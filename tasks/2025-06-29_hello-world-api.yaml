@@ -1,0 +1,4 @@
+task_id: hello-world-api
+language: python
+description: 寫一個 Flask 的 hello world API，輸出 "你好，世界"
+target_file: flow_code/hello_api.py
