@@ -51,7 +51,7 @@ def process_task(task_data):
                 )
                 result = subprocess.run(
                     [sys.executable, '-c', import_script, target_file],
-                    capture_output=True, text=True, timeout=10
+                    capture_output=True, text=True, timeout=PYTHON_IMPORT_TIMEOUT
                 )
                 if result.returncode == 0:
                     print("✓ Python file imports successfully")
