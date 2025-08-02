@@ -1,6 +1,6 @@
-# This is a basic workflow to help you get started with Actions
+# FlowAgent Task System CI/CD Pipeline
 
-name: CI
+name: Flow Tasks CI
 
 # Controls when the workflow will run
 on:
@@ -15,22 +15,46 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  # Test and validate tasks
+  test:
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      # Set up Python environment
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      # Install dependencies
+      - name: Install dependencies
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Process and validate tasks
+      - name: Process Tasks
+        run: |
+          python process_tasks.py
+
+      # Test Flask API
+      - name: Test Flask API
+        run: |
+          # Start Flask app in background
+          python flow_code/hello_api.py &
+          FLASK_PID=$!
+          
+          # Wait for Flask to start
+          sleep 5
+          
+          # Test the API endpoints
+          curl -f http://localhost:5000/ || exit 1
+          curl -f http://localhost:5000/health || exit 1
+          
+          # Stop Flask app
+          kill $FLASK_PID
+          
+          echo "✓ Flask API tests passed"
