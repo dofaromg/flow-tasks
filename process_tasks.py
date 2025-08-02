@@ -42,8 +42,17 @@ def process_task(task_data):
         if target_file.endswith('.py'):
             try:
                 print(f"Testing Python file: {target_file}")
-                result = subprocess.run([sys.executable, '-c', f'import {target_file.replace("/", ".").replace(".py", "")}'], 
-                                      capture_output=True, text=True, timeout=10)
+                # Use importlib to import the file directly, regardless of package structure
+                import_script = (
+                    "import importlib.util, sys; "
+                    "spec = importlib.util.spec_from_file_location('test_module', sys.argv[1]); "
+                    "module = importlib.util.module_from_spec(spec); "
+                    "spec.loader.exec_module(module)"
+                )
+                result = subprocess.run(
+                    [sys.executable, '-c', import_script, target_file],
+                    capture_output=True, text=True, timeout=10
+                )
                 if result.returncode == 0:
                     print("✓ Python file imports successfully")
                 else:
