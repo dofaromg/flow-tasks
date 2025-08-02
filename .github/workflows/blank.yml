@@ -45,6 +45,7 @@ jobs:
         run: |
           # Start Flask app in background
           export FLASK_ENV=testing
+          export FLASK_ENV=testing
           python flow_code/hello_api.py &
           FLASK_PID=$!
           
