@@ -48,8 +48,14 @@ jobs:
           python flow_code/hello_api.py &
           FLASK_PID=$!
           
-          # Wait for Flask to start
-          sleep 5
+          # Wait for Flask to start by polling the /health endpoint
+          for i in {1..10}; do
+            if curl -fs http://localhost:5000/health; then
+              break
+            fi
+            echo "Waiting for Flask to be ready... ($i/10)"
+            sleep 1
+          done
           
           # Test the API endpoints
           curl -f http://localhost:5000/ || exit 1
