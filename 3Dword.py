@@ -28,7 +28,7 @@ class AI3DPersonality:
             One of ``neutral``, ``happy``, ``sad`` or ``angry``.
         """
         if emotion not in self._expressions:
-            raise ValueError(f"Unsupported emotion: {emotion}")
+            引發 ValueError ( f"不支持的情緒：{ emotion } 。有效情緒為：{ '，' 。join ( self._expressions.keys ( ) ) } " )
         self.emotion = emotion
 
     def get_expression(self, language: str = "en") -> str:
