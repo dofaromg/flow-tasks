@@ -13,9 +13,11 @@ class AI3DPersonality:
         "angry": {"en": "showing anger", "zh": "憤怒表情"},
     }
 
+    DEFAULT_EMOTION = "neutral"
+
     def __init__(self, name: str):
         self.name = name
-        self.emotion = "neutral"
+        self.emotion = self.DEFAULT_EMOTION
 
     def set_emotion(self, emotion: str) -> None:
         """Update the avatar's current emotion.
