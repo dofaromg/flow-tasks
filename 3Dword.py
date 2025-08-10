@@ -57,8 +57,7 @@ class AI3DPersonality:
             "en": "{name} ({emotion}) says: I hear you saying '{message}'.",
             "zh": "{name}（{emotion}）說：我聽到了你說『{message}』。",
         }
-        if language not in templates:
-            raise ValueError("language must be 'en' or 'zh'")
+        self._validate_language（語言）
         return templates[language].format(
             name=self.name,
             emotion=self._expressions[self.emotion][language],
