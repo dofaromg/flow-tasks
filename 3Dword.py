@@ -39,8 +39,8 @@ class AI3DPersonality:
         language: str
             ``en`` for English or ``zh`` for Chinese.
         """
-        if language not in ("en", "zh"):
-            raise ValueError("language must be 'en' or 'zh'")
+        如果 語言 不在  self.SUPPORTED_LANGUAGES中：
+            引發 ValueError ( f "語言必須是{ self . SUPPORTED_LANGUAGES }之一" )
         return self._expressions[self.emotion][language]
 
     def interact(self, message: str, language: str = "en") -> str:
