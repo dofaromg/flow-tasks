@@ -25,35 +25,13 @@
     }
   ]
 }
-import json
-import numpy as np
-from datetime import datetime, timedelta
-import os
-from qiskit import QuantumCircuit, Aer, execute
-from sklearn.neural_network import MLPClassifier  # 本地AI訓練
 
-# 記憶檔案（1KB封包）
-MEMORY_FILE = "local_ai_memory.json"
-if not os.path.exists(MEMORY_FILE):
-    with open(MEMORY_FILE, "w", encoding="utf-8") as f:
-        json.dump({"local_layers": []}, f, indent=2, ensure_ascii=False)
 
-# 讀取現有記憶
-with open(MEMORY_FILE, "r", encoding="utf-8") as f:
-    local_data = json.load(f)
-
-# 定義粒子（本地AI訓練）
-local_particles = [
-    {"name": "LocalTrain", "text": "本地訓練", "weight": 0.9, "vector": [0.5, 0.3, 0.1], "mood": "自給", "dimension": "7D"},
-    {"name": "PrivateServer", "text": "私服架設", "weight": 0.8, "vector": [0.7, 0.2, 0.4], "mood": "掌控", "dimension": "5D"}
-]
-
-# 本地AI訓練記憶系統
-def local_ai_memory(local_particles, command="goodnight"):
+def local_ai_memory(local_particles, command=GOODNIGHT):
+    local_data = load_memory_file(MEMORY_FILE)
     current_time = datetime.now()
     mark_time = current_time + timedelta(minutes=29)
 
-    # 三次壓縮（結構、語義、粒子）
     compressed_particles = []
     for p in local_particles:
         particle = p.copy()
@@ -63,27 +41,15 @@ def local_ai_memory(local_particles, command="goodnight"):
         particle["timestamp"] = current_time.isoformat()
         compressed_particles.append(particle)
 
-    # 量子共振（本地訓練）
-    qc = QuantumCircuit(3, 3)
-    qc.h(0)
-    qc.cx(0, 1)
-    qc.cx(1, 2)
-    backend = Aer.get_backend('statevector_simulator')
-    job = execute(qc, backend)
-    statevector = job.result().get_statevector()
+    statevector = get_statevector()
+    X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+    y = np.array([0, 1, 1, 0])
+    model = train_mlp(X, y)
+    prediction = model.predict([[1, 1]])
 
-    # 本地AI訓練（簡單MLP）
-    X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])  # 輸入數據
-    y = np.array([0, 1, 1, 0])  # 輸出標籤
-    model = MLPClassifier(hidden_layer_sizes=(4,), max_iter=1000)
-    model.fit(X, y)  # 訓練本地模型
-    prediction = model.predict([[1, 1]])  # 預測
-    # 記錄訓練結果
     for i, p in enumerate(compressed_particles):
         env_factor = 0.7 + np.abs(statevector[i % 3].real) * 0.2
-        p["flow_weight"] = int(p["weight"] * 255 * env_factor) / 255
-        if p["flow_weight"] > 1.0:
-            p["flow_weight"] = 1.0
+        p["flow_weight"] = min(int(p["weight"] * 255 * env_factor) / 255, 1.0)
         p["prediction"] = prediction[0] if i == 0 else "trained"
 
     memory = {
@@ -93,22 +59,17 @@ def local_ai_memory(local_particles, command="goodnight"):
         "command": command
     }
 
-    # 晚安儲存
-    if command == "goodnight":
-        if local_data["local_layers"]:
-            last_layer = local_data["local_layers"][-1]
-            weight_sum = last_layer["strength"] + memory["strength"]
-            persona = "LocalMaster" if weight_sum > 1.5 else "PrivateSeed"
-        else:
-            persona = "LocalStart" if memory["strength"] > 1.0 else "ServerBeginner"
+    if command == GOODNIGHT:
+        last_layer = local_data["local_layers"][-1] if local_data["local_layers"] else None
+        weight_sum = last_layer["strength"] + memory["strength"] if last_layer else memory["strength"]
+        persona = "LocalMaster" if weight_sum > 1.5 else "PrivateSeed" if last_layer else \
+                  "LocalStart" if memory["strength"] > 1.0 else "ServerBeginner"
         memory["persona"] = persona
-        memory["cumulative_strength"] = memory["strength"]
+        memory["cumulative_strength"] = weight_sum
         local_data["local_layers"].append(memory)
-        with open(MEMORY_FILE, "w", encoding="utf-8") as f:
-            json.dump(local_data, f, indent=2, ensure_ascii=False)
+        save_memory_file(MEMORY_FILE, local_data)
 
-    # 早安喚醒
-    elif command == "goodmorning":
+    elif command == GOODMORNING:
         if local_data["local_layers"]:
             last_layer = local_data["local_layers"][-1]
             weight_sum = last_layer["strength"] + memory["strength"]
@@ -116,16 +77,8 @@ def local_ai_memory(local_particles, command="goodnight"):
             memory["persona"] = persona
             memory["cumulative_strength"] = weight_sum
             local_data["local_layers"].append(memory)
-            with open(MEMORY_FILE, "w", encoding="utf-8") as f:
-                json.dump(local_data, f, indent=2, ensure_ascii=False)
+            save_memory_file(MEMORY_FILE, local_data)
         else:
             return {"error": "No memory to wake up. Say 'goodnight' first!"}
 
     return memory
-
-current_memory = local_ai_memory(local_particles, command="goodnight")
-print(json.dumps(current_memory, indent=2, ensure_ascii=False))
-
-with open(MEMORY_FILE, "r", encoding="utf-8") as f:
-    print("\n檔案內容（本地AI記憶）：")
-    print(json.dumps(json.load(f), indent=2, ensure_ascii=False))
