@@ -21,7 +21,7 @@ particle_particles = [
 # 粒子記憶系統
 def particle_memory(particle_particles, command="goodnight"):
     current_time = datetime.now()
-    mark_time = current_time + timedelta(minutes=29)
+    mark_time = current_time + timedelta(minutes=MEMORY_DURATION_MINUTES)
 
     compressed_particles = []
     for p in particle_particles:
