@@ -28,7 +28,7 @@ def particle_memory(particle_particles, command="goodnight"):
         particle = p.copy()
         particle["vector"] = [round(x, 1) for x in particle["vector"]]
         particle["text"] = particle["text"][:5]
-        particle["weight"] = round(particle["weight"] * 0.7, 2)
+        particle["weight"] = round(particle["weight"] * WEIGHT_COMPRESSION_FACTOR, 2)
         particle["timestamp"] = current_time.isoformat()
         compressed_particles.append(particle)
 
