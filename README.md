@@ -55,6 +55,14 @@ curl http://localhost:5000/info
 python test_comprehensive.py
 ```
 
+### 6. 同步對齊憑證 (Ping Sync)
+```bash
+npx tsx scripts/ping-sync.ts
+```
+此腳本會在 `_status/ping.txt` 寫入當前時間戳，若環境變數
+`NOTION_API_KEY` 與 `NOTION_DATABASE_ID` 已設定，則會同步至指定的
+Notion 資料庫。
+
 ## 📋 API 端點
 
 | 端點 | 功能 | 回應 |
