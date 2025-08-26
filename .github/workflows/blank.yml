@@ -45,7 +45,7 @@ jobs:
         run: |
           # Start Flask app in background
           export FLASK_ENV=testing
-          python flow_code/hello_api.py &
+          FLASK_ENV=測試python flow_code/hello_api.py &
           FLASK_PID=$!
           
           # Wait for Flask to start by polling the /health endpoint
