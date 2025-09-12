@@ -1,0 +1,5 @@
+{
+  "endpoint": "/invoke",
+  "method": "POST",
+  "payload": {"text": "simulate", "persona": "Echo"}
+}
