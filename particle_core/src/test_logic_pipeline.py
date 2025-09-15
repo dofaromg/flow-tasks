@@ -25,7 +25,7 @@ class TestLogicPipeline(unittest.TestCase):
         from unittest.mock import patch
         mock_now = datetime(2025, 1, 1, 12, 0, 0)
 
-        from unittest.mock import patch, MagicMock
+        from unittest.mock import patch
         # Simulate that datetime.now() is 8 hours ahead of utcnow()
         mock_now = datetime(2025, 1, 1, 20, 0, 0)
         mock_utcnow = datetime(2025, 1, 1, 12, 0, 0)
