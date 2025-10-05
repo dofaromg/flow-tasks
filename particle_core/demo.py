@@ -12,6 +12,7 @@ try:
     from logic_pipeline import LogicPipeline
     from rebuild_fn import FunctionRestorer
     from logic_transformer import LogicTransformer
+    from memory_archive_seed import MemoryArchiveSeed
 except ImportError as e:
     print(f"Import error: {e}")
     sys.exit(1)
@@ -73,6 +74,29 @@ def demo_basic_functionality():
     with open(json_file, 'w', encoding='utf-8') as f:
         json.dump(json_export, f, ensure_ascii=False, indent=2)
     print(f"   JSON 匯出已儲存: {json_file}")
+    
+    # 5. 記憶封存種子示範
+    print("\n5. 記憶封存種子功能:")
+    archive = MemoryArchiveSeed()
+    
+    # 創建記憶種子
+    seed_data = {
+        "logic_result": result['result'],
+        "compressed": result['compressed'],
+        "timestamp": "demo_execution"
+    }
+    seed_result = archive.create_seed(
+        particle_data=seed_data,
+        metadata={"demo": True, "type": "test"},
+        seed_name="demo_memory_seed"
+    )
+    print(f"   記憶種子已創建: {seed_result['seed_name']}")
+    print(f"   種子檔案: {seed_result['seed_file']}")
+    print(f"   校驗碼: {seed_result['checksum'][:16]}...")
+    
+    # 壓縮種子
+    compressed_seed = archive.compress_seed("demo_memory_seed")
+    print(f"   壓縮格式: {compressed_seed}")
     
     print("\n=== Demo 完成 ===")
 
