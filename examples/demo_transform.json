@@ -1,0 +1,24 @@
+{
+  "module_type": "logic_function_chain",
+  "version": "1.0",
+  "timestamp": "2025-10-05T10:57:26.088150",
+  "functions": [
+    "structure",
+    "store"
+  ],
+  "transformations": {
+    "original": [
+      "structure",
+      "store"
+    ],
+    "symbols": "(S→ST)",
+    "flpkg_standard": "CUSTOM_SEED(X) = ST(S(X))",
+    "flpkg_compact": "(S→ST)",
+    "length": 2,
+    "complexity": "simple"
+  },
+  "compressed": "CUSTOM_SEED(X) = ST(S(X))",
+  "signature": "MRLSIG-TRANSFORM-9395",
+  "recursive": true,
+  "metadata": {}
+}
