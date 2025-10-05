@@ -59,7 +59,7 @@ class LogicPipeline:
             "compressed": self.compress_logic(self.fn_steps)
         }
         
-        filename = os.path.join(output_dir, f"logic_result_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
+        filename = os.path.join(output_dir, f"logic_result_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json")
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
         
