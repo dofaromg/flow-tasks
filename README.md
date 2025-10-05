@@ -2,6 +2,37 @@
 
 這個壓縮包是「一次搞定」的部署骨架。你把整包丟到 GitHub（或上傳到你的空間）即可：
 
+## 🆕 粒子語言核心系統 (Particle Language Core)
+
+本專案包含完整的 **MRLiou 粒子語言核心系統**，提供：
+
+- **邏輯鏈執行**: STRUCTURE → MARK → FLOW → RECURSE → STORE
+- **記憶封存種子系統**: 完整的記憶快照、還原與管理功能
+- **邏輯壓縮**: .flpkg 格式支援
+- **CLI 互動介面**: 豐富的命令列工具
+
+### 快速開始
+
+```bash
+cd particle_core
+
+# 執行示範
+python demo.py demo
+
+# 啟動 CLI 介面
+python src/cli_runner.py
+
+# 記憶封存系統
+python src/memory_archive_seed.py interactive
+```
+
+詳細說明請參閱：
+- [本地執行說明](particle_core/docs/本地執行說明.md)
+- [記憶封存種子說明](particle_core/docs/記憶封存種子說明.md)
+- [記憶封存種子系統更新說明](記憶封存種子系統更新說明.md)
+
+---
+
 ## 部署空間位置（你會用到的介面）
 - **GKE 叢集控制台**：`https://console.cloud.google.com/kubernetes/list?project=flowmemorysync`
 - **Artifact Registry**（容器倉庫）：`https://console.cloud.google.com/artifacts?project=flowmemorysync&supportedpurview=project`
