@@ -4,7 +4,7 @@
 import json
 import os
 from typing import List, Dict, Any, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 class FunctionRestorer:
     """MRLiou 函數還原重建器"""
@@ -86,11 +86,11 @@ class FunctionRestorer:
         package = {
             "package_type": "flpkg",
             "version": "1.0",
-            "created": datetime.utcnow().isoformat(),
+            "created": datetime.now(timezone.utc).isoformat(),
             "compressed": self.compress_fn(fn_steps),
             "functions": fn_steps,
             "human_readable": self.to_human_readable(fn_steps),
-            "signature": f"MRLSIG-{hash(str(fn_steps)) % 10000:04d}",
+            "signature": f"MRLSIG-{abs(hash(str(fn_steps))) % 10000:04d}",
             "metadata": metadata
         }
         

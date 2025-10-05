@@ -2,7 +2,7 @@
 # 邏輯管線核心執行系統
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Dict, Any
 import os
 
@@ -50,8 +50,11 @@ class LogicPipeline:
         """儲存執行結果"""
         os.makedirs(output_dir, exist_ok=True)
         
+        # Use the same timestamp for both filename and content to ensure consistency
+        now = datetime.now(timezone.utc)
+        
         data = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": now.isoformat(),
             "input": input_val,
             "logic_chain": self.fn_steps,
             "human_readable": self.get_human_readable(),
@@ -59,7 +62,7 @@ class LogicPipeline:
             "compressed": self.compress_logic(self.fn_steps)
         }
         
-        filename = os.path.join(output_dir, f"logic_result_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json")
+        filename = os.path.join(output_dir, f"logic_result_{now.strftime('%Y%m%d_%H%M%S')}.json")
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
         
