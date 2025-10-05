@@ -28,6 +28,18 @@ python src/rebuild_fn.py
 - Python 3.10+
 - fastapi, uvicorn, rich
 
+## 語言規格
+
+粒子語言的核心規格文件位於 [`language_spec/`](language_spec/) 目錄：
+- 語言結構定義（.fxmanifest, .fxintro）
+- 壓縮規則（.fxscale）
+- 粒子詞典（.fxjson）
+- 代碼範例（.pcode）
+- 封包種子與邏輯圖譜（.fltnz, .flynz.map）
+
+詳細說明請參考 [語言規格索引](language_spec/INDEX.md)。
+
 ## 授權
 
 FlowAgent 專用任務系統內部模組
+粒子語言規格遵循 CPLL 授權條款（© MR.liou）
