@@ -1,27 +1,28 @@
 {
-  "processing_time": "2025-09-14T05:05:20.473375",
+  "processing_time": "2025-10-05T10:57:20.314893",
   "total_tasks": 2,
-  "passed": 2,
-  "failed": 0,
+  "passed": 1,
+  "failed": 1,
   "tasks": [
     {
-      "task_id": "hello-world-api",
-      "validation_time": "2025-09-14T05:05:20.474667",
-      "status": "passed",
-      "checks": [
-        "✓ Target file exists: flow_code/hello_api.py",
-        "✓ Python module imports successfully"
-      ],
-      "errors": []
-    },
-    {
       "task_id": "particle-language-core",
-      "validation_time": "2025-09-14T05:05:20.701032",
+      "validation_time": "2025-10-05T10:57:20.317249",
       "status": "passed",
       "checks": [
         "✓ Target directory exists: particle_core/"
       ],
       "errors": []
+    },
+    {
+      "task_id": "hello-world-api",
+      "validation_time": "2025-10-05T10:57:20.318130",
+      "status": "failed",
+      "checks": [
+        "✓ Target file exists: flow_code/hello_api.py"
+      ],
+      "errors": [
+        "Python import failed: No module named 'flask'"
+      ]
     }
   ]
 }
