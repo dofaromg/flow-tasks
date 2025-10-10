@@ -208,3 +208,7 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Particle core test artifacts
+particle_core/src/examples/*.json
+particle_core/src/test_output/
