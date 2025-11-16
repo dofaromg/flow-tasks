@@ -1,0 +1,79 @@
+name: CD - Deploy to GKE
+
+on:
+  workflow_run:
+    workflows: ["CI - Build and Push Container Images"]
+    types:
+      - completed
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: flowmemorysync
+  REGION: asia-east1
+  ZONE: asia-east1-a
+  CLUSTER_NAME: modular-cluster
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    # Only run if CI workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    
+    permissions:
+      contents: read
+      id-token: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Authenticate to Google Cloud
+      id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+        service_account: ${{ secrets.GCP_DEPLOYER_SA }}
+    
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+    
+    - name: Install gke-gcloud-auth-plugin
+      run: |
+        gcloud components install gke-gcloud-auth-plugin
+    
+    - name: Get GKE credentials
+      run: |
+        gcloud container clusters get-credentials ${{ env.CLUSTER_NAME }} \
+          --zone ${{ env.ZONE }} \
+          --project ${{ env.PROJECT_ID }}
+    
+    - name: Install Kustomize
+      run: |
+        curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+        sudo mv kustomize /usr/local/bin/
+    
+    - name: Build Kustomize manifests
+      run: |
+        kustomize build cluster/overlays/prod > /tmp/manifests.yaml
+    
+    - name: Deploy to GKE
+      run: |
+        kubectl apply -f /tmp/manifests.yaml
+    
+    - name: Verify deployment
+      run: |
+        kubectl rollout status deployment/module-a -n flowagent --timeout=5m
+        kubectl rollout status deployment/orchestrator -n flowagent --timeout=5m
+        kubectl rollout status deployment/mongodb -n flowagent --timeout=5m
+    
+    - name: Get service endpoints
+      run: |
+        echo "### 🎉 Deployment Complete" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Services:**" >> $GITHUB_STEP_SUMMARY
+        kubectl get svc -n flowagent >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Pods:**" >> $GITHUB_STEP_SUMMARY
+        kubectl get pods -n flowagent >> $GITHUB_STEP_SUMMARY

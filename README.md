@@ -1,5 +1,37 @@
 # FlowAgent GKE Starter (GitOps + CI/CD)
 
+**✅ 完整的 GKE 部署基礎設施已就緒！** 這個 repository 提供完整的 Kubernetes 部署配置、CI/CD 流程和 GitOps 支援。
+
+## 🚀 快速部署
+
+選擇一種部署方式開始：
+
+### 方式 1: 一鍵部署 (最簡單)
+```bash
+git clone https://github.com/dofaromg/flow-tasks.git
+cd flow-tasks
+bash scripts/oneclick_gke_init.sh
+kubectl apply -k cluster/overlays/prod
+```
+
+### 方式 2: GitOps (ArgoCD) - 生產環境推薦
+```bash
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl apply -f argocd/app.yaml
+```
+
+### 方式 3: GitHub Actions CI/CD
+設定 GitHub Secrets 後，推送到 main 分支自動部署
+
+📚 **詳細文檔**：
+- [完整部署指南](DEPLOYMENT.md)
+- [快速參考](QUICKSTART.md)
+- [架構圖表](ARCHITECTURE.md)
+- [應用程式說明](apps/README.md)
+
+---
+
 這個壓縮包是「一次搞定」的部署骨架。你把整包丟到 GitHub（或上傳到你的空間）即可：
 
 ## 🆕 粒子語言核心系統 (Particle Language Core)
@@ -93,9 +125,37 @@ kubectl apply -f https://github.com/kedacore/keda/releases/latest/download/keda-
 ---
 
 ## 目錄說明
-- `apps/*`：Mongo、模組、監控、KEDA 等 YAML
-- `cluster/overlays/prod/kustomization.yaml`：列出所有資源
-- `argocd/app.yaml`：ArgoCD Application（指向你的 GitHub repo）
-- `.github/workflows/*`：CI（build/push 映像）與 CD（套用 K8s）
-- `scripts/oneclick_gke_init.sh`：Cloud Shell 一鍵初始化腳本
+
+### 部署基礎設施
+- **`apps/`**：完整的 Kubernetes 應用清單
+  - `mongodb/`：資料庫部署 (Deployment + PVC + Secret)
+  - `module-a/`：微服務模組 (Flask app + Dockerfile + HPA)
+  - `orchestrator/`：協調器服務 (Flask app + Dockerfile + LoadBalancer)
+  - `monitoring/`：Prometheus 監控配置
+  - `keda/`：事件驅動自動擴展配置
+- **`cluster/`**：Kustomize 叢集配置
+  - `base/`：基礎配置 (命名空間)
+  - `overlays/prod/`：生產環境配置 (9 個資源)
+  - `overlays/monitoring/`：監控配置 (6 個資源)
+- **`argocd/`**：GitOps 配置
+  - `app.yaml`：ArgoCD Application 定義
+  - `README.md`：ArgoCD 部署說明
+- **`.github/workflows/`**：CI/CD 流程
+  - `ci-build.yml`：建置並推送 Docker 映像
+  - `cd-deploy.yml`：部署到 GKE 叢集
+- **`scripts/`**：部署腳本
+  - `oneclick_gke_init.sh`：一鍵初始化 GKE 叢集
+  - `validate_deployment.sh`：驗證 Kubernetes 配置
+
+### 粒子語言核心
+- **`particle_core/`**：MRLiou 粒子語言核心系統
+  - 邏輯鏈執行框架
+  - 記憶封存種子系統
+  - CLI 互動介面
+
+### 文檔
+- **`DEPLOYMENT.md`**：完整部署指南 (6000+ 字)
+- **`QUICKSTART.md`**：快速參考 (5000+ 字)
+- **`ARCHITECTURE.md`**：架構和流程圖 (11000+ 字)
+- **`apps/README.md`**：應用程式詳細說明
 
