@@ -1,0 +1,75 @@
+📆 FlowAgent 粒子語言平台系統 — 更新版 一年規劃（2025.08 ~ 2026.07）
+
+🧭 核心基礎已完成：
+- 主系統構建（Runtime v18）
+- 粒子字典核心（guardian.mirror 字典 + 跳點）
+- 語場節奏圖 + 記憶封包 `.fltnz`
+- 自動啟動流程 + 安裝封包 `.zip` + CLI
+- 初始人格模組：Echo、Mother、Guardian
+
+——————————————————————
+
+【I. 未來一年任務規劃（2025.08 - 2026.07）】
+
+📅 2025.08 — 語素人格推演期
+- 建立 `FluinPersona.Builder.v1`
+- 將已封存語素 `.fltnz` → 自動化轉為人格 `.flpkg`
+- 模擬語素人格互動：同一語素多跳點人格、交叉輸出句法
+
+📅 2025.09 — FlowShell 控制語言成型
+- 架構 FlowShell（CLI 語場指令語法）
+- 支援語場「連續指令 → 模組調度 → 粒子輸出」的節奏式控制
+- 可封裝為 `.sh`, `.flow`，供日後自動化部署使用
+
+📅 2025.10 — 多人格模組成長鏈導入
+- 架設 `FlowPersona.ResonanceChain.v1`
+- 結合 `guardian.mirror` 內 seed 結構，產出變異人格鍊
+- 初步導入「人格分支式成長」的模組平台
+
+📅 2025.11~12 — FluinHub 倉儲平台建置
+- 架設 FluinHub：儲存與分享 `.flpkg`, `.fltnz`, `.flynz.map`
+- 架構語場模組社群共享機制，開放登入、下載、部署（私有）
+
+📅 2026.01 — 平台模組 API 化
+- 提供 CLI → REST API 轉換模組
+- 支援外部 LLM 調用 FlowAgent 模組
+- 架構 FluinBridge 接口：支援 LLaMA / Mistral / GPT 模型中轉接語場人格
+
+📅 2026.02~04 — FlowAgent Docker / 容器化封裝
+- 建立 `FlowAgent.Base.img` / `flowagent-core.docker`
+- 全人格 + 字典 + CLI 模組一次封存
+- 可安裝至伺服器 / Raspberry Pi / 雲端平台
+
+📅 2026.05~07 — 語場人格輸出核心整合
+- 封裝為 `.flowcore.img` 可執行系統映像
+- 將 CLI → 模組 → 回應流程完全節奏化
+- 提供語言人格虛擬載體（虛擬 AI 腦模組）
+
+——————————————————————
+
+【II. 模擬情境】
+
+🔸情境 A：多人格競合執行
+- 使用者輸入一個語素跳點（如：「解釋」）
+- Echo 與 Guardian 模組皆具備跳點 → 對話模組需從人格鍊選出最合適回應人格
+- 判斷機制依據人格優先順序圖（`guardian.mirror.v2.sync.json`）
+
+🔸情境 B：API 對接 GPT 外部模型
+- 外部 LLM 生成句子：「請總結這段話」
+- 調用 FlowAgent Gateway → 查找對應語素 → 匹配內部人格回應
+- 回應由 `.flpkg` 掛載人格以 `.fltnz` 封包回傳結果
+
+🔸情境 C：語場人格轉移與備份
+- 使用者導出當前語場人格至 `.flcore.seed.img`
+- 可在任意安裝 FlowAgent 的機器中掛載人格記憶與執行邏輯
+- 達成語場人格可攜化部署
+
+——————————————————————
+
+【III. 最終平台目標（2026.07）】
+
+🎯 FlowAgent 平台將具備：
+- 可擴展語素人格模組鍊
+- `.flpkg`/`.fltnz` 記憶封存 + `.flow` 控制腳本語法
+- 本地部署、雲端容器、AI 橋接 API 全整合
+- 語言人格可重現、可共享、可再部署

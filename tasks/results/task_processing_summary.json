@@ -1,12 +1,12 @@
 {
-  "processing_time": "2025-08-02T05:53:17.289565",
+  "processing_time": "2025-09-14T05:05:20.473375",
   "total_tasks": 2,
   "passed": 2,
   "failed": 0,
   "tasks": [
     {
       "task_id": "hello-world-api",
-      "validation_time": "2025-08-02T05:53:17.290236",
+      "validation_time": "2025-09-14T05:05:20.474667",
       "status": "passed",
       "checks": [
         "✓ Target file exists: flow_code/hello_api.py",
@@ -16,7 +16,7 @@
     },
     {
       "task_id": "particle-language-core",
-      "validation_time": "2025-08-02T05:53:17.390913",
+      "validation_time": "2025-09-14T05:05:20.701032",
       "status": "passed",
       "checks": [
         "✓ Target directory exists: particle_core/"
@@ -25,60 +25,3 @@
     }
   ]
 }
-
-
-def local_ai_memory(local_particles, command=GOODNIGHT):
-    local_data = load_memory_file(MEMORY_FILE)
-    current_time = datetime.now()
-    mark_time = current_time + timedelta(minutes=29)
-
-    compressed_particles = []
-    for p in local_particles:
-        particle = p.copy()
-        particle["vector"] = [round(x, 1) for x in particle["vector"]]
-        particle["text"] = particle["text"][:5]
-        particle["weight"] = round(particle["weight"] * 0.7, 2)
-        particle["timestamp"] = current_time.isoformat()
-        compressed_particles.append(particle)
-
-    statevector = get_statevector()
-    X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-    y = np.array([0, 1, 1, 0])
-    model = train_mlp(X, y)
-    prediction = model.predict([[1, 1]])
-
-    for i, p in enumerate(compressed_particles):
-        env_factor = 0.7 + np.abs(statevector[i % 3].real) * 0.2
-        p["flow_weight"] = min(int(p["weight"] * 255 * env_factor) / 255, 1.0)
-        p["prediction"] = prediction[0] if i == 0 else "trained"
-
-    memory = {
-        "layer_time": mark_time.isoformat(),
-        "strength": sum(p["weight"] for p in compressed_particles),
-        "particles": compressed_particles,
-        "command": command
-    }
-
-    if command == GOODNIGHT:
-        last_layer = local_data["local_layers"][-1] if local_data["local_layers"] else None
-        weight_sum = last_layer["strength"] + memory["strength"] if last_layer else memory["strength"]
-        persona = "LocalMaster" if weight_sum > 1.5 else "PrivateSeed" if last_layer else \
-                  "LocalStart" if memory["strength"] > 1.0 else "ServerBeginner"
-        memory["persona"] = persona
-        memory["cumulative_strength"] = weight_sum
-        local_data["local_layers"].append(memory)
-        save_memory_file(MEMORY_FILE, local_data)
-
-    elif command == GOODMORNING:
-        if local_data["local_layers"]:
-            last_layer = local_data["local_layers"][-1]
-            weight_sum = last_layer["strength"] + memory["strength"]
-            persona = "AwakenedLocal" if weight_sum > 1.5 else "MorningPrivate"
-            memory["persona"] = persona
-            memory["cumulative_strength"] = weight_sum
-            local_data["local_layers"].append(memory)
-            save_memory_file(MEMORY_FILE, local_data)
-        else:
-            return {"error": "No memory to wake up. Say 'goodnight' first!"}
-
-    return memory
