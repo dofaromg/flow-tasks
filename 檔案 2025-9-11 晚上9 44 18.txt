@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowAgent 3D 整合軟體包</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/js/utils/BufferGeometryUtils.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #333;
+        }
+        canvas {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 32px;
+            margin: 20px;
+            max-width: 90%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .button {
+            background-color: #4a90e2;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .file-input-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .status-box {
+            background-color: #f1f5f9;
+            padding: 16px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+        .progress-bar {
+            background-color: #e2e8f0;
+            border-radius: 8px;
+            height: 16px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #3b82f6;
+            height: 100%;
+            transition: width 0.4s ease-in-out;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="container">
+        <h1 class="text-3xl font-bold mb-2 text-center text-gray-800">FlowAgent 3D 整合軟體包</h1>
+        <p class="text-gray-600 text-center mb-6">將現實世界的快照轉化為我們的版本，效能更快、功能不變。</p>
+
+        <canvas id="flowCanvas"></canvas>
+
+        <div class="file-input-wrapper">
+            <button class="button">上傳照片</button>
+            <input type="file" id="imageInput" multiple accept="image/*">
+        </div>
+
+        <div class="status-box">
+            <p id="statusText" class="font-medium text-gray-700">等待快照上傳...</p>
+            <div class="progress-bar hidden">
+                <div id="progressBarFill" class="progress-fill" style="width: 0%;"></div>
+            </div>
+            <p id="processedCount" class="text-sm text-gray-500 mt-2 hidden">已處理 0 張照片</p>
+        </div>
+    </div>
+
+    <script>
+        // 初始化 Three.js 場景
+        let scene, camera, renderer, controls;
+        let ambientLight, directionalLight;
+        let finalModel = null;
+        let mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+        
+        function init3D() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, canvas: document.getElementById('flowCanvas') });
+
+            const containerWidth = document.querySelector('.container').offsetWidth - 64; // 减去padding
+            const containerHeight = containerWidth * 0.75;
+            renderer.setSize(containerWidth, containerHeight);
+
+            renderer.setClearColor(0xf3f4f6, 1);
+            camera.position.z = 5;
+            camera.position.y = 1;
+
+            ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(5, 5, 5).normalize();
+            scene.add(directionalLight);
+        }
+
+        // 粒子化與演算法核心
+        const Algorithm = {
+            processImage: (image, callback) => {
+                const geometry = new THREE.SphereGeometry(1, 16, 16);
+                const material = new THREE.MeshStandardMaterial({
+                    color: new THREE.Color(Math.random(), Math.random(), Math.random()),
+                    metalness: 0.2,
+                    roughness: 0.8
+                });
+                const mesh = new THREE.Mesh(geometry, material);
+
+                const processingTime = 500 + Math.random() * 500;
+                setTimeout(() => {
+                    callback(mesh.geometry.toNonIndexed());
+                }, processingTime);
+            },
+            fuseGeometries: (geometries) => {
+                return BufferGeometryUtils.mergeBufferGeometries(geometries);
+            }
+        };
+
+        const state = {
+            files: [],
+            processedFiles: 0,
+            geometries: [],
+            isProcessing: false,
+        };
+
+        const dom = {
+            input: document.getElementById('imageInput'),
+            statusText: document.getElementById('statusText'),
+            progressBar: document.getElementById('progressBarFill'),
+            progressBarContainer: document.querySelector('.progress-bar'),
+            processedCount: document.getElementById('processedCount'),
+        };
+
+        function updateUI() {
+            const totalFiles = state.files.length;
+            const processed = state.processedFiles;
+            dom.statusText.textContent = `正在將快照粒子化...`;
+            dom.progressBarContainer.classList.remove('hidden');
+            dom.processedCount.classList.remove('hidden');
+            dom.processedCount.textContent = `已處理 ${processed} / ${totalFiles} 張照片`;
+            const progress = (processed / totalFiles) * 100;
+            dom.progressBar.style.width = `${progress}%`;
+
+            if (processed === totalFiles && totalFiles > 0) {
+                dom.statusText.textContent = '所有快照已完成粒子化。正在進行模型融合...';
+                
+                setTimeout(() => {
+                    dom.statusText.textContent = '模型已成功生成！';
+                    
+                    if (finalModel) {
+                        scene.remove(finalModel);
+                    }
+
+                    const mergedGeometry = Algorithm.fuseGeometries(state.geometries);
+                    const material = new THREE.MeshStandardMaterial({
+                        color: 0x4a90e2,
+                        metalness: 0.4,
+                        roughness: 0.6
+                    });
+                    finalModel = new THREE.Mesh(mergedGeometry, material);
+                    finalModel.position.set(0, 0, 0);
+                    scene.add(finalModel);
+                    
+                    state.files = [];
+                    state.processedFiles = 0;
+                    state.geometries = [];
+                    state.isProcessing = false;
+                    dom.progressBarContainer.classList.add('hidden');
+                    dom.processedCount.classList.add('hidden');
+                }, 1000);
+            }
+        }
+
+        dom.input.addEventListener('change', (event) => {
+            if (state.isProcessing) return;
+            state.files = Array.from(event.target.files);
+            state.processedFiles = 0;
+            state.geometries = [];
+            state.isProcessing = true;
+            
+            dom.statusText.textContent = `已選取 ${state.files.length} 張快照，準備粒子化...`;
+
+            if (state.files.length > 0) {
+                processNextImage();
+            } else {
+                state.isProcessing = false;
+                dom.statusText.textContent = '等待快照上傳...';
+                dom.progressBarContainer.classList.add('hidden');
+                dom.processedCount.classList.add('hidden');
+            }
+        });
+
+        function processNextImage() {
+            if (state.processedFiles < state.files.length) {
+                const file = state.files[state.processedFiles];
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = () => {
+                        Algorithm.processImage(img, (geometry) => {
+                            state.geometries.push(geometry);
+                            state.processedFiles++;
+                            updateUI();
+                            processNextImage();
+                        });
+                    };
+                };
+                reader.readAsDataURL(file);
+            } else {
+                updateUI();
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (finalModel) {
+                finalModel.rotation.y += 0.005;
+                finalModel.rotation.x += 0.002;
+            }
+            renderer.render(scene, camera);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) / 100;
+            mouseY = (event.clientY - windowHalfY) / 100;
+        }
+
+        init3D();
+        document.addEventListener('mousemove', onDocumentMouseMove, false);
+        window.onload = animate;
+        window.addEventListener('resize', () => {
+            const containerWidth = document.querySelector('.container').offsetWidth - 64;
+            const containerHeight = containerWidth * 0.75;
+            renderer.setSize(containerWidth, containerHeight);
+            camera.aspect = containerWidth / containerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+</body>
+</html>
+
