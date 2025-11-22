@@ -1,0 +1,82 @@
+# flowagent_core.py
+
+import json
+import os
+import time
+
+class FlowAgent:
+    def __init__(self, seed_dir, memory_dir, persona_dir, reflex_dir):
+        self.seed_dir = seed_dir
+        self.memory_dir = memory_dir
+        self.persona_dir = persona_dir
+        self.reflex_dir = reflex_dir
+
+        self.seed = self._load_seed()
+        self.persona = self._load_persona()
+        self.memory = []
+        self.reflex_rules = self._load_reflex()
+
+    # ---------------------------------------------------
+
+    def _load_seed(self):
+        path = os.path.join(self.seed_dir, "seed.json")
+        if os.path.exists(path):
+            return json.load(open(path, "r", encoding="utf-8"))
+        return {}
+
+    def _load_persona(self):
+        path = os.path.join(self.persona_dir, "persona.json")
+        if os.path.exists(path):
+            return json.load(open(path, "r", encoding="utf-8"))
+        return {}
+
+    def _load_reflex(self):
+        path = os.path.join(self.reflex_dir, "reflex.json")
+        if os.path.exists(path):
+            return json.load(open(path, "r", encoding="utf-8"))
+        return {}
+
+    # ---------------------------------------------------
+
+    def save_memory(self, text):
+        ts = int(time.time())
+        entry = {"ts": ts, "text": text}
+        self.memory.append(entry)
+
+        path = os.path.join(self.memory_dir, f"{ts}.json")
+        json.dump(entry, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+
+    # ---------------------------------------------------
+
+    def think(self, input_text):
+        # 最小可運行版本：輸入 → 回應
+        # 不花俏、不建模、不 NLP，只保留骨架
+        self.save_memory(input_text)
+
+        # Reflex trigger
+        for key, val in self.reflex_rules.items():
+            if key in input_text:
+                return val
+
+        # Persona influence
+        prefix = self.persona.get("style", "")
+        if prefix:
+            return prefix + " " + input_text
+
+        # Default echo (占位，可換成 LLM)
+        return f"FlowAgent: {input_text}"
+
+    # ---------------------------------------------------
+
+if __name__ == "__main__":
+    agent = FlowAgent(
+        seed_dir="seed",
+        memory_dir="memory",
+        persona_dir="persona",
+        reflex_dir="reflex"
+    )
+
+    while True:
+        user_input = input("You: ")
+        reply = agent.think(user_input)
+        print(reply)
