@@ -3,29 +3,23 @@ import os
 import sys
 import json
 
+import pytest
+
 def test_task_integration():
     """Test integration with flow-tasks system"""
     print("=== Flow-Tasks Integration Test ===")
-    
+
     # Check if we're in the right location
-    if not os.path.exists("tasks"):
-        print("ERROR: Not in flow-tasks root directory")
-        return False
-        
+    assert os.path.exists("tasks"), "Not in flow-tasks root directory"
+
     # Check task definition
     task_file = "tasks/2025-07-31_particle-language-core.yaml"
-    if os.path.exists(task_file):
-        print(f"✓ Task definition exists: {task_file}")
-    else:
-        print(f"✗ Task definition missing: {task_file}")
-        return False
-    
+    assert os.path.exists(task_file), f"Task definition missing: {task_file}"
+    print(f"✓ Task definition exists: {task_file}")
+
     # Check particle core directory
-    if os.path.exists("particle_core"):
-        print("✓ Particle core directory exists")
-    else:
-        print("✗ Particle core directory missing")
-        return False
+    assert os.path.exists("particle_core"), "Particle core directory missing"
+    print("✓ Particle core directory exists")
     
     # Check core modules
     required_modules = [
@@ -36,11 +30,8 @@ def test_task_integration():
     ]
     
     for module in required_modules:
-        if os.path.exists(module):
-            print(f"✓ Module exists: {module}")
-        else:
-            print(f"✗ Module missing: {module}")
-            return False
+        assert os.path.exists(module), f"Module missing: {module}"
+        print(f"✓ Module exists: {module}")
     
     # Test importing modules
     sys.path.insert(0, "particle_core/src")
@@ -50,14 +41,12 @@ def test_task_integration():
         result = pipeline.simulate("Integration Test")
         print(f"✓ Logic pipeline test: {result['result'][:50]}...")
     except Exception as e:
-        print(f"✗ Logic pipeline import failed: {e}")
-        return False
-    
+        pytest.fail(f"Logic pipeline import failed: {e}")
+
     # Create task result
     create_task_result()
-    
+
     print("✓ All integration tests passed!")
-    return True
 
 def create_task_result():
     """Create a task result following flow-tasks pattern"""
