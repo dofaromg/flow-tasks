@@ -1,0 +1,330 @@
+取得 Croissant 元數據
+資料集檢視器會自動為 Hugging Face Hub 上的每個資料集產生Croissant格式 (JSON-LD) 的元資料。它會列出資料集的名稱、描述、URL 以及資料集的 Parquet 檔案分佈，包括列的元資料。所有可轉換為 Parquet 格式的資料集均可使用 Croissant 元資料。
+
+什麼是可頌？
+Croissant 是一種建立在schema.org之上的元資料格式，旨在描述用於機器學習的資料集，以幫助以程式設計方式對其進行索引、搜尋和載入。
+
+取得元數據
+本指南向您展示如何使用Hugging Face/croissant端點檢索與資料集相關的 Croissant 元資料。
+
+端點/croissant採用 URL 中的資料集名稱，例如對於ibm/duorc資料集：
+
+已複製
+導入請求
+標頭 = { “授權”：f“持有者{API_TOKEN} ” }
+API_URL = "https://huggingface.co/api/datasets/ibm/duorc/croissant" 
+def  query（）：
+    回應 = 請求.get（API_URL，標頭=標頭）
+    返回響應.json（）
+資料=查詢（）
+在底層，它使用https://datasets-server.huggingface.co/croissant-crumbs端點並透過 Hub 元資料豐富它。
+
+端點響應是一個JSON-LD 格式的回應，其中包含 Croissant 格式的元資料。例如，ibm/duorc資料集有兩個子集，ParaphraseRC和SelfRC（有關拆分和子集的更多詳細信息，請參閱列表拆分和子集指南）。元資料連結到相應的 Parquet 文件，並描述了以下六列的類型：plot_id、plot、title、question_id、question和no_answer：
+
+已複製
+{ 
+  “@context” ： { “@language 
+    ” ： “en” ，
+    “@vocab” ： “https://schema.org/” ，
+    “citeAs” ： “cr：citeAs” ，
+    “ column” ： “cr：column” ，
+    “conformsTo ” : “  dct ：conforms ” cr：coml / cro .. 
+    ：{ “@id” ：“cr：data” ，“@type” ：“@json” } ， “ dataBiases ” ： “cr：dataBiases ” ，“dataCollection” ：“ cr：dataCollection” ，“ dataType ” ：{ “@id” ：“ cr：dataType” ，@ type ” “http://purl.org/dc/terms/” ，“extract” ：“cr：extract” ，“field” ：“cr：field” ，“fileProperty” ：“cr：fileProperty” ，“fileObject” ：“cr ：fileObject” ，“ fileSet” ：“ cr:crSet” ，“sformat ” ：“ cr : “isLiveDataset” ：“cr：isLiveDataset” ，“jsonPath” ：“cr：jsonPath” ，“key” ：“cr：key” ，“ md5” ：“cr：md5” ，“ parentField” ：“cr：parentField ” ，“ minive pathson ” “cr：personalSensitiveInformation” ，“recordSet” ：“cr：recordSet” ，“references” ：“cr：references” ，“regex” ：“cr：regex” ，“重複” ：“cr：repeated” ，“替換” ：“cr：replace” ，“sc” ：“https://schema.org/” ，“分隔符” ：“cr：separator” ，“源” ：“cr：source” ，“ ield” ：“cr：sub 
+     
+       
+       
+    
+     
+     
+     
+       
+       
+    
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+    “transform” ： “cr：transform” 
+  } ，
+  “@type” ： “sc：Dataset” ，
+  “distribution” ： [ 
+    { 
+      “@type” ： “cr：FileObject” ，
+      “@id” ： “repo” ，
+      “name” ： “repo” ， “description” ： “Hugging Face” ， “name” git git” ， “ 
+      description ” ： “Hugging Face” gitUrl" git: "Hugging 儲存庫。
+      " https://huggingface.co/datasets/ibm/duorc/tree/refs%2Fconvert%2Fparquet" , " encodingFormat" : " git +https" , "sha256 " : " https://github.com/mlcommons/Fileissant/issues/80 " , " "parquet-files-for-config-ParaphraseRC" , "name" : "parquet-files-for-config-ParaphraseRC" , "description" : "由 Hugging Face轉換的底層 Parquet 檔案（請參閱：https://hugging.co/docs/dataset-viewer/parquet 檔案（請參閱：https : //hugging.co/docs/dataset-viewer/parquet檔案（請問, "encodingFormat" : "application/x-parquet" , "includes" : "ParaphraseRC/*/*.parquet" } , { " @type " : "cr:FileSet" , " @id" : "parquet-files-for - config-config- IlfRC . " "由Hugging Face轉換的底層 Parquet 檔案（請參閱：https://huggingface.co/docs/dataset-viewer/parquet）。" , “ containedIn” ：{ “ @id” ：“ repo ” } , “ encodingFormat ” : “ ：[ { “@type” ：“cr：RecordSet” ，“@id” ：“ParaphraseRC” ，“name” ：“ParaphraseRC” ，“description” ：“ibm/duorc - 'ParaphraseRC'子集\n\n附加資訊：\n- 3 個分割：訓練、驗證、測試\n- 1 個答案：” 列：n- 1 跳過測試\n- 1 個答案的列： ” 
+       
+       
+    
+    
+       
+       
+       
+       
+       
+         
+      
+       
+       
+    
+    
+       
+       
+       
+       
+       
+         
+      
+       
+       
+    
+  
+   
+    
+       
+       
+       
+       
+       [ 
+        { 
+          “@type” ： “cr：Field” ，
+          “@id” ： “ParaphraseRC/plot_id” ，
+          “name” ： “ParaphraseRC/plot_id” ，
+          “description” ： “來自 Hugging Face 鑲木地板檔案的列‘plot_id’。” ，
+          Set Set 」： ” 地板」 ：「」 地板檔案」 ： Set 」。 」，
+          Set 」 ： 「」: 地板檔案」：「Set 」。」: “parquet-files-for-config-ParaphraseRC” } ，“extract” ：{ “column” ：“plot_id” } } } ，{ “ @type” ：“cr：Field” ，“@id” ：“ParaphraseRC/plot” ，“cr：Field” ， “@id” ：“ParaphraseRC/plot” ，“nname” RC 3 "鑲木地板檔案的列‘ plot ’ 。​​​​​​​​​​​​​​​​​​​​​​​​ "ParaphraseRC/title" , "name" : "ParaphraseRC/title" , "description" : "來自 Hugging Face parquet 文件的列‘title’。" , "dataType" : "sc:Text" , "source" : { "fileSet" : { "@id" : "parquet-files-for-config-ParaphraseRC" } , "extract" : { "column" : "title" } } } , { "@type" : "cr:Field" ,"@id" : "ParaphraseRC/question_id" , "name" : "ParaphraseRC/question_id" , "description" : "來自 Hugging Face parquet 檔案的‘question_id’欄位。" , "dataType" : "sc:Text" , "source" : { "SetSet" : "source" : { 
+             
+               
+            
+             
+               
+            
+          
+        
+        
+           
+           
+           
+           
+           
+           
+             
+               
+            
+             
+               
+            
+          
+        
+        
+           
+           
+           
+           
+           
+           
+             
+               
+            
+             
+               
+            
+          
+        
+        
+           
+           
+           
+           
+           
+           
+             
+              "@id" :  "parquet-files-for-config-ParaphraseRC" 
+            } , 
+            "extract" :  { 
+              "column" :  "question_id" 
+            } 
+          } 
+        } , 
+        { 
+          "@type" :  "cr:Field" , 
+          "@id" :  "ParaphraseRC/question" : "cr:Field" , "@id" 
+          : "ParaphraseRC/question" questname" 2: " Parapion" :  "ParaphraseRC/question " questname" : "Parconn: parquet檔案的‘ question ’列。​​​​​​​​​​​​​​​​​​​​​​​​​​ "ParaphraseRC/no_answer" , "name" : "ParaphraseRC/no_answer" , "description" : "來自 Hugging Face parquet檔案的欄位‘no_answer’ 。 " , "dataType" : "sc:Boolean" , "source" : { "ParfileSet : "dataType " : "sc: Boolean" , "source" : { "extract" : { "column" : "no_answer" } } } ] } , { "@type" : "cr:RecordSet" , "@id" : "SelfRC" , "name" : "SelfRC" , "description" : "ibm/duorc - 'name" : "SelfRC" , "description" : "ibm/duorc - 'nlfRC' 3%\n; 1 個跳過的欄位：答案" , "field" : [ { "@type" : "cr:Field" , "@id" :"SelfRC/plot_id" , "name" : "SelfRC/plot_id" , "description" : "來自 Hugging Face 拼花文件的列‘plot_id’。" , "dataType" : "sc:Text" , "source" : { "fileSet" : { "@id" :
+           
+           
+           
+             
+               
+            
+             
+               
+            
+          
+        
+        
+           
+           
+           
+           
+           
+           
+             
+               
+            
+             
+               
+            
+          
+        
+      
+    
+    
+       
+       
+       
+       
+       
+        
+           
+           
+           
+           
+           
+           
+             
+               “parquet-files-for-config-SelfRC” 
+            } ，
+            “extract” ： { 
+              “column” ： “plot_id” 
+            } 
+          } 
+        } ，
+        { 
+          “@type” ： “cr：Field” ，
+          “@id” ：“  SelfRC / plot” ，“ 
+          3name” ：“Self / plot ” ：parquet檔案的欄位' plot ' 。​​​​​​​​​​​​​​​​​​​​​​​​​ "SelfRC/title" , "name" : "SelfRC/title" , "description" : "來自 Hugging Face parquet檔案的‘title’欄。" , "dataType" : "sc:Text" , "source" : { "fileSet" : { "@id" : "sc:Text" , "source" : { "fileSet" : { "@id " : " par-t - filen "title" } } } , { "@type" : "cr:Field" , "@id" : "SelfRC/question_id" , "name" : " SelfRC/question_id " , "description" : "來自 Hugging Face parquet 檔案的欄位‘ question_id’ , " datadata " : " data : "@id" : "parquet-files-for-config-SelfRC" } , "extract" : { "column" :"question_id" } } } , { "@type" : "cr:Field" , "@id" : "SelfRC/question" , "name" : "SelfRC/question" , "description" : "來自 Hugging Face parquet 檔案的‘question’欄位。" ,’列。" 
+           
+           
+           
+             
+               
+            
+             
+               
+            
+          
+        
+        
+           
+           
+           
+           
+           
+           
+             
+               
+            
+             
+               
+            
+          
+        
+        
+           
+           
+           
+           
+           
+           
+             
+               
+            
+             
+               
+            
+          
+        
+        
+           
+           
+           
+           
+          “dataType” ： “sc：Text” ，
+          “source” ： { 
+            “fileSet” ： { 
+              “@id” ： “parquet-files-for-config-SelfRC” 
+            } ，
+            “extract” ： { 
+              “column” ： “question” 
+            } 
+          } 
+        } ，
+        { 
+          “@type” ： “cr：Field” ，
+          “cr：Field” ， “cr：Fiel_RC” cr ：
+          Field ” ， “SelfRC/no_answer” ，
+          “description” ： “來自Hugging Face parquet檔案的欄位‘no_answer’。” , " 
+          dataType" : "  sc :Boolean" , 
+          "source" :  { 
+            "fileSet" :  { 
+              " @id" : "  parquet - s-s - for-config 
+            - Setract " ] } ] , "name" : "duorc" , "description" : "\n\t\n\t\n\t\n\t\n\t\n\t\tduorc 資料集卡\n\t\n\n\n\t\n\t\n\t\RCn\t\nt\in資料集是一個英語資料集，其中包含由眾包 AMT 工作者收集的關於維基百科和 IMDb 電影情節的問題和答案。包含根據維基百科電影情節編寫的問題…請參閱資料集頁面的完整描述：https://huggingface.co/datasets/ibm/duorc。 “” 、“alternateName” ：[ “ibm/duorc” 、“DuoRC” ] 、“creator” ：{ “@type” : " Organation " : "url " " . " "https://huggingface.co/ibm" } 、“keywords” ：[ “question-answering” 、“text2text-generation”] 。“abstractive-qa” 、“extractive-qa” 、“crowdsourced” 、“crowdsourced” 、“單語” 、“100K<n<1M” 、“10K<n<100K” 、“original” 、“English” 、“mit”
+             
+               
+            
+          
+        
+      
+    
+  
+   
+   
+   
+    
+    
+  
+   
+     
+     
+     
+  
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    , 
+    " Croissant" , 
+    "arxiv:1804.07927" , 
+    "🇺🇸 地區: 美國" 
+  ] , " 
+  license" :  "https://choosealicense.com/licenses/mit/" , 
+  "sameAs" :  "https://duorc.github.io/ " "https://huggingface.co/datasets/ibm/duorc" }

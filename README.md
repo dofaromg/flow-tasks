@@ -1,96 +1,70 @@
-# flow-tasks
+# FlowAgent GKE Starter (GitOps + CI/CD)
 
-FlowAgent 專用任務系統：自動接收、解析與寫程式的任務中心
+這個壓縮包是「一次搞定」的部署骨架。你把整包丟到 GitHub（或上傳到你的空間）即可：
 
-## 🎯 系統概述
+## 部署空間位置（你會用到的介面）
+- **GKE 叢集控制台**：`https://console.cloud.google.com/kubernetes/list?project=flowmemorysync`
+- **Artifact Registry**（容器倉庫）：`https://console.cloud.google.com/artifacts?project=flowmemorysync&supportedpurview=project`
+- **Cloud Shell**：`https://console.cloud.google.com/?cloudshell=true&project=flowmemorysync`
+- **（可選）Cloud Run**：`https://console.cloud.google.com/run?project=flowmemorysync`
+- **（可選）備份 GCS Bucket**：`gs://flowagent-backup-flowmemorysync`
 
-FlowAgent task system 是一個完整的任務自動化系統，能夠：
-- 自動接收和解析 YAML 任務定義
-- 生成和驗證程式碼實作
-- 提供 API 服務和邏輯運算功能
+> 把 `flowmemorysync` 換成你的（例如 `flowmemorysync`）。`dofaromg/----2` 換成你的 repo URL。
 
-## 🏗️ 系統架構
+---
 
-### 核心組件
-1. **Task Processor** (`process_tasks.py`) - 任務處理與驗證系統
-2. **Flask API** (`flow_code/hello_api.py`) - Hello World API 服務
-3. **Particle Core** (`particle_core/`) - MRLiou 粒子語言核心系統
-4. **Integration Tests** - 完整的測試套件
+## 路線 A：GitOps（Argo CD 拉）
+1. 在叢集安裝 Argo CD：
+   ```bash
+   kubectl create ns argocd || true
+   kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+   ```
+2. 將本 repo push 到 GitHub。
+3. 套用 `argocd/app.yaml`（把 repo URL 改成你的）：
+   ```bash
+   kubectl apply -f argocd/app.yaml
+   ```
+4. Argo 會自動把 `cluster/overlays/prod` 底下的所有資源佈署到命名空間 `flowagent`。
 
-### 已實作任務
-- ✅ **hello-world-api**: Flask API 輸出 "你好，世界"
-- ✅ **particle-language-core**: 完整的粒子語言核心系統
+## 路線 B：GitHub Actions（推進叢集）
+- 設定 GitHub Secrets：`GCP_WIF_PROVIDER`、`GCP_DEPLOYER_SA`。
+- 推 commit 後，`ci-build.yml` 會 build/push 映像，`cd-deploy.yml` 會 `kustomize build` 並 `kubectl apply`。
 
-## 🚀 使用方式
+---
 
-### 1. 安裝依賴
+## 必改的參數
+- 容器映像位址：`asia-east1-docker.pkg.dev/flowmemorysync/flowagent/{module-a,orchestrator}:latest`
+- `argocd/app.yaml` 的 repo URL
+- 叢集名稱（預設 `modular-cluster`）、區域（預設 `asia-east1-a`）
+
+---
+
+## 一鍵初始化（Cloud Shell）
+> 將 `flowmemorysync`、`YOUR_GH_REPO` 改成你的。
+
 ```bash
-pip install -r requirements.txt
+export PROJECT_ID=flowmemorysync
+export REGION=asia-east1
+export ZONE=asia-east1-a
+export NS=flowagent
+
+gcloud config set project $PROJECT_ID
+gcloud services enable container.googleapis.com artifactregistry.googleapis.com
+
+gcloud container clusters get-credentials modular-cluster --zone $ZONE --project $PROJECT_ID
+
+kubectl create namespace $NS || true
+kubectl create namespace monitoring || true
+kubectl apply -n monitoring -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/main/bundle.yaml
+kubectl apply -f https://github.com/kedacore/keda/releases/latest/download/keda-2.13.1.yaml
 ```
 
-### 2. 執行任務驗證
-```bash
-python process_tasks.py
-```
+---
 
-### 3. 啟動 Flask API
-```bash
-python flow_code/hello_api.py
-```
+## 目錄說明
+- `apps/*`：Mongo、模組、監控、KEDA 等 YAML
+- `cluster/overlays/prod/kustomization.yaml`：列出所有資源
+- `argocd/app.yaml`：ArgoCD Application（指向你的 GitHub repo）
+- `.github/workflows/*`：CI（build/push 映像）與 CD（套用 K8s）
+- `scripts/oneclick_gke_init.sh`：Cloud Shell 一鍵初始化腳本
 
-### 4. 測試 API 端點
-```bash
-# 主要端點 - 返回中文問候
-curl http://localhost:5000/
-
-# 健康檢查
-curl http://localhost:5000/health
-
-# API 資訊
-curl http://localhost:5000/info
-```
-
-### 5. 執行完整測試
-```bash
-python test_comprehensive.py
-```
-
-## 📋 API 端點
-
-| 端點 | 功能 | 回應 |
-|------|------|------|
-| `/` | 主要問候訊息 | `{"message": "你好，世界"}` |
-| `/health` | 健康檢查 | `{"status": "healthy", "service": "hello-world-api"}` |
-| `/info` | API 資訊 | 任務詳細資訊 |
-
-## 🧪 測試結果
-
-所有系統組件都通過測試：
-- ✅ 任務處理器正常運作
-- ✅ Flask API 正確回應中文訊息
-- ✅ 粒子核心系統完整功能
-- ✅ 系統整合測試通過
-
-## 📁 專案結構
-
-```
-flow-tasks/
-├── flow_code/              # 生成的程式碼
-│   └── hello_api.py        # Flask Hello World API
-├── particle_core/          # MRLiou 粒子語言核心
-│   ├── src/               # 核心模組
-│   ├── config/            # 配置檔案
-│   └── examples/          # 範例檔案
-├── tasks/                  # 任務定義
-│   ├── 2025-06-29_hello-world-api.yaml
-│   ├── 2025-07-31_particle-language-core.yaml
-│   └── results/           # 任務執行結果
-├── process_tasks.py        # 任務處理器
-├── test_comprehensive.py   # 完整測試套件
-└── test_integration.py     # 整合測試
-
-```
-
-## 🔧 開發狀態
-
-系統已完全實作並通過所有測試。解決了之前的"unexpected behavior"問題，現在能正確處理任務並生成功能完整的程式碼。
