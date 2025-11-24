@@ -29,6 +29,7 @@ kubectl apply -f argocd/app.yaml
 - [快速參考](QUICKSTART.md)
 - [架構圖表](ARCHITECTURE.md)
 - [應用程式說明](apps/README.md)
+- [分支整合優化指南](BRANCH_INTEGRATION_GUIDE.md) ⭐ 新增
 
 ---
 
@@ -62,6 +63,33 @@ python src/memory_archive_seed.py interactive
 - [本地執行說明](particle_core/docs/本地執行說明.md)
 - [記憶封存種子說明](particle_core/docs/記憶封存種子說明.md)
 - [記憶封存種子系統更新說明](記憶封存種子系統更新說明.md)
+
+---
+
+## 🔄 分支整合優化 (Branch Integration Optimization)
+
+本專案已實施完整的分支整合檢查機制，確保程式碼品質和部署穩定性：
+
+### 自動化檢查 (Automated Checks)
+- ✅ **PR 驗證工作流程**: 自動測試、語法檢查、K8s 配置驗證
+- ✅ **多環境分支追蹤**: Production (main) / Staging (develop)
+- ✅ **本地驗證腳本**: 建立 PR 前的預先檢查
+
+### 快速驗證 (Quick Validation)
+```bash
+# 在建立 PR 前執行本地驗證
+bash scripts/validate_branch_integration.sh
+```
+
+### 工作流程 (Workflow)
+1. **建立功能分支** (Create feature branch)
+2. **開發和測試** (Develop and test)
+3. **本地驗證** (Local validation) - 使用驗證腳本
+4. **建立 Pull Request** (Create PR)
+5. **自動化檢查** (Automated checks) - CI/CD 流程
+6. **審核和合併** (Review and merge)
+
+詳細指南請參閱: [分支整合優化指南](BRANCH_INTEGRATION_GUIDE.md)
 
 ---
 
