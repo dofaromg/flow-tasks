@@ -1,0 +1,11 @@
+{
+  "task_id": "hello-world-api",
+  "validation_time": "2025-10-05T11:00:09.217577",
+  "status": "failed",
+  "checks": [
+    "✓ Target file exists: flow_code/hello_api.py"
+  ],
+  "errors": [
+    "Python import failed: No module named 'flask'"
+  ]
+}
