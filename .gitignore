@@ -208,3 +208,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Particle Core - Dynamic test output files
+# Keep static examples, exclude dynamically generated ones
+examples/logic_result_*.json
+particle_core/examples/logic_result_*.json
+test_output/
