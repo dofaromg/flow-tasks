@@ -35,6 +35,14 @@ kubectl apply -f argocd/app.yaml
 
 這個壓縮包是「一次搞定」的部署骨架。你把整包丟到 GitHub（或上傳到你的空間）即可：
 
+## 🧩 解壓縮 DLL
+
+新增可重複使用的 .NET 8 解壓縮 DLL（`dll/DecompressionUtility`）：
+- 以 `DecompressionHelper.ExtractZip` 將 ZIP 檔案解壓到指定資料夾，可選擇是否覆寫。
+- 以 `DecompressionHelper.ListEntries` 先行列出壓縮檔內容，避免盲目解壓。
+- 透過 `dotnet build` 直接產出 `DecompressionUtility.dll`，方便在其他模組或自動化腳本中載入使用。
+- 透過 `bash scripts/publish_decompression_dll.sh` 打包成 ZIP，方便上傳 GitHub Release 或內部 Artifact Registry。
+
 ## 🆕 粒子語言核心系統 (Particle Language Core)
 
 本專案包含完整的 **MRLiou 粒子語言核心系統**，提供：
