@@ -51,6 +51,7 @@ kubectl apply -f argocd/app.yaml
 - **記憶封存種子系統**: 完整的記憶快照、還原與管理功能
 - **邏輯壓縮**: .flpkg 格式支援
 - **CLI 互動介面**: 豐富的命令列工具
+- **AI 人格套件**: 人格連結器與通用 ZIP 壓縮/解壓縮（無檔案名稱限制）
 
 ### 快速開始
 
@@ -65,11 +66,15 @@ python src/cli_runner.py
 
 # 記憶封存系統
 python src/memory_archive_seed.py interactive
+
+# AI 人格套件
+python src/ai_persona_toolkit.py
 ```
 
 詳細說明請參閱：
 - [本地執行說明](particle_core/docs/本地執行說明.md)
 - [記憶封存種子說明](particle_core/docs/記憶封存種子說明.md)
+- [AI 人格套件使用說明](particle_core/docs/ai_persona_toolkit_guide.md)
 - [記憶封存種子系統更新說明](記憶封存種子系統更新說明.md)
 
 ---
