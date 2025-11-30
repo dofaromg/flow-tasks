@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
 - namespace.yaml
 
-commonLabels:
-  managed-by: kustomize
-  project: flowagent
+labels:
+- pairs:
+    managed-by: kustomize
+    project: flowagent
