@@ -169,7 +169,7 @@ for persona in toolkit.connector.list_personas():
 
 ## 版本歷史
 
-- **v1.0.0** (2024): 初始版本
+- **v1.0.0** (2025-11): 初始版本
   - 人格連結器
   - 通用 ZIP 壓縮/解壓縮
   - Base64 支援

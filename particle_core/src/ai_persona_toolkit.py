@@ -350,8 +350,8 @@ class UniversalZipHandler:
         self,
         source: Union[str, List[str], Dict[str, bytes]],
         output_path: Optional[str] = None,
-        compression_level: int = zipfile.ZIP_DEFLATED,
-        password: Optional[str] = None
+        compression: int = zipfile.ZIP_DEFLATED,
+        compresslevel: int = 9
     ) -> Dict[str, Any]:
         """
         壓縮檔案或資料為 ZIP
@@ -359,8 +359,8 @@ class UniversalZipHandler:
         Args:
             source: 來源（檔案路徑、路徑列表、或 {檔名: 資料} 字典）
             output_path: 輸出 ZIP 路徑
-            compression_level: 壓縮等級
-            password: 密碼（選填，注意：標準 zipfile 不支援加密寫入）
+            compression: 壓縮方法 (ZIP_STORED, ZIP_DEFLATED, ZIP_BZIP2, ZIP_LZMA)
+            compresslevel: 壓縮等級 (0-9，僅適用於 ZIP_DEFLATED 和 ZIP_BZIP2)
             
         Returns:
             壓縮結果
@@ -371,7 +371,7 @@ class UniversalZipHandler:
         files_added = []
         total_size = 0
         
-        with zipfile.ZipFile(output_path, 'w', compression_level) as zf:
+        with zipfile.ZipFile(output_path, 'w', compression=compression, compresslevel=compresslevel) as zf:
             if isinstance(source, dict):
                 # 直接從記憶體資料壓縮
                 for filename, data in source.items():
@@ -446,8 +446,15 @@ class UniversalZipHandler:
                     continue
                 
                 # 安全性檢查：防止路徑穿越攻擊
+                # 使用 os.path.commonpath 確保解壓檔案保持在目標目錄內
                 member_path = os.path.normpath(member)
                 if member_path.startswith('..') or os.path.isabs(member_path):
+                    skipped_files.append(member)
+                    continue
+                
+                # 額外安全檢查：確認最終路徑在目標目錄內
+                final_path = os.path.normpath(os.path.join(output_dir, member_path))
+                if not final_path.startswith(os.path.normpath(output_dir)):
                     skipped_files.append(member)
                     continue
                 
@@ -675,7 +682,7 @@ class AIPersonaToolkit:
     
     def quick_compress(
         self,
-        files: Union[str, List[str], Dict[str, str]],
+        files: Union[str, List[str], Dict[str, Union[str, bytes]]],
         output_name: Optional[str] = None
     ) -> str:
         """
