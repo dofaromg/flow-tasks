@@ -26,13 +26,22 @@ class ParticleRegressor:
     def __init__(self):
         """初始化粒子回溯器"""
         self.version = "v1"
-        self.particle_id = "MrLioū.Particle.Mrlword.v1"
+        self.particle_id = f"MrLioū.Particle.Mrlword.{self.version}"
         
         # 標準邏輯管線步驟（正向）
         self.forward_steps = ["structure", "mark", "flow", "recurse", "store"]
         
         # 逆向邏輯管線步驟（回溯）
         self.backward_steps = ["store", "recurse", "flow", "mark", "structure"]
+        
+        # 逆向符號映射（避免首字母碰撞）
+        self.regress_symbol_map = {
+            "store": "STR",
+            "recurse": "RCR",
+            "flow": "FLR",
+            "mark": "MKR",
+            "structure": "STR_R"
+        }
         
         # 步驟解釋（回溯模式）
         self.backward_explanations = {
@@ -175,7 +184,7 @@ class ParticleRegressor:
         
         # 正向追蹤 (Growth)
         forward_path = []
-        current = states[0] if states else 1.0
+        current = states[0]
         forward_path.append({"step": 0, "value": current, "operation": "initial"})
         
         for i, (n, eta) in enumerate(zip(n_factors, eta_factors)):
@@ -203,12 +212,13 @@ class ParticleRegressor:
                 "eta_factor": eta
             })
         
+        start_value = states[0]
         return {
             "particle_id": self.particle_id,
             "forward_path": forward_path,
             "backward_path": backward_path,
-            "start_value": states[0] if states else 1.0,
-            "verified": abs(backward_path[-1]["value"] - (states[0] if states else 1.0)) < 1e-10
+            "start_value": start_value,
+            "verified": abs(backward_path[-1]["value"] - start_value) < 1e-10
         }
     
     def compress_regress_chain(self) -> str:
@@ -218,10 +228,10 @@ class ParticleRegressor:
         Returns:
             壓縮後的邏輯鏈字串
         """
-        # 建構巢狀結構（逆向）
+        # 建構巢狀結構（逆向），使用定義的符號映射避免碰撞
         nested = "X"
         for step in self.backward_steps:
-            symbol = step[0].upper() + "R"  # 加上 R 表示 Regress
+            symbol = self.regress_symbol_map.get(step, step[0].upper() + "R")
             nested = f"{symbol}({nested})"
         
         return f"REGRESS_SEED(X) = {nested}"
