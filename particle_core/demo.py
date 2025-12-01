@@ -13,6 +13,7 @@ try:
     from rebuild_fn import FunctionRestorer
     from logic_transformer import LogicTransformer
     from memory_archive_seed import MemoryArchiveSeed
+    from particle_regressor import ParticleRegressor
 except ImportError as e:
     print(f"Import error: {e}")
     sys.exit(1)
@@ -98,7 +99,29 @@ def demo_basic_functionality():
     compressed_seed = archive.compress_seed("demo_memory_seed")
     print(f"   壓縮格式: {compressed_seed}")
     
+    # 6. 粒子回溯器示範 (Mrlword.v1)
+    print("\n6. 粒子回溯器功能 (MrLioū.Particle.Mrlword.v1):")
+    regressor = ParticleRegressor()
+    
+    # 回歸計算
+    p_k = 100.0
+    n, eta = 2.0, 0.5
+    p_k_minus_1 = regressor.regress_state(p_k, n, eta)
+    print(f"   回歸計算: P_{{k}} = {p_k} → P_{{k-1}} = {p_k_minus_1}")
+    
+    # Growth/Regress 互補驗證
+    initial = 50.0
+    grown = regressor.growth_state(initial, n, eta)
+    regressed = regressor.regress_state(grown, n, eta)
+    print(f"   互補驗證: {initial} → Growth → {grown} → Regress → {regressed}")
+    
+    # 逆向邏輯鏈
+    regress_sim = regressor.simulate("記憶資料")
+    print(f"   逆向步驟: {' → '.join(regress_sim['backward_steps'])}")
+    print(f"   壓縮格式: {regress_sim['compressed']}")
+    
     print("\n=== Demo 完成 ===")
+
 
 def run_performance_test():
     """執行效能測試"""
