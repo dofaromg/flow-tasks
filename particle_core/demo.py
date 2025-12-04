@@ -14,6 +14,7 @@ try:
     from logic_transformer import LogicTransformer
     from memory_archive_seed import MemoryArchiveSeed
     from particle_regressor import ParticleRegressor
+    from fluin_dict_agent import FluinDictAgent
 except ImportError as e:
     print(f"Import error: {e}")
     sys.exit(1)
@@ -119,6 +120,32 @@ def demo_basic_functionality():
     regress_sim = regressor.simulate("記憶資料")
     print(f"   逆向步驟: {' → '.join(regress_sim['backward_steps'])}")
     print(f"   壓縮格式: {regress_sim['compressed']}")
+    
+    # 7. Fluin Dict Agent 示範 (DictSeed.0003)
+    print("\n7. Fluin Dict Agent 字典種子記憶快照 (DictSeed.0003):")
+    dict_agent = FluinDictAgent()
+    
+    # Echo/Jump 融合
+    dict_agent.create_echo("demo_echo", "粒子記憶測試")
+    dict_agent.set_jump_point("start", 0)
+    echo_result = dict_agent.trigger_echo("demo_echo")
+    print(f"   Echo 觸發: {echo_result['content']} ({echo_result['symbol']})")
+    
+    # 字典種子
+    seed_result = dict_agent.create_dict_seed(
+        "demo_dict_seed",
+        {"key": "value", "data": [1, 2, 3]},
+        {"purpose": "demo"}
+    )
+    print(f"   字典種子: {seed_result['seed_id']} (Core ⟁{seed_result['core_index']})")
+    
+    # 人格註冊與展開
+    dict_agent.register_persona("demo_persona", "Demo Agent", ["helpful", "precise"])
+    persona = dict_agent.expand_persona("demo_persona")
+    print(f"   人格展開: {persona['persona']['name']} ({persona['symbol']})")
+    
+    # 粒子符號輸出
+    print(f"   狀態符號:\n{dict_agent.compress_to_particle_notation()}")
     
     print("\n=== Demo 完成 ===")
 

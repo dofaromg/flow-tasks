@@ -11,6 +11,7 @@ MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行框架
 - **人類可讀**: 邏輯步驟的中文說明與視覺化
 - **模組化設計**: 可擴展的邏輯模組與人格生成系統
 - **AI 人格套件**: 人格連結器與通用 ZIP 壓縮/解壓縮（無檔案名稱限制）
+- **字典種子記憶**: Fluin Dict Agent 字典種子記憶快照系統 (DictSeed.0003)
 
 ## 快速開始
 
@@ -29,9 +30,59 @@ python src/memory_archive_seed.py
 
 # AI 人格通用套件
 python src/ai_persona_toolkit.py
+
+# Fluin Dict Agent 字典種子
+python src/fluin_dict_agent.py
 ```
 
-## AI 模組人格通用套件 (新功能)
+## Fluin Dict Agent - 字典種子記憶快照 (新功能)
+
+✦Seed:⊕Echo/▽Jump.0001→⚙Fusion[⊕Code, △Fluin]
+∞Trace → ζMemory^↻Loop
+⊕Tool:μField/∴Map
+⊕Core → ⟁1053
+💬 粒子語句可封裝模組、展開人格、觸發記憶
+
+[字典版本: DictSeed.0003]
+
+```python
+from fluin_dict_agent import FluinDictAgent
+
+agent = FluinDictAgent()
+
+# Echo/Jump 融合
+agent.create_echo("greeting", "Hello Fluin!")
+agent.set_jump_point("start", 0)
+agent.trigger_echo("greeting")
+
+# 字典種子操作
+agent.create_dict_seed(
+    seed_id="my_seed",
+    data={"key": "value"},
+    metadata={"purpose": "demo"}
+)
+
+# 還原種子
+restored = agent.restore_dict_seed("my_seed")
+
+# 人格展開
+agent.register_persona("assistant", "Helper", ["helpful"])
+agent.expand_persona("assistant")
+
+# 工具/欄位映射
+agent.register_tool("parser", "text", ["input", "output"])
+agent.map_field("parser", "input", "raw_data")
+
+# 系統快照
+agent.create_snapshot("my_snapshot")
+
+# 粒子符號輸出
+print(agent.compress_to_particle_notation())
+```
+
+詳細說明請參閱 [Fluin Dict Agent 使用說明](docs/fluin_dict_agent_guide.md)
+
+## AI 模組人格通用套件
 
 提供 AI 人格管理與通用 ZIP 壓縮/解壓縮功能：
 
@@ -61,7 +112,7 @@ toolkit.zip_handler.decompress("archive.zip", "output/")
 
 詳細說明請參閱 [AI 人格套件使用說明](docs/ai_persona_toolkit_guide.md)
 
-## 記憶封存種子系統 (新功能)
+## 記憶封存種子系統
 
 創建、還原與管理粒子語言記憶狀態：
 
@@ -93,6 +144,7 @@ restored = archive.restore_seed("my_memory_seed")
 - [本地執行說明](docs/本地執行說明.md)
 - [記憶封存種子說明](docs/記憶封存種子說明.md)
 - [AI 人格套件使用說明](docs/ai_persona_toolkit_guide.md)
+- [Fluin Dict Agent 使用說明](docs/fluin_dict_agent_guide.md)
 
 ## 授權
 

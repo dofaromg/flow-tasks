@@ -6,8 +6,11 @@ __pycache__/
 
 # Memory seeds and exports
 memory_seeds/
+dict_seeds/
 *_export.json
 *.mseed.json
+*.dseed.json
+*.snapshot.json
 
 # Test outputs
 test_output/
