@@ -495,14 +495,18 @@ class FluinDictAgent:
         """
         seeds = []
         for seed_file in self.storage_path.glob("*.dseed.json"):
-            with open(seed_file, 'r', encoding='utf-8') as f:
-                seed = json.load(f)
-                seeds.append({
-                    "seed_id": seed["seed_id"],
-                    "version": seed["version"],
-                    "created_at": seed["created_at"],
-                    "file": str(seed_file)
-                })
+            try:
+                with open(seed_file, 'r', encoding='utf-8') as f:
+                    seed = json.load(f)
+                    seeds.append({
+                        "seed_id": seed["seed_id"],
+                        "version": seed["version"],
+                        "created_at": seed["created_at"],
+                        "file": str(seed_file)
+                    })
+            except (json.JSONDecodeError, KeyError, IOError) as e:
+                # Skip corrupted or invalid seed files
+                continue
         return sorted(seeds, key=lambda x: x["created_at"], reverse=True)
     
     # ========== Particle Module Encapsulation (粒子語句可封裝模組) ==========
@@ -728,11 +732,15 @@ class FluinDictAgent:
             "personas": len(self.persona_modules),
             "triggers": len(self.memory_triggers),
             "state": {
-                "memory_trace": self.memory_trace.copy(),
+                "memory_trace": copy.deepcopy(self.memory_trace),
                 "echo_registry": copy.deepcopy(self.echo_registry),
-                "jump_points": self.jump_points.copy(),
+                "jump_points": copy.deepcopy(self.jump_points),
                 "tool_field_map": copy.deepcopy(self.tool_field_map),
-                "persona_modules": copy.deepcopy(self.persona_modules)
+                "persona_modules": copy.deepcopy(self.persona_modules),
+                "memory_triggers_info": {
+                    tid: {"condition": t["condition"], "registered_at": t["registered_at"]}
+                    for tid, t in self.memory_triggers.items()
+                }
             }
         }
         
@@ -763,6 +771,10 @@ class FluinDictAgent:
         Restore system from a snapshot
         從快照還原系統
         
+        Note: Memory triggers (callable functions) cannot be restored from
+        snapshots as they are not serializable. Only trigger metadata is
+        preserved in the snapshot for reference.
+        
         Args:
             snapshot_id: Snapshot identifier
             
@@ -788,6 +800,8 @@ class FluinDictAgent:
         self.jump_points = state["jump_points"]
         self.tool_field_map = state["tool_field_map"]
         self.persona_modules = state["persona_modules"]
+        # Note: memory_triggers contain callable functions and cannot be restored
+        # from serialized snapshots. Trigger metadata is preserved in snapshot for reference.
         
         return {
             "success": True,
