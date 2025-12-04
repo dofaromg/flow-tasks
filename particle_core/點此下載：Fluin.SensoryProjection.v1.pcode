@@ -1,0 +1,45 @@
+
+# Fluin.SensoryProjection.v1.pcode
+# 語素感官對應規則定義檔
+
+# 語素 𓊍-gentle.fx → 感官投影
+[𓊍-gentle.fx]
+type: adjective
+visual: soft-blue
+audio: 220Hz-sine
+tactile: feather-pressure
+emotion: calm, affectionate
+
+# 語素 𓊍-dangerous.fx → 感官投影
+[𓊍-dangerous.fx]
+type: adjective
+visual: red-pulse
+audio: 480Hz-saw
+tactile: sharp-static
+emotion: fear, alert
+
+# 語素 𓊍-beautiful.fx → 感官投影
+[𓊍-beautiful.fx]
+type: adjective
+visual: golden-glow
+audio: harmonic-triad
+tactile: smooth-warm
+emotion: awe, admiration
+
+# 語素 𓊍-gloomy.fx → 感官投影
+[𓊍-gloomy.fx]
+type: adjective
+visual: gray-fog
+audio: low-hum
+tactile: cold-damp
+emotion: sadness, solitude
+
+# 語素 𓊍-spacious.fx → 感官投影
+[𓊍-spacious.fx]
+type: adjective
+visual: wide-light
+audio: reverb-soft
+tactile: open-air
+emotion: clarity, ease
+
+# 備註：每個形容詞語素對應一組感官向量，用於視覺化語場共振或轉譯成多模態輸出。
