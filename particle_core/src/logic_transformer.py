@@ -29,11 +29,11 @@ class LogicTransformer:
             "debug": ["structure", "mark", "debug", "flow", "recurse", "store"]
         }
     
-    def compress_to_symbols(self, fn_list: List[str]) -> str:
+    def compress_to_symbols(self, function_list: List[str]) -> str:
         """壓縮函數列表為符號表示"""
         symbols = []
-        for fn in fn_list:
-            symbol = self.compress_map.get(fn, fn[0].upper())
+        for function_name in function_list:
+            symbol = self.compress_map.get(function_name, function_name[0].upper())
             symbols.append(symbol)
         return "(" + "→".join(symbols) + ")"
     
@@ -50,21 +50,21 @@ class LogicTransformer:
         
         return expanded
     
-    def compress_to_flpkg(self, fn_list: List[str], compact: bool = False) -> str:
+    def compress_to_flpkg(self, function_list: List[str], compact: bool = False) -> str:
         """壓縮函數鏈為 .flpkg 形式"""
         if compact:
             # 緊湊模式
-            return self.compress_to_symbols(fn_list)
+            return self.compress_to_symbols(function_list)
         
         # 標準模式
-        if fn_list == self.transformation_rules["standard"]:
+        if function_list == self.transformation_rules["standard"]:
             return "SEED(X) = ST(R(F(M(S(X)))))"
         
         # 動態建構
-        if len(fn_list) > 0:
+        if len(function_list) > 0:
             nested = "X"
-            for fn in fn_list:
-                symbol = self.compress_map.get(fn, fn[0].upper())
+            for function_name in function_list:
+                symbol = self.compress_map.get(function_name, function_name[0].upper())
                 nested = f"{symbol}({nested})"
             return f"CUSTOM_SEED(X) = {nested}"
         
@@ -102,20 +102,20 @@ class LogicTransformer:
         """轉換為預設規則"""
         return self.transformation_rules.get(preset_name, [])
     
-    def create_transformation_map(self, fn_list: List[str]) -> Dict[str, Any]:
+    def create_transformation_map(self, function_list: List[str]) -> Dict[str, Any]:
         """建立轉換映射表"""
         return {
-            "original": fn_list,
-            "symbols": self.compress_to_symbols(fn_list),
-            "flpkg_standard": self.compress_to_flpkg(fn_list, compact=False),
-            "flpkg_compact": self.compress_to_flpkg(fn_list, compact=True),
-            "length": len(fn_list),
-            "complexity": self._calculate_complexity(fn_list)
+            "original": function_list,
+            "symbols": self.compress_to_symbols(function_list),
+            "flpkg_standard": self.compress_to_flpkg(function_list, compact=False),
+            "flpkg_compact": self.compress_to_flpkg(function_list, compact=True),
+            "length": len(function_list),
+            "complexity": self._calculate_complexity(function_list)
         }
     
-    def _calculate_complexity(self, fn_list: List[str]) -> str:
+    def _calculate_complexity(self, function_list: List[str]) -> str:
         """計算邏輯複雜度"""
-        length = len(fn_list)
+        length = len(function_list)
         if length <= 2:
             return "simple"
         elif length <= 5:
@@ -125,21 +125,21 @@ class LogicTransformer:
         else:
             return "advanced"
     
-    def export_to_json(self, fn_list: List[str], metadata: Dict = None) -> Dict[str, Any]:
+    def export_to_json(self, function_list: List[str], metadata: Dict = None) -> Dict[str, Any]:
         """匯出為 JSON 模組描述"""
         if metadata is None:
             metadata = {}
         
-        transformation_map = self.create_transformation_map(fn_list)
+        transformation_map = self.create_transformation_map(function_list)
         
         return {
             "module_type": "logic_function_chain",
             "version": "1.0",
             "timestamp": datetime.utcnow().isoformat(),
-            "functions": fn_list,
+            "functions": function_list,
             "transformations": transformation_map,
             "compressed": transformation_map["flpkg_standard"],
-            "signature": f"MRLSIG-TRANSFORM-{hash(str(fn_list)) % 10000:04d}",
+            "signature": f"MRLSIG-TRANSFORM-{hash(str(function_list)) % 10000:04d}",
             "recursive": True,
             "metadata": metadata
         }
@@ -148,8 +148,8 @@ class LogicTransformer:
         """批次轉換多個預設規則"""
         results = {}
         for preset in preset_names:
-            fn_list = self.transform_to_preset(preset)
-            results[preset] = self.create_transformation_map(fn_list)
+            function_list = self.transform_to_preset(preset)
+            results[preset] = self.create_transformation_map(function_list)
         return results
     
     def validate_transformation(self, original: List[str], transformed: str) -> bool:
@@ -212,10 +212,10 @@ def interactive_transformer():
         
         if choice == "1":
             functions_input = input("請輸入函數 (用逗號分隔): ")
-            functions = [f.strip() for f in functions_input.split(",")]
+            function_list = [f.strip() for f in functions_input.split(",")]
             
-            symbols = transformer.compress_to_symbols(functions)
-            flpkg = transformer.compress_to_flpkg(functions)
+            symbols = transformer.compress_to_symbols(function_list)
+            flpkg = transformer.compress_to_flpkg(function_list)
             
             print(f"符號表示: {symbols}")
             print(f"FLPKG 格式: {flpkg}")
@@ -228,8 +228,8 @@ def interactive_transformer():
         elif choice == "3":
             print("可用預設: standard, minimal, extended, debug")
             preset = input("請選擇預設規則: ")
-            functions = transformer.transform_to_preset(preset)
-            print(f"{preset} 規則: {' → '.join(functions)}")
+            function_list = transformer.transform_to_preset(preset)
+            print(f"{preset} 規則: {' → '.join(function_list)}")
             
         elif choice == "4":
             results = transformer.batch_transform(["standard", "minimal", "extended"])
@@ -238,9 +238,9 @@ def interactive_transformer():
                 
         elif choice == "5":
             functions_input = input("請輸入函數 (用逗號分隔): ")
-            functions = [f.strip() for f in functions_input.split(",")]
+            function_list = [f.strip() for f in functions_input.split(",")]
             
-            json_export = transformer.export_to_json(functions)
+            json_export = transformer.export_to_json(function_list)
             
             filename = input("輸入檔案名稱 (不含副檔名): ")
             if not os.path.exists("examples"):

@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Resources in flowagent namespace
+namespace: flowagent
+
+resources:
+- ../../base
+- ../../../apps/mongodb
+- ../../../apps/module-a
+- ../../../apps/orchestrator
+
+labels:
+- pairs:
+    environment: production
+    version: v1
+
+images:
+- name: asia-east1-docker.pkg.dev/flowmemorysync/flowagent/module-a
+  newTag: latest
+- name: asia-east1-docker.pkg.dev/flowmemorysync/flowagent/orchestrator
+  newTag: latest

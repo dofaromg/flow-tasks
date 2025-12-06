@@ -1,0 +1,73 @@
+name: CI - Build and Push Container Images
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'apps/**'
+      - 'particle_core/**'
+      - 'flow_code/**'
+      - '.github/workflows/ci-build.yml'
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: flowmemorysync
+  REGION: asia-east1
+  REGISTRY: asia-east1-docker.pkg.dev
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      id-token: write
+    
+    strategy:
+      matrix:
+        service:
+          - name: module-a
+            context: ./apps/module-a
+            dockerfile: ./apps/module-a/Dockerfile
+          - name: orchestrator
+            context: ./apps/orchestrator
+            dockerfile: ./apps/orchestrator/Dockerfile
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Authenticate to Google Cloud
+      id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+        service_account: ${{ secrets.GCP_DEPLOYER_SA }}
+    
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+    
+    - name: Configure Docker for GCP
+      run: |
+        gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
+    
+    - name: Build Docker image
+      run: |
+        docker build \
+          -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flowagent/${{ matrix.service.name }}:${{ github.sha }} \
+          -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flowagent/${{ matrix.service.name }}:latest \
+          -f ${{ matrix.service.dockerfile }} \
+          ${{ matrix.service.context }}
+    
+    - name: Push Docker image
+      run: |
+        docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flowagent/${{ matrix.service.name }}:${{ github.sha }}
+        docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flowagent/${{ matrix.service.name }}:latest
+    
+    - name: Summary
+      run: |
+        echo "### 🚀 Image Published" >> $GITHUB_STEP_SUMMARY
+        echo "**Service:** ${{ matrix.service.name }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Tags:**" >> $GITHUB_STEP_SUMMARY
+        echo "- \`${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flowagent/${{ matrix.service.name }}:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "- \`${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flowagent/${{ matrix.service.name }}:latest\`" >> $GITHUB_STEP_SUMMARY

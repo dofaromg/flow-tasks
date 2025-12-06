@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: flowagent
+  namespace: argocd
+spec:
+  project: default
+  
+  source:
+    repoURL: https://github.com/dofaromg/flow-tasks.git
+    targetRevision: HEAD
+    path: cluster/overlays/prod
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: flowagent
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

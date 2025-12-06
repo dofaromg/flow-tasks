@@ -13,12 +13,14 @@ import subprocess
 import threading
 from pathlib import Path
 
+import pytest
+
 def test_task_processor():
     """Test the task processing system"""
     print("=== Testing Task Processor ===")
     
     # Run task processor
-    result = subprocess.run([sys.executable, "process_tasks.py"], 
+    result = subprocess.run([sys.executable, "process_tasks.py"],
                           capture_output=True, text=True)
     
     print(f"Exit code: {result.returncode}")
@@ -31,19 +33,16 @@ def test_task_processor():
     
     # Check if results were created
     results_dir = Path("tasks/results")
-    if results_dir.exists():
-        print(f"✓ Results directory exists: {results_dir}")
-        
-        # List result files
-        result_files = list(results_dir.glob("*.json"))
-        print(f"✓ Found {len(result_files)} result files:")
-        for f in result_files:
-            print(f"  - {f.name}")
-    else:
-        print("✗ Results directory missing")
-        return False
-    
-    return result.returncode == 0
+    assert results_dir.exists(), "Results directory missing"
+    print(f"✓ Results directory exists: {results_dir}")
+
+    # List result files
+    result_files = list(results_dir.glob("*.json"))
+    print(f"✓ Found {len(result_files)} result files:")
+    for f in result_files:
+        print(f"  - {f.name}")
+
+    assert result.returncode == 0, "Task processor exited with errors"
 
 def test_flask_api():
     """Test the Flask API by starting it and making requests"""
@@ -62,55 +61,35 @@ def test_flask_api():
         # Test main endpoint
         print("Testing main endpoint (/)...")
         response = requests.get("http://localhost:5000/", timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            expected_message = "你好，世界"
-            if data.get("message") == expected_message:
-                print(f"✓ Main endpoint working: {data['message']}")
-            else:
-                print(f"✗ Wrong message: expected '{expected_message}', got '{data.get('message')}'")
-                return False
-        else:
-            print(f"✗ Main endpoint failed: {response.status_code}")
-            return False
-        
+        assert response.status_code == 200, f"Main endpoint failed: {response.status_code}"
+        data = response.json()
+        expected_message = "你好，世界"
+        assert data.get("message") == expected_message, \
+            f"Wrong message: expected '{expected_message}', got '{data.get('message')}'"
+        print(f"✓ Main endpoint working: {data['message']}")
+
         # Test health endpoint
         print("Testing health endpoint (/health)...")
         response = requests.get("http://localhost:5000/health", timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            if data.get("status") == "healthy":
-                print(f"✓ Health endpoint working: {data}")
-            else:
-                print(f"✗ Health check failed: {data}")
-                return False
-        else:
-            print(f"✗ Health endpoint failed: {response.status_code}")
-            return False
-        
+        assert response.status_code == 200, f"Health endpoint failed: {response.status_code}"
+        data = response.json()
+        assert data.get("status") == "healthy", f"Health check failed: {data}"
+        print(f"✓ Health endpoint working: {data}")
+
         # Test info endpoint
         print("Testing info endpoint (/info)...")
         response = requests.get("http://localhost:5000/info", timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            if data.get("task_id") == "hello-world-api":
-                print(f"✓ Info endpoint working: task_id = {data['task_id']}")
-            else:
-                print(f"✗ Info endpoint incorrect: {data}")
-                return False
-        else:
-            print(f"✗ Info endpoint failed: {response.status_code}")
-            return False
-            
+        assert response.status_code == 200, f"Info endpoint failed: {response.status_code}"
+        data = response.json()
+        assert data.get("task_id") == "hello-world-api", f"Info endpoint incorrect: {data}"
+        print(f"✓ Info endpoint working: task_id = {data['task_id']}")
+
         print("✓ All Flask API tests passed!")
-        return True
-        
+
     except requests.exceptions.RequestException as e:
-        print(f"✗ Request failed: {e}")
-        return False
+        pytest.fail(f"Request failed: {e}")
     except Exception as e:
-        print(f"✗ Test failed: {e}")
-        return False
+        pytest.fail(f"Test failed: {e}")
     finally:
         # Stop server
         print("Stopping Flask server...")
@@ -123,21 +102,20 @@ def test_particle_core():
     
     try:
         # Run the existing integration test
-        result = subprocess.run([sys.executable, "test_integration.py"], 
+        result = subprocess.run([sys.executable, "test_integration.py"],
                               capture_output=True, text=True)
-        
+
         print(f"Exit code: {result.returncode}")
         print("STDOUT:")
         print(result.stdout)
-        
+
         if result.stderr:
             print("STDERR:")
             print(result.stderr)
-        
-        return result.returncode == 0
+
+        assert result.returncode == 0, "Particle core integration test failed"
     except Exception as e:
-        print(f"✗ Particle core test failed: {e}")
-        return False
+        pytest.fail(f"Particle core test failed: {e}")
 
 def test_system_integration():
     """Test overall system integration"""
@@ -156,28 +134,23 @@ def test_system_integration():
     for file_path in required_files:
         if not Path(file_path).exists():
             missing_files.append(file_path)
-    
-    if missing_files:
-        print(f"✗ Missing required files: {missing_files}")
-        return False
-    else:
-        print("✓ All required files present")
+
+    assert not missing_files, f"Missing required files: {missing_files}"
+    print("✓ All required files present")
     
     # Check task definitions
     task_files = [
         "tasks/2025-06-29_hello-world-api.yaml",
         "tasks/2025-07-31_particle-language-core.yaml"
     ]
-    
+
     for task_file in task_files:
         if Path(task_file).exists():
             print(f"✓ Task definition exists: {task_file}")
         else:
-            print(f"✗ Task definition missing: {task_file}")
-            return False
-    
+            pytest.fail(f"Task definition missing: {task_file}")
+
     print("✓ System integration checks passed!")
-    return True
 
 def main():
     """Run all tests"""
@@ -198,7 +171,11 @@ def main():
     for test_name, test_func in tests:
         print(f"\n{'='*20} {test_name} {'='*20}")
         try:
-            results[test_name] = test_func()
+            test_func()
+            results[test_name] = True
+        except AssertionError as e:
+            print(f"✗ {test_name} assertion failed: {e}")
+            results[test_name] = False
         except Exception as e:
             print(f"✗ {test_name} test crashed: {e}")
             results[test_name] = False
