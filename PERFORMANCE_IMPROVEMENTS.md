@@ -264,7 +264,11 @@ from datetime import datetime
 from typing import Dict, Any, Optional
 
 def create_snapshot(self, snapshot_id: Optional[str] = None) -> Dict[str, Any]:
-    """Create a snapshot using JSON serialization (more efficient for JSON-serializable data)."""
+    """Create a snapshot using JSON serialization (more efficient for JSON-serializable data).
+    
+    Note: JSON round-trip can be faster than copy.deepcopy() for large nested structures
+    with simple types, but may be slower for small structures. Benchmark for your use case.
+    """
     # For JSON-serializable data, JSON round-trip is often faster than deepcopy
     state = {
         "memory_trace": list(self.memory_trace),  # Convert deque to list if needed
@@ -278,7 +282,9 @@ def create_snapshot(self, snapshot_id: Optional[str] = None) -> Dict[str, Any]:
         }
     }
     
-    # JSON round-trip creates an isolated copy and is faster for large nested structures
+    # JSON round-trip creates an isolated copy
+    # For very large nested dicts, this can be faster than deepcopy
+    # Benchmark: timeit for your specific data sizes
     state_copy = json.loads(json.dumps(state, ensure_ascii=False))
     
     snapshot = {
@@ -319,20 +325,20 @@ def _trace_action(self, action: str, target: str, data: Any) -> None:
 ```python
 from collections import deque
 from datetime import datetime
-from typing import Any
+from typing import Any, Dict, Deque
 
 class FluinDictAgent:
     MAX_TRACE_SIZE = 10000  # Configurable limit
     
     def __init__(self, storage_path: str = "dict_seeds"):
         # Use deque with max length for bounded memory
-        self.memory_trace: deque = deque(maxlen=self.MAX_TRACE_SIZE)
+        self.memory_trace: Deque[Dict[str, Any]] = deque(maxlen=self.MAX_TRACE_SIZE)
         self._trace_counter: int = 0  # Initialize the counter
         # ... other initialization ...
     
     def _trace_action(self, action: str, target: str, data: Any) -> None:
         """Add action to memory trace with bounded size."""
-        trace_entry = {
+        trace_entry: Dict[str, Any] = {
             "index": self._trace_counter,  # Use counter instead of len()
             "action": action,
             "target": target,
@@ -478,16 +484,20 @@ For performance-critical functions, add timing decorators:
 ```python
 import functools
 import time
+from typing import Any, Callable, TypeVar
 
-def timing_decorator(func):
+F = TypeVar('F', bound=Callable[..., Any])
+
+def timing_decorator(func: F) -> F:
+    """Decorator to measure function execution time."""
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
         start = time.perf_counter()
         result = func(*args, **kwargs)
         end = time.perf_counter()
         print(f"{func.__name__} took {end - start:.4f} seconds")
         return result
-    return wrapper
+    return wrapper  # type: ignore
 ```
 
 ### 4. Use Connection Pooling for Database/API Calls
