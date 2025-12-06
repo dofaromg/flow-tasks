@@ -38,10 +38,10 @@ def test_task_integration():
     try:
         from logic_pipeline import LogicPipeline
         pipeline = LogicPipeline()
-        result = pipeline.simulate("Integration Test")
-        print(f"✓ Logic pipeline test: {result['result'][:50]}...")
-    except Exception as e:
-        pytest.fail(f"Logic pipeline import failed: {e}")
+        simulation_result = pipeline.simulate("Integration Test")
+        print(f"✓ Logic pipeline test: {simulation_result['result'][:50]}...")
+    except Exception as pipeline_error:
+        pytest.fail(f"Logic pipeline import failed: {pipeline_error}")
 
     # Create task result
     create_task_result()
@@ -71,8 +71,8 @@ def create_task_result():
     
     results = []
     for input_data in test_inputs:
-        result = pipeline.simulate(input_data)
-        results.append(result)
+        simulation_result = pipeline.simulate(input_data)
+        results.append(simulation_result)
     
     # Create summary
     task_result = {
@@ -107,8 +107,8 @@ def create_task_result():
     
     # Save task result
     result_file = "tasks/results/2025-07-31_particle-language-core_result.json"
-    with open(result_file, 'w', encoding='utf-8') as f:
-        json.dump(task_result, f, ensure_ascii=False, indent=2)
+    with open(result_file, 'w', encoding='utf-8') as result_output_file:
+        json.dump(task_result, result_output_file, ensure_ascii=False, indent=2)
     
     print(f"✓ Task result created: {result_file}")
 

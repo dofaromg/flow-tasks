@@ -35,27 +35,27 @@ def read_files(base_dir: Path) -> Tuple[List[str], List[str]]:
         Two lists: document contents and their corresponding paths.
     """
 
-    docs: List[str] = []
-    paths: List[str] = []
+    document_contents: List[str] = []
+    file_paths: List[str] = []
 
-    for path in base_dir.rglob("*"):
-        if path.suffix in SUPPORTED_SUFFIXES and path.is_file():
+    for file_path in base_dir.rglob("*"):
+        if file_path.suffix in SUPPORTED_SUFFIXES and file_path.is_file():
             try:
-                text = path.read_text(encoding="utf-8", errors="ignore")
+                file_content = file_path.read_text(encoding="utf-8", errors="ignore")
             except Exception:
                 # Skip files we can't read
                 continue
-            docs.append(text)
-            paths.append(str(path))
+            document_contents.append(file_content)
+            file_paths.append(str(file_path))
 
-    return docs, paths
+    return document_contents, file_paths
 
 
-def build_index(docs: List[str]) -> Tuple[TfidfVectorizer, sparse.csr_matrix]:
+def build_index(document_contents: List[str]) -> Tuple[TfidfVectorizer, sparse.csr_matrix]:
     """Build the TF-IDF vectorizer and document-term matrix."""
-    vectorizer = TfidfVectorizer()
-    matrix = vectorizer.fit_transform(docs)
-    return vectorizer, matrix
+    tfidf_vectorizer = TfidfVectorizer()
+    tfidf_matrix = tfidf_vectorizer.fit_transform(document_contents)
+    return tfidf_vectorizer, tfidf_matrix
 
 
 def main() -> None:
@@ -74,24 +74,24 @@ def main() -> None:
     if not repo_dir.exists():
         raise FileNotFoundError(f"Repository directory '{repo_dir}' does not exist")
 
-    docs, paths = read_files(repo_dir)
+    document_contents, file_paths = read_files(repo_dir)
 
-    if not docs:
+    if not document_contents:
         raise RuntimeError(f"No documents found under '{repo_dir}' with supported extensions {SUPPORTED_SUFFIXES}")
 
-    vectorizer, matrix = build_index(docs)
+    tfidf_vectorizer, tfidf_matrix = build_index(document_contents)
 
     index_dir.mkdir(parents=True, exist_ok=True)
 
-    with open(index_dir / "vectorizer.pkl", "wb") as f:
-        pickle.dump(vectorizer, f)
+    with open(index_dir / "vectorizer.pkl", "wb") as vectorizer_file:
+        pickle.dump(tfidf_vectorizer, vectorizer_file)
 
-    sparse.save_npz(index_dir / "tfidf_matrix.npz", matrix)
+    sparse.save_npz(index_dir / "tfidf_matrix.npz", tfidf_matrix)
 
-    with open(index_dir / "paths.json", "w", encoding="utf-8") as f:
-        json.dump(paths, f, ensure_ascii=False, indent=2)
+    with open(index_dir / "paths.json", "w", encoding="utf-8") as paths_file:
+        json.dump(file_paths, paths_file, ensure_ascii=False, indent=2)
 
-    print(f"Indexed {len(paths)} files into '{index_dir}'")
+    print(f"Indexed {len(file_paths)} files into '{index_dir}'")
 
 
 if __name__ == "__main__":

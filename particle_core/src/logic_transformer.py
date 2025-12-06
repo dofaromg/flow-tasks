@@ -19,7 +19,7 @@ class LogicTransformer:
             "store": "ST"
         }
         
-        self.expand_map = {v: k for k, v in self.compress_map.items()}
+        self.expand_map = {symbol: function_name for function_name, symbol in self.compress_map.items()}
         
         # 預定義轉換規則
         self.transformation_rules = {
@@ -247,8 +247,8 @@ def interactive_transformer():
                 os.makedirs("examples")
             
             filepath = f"examples/{filename}.json"
-            with open(filepath, 'w', encoding='utf-8') as f:
-                json.dump(json_export, f, ensure_ascii=False, indent=2)
+            with open(filepath, 'w', encoding='utf-8') as output_file:
+                json.dump(json_export, output_file, ensure_ascii=False, indent=2)
             
             print(f"JSON 已儲存至: {filepath}")
             

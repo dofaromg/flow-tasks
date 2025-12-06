@@ -114,10 +114,10 @@ class ParticleRegressor:
         Returns:
             逆向處理結果
         """
-        result = input_data
+        current_result = input_data
         for step in self.backward_steps:
-            result = f"[{step.upper()}_REGRESS → {result}]"
-        return result
+            current_result = f"[{step.upper()}_REGRESS → {current_result}]"
+        return current_result
     
     def backtrack_memory(
         self,
@@ -184,32 +184,32 @@ class ParticleRegressor:
         
         # 正向追蹤 (Growth)
         forward_path = []
-        current = states[0]
-        forward_path.append({"step": 0, "value": current, "operation": "initial"})
+        current_value = states[0]
+        forward_path.append({"step": 0, "value": current_value, "operation": "initial"})
         
-        for i, (n, eta) in enumerate(zip(n_factors, eta_factors)):
-            current = self.growth_state(current, n, eta)
+        for step_index, (n_factor, eta_factor) in enumerate(zip(n_factors, eta_factors)):
+            current_value = self.growth_state(current_value, n_factor, eta_factor)
             forward_path.append({
-                "step": i + 1,
-                "value": current,
+                "step": step_index + 1,
+                "value": current_value,
                 "operation": "growth",
-                "n_factor": n,
-                "eta_factor": eta
+                "n_factor": n_factor,
+                "eta_factor": eta_factor
             })
         
         # 逆向追蹤 (Regress)
         backward_path = []
-        backward_path.append({"step": 0, "value": current, "operation": "initial"})
+        backward_path.append({"step": 0, "value": current_value, "operation": "initial"})
         
-        for i in range(len(n_factors) - 1, -1, -1):
-            n, eta = n_factors[i], eta_factors[i]
-            current = self.regress_state(current, n, eta)
+        for step_index in range(len(n_factors) - 1, -1, -1):
+            n_factor, eta_factor = n_factors[step_index], eta_factors[step_index]
+            current_value = self.regress_state(current_value, n_factor, eta_factor)
             backward_path.append({
-                "step": len(n_factors) - i,
-                "value": current,
+                "step": len(n_factors) - step_index,
+                "value": current_value,
                 "operation": "regress",
-                "n_factor": n,
-                "eta_factor": eta
+                "n_factor": n_factor,
+                "eta_factor": eta_factor
             })
         
         start_value = states[0]
@@ -313,8 +313,8 @@ class ParticleRegressor:
             f"regress_result_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.json"
         )
         
-        with open(filename, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+        with open(filename, "w", encoding="utf-8") as output_file:
+            json.dump(data, output_file, ensure_ascii=False, indent=2)
         
         return filename
 
