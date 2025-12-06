@@ -25,8 +25,8 @@ class TaskProcessor:
         if not task_path.exists():
             raise FileNotFoundError(f"Task file not found: {task_path}")
             
-        with open(task_path, 'r', encoding='utf-8') as f:
-            return yaml.safe_load(f)
+        with open(task_path, 'r', encoding='utf-8') as task_file:
+            return yaml.safe_load(task_file)
     
     def validate_task_implementation(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """Validate if task has been implemented correctly"""
@@ -63,13 +63,13 @@ class TaskProcessor:
                 # Try to import/validate Python files
                 if target_file.endswith('.py'):
                     try:
-                        spec = importlib.util.spec_from_file_location("task_module", target_path)
-                        module = importlib.util.module_from_spec(spec)
-                        spec.loader.exec_module(module)
+                        module_spec = importlib.util.spec_from_file_location("task_module", target_path)
+                        task_module = importlib.util.module_from_spec(module_spec)
+                        module_spec.loader.exec_module(task_module)
                         result["checks"].append(f"✓ Python module imports successfully")
                         result["status"] = "passed"
-                    except Exception as e:
-                        result["errors"].append(f"Python import failed: {str(e)}")
+                    except Exception as import_error:
+                        result["errors"].append(f"Python import failed: {str(import_error)}")
                         result["status"] = "failed"
                 else:
                     result["status"] = "passed"
@@ -107,22 +107,22 @@ class TaskProcessor:
                     
                     # Save individual task result
                     result_file = self.results_dir / f"{task_file.stem}_result.json"
-                    with open(result_file, 'w', encoding='utf-8') as f:
-                        json.dump(result, f, ensure_ascii=False, indent=2)
+                    with open(result_file, 'w', encoding='utf-8') as result_output_file:
+                        json.dump(result, result_output_file, ensure_ascii=False, indent=2)
                         
-                except Exception as e:
+                except Exception as processing_error:
                     error_result = {
                         "task_id": task_file.stem,
                         "status": "error",
-                        "errors": [f"Failed to process task: {str(e)}"]
+                        "errors": [f"Failed to process task: {str(processing_error)}"]
                     }
                     summary["tasks"].append(error_result)
                     summary["failed"] += 1
         
         # Save summary
         summary_file = self.results_dir / "task_processing_summary.json"
-        with open(summary_file, 'w', encoding='utf-8') as f:
-            json.dump(summary, f, ensure_ascii=False, indent=2)
+        with open(summary_file, 'w', encoding='utf-8') as summary_output_file:
+            json.dump(summary, summary_output_file, ensure_ascii=False, indent=2)
             
         return summary
     

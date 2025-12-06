@@ -20,16 +20,16 @@ def test_task_processor():
     print("=== Testing Task Processor ===")
     
     # Run task processor
-    result = subprocess.run([sys.executable, "process_tasks.py"],
+    process_result = subprocess.run([sys.executable, "process_tasks.py"],
                           capture_output=True, text=True)
     
-    print(f"Exit code: {result.returncode}")
+    print(f"Exit code: {process_result.returncode}")
     print("STDOUT:")
-    print(result.stdout)
+    print(process_result.stdout)
     
-    if result.stderr:
+    if process_result.stderr:
         print("STDERR:")
-        print(result.stderr)
+        print(process_result.stderr)
     
     # Check if results were created
     results_dir = Path("tasks/results")
@@ -39,10 +39,10 @@ def test_task_processor():
     # List result files
     result_files = list(results_dir.glob("*.json"))
     print(f"✓ Found {len(result_files)} result files:")
-    for f in result_files:
-        print(f"  - {f.name}")
+    for result_file in result_files:
+        print(f"  - {result_file.name}")
 
-    assert result.returncode == 0, "Task processor exited with errors"
+    assert process_result.returncode == 0, "Task processor exited with errors"
 
 def test_flask_api():
     """Test the Flask API by starting it and making requests"""
@@ -86,10 +86,10 @@ def test_flask_api():
 
         print("✓ All Flask API tests passed!")
 
-    except requests.exceptions.RequestException as e:
-        pytest.fail(f"Request failed: {e}")
-    except Exception as e:
-        pytest.fail(f"Test failed: {e}")
+    except requests.exceptions.RequestException as request_error:
+        pytest.fail(f"Request failed: {request_error}")
+    except Exception as test_error:
+        pytest.fail(f"Test failed: {test_error}")
     finally:
         # Stop server
         print("Stopping Flask server...")
@@ -102,20 +102,20 @@ def test_particle_core():
     
     try:
         # Run the existing integration test
-        result = subprocess.run([sys.executable, "test_integration.py"],
+        process_result = subprocess.run([sys.executable, "test_integration.py"],
                               capture_output=True, text=True)
 
-        print(f"Exit code: {result.returncode}")
+        print(f"Exit code: {process_result.returncode}")
         print("STDOUT:")
-        print(result.stdout)
+        print(process_result.stdout)
 
-        if result.stderr:
+        if process_result.stderr:
             print("STDERR:")
-            print(result.stderr)
+            print(process_result.stderr)
 
-        assert result.returncode == 0, "Particle core integration test failed"
-    except Exception as e:
-        pytest.fail(f"Particle core test failed: {e}")
+        assert process_result.returncode == 0, "Particle core integration test failed"
+    except Exception as test_error:
+        pytest.fail(f"Particle core test failed: {test_error}")
 
 def test_system_integration():
     """Test overall system integration"""
@@ -173,11 +173,11 @@ def main():
         try:
             test_func()
             results[test_name] = True
-        except AssertionError as e:
-            print(f"✗ {test_name} assertion failed: {e}")
+        except AssertionError as assertion_error:
+            print(f"✗ {test_name} assertion failed: {assertion_error}")
             results[test_name] = False
-        except Exception as e:
-            print(f"✗ {test_name} test crashed: {e}")
+        except Exception as test_error:
+            print(f"✗ {test_name} test crashed: {test_error}")
             results[test_name] = False
     
     # Print summary

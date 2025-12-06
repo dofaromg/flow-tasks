@@ -429,8 +429,8 @@ class FluinDictAgent:
         
         # Save to storage
         seed_file = self.storage_path / f"{seed_id}.dseed.json"
-        with open(seed_file, 'w', encoding='utf-8') as f:
-            json.dump(seed, f, indent=2, ensure_ascii=False)
+        with open(seed_file, 'w', encoding='utf-8') as seed_output_file:
+            json.dump(seed, seed_output_file, indent=2, ensure_ascii=False)
         
         self._trace_action("create_dict_seed", seed_id, {"checksum": seed["checksum"]})
         
@@ -464,8 +464,8 @@ class FluinDictAgent:
             if not seed_file.exists():
                 return {"success": False, "error": f"Seed '{seed_id}' not found"}
             
-            with open(seed_file, 'r', encoding='utf-8') as f:
-                seed = json.load(f)
+            with open(seed_file, 'r', encoding='utf-8') as seed_input_file:
+                seed = json.load(seed_input_file)
             
             self.active_seeds[seed_id] = seed
         
@@ -496,15 +496,15 @@ class FluinDictAgent:
         seeds = []
         for seed_file in self.storage_path.glob("*.dseed.json"):
             try:
-                with open(seed_file, 'r', encoding='utf-8') as f:
-                    seed = json.load(f)
+                with open(seed_file, 'r', encoding='utf-8') as seed_input_file:
+                    seed = json.load(seed_input_file)
                     seeds.append({
                         "seed_id": seed["seed_id"],
                         "version": seed["version"],
                         "created_at": seed["created_at"],
                         "file": str(seed_file)
                     })
-            except (json.JSONDecodeError, KeyError, IOError) as e:
+            except (json.JSONDecodeError, KeyError, IOError) as seed_error:
                 # Skip corrupted or invalid seed files
                 continue
         return sorted(seeds, key=lambda x: x["created_at"], reverse=True)
@@ -748,8 +748,8 @@ class FluinDictAgent:
         
         # Save snapshot
         snapshot_file = self.storage_path / f"{snapshot_id}.snapshot.json"
-        with open(snapshot_file, 'w', encoding='utf-8') as f:
-            json.dump(snapshot, f, indent=2, ensure_ascii=False)
+        with open(snapshot_file, 'w', encoding='utf-8') as snapshot_output_file:
+            json.dump(snapshot, snapshot_output_file, indent=2, ensure_ascii=False)
         
         return {
             "success": True,
@@ -785,8 +785,8 @@ class FluinDictAgent:
         if not snapshot_file.exists():
             return {"success": False, "error": f"Snapshot '{snapshot_id}' not found"}
         
-        with open(snapshot_file, 'r', encoding='utf-8') as f:
-            snapshot = json.load(f)
+        with open(snapshot_file, 'r', encoding='utf-8') as snapshot_input_file:
+            snapshot = json.load(snapshot_input_file)
         
         # Verify checksum
         current_checksum = self._generate_checksum(snapshot["state"])

@@ -277,8 +277,8 @@ class PersonaConnector:
         Returns:
             載入結果
         """
-        with open(registry_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        with open(registry_path, 'r', encoding='utf-8') as registry_file:
+            data = json.load(registry_file)
         
         loaded_count = 0
         if "personas" in data:
@@ -315,8 +315,8 @@ class PersonaConnector:
             "version": "1.0"
         }
         
-        with open(registry_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+        with open(registry_path, 'w', encoding='utf-8') as registry_file:
+            json.dump(data, registry_file, indent=2, ensure_ascii=False)
         
         return registry_path
     
@@ -326,8 +326,8 @@ class PersonaConnector:
             for callback in self.hooks[event]:
                 try:
                     callback(*args)
-                except Exception as e:
-                    print(f"Hook error ({event}): {e}")
+                except Exception as hook_error:
+                    print(f"Hook error ({event}): {hook_error}")
 
 
 class UniversalZipHandler:

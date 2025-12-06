@@ -41,9 +41,9 @@ class FunctionRestorer:
         normalized = compressed_code.strip()
         
         # 檢查已知的壓縮格式
-        for pattern, function_steps in self.restore_map.items():
+        for pattern, steps_list in self.restore_map.items():
             if pattern in normalized:
-                return function_steps
+                return steps_list
         
         # 嘗試解析其他格式
         if "SEED" in normalized:
@@ -73,10 +73,10 @@ class FunctionRestorer:
     
     def simulate_execution(self, function_steps: List[str], input_data: str = "X") -> str:
         """模擬執行函數鏈"""
-        output = input_data
+        current_output = input_data
         for step in function_steps:
-            output = f"[{step.upper()} → {output}]"
-        return output
+            current_output = f"[{step.upper()} → {current_output}]"
+        return current_output
     
     def create_flpkg_package(self, function_steps: List[str], metadata: Optional[Dict] = None) -> Dict[str, Any]:
         """建立 .flpkg 封包格式"""
@@ -98,17 +98,17 @@ class FunctionRestorer:
     
     def save_flpkg(self, package: Dict[str, Any], filename: str) -> str:
         """儲存 .flpkg 檔案"""
-        filepath = filename if filename.endswith('.flpkg.json') else f"{filename}.flpkg.json"
+        output_filepath = filename if filename.endswith('.flpkg.json') else f"{filename}.flpkg.json"
         
-        with open(filepath, 'w', encoding='utf-8') as f:
-            json.dump(package, f, ensure_ascii=False, indent=2)
+        with open(output_filepath, 'w', encoding='utf-8') as output_file:
+            json.dump(package, output_file, ensure_ascii=False, indent=2)
         
-        return filepath
+        return output_filepath
     
     def load_flpkg(self, filename: str) -> Dict[str, Any]:
         """載入 .flpkg 檔案"""
-        with open(filename, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        with open(filename, 'r', encoding='utf-8') as input_file:
+            return json.load(input_file)
     
     def validate_flpkg(self, package: Dict[str, Any]) -> bool:
         """驗證 .flpkg 封包完整性"""

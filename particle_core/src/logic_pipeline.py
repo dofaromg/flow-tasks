@@ -21,10 +21,10 @@ class LogicPipeline:
     
     def run_logic_chain(self, input_data: str) -> str:
         """執行完整邏輯鏈"""
-        result = input_data
+        current_result = input_data
         for step in self.pipeline_steps:
-            result = f"[{step.upper()} → {result}]"
-        return result
+            current_result = f"[{step.upper()} → {current_result}]"
+        return current_result
     
     def process_step(self, step: str, data: str) -> str:
         """處理單一邏輯步驟"""
@@ -60,20 +60,20 @@ class LogicPipeline:
         }
         
         filename = os.path.join(output_dir, f"logic_result_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json")
-        with open(filename, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+        with open(filename, "w", encoding="utf-8") as output_file:
+            json.dump(data, output_file, ensure_ascii=False, indent=2)
         
         return filename
     
     def simulate(self, input_data: str) -> Dict[str, Any]:
         """完整模擬執行流程"""
-        result = self.run_logic_chain(input_data)
+        execution_result = self.run_logic_chain(input_data)
         
         return {
             "input": input_data,
             "steps": self.pipeline_steps,
             "explanations": self.get_human_readable(),
-            "result": result,
+            "result": execution_result,
             "compressed": self.compress_logic(self.pipeline_steps)
         }
 
