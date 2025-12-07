@@ -146,6 +146,88 @@ cd particle_core && python demo.py demo
 - Integration tests in the root directory
 - Use descriptive test function names with `test_` prefix
 
+## Database Management (MongoDB)
+
+### MongoDB Deployment
+This repository includes MongoDB as the primary database:
+- **Location**: `apps/mongodb/`
+- **Deployment**: StatefulSet pattern with persistent storage
+- **Version**: MongoDB 6.0
+- **Namespace**: `flowagent`
+- **Port**: 27017
+
+### Database Configuration
+- **Connection string format**: `mongodb://admin:<password>@mongodb.flowagent.svc.cluster.local:27017`
+- **Credentials**: Stored in `apps/mongodb/secret.yaml` (change for production!)
+- **Persistent storage**: 10Gi PVC at `/data/db`
+- **Resource limits**: 256Mi-512Mi memory, 100m-500m CPU
+
+### Automatic Updates and Optimization
+The database system is designed to:
+1. **Auto-scale storage**: PVC can be expanded when needed (requires manual intervention)
+2. **Self-optimize**: MongoDB's internal optimization runs automatically
+3. **Auto-backup**: Configure periodic backups using CronJobs or external tools
+4. **Monitor performance**: Integrate with Prometheus for metrics
+
+### Database Operations
+
+**Connecting to MongoDB**
+```bash
+# Port forward to local machine
+kubectl port-forward svc/mongodb 27017:27017 -n flowagent
+
+# Connect using mongosh
+mongosh "mongodb://admin:<password>@localhost:27017"
+```
+
+**Backup and Restore**
+```bash
+# Backup
+kubectl exec -it deployment/mongodb -n flowagent -- mongodump --out /data/backup
+
+# Restore
+kubectl exec -it deployment/mongodb -n flowagent -- mongorestore /data/backup
+```
+
+**Scaling Storage**
+```bash
+# Edit PVC to increase size
+kubectl edit pvc mongodb-pvc -n flowagent
+# Update storage size, then restart pod
+kubectl rollout restart deployment/mongodb -n flowagent
+```
+
+**Monitoring Database Health**
+```bash
+# Check database status
+kubectl exec -it deployment/mongodb -n flowagent -- mongosh --eval "db.adminCommand('ping')"
+
+# Check pod logs
+kubectl logs -f deployment/mongodb -n flowagent
+
+# Check resource usage
+kubectl top pod -n flowagent -l app=mongodb
+```
+
+### Database Schema and Migrations
+- Use versioned migration scripts for schema changes
+- Store migrations in `scripts/migrations/` directory
+- Document all schema changes in CHANGELOG.md
+- Test migrations in development before production
+
+### Performance Optimization
+- **Indexes**: Create indexes for frequently queried fields
+- **Connection pooling**: Applications use connection pooling by default
+- **Query optimization**: Monitor slow queries and optimize
+- **Sharding**: Consider sharding for large-scale data growth
+
+### Security Best Practices
+- **Change default password**: Update `apps/mongodb/secret.yaml` for production
+- **Enable authentication**: Always use authenticated connections
+- **Network isolation**: Use NetworkPolicy to restrict database access
+- **Encryption**: Enable encryption at rest and in transit for sensitive data
+- **Regular updates**: Keep MongoDB version updated for security patches
+
 ## Kubernetes and Deployment
 
 ### GCP Project Configuration
