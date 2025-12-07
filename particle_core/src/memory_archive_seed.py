@@ -70,8 +70,8 @@ class MemoryArchiveSeed:
         
         # 儲存種子
         seed_file = self.storage_path / f"{seed_name}.mseed.json"
-        with open(seed_file, 'w', encoding='utf-8') as f:
-            json.dump(seed, f, indent=2, ensure_ascii=False)
+        with open(seed_file, 'w', encoding='utf-8') as seed_output_file:
+            json.dump(seed, seed_output_file, indent=2, ensure_ascii=False)
         
         return {
             "seed_name": seed_name,
@@ -95,8 +95,8 @@ class MemoryArchiveSeed:
         if not seed_file.exists():
             raise FileNotFoundError(f"記憶種子不存在: {seed_name}")
         
-        with open(seed_file, 'r', encoding='utf-8') as f:
-            seed = json.load(f)
+        with open(seed_file, 'r', encoding='utf-8') as seed_input_file:
+            seed = json.load(seed_input_file)
         
         # 驗證完整性
         current_checksum = self._generate_checksum(seed["particle_data"])
@@ -220,8 +220,8 @@ class MemoryArchiveSeed:
             }
         }
         
-        with open(export_path, 'w', encoding='utf-8') as f:
-            json.dump(export_data, f, indent=2, ensure_ascii=False)
+        with open(export_path, 'w', encoding='utf-8') as export_output_file:
+            json.dump(export_data, export_output_file, indent=2, ensure_ascii=False)
         
         return export_path
     
@@ -235,8 +235,8 @@ class MemoryArchiveSeed:
         Returns:
             匯入的種子資訊
         """
-        with open(import_path, 'r', encoding='utf-8') as f:
-            import_data = json.load(f)
+        with open(import_path, 'r', encoding='utf-8') as import_input_file:
+            import_data = json.load(import_input_file)
         
         # 驗證格式
         if "seed_name" not in import_data:

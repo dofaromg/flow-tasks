@@ -59,22 +59,22 @@ def demo_basic_functionality():
     print("4. 檔案儲存功能:")
     
     # 儲存邏輯結果
-    filename = pipeline.store_result("Demo Data", result['result'], "examples")
-    print(f"   邏輯結果已儲存: {filename}")
+    output_filename = pipeline.store_result("Demo Data", result['result'], "examples")
+    print(f"   邏輯結果已儲存: {output_filename}")
     
     # 建立 FLPKG 封包
-    package = restorer.create_flpkg_package(
+    flpkg_package = restorer.create_flpkg_package(
         ["structure", "mark", "flow", "recurse", "store"],
         {"demo": True, "version": "1.0"}
     )
-    flpkg_file = restorer.save_flpkg(package, "examples/demo_package")
+    flpkg_file = restorer.save_flpkg(flpkg_package, "examples/demo_package")
     print(f"   FLPKG 封包已儲存: {flpkg_file}")
     
     # JSON 匯出
     json_export = transformer.export_to_json(["structure", "store"])
     json_file = "examples/demo_transform.json"
-    with open(json_file, 'w', encoding='utf-8') as f:
-        json.dump(json_export, f, ensure_ascii=False, indent=2)
+    with open(json_file, 'w', encoding='utf-8') as json_output_file:
+        json.dump(json_export, json_output_file, ensure_ascii=False, indent=2)
     print(f"   JSON 匯出已儲存: {json_file}")
     
     # 5. 記憶封存種子示範
