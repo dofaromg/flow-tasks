@@ -28,6 +28,9 @@ MANIFEST
 
 # Node dependencies
 node_modules/
+.next/
+.vercel/
+npm-debug.log*
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
