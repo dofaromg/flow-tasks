@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
-import { injectSpeedInsights } from '@vercel/speed-insights';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 function App({ Component, pageProps }) {
-  useEffect(() => {
-    injectSpeedInsights();
-  }, []);
-
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <Component {...pageProps} />
+      <SpeedInsights />
+    </>
+  );
 }
 
 export default App;
