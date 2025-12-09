@@ -6,13 +6,23 @@ app = Flask(__name__)
 @app.route('/translate', methods=['POST'])
 def translate():
     text = request.json.get('text', '')
-    result = subprocess.getoutput(f'python advanced_parser.py "{text}"')
+    completed = subprocess.run(
+        ['python', 'advanced_parser.py', text],
+        capture_output=True,
+        text=True
+    )
+    result = completed.stdout
     return jsonify({'result': result})
 
 @app.route('/restore', methods=['POST'])
 def restore():
     file = request.json.get('file', '')
-    result = subprocess.getoutput(f'python FluinTraceInterpreter.py "{file}"')
+    completed = subprocess.run(
+        ['python', 'FluinTraceInterpreter.py', file],
+        capture_output=True,
+        text=True
+    )
+    result = completed.stdout
     return jsonify({'result': result})
 
 if __name__ == "__main__":
