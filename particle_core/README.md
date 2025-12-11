@@ -82,6 +82,10 @@ print(agent.compress_to_particle_notation())
 
 詳細說明請參閱 [Fluin Dict Agent 使用說明](docs/fluin_dict_agent_guide.md)
 
+## 種子資料集
+
+- **AI Memory Protocol Seed** (`examples/AI-Memory-Protocol-Seed.json`): 保存 AI 記憶協定的語意粒子樹格式資料，包含核心粒子、章節索引與雙向記憶流程，可直接作為記憶封存/召回範例輸入。
+
 ## AI 模組人格通用套件
 
 提供 AI 人格管理與通用 ZIP 壓縮/解壓縮功能：
