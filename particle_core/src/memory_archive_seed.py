@@ -9,8 +9,40 @@ import json
 import os
 import hashlib
 from datetime import datetime
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Tuple, Union
 from pathlib import Path
+from functools import lru_cache
+
+
+# Checksum caching helpers
+def _make_hashable_mas(obj: Any) -> Union[Tuple, Any]:
+    """Convert an object to a hashable representation for caching."""
+    if isinstance(obj, dict):
+        return tuple(sorted((k, _make_hashable_mas(v)) for k, v in obj.items()))
+    elif isinstance(obj, list):
+        return tuple(_make_hashable_mas(item) for item in obj)
+    return obj
+
+
+def _reconstruct_mas(hashable_data: Union[Tuple, Any]) -> Any:
+    """Reconstruct original data structure from hashable format."""
+    if isinstance(hashable_data, tuple):
+        # Check if it looks like dict items (tuple of key-value pairs)
+        if hashable_data and isinstance(hashable_data[0], tuple) and len(hashable_data[0]) == 2:
+            return {k: _reconstruct_mas(v) for k, v in hashable_data}
+        else:
+            return [_reconstruct_mas(item) for item in hashable_data]
+    return hashable_data
+
+
+@lru_cache(maxsize=256)
+def _cached_checksum_mas(hashable_data: Tuple) -> str:
+    """Cached checksum calculation for repeated data."""
+    # Reconstruct data from hashable format for JSON serialization
+    reconstructed = _reconstruct_mas(hashable_data)
+    data_str = json.dumps(reconstructed, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(data_str.encode('utf-8')).hexdigest()
+
 
 class MemoryArchiveSeed:
     """記憶封存種子核心類別"""
@@ -264,7 +296,7 @@ class MemoryArchiveSeed:
     
     def _generate_checksum(self, data: Any) -> str:
         """
-        生成資料校驗碼
+        生成資料校驗碼（帶快取優化）
         
         Args:
             data: 要校驗的資料
@@ -272,8 +304,13 @@ class MemoryArchiveSeed:
         Returns:
             校驗碼
         """
-        data_str = json.dumps(data, sort_keys=True, ensure_ascii=False)
-        return hashlib.sha256(data_str.encode('utf-8')).hexdigest()
+        try:
+            hashable = _make_hashable_mas(data)
+            return _cached_checksum_mas(hashable)
+        except (TypeError, AttributeError):
+            # Fallback for non-hashable or complex data
+            data_str = json.dumps(data, sort_keys=True, ensure_ascii=False)
+            return hashlib.sha256(data_str.encode('utf-8')).hexdigest()
 
 
 def interactive_demo():
