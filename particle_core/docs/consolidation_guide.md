@@ -72,7 +72,8 @@ python consolidate_memory_seeds.py --target 10 --strategy by_date
 | `--storage PATH` | 種子儲存路徑 | memory_seeds |
 | `--dry-run` | 只模擬不實際執行 | - |
 | `--list` | 列出所有種子 | - |
-| `--cleanup` | 清理舊種子 | - |
+| `--cleanup` | 清理舊種子（需輸入 DELETE 確認） | - |
+| `--force-cleanup` | 強制清理舊種子（危險！） | - |
 
 ### 合併策略
 
@@ -116,7 +117,23 @@ python consolidate_memory_seeds.py --target 10 --strategy even
 python consolidate_memory_seeds.py --target 10 --storage /path/to/custom/seeds
 ```
 
-### 範例 4: Python 程式調用
+### 範例 4: 清理原始種子（驗證後）
+
+合併完成並驗證無誤後，可以清理原始種子以釋放空間：
+
+```bash
+# 清理原始種子（需要輸入 DELETE 確認）
+python consolidate_memory_seeds.py --cleanup
+
+# 強制清理（跳過確認，請謹慎使用）
+python consolidate_memory_seeds.py --cleanup --force-cleanup
+```
+
+**重要提醒**：
+- 清理操作會永久刪除原始種子
+- 建議先備份重要資料
+- 需要輸入 'DELETE' 進行確認
+- 清理後無法復原
 
 ```python
 from consolidate_memory_seeds import MemorySeedConsolidator

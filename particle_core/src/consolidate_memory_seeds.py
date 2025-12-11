@@ -158,7 +158,12 @@ class MemorySeedConsolidator:
             seeds = sorted(seeds, key=lambda x: x['created_at'])
         elif strategy == "by_size":
             # 按大小排序（需要讀取文件大小）
-            seeds = sorted(seeds, key=lambda x: Path(x['file']).stat().st_size)
+            def get_file_size(seed):
+                try:
+                    return Path(seed['file']).stat().st_size
+                except (FileNotFoundError, OSError):
+                    return 0
+            seeds = sorted(seeds, key=get_file_size)
         elif strategy == "even":
             # 平均分配
             pass
@@ -185,18 +190,20 @@ class MemorySeedConsolidator:
         
         return groups
     
-    def cleanup_old_seeds(self, keep_merged: bool = True) -> Dict[str, Any]:
+    def cleanup_old_seeds(self, keep_merged: bool = True, force: bool = False) -> Dict[str, Any]:
         """
         清理舊的種子文件
         
         Args:
             keep_merged: 是否保留已合併的種子
+            force: 是否強制刪除（跳過確認）
             
         Returns:
             清理報告
         """
-        print("\n⚠️  警告：此操作將刪除舊的種子文件！")
-        print("建議先備份重要資料。\n")
+        if not force:
+            print("\n⚠️  警告：此操作將刪除舊的種子文件！")
+            print("建議先備份重要資料。\n")
         
         seeds = self.get_all_seeds()
         
@@ -204,8 +211,13 @@ class MemorySeedConsolidator:
             # 只保留 consolidated_ 開頭的種子
             to_delete = [s for s in seeds if not s['seed_name'].startswith('consolidated_')]
         else:
-            print("此功能需要謹慎使用，暫不提供自動刪除。")
-            return {"status": "skipped"}
+            if not force:
+                print("此功能需要謹慎使用，暫不提供自動刪除。")
+                return {"status": "skipped"}
+        
+        if not to_delete:
+            print("✅ 沒有需要清理的舊種子")
+            return {"status": "no_seeds_to_delete"}
         
         print(f"將刪除 {len(to_delete)} 個舊種子")
         for seed in to_delete[:5]:
@@ -213,27 +225,28 @@ class MemorySeedConsolidator:
         if len(to_delete) > 5:
             print(f"  ... 還有 {len(to_delete) - 5} 個")
         
-        confirm = input("\n確定要刪除嗎？(yes/no): ")
-        
-        if confirm.lower() == 'yes':
-            deleted = []
-            for seed in to_delete:
-                try:
-                    Path(seed['file']).unlink()
-                    deleted.append(seed['seed_name'])
-                    print(f"  ✓ 已刪除: {seed['seed_name']}")
-                except Exception as e:
-                    print(f"  ✗ 刪除失敗: {seed['seed_name']} - {e}")
+        if not force:
+            confirm = input("\n⚠️  請輸入 'DELETE' 確認刪除操作: ")
             
-            print(f"\n✅ 清理完成，已刪除 {len(deleted)} 個種子")
-            return {
-                "status": "success",
-                "deleted_count": len(deleted),
-                "deleted_seeds": deleted
-            }
-        else:
-            print("\n取消刪除操作")
-            return {"status": "cancelled"}
+            if confirm != 'DELETE':
+                print("\n取消刪除操作")
+                return {"status": "cancelled"}
+        
+        deleted = []
+        for seed in to_delete:
+            try:
+                Path(seed['file']).unlink()
+                deleted.append(seed['seed_name'])
+                print(f"  ✓ 已刪除: {seed['seed_name']}")
+            except Exception as e:
+                print(f"  ✗ 刪除失敗: {seed['seed_name']} - {e}")
+        
+        print(f"\n✅ 清理完成，已刪除 {len(deleted)} 個種子")
+        return {
+            "status": "success",
+            "deleted_count": len(deleted),
+            "deleted_seeds": deleted
+        }
 
 
 def main():
@@ -274,7 +287,12 @@ def main():
     parser.add_argument(
         "--cleanup",
         action="store_true",
-        help="清理舊的種子（保留合併後的）"
+        help="清理舊的種子（保留合併後的）- 需要輸入 'DELETE' 確認"
+    )
+    parser.add_argument(
+        "--force-cleanup",
+        action="store_true",
+        help="強制清理舊種子，跳過確認（危險！請謹慎使用）"
     )
     
     args = parser.parse_args()
@@ -292,7 +310,10 @@ def main():
             print()
     elif args.cleanup:
         # 清理舊種子
-        result = consolidator.cleanup_old_seeds(keep_merged=True)
+        result = consolidator.cleanup_old_seeds(
+            keep_merged=True, 
+            force=args.force_cleanup
+        )
     else:
         # 執行合併
         result = consolidator.consolidate_to_target(

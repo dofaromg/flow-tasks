@@ -61,7 +61,7 @@ def create_sample_seeds(count: int = 25, storage_path: str = "memory_seeds"):
             "timestamp": (datetime.now() - timedelta(hours=random.randint(1, 720))).isoformat(),
             "status": random.choice(["active", "archived", "processed"]),
             "size": random.randint(100, 10000),
-            "tags": random.sample(["重要", "緊急", "待處理", "已完成", "測試"], k=random.randint(1, 3))
+            "tags": random.sample(["重要", "緊急", "待處理", "已完成", "測試"], k=min(random.randint(1, 3), 5))
         }
         
         metadata = {
