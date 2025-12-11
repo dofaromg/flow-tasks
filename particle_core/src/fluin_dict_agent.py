@@ -278,13 +278,18 @@ class FluinDictAgent:
         Args:
             action: Action name
             target: Target identifier
-            data: Action data
+            data: Action data (stored by reference for performance)
+        
+        Note:
+            Data is stored by reference rather than deep copied for performance.
+            If the caller mutates data after tracing, use copy.deepcopy(data) 
+            before calling this method.
         """
         trace_entry = {
             "index": self._trace_counter,  # Use counter instead of len()
             "action": action,
             "target": target,
-            "data": data,  # Avoid deep copy for performance unless needed
+            "data": data,  # Stored by reference for performance
             "timestamp": datetime.now().isoformat(),
             "symbol": "∞Trace"
         }
@@ -301,11 +306,18 @@ class FluinDictAgent:
             end: End index
             
         Returns:
-            List of trace entries
+            List of trace entries (converted from deque)
         """
         if start is None and end is None:
-            return self.memory_trace.copy()
-        return self.memory_trace[start:end]
+            return list(self.memory_trace)  # Convert deque to list
+        
+        # Slicing a deque returns a list
+        if start is not None and end is not None:
+            return list(self.memory_trace)[start:end]
+        elif start is not None:
+            return list(self.memory_trace)[start:]
+        else:  # end is not None
+            return list(self.memory_trace)[:end]
     
     def create_memory_loop(self, loop_id: str, interval: int = 1) -> Dict[str, Any]:
         """

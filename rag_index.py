@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import pickle
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -42,21 +43,27 @@ def read_single_file(file_path: Path) -> Optional[Tuple[str, str]]:
         return None
 
 
-def read_files(base_dir: Path, max_workers: int = 4) -> Tuple[List[str], List[str]]:
+def read_files(base_dir: Path, max_workers: Optional[int] = None) -> Tuple[List[str], List[str]]:
     """Collect text and file paths from base_dir with parallel I/O.
 
     Parameters
     ----------
     base_dir: Path
         Directory to scan recursively.
-    max_workers: int
-        Maximum number of parallel workers for file reading (default: 4)
+    max_workers: Optional[int]
+        Maximum number of parallel workers for file reading.
+        If None, uses min(4, cpu_count) for optimal performance.
 
     Returns
     -------
     Tuple[List[str], List[str]]
         Two lists: document contents and their corresponding paths.
     """
+    # Auto-scale workers based on CPU count, with a reasonable default
+    if max_workers is None:
+        cpu_count = os.cpu_count() or 1
+        max_workers = min(4, cpu_count)
+    
     # Use targeted glob patterns instead of filtering all files
     file_paths: List[Path] = []
     for suffix in SUPPORTED_SUFFIXES:

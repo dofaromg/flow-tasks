@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import subprocess
+import sys
 from typing import Any
 
 app = Flask(__name__)
@@ -19,8 +20,9 @@ def run_safe_command(script: str, argument: str) -> str:
         The stdout output if successful, stderr if failed, or error message
     """
     try:
+        # Use sys.executable for security - ensures we use the same Python interpreter
         result = subprocess.run(
-            ['python', script, argument],
+            [sys.executable, script, argument],
             capture_output=True,
             text=True,
             timeout=30,
