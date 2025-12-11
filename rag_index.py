@@ -11,9 +11,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import pickle
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy import sparse
@@ -21,34 +23,65 @@ from scipy import sparse
 SUPPORTED_SUFFIXES = (".py", ".md", ".txt")
 
 
-def read_files(base_dir: Path) -> Tuple[List[str], List[str]]:
-    """Collect text and file paths from base_dir.
+def read_single_file(file_path: Path) -> Optional[Tuple[str, str]]:
+    """Read a single file, returning content and path or None on failure.
+    
+    Parameters
+    ----------
+    file_path: Path
+        File to read
+        
+    Returns
+    -------
+    Optional[Tuple[str, str]]
+        Tuple of (content, path) or None if read fails
+    """
+    try:
+        content = file_path.read_text(encoding="utf-8", errors="ignore")
+        return content, str(file_path)
+    except Exception:
+        return None
+
+
+def read_files(base_dir: Path, max_workers: Optional[int] = None) -> Tuple[List[str], List[str]]:
+    """Collect text and file paths from base_dir with parallel I/O.
 
     Parameters
     ----------
     base_dir: Path
         Directory to scan recursively.
+    max_workers: Optional[int]
+        Maximum number of parallel workers for file reading.
+        If None, uses min(4, cpu_count) for optimal performance.
 
     Returns
     -------
     Tuple[List[str], List[str]]
         Two lists: document contents and their corresponding paths.
     """
+    # Auto-scale workers based on CPU count, with a reasonable default
+    if max_workers is None:
+        cpu_count = os.cpu_count() or 1
+        max_workers = min(4, cpu_count)
+    
+    # Use targeted glob patterns instead of filtering all files
+    file_paths: List[Path] = []
+    for suffix in SUPPORTED_SUFFIXES:
+        file_paths.extend(base_dir.rglob(f"*{suffix}"))
 
     document_contents: List[str] = []
-    file_paths: List[str] = []
+    result_paths: List[str] = []
 
-    for file_path in base_dir.rglob("*"):
-        if file_path.suffix in SUPPORTED_SUFFIXES and file_path.is_file():
-            try:
-                file_content = file_path.read_text(encoding="utf-8", errors="ignore")
-            except Exception:
-                # Skip files we can't read
-                continue
-            document_contents.append(file_content)
-            file_paths.append(str(file_path))
+    # Parallel file reading for better performance
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        results = executor.map(read_single_file, file_paths)
+        for result in results:
+            if result is not None:
+                content, path = result
+                document_contents.append(content)
+                result_paths.append(path)
 
-    return document_contents, file_paths
+    return document_contents, result_paths
 
 
 def build_index(document_contents: List[str]) -> Tuple[TfidfVectorizer, sparse.csr_matrix]:

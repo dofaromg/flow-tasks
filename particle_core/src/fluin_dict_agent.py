@@ -16,9 +16,43 @@ Fluin Dict Agent - Dictionary Seed Memory Snapshot
 import json
 import hashlib
 from datetime import datetime
-from typing import Dict, List, Any, Optional, Union, Callable
+from typing import Dict, List, Any, Optional, Union, Callable, Tuple
 from pathlib import Path
+from collections import deque
+from functools import lru_cache
 import copy
+
+
+# Checksum caching helpers
+def _make_hashable(obj: Any) -> Union[Tuple, Any]:
+    """Convert an object to a hashable representation for caching."""
+    if isinstance(obj, dict):
+        return tuple(sorted((k, _make_hashable(v)) for k, v in obj.items()))
+    elif isinstance(obj, list):
+        return tuple(_make_hashable(item) for item in obj)
+    elif isinstance(obj, deque):
+        return tuple(_make_hashable(item) for item in obj)
+    return obj
+
+
+def _reconstruct(hashable_data: Union[Tuple, Any]) -> Any:
+    """Reconstruct original data structure from hashable format."""
+    if isinstance(hashable_data, tuple):
+        # Check if it looks like dict items (tuple of key-value pairs)
+        if hashable_data and isinstance(hashable_data[0], tuple) and len(hashable_data[0]) == 2:
+            return {k: _reconstruct(v) for k, v in hashable_data}
+        else:
+            return [_reconstruct(item) for item in hashable_data]
+    return hashable_data
+
+
+@lru_cache(maxsize=256)
+def _cached_checksum(hashable_data: Tuple) -> str:
+    """Cached checksum calculation for repeated data."""
+    # Reconstruct data from hashable format for JSON serialization
+    reconstructed = _reconstruct(hashable_data)
+    data_str = json.dumps(reconstructed, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(data_str.encode('utf-8')).hexdigest()
 
 
 class FluinDictAgent:
@@ -35,6 +69,7 @@ class FluinDictAgent:
     
     VERSION = "DictSeed.0003"
     CORE_INDEX = 1053
+    MAX_TRACE_SIZE = 10000  # Bounded memory trace size
     
     def __init__(self, storage_path: str = "dict_seeds"):
         """
@@ -46,8 +81,9 @@ class FluinDictAgent:
         self.storage_path = Path(storage_path)
         self.storage_path.mkdir(exist_ok=True)
         
-        # Memory trace loop (∞Trace → ζMemory^↻Loop)
-        self.memory_trace: List[Dict[str, Any]] = []
+        # Memory trace loop (∞Trace → ζMemory^↻Loop) - bounded with deque
+        self.memory_trace: deque = deque(maxlen=self.MAX_TRACE_SIZE)
+        self._trace_counter: int = 0  # Counter for trace indexes
         
         # Tool/Field mapping (⊕Tool:μField/∴Map)
         self.tool_field_map: Dict[str, Dict[str, Any]] = {}
@@ -236,23 +272,29 @@ class FluinDictAgent:
     
     def _trace_action(self, action: str, target: str, data: Any) -> None:
         """
-        Add an action to memory trace
-        添加操作至記憶追蹤
+        Add an action to memory trace with bounded size
+        添加操作至記憶追蹤（限制大小）
         
         Args:
             action: Action name
             target: Target identifier
-            data: Action data
+            data: Action data (stored by reference for performance)
+        
+        Note:
+            Data is stored by reference rather than deep copied for performance.
+            If the caller mutates data after tracing, use copy.deepcopy(data) 
+            before calling this method.
         """
         trace_entry = {
-            "index": len(self.memory_trace),
+            "index": self._trace_counter,  # Use counter instead of len()
             "action": action,
             "target": target,
-            "data": copy.deepcopy(data),
+            "data": data,  # Stored by reference for performance
             "timestamp": datetime.now().isoformat(),
             "symbol": "∞Trace"
         }
         self.memory_trace.append(trace_entry)
+        self._trace_counter += 1
     
     def get_trace(self, start: Optional[int] = None, end: Optional[int] = None) -> List[Dict[str, Any]]:
         """
@@ -264,11 +306,18 @@ class FluinDictAgent:
             end: End index
             
         Returns:
-            List of trace entries
+            List of trace entries (converted from deque)
         """
         if start is None and end is None:
-            return self.memory_trace.copy()
-        return self.memory_trace[start:end]
+            return list(self.memory_trace)  # Convert deque to list
+        
+        # Slicing a deque returns a list
+        if start is not None and end is not None:
+            return list(self.memory_trace)[start:end]
+        elif start is not None:
+            return list(self.memory_trace)[start:]
+        else:  # end is not None
+            return list(self.memory_trace)[:end]
     
     def create_memory_loop(self, loop_id: str, interval: int = 1) -> Dict[str, Any]:
         """
@@ -707,8 +756,8 @@ class FluinDictAgent:
     
     def create_snapshot(self, snapshot_id: Optional[str] = None) -> Dict[str, Any]:
         """
-        Create a full system snapshot
-        創建完整系統快照
+        Create a full system snapshot using JSON round-trip for efficiency
+        創建完整系統快照（使用 JSON 往返提升效率）
         
         Args:
             snapshot_id: Optional snapshot identifier
@@ -718,6 +767,23 @@ class FluinDictAgent:
         """
         if snapshot_id is None:
             snapshot_id = f"snapshot_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        
+        # Prepare state data for JSON serialization
+        state = {
+            "memory_trace": list(self.memory_trace),  # Convert deque to list
+            "echo_registry": self.echo_registry,
+            "jump_points": self.jump_points,
+            "tool_field_map": self.tool_field_map,
+            "persona_modules": self.persona_modules,
+            "memory_triggers_info": {
+                tid: {"condition": t.get("condition", ""), "registered_at": t.get("registered_at", "")}
+                for tid, t in self.memory_triggers.items()
+                if isinstance(t, dict)  # Only include dict triggers in snapshot
+            }
+        }
+        
+        # JSON round-trip creates an isolated copy (faster than deepcopy for nested dicts)
+        state_copy = json.loads(json.dumps(state, ensure_ascii=False))
         
         snapshot = {
             "snapshot_id": snapshot_id,
@@ -731,17 +797,7 @@ class FluinDictAgent:
             "active_seeds": len(self.active_seeds),
             "personas": len(self.persona_modules),
             "triggers": len(self.memory_triggers),
-            "state": {
-                "memory_trace": copy.deepcopy(self.memory_trace),
-                "echo_registry": copy.deepcopy(self.echo_registry),
-                "jump_points": copy.deepcopy(self.jump_points),
-                "tool_field_map": copy.deepcopy(self.tool_field_map),
-                "persona_modules": copy.deepcopy(self.persona_modules),
-                "memory_triggers_info": {
-                    tid: {"condition": t["condition"], "registered_at": t["registered_at"]}
-                    for tid, t in self.memory_triggers.items()
-                }
-            }
+            "state": state_copy
         }
         
         snapshot["checksum"] = self._generate_checksum(snapshot["state"])
@@ -814,9 +870,18 @@ class FluinDictAgent:
     # ========== Utility Methods ==========
     
     def _generate_checksum(self, data: Any) -> str:
-        """Generate SHA-256 checksum for data"""
-        data_str = json.dumps(data, sort_keys=True, ensure_ascii=False)
-        return hashlib.sha256(data_str.encode('utf-8')).hexdigest()
+        """Generate SHA-256 checksum with caching for repeated data.
+        
+        Uses LRU cache to avoid redundant checksum calculations for
+        frequently accessed or repeated data structures.
+        """
+        try:
+            hashable = _make_hashable(data)
+            return _cached_checksum(hashable)
+        except (TypeError, AttributeError):
+            # Fallback for non-hashable or complex data
+            data_str = json.dumps(data, sort_keys=True, ensure_ascii=False)
+            return hashlib.sha256(data_str.encode('utf-8')).hexdigest()
     
     def get_core_info(self) -> Dict[str, Any]:
         """

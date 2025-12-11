@@ -81,43 +81,43 @@ class TaskProcessor:
     
     def process_all_tasks(self) -> Dict[str, Any]:
         """Process all task files in the tasks directory"""
+        # Use more specific glob pattern to avoid filtering
+        task_files = list(self.tasks_dir.glob("2025-*.yaml"))
+        
         summary = {
             "processing_time": datetime.now().isoformat(),
-            "total_tasks": 0,
+            "total_tasks": len(task_files),
             "passed": 0,
             "failed": 0,
             "tasks": []
         }
         
-        # Find all YAML task files
-        for task_file in self.tasks_dir.glob("*.yaml"):
-            if task_file.name.startswith("2025-"):  # Task file pattern
-                summary["total_tasks"] += 1
+        # Process task files
+        for task_file in task_files:
+            try:
+                task = self.load_task(task_file.name)
+                result = self.validate_task_implementation(task)
                 
-                try:
-                    task = self.load_task(task_file.name)
-                    result = self.validate_task_implementation(task)
-                    
-                    if result["status"] == "passed":
-                        summary["passed"] += 1
-                    else:
-                        summary["failed"] += 1
-                        
-                    summary["tasks"].append(result)
-                    
-                    # Save individual task result
-                    result_file = self.results_dir / f"{task_file.stem}_result.json"
-                    with open(result_file, 'w', encoding='utf-8') as result_output_file:
-                        json.dump(result, result_output_file, ensure_ascii=False, indent=2)
-                        
-                except Exception as processing_error:
-                    error_result = {
-                        "task_id": task_file.stem,
-                        "status": "error",
-                        "errors": [f"Failed to process task: {str(processing_error)}"]
-                    }
-                    summary["tasks"].append(error_result)
+                if result["status"] == "passed":
+                    summary["passed"] += 1
+                else:
                     summary["failed"] += 1
+                    
+                summary["tasks"].append(result)
+                
+                # Save individual task result
+                result_file = self.results_dir / f"{task_file.stem}_result.json"
+                with open(result_file, 'w', encoding='utf-8') as result_output_file:
+                    json.dump(result, result_output_file, ensure_ascii=False, indent=2)
+                    
+            except Exception as processing_error:
+                error_result = {
+                    "task_id": task_file.stem,
+                    "status": "error",
+                    "errors": [f"Failed to process task: {str(processing_error)}"]
+                }
+                summary["tasks"].append(error_result)
+                summary["failed"] += 1
         
         # Save summary
         summary_file = self.results_dir / "task_processing_summary.json"
