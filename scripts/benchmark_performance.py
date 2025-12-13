@@ -19,16 +19,26 @@ import tempfile
 import shutil
 from pathlib import Path
 
-# Add project root to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
+# Add project root to path for imports
+project_root = Path(__file__).parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
-from particle_core.src.logic_pipeline import LogicPipeline
-from particle_core.src.rebuild_fn import FunctionRestorer
-from particle_core.src.memory_archive_seed import MemoryArchiveSeed
+# Import core modules
+try:
+    from particle_core.src.logic_pipeline import LogicPipeline
+    from particle_core.src.rebuild_fn import FunctionRestorer
+    from particle_core.src.memory_archive_seed import MemoryArchiveSeed
+except ImportError as e:
+    print(f"Error importing particle core modules: {e}")
+    print("Please ensure you're running from the repository root.")
+    sys.exit(1)
 
 # Try to import rag_index (optional, requires sklearn)
 try:
-    from rag_index import read_files, build_index
+    import rag_index
+    read_files = rag_index.read_files
+    build_index = rag_index.build_index
     HAS_RAG_INDEX = True
 except ImportError:
     HAS_RAG_INDEX = False

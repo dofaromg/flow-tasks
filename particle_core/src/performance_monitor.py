@@ -11,18 +11,27 @@ collecting statistics, and identifying bottlenecks.
 import functools
 import time
 import logging
+import threading
 from typing import Any, Callable, TypeVar, Optional
 from collections import defaultdict
 
 F = TypeVar('F', bound=Callable[..., Any])
 
-# Global performance statistics
-_performance_stats = defaultdict(lambda: {
-    'count': 0,
-    'total_time': 0.0,
-    'min_time': float('inf'),
-    'max_time': 0.0
-})
+# Thread-safe global performance statistics
+_stats_lock = threading.Lock()
+
+
+def _create_stats_dict():
+    """Factory function for creating new statistics dictionaries."""
+    return {
+        'count': 0,
+        'total_time': 0.0,
+        'min_time': float('inf'),
+        'max_time': 0.0
+    }
+
+
+_performance_stats = defaultdict(_create_stats_dict)
 
 
 def timing_decorator(log_level: str = 'INFO', threshold_ms: Optional[float] = None) -> Callable[[F], F]:
@@ -54,12 +63,13 @@ def timing_decorator(log_level: str = 'INFO', threshold_ms: Optional[float] = No
             
             elapsed_ms = (end - start) * 1000
             
-            # Update statistics
-            stats = _performance_stats[func.__name__]
-            stats['count'] += 1
-            stats['total_time'] += elapsed_ms
-            stats['min_time'] = min(stats['min_time'], elapsed_ms)
-            stats['max_time'] = max(stats['max_time'], elapsed_ms)
+            # Update statistics (thread-safe)
+            with _stats_lock:
+                stats = _performance_stats[func.__name__]
+                stats['count'] += 1
+                stats['total_time'] += elapsed_ms
+                stats['min_time'] = min(stats['min_time'], elapsed_ms)
+                stats['max_time'] = max(stats['max_time'], elapsed_ms)
             
             # Log if threshold is met or not set
             if threshold_ms is None or elapsed_ms >= threshold_ms:
@@ -103,8 +113,9 @@ def get_performance_stats(func_name: Optional[str] = None) -> dict:
 
 
 def reset_performance_stats() -> None:
-    """Reset all performance statistics."""
-    _performance_stats.clear()
+    """Reset all performance statistics (thread-safe)."""
+    with _stats_lock:
+        _performance_stats.clear()
 
 
 def print_performance_report() -> None:
