@@ -31,34 +31,31 @@ class CodeQualityChecker:
         # Define patterns to detect
         self.patterns = {
             # Critical patterns
-            r'subprocess\.getoutput\s*\(.*f["\']': {
+            # Match subprocess with f-string or format() which could allow injection
+            r'subprocess\.(?:getoutput|call|Popen)\s*\(\s*f["\']': {
                 'severity': 'critical',
-                'pattern': 'subprocess.getoutput with f-string',
-                'description': 'Command injection vulnerability',
-                'suggestion': 'Use subprocess.run with argument list instead'
+                'pattern': 'subprocess with f-string interpolation',
+                'description': 'Command injection vulnerability - user input in shell command',
+                'suggestion': 'Use subprocess.run([list, of, args], ...) with argument list'
             },
-            r'subprocess\.call\s*\(.*f["\']': {
+            r'subprocess\.(?:getoutput|call|Popen)\s*\([^)]*\.format\(': {
                 'severity': 'critical',
-                'pattern': 'subprocess.call with f-string',
-                'description': 'Potential command injection',
-                'suggestion': 'Use subprocess.run with argument list'
+                'pattern': 'subprocess with .format() interpolation',
+                'description': 'Potential command injection - string interpolation in shell command',
+                'suggestion': 'Use subprocess.run with argument list instead of string formatting'
             },
             
             # High priority patterns
             # Note: rglob('*') is acceptable for ZIP operations with is_file() check
-            # Skip this pattern for now as it has too many false positives
-            r'for\s+\w+\s+in\s+.*\.glob\(["\'][*]\..*[\'"]\):\s*\n\s+if\s+': {
-                'severity': 'high',
-                'pattern': 'glob with post-filtering',
-                'description': 'Inefficient - glob then filter',
-                'suggestion': 'Use more specific glob pattern'
-            },
+            # These patterns are commented out to reduce false positives
+            # Uncomment and refine if needed for specific use cases
             
             # Medium priority patterns
-            r'self\.\w+\s*=\s*\[\].*trace|history|log': {
+            # More specific pattern: look for self.X_trace or self.X_history = []
+            r'self\.(\w*(?:trace|history|log|events)\w*)\s*=\s*\[\]': {
                 'severity': 'medium',
-                'pattern': 'Unbounded list for traces/logs',
-                'description': 'Potential memory leak with unbounded list',
+                'pattern': 'Unbounded list for traces/logs/history',
+                'description': 'Potential memory leak with unbounded collection',
                 'suggestion': 'Consider using deque(maxlen=N) for bounded memory'
             },
             r'copy\.deepcopy\([^)]+\).*\n.*copy\.deepcopy': {
@@ -69,12 +66,9 @@ class CodeQualityChecker:
             },
             
             # Low priority patterns
-            r'json\.dumps\([^)]+\).*\n.*json\.dumps\([^)]+\).*\n.*json\.dumps': {
-                'severity': 'low',
-                'pattern': 'Repeated JSON serialization',
-                'description': 'Multiple JSON dumps without caching',
-                'suggestion': 'Consider caching serialization results'
-            },
+            # Note: Detecting repeated JSON serialization is complex and context-dependent
+            # Removing this pattern to avoid false positives
+            # Manual code review is more effective for this case
         }
     
     def check_file(self, file_path: Path) -> None:
@@ -177,13 +171,13 @@ class CodeQualityChecker:
         
         if by_severity['critical']:
             print("\n⚠️  CRITICAL issues require immediate attention!")
-            return 1
+            return 2  # Exit code 2 for critical issues
         elif by_severity['high']:
             print("\n⚠️  HIGH priority issues should be addressed soon.")
-            return 1
+            return 1  # Exit code 1 for high priority issues
         else:
             print("\n✅ No critical or high priority issues found.")
-            return 0
+            return 0  # Exit code 0 for success
     
     def generate_json_report(self, output_file: str = "code_quality_report.json") -> None:
         """Generate a JSON report of issues."""
