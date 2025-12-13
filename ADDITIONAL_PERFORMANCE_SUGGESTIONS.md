@@ -140,13 +140,27 @@ Performance Monitoring Utilities
 import functools
 import time
 import logging
+import threading
 from typing import Any, Callable, TypeVar, Optional
 from collections import defaultdict
 
 F = TypeVar('F', bound=Callable[..., Any])
 
-# Global performance statistics
-_performance_stats = defaultdict(lambda: {'count': 0, 'total_time': 0.0, 'min_time': float('inf'), 'max_time': 0.0})
+# Thread-safe global performance statistics
+_stats_lock = threading.Lock()
+
+
+def _create_stats_dict():
+    """Factory function for creating new statistics dictionaries."""
+    return {
+        'count': 0,
+        'total_time': 0.0,
+        'min_time': float('inf'),
+        'max_time': 0.0
+    }
+
+
+_performance_stats = defaultdict(_create_stats_dict)
 
 def timing_decorator(log_level: str = 'INFO', threshold_ms: Optional[float] = None) -> Callable[[F], F]:
     """
