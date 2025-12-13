@@ -52,9 +52,11 @@ jobs:
           
           # Check for warnings (within 7 days of deletion)
           CURRENT_TIME=$(date +%s)
-          WARNING_COUNT=0
           
-          echo "$CODESPACES" | jq -r '.[] | @json' | while read -r codespace; do
+          # Create a temporary file to store warning information
+          > warnings.txt
+          
+          while IFS= read -r codespace; do
             NAME=$(echo "$codespace" | jq -r '.name')
             LAST_USED=$(echo "$codespace" | jq -r '.lastUsedAt')
             
@@ -66,13 +68,15 @@ jobs:
                 
                 if [ $DAYS_UNTIL_DELETION -le 7 ]; then
                   echo "⚠️  WARNING: $NAME will be deleted in ~${DAYS_UNTIL_DELETION} days"
-                  WARNING_COUNT=$((WARNING_COUNT + 1))
+                  echo "$NAME" >> warnings.txt
                 fi
               fi
             fi
-          done
+          done < <(echo "$CODESPACES" | jq -r '.[] | @json')
           
-          if [ $WARNING_COUNT -gt 0 ]; then
+          WARNING_COUNT=$(wc -l < warnings.txt | tr -d ' ')
+          
+          if [ "$WARNING_COUNT" -gt 0 ]; then
             echo "has_warnings=true" >> $GITHUB_OUTPUT
             echo "warning_count=$WARNING_COUNT" >> $GITHUB_OUTPUT
           else
