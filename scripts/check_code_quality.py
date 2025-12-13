@@ -58,12 +58,8 @@ class CodeQualityChecker:
                 'description': 'Potential memory leak with unbounded collection',
                 'suggestion': 'Consider using deque(maxlen=N) for bounded memory'
             },
-            r'copy\.deepcopy\([^)]+\).*\n.*copy\.deepcopy': {
-                'severity': 'medium',
-                'pattern': 'Multiple deepcopy calls',
-                'description': 'Multiple deep copies can be expensive',
-                'suggestion': 'Consider JSON round-trip or single copy'
-            },
+            # Note: Multiple deepcopy detection removed to avoid false positives
+            # Better to detect this through manual code review or AST analysis
             
             # Low priority patterns
             # Note: Detecting repeated JSON serialization is complex and context-dependent
@@ -115,6 +111,23 @@ class CodeQualityChecker:
         
         for py_file in python_files:
             self.check_file(py_file)
+    
+    def get_exit_code(self) -> int:
+        """Determine exit code based on issue severity.
+        
+        Returns:
+            0 for no issues or low/medium only
+            1 for high priority issues
+            2 for critical issues
+        """
+        has_critical = any(i.severity == 'critical' for i in self.issues)
+        has_high = any(i.severity == 'high' for i in self.issues)
+        
+        if has_critical:
+            return 2
+        elif has_high:
+            return 1
+        return 0
     
     def print_report(self) -> None:
         """Print a formatted report of issues found."""
@@ -171,13 +184,10 @@ class CodeQualityChecker:
         
         if by_severity['critical']:
             print("\n⚠️  CRITICAL issues require immediate attention!")
-            return 2  # Exit code 2 for critical issues
         elif by_severity['high']:
             print("\n⚠️  HIGH priority issues should be addressed soon.")
-            return 1  # Exit code 1 for high priority issues
         else:
             print("\n✅ No critical or high priority issues found.")
-            return 0  # Exit code 0 for success
     
     def generate_json_report(self, output_file: str = "code_quality_report.json") -> None:
         """Generate a JSON report of issues."""
@@ -236,12 +246,13 @@ def main():
     
     checker = CodeQualityChecker(args.dir)
     checker.check_directory()
-    exit_code = checker.print_report()
+    checker.print_report()
     
     if args.json:
         checker.generate_json_report(args.output)
     
-    sys.exit(exit_code or 0)
+    # Exit with appropriate code based on severity
+    sys.exit(checker.get_exit_code())
 
 if __name__ == "__main__":
     main()
