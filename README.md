@@ -30,6 +30,52 @@ kubectl apply -f argocd/app.yaml
 - [架構圖表](ARCHITECTURE.md)
 - [應用程式說明](apps/README.md)
 - [分支整合優化指南](BRANCH_INTEGRATION_GUIDE.md) ⭐ 新增
+- [Codespace 管理指南](CODESPACE_MANAGEMENT.md) 🆕 新增
+
+---
+
+## 📦 GitHub Codespaces 開發環境
+
+使用 GitHub Codespaces 快速啟動雲端開發環境：
+
+### 快速開始
+```bash
+# 創建 Codespace
+gh codespace create --repo dofaromg/flow-tasks
+
+# 或直接從 GitHub 網頁介面創建
+# 點擊 "Code" → "Codespaces" → "Create codespace on main"
+```
+
+### Codespace 生命週期管理
+
+⚠️ **重要提醒**：Codespace 在 30 天不活動後會自動刪除。
+
+**防止刪除的方法**：
+1. 定期連接 Codespace（建議每 2 週一次）
+2. 使用監控腳本：`./scripts/monitor-codespaces.sh`
+3. 啟用自動監控：查看 `.github/workflows/codespace-monitoring.yml`
+
+**快速管理命令**：
+```bash
+# 列出所有 Codespaces
+gh codespace list
+
+# 連接到 Codespace
+gh codespace code -c CODESPACE_NAME
+
+# 停止 Codespace（節省使用時數）
+gh codespace stop -c CODESPACE_NAME
+
+# 刪除 Codespace
+gh codespace delete -c CODESPACE_NAME
+```
+
+📖 **完整指南**：查看 [Codespace 管理指南](CODESPACE_MANAGEMENT.md) 了解：
+- 詳細的生命週期管理策略
+- 自動化監控和提醒設置
+- 最佳實踐和故障排除
+- 成本優化建議
 
 ---
 
