@@ -53,7 +53,7 @@ Create a scheduled task to connect to your codespace periodically:
 
 ### Method 3: GitHub Actions Workflow
 
-Use the automated workflow included in this repository (see `.github/workflows/codespace-keepalive.yml`)
+Use the automated workflow included in this repository (see `.github/workflows/codespace-monitoring.yml`)
 
 ### Method 4: Codespace Management via CLI
 
@@ -251,8 +251,8 @@ GitHub Free/Pro accounts include:
 
 This repository includes:
 - `.devcontainer/devcontainer.json`: Base configuration
-- `scripts/monitor-codespaces.sh`: Monitoring script (to be created)
-- `.github/workflows/codespace-keepalive.yml`: Automated keep-alive (to be created)
+- `scripts/monitor-codespaces.sh`: Monitoring script
+- `.github/workflows/codespace-monitoring.yml`: Automated monitoring workflow
 
 ## Additional Resources
 
