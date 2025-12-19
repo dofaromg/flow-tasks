@@ -12,6 +12,7 @@ import json
 import importlib.util
 import time
 import traceback
+import html
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
@@ -98,11 +99,12 @@ class TaskProcessor:
                 })
                 result["metrics"]["files_checked"] = 1
                 
-                # Count lines of code
+                # Count lines of code efficiently
                 try:
                     with open(target_path, 'r', encoding='utf-8') as f:
-                        lines = f.readlines()
-                        result["metrics"]["lines_of_code"] = len(lines)
+                        # Count lines without loading entire file
+                        line_count = sum(1 for _ in f)
+                        result["metrics"]["lines_of_code"] = line_count
                 except Exception as e:
                     result["warnings"].append({
                         "type": "metrics",
@@ -337,8 +339,20 @@ class TaskProcessor:
         """Generate an HTML report with visual elements"""
         report_file = self.results_dir / "report.html"
         
-        # Calculate pass rate for progress bar
+        # Calculate pass rate for progress bar - sanitize for HTML
         pass_rate = summary['summary']['pass_rate']
+        pass_rate_str = html.escape(f"{pass_rate:.1f}")
+        
+        # Escape summary values for HTML
+        processing_time = html.escape(summary['processing_time'])
+        total_tasks = html.escape(str(summary['total_tasks']))
+        passed = html.escape(str(summary['passed']))
+        failed = html.escape(str(summary['failed']))
+        warnings = html.escape(str(summary['warnings']))
+        total_exec_time = html.escape(f"{summary['overall_metrics']['total_execution_time_ms']:.2f}")
+        avg_task_time = html.escape(f"{summary['overall_metrics']['average_task_time_ms']:.2f}")
+        total_files = html.escape(str(summary['overall_metrics']['total_files_checked']))
+        total_loc = html.escape(str(summary['overall_metrics']['total_lines_of_code']))
         
         html_content = f"""<!DOCTYPE html>
 <html lang="en">
@@ -531,30 +545,30 @@ class TaskProcessor:
 <body>
     <div class="container">
         <h1>📊 FlowAgent Task Processing Report</h1>
-        <div class="timestamp">Generated: {summary['processing_time']}</div>
+        <div class="timestamp">Generated: {processing_time}</div>
         
         <div class="summary-grid">
             <div class="metric-card">
                 <div class="metric-label">Total Tasks</div>
-                <div class="metric-value">{summary['total_tasks']}</div>
+                <div class="metric-value">{total_tasks}</div>
             </div>
             <div class="metric-card success">
                 <div class="metric-label">✅ Passed</div>
-                <div class="metric-value">{summary['passed']}</div>
+                <div class="metric-value">{passed}</div>
             </div>
             <div class="metric-card danger">
                 <div class="metric-label">❌ Failed</div>
-                <div class="metric-value">{summary['failed']}</div>
+                <div class="metric-value">{failed}</div>
             </div>
             <div class="metric-card warning">
                 <div class="metric-label">⚠️ Warnings</div>
-                <div class="metric-value">{summary['warnings']}</div>
+                <div class="metric-value">{warnings}</div>
             </div>
         </div>
         
         <div class="progress-bar">
             <div class="progress-fill" style="width: {pass_rate}%">
-                {pass_rate}% Pass Rate
+                {pass_rate_str}% Pass Rate
             </div>
         </div>
         
@@ -562,22 +576,22 @@ class TaskProcessor:
             <h2>⏱️ Performance Metrics</h2>
             <div class="task-metrics">
                 <div class="task-metric">
-                    <strong>Total Execution Time:</strong> {summary['overall_metrics']['total_execution_time_ms']:.2f}ms
+                    <strong>Total Execution Time:</strong> {total_exec_time}ms
                 </div>
                 <div class="task-metric">
-                    <strong>Average Task Time:</strong> {summary['overall_metrics']['average_task_time_ms']:.2f}ms
+                    <strong>Average Task Time:</strong> {avg_task_time}ms
                 </div>
                 <div class="task-metric">
-                    <strong>Files Checked:</strong> {summary['overall_metrics']['total_files_checked']}
+                    <strong>Files Checked:</strong> {total_files}
                 </div>
                 <div class="task-metric">
-                    <strong>Lines of Code:</strong> {summary['overall_metrics']['total_lines_of_code']}
+                    <strong>Lines of Code:</strong> {total_loc}
                 </div>
             </div>
         </div>
 """
         
-        # Add recommendations
+        # Add recommendations (with HTML escaping)
         if summary['summary']['recommendations']:
             html_content += """
         <div class="section">
@@ -586,7 +600,7 @@ class TaskProcessor:
                 <ul>
 """
             for rec in summary['summary']['recommendations']:
-                html_content += f"                    <li>{rec}</li>\n"
+                html_content += f"                    <li>{html.escape(rec)}</li>\n"
             html_content += """                </ul>
             </div>
         </div>
@@ -601,56 +615,66 @@ class TaskProcessor:
         for task in summary['tasks']:
             status_class = task['status']
             status_icon = "✓" if task['status'] == 'passed' else "✗"
+            task_id = html.escape(task['task_id'])
             
             html_content += f"""
             <div class="task-card {status_class}">
                 <div class="task-header">
                     <div class="task-status {status_class}">{status_icon}</div>
-                    <div class="task-title">{task['task_id']}</div>
+                    <div class="task-title">{task_id}</div>
                 </div>
 """
             
             if task.get('metadata', {}).get('description'):
-                html_content += f"                <p><strong>Description:</strong> {task['metadata']['description']}</p>\n"
+                desc = html.escape(task['metadata']['description'])
+                html_content += f"                <p><strong>Description:</strong> {desc}</p>\n"
+            
+            exec_time = html.escape(f"{task['metrics']['execution_time_ms']:.2f}")
+            files_checked = html.escape(str(task['metrics']['files_checked']))
+            loc = html.escape(str(task['metrics']['lines_of_code']))
             
             html_content += f"""
                 <div class="task-metrics">
-                    <div class="task-metric">⏱️ {task['metrics']['execution_time_ms']:.2f}ms</div>
-                    <div class="task-metric">📁 {task['metrics']['files_checked']} files</div>
-                    <div class="task-metric">📝 {task['metrics']['lines_of_code']} LOC</div>
+                    <div class="task-metric">⏱️ {exec_time}ms</div>
+                    <div class="task-metric">📁 {files_checked} files</div>
+                    <div class="task-metric">📝 {loc} LOC</div>
                 </div>
 """
             
-            # Add checks
+            # Add checks (with HTML escaping)
             if task.get('checks'):
                 html_content += "                <div class='checks'>\n"
                 for check in task['checks']:
                     if isinstance(check, dict):
-                        msg = check.get('message', check.get('check'))
+                        msg = html.escape(check.get('message', check.get('check', '')))
                     else:
-                        msg = check
+                        msg = html.escape(str(check))
                     html_content += f"                    <div class='check-item'>✓ {msg}</div>\n"
                 html_content += "                </div>\n"
             
-            # Add errors
+            # Add errors (with HTML escaping)
             if task.get('errors'):
                 html_content += "                <div class='errors'>\n"
                 for error in task['errors']:
                     if isinstance(error, dict):
-                        msg = f"[{error.get('type', 'error')}] {error.get('message')}"
+                        error_type = html.escape(error.get('type', 'error'))
+                        error_msg = html.escape(error.get('message', ''))
+                        msg = f"[{error_type}] {error_msg}"
                     else:
-                        msg = error
+                        msg = html.escape(str(error))
                     html_content += f"                    <div class='error-item'>✗ {msg}</div>\n"
                 html_content += "                </div>\n"
             
-            # Add warnings
+            # Add warnings (with HTML escaping)
             if task.get('warnings'):
                 html_content += "                <div class='warnings'>\n"
                 for warning in task['warnings']:
                     if isinstance(warning, dict):
-                        msg = f"[{warning.get('type', 'warning')}] {warning.get('message')}"
+                        warning_type = html.escape(warning.get('type', 'warning'))
+                        warning_msg = html.escape(warning.get('message', ''))
+                        msg = f"[{warning_type}] {warning_msg}"
                     else:
-                        msg = warning
+                        msg = html.escape(str(warning))
                     html_content += f"                    <div class='warning-item'>⚠️ {msg}</div>\n"
                 html_content += "                </div>\n"
             
