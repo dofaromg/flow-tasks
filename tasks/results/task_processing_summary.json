@@ -1,5 +1,5 @@
 {
-  "processing_time": "2025-12-19T15:10:13.605737",
+  "processing_time": "2025-12-19T15:12:02.108550",
   "total_tasks": 2,
   "passed": 2,
   "failed": 0,
@@ -8,7 +8,7 @@
     {
       "task_id": "particle-language-core",
       "task_name": "Unknown Task",
-      "validation_time": "2025-12-19T15:10:13.607779",
+      "validation_time": "2025-12-19T15:12:02.110667",
       "status": "passed",
       "checks": [
         {
@@ -33,7 +33,7 @@
     {
       "task_id": "hello-world-api",
       "task_name": "Unknown Task",
-      "validation_time": "2025-12-19T15:10:13.609156",
+      "validation_time": "2025-12-19T15:12:02.112081",
       "status": "passed",
       "checks": [
         {
@@ -50,7 +50,7 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 111.75,
+        "execution_time_ms": 109.46,
         "files_checked": 1,
         "lines_of_code": 36
       },
@@ -62,10 +62,10 @@
     }
   ],
   "overall_metrics": {
-    "total_execution_time_ms": 115.63,
+    "total_execution_time_ms": 113.42,
     "total_files_checked": 65,
     "total_lines_of_code": 36,
-    "average_task_time_ms": 57.81
+    "average_task_time_ms": 56.71
   },
   "summary": {
     "pass_rate": 100.0,

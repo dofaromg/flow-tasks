@@ -249,6 +249,7 @@ class TaskProcessor:
         
         # Generate additional report formats
         self._generate_markdown_report(summary)
+        self._generate_html_report(summary)
             
         return summary
     
@@ -332,6 +333,343 @@ class TaskProcessor:
                 
                 f.write("---\n\n")
     
+    def _generate_html_report(self, summary: Dict[str, Any]) -> None:
+        """Generate an HTML report with visual elements"""
+        report_file = self.results_dir / "report.html"
+        
+        # Calculate pass rate for progress bar
+        pass_rate = summary['summary']['pass_rate']
+        
+        html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowAgent Task Processing Report</title>
+    <style>
+        * {{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }}
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }}
+        .container {{
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }}
+        h1 {{
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }}
+        .timestamp {{
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }}
+        .summary-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }}
+        .metric-card {{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }}
+        .metric-card.success {{
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }}
+        .metric-card.danger {{
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+        }}
+        .metric-card.warning {{
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }}
+        .metric-label {{
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }}
+        .metric-value {{
+            font-size: 2em;
+            font-weight: bold;
+        }}
+        .progress-bar {{
+            height: 30px;
+            background: #ecf0f1;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }}
+        .progress-fill {{
+            height: 100%;
+            background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }}
+        .section {{
+            margin: 30px 0;
+        }}
+        h2 {{
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }}
+        .task-card {{
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }}
+        .task-card.passed {{
+            border-left-color: #2ecc71;
+        }}
+        .task-card.failed {{
+            border-left-color: #e74c3c;
+        }}
+        .task-header {{
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }}
+        .task-status {{
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }}
+        .task-status.passed {{
+            background: #2ecc71;
+            color: white;
+        }}
+        .task-status.failed {{
+            background: #e74c3c;
+            color: white;
+        }}
+        .task-title {{
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }}
+        .task-metrics {{
+            display: flex;
+            gap: 20px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }}
+        .task-metric {{
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }}
+        .checks, .errors, .warnings {{
+            margin: 10px 0;
+        }}
+        .check-item, .error-item, .warning-item {{
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }}
+        .check-item {{
+            background: #d5f4e6;
+            color: #27ae60;
+        }}
+        .error-item {{
+            background: #fadbd8;
+            color: #c0392b;
+        }}
+        .warning-item {{
+            background: #fcf3cf;
+            color: #d68910;
+        }}
+        .recommendations {{
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }}
+        .recommendations ul {{
+            list-style-position: inside;
+            margin-left: 10px;
+        }}
+        .footer {{
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 FlowAgent Task Processing Report</h1>
+        <div class="timestamp">Generated: {summary['processing_time']}</div>
+        
+        <div class="summary-grid">
+            <div class="metric-card">
+                <div class="metric-label">Total Tasks</div>
+                <div class="metric-value">{summary['total_tasks']}</div>
+            </div>
+            <div class="metric-card success">
+                <div class="metric-label">✅ Passed</div>
+                <div class="metric-value">{summary['passed']}</div>
+            </div>
+            <div class="metric-card danger">
+                <div class="metric-label">❌ Failed</div>
+                <div class="metric-value">{summary['failed']}</div>
+            </div>
+            <div class="metric-card warning">
+                <div class="metric-label">⚠️ Warnings</div>
+                <div class="metric-value">{summary['warnings']}</div>
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {pass_rate}%">
+                {pass_rate}% Pass Rate
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>⏱️ Performance Metrics</h2>
+            <div class="task-metrics">
+                <div class="task-metric">
+                    <strong>Total Execution Time:</strong> {summary['overall_metrics']['total_execution_time_ms']:.2f}ms
+                </div>
+                <div class="task-metric">
+                    <strong>Average Task Time:</strong> {summary['overall_metrics']['average_task_time_ms']:.2f}ms
+                </div>
+                <div class="task-metric">
+                    <strong>Files Checked:</strong> {summary['overall_metrics']['total_files_checked']}
+                </div>
+                <div class="task-metric">
+                    <strong>Lines of Code:</strong> {summary['overall_metrics']['total_lines_of_code']}
+                </div>
+            </div>
+        </div>
+"""
+        
+        # Add recommendations
+        if summary['summary']['recommendations']:
+            html_content += """
+        <div class="section">
+            <h2>💡 Recommendations</h2>
+            <div class="recommendations">
+                <ul>
+"""
+            for rec in summary['summary']['recommendations']:
+                html_content += f"                    <li>{rec}</li>\n"
+            html_content += """                </ul>
+            </div>
+        </div>
+"""
+        
+        # Add task details
+        html_content += """
+        <div class="section">
+            <h2>📋 Task Details</h2>
+"""
+        
+        for task in summary['tasks']:
+            status_class = task['status']
+            status_icon = "✓" if task['status'] == 'passed' else "✗"
+            
+            html_content += f"""
+            <div class="task-card {status_class}">
+                <div class="task-header">
+                    <div class="task-status {status_class}">{status_icon}</div>
+                    <div class="task-title">{task['task_id']}</div>
+                </div>
+"""
+            
+            if task.get('metadata', {}).get('description'):
+                html_content += f"                <p><strong>Description:</strong> {task['metadata']['description']}</p>\n"
+            
+            html_content += f"""
+                <div class="task-metrics">
+                    <div class="task-metric">⏱️ {task['metrics']['execution_time_ms']:.2f}ms</div>
+                    <div class="task-metric">📁 {task['metrics']['files_checked']} files</div>
+                    <div class="task-metric">📝 {task['metrics']['lines_of_code']} LOC</div>
+                </div>
+"""
+            
+            # Add checks
+            if task.get('checks'):
+                html_content += "                <div class='checks'>\n"
+                for check in task['checks']:
+                    if isinstance(check, dict):
+                        msg = check.get('message', check.get('check'))
+                    else:
+                        msg = check
+                    html_content += f"                    <div class='check-item'>✓ {msg}</div>\n"
+                html_content += "                </div>\n"
+            
+            # Add errors
+            if task.get('errors'):
+                html_content += "                <div class='errors'>\n"
+                for error in task['errors']:
+                    if isinstance(error, dict):
+                        msg = f"[{error.get('type', 'error')}] {error.get('message')}"
+                    else:
+                        msg = error
+                    html_content += f"                    <div class='error-item'>✗ {msg}</div>\n"
+                html_content += "                </div>\n"
+            
+            # Add warnings
+            if task.get('warnings'):
+                html_content += "                <div class='warnings'>\n"
+                for warning in task['warnings']:
+                    if isinstance(warning, dict):
+                        msg = f"[{warning.get('type', 'warning')}] {warning.get('message')}"
+                    else:
+                        msg = warning
+                    html_content += f"                    <div class='warning-item'>⚠️ {msg}</div>\n"
+                html_content += "                </div>\n"
+            
+            html_content += "            </div>\n"
+        
+        html_content += """
+        </div>
+        
+        <div class="footer">
+            FlowAgent Task Processor - Automated Code Generation Validation System
+        </div>
+    </div>
+</body>
+</html>
+"""
+        
+        with open(report_file, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+    
     def print_summary(self, summary: Dict[str, Any]):
         """Print a formatted summary of task processing"""
         print("=" * 70)
@@ -413,6 +751,7 @@ def main():
     print("=" * 70)
     print(f"  - JSON Summary: {processor.results_dir / 'task_processing_summary.json'}")
     print(f"  - Markdown Report: {processor.results_dir / 'report.md'}")
+    print(f"  - HTML Report: {processor.results_dir / 'report.html'}")
     print(f"  - Individual Results: {processor.results_dir / '*_result.json'}")
     print()
     
