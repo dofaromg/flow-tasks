@@ -1,9 +1,25 @@
 {
   "task_id": "particle-language-core",
-  "validation_time": "2025-12-19T15:08:04.442579",
+  "task_name": "Unknown Task",
+  "validation_time": "2025-12-19T15:10:13.607779",
   "status": "passed",
   "checks": [
-    "✓ Target directory exists: particle_core/"
+    {
+      "check": "directory_exists",
+      "status": "passed",
+      "message": "Target directory exists: particle_core/"
+    }
   ],
-  "errors": []
+  "errors": [],
+  "warnings": [],
+  "metrics": {
+    "execution_time_ms": 0.59,
+    "files_checked": 64,
+    "lines_of_code": 0
+  },
+  "metadata": {
+    "description": "MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統",
+    "priority": "medium",
+    "tags": []
+  }
 }
