@@ -2,6 +2,29 @@
 
 **✅ 完整的 GKE 部署基礎設施已就緒！** 這個 repository 提供完整的 Kubernetes 部署配置、CI/CD 流程和 GitOps 支援。
 
+## 🔄 外部倉庫檔案同步 / External Repository File Sync
+
+**全新功能！** 自動從其他 GitHub 倉庫拉取檔案到本地倉庫。
+
+**New Feature!** Automatically pull files from other GitHub repositories to your local repository.
+
+### 快速開始 / Quick Start
+
+```bash
+# 配置要同步的倉庫 / Configure repositories to sync
+vim repos_sync.yaml
+
+# 手動執行同步 / Run sync manually
+python scripts/sync_external_repos.py
+
+# 列出所有配置的倉庫 / List all configured repositories
+python scripts/sync_external_repos.py --list
+```
+
+📚 **完整文檔**: [外部倉庫檔案同步系統指南](docs/EXTERNAL_REPO_SYNC.md)
+
+---
+
 ## 🚀 快速部署
 
 選擇一種部署方式開始：
