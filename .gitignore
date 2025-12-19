@@ -216,3 +216,6 @@ particle_core/examples/logic_result_*.json
 test_output/
 memory_seeds/test_*.mseed.json
 dict_seeds/
+
+# Repository sync backups
+.sync_backups/
