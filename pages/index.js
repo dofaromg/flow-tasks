@@ -42,6 +42,13 @@ export default function Home() {
     red: '#ef4444',
   };
 
+  // Calculate margin top based on visible banners
+  const getContentMarginTop = () => {
+    if (showSummerSale && showFreeDelivery) return '6rem';
+    if (showSummerSale || showFreeDelivery) return '3rem';
+    return 0;
+  };
+
   return (
     <>
       <Head>
@@ -112,7 +119,7 @@ export default function Home() {
             boxShadow: '0 16px 48px rgba(15, 23, 42, 0.08)',
             padding: '2.5rem',
             border: '1px solid #e2e8f0',
-            marginTop: (showSummerSale && showFreeDelivery) ? '6rem' : (showSummerSale || showFreeDelivery) ? '3rem' : 0,
+            marginTop: getContentMarginTop(),
           }}
         >
           <p style={{ color: '#64748b', fontWeight: 600, letterSpacing: 1.2, marginBottom: 12 }}>

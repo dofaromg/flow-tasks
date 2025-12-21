@@ -3,14 +3,18 @@ import { identify } from './identify'
 
 // Initialize GrowthBook instance
 let growthbook: GrowthBook | null = null
+let dummyGrowthBook: GrowthBook | null = null
 
 export function getGrowthBook(): GrowthBook {
   if (typeof window === 'undefined') {
-    // Server-side: return a dummy GrowthBook instance
-    return new GrowthBook({
-      attributes: {},
-      features: {},
-    })
+    // Server-side: return a cached dummy GrowthBook instance
+    if (!dummyGrowthBook) {
+      dummyGrowthBook = new GrowthBook({
+        attributes: {},
+        features: {},
+      })
+    }
+    return dummyGrowthBook
   }
 
   if (!growthbook) {
