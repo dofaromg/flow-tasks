@@ -14,7 +14,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# lib/   # Commented out to allow Next.js lib/ directory with TypeScript utilities
 lib64/
 parts/
 sdist/
@@ -28,6 +28,16 @@ MANIFEST
 
 # Node dependencies
 node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
