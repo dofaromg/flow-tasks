@@ -1,8 +1,10 @@
 name: Deploy Next.js App
 
 on:
-  push:
-    branches: ["main"]
+  # Automatic deployment on push to main has been disabled
+  # Use workflow_dispatch for manual deployment only
+  # push:
+  #   branches: ["main"]
   workflow_dispatch:
 
 jobs:
