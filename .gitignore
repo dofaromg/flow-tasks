@@ -219,3 +219,10 @@ dict_seeds/
 
 # Repository sync backups
 .sync_backups/
+# AMP ledger artifacts
+/data/chain.jsonl
+/data/dag_edges.jsonl
+/data/refs.json
+/data/notion_export.json
+/data/github_export.json
+/data/snapshots/*.json

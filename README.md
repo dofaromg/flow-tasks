@@ -269,3 +269,57 @@ kubectl apply -f https://github.com/kedacore/keda/releases/latest/download/keda-
 - **`ARCHITECTURE.md`**：架構和流程圖 (11000+ 字)
 - **`apps/README.md`**：應用程式詳細說明
 
+
+## AMP（Index-only Ledger）
+
+這個倉庫現在包含一個可直接執行的 AMP index-only ledger。以下步驟可以在本地或 CI 中重放：
+
+### 安裝與設定
+1. 建立虛擬環境並安裝依賴：
+   ```bash
+   python -m venv .venv && source .venv/bin/activate
+   pip install -r requirements.txt
+   ```
+2. 建立設定檔：
+   ```bash
+   cp config.sample.yaml config.yaml
+   ```
+
+### 基本操作（Smoke Test）
+```bash
+python cli.py init
+python cli.py append "A"
+python cli.py append "B"
+python cli.py snapshot s1
+python cli.py verify
+python cli.py log --n 10
+```
+
+資料會寫入 `data/`：
+- `chain.jsonl`: 交易鏈（每筆一行 JSON）。
+- `dag_edges.jsonl`: 節點邊索引。
+- `refs.json`: 目前 head 與長度。
+- `snapshots/*.json`: 命名快照。
+
+### Docker 執行
+```bash
+docker build -t amp .
+docker run --rm -v "$PWD:/data" amp init
+docker run --rm -v "$PWD:/data" amp append "hello"
+docker run --rm -v "$PWD:/data" amp verify
+```
+
+### （可選）Notion 同步
+- 需要 `NOTION_TOKEN`（可放在環境變數或 GitHub Secrets）。
+- 將 `config.yaml` 中的 `notion` 區段填入 root page/database id。
+- 執行：
+  ```bash
+  python cli.py notion-sync
+  ```
+
+### 重播 (Replay)
+1. 確認 `data/chain.jsonl` 在工作目錄中。
+2. 重新執行 `python cli.py verify` 以驗證鏈條完整性。
+3. 使用 `python cli.py log --n 0` 匯出全部事件並據此重建需要的狀態。
+
+相關 CI 工作流程：`.github/workflows/ci.yml` 會自動跑一次 smoke test 並上傳 `data/` 產物。 
