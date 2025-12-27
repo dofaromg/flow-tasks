@@ -295,7 +295,6 @@ def build_parser() -> argparse.ArgumentParser:
     send_parser.set_defaults(func=session_send)
 
     web_parser = subparsers.add_parser("web", help="Launch the minimal web UI")
-    web_parser.add_argument("project", help="Project name")
     web_parser.add_argument("--port", type=int, default=8787, help="Port to bind")
     web_parser.add_argument("--debug", action="store_true", help="Enable Flask debug mode")
     web_parser.set_defaults(func=run_web)
