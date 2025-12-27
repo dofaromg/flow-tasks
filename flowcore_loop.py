@@ -264,7 +264,8 @@ def build_app() -> Flask:
 
 def run_web(args: argparse.Namespace) -> None:
     app = build_app()
-    app.run(host="0.0.0.0", port=args.port, debug=args.debug)
+    host = "127.0.0.1" if args.debug else "0.0.0.0"
+    app.run(host=host, port=args.port, debug=args.debug)
 
 
 # ---------------------------
