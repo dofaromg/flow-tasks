@@ -4,6 +4,21 @@
 
 This directory contains the configuration for GitHub Codespaces and VS Code Dev Containers.
 
+This configuration is based on the [Development Container Specification](https://containers.dev/) and follows the standards defined in the [devcontainers/spec](https://github.com/devcontainers/spec) repository.
+
+### Specification Compliance
+
+Our configuration aligns with the devcontainer specification as demonstrated in [PR #675](https://github.com/devcontainers/spec/pull/675), which establishes the baseline configuration:
+
+```json
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {}
+}
+```
+
+We extend this minimal specification with project-specific features, extensions, and lifecycle commands to support the FlowAgent development workflow.
+
 ## Configuration
 
 ### devcontainer.json
