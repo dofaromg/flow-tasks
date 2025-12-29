@@ -160,6 +160,20 @@ gh codespace rebuild -c CODESPACE_NAME
 2. Forward manually: Ports view → Forward a Port
 3. Check firewall settings
 
+## Validation
+
+To validate the devcontainer configuration:
+
+```bash
+python3 .devcontainer/validate_config.py
+```
+
+This script checks:
+- JSON syntax validity
+- Base image compliance with devcontainer spec
+- Property validation against the specification
+- Configuration summary
+
 ## Resources
 
 - [GitHub Codespaces Documentation](https://docs.github.com/en/codespaces)
