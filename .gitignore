@@ -227,6 +227,10 @@ test_output/
 memory_seeds/test_*.mseed.json
 dict_seeds/
 
+# Memory Quick Mount (MQM) runtime directories
+context/
+snapshots/
+
 # Repository sync backups
 .sync_backups/
 # AMP ledger artifacts
