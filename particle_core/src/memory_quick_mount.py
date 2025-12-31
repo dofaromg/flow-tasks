@@ -362,7 +362,7 @@ class MemoryQuickMounter:
         snapshot_data['compressed'] = compressed
         
         # 儲存快照 (Save snapshot)
-        snapshot_filename = f"snapshot_{agent_name}_{timestamp.strftime('%Y%m%d_%H%M%S')}.json"
+        snapshot_filename = f"snapshot_{agent_name}_{timestamp.strftime('%Y%m%d_%H%M%S_%f')}.json"
         snapshot_file = self.snapshot_dir / snapshot_filename
         
         try:
