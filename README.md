@@ -122,6 +122,15 @@ gh codespace delete -c CODESPACE_NAME
 - **CLI 互動介面**: 豐富的命令列工具
 - **AI 人格套件**: 人格連結器與通用 ZIP 壓縮/解壓縮（無檔案名稱限制）
 
+### Memory Quick Mount (MQM)
+一鍵式記憶掛載工具，支援：
+- 記憶種子快速掛載
+- 代理狀態快照
+- 離線本地運作
+- 粒子壓縮格式
+
+詳見：[MQM 文檔](particle_core/docs/memory_quick_mount.md)
+
 ### 快速開始
 
 ```bash
@@ -138,6 +147,9 @@ python src/memory_archive_seed.py interactive
 
 # AI 人格套件
 python src/ai_persona_toolkit.py
+
+# Memory Quick Mount (MQM)
+python src/memory_quick_mount.py --config config/mqm_config.yaml mount
 ```
 
 詳細說明請參閱：
@@ -145,6 +157,7 @@ python src/ai_persona_toolkit.py
 - [記憶封存種子說明](particle_core/docs/記憶封存種子說明.md)
 - [AI 人格套件使用說明](particle_core/docs/ai_persona_toolkit_guide.md)
 - [記憶封存種子系統更新說明](記憶封存種子系統更新說明.md)
+- [Memory Quick Mount 文檔](particle_core/docs/memory_quick_mount.md)
 
 ---
 
