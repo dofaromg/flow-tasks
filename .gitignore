@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# C build artifacts (wire protocol)
+particle_core/src/wire/wire_test
+particle_core/src/wire/*.o
+
 # Distribution / packaging
 .Python
 build/
@@ -226,6 +230,13 @@ particle_core/examples/logic_result_*.json
 test_output/
 memory_seeds/test_*.mseed.json
 dict_seeds/
+
+# Memory Quick Mount - Dynamic files
+particle_core/context/
+particle_core/snapshots/
+particle_core/backups/
+/tmp/test_context/
+/tmp/test_snapshots/
 
 # Repository sync backups
 .sync_backups/
