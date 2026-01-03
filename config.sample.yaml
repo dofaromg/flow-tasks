@@ -5,3 +5,57 @@ notion:
   database_id: ""
 github:
   enabled: false
+
+# Context Management Strategy Configuration
+# 上下文管理策略配置
+context_management:
+  default_strategy: "workspace"  # Options: workspace, sliding_window, summary, rag, hybrid
+  
+  # Workspace Strategy - File-based context management (Recommended)
+  workspace:
+    path: "./workspace"
+    watch_enabled: false
+    file_patterns:
+      - "*.py"
+      - "*.md"
+      - "*.txt"
+      - "*.json"
+      - "*.yaml"
+    ignore_patterns:
+      - ".git"
+      - "node_modules"
+      - "__pycache__"
+      - "*.pyc"
+      - ".DS_Store"
+  
+  # Sliding Window Strategy - Real-time data streams
+  sliding_window:
+    window_size: 50
+    overlap_size: 5
+    prioritize_important: true
+    max_tokens: 4096
+  
+  # Summary Strategy - Long conversation compression
+  summary:
+    segment_size: 10
+    preserve_recent: 5
+    summary_ratio: 0.3
+    max_tokens: 4096
+  
+  # RAG Strategy - Document retrieval
+  rag:
+    use_vector_db: false  # Set true to use sentence-transformers
+    model_name: "all-MiniLM-L6-v2"
+    max_tokens: 4096
+  
+  # Hybrid Strategy - Combine multiple strategies
+  hybrid:
+    strategies:
+      - "workspace"
+      - "sliding_window"
+    weights:
+      - 0.6
+      - 0.4
+    routing_rules:
+      file: "WorkspaceStrategy"
+      recent: "SlidingWindowStrategy"
