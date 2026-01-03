@@ -3,6 +3,14 @@
 
 本套件包含了 Wire-Memory Integration 驗證和 Memory Cache Disk Mapping 系統的完整實作。
 
+## 版本歷史 / Version History
+
+**Commit**: [`ffebfa0`](https://github.com/dofaromg/flow-tasks/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)  
+**Date**: 2026-01-03 05:44:29 UTC  
+**Author**: copilot-swe-agent[bot]  
+**Message**: Add FlowHub integration export package (patches and bundle)  
+**Co-authored-by**: dofaromg <217537952+dofaromg@users.noreply.github.com>
+
 ## 內容 (Contents)
 
 ### 1. Git Patch 檔案 (Individual Patches)

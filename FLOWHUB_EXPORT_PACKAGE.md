@@ -6,6 +6,14 @@
 **目標 (Target)**: dofaromg/flowhub  
 **提交範圍 (Commit Range)**: ba6f6a8..efa908e (5 commits)
 
+## 版本歷史 / Version History
+
+**Commit**: [`ffebfa0`](https://github.com/dofaromg/flow-tasks/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)  
+**Date**: 2026-01-03 05:44:29 UTC  
+**Author**: copilot-swe-agent[bot]  
+**Message**: Add FlowHub integration export package (patches and bundle)  
+**Co-authored-by**: dofaromg <217537952+dofaromg@users.noreply.github.com>
+
 ---
 
 ## 套件內容 (Package Contents)
