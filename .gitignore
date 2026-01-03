@@ -247,3 +247,4 @@ particle_core/backups/
 /data/notion_export.json
 /data/github_export.json
 /data/snapshots/*.json
+flowos/dist/
