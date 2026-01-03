@@ -239,6 +239,8 @@ particle_core/cache/
 /tmp/test_context/
 /tmp/test_snapshots/
 /tmp/test_cache/
+/tmp/test_context/
+/tmp/test_snapshots/
 
 # Repository sync backups
 .sync_backups/
@@ -249,3 +251,4 @@ particle_core/cache/
 /data/notion_export.json
 /data/github_export.json
 /data/snapshots/*.json
+flowos/dist/
