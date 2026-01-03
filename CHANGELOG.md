@@ -19,7 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Package includes Wire-Memory Integration validation and Memory Cache Disk Mapping system
 - Provides three integration methods: Git Bundle (recommended), Patch files, and Manual copy
 - All content ready for application to dofaromg/flowhub repository
-- **Co-authored-by**: dofaromg <217537952+dofaromg@users.noreply.github.com>
 
 ---
 

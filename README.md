@@ -355,4 +355,4 @@ git am patches/*.patch
 - [FlowHub 整合套件說明](FLOWHUB_EXPORT_PACKAGE.md)
 - [FlowHub 整合指南](FLOWHUB_INTEGRATION_GUIDE.md)
 
-🔗 **版本追蹤**: [Commit ffebfa0](https://github.com/dofaromg/flow-tasks/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)
+🔗 **版本追蹤**: Commit [`ffebfa0`](https://github.com/dofaromg/flow-tasks/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)
