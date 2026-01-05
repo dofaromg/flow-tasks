@@ -320,6 +320,111 @@ def test_format_for_analysis():
     assert len(formatted) > 0
 
 
+def test_export_yaml():
+    """測試 YAML 導出"""
+    extractor = ConversationExtractor()
+    package = extractor.package_conversation(SAMPLE_CONVERSATION)
+    
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
+        temp_path = f.name
+    
+    try:
+        extractor.export_to_file(package, temp_path, "yaml")
+        
+        # 驗證檔案存在
+        assert os.path.exists(temp_path)
+        
+        # 驗證內容
+        with open(temp_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        assert "messages:" in content or "metadata:" in content
+    finally:
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+
+
+def test_export_csv():
+    """測試 CSV 導出"""
+    extractor = ConversationExtractor()
+    package = extractor.package_conversation(SAMPLE_CONVERSATION)
+    
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as f:
+        temp_path = f.name
+    
+    try:
+        extractor.export_to_file(package, temp_path, "csv")
+        
+        # 驗證檔案存在
+        assert os.path.exists(temp_path)
+        
+        # 驗證內容
+        with open(temp_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        assert "Index" in content
+        assert "Role" in content
+        assert "Content" in content
+    finally:
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+
+
+def test_export_html():
+    """測試 HTML 導出"""
+    extractor = ConversationExtractor()
+    package = extractor.package_conversation(
+        SAMPLE_CONVERSATION,
+        metadata={"title": "測試", "date": "2026-01-05", "tags": ["test"]}
+    )
+    
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.html', delete=False) as f:
+        temp_path = f.name
+    
+    try:
+        extractor.export_to_file(package, temp_path, "html")
+        
+        # 驗證檔案存在
+        assert os.path.exists(temp_path)
+        
+        # 驗證內容
+        with open(temp_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        assert "<!DOCTYPE html>" in content
+        assert "<html" in content
+        assert "測試" in content
+    finally:
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+
+
+def test_export_xml():
+    """測試 XML 導出"""
+    extractor = ConversationExtractor()
+    package = extractor.package_conversation(SAMPLE_CONVERSATION)
+    
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.xml', delete=False) as f:
+        temp_path = f.name
+    
+    try:
+        extractor.export_to_file(package, temp_path, "xml")
+        
+        # 驗證檔案存在
+        assert os.path.exists(temp_path)
+        
+        # 驗證內容
+        with open(temp_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        assert '<?xml version="1.0" encoding="UTF-8"?>' in content
+        assert "<conversation" in content
+        assert "<messages>" in content
+    finally:
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+
+
 # 執行測試
 if __name__ == "__main__":
     print("🧪 執行對話知識提取器測試...")
@@ -333,6 +438,10 @@ if __name__ == "__main__":
         test_export_json,
         test_export_markdown,
         test_export_text,
+        test_export_yaml,
+        test_export_csv,
+        test_export_html,
+        test_export_xml,
         test_extract_keywords,
         test_analyze_attention,
         test_extract_concepts,

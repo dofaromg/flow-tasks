@@ -64,6 +64,10 @@ def demo_basic_usage():
     extractor.export_to_file(package, "/tmp/conversation_demo/demo.json", "json")
     extractor.export_to_file(package, "/tmp/conversation_demo/demo.md", "markdown")
     extractor.export_to_file(package, "/tmp/conversation_demo/demo.txt", "txt")
+    extractor.export_to_file(package, "/tmp/conversation_demo/demo.yaml", "yaml")
+    extractor.export_to_file(package, "/tmp/conversation_demo/demo.csv", "csv")
+    extractor.export_to_file(package, "/tmp/conversation_demo/demo.html", "html")
+    extractor.export_to_file(package, "/tmp/conversation_demo/demo.xml", "xml")
     
     print("\n✓ 已導出所有格式到 /tmp/conversation_demo/")
 
@@ -234,6 +238,10 @@ def main():
         print("  - demo.json (JSON 格式)")
         print("  - demo.md (Markdown 格式)")
         print("  - demo.txt (純文字格式)")
+        print("  - demo.yaml (YAML 格式)")
+        print("  - demo.csv (CSV 格式)")
+        print("  - demo.html (HTML 格式)")
+        print("  - demo.xml (XML 格式)")
         print("  - analysis_report.md (分析報告)")
         
     except Exception as e:

@@ -127,7 +127,7 @@ with open("analysis_report.md", "w", encoding="utf-8") as f:
 ```
 
 **主要功能**:
-- 📦 對話打包與導出 (JSON/Markdown/TXT)
+- 📦 對話打包與導出 (JSON/Markdown/TXT/YAML/CSV/HTML/XML) - 支援所有常見檔案格式
 - 🎯 注意力機制分析 (關鍵時刻、話題轉換、資訊密集段落)
 - 🧬 邏輯結構提取 (概念、因果關係、推理鏈、結論)
 - 🤖 AI 深度分析 (需要 Anthropic API Key)

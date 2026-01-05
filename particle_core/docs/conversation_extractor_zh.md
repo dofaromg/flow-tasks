@@ -17,6 +17,10 @@
 - **JSON**: 完整的數據結構，包含元數據和統計資訊
 - **Markdown**: 易讀的格式，適合文檔化
 - **純文字**: 簡潔的文字格式
+- **YAML**: YAML 格式，易於配置和讀取
+- **CSV**: 表格格式，方便數據分析和處理
+- **HTML**: 網頁格式，支持樣式美化和瀏覽器查看
+- **XML**: 結構化標記語言，便於程式解析
 
 ### 2. 注意力機制分析 (Attention Analysis)
 
@@ -88,6 +92,11 @@ package = extractor.package_conversation(
 # 導出為不同格式
 extractor.export_to_file(package, "conversation.json", "json")
 extractor.export_to_file(package, "conversation.md", "markdown")
+extractor.export_to_file(package, "conversation.txt", "txt")
+extractor.export_to_file(package, "conversation.yaml", "yaml")
+extractor.export_to_file(package, "conversation.csv", "csv")
+extractor.export_to_file(package, "conversation.html", "html")
+extractor.export_to_file(package, "conversation.xml", "xml")
 extractor.export_to_file(package, "conversation.txt", "txt")
 ```
 
@@ -204,7 +213,7 @@ python test_conversation_extractor.py
 **參數**:
 - `package`: 對話包
 - `filepath`: 檔案路徑
-- `format`: 格式，可選 "json"、"markdown"、"txt"
+- `format`: 格式，可選 "json"、"markdown"/"md"、"txt"/"text"、"yaml"/"yml"、"csv"、"html"/"htm"、"xml"
 
 #### `analyze_attention(messages: List[Dict]) -> Dict`
 
@@ -238,11 +247,12 @@ python test_conversation_extractor.py
 
 ```
 anthropic  # 用於 AI 深度分析（可選）
+pyyaml     # 用於 YAML 格式導出（可選，系統會自動降級）
 ```
 
 已添加到 `particle_core/requirements.txt`。
 
-如果不需要 AI 分析功能，anthropic 庫不是必需的，系統會優雅降級。
+如果不需要 AI 分析功能，anthropic 庫不是必需的；如果不需要 YAML 導出，pyyaml 也不是必需的，系統會優雅降級。
 
 ## 輸出範例
 

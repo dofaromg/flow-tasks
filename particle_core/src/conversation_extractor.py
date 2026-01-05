@@ -13,15 +13,24 @@
 
 import json
 import re
+import csv
+import xml.etree.ElementTree as ET
 from datetime import datetime
 from typing import List, Dict, Tuple, Optional
 from collections import Counter, defaultdict
+from html import escape as html_escape
 
 try:
     import anthropic
     ANTHROPIC_AVAILABLE = True
 except ImportError:
     ANTHROPIC_AVAILABLE = False
+
+try:
+    import yaml
+    YAML_AVAILABLE = True
+except ImportError:
+    YAML_AVAILABLE = False
 
 
 class ConversationExtractor:
@@ -84,24 +93,50 @@ class ConversationExtractor:
         Args:
             package: 對話包
             filepath: 檔案路徑
-            format: 格式 (json/markdown/txt)
+            format: 格式 (json/markdown/txt/yaml/csv/html/xml)
         """
         if format == "json":
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(package, f, ensure_ascii=False, indent=2)
             print(f"✓ 已導出 JSON: {filepath}")
         
-        elif format == "markdown":
+        elif format == "markdown" or format == "md":
             md_content = self._convert_to_markdown(package)
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(md_content)
             print(f"✓ 已導出 Markdown: {filepath}")
         
-        elif format == "txt":
+        elif format == "txt" or format == "text":
             txt_content = self._convert_to_text(package)
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(txt_content)
             print(f"✓ 已導出 TXT: {filepath}")
+        
+        elif format == "yaml" or format == "yml":
+            yaml_content = self._convert_to_yaml(package)
+            with open(filepath, 'w', encoding='utf-8') as f:
+                f.write(yaml_content)
+            print(f"✓ 已導出 YAML: {filepath}")
+        
+        elif format == "csv":
+            self._convert_to_csv(package, filepath)
+            print(f"✓ 已導出 CSV: {filepath}")
+        
+        elif format == "html" or format == "htm":
+            html_content = self._convert_to_html(package)
+            with open(filepath, 'w', encoding='utf-8') as f:
+                f.write(html_content)
+            print(f"✓ 已導出 HTML: {filepath}")
+        
+        elif format == "xml":
+            xml_content = self._convert_to_xml(package)
+            with open(filepath, 'w', encoding='utf-8') as f:
+                f.write(xml_content)
+            print(f"✓ 已導出 XML: {filepath}")
+        
+        else:
+            print(f"⚠️  不支援的格式: {format}")
+            print(f"   支援的格式: json, markdown/md, txt/text, yaml/yml, csv, html/htm, xml")
     
     def _convert_to_markdown(self, package: Dict) -> str:
         """轉換為 Markdown 格式"""
@@ -134,6 +169,175 @@ class ConversationExtractor:
             lines.append("\n" + "="*50 + "\n")
         
         return "\n".join(lines)
+    
+    def _convert_to_yaml(self, package: Dict) -> str:
+        """轉換為 YAML 格式"""
+        if not YAML_AVAILABLE:
+            # Fallback to manual YAML generation if pyyaml not available
+            lines = []
+            lines.append("---")
+            lines.append("metadata:")
+            metadata = package.get("metadata", {})
+            lines.append(f"  title: \"{metadata.get('title', '對話記錄')}\"")
+            lines.append(f"  date: \"{metadata.get('date', 'N/A')}\"")
+            tags = metadata.get('tags', [])
+            if tags:
+                lines.append("  tags:")
+                for tag in tags:
+                    lines.append(f"    - \"{tag}\"")
+            
+            lines.append("\nmessages:")
+            for i, msg in enumerate(package["messages"]):
+                lines.append(f"  - index: {i}")
+                lines.append(f"    role: \"{msg['role']}\"")
+                # Escape multiline content properly
+                content = msg['content'].replace('"', '\\"').replace('\n', '\\n')
+                lines.append(f"    content: \"{content}\"")
+            
+            lines.append("\nstatistics:")
+            stats = package.get("statistics", {})
+            for key, value in stats.items():
+                lines.append(f"  {key}: {value}")
+            
+            lines.append(f"\nexported_at: \"{package.get('exported_at', '')}\"")
+            lines.append(f"version: \"{package.get('version', '1.0')}\"")
+            
+            return "\n".join(lines)
+        else:
+            return yaml.dump(package, allow_unicode=True, default_flow_style=False, sort_keys=False)
+    
+    def _convert_to_csv(self, package: Dict, filepath: str):
+        """轉換為 CSV 格式"""
+        with open(filepath, 'w', encoding='utf-8', newline='') as f:
+            writer = csv.writer(f)
+            
+            # Write headers
+            writer.writerow(['Index', 'Role', 'Content', 'Length'])
+            
+            # Write conversation messages
+            for i, msg in enumerate(package["messages"]):
+                writer.writerow([
+                    i,
+                    msg["role"],
+                    msg["content"],
+                    len(msg["content"])
+                ])
+    
+    def _convert_to_html(self, package: Dict) -> str:
+        """轉換為 HTML 格式"""
+        lines = []
+        
+        # HTML header
+        lines.append("<!DOCTYPE html>")
+        lines.append("<html lang=\"zh-TW\">")
+        lines.append("<head>")
+        lines.append("    <meta charset=\"UTF-8\">")
+        lines.append("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">")
+        
+        metadata = package.get("metadata", {})
+        title = html_escape(metadata.get('title', '對話記錄'))
+        lines.append(f"    <title>{title}</title>")
+        
+        # Add CSS styling
+        lines.append("    <style>")
+        lines.append("        body { font-family: 'Microsoft JhengHei', Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 20px; background: #f5f5f5; }")
+        lines.append("        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }")
+        lines.append("        h1 { color: #333; border-bottom: 3px solid #4CAF50; padding-bottom: 10px; }")
+        lines.append("        .metadata { background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 30px; }")
+        lines.append("        .message { margin: 20px 0; padding: 15px; border-radius: 8px; }")
+        lines.append("        .user { background: #e3f2fd; border-left: 4px solid #2196F3; }")
+        lines.append("        .assistant { background: #f3e5f5; border-left: 4px solid #9C27B0; }")
+        lines.append("        .role { font-weight: bold; margin-bottom: 10px; color: #555; }")
+        lines.append("        .content { line-height: 1.6; white-space: pre-wrap; }")
+        lines.append("        .stats { margin-top: 30px; padding: 15px; background: #fff3e0; border-radius: 5px; }")
+        lines.append("    </style>")
+        lines.append("</head>")
+        lines.append("<body>")
+        lines.append("    <div class=\"container\">")
+        
+        # Title and metadata
+        lines.append(f"        <h1>{title}</h1>")
+        lines.append("        <div class=\"metadata\">")
+        lines.append(f"            <p><strong>日期:</strong> {html_escape(metadata.get('date', 'N/A'))}</p>")
+        tags = metadata.get('tags', [])
+        if tags:
+            lines.append(f"            <p><strong>標籤:</strong> {', '.join(html_escape(str(tag)) for tag in tags)}</p>")
+        lines.append("        </div>")
+        
+        # Messages
+        for msg in package["messages"]:
+            role_class = "user" if msg["role"] == "user" else "assistant"
+            role_display = "👤 使用者" if msg["role"] == "user" else "🤖 助手"
+            lines.append(f"        <div class=\"message {role_class}\">")
+            lines.append(f"            <div class=\"role\">{role_display}</div>")
+            lines.append(f"            <div class=\"content\">{html_escape(msg['content'])}</div>")
+            lines.append("        </div>")
+        
+        # Statistics
+        stats = package.get("statistics", {})
+        if stats:
+            lines.append("        <div class=\"stats\">")
+            lines.append("            <h3>統計資訊</h3>")
+            lines.append(f"            <p>總訊息數: {stats.get('total_messages', 0)}</p>")
+            lines.append(f"            <p>用戶訊息: {stats.get('user_messages', 0)}</p>")
+            lines.append(f"            <p>助手訊息: {stats.get('assistant_messages', 0)}</p>")
+            lines.append(f"            <p>總字符數: {stats.get('total_chars', 0):,}</p>")
+            lines.append("        </div>")
+        
+        lines.append("    </div>")
+        lines.append("</body>")
+        lines.append("</html>")
+        
+        return "\n".join(lines)
+    
+    def _convert_to_xml(self, package: Dict) -> str:
+        """轉換為 XML 格式"""
+        root = ET.Element("conversation")
+        root.set("version", package.get("version", "1.0"))
+        root.set("exported_at", package.get("exported_at", ""))
+        
+        # Metadata
+        metadata = package.get("metadata", {})
+        meta_elem = ET.SubElement(root, "metadata")
+        
+        title_elem = ET.SubElement(meta_elem, "title")
+        title_elem.text = metadata.get('title', '對話記錄')
+        
+        date_elem = ET.SubElement(meta_elem, "date")
+        date_elem.text = metadata.get('date', 'N/A')
+        
+        tags = metadata.get('tags', [])
+        if tags:
+            tags_elem = ET.SubElement(meta_elem, "tags")
+            for tag in tags:
+                tag_elem = ET.SubElement(tags_elem, "tag")
+                tag_elem.text = str(tag)
+        
+        # Messages
+        messages_elem = ET.SubElement(root, "messages")
+        for i, msg in enumerate(package["messages"]):
+            msg_elem = ET.SubElement(messages_elem, "message")
+            msg_elem.set("index", str(i))
+            
+            role_elem = ET.SubElement(msg_elem, "role")
+            role_elem.text = msg["role"]
+            
+            content_elem = ET.SubElement(msg_elem, "content")
+            content_elem.text = msg["content"]
+        
+        # Statistics
+        stats = package.get("statistics", {})
+        if stats:
+            stats_elem = ET.SubElement(root, "statistics")
+            for key, value in stats.items():
+                stat_elem = ET.SubElement(stats_elem, key)
+                stat_elem.text = str(value)
+        
+        # Convert to string with proper formatting
+        xml_str = ET.tostring(root, encoding='unicode', method='xml')
+        
+        # Add XML declaration and pretty print
+        return '<?xml version="1.0" encoding="UTF-8"?>\n' + xml_str
     
     # ==================== 第二部分：注意力機制分析 ====================
     
