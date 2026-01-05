@@ -80,18 +80,22 @@ class ConversationExtractor:
     def export_to_file(self, package: Dict, filepath: str, format: str = "json"):
         """
         導出對話包到檔案
+        Export conversation package to file
         
         Args:
-            package: 對話包
-            filepath: 檔案路徑
-            format: 格式 (json/markdown/txt)
+            package: 對話包 (Conversation package)
+            filepath: 檔案路徑 (File path)
+            format: 格式 - Format
+                   支援: json, markdown, txt, csv, xml, yaml
         """
+        format = format.lower()
+        
         if format == "json":
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(package, f, ensure_ascii=False, indent=2)
             print(f"✓ 已導出 JSON: {filepath}")
         
-        elif format == "markdown":
+        elif format in ["markdown", "md"]:
             md_content = self._convert_to_markdown(package)
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(md_content)
@@ -102,6 +106,21 @@ class ConversationExtractor:
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(txt_content)
             print(f"✓ 已導出 TXT: {filepath}")
+        
+        elif format == "csv":
+            self._export_to_csv(package, filepath)
+            print(f"✓ 已導出 CSV: {filepath}")
+        
+        elif format == "xml":
+            self._export_to_xml(package, filepath)
+            print(f"✓ 已導出 XML: {filepath}")
+        
+        elif format in ["yaml", "yml"]:
+            self._export_to_yaml(package, filepath)
+            print(f"✓ 已導出 YAML: {filepath}")
+        
+        else:
+            raise ValueError(f"不支援的導出格式: {format}")
     
     def _convert_to_markdown(self, package: Dict) -> str:
         """轉換為 Markdown 格式"""
@@ -134,6 +153,389 @@ class ConversationExtractor:
             lines.append("\n" + "="*50 + "\n")
         
         return "\n".join(lines)
+    
+    def _export_to_csv(self, package: Dict, filepath: str):
+        """導出為 CSV 格式"""
+        import csv
+        
+        with open(filepath, 'w', encoding='utf-8', newline='') as f:
+            writer = csv.writer(f)
+            
+            # 寫入標題
+            writer.writerow(['role', 'content'])
+            
+            # 寫入訊息
+            for msg in package["messages"]:
+                writer.writerow([msg["role"], msg["content"]])
+    
+    def _export_to_xml(self, package: Dict, filepath: str):
+        """導出為 XML 格式"""
+        import xml.etree.ElementTree as ET
+        
+        # 建立根元素
+        root = ET.Element('conversation')
+        
+        # 添加元數據
+        metadata = package.get("metadata", {})
+        if metadata:
+            meta_elem = ET.SubElement(root, 'metadata')
+            
+            if 'title' in metadata:
+                title_elem = ET.SubElement(meta_elem, 'title')
+                title_elem.text = metadata['title']
+            
+            if 'date' in metadata:
+                date_elem = ET.SubElement(meta_elem, 'date')
+                date_elem.text = metadata['date']
+            
+            if 'tags' in metadata:
+                tags_elem = ET.SubElement(meta_elem, 'tags')
+                for tag in metadata['tags']:
+                    tag_elem = ET.SubElement(tags_elem, 'tag')
+                    tag_elem.text = tag
+        
+        # 添加訊息
+        messages_elem = ET.SubElement(root, 'messages')
+        for msg in package["messages"]:
+            msg_elem = ET.SubElement(messages_elem, 'message')
+            msg_elem.set('role', msg["role"])
+            
+            content_elem = ET.SubElement(msg_elem, 'content')
+            content_elem.text = msg["content"]
+        
+        # 寫入檔案
+        tree = ET.ElementTree(root)
+        ET.indent(tree, space="  ")
+        tree.write(filepath, encoding='utf-8', xml_declaration=True)
+    
+    def _export_to_yaml(self, package: Dict, filepath: str):
+        """導出為 YAML 格式"""
+        try:
+            import yaml
+        except ImportError:
+            raise ImportError("需要安裝 PyYAML 套件才能導出 YAML 檔案: pip install pyyaml")
+        
+        with open(filepath, 'w', encoding='utf-8') as f:
+            yaml.safe_dump(package, f, allow_unicode=True, default_flow_style=False)
+    
+    # ==================== 導入功能 (Import Functions) ====================
+    
+    def import_from_file(self, filepath: str, format: str = None) -> Dict:
+        """
+        從檔案導入對話記錄
+        Import conversation from file
+        
+        Args:
+            filepath: 檔案路徑 (File path)
+            format: 格式 (可選，自動檢測) - Format (optional, auto-detect)
+                   支援: json, markdown, txt, csv, xml, yaml
+        
+        Returns:
+            對話包字典 (Conversation package dictionary)
+        """
+        # 自動檢測格式
+        if format is None:
+            format = self._detect_format(filepath)
+        
+        format = format.lower()
+        
+        if format == "json":
+            return self._import_from_json(filepath)
+        elif format in ["markdown", "md"]:
+            return self._import_from_markdown(filepath)
+        elif format == "txt":
+            return self._import_from_text(filepath)
+        elif format == "csv":
+            return self._import_from_csv(filepath)
+        elif format == "xml":
+            return self._import_from_xml(filepath)
+        elif format in ["yaml", "yml"]:
+            return self._import_from_yaml(filepath)
+        else:
+            raise ValueError(f"不支援的格式: {format}")
+    
+    def _detect_format(self, filepath: str) -> str:
+        """自動檢測檔案格式 (Auto-detect file format)"""
+        extension = filepath.lower().split('.')[-1]
+        
+        format_map = {
+            'json': 'json',
+            'md': 'markdown',
+            'markdown': 'markdown',
+            'txt': 'txt',
+            'csv': 'csv',
+            'xml': 'xml',
+            'yaml': 'yaml',
+            'yml': 'yaml'
+        }
+        
+        return format_map.get(extension, 'txt')
+    
+    def _import_from_json(self, filepath: str) -> Dict:
+        """從 JSON 檔案導入"""
+        with open(filepath, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        # 如果是完整的對話包，直接返回
+        if "messages" in data and isinstance(data["messages"], list):
+            print(f"✓ 已從 JSON 導入: {filepath}")
+            return data
+        
+        # 如果只是訊息列表，包裝成對話包
+        if isinstance(data, list):
+            return self.package_conversation(data)
+        
+        raise ValueError("JSON 格式不正確：需要包含 'messages' 欄位或為訊息列表")
+    
+    def _import_from_markdown(self, filepath: str) -> Dict:
+        """從 Markdown 檔案導入"""
+        with open(filepath, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        messages = []
+        metadata = {}
+        
+        # 提取標題
+        title_match = re.search(r'^#\s+(.+)$', content, re.MULTILINE)
+        if title_match:
+            metadata['title'] = title_match.group(1).strip()
+        
+        # 提取日期
+        date_match = re.search(r'\*\*日期\*\*:\s*(.+)$', content, re.MULTILINE)
+        if date_match:
+            metadata['date'] = date_match.group(1).strip()
+        
+        # 提取標籤
+        tags_match = re.search(r'\*\*標籤\*\*:\s*(.+)$', content, re.MULTILINE)
+        if tags_match:
+            tags_str = tags_match.group(1).strip()
+            metadata['tags'] = [tag.strip() for tag in tags_str.split(',')]
+        
+        # 提取對話內容
+        # 匹配 ### 👤 User 或 ### 🤖 Assistant 格式
+        sections = re.split(r'###\s*[👤🤖]?\s*(User|Assistant)', content)
+        
+        current_role = None
+        for i, section in enumerate(sections):
+            if section.strip() in ['User', 'Assistant']:
+                current_role = 'user' if section == 'User' else 'assistant'
+            elif current_role and section.strip():
+                # 清理內容
+                content_text = section.split('---')[0].strip()
+                if content_text:
+                    messages.append({
+                        "role": current_role,
+                        "content": content_text
+                    })
+        
+        if not messages:
+            # 嘗試其他格式：[USER] 或 [ASSISTANT]
+            lines = content.split('\n')
+            current_role = None
+            current_content = []
+            
+            for line in lines:
+                if line.strip().startswith('[USER]') or line.strip().startswith('**User**'):
+                    if current_role and current_content:
+                        messages.append({
+                            "role": current_role,
+                            "content": '\n'.join(current_content).strip()
+                        })
+                    current_role = 'user'
+                    current_content = []
+                elif line.strip().startswith('[ASSISTANT]') or line.strip().startswith('**Assistant**'):
+                    if current_role and current_content:
+                        messages.append({
+                            "role": current_role,
+                            "content": '\n'.join(current_content).strip()
+                        })
+                    current_role = 'assistant'
+                    current_content = []
+                elif current_role and line.strip() and not line.strip().startswith('---'):
+                    current_content.append(line)
+            
+            if current_role and current_content:
+                messages.append({
+                    "role": current_role,
+                    "content": '\n'.join(current_content).strip()
+                })
+        
+        print(f"✓ 已從 Markdown 導入: {filepath} ({len(messages)} 條訊息)")
+        return self.package_conversation(messages, metadata)
+    
+    def _import_from_text(self, filepath: str) -> Dict:
+        """從純文字檔案導入"""
+        with open(filepath, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        messages = []
+        
+        # 嘗試多種文字格式
+        # 格式1: [USER] 和 [ASSISTANT]
+        if '[USER]' in content.upper() or '[ASSISTANT]' in content.upper():
+            sections = re.split(r'\[(USER|ASSISTANT)\]', content, flags=re.IGNORECASE)
+            
+            current_role = None
+            for section in sections:
+                section = section.strip()
+                if section.upper() in ['USER', 'ASSISTANT']:
+                    current_role = 'user' if section.upper() == 'USER' else 'assistant'
+                elif current_role and section:
+                    # 清理分隔線
+                    content_text = re.sub(r'=+', '', section).strip()
+                    if content_text:
+                        messages.append({
+                            "role": current_role,
+                            "content": content_text
+                        })
+        
+        # 格式2: User: 和 Assistant: 或 AI:
+        elif re.search(r'(User|Assistant|AI):', content, re.IGNORECASE):
+            lines = content.split('\n')
+            current_role = None
+            current_content = []
+            
+            for line in lines:
+                user_match = re.match(r'^(User|用戶|人類)[:：]\s*(.*)$', line, re.IGNORECASE)
+                assistant_match = re.match(r'^(Assistant|AI|助手|助理)[:：]\s*(.*)$', line, re.IGNORECASE)
+                
+                if user_match:
+                    if current_role and current_content:
+                        messages.append({
+                            "role": current_role,
+                            "content": '\n'.join(current_content).strip()
+                        })
+                    current_role = 'user'
+                    current_content = [user_match.group(2)] if user_match.group(2) else []
+                elif assistant_match:
+                    if current_role and current_content:
+                        messages.append({
+                            "role": current_role,
+                            "content": '\n'.join(current_content).strip()
+                        })
+                    current_role = 'assistant'
+                    current_content = [assistant_match.group(2)] if assistant_match.group(2) else []
+                elif current_role:
+                    current_content.append(line)
+            
+            if current_role and current_content:
+                messages.append({
+                    "role": current_role,
+                    "content": '\n'.join(current_content).strip()
+                })
+        
+        # 格式3: 簡單的交替格式（假設奇數行是用戶，偶數行是助手）
+        else:
+            lines = [line.strip() for line in content.split('\n') if line.strip()]
+            for i, line in enumerate(lines):
+                role = 'user' if i % 2 == 0 else 'assistant'
+                messages.append({
+                    "role": role,
+                    "content": line
+                })
+        
+        print(f"✓ 已從 TXT 導入: {filepath} ({len(messages)} 條訊息)")
+        return self.package_conversation(messages)
+    
+    def _import_from_csv(self, filepath: str) -> Dict:
+        """從 CSV 檔案導入"""
+        import csv
+        
+        messages = []
+        
+        with open(filepath, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            
+            for row in reader:
+                # 支援多種欄位名稱
+                role = None
+                content = None
+                
+                # 檢測角色欄位
+                for key in ['role', 'Role', 'ROLE', 'speaker', 'Speaker']:
+                    if key in row:
+                        role_value = row[key].lower()
+                        if 'user' in role_value or '用戶' in role_value:
+                            role = 'user'
+                        elif 'assistant' in role_value or 'ai' in role_value or '助手' in role_value:
+                            role = 'assistant'
+                        break
+                
+                # 檢測內容欄位
+                for key in ['content', 'Content', 'CONTENT', 'message', 'Message', 'text', 'Text']:
+                    if key in row:
+                        content = row[key]
+                        break
+                
+                if role and content:
+                    messages.append({
+                        "role": role,
+                        "content": content
+                    })
+        
+        print(f"✓ 已從 CSV 導入: {filepath} ({len(messages)} 條訊息)")
+        return self.package_conversation(messages)
+    
+    def _import_from_xml(self, filepath: str) -> Dict:
+        """從 XML 檔案導入"""
+        import xml.etree.ElementTree as ET
+        
+        tree = ET.parse(filepath)
+        root = tree.getroot()
+        
+        messages = []
+        metadata = {}
+        
+        # 提取元數據
+        meta_elem = root.find('metadata')
+        if meta_elem is not None:
+            title_elem = meta_elem.find('title')
+            if title_elem is not None:
+                metadata['title'] = title_elem.text
+            
+            date_elem = meta_elem.find('date')
+            if date_elem is not None:
+                metadata['date'] = date_elem.text
+            
+            tags_elem = meta_elem.find('tags')
+            if tags_elem is not None:
+                metadata['tags'] = [tag.text for tag in tags_elem.findall('tag')]
+        
+        # 提取訊息
+        messages_elem = root.find('messages')
+        if messages_elem is not None:
+            for msg_elem in messages_elem.findall('message'):
+                role = msg_elem.get('role') or msg_elem.find('role').text
+                content = msg_elem.find('content').text or ""
+                
+                messages.append({
+                    "role": role,
+                    "content": content
+                })
+        
+        print(f"✓ 已從 XML 導入: {filepath} ({len(messages)} 條訊息)")
+        return self.package_conversation(messages, metadata)
+    
+    def _import_from_yaml(self, filepath: str) -> Dict:
+        """從 YAML 檔案導入"""
+        try:
+            import yaml
+        except ImportError:
+            raise ImportError("需要安裝 PyYAML 套件才能導入 YAML 檔案: pip install pyyaml")
+        
+        with open(filepath, 'r', encoding='utf-8') as f:
+            data = yaml.safe_load(f)
+        
+        # 如果是完整的對話包，直接返回
+        if isinstance(data, dict) and "messages" in data:
+            print(f"✓ 已從 YAML 導入: {filepath}")
+            return data
+        
+        # 如果只是訊息列表，包裝成對話包
+        if isinstance(data, list):
+            return self.package_conversation(data)
+        
+        raise ValueError("YAML 格式不正確：需要包含 'messages' 欄位或為訊息列表")
     
     # ==================== 第二部分：注意力機制分析 ====================
     

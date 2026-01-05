@@ -1,22 +1,38 @@
 # 對話知識提取器 (Conversation Knowledge Extractor)
 
 **作者**: MR.liou × Claude (empathetic.mirror)  
-**版本**: v1.0  
+**版本**: v1.1 (新增全格式導入支援)  
 **位置**: `particle_core/src/conversation_extractor.py`
 
 ## 概述
 
-對話知識提取器是一個強大的工具，用於分析、打包和導出對話記錄。它能夠自動識別對話中的重點、邏輯結構和知識要點，並生成結構化的分析報告。
+對話知識提取器是一個強大的工具，用於分析、打包、導入和導出對話記錄。它能夠自動識別對話中的重點、邏輯結構和知識要點，並生成結構化的分析報告。**現已支援多種檔案格式的雙向轉換！**
 
 ## 主要功能
 
-### 1. 對話打包與導出 (Conversation Packaging)
+### 1. 對話打包、導入與導出 (Conversation Import/Export)
 
-將對話記錄打包成結構化格式，支持多種導出格式：
-
+**導出支援格式**：
 - **JSON**: 完整的數據結構，包含元數據和統計資訊
 - **Markdown**: 易讀的格式，適合文檔化
 - **純文字**: 簡潔的文字格式
+- **CSV**: 表格格式，適合數據分析
+- **XML**: 結構化標記語言
+- **YAML**: 人類友好的數據序列化格式
+
+**導入支援格式**：
+- **JSON**: 導入完整的對話包或訊息列表
+- **Markdown**: 自動解析 Markdown 格式的對話記錄
+- **純文字**: 支援多種文字對話格式（[USER]/[ASSISTANT]、User:/Assistant: 等）
+- **CSV**: 從 CSV 表格導入對話
+- **XML**: 導入 XML 格式的對話數據
+- **YAML**: 導入 YAML 格式的對話數據
+
+**特色功能**：
+- ✅ 自動檢測檔案格式（根據副檔名）
+- ✅ 支援多種文字對話格式
+- ✅ 完整保留元數據（支援格式：JSON, XML, YAML, Markdown）
+- ✅ 往返導出/導入測試通過
 
 ### 2. 注意力機制分析 (Attention Analysis)
 
@@ -89,6 +105,62 @@ package = extractor.package_conversation(
 extractor.export_to_file(package, "conversation.json", "json")
 extractor.export_to_file(package, "conversation.md", "markdown")
 extractor.export_to_file(package, "conversation.txt", "txt")
+extractor.export_to_file(package, "conversation.csv", "csv")
+extractor.export_to_file(package, "conversation.xml", "xml")
+extractor.export_to_file(package, "conversation.yaml", "yaml")
+```
+
+### 導入對話
+
+**從檔案導入**（自動檢測格式）：
+
+```python
+from conversation_extractor import ConversationExtractor
+
+extractor = ConversationExtractor()
+
+# 自動檢測檔案格式並導入
+package = extractor.import_from_file("conversation.json")
+package = extractor.import_from_file("conversation.md")
+package = extractor.import_from_file("conversation.csv")
+
+# 導入後訪問訊息
+messages = package["messages"]
+metadata = package.get("metadata", {})
+```
+
+**指定格式導入**：
+
+```python
+# 明確指定格式
+package = extractor.import_from_file("my_file.txt", format="txt")
+package = extractor.import_from_file("data.xml", format="xml")
+```
+
+**支援的文字格式**：
+
+```python
+# 格式1: [USER] 和 [ASSISTANT]
+text1 = """
+[USER]
+這是用戶問題
+
+[ASSISTANT]
+這是助手回答
+"""
+
+# 格式2: User: 和 Assistant:
+text2 = """
+User: 這是用戶問題
+Assistant: 這是助手回答
+"""
+
+# 兩種格式都能正確解析
+with open("conversation.txt", "w") as f:
+    f.write(text1)
+
+package = extractor.import_from_file("conversation.txt")
+```
 ```
 
 ### 分析對話
