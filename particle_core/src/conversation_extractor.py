@@ -174,24 +174,34 @@ class ConversationExtractor:
         """轉換為 YAML 格式"""
         if not YAML_AVAILABLE:
             # Fallback to manual YAML generation if pyyaml not available
+            def escape_yaml_string(s):
+                """Properly escape YAML string content"""
+                # Replace backslashes first to avoid double-escaping
+                s = s.replace('\\', '\\\\')
+                s = s.replace('"', '\\"')
+                s = s.replace('\n', '\\n')
+                s = s.replace('\r', '\\r')
+                s = s.replace('\t', '\\t')
+                return s
+            
             lines = []
             lines.append("---")
             lines.append("metadata:")
             metadata = package.get("metadata", {})
-            lines.append(f"  title: \"{metadata.get('title', '對話記錄')}\"")
-            lines.append(f"  date: \"{metadata.get('date', 'N/A')}\"")
+            lines.append(f"  title: \"{escape_yaml_string(metadata.get('title', '對話記錄'))}\"")
+            lines.append(f"  date: \"{escape_yaml_string(metadata.get('date', 'N/A'))}\"")
             tags = metadata.get('tags', [])
             if tags:
                 lines.append("  tags:")
                 for tag in tags:
-                    lines.append(f"    - \"{tag}\"")
+                    lines.append(f"    - \"{escape_yaml_string(str(tag))}\"")
             
             lines.append("\nmessages:")
             for i, msg in enumerate(package["messages"]):
                 lines.append(f"  - index: {i}")
                 lines.append(f"    role: \"{msg['role']}\"")
-                # Escape multiline content properly
-                content = msg['content'].replace('"', '\\"').replace('\n', '\\n')
+                # Escape content properly
+                content = escape_yaml_string(msg['content'])
                 lines.append(f"    content: \"{content}\"")
             
             lines.append("\nstatistics:")
@@ -333,11 +343,21 @@ class ConversationExtractor:
                 stat_elem = ET.SubElement(stats_elem, key)
                 stat_elem.text = str(value)
         
-        # Convert to string with proper formatting
+        # Convert to string with proper formatting using minidom for pretty printing
         xml_str = ET.tostring(root, encoding='unicode', method='xml')
         
-        # Add XML declaration and pretty print
-        return '<?xml version="1.0" encoding="UTF-8"?>\n' + xml_str
+        # Pretty print XML using minidom
+        try:
+            import xml.dom.minidom as minidom
+            dom = minidom.parseString(xml_str)
+            # Pretty print with 2-space indentation
+            pretty_xml = dom.toprettyxml(indent="  ", encoding=None)
+            # Remove extra blank lines
+            lines = [line for line in pretty_xml.split('\n') if line.strip()]
+            return '\n'.join(lines)
+        except:
+            # Fallback to basic formatting if minidom fails
+            return '<?xml version="1.0" encoding="UTF-8"?>\n' + xml_str
     
     # ==================== 第二部分：注意力機制分析 ====================
     

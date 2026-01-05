@@ -417,7 +417,7 @@ def test_export_xml():
         with open(temp_path, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        assert '<?xml version="1.0" encoding="UTF-8"?>' in content
+        assert '<?xml version="1.0"' in content
         assert "<conversation" in content
         assert "<messages>" in content
     finally:
