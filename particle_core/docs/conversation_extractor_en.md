@@ -97,7 +97,6 @@ extractor.export_to_file(package, "conversation.yaml", "yaml")
 extractor.export_to_file(package, "conversation.csv", "csv")
 extractor.export_to_file(package, "conversation.html", "html")
 extractor.export_to_file(package, "conversation.xml", "xml")
-extractor.export_to_file(package, "conversation.txt", "txt")
 ```
 
 ### Analyze Conversations
@@ -253,8 +252,6 @@ pyyaml     # For YAML format export (optional, system will gracefully degrade)
 Added to `particle_core/requirements.txt`.
 
 If AI analysis is not needed, the anthropic library is not required; if YAML export is not needed, pyyaml is also not required - the system degrades gracefully.
-
-If AI analysis is not needed, the anthropic library is not required - the system degrades gracefully.
 
 ## Output Examples
 

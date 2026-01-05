@@ -97,7 +97,6 @@ extractor.export_to_file(package, "conversation.yaml", "yaml")
 extractor.export_to_file(package, "conversation.csv", "csv")
 extractor.export_to_file(package, "conversation.html", "html")
 extractor.export_to_file(package, "conversation.xml", "xml")
-extractor.export_to_file(package, "conversation.txt", "txt")
 ```
 
 ### 分析對話
