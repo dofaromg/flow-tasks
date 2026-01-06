@@ -33,7 +33,7 @@ class Entry:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, str]) -> "Entry":
+    def from_dict(cls, data: Dict[str, Any]) -> "Entry":
         return cls(
             index=int(data["index"]),
             prev_hash=data.get("prev_hash") or None,
