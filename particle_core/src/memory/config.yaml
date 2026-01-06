@@ -4,6 +4,7 @@
 # Context and snapshot directories
 context_dir: "particle_core/context"
 snapshot_dir: "particle_core/snapshots"
+cache_dir: "particle_core/cache"
 
 # Memory seeds to mount on startup
 seeds:
