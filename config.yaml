@@ -1,8 +1,0 @@
-data_dir: data
-sandbox_data_dir: data_sandbox
-notion:
-  enabled: false
-  root_page_id: ""
-  database_id: ""
-github:
-  enabled: false
