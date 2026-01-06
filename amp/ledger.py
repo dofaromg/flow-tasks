@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from .storage import Storage
 
@@ -23,7 +23,7 @@ class Entry:
         entry_hash = hashlib.sha256(payload).hexdigest()
         return cls(index=index, prev_hash=prev_hash, content=content, timestamp=timestamp, hash=entry_hash)
 
-    def to_dict(self) -> Dict[str, str]:
+    def to_dict(self) -> Dict[str, Any]:
         return {
             "index": self.index,
             "prev_hash": self.prev_hash,
@@ -88,7 +88,7 @@ class Ledger:
 
         return True, f"Verified {len(entries)} entries"
 
-    def snapshot(self, name: str) -> Dict[str, str]:
+    def snapshot(self, name: str) -> Dict[str, Any]:
         refs = self.storage.load_refs()
         snapshot_data = {
             "name": name,
@@ -100,11 +100,11 @@ class Ledger:
         snapshot_data["path"] = str(path)
         return snapshot_data
 
-    def log(self, n: int) -> List[Dict[str, str]]:
+    def log(self, n: int) -> List[Dict[str, Any]]:
         entries = self.storage.tail_chain(n)
         return [Entry.from_dict(e).to_dict() for e in entries]
 
-    def export_state(self) -> Dict[str, str]:
+    def export_state(self) -> Dict[str, Any]:
         refs = self.storage.load_refs()
         entries = self.storage.load_chain_entries()
         return {
@@ -132,7 +132,7 @@ class Ledger:
 
         if len(primary_entries) != len(sandbox_entries):
             diff = len(primary_entries) - len(sandbox_entries)
-            direction = "ahead" if diff > 0 else "behind"
+            direction = "behind" if diff > 0 else "ahead"
             return (
                 False,
                 f"Sandbox ledger is {abs(diff)} entries {direction} "
