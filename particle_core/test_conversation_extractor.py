@@ -425,6 +425,102 @@ def test_export_xml():
             os.remove(temp_path)
 
 
+def test_theme_initialization():
+    """測試主題初始化"""
+    # 測試預設主題
+    extractor = ConversationExtractor()
+    assert extractor.theme == "default"
+    
+    # 測試指定主題
+    extractor_ocean = ConversationExtractor(theme="ocean")
+    assert extractor_ocean.theme == "ocean"
+    
+    # 測試無效主題（應回退到 default）
+    extractor_invalid = ConversationExtractor(theme="invalid")
+    assert extractor_invalid.theme == "default"
+
+
+def test_html_with_theme():
+    """測試帶主題的 HTML 導出"""
+    extractor = ConversationExtractor(theme="ocean")
+    package = extractor.package_conversation(SAMPLE_CONVERSATION)
+    
+    html_content = extractor._convert_to_html(package)
+    
+    # 驗證包含海洋主題的顏色
+    assert "#e0f7fa" in html_content or "#b2ebf2" in html_content
+    assert "<!DOCTYPE html>" in html_content
+
+
+def test_batch_export():
+    """測試批次導出"""
+    extractor = ConversationExtractor()
+    package = extractor.package_conversation(SAMPLE_CONVERSATION)
+    
+    with tempfile.TemporaryDirectory() as tmpdir:
+        base_path = os.path.join(tmpdir, "test")
+        
+        # 測試部分格式
+        formats = ['json', 'md', 'html']
+        exported = extractor.export_batch(package, base_path, formats)
+        
+        assert len(exported) == 3
+        assert os.path.exists(os.path.join(tmpdir, "test.json"))
+        assert os.path.exists(os.path.join(tmpdir, "test.md"))
+        assert os.path.exists(os.path.join(tmpdir, "test.html"))
+
+
+def test_website_bundle():
+    """測試網站套件生成"""
+    extractor = ConversationExtractor()
+    package = extractor.package_conversation(
+        SAMPLE_CONVERSATION,
+        metadata={"title": "測試", "date": "2026-01-09", "tags": ["test"]}
+    )
+    
+    with tempfile.TemporaryDirectory() as tmpdir:
+        # 只生成 2 個主題以加快測試
+        result = extractor.generate_website_bundle(package, tmpdir, themes=["default", "ocean"])
+        
+        # 驗證結果結構
+        assert "html_files" in result
+        assert "data_files" in result
+        assert "index_file" in result
+        
+        # 驗證檔案存在
+        assert len(result["html_files"]) == 2
+        assert os.path.exists(os.path.join(tmpdir, "index.html"))
+        assert os.path.exists(os.path.join(tmpdir, "conversation_default.html"))
+        assert os.path.exists(os.path.join(tmpdir, "conversation_ocean.html"))
+
+
+def test_custom_palette():
+    """測試自訂調色盤"""
+    extractor = ConversationExtractor()
+    package = extractor.package_conversation(SAMPLE_CONVERSATION)
+    
+    custom_palette = {
+        "bg_body": "#ffffff",
+        "bg_container": "#f0f0f0",
+        "bg_metadata": "#e0e0e0",
+        "bg_user": "#d0d0d0",
+        "bg_assistant": "#c0c0c0",
+        "bg_stats": "#b0b0b0",
+        "border_title": "#000000",
+        "border_user": "#111111",
+        "border_assistant": "#222222",
+        "text_primary": "#333333",
+        "text_secondary": "#444444"
+    }
+    
+    html_content = extractor._convert_to_html(package, custom_palette=custom_palette)
+    
+    # 驗證包含自訂顏色
+    assert "#ffffff" in html_content
+    assert "#f0f0f0" in html_content
+    assert "<!DOCTYPE html>" in html_content
+
+
 # 執行測試
 if __name__ == "__main__":
     print("🧪 執行對話知識提取器測試...")
@@ -452,6 +548,11 @@ if __name__ == "__main__":
         test_generate_report,
         test_deep_analysis_without_api_key,
         test_format_for_analysis,
+        test_theme_initialization,
+        test_html_with_theme,
+        test_batch_export,
+        test_website_bundle,
+        test_custom_palette,
     ]
     
     passed = 0

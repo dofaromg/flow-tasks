@@ -128,10 +128,21 @@ with open("analysis_report.md", "w", encoding="utf-8") as f:
 
 **主要功能**:
 - 📦 對話打包與導出 (JSON/Markdown/TXT/YAML/CSV/HTML/XML) - 支援所有常見檔案格式
+- 🎨 **主題調色盤系統** (6 種預設主題 + 自訂調色盤) - 🆕
+- 🌐 **網站套件生成** (多主題 HTML + 所有格式 + 美觀索引頁) - 🆕
+- 📦 **批次導出功能** (一次導出所有格式) - 🆕
 - 🎯 注意力機制分析 (關鍵時刻、話題轉換、資訊密集段落)
 - 🧬 邏輯結構提取 (概念、因果關係、推理鏈、結論)
 - 🤖 AI 深度分析 (需要 Anthropic API Key)
 - 📊 完整分析報告生成
+
+**預設主題**:
+- 🎨 預設 (Default) - 清新綠色
+- 🌊 海洋 (Ocean) - 藍綠色調
+- 🌅 日落 (Sunset) - 橙紅色調
+- 🌙 夜晚 (Night) - 深色模式
+- 🌲 森林 (Forest) - 自然綠色
+- ⚪ 極簡 (Minimal) - 黑白灰色
 
 詳細說明請參閱:
 - [對話知識提取器使用說明 (中文)](docs/conversation_extractor_zh.md)

@@ -36,14 +36,105 @@ except ImportError:
 class ConversationExtractor:
     """對話知識提取器核心類別"""
     
-    def __init__(self, api_key: str = None):
+    # 預定義調色盤主題
+    COLOR_PALETTES = {
+        "default": {
+            "name": "預設 (Default)",
+            "bg_body": "#f5f5f5",
+            "bg_container": "white",
+            "bg_metadata": "#f8f9fa",
+            "bg_user": "#e3f2fd",
+            "bg_assistant": "#f3e5f5",
+            "bg_stats": "#fff3e0",
+            "border_title": "#4CAF50",
+            "border_user": "#2196F3",
+            "border_assistant": "#9C27B0",
+            "text_primary": "#333",
+            "text_secondary": "#555"
+        },
+        "ocean": {
+            "name": "海洋 (Ocean)",
+            "bg_body": "#e0f7fa",
+            "bg_container": "white",
+            "bg_metadata": "#b2ebf2",
+            "bg_user": "#b2dfdb",
+            "bg_assistant": "#c8e6c9",
+            "bg_stats": "#fff9c4",
+            "border_title": "#00796b",
+            "border_user": "#00897b",
+            "border_assistant": "#388e3c",
+            "text_primary": "#004d40",
+            "text_secondary": "#00695c"
+        },
+        "sunset": {
+            "name": "日落 (Sunset)",
+            "bg_body": "#ffe0b2",
+            "bg_container": "white",
+            "bg_metadata": "#ffccbc",
+            "bg_user": "#ffecb3",
+            "bg_assistant": "#ffe0b2",
+            "bg_stats": "#f8bbd0",
+            "border_title": "#d84315",
+            "border_user": "#f57c00",
+            "border_assistant": "#e64a19",
+            "text_primary": "#bf360c",
+            "text_secondary": "#d84315"
+        },
+        "night": {
+            "name": "夜晚 (Night)",
+            "bg_body": "#263238",
+            "bg_container": "#37474f",
+            "bg_metadata": "#455a64",
+            "bg_user": "#546e7a",
+            "bg_assistant": "#607d8b",
+            "bg_stats": "#78909c",
+            "border_title": "#00bcd4",
+            "border_user": "#03a9f4",
+            "border_assistant": "#00acc1",
+            "text_primary": "#eceff1",
+            "text_secondary": "#cfd8dc"
+        },
+        "forest": {
+            "name": "森林 (Forest)",
+            "bg_body": "#e8f5e9",
+            "bg_container": "white",
+            "bg_metadata": "#c8e6c9",
+            "bg_user": "#a5d6a7",
+            "bg_assistant": "#c5e1a5",
+            "bg_stats": "#f0f4c3",
+            "border_title": "#2e7d32",
+            "border_user": "#388e3c",
+            "border_assistant": "#558b2f",
+            "text_primary": "#1b5e20",
+            "text_secondary": "#2e7d32"
+        },
+        "minimal": {
+            "name": "極簡 (Minimal)",
+            "bg_body": "#ffffff",
+            "bg_container": "#fafafa",
+            "bg_metadata": "#f5f5f5",
+            "bg_user": "#eeeeee",
+            "bg_assistant": "#e0e0e0",
+            "bg_stats": "#f5f5f5",
+            "border_title": "#000000",
+            "border_user": "#424242",
+            "border_assistant": "#616161",
+            "text_primary": "#000000",
+            "text_secondary": "#424242"
+        }
+    }
+    
+    def __init__(self, api_key: str = None, theme: str = "default"):
         """
         初始化提取器
         
         Args:
             api_key: Anthropic API Key (用於深度分析)
+            theme: HTML 輸出的主題調色盤 (default/ocean/sunset/night/forest/minimal)
         """
         self.api_key = api_key
+        self.theme = theme if theme in self.COLOR_PALETTES else "default"
+        
         if api_key and ANTHROPIC_AVAILABLE:
             self.client = anthropic.Anthropic(api_key=api_key)
         elif api_key and not ANTHROPIC_AVAILABLE:
@@ -137,6 +228,221 @@ class ConversationExtractor:
         else:
             print(f"⚠️  不支援的格式: {format}")
             print(f"   支援的格式: json, markdown/md, txt/text, yaml/yml, csv, html/htm, xml")
+    
+    def export_batch(self, package: Dict, base_path: str, formats: List[str] = None):
+        """
+        批次導出多種格式
+        
+        Args:
+            package: 對話包
+            base_path: 基礎檔案路徑（不含副檔名）
+            formats: 要導出的格式列表，預設為所有格式
+        
+        Returns:
+            導出的檔案路徑列表
+        """
+        if formats is None:
+            formats = ['json', 'md', 'txt', 'yaml', 'csv', 'html', 'xml']
+        
+        exported_files = []
+        
+        print(f"\n📦 批次導出 {len(formats)} 種格式...")
+        print("=" * 60)
+        
+        for fmt in formats:
+            # 確定副檔名
+            if fmt in ['md', 'markdown']:
+                ext = 'md'
+            elif fmt in ['txt', 'text']:
+                ext = 'txt'
+            elif fmt in ['yaml', 'yml']:
+                ext = 'yaml'
+            elif fmt in ['html', 'htm']:
+                ext = 'html'
+            else:
+                ext = fmt
+            
+            filepath = f"{base_path}.{ext}"
+            
+            try:
+                self.export_to_file(package, filepath, fmt)
+                exported_files.append(filepath)
+            except Exception as e:
+                print(f"✗ 導出 {fmt} 失敗: {e}")
+        
+        print("=" * 60)
+        print(f"✓ 成功導出 {len(exported_files)}/{len(formats)} 個檔案")
+        
+        return exported_files
+    
+    def generate_website_bundle(self, package: Dict, output_dir: str, themes: List[str] = None):
+        """
+        生成完整網站套件（包含多個主題的 HTML 和其他格式）
+        
+        Args:
+            package: 對話包
+            output_dir: 輸出目錄
+            themes: 要生成的主題列表，預設為所有主題
+        
+        Returns:
+            生成的檔案資訊字典
+        """
+        import os
+        
+        # 創建輸出目錄
+        os.makedirs(output_dir, exist_ok=True)
+        
+        if themes is None:
+            themes = list(self.COLOR_PALETTES.keys())
+        
+        print(f"\n🌐 生成網站套件...")
+        print(f"📁 輸出目錄: {output_dir}")
+        print("=" * 60)
+        
+        generated_files = {
+            "html_files": [],
+            "data_files": [],
+            "index_file": None
+        }
+        
+        # 1. 生成多個主題的 HTML 檔案
+        print(f"\n🎨 生成 {len(themes)} 個主題變化...")
+        for theme in themes:
+            # 暫時切換主題
+            original_theme = self.theme
+            self.theme = theme
+            
+            theme_filename = f"conversation_{theme}.html"
+            theme_path = os.path.join(output_dir, theme_filename)
+            
+            html_content = self._convert_to_html(package)
+            with open(theme_path, 'w', encoding='utf-8') as f:
+                f.write(html_content)
+            
+            print(f"  ✓ {self.COLOR_PALETTES[theme]['name']}: {theme_filename}")
+            generated_files["html_files"].append(theme_filename)
+            
+            # 恢復原主題
+            self.theme = original_theme
+        
+        # 2. 生成數據檔案（JSON, YAML, CSV, XML）
+        print(f"\n📊 生成數據檔案...")
+        data_formats = [
+            ('json', 'conversation.json'),
+            ('yaml', 'conversation.yaml'),
+            ('csv', 'conversation.csv'),
+            ('xml', 'conversation.xml')
+        ]
+        
+        for fmt, filename in data_formats:
+            filepath = os.path.join(output_dir, filename)
+            self.export_to_file(package, filepath, fmt)
+            generated_files["data_files"].append(filename)
+        
+        # 3. 生成文檔檔案（Markdown, TXT）
+        print(f"\n📝 生成文檔檔案...")
+        doc_formats = [
+            ('md', 'conversation.md'),
+            ('txt', 'conversation.txt')
+        ]
+        
+        for fmt, filename in doc_formats:
+            filepath = os.path.join(output_dir, filename)
+            self.export_to_file(package, filepath, fmt)
+            generated_files["data_files"].append(filename)
+        
+        # 4. 生成索引頁面（列出所有主題）
+        print(f"\n📑 生成索引頁面...")
+        index_path = os.path.join(output_dir, "index.html")
+        self._generate_index_page(package, index_path, themes)
+        generated_files["index_file"] = "index.html"
+        
+        print("=" * 60)
+        print(f"✅ 網站套件生成完成！")
+        print(f"   • HTML 主題: {len(generated_files['html_files'])} 個")
+        print(f"   • 數據檔案: {len(generated_files['data_files'])} 個")
+        print(f"   • 索引頁面: 1 個")
+        print(f"\n🌐 開啟 {os.path.join(output_dir, 'index.html')} 查看完整網站")
+        
+        return generated_files
+    
+    def _generate_index_page(self, package: Dict, filepath: str, themes: List[str]):
+        """生成索引頁面，列出所有主題變化"""
+        metadata = package.get("metadata", {})
+        title = html_escape(metadata.get('title', '對話記錄'))
+        
+        lines = []
+        lines.append("<!DOCTYPE html>")
+        lines.append("<html lang=\"zh-TW\">")
+        lines.append("<head>")
+        lines.append("    <meta charset=\"UTF-8\">")
+        lines.append("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">")
+        lines.append(f"    <title>{title} - 主題索引</title>")
+        lines.append("    <style>")
+        lines.append("        * { margin: 0; padding: 0; box-sizing: border-box; }")
+        lines.append("        body { font-family: 'Microsoft JhengHei', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 40px 20px; }")
+        lines.append("        .container { max-width: 1200px; margin: 0 auto; }")
+        lines.append("        h1 { color: white; text-align: center; font-size: 2.5em; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }")
+        lines.append("        .subtitle { color: rgba(255,255,255,0.9); text-align: center; font-size: 1.2em; margin-bottom: 40px; }")
+        lines.append("        .theme-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 40px; }")
+        lines.append("        .theme-card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }")
+        lines.append("        .theme-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }")
+        lines.append("        .theme-name { font-size: 1.5em; font-weight: bold; margin-bottom: 15px; color: #333; }")
+        lines.append("        .theme-preview { height: 80px; border-radius: 8px; margin-bottom: 15px; display: flex; gap: 5px; }")
+        lines.append("        .color-bar { flex: 1; border-radius: 4px; }")
+        lines.append("        .theme-link { display: inline-block; padding: 10px 20px; background: #667eea; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background 0.3s; }")
+        lines.append("        .theme-link:hover { background: #764ba2; }")
+        lines.append("        .data-section { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-top: 30px; }")
+        lines.append("        .data-section h2 { color: #333; margin-bottom: 20px; font-size: 1.8em; }")
+        lines.append("        .data-links { display: flex; flex-wrap: wrap; gap: 15px; }")
+        lines.append("        .data-link { padding: 12px 24px; background: #f5f5f5; color: #333; text-decoration: none; border-radius: 6px; font-weight: 500; transition: background 0.3s; border: 2px solid #ddd; }")
+        lines.append("        .data-link:hover { background: #e0e0e0; border-color: #667eea; }")
+        lines.append("    </style>")
+        lines.append("</head>")
+        lines.append("<body>")
+        lines.append("    <div class=\"container\">")
+        lines.append(f"        <h1>🎨 {title}</h1>")
+        lines.append(f"        <p class=\"subtitle\">選擇您喜歡的主題樣式，或下載數據檔案</p>")
+        lines.append("        <div class=\"theme-grid\">")
+        
+        # 為每個主題創建卡片
+        for theme in themes:
+            palette = self.COLOR_PALETTES[theme]
+            lines.append("            <div class=\"theme-card\">")
+            lines.append(f"                <div class=\"theme-name\">{palette['name']}</div>")
+            lines.append("                <div class=\"theme-preview\">")
+            lines.append(f"                    <div class=\"color-bar\" style=\"background: {palette['bg_user']};\"></div>")
+            lines.append(f"                    <div class=\"color-bar\" style=\"background: {palette['border_user']};\"></div>")
+            lines.append(f"                    <div class=\"color-bar\" style=\"background: {palette['bg_assistant']};\"></div>")
+            lines.append(f"                    <div class=\"color-bar\" style=\"background: {palette['border_assistant']};\"></div>")
+            lines.append(f"                    <div class=\"color-bar\" style=\"background: {palette['border_title']};\"></div>")
+            lines.append("                </div>")
+            lines.append(f"                <a href=\"conversation_{theme}.html\" class=\"theme-link\">查看 →</a>")
+            lines.append("            </div>")
+        
+        lines.append("        </div>")
+        
+        # 數據檔案下載區
+        lines.append("        <div class=\"data-section\">")
+        lines.append("            <h2>📊 下載數據檔案</h2>")
+        lines.append("            <div class=\"data-links\">")
+        lines.append("                <a href=\"conversation.json\" class=\"data-link\" download>📄 JSON</a>")
+        lines.append("                <a href=\"conversation.yaml\" class=\"data-link\" download>📋 YAML</a>")
+        lines.append("                <a href=\"conversation.csv\" class=\"data-link\" download>📊 CSV</a>")
+        lines.append("                <a href=\"conversation.xml\" class=\"data-link\" download>📝 XML</a>")
+        lines.append("                <a href=\"conversation.md\" class=\"data-link\" download>📖 Markdown</a>")
+        lines.append("                <a href=\"conversation.txt\" class=\"data-link\" download>📃 TXT</a>")
+        lines.append("            </div>")
+        lines.append("        </div>")
+        
+        lines.append("    </div>")
+        lines.append("</body>")
+        lines.append("</html>")
+        
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write("\n".join(lines))
+        
+        print(f"  ✓ index.html")
     
     def _convert_to_markdown(self, package: Dict) -> str:
         """轉換為 Markdown 格式"""
@@ -233,9 +539,21 @@ class ConversationExtractor:
                     len(msg["content"])
                 ])
     
-    def _convert_to_html(self, package: Dict) -> str:
-        """轉換為 HTML 格式"""
+    def _convert_to_html(self, package: Dict, custom_palette: Dict = None) -> str:
+        """
+        轉換為 HTML 格式
+        
+        Args:
+            package: 對話包
+            custom_palette: 自定義調色盤（可選）
+        """
         lines = []
+        
+        # 選擇調色盤
+        if custom_palette:
+            palette = custom_palette
+        else:
+            palette = self.COLOR_PALETTES.get(self.theme, self.COLOR_PALETTES["default"])
         
         # HTML header
         lines.append("<!DOCTYPE html>")
@@ -248,18 +566,18 @@ class ConversationExtractor:
         title = html_escape(metadata.get('title', '對話記錄'))
         lines.append(f"    <title>{title}</title>")
         
-        # Add CSS styling
+        # Add CSS styling with theme colors
         lines.append("    <style>")
-        lines.append("        body { font-family: 'Microsoft JhengHei', Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 20px; background: #f5f5f5; }")
-        lines.append("        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }")
-        lines.append("        h1 { color: #333; border-bottom: 3px solid #4CAF50; padding-bottom: 10px; }")
-        lines.append("        .metadata { background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 30px; }")
-        lines.append("        .message { margin: 20px 0; padding: 15px; border-radius: 8px; }")
-        lines.append("        .user { background: #e3f2fd; border-left: 4px solid #2196F3; }")
-        lines.append("        .assistant { background: #f3e5f5; border-left: 4px solid #9C27B0; }")
-        lines.append("        .role { font-weight: bold; margin-bottom: 10px; color: #555; }")
-        lines.append("        .content { line-height: 1.6; white-space: pre-wrap; }")
-        lines.append("        .stats { margin-top: 30px; padding: 15px; background: #fff3e0; border-radius: 5px; }")
+        lines.append(f"        body {{ font-family: 'Microsoft JhengHei', Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 20px; background: {palette['bg_body']}; }}")
+        lines.append(f"        .container {{ background: {palette['bg_container']}; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }}")
+        lines.append(f"        h1 {{ color: {palette['text_primary']}; border-bottom: 3px solid {palette['border_title']}; padding-bottom: 10px; }}")
+        lines.append(f"        .metadata {{ background: {palette['bg_metadata']}; padding: 15px; border-radius: 5px; margin-bottom: 30px; color: {palette['text_primary']}; }}")
+        lines.append(f"        .message {{ margin: 20px 0; padding: 15px; border-radius: 8px; }}")
+        lines.append(f"        .user {{ background: {palette['bg_user']}; border-left: 4px solid {palette['border_user']}; }}")
+        lines.append(f"        .assistant {{ background: {palette['bg_assistant']}; border-left: 4px solid {palette['border_assistant']}; }}")
+        lines.append(f"        .role {{ font-weight: bold; margin-bottom: 10px; color: {palette['text_secondary']}; }}")
+        lines.append(f"        .content {{ line-height: 1.6; white-space: pre-wrap; color: {palette['text_primary']}; }}")
+        lines.append(f"        .stats {{ margin-top: 30px; padding: 15px; background: {palette['bg_stats']}; border-radius: 5px; color: {palette['text_primary']}; }}")
         lines.append("    </style>")
         lines.append("</head>")
         lines.append("<body>")
