@@ -131,6 +131,7 @@ with open("analysis_report.md", "w", encoding="utf-8") as f:
 - 🎨 **主題調色盤系統** (6 種預設主題 + 自訂調色盤) - 🆕
 - 🌐 **網站套件生成** (多主題 HTML + 所有格式 + 美觀索引頁) - 🆕
 - 📦 **批次導出功能** (一次導出所有格式) - 🆕
+- 🤖 **AI 助手網站管家** (專案管理、自動備份、版本控制) - 🆕🆕
 - 🎯 注意力機制分析 (關鍵時刻、話題轉換、資訊密集段落)
 - 🧬 邏輯結構提取 (概念、因果關係、推理鏈、結論)
 - 🤖 AI 深度分析 (需要 Anthropic API Key)
@@ -147,6 +148,44 @@ with open("analysis_report.md", "w", encoding="utf-8") as f:
 詳細說明請參閱:
 - [對話知識提取器使用說明 (中文)](docs/conversation_extractor_zh.md)
 - [Conversation Extractor Guide (English)](docs/conversation_extractor_en.md)
+
+### AI 助手網站管家
+
+完整的網站專案管理系統，提供專案建立、備份、版本控制等功能。
+
+```python
+from website_manager import WebsiteManager
+
+# 初始化管家
+manager = WebsiteManager(workspace_dir="./my_websites")
+
+# 建立專案
+project_id = manager.create_project(
+    project_name="我的對話網站",
+    conversation=conversation,
+    metadata={"title": "專案標題", "date": "2026-01-10"}
+)
+
+# 列出所有專案
+projects = manager.list_projects()
+
+# 備份專案
+manager.backup_project(project_id)
+
+# 更新主題
+manager.update_project_theme(project_id, "ocean")
+
+# 查看統計
+manager.print_statistics()
+```
+
+**網站管家功能**:
+- 🏗️ 專案建立與管理
+- 💾 自動備份與版本控制
+- 🎨 主題動態切換
+- 📊 統計分析
+- 🗂️ 多專案管理
+- 🔍 專案查詢與預覽
 
 ## 種子資料集
 
