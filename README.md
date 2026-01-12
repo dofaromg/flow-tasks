@@ -54,6 +54,7 @@ kubectl apply -f argocd/app.yaml
 - [應用程式說明](apps/README.md)
 - [分支整合優化指南](BRANCH_INTEGRATION_GUIDE.md) ⭐ 新增
 - [Codespace 管理指南](CODESPACE_MANAGEMENT.md) 🆕 新增
+- [MrliouWord 3D掃描器專案](MRLIOUWORD_IMPLEMENTATION_SUMMARY.md) ✨ 新增
 
 ---
 
@@ -145,6 +146,37 @@ python src/ai_persona_toolkit.py
 - [記憶封存種子說明](particle_core/docs/記憶封存種子說明.md)
 - [AI 人格套件使用說明](particle_core/docs/ai_persona_toolkit_guide.md)
 - [記憶封存種子系統更新說明](記憶封存種子系統更新說明.md)
+
+---
+
+## 📱 MrliouWord - 智慧3D掃描器
+
+**革命性的3D內容創作生態系統** 🚀
+
+MrliouWord 是一款結合 LiDAR 精密掃描和 AI 快照建模的智慧3D掃描器，旨在成為「3D內容創作的TikTok」。
+
+### 核心特色
+- **三模式系統** - 輕鬆/探索/專業模式，同一引擎不同曝光
+- **AI 快照建模** - 單張照片生成3D模型
+- **社群分享生態** - 一鍵分享到多平台
+- **智能品牌標識** - 自動浮水印系統
+
+### 技術棧
+- **SwiftUI** - 現代化 iOS UI 框架
+- **ARKit + LiDAR** - 3D 掃描核心
+- **CoreML + Vision** - AI 處理引擎
+- **RealityKit** - 3D 渲染展示
+
+### 快速開始
+```bash
+cd MrliouWord
+open MrliouWord.xcodeproj  # 在 Xcode 中開啟專案
+# 選擇支援 LiDAR 的 iPhone 12 Pro+ 或 iPad Pro (2020+)
+# Cmd + R 運行專案
+```
+
+**詳細文檔**: [MrliouWord 實作摘要](MRLIOUWORD_IMPLEMENTATION_SUMMARY.md)  
+**Reference Commit**: [c785f4d](https://github.com/dofaromg/flow-tasks/commit/c785f4d33e92a46ce2515da4ab7360f1685ed43b)
 
 ---
 
