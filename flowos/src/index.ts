@@ -104,7 +104,8 @@ export default {
 
       // C. Traffic Gate
       if (path.startsWith('/gate/')) {
-        const gateStub = env.GATE_ENGINE.idFromName('global-gate').getStub();
+        const id = env.GATE_ENGINE.idFromName('global-gate');
+        const gateStub = env.GATE_ENGINE.get(id);
         const payload = await safeJson(request);
         return await synapse.fireInternal(gateStub, path, payload);
       }
@@ -300,11 +301,11 @@ interface R2Bucket {
 
 interface DurableObjectNamespace {
   idFromName(name: string): DurableObjectId;
+  get(id: DurableObjectId): DurableObjectStub;
 }
 
-interface DurableObjectId {
-  getStub(): DurableObjectStub;
-}
+// Opaque identifier for Durable Objects in Cloudflare Workers runtime
+interface DurableObjectId {}
 
 interface DurableObjectStub {
   fetch(input: RequestInfo, init?: RequestInit): Promise<Response>;
