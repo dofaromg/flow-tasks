@@ -59,14 +59,16 @@ MrliouWord 是一款結合 LiDAR 精密掃描和 AI 快照建模的智慧3D掃�
 
 ## 🚀 快速開始
 
+> **📝 重要提示**: 本專案包含所有必要的 Swift 源代碼文件，但需要使用 Xcode 創建項目文件。請參閱 [XCODE_SETUP.md](XCODE_SETUP.md) 獲取詳細的項目設置說明。
+
 ### 1. 環境設置
 ```bash
 # 克隆專案
 git clone https://github.com/dofaromg/flow-tasks.git
 cd flow-tasks/MrliouWord
 
-# 開啟 iOS 專案
-open MrliouWord.xcodeproj
+# 參閱 XCODE_SETUP.md 創建 Xcode 項目
+# 或使用 Xcode 的 "New Project" 功能並添加現有源文件
 ```
 
 ### 2. 依賴安裝
