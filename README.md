@@ -29,7 +29,17 @@ python scripts/sync_external_repos.py --list
 
 選擇一種部署方式開始：
 
-### 方式 1: 一鍵部署 (最簡單)
+### 方式 0: Vercel 前端部署 (最快速) 🆕
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdofaromg%2Fflow-tasks)
+
+一鍵部署 Next.js 前端應用到 Vercel：
+- ⚡ 即時全球 CDN
+- 🔄 自動 GitHub 整合
+- 📊 內建分析工具
+
+📚 詳見：[Vercel 部署指南](VERCEL_DEPLOYMENT.md)
+
+### 方式 1: 一鍵部署 GKE (最簡單)
 ```bash
 git clone https://github.com/dofaromg/flow-tasks.git
 cd flow-tasks
@@ -48,7 +58,8 @@ kubectl apply -f argocd/app.yaml
 設定 GitHub Secrets 後，推送到 main 分支自動部署
 
 📚 **詳細文檔**：
-- [完整部署指南](DEPLOYMENT.md)
+- [Vercel 部署指南](VERCEL_DEPLOYMENT.md) 🆕 新增 - Next.js 前端部署到 Vercel
+- [完整部署指南](DEPLOYMENT.md) - GKE 後端服務部署
 - [快速參考](QUICKSTART.md)
 - [架構圖表](ARCHITECTURE.md)
 - [應用程式說明](apps/README.md)
