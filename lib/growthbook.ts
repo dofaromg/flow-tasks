@@ -51,6 +51,9 @@ export function isFeatureOn(featureKey: string): boolean {
 
 export function getFeatureValue<T>(featureKey: string, defaultValue: T): T {
   const gb = getGrowthBook()
+  // Type assertion is necessary because GrowthBook's getFeatureValue returns WidenPrimitives<T>
+  // which widens primitive types (e.g., "blue" becomes string). We assert back to T to maintain
+  // the specific type from the defaultValue parameter.
   return gb.getFeatureValue(featureKey, defaultValue) as T
 }
 
