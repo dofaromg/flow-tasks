@@ -247,6 +247,7 @@ interface DurableObjectNamespace {
   get(id: DurableObjectId): DurableObjectStub;
 }
 
+// Opaque identifier for Durable Objects in Cloudflare Workers runtime
 interface DurableObjectId {}
 
 interface DurableObjectStub {
