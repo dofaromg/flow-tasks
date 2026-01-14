@@ -235,8 +235,10 @@ dict_seeds/
 particle_core/context/
 particle_core/snapshots/
 particle_core/backups/
+particle_core/cache/
 /tmp/test_context/
 /tmp/test_snapshots/
+/tmp/test_cache/
 
 # Repository sync backups
 .sync_backups/
