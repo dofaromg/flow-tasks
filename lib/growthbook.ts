@@ -51,6 +51,12 @@ export function isFeatureOn(featureKey: string): boolean {
 
 export function getFeatureValue<T>(featureKey: string, defaultValue: T): T {
   const gb = getGrowthBook()
+  // GrowthBook's getFeatureValue is typed to return WidenPrimitives<T>,
+  // which intentionally "widens" primitive types for flexibility.
+  // Here we expose a simpler helper that returns the same shape as the
+  // provided defaultValue, so we assert back to T. This keeps the
+  // external API ergonomic while relying on GrowthBook's runtime behavior
+  // and the defaultValue type to ensure correctness.
   return gb.getFeatureValue(featureKey, defaultValue) as T
 }
 
