@@ -230,6 +230,9 @@ export class Auth {
 
 // ============================================
 // 6. Worker Runtime Types (stubs for build-time)
+// Note: These type stubs are minimal definitions for build-time checks.
+// For production use, consider installing @cloudflare/workers-types package
+// to get complete, up-to-date type definitions for Cloudflare Workers runtime.
 // ============================================
 interface KVNamespace {
   get(key: string): Promise<string | null>;

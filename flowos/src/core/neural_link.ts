@@ -1,3 +1,6 @@
+// Note: This module imports crypto utilities from '../utils' which may use Node.js crypto.
+// The wrangler.toml enables nodejs_compat for compatibility. Web Crypto API is preferred
+// for Cloudflare Workers, but nodejs_compat provides broader Node.js API support.
 import { FlowContext } from '../types';
 import { now, randomId } from '../utils';
 
@@ -17,6 +20,8 @@ interface NeuralLinkEnv {
   GITHUB_TOKEN?: string;
 }
 
+// Local type definitions for fetch API (duplicated for module isolation)
+// TODO: Consider using @cloudflare/workers-types to avoid duplication
 interface RequestInit {
   method?: string;
   headers?: Record<string, string>;
