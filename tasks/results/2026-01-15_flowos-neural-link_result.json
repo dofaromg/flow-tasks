@@ -13,7 +13,7 @@
   "components_implemented": [
     {
       "file": "flowos/src/core/neural_link.ts",
-      "lines": 112,
+      "lines": 113,
       "description": "Neural Link event system with handler registration, packet transmission, and GitHub API integration",
       "classes": [
         "NeuralLink",
@@ -28,7 +28,7 @@
     },
     {
       "file": "flowos/src/core/config.ts",
-      "lines": 45,
+      "lines": 46,
       "description": "Configuration management with snapshot pattern and change notifications",
       "classes": [
         "ConfigManager"
@@ -42,7 +42,7 @@
     },
     {
       "file": "flowos/src/core/gate.ts",
-      "lines": 29,
+      "lines": 30,
       "description": "Traffic gate system for request filtering and throttling",
       "classes": [
         "FlowGate",
@@ -56,22 +56,22 @@
     },
     {
       "file": "flowos/src/adapters/envoy.ts",
-      "lines": 8,
+      "lines": 9,
       "description": "Envoy service mesh adapter interface"
     },
     {
       "file": "flowos/src/adapters/jetstream.ts",
-      "lines": 8,
+      "lines": 9,
       "description": "NATS JetStream messaging adapter interface"
     },
     {
       "file": "flowos/src/adapters/k8s.ts",
-      "lines": 9,
+      "lines": 10,
       "description": "Kubernetes deployment adapter interface"
     },
     {
       "file": "flowos/src/adapters/index.ts",
-      "lines": 3,
+      "lines": 4,
       "description": "Adapter module exports"
     },
     {
@@ -89,7 +89,7 @@
     },
     {
       "file": "flowos/wrangler.toml",
-      "lines": 4,
+      "lines": 5,
       "description": "Cloudflare Workers configuration with Node.js compatibility"
     }
   ],
