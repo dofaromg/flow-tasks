@@ -503,7 +503,6 @@ Before merging code, verify:
 **Remember**: These patterns are proven to work in this repository. Use them as templates for new code!
 
 ---
-# Performance Improvements
 
 # Performance Improvements for Flow-Tasks Repository
 
