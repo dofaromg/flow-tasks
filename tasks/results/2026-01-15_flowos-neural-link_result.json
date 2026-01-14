@@ -115,7 +115,7 @@
     "documentation_present": true
   },
   "notes": [
-    "Philosophy embedded: 怎麼過去，就怎麼回來 (How it comes, so it returns)",
+    "Philosophy embedded: 怎麼過去，就怎麼回來 (How you go, so you return)",
     "Neural Link enables distributed ASI node communication",
     "Designed for edge deployment with minimal latency",
     "Supports multi-platform adapter integration (Envoy, JetStream, K8s)",
