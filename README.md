@@ -300,6 +300,8 @@ kubectl apply -f https://github.com/kedacore/keda/releases/latest/download/keda-
 - **`QUICKSTART.md`**：快速參考 (5000+ 字)
 - **`ARCHITECTURE.md`**：架構和流程圖 (11000+ 字)
 - **`apps/README.md`**：應用程式詳細說明
+- **`docs/SUBSHELL_BUG_FIX.md`**：Shell 腳本子殼變數作用域問題修復指南 🆕
+- **`docs/SHELL_SCRIPTING_BEST_PRACTICES.md`**：Shell 腳本最佳實踐 🆕
 
 
 ## AMP（Index-only Ledger）
