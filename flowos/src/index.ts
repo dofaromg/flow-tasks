@@ -57,7 +57,7 @@ export default {
         }
         const gateStub = env.GATE_ENGINE.idFromName('global-gate').getStub();
         const payload = await safeJson(request);
-        return (await synapse.fireInternal(gateStub, path, payload)) as Response;
+        return await synapse.fireInternal(gateStub, path, payload);
       }
 
       // D. Core business logic

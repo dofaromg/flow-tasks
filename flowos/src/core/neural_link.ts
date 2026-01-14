@@ -30,10 +30,17 @@ interface RequestInit {
 
 interface RequestInfo {}
 
+interface Headers {
+  get(name: string): string | null;
+}
+
 interface Response {
-  ok: boolean;
-  status: number;
-  json(): Promise<unknown>;
+  readonly ok: boolean;
+  readonly status: number;
+  readonly statusText: string;
+  readonly headers: Headers;
+  json<T = unknown>(): Promise<T>;
+  text(): Promise<string>;
 }
 
 declare function fetch(input: RequestInfo | string, init?: RequestInit): Promise<Response>;
