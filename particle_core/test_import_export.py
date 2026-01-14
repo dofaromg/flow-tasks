@@ -5,7 +5,6 @@ Test suite for ConversationExtractor Import/Export functionality
 
 import os
 import sys
-import json
 import tempfile
 
 # Add particle_core/src to path
