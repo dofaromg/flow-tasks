@@ -3,7 +3,7 @@ import { randomId, now } from '../../utils';
 import { MemoryStorage } from '../../storage';
 
 export class ParticleStore {
-  constructor(private storage: MemoryStorage) {}
+  constructor(private readonly storage: MemoryStorage) {}
 
   create(content: string, context: FlowContext, summary?: string): FlowParticleSnapshot {
     const state: FlowParticleState = {
