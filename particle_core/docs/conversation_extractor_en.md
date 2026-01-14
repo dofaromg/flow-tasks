@@ -2,6 +2,7 @@
 
 **Author**: MR.liou × Claude (empathetic.mirror)  
 **Version**: v1.1 (Added full format import support)  
+**Version**: v1.0  
 **Location**: `particle_core/src/conversation_extractor.py`
 
 ## Overview
@@ -33,6 +34,17 @@ The Conversation Knowledge Extractor is a powerful tool for analyzing, packaging
 - ✅ Support multiple text conversation formats
 - ✅ Preserve complete metadata (supported formats: JSON, XML, YAML, Markdown)
 - ✅ Roundtrip export/import tested
+The Conversation Knowledge Extractor is a powerful tool for analyzing, packaging, and exporting conversation records. It automatically identifies key points, logical structures, and knowledge insights from conversations, generating structured analysis reports.
+
+## Key Features
+
+### 1. Conversation Packaging & Export
+
+Package conversation records into structured formats with multiple export options:
+
+- **JSON**: Complete data structure with metadata and statistics
+- **Markdown**: Human-readable format for documentation
+- **Plain Text**: Simple text format
 
 ### 2. Attention Mechanism Analysis
 

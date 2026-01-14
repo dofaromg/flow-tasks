@@ -89,6 +89,7 @@ print(agent.compress_to_particle_notation())
 ## 對話知識提取器 - Conversation Knowledge Extractor (新功能)
 
 對話知識提取器是一個強大的工具，用於分析、打包、導入和導出對話記錄。支援注意力機制分析、邏輯結構提取和 AI 深度分析。**v1.1 新增全格式導入支援！**
+對話知識提取器是一個強大的工具，用於分析、打包和導出對話記錄。支援注意力機制分析、邏輯結構提取和 AI 深度分析。
 
 ```python
 from conversation_extractor import ConversationExtractor
@@ -118,6 +119,12 @@ extractor.export_to_file(package, "conversation.yaml", "yaml")
 imported = extractor.import_from_file("conversation.json")
 imported = extractor.import_from_file("conversation.md")
 imported = extractor.import_from_file("conversation.csv")
+    metadata={"title": "粒子語言討論", "date": "2026-01-04"}
+)
+
+# 導出為不同格式
+extractor.export_to_file(package, "conversation.json", "json")
+extractor.export_to_file(package, "conversation.md", "markdown")
 
 # 注意力分析
 attention = extractor.analyze_attention(conversation)
@@ -138,6 +145,7 @@ with open("analysis_report.md", "w", encoding="utf-8") as f:
 - 📦 對話打包與導出 (JSON/Markdown/TXT/CSV/XML/YAML)
 - 📥 對話導入 (JSON/Markdown/TXT/CSV/XML/YAML) 🆕
 - 🔍 自動檢測檔案格式 🆕
+- 📦 對話打包與導出 (JSON/Markdown/TXT)
 - 🎯 注意力機制分析 (關鍵時刻、話題轉換、資訊密集段落)
 - 🧬 邏輯結構提取 (概念、因果關係、推理鏈、結論)
 - 🤖 AI 深度分析 (需要 Anthropic API Key)

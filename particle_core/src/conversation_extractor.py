@@ -90,12 +90,19 @@ class ConversationExtractor:
         """
         format = format.lower()
         
+        
+        Args:
+            package: 對話包
+            filepath: 檔案路徑
+            format: 格式 (json/markdown/txt)
+        """
         if format == "json":
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(package, f, ensure_ascii=False, indent=2)
             print(f"✓ 已導出 JSON: {filepath}")
         
         elif format in ["markdown", "md"]:
+        elif format == "markdown":
             md_content = self._convert_to_markdown(package)
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(md_content)

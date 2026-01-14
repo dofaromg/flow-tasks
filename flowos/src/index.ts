@@ -5,6 +5,9 @@ import { ParticleStore } from './core/particles/store';
 import { MerkleChain } from './core/chains';
 import { SeedRegistry } from './core/seeds';
 import { PersonaRegistry } from './core/personas';
+import { ConfigManager } from './core/config';
+import { FlowGate, GateDecision } from './core/gate';
+import { NeuralLink, NeuralLinkPacket } from './core/neural_link';
 import { FlowLaw } from './lib/flow-law';
 import { ConversationManager } from './app/conversations';
 import { ProjectRegistry } from './app/projects';
@@ -13,6 +16,11 @@ import { MemorySystem } from './app/memory';
 import { ToolRegistry } from './app/tools';
 import { randomId, now } from './utils';
 
+export interface NeuralSignalResult {
+  decision: GateDecision;
+  packet?: NeuralLinkPacket;
+}
+
 export class FlowOS {
   readonly storage: MemoryStorage;
   readonly particles: ParticleEngine;
@@ -20,6 +28,9 @@ export class FlowOS {
   readonly chain: MerkleChain;
   readonly seeds: SeedRegistry;
   readonly personas: PersonaRegistry;
+  readonly config: ConfigManager;
+  readonly gate: FlowGate;
+  readonly neuralLink: NeuralLink;
   readonly flowLaw: FlowLaw;
   readonly conversations: ConversationManager;
   readonly projects: ProjectRegistry;
@@ -34,6 +45,9 @@ export class FlowOS {
     this.chain = new MerkleChain();
     this.seeds = new SeedRegistry();
     this.personas = new PersonaRegistry();
+    this.config = new ConfigManager();
+    this.gate = new FlowGate();
+    this.neuralLink = new NeuralLink();
     this.flowLaw = new FlowLaw();
     this.conversations = new ConversationManager(this.storage);
     this.projects = new ProjectRegistry(this.storage);
@@ -60,6 +74,19 @@ export class FlowOS {
     return this.flowLaw.evaluate(this.particles.listParticles(), context);
   }
 
+  async emitSignal(
+    type: string,
+    payload: Record<string, unknown>,
+    context?: FlowContext,
+  ): Promise<NeuralSignalResult> {
+    const decision = this.gate.evaluate(payload, context);
+    if (!decision.allowed) {
+      return { decision };
+    }
+    const packet = await this.neuralLink.transmit(type, payload, context);
+    return { decision, packet };
+  }
+
   snapshot(): FlowSnapshot {
     const snapshot = this.storage.snapshot();
     return {
@@ -71,3 +98,7 @@ export class FlowOS {
 
 export * from './types';
 export * from './utils';
+export * from './core/config';
+export * from './core/gate';
+export * from './core/neural_link';
+export * from './adapters';
