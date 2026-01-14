@@ -5,6 +5,8 @@ import { NeuralLink, ParticleNeuralLink, NeuralLinkPacket } from './src/core/neu
 import { ConfigManager } from './src/core/config';
 import { FlowGate, GateEngine } from './src/core/gate';
 
+const FLOWOS_VERSION = '4.0.0';
+
 async function runTests() {
   // Test NeuralLink event system
   const link = new NeuralLink();
@@ -24,12 +26,12 @@ async function runTests() {
   }
 
   // Test ConfigManager
-  const config = new ConfigManager({ version: '4.0.0' });
+  const config = new ConfigManager({ version: FLOWOS_VERSION });
   config.update({ philosophy: '怎麼過去，就怎麼回來' });
   const version = config.get('version');
   const philosophy = config.get('philosophy');
 
-  if (version === '4.0.0' && philosophy === '怎麼過去，就怎麼回來') {
+  if (version === FLOWOS_VERSION && philosophy === '怎麼過去，就怎麼回來') {
     console.log('✓ ConfigManager working');
   } else {
     console.error('✗ ConfigManager test failed');
@@ -53,7 +55,7 @@ async function runTests() {
     console.error('✗ GateEngine test failed');
   }
 
-  console.log('\nFlowOS Neural Link System v4.0.0 - Tests Complete');
+  console.log(`\nFlowOS Neural Link System v${FLOWOS_VERSION} - Tests Complete`);
   console.log('Philosophy: 怎麼過去，就怎麼回來');
 }
 
