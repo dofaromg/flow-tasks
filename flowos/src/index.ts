@@ -57,7 +57,7 @@ export default {
         }
         const gateStub = env.GATE_ENGINE.idFromName('global-gate').getStub();
         const payload = await safeJson(request);
-        return await synapse.fireInternal(gateStub, path, payload);
+        return (await synapse.fireInternal(gateStub, path, payload)) as Response;
       }
 
       // D. Core business logic
@@ -289,7 +289,14 @@ interface Request {
   json(): Promise<unknown>;
 }
 
-interface Response {}
+interface Response {
+  readonly status: number;
+  readonly statusText: string;
+  readonly ok: boolean;
+  readonly headers: Headers;
+  json<T = unknown>(): Promise<T>;
+  text(): Promise<string>;
+}
 
 declare const Response: {
   new (body?: BodyInit | null, init?: ResponseInit): Response;
