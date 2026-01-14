@@ -47,7 +47,8 @@ export default {
 
       // C. Traffic Gate
       if (path.startsWith('/gate/')) {
-        const gateStub = env.GATE_ENGINE.idFromName('global-gate').getStub();
+        const id = env.GATE_ENGINE.idFromName('global-gate');
+        const gateStub = env.GATE_ENGINE.get(id);
         const payload = await safeJson(request);
         return await synapse.fireInternal(gateStub, path, payload);
       }
@@ -243,11 +244,10 @@ interface R2Bucket {
 
 interface DurableObjectNamespace {
   idFromName(name: string): DurableObjectId;
+  get(id: DurableObjectId): DurableObjectStub;
 }
 
-interface DurableObjectId {
-  getStub(): DurableObjectStub;
-}
+interface DurableObjectId {}
 
 interface DurableObjectStub {
   fetch(input: RequestInfo, init?: RequestInit): Promise<Response>;
@@ -283,7 +283,11 @@ interface Request {
   json(): Promise<unknown>;
 }
 
-interface Response {}
+interface Response {
+  ok: boolean;
+  status: number;
+  json(): Promise<unknown>;
+}
 
 declare const Response: {
   new (body?: BodyInit | null, init?: ResponseInit): Response;
