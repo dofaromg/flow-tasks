@@ -244,6 +244,11 @@ particle_core/cache/
 
 # Repository sync backups
 .sync_backups/
+
+# Synced external repository files
+# These are auto-synced from external repos, not part of this codebase
+particle_core/examples/claude_recipes/
+cluster/configs/google_templates/
 # AMP ledger artifacts
 /data/chain.jsonl
 /data/dag_edges.jsonl
