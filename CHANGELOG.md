@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Three-mode scanning system (Easy/Explore/Professional)
   - SwiftUI + ARKit + LiDAR core architecture
   - AI snapshot modeling integration
-  - 7 core Swift source files (~900 LOC)
+  - 7 core Swift source files (414 LOC)
   - Complete project documentation (README.md, XCODE_SETUP.md)
   - Implementation summary: [MRLIOUWORD_IMPLEMENTATION_SUMMARY.md](MRLIOUWORD_IMPLEMENTATION_SUMMARY.md)
   - Reference commit: [c785f4d](https://github.com/dofaromg/flow-tasks/commit/c785f4d33e92a46ce2515da4ab7360f1685ed43b)

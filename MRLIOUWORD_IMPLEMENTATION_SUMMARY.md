@@ -72,12 +72,12 @@ MrliouWord/
 
 #### 1. **App/** - Application Core
 
-**MrliouWordApp.swift** (70 lines)
+**MrliouWordApp.swift** (17 lines)
 - SwiftUI App lifecycle entry point
 - Environment setup and configuration
 - Scene management
 
-**ContentView.swift** (210 lines)
+**ContentView.swift** (41 lines)
 - Main application view orchestrator
 - Three-mode UI layout management
 - Navigation and state coordination
@@ -85,7 +85,7 @@ MrliouWord/
 
 #### 2. **Models/** - Data Models
 
-**ScanMode.swift** (50 lines)
+**ScanMode.swift** (35 lines)
 - Defines three scanning modes: Easy, Explore, Professional
 - Mode-specific parameter configurations
 - Enum-based mode switching logic
@@ -93,7 +93,7 @@ MrliouWord/
 
 #### 3. **Services/** - Business Logic
 
-**ScannerManager.swift** (180 lines)
+**ScannerManager.swift** (96 lines)
 - Core scanning orchestration service
 - ARKit session management
 - LiDAR data capture and processing
@@ -103,19 +103,19 @@ MrliouWord/
 
 #### 4. **Views/** - User Interface
 
-**ARViewContainer.swift** (130 lines)
+**ARViewContainer.swift** (50 lines)
 - SwiftUI wrapper for ARKit ARView
 - Coordinator pattern implementation
 - Camera session lifecycle management
 - Real-time AR preview rendering
 
-**ModeSelector.swift** (110 lines)
+**ModeSelector.swift** (79 lines)
 - Interactive mode selection interface
 - Visual mode representation
 - Smooth transition animations
 - Mode-specific feature highlights
 
-**ScanControlsView.swift** (150 lines)
+**ScanControlsView.swift** (96 lines)
 - Scanning control buttons and UI
 - Progress indicators
 - Real-time feedback display
@@ -342,7 +342,7 @@ cd flow-tasks/MrliouWord
 
 ## Summary | 總結
 
-The MrliouWord iOS 3D scanner project represents a significant addition to the flow-tasks repository, combining cutting-edge 3D scanning technology with an innovative three-mode user experience design. The initial implementation provides a solid foundation with 7 core Swift source files totaling approximately 900 lines of code, organized in a clean, modular architecture that supports future expansion and feature development.
+The MrliouWord iOS 3D scanner project represents a significant addition to the flow-tasks repository, combining cutting-edge 3D scanning technology with an innovative three-mode user experience design. The initial implementation provides a solid foundation with 7 core Swift source files totaling 414 lines of code, organized in a clean, modular architecture that supports future expansion and feature development.
 
 MrliouWord iOS 3D掃描器專案為 flow-tasks 儲存庫增添了重要內容，結合最先進的3D掃描技術與創新的三模式用戶體驗設計。初始實作提供了堅實的基礎，包含7個核心 Swift 源碼文件，共約900行代碼，採用清晰的模組化架構，支援未來的擴展和功能開發。
 
