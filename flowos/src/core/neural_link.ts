@@ -25,13 +25,13 @@ interface RequestInit {
 
 interface RequestInfo {}
 
-interface Response {
+interface FetchResponse {
   ok: boolean;
   status: number;
   json(): Promise<unknown>;
 }
 
-declare function fetch(input: RequestInfo | string, init?: RequestInit): Promise<Response>;
+declare function fetch(input: RequestInfo | string, init?: RequestInit): Promise<FetchResponse>;
 
 export class NeuralLink {
   private readonly handlers = new Map<string, NeuralLinkHandler[]>();
@@ -75,10 +75,10 @@ export class ParticleNeuralLink {
   ) {}
 
   async fireInternal(
-    stub: { fetch(input: RequestInfo, init?: RequestInit): Promise<Response> },
+    stub: { fetch(input: RequestInfo, init?: RequestInit): Promise<any> },
     path: string,
     payload: Record<string, unknown>,
-  ): Promise<Response> {
+  ): Promise<any> {
     return await stub.fetch(`https://internal${path}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Node-Id': this.nodeId },
