@@ -166,6 +166,8 @@ Multiple layers of protection:
    - **Issue**: WARNING_COUNT modified in subshell, value lost
    - **Fix**: Used process substitution and temporary file
    - **Result**: Accurate warning count propagation
+   - **Documentation**: See `docs/SUBSHELL_BUG_FIX.md` for detailed explanation and examples
+   - **Test**: Run `bash scripts/test_subshell_bug_fix.sh` to verify the fix
 
 2. **Deprecated Setting**
    - **Issue**: `python.formatting.provider` deprecated
