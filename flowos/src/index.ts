@@ -39,7 +39,7 @@ export default {
           version: env.VERSION || '4.0.0',
           origin: env.ORIGIN || 'MrLiouWord',
           philosophy: '怎麼過去，就怎麼回來',
-          github_lock: '2022-11-28',
+          github_api_version: '2024-11-28',
         });
       }
 
