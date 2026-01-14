@@ -5,6 +5,8 @@ import { ParticleNeuralLink } from './core/neural_link';
 
 // ============================================
 // 1. Environment Definition (per wrangler.toml)
+// Note: GATE_ENGINE is optional to allow deployment without Durable Objects binding.
+// This is a breaking change from the original interface where it was required.
 // ============================================
 export interface Env {
   MRLIOUWORD_VAULT: KVNamespace;

@@ -110,7 +110,7 @@ export class ParticleNeuralLink {
     };
     if (this.env.GITHUB_TOKEN) {
       const rawToken = this.env.GITHUB_TOKEN.trim();
-      const hasBearerPrefix = /^Bearer\s+/i.test(rawToken);
+      const hasBearerPrefix = /^Bearer\s/i.test(rawToken);
       headers.Authorization = hasBearerPrefix ? rawToken : `Bearer ${rawToken}`;
     }
     const response = await fetch(`https://api.github.com${path}`, {
@@ -122,7 +122,7 @@ export class ParticleNeuralLink {
       let bodyDescription = '';
       try {
         const errorBody = await response.json();
-        if (errorBody !== undefined && errorBody !== null) {
+        if (errorBody) {
           bodyDescription = ` Response body: ${JSON.stringify(errorBody)}`;
         }
       } catch {
