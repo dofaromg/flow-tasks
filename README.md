@@ -53,6 +53,7 @@ kubectl apply -f argocd/app.yaml
 - [架構圖表](ARCHITECTURE.md)
 - [應用程式說明](apps/README.md)
 - [分支整合優化指南](BRANCH_INTEGRATION_GUIDE.md) ⭐ 新增
+- [Development Container 配置](.devcontainer/README.md) 🆕 新增
 - [Codespace 管理指南](CODESPACE_MANAGEMENT.md) 🆕 新增
 
 ---
@@ -60,6 +61,8 @@ kubectl apply -f argocd/app.yaml
 ## 📦 GitHub Codespaces 開發環境
 
 使用 GitHub Codespaces 快速啟動雲端開發環境：
+
+本專案提供完整的 Development Container 配置，符合 [devcontainers/spec](https://github.com/devcontainers/spec) 標準。配置詳情請參閱 [.devcontainer/README.md](.devcontainer/README.md)。
 
 ### 快速開始
 ```bash
@@ -94,11 +97,13 @@ gh codespace stop -c CODESPACE_NAME
 gh codespace delete -c CODESPACE_NAME
 ```
 
-📖 **完整指南**：查看 [Codespace 管理指南](CODESPACE_MANAGEMENT.md) 了解：
-- 詳細的生命週期管理策略
-- 自動化監控和提醒設置
-- 最佳實踐和故障排除
-- 成本優化建議
+📖 **完整指南**：
+- [Development Container 配置說明](.devcontainer/README.md) - 開發環境配置與自訂
+- [Codespace 管理指南](CODESPACE_MANAGEMENT.md) - 生命週期管理與最佳實踐
+  - 詳細的生命週期管理策略
+  - 自動化監控和提醒設置
+  - 最佳實踐和故障排除
+  - 成本優化建議
 
 ---
 
