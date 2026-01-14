@@ -3,9 +3,66 @@
 
 import { ParticleNeuralLink } from './core/neural_link';
 import { GateEngine } from './core/gate';
+import { ParticleEngine } from './core/particles';
+import { ParticleStore } from './core/particles/store';
+import { ConversationManager } from './app/conversations';
+import { ProjectRegistry } from './app/projects';
+import { ArtifactVault } from './app/artifacts';
+import { MemorySystem } from './app/memory';
+import { MerkleChain } from './core/chains';
+import { FlowLaw } from './lib/flow-law';
+import { MemoryStorage } from './storage';
+import { FlowContext, FlowSnapshot, FlowLawResult } from './types';
+import { randomId, now } from './utils';
 
 // ============================================
-// 1. Environment Definition (per wrangler 2.json)
+// 1. Main FlowOS Class (for local/library usage)
+// ============================================
+export class FlowOS {
+  private storage: MemoryStorage;
+  public readonly particles: ParticleEngine;
+  public readonly conversations: ConversationManager;
+  public readonly projects: ProjectRegistry;
+  public readonly artifacts: ArtifactVault;
+  public readonly memory: MemorySystem;
+  public readonly chain: MerkleChain;
+  private flowLaw: FlowLaw;
+
+  constructor() {
+    this.storage = new MemoryStorage();
+    const particleStore = new ParticleStore(this.storage);
+    this.particles = new ParticleEngine(particleStore);
+    this.conversations = new ConversationManager(this.storage);
+    this.projects = new ProjectRegistry(this.storage);
+    this.artifacts = new ArtifactVault(this.storage);
+    this.memory = new MemorySystem(this.storage);
+    this.chain = new MerkleChain();
+    this.flowLaw = new FlowLaw();
+  }
+
+  createContext(options: { persona?: string; project?: string; seed?: string; metadata?: Record<string, unknown> }): FlowContext {
+    return {
+      id: randomId(),
+      persona: options.persona,
+      project: options.project,
+      seed: options.seed,
+      createdAt: now(),
+      metadata: options.metadata,
+    };
+  }
+
+  snapshot(): FlowSnapshot {
+    return this.storage.snapshot();
+  }
+
+  enforce(context?: FlowContext): FlowLawResult {
+    const particles = this.particles.listParticles();
+    return this.flowLaw.evaluate(particles, context);
+  }
+}
+
+// ============================================
+// 2. Environment Definition (per wrangler 2.json)
 // ============================================
 export interface Env {
   MRLIOUWORD_VAULT: KVNamespace;
@@ -23,7 +80,7 @@ export interface Env {
 }
 
 // ============================================
-// 2. Core Brain (Main Entry)
+// 3. Core Brain (Main Entry for Edge Worker)
 // ============================================
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -113,7 +170,7 @@ export default {
 };
 
 // ============================================
-// 3. Business Adapters
+// 4. Business Adapters
 // ============================================
 async function handleVCS(path: string, request: Request, vcs: VersionControl) {
   const body = async () => safeJson(request);
@@ -163,7 +220,7 @@ async function safeJson(request: Request): Promise<Record<string, unknown>> {
 }
 
 // ============================================
-// 4. Improved VersionControl (Neural Link injected)
+// 5. Improved VersionControl (Neural Link injected)
 // ============================================
 class VersionControl {
   constructor(
@@ -197,7 +254,7 @@ class VersionControl {
 }
 
 // ============================================
-// 5. Other Classes (Memory, Persona, Auth)
+// 6. Other Classes (Memory, Persona, Auth)
 // ============================================
 class Memory {
   constructor(private kv: KVNamespace) {
@@ -226,7 +283,7 @@ class Auth {
 }
 
 // ============================================
-// 6. Worker Runtime Types (stubs for build-time)
+// 7. Worker Runtime Types (stubs for build-time)
 // ============================================
 interface KVNamespace {
   get(key: string): Promise<string | null>;
@@ -283,7 +340,11 @@ interface Request {
   json(): Promise<unknown>;
 }
 
-interface Response {}
+interface Response {
+  ok: boolean;
+  status: number;
+  json(): Promise<unknown>;
+}
 
 declare const Response: {
   new (body?: BodyInit | null, init?: ResponseInit): Response;
