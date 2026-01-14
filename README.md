@@ -53,6 +53,7 @@ kubectl apply -f argocd/app.yaml
 - [架構圖表](ARCHITECTURE.md)
 - [應用程式說明](apps/README.md)
 - [分支整合優化指南](BRANCH_INTEGRATION_GUIDE.md) ⭐ 新增
+- [Development Container 配置](.devcontainer/README.md) 🆕 新增
 - [Codespace 管理指南](CODESPACE_MANAGEMENT.md) 🆕 新增
 
 ---
@@ -60,6 +61,8 @@ kubectl apply -f argocd/app.yaml
 ## 📦 GitHub Codespaces 開發環境
 
 使用 GitHub Codespaces 快速啟動雲端開發環境：
+
+本專案提供完整的 Development Container 配置，符合 [devcontainers/spec](https://github.com/devcontainers/spec) 標準。配置詳情請參閱 [.devcontainer/README.md](.devcontainer/README.md)。
 
 ### 快速開始
 ```bash
@@ -94,11 +97,13 @@ gh codespace stop -c CODESPACE_NAME
 gh codespace delete -c CODESPACE_NAME
 ```
 
-📖 **完整指南**：查看 [Codespace 管理指南](CODESPACE_MANAGEMENT.md) 了解：
-- 詳細的生命週期管理策略
-- 自動化監控和提醒設置
-- 最佳實踐和故障排除
-- 成本優化建議
+📖 **完整指南**：
+- [Development Container 配置說明](.devcontainer/README.md) - 開發環境配置與自訂
+- [Codespace 管理指南](CODESPACE_MANAGEMENT.md) - 生命週期管理與最佳實踐
+  - 詳細的生命週期管理策略
+  - 自動化監控和提醒設置
+  - 最佳實踐和故障排除
+  - 成本優化建議
 
 ---
 
@@ -145,6 +150,55 @@ python src/ai_persona_toolkit.py
 - [記憶封存種子說明](particle_core/docs/記憶封存種子說明.md)
 - [AI 人格套件使用說明](particle_core/docs/ai_persona_toolkit_guide.md)
 - [記憶封存種子系統更新說明](記憶封存種子系統更新說明.md)
+
+---
+
+## 📱 MrliouWord - iOS 3D Scanner | iOS 3D掃描器
+
+**革命性的3D內容創作生態系統** - 結合 LiDAR 精密掃描和 AI 快照建模的智慧3D掃描器，旨在成為「3D內容創作的TikTok」。
+
+### 核心特色 (Core Features)
+
+- **三模式系統** (Three-Mode System) - 輕鬆/探索/專業模式，同一引擎不同曝光
+- **AI 快照建模** (AI Snapshot Modeling) - 單張照片生成3D模型，90%成功率
+- **社群分享生態** (Community Sharing) - 一鍵分享到多平台
+- **智能品牌標識** (Smart Watermarking) - 自動浮水印系統
+
+### 技術架構 (Tech Stack)
+
+- **SwiftUI** - 現代化UI框架
+- **ARKit + LiDAR** - 3D掃描核心
+- **CoreML + Vision** - AI處理引擎
+- **RealityKit** - 3D渲染展示
+
+### 快速開始 (Quick Start)
+
+```bash
+cd MrliouWord
+
+# 參閱 XCODE_SETUP.md 創建 Xcode 項目
+# Refer to XCODE_SETUP.md for Xcode project creation
+
+# 選擇支援 LiDAR 的實體設備
+# Select a physical device with LiDAR support
+
+# Cmd + R 運行專案
+```
+
+### 硬體需求 (Hardware Requirements)
+
+- **開發** - Mac with macOS 13.0+, Xcode 15+
+- **測試** - iPhone 12 Pro+ or iPad Pro (2020+) with LiDAR sensor
+
+### 文檔 (Documentation)
+
+- [完整專案說明](MrliouWord/README.md) - 詳細的專案文檔
+- [Xcode 設置指南](MrliouWord/XCODE_SETUP.md) - Xcode 專案設置說明
+- [實作摘要](MRLIOUWORD_IMPLEMENTATION_SUMMARY.md) - 技術實作詳情
+
+### 參考提交 (Reference Commit)
+
+初始實作: [c785f4d](https://github.com/dofaromg/flow-tasks/commit/c785f4d33e92a46ce2515da4ab7360f1685ed43b)
 
 ---
 
