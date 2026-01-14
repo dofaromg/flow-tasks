@@ -239,8 +239,6 @@ particle_core/cache/
 /tmp/test_context/
 /tmp/test_snapshots/
 /tmp/test_cache/
-/tmp/test_context/
-/tmp/test_snapshots/
 
 # Repository sync backups
 .sync_backups/
