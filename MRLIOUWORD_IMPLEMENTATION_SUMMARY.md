@@ -344,7 +344,7 @@ cd flow-tasks/MrliouWord
 
 The MrliouWord iOS 3D scanner project represents a significant addition to the flow-tasks repository, combining cutting-edge 3D scanning technology with an innovative three-mode user experience design. The initial implementation provides a solid foundation with 7 core Swift source files totaling 414 lines of code, organized in a clean, modular architecture that supports future expansion and feature development.
 
-MrliouWord iOS 3D掃描器專案為 flow-tasks 儲存庫增添了重要內容，結合最先進的3D掃描技術與創新的三模式用戶體驗設計。初始實作提供了堅實的基礎，包含7個核心 Swift 源碼文件，共約900行代碼，採用清晰的模組化架構，支援未來的擴展和功能開發。
+MrliouWord iOS 3D掃描器專案為 flow-tasks 儲存庫增添了重要內容，結合最先進的3D掃描技術與創新的三模式用戶體驗設計。初始實作提供了堅實的基礎，包含7個核心 Swift 源碼文件，共414行代碼，採用清晰的模組化架構，支援未來的擴展和功能開發。
 
 The project's vision to become the "TikTok of 3D Content Creation" is supported by its focus on ease of use (Easy mode), learning and exploration (Explore mode), and professional capabilities (Professional mode), making it accessible to users of all skill levels.
 
