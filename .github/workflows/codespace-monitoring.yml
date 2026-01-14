@@ -1,0 +1,184 @@
+name: Codespace Monitoring
+
+on:
+  schedule:
+    # Run every Monday at 9:00 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  monitor-codespaces:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup GitHub CLI
+        run: |
+          type -p gh > /dev/null || (echo "GitHub CLI not found" && exit 1)
+      
+      - name: Authenticate GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$GH_TOKEN" | gh auth login --with-token
+      
+      - name: Check Codespace Status
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Checking codespace status..."
+          
+          # Get codespaces
+          CODESPACES=$(gh codespace list --json name,repository,state,lastUsedAt 2>/dev/null || echo "[]")
+          
+          if [ "$CODESPACES" = "[]" ]; then
+            echo "No codespaces found."
+            echo "has_warnings=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Save to file for processing
+          echo "$CODESPACES" > codespaces.json
+          
+          # Count total codespaces
+          TOTAL=$(echo "$CODESPACES" | jq '. | length')
+          echo "Total codespaces: $TOTAL"
+          
+          # Check for warnings (within 7 days of deletion)
+          CURRENT_TIME=$(date +%s)
+          
+          # Create a temporary file to store warning information
+          > warnings.txt
+          
+          while IFS= read -r codespace; do
+            NAME=$(echo "$codespace" | jq -r '.name')
+            LAST_USED=$(echo "$codespace" | jq -r '.lastUsedAt')
+            
+            if [ "$LAST_USED" != "null" ]; then
+              LAST_USED_TS=$(date -d "$LAST_USED" +%s 2>/dev/null)
+              if [ -n "$LAST_USED_TS" ]; then
+                DAYS_SINCE_USED=$(( ($CURRENT_TIME - $LAST_USED_TS) / 86400 ))
+                DAYS_UNTIL_DELETION=$((30 - $DAYS_SINCE_USED))
+                
+                if [ $DAYS_UNTIL_DELETION -le 7 ]; then
+                  echo "⚠️  WARNING: $NAME will be deleted in ~${DAYS_UNTIL_DELETION} days"
+                  echo "$NAME" >> warnings.txt
+                fi
+              fi
+            fi
+          done < <(echo "$CODESPACES" | jq -r '.[] | @json')
+          
+          WARNING_COUNT=$(wc -l < warnings.txt | tr -d ' ')
+          
+          if [ "$WARNING_COUNT" -gt 0 ]; then
+            echo "has_warnings=true" >> $GITHUB_OUTPUT
+            echo "warning_count=$WARNING_COUNT" >> $GITHUB_OUTPUT
+          else
+            echo "has_warnings=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Create Issue for Warnings
+        if: steps.check.outputs.has_warnings == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Read codespace data
+          CODESPACES=$(cat codespaces.json)
+          
+          # Generate issue body
+          cat > issue_body.md <<'EOF'
+          ## ⚠️ Codespace Retention Warning
+          
+          Some of your codespaces are approaching the end of their retention period and will be deleted soon.
+          
+          ### Codespaces Requiring Attention
+          
+          EOF
+          
+          # Add codespace details
+          CURRENT_TIME=$(date +%s)
+          echo "$CODESPACES" | jq -r '.[] | @json' | while read -r codespace; do
+            NAME=$(echo "$codespace" | jq -r '.name')
+            REPO=$(echo "$codespace" | jq -r '.repository')
+            STATE=$(echo "$codespace" | jq -r '.state')
+            LAST_USED=$(echo "$codespace" | jq -r '.lastUsedAt')
+            
+            if [ "$LAST_USED" != "null" ]; then
+              LAST_USED_TS=$(date -d "$LAST_USED" +%s 2>/dev/null)
+              if [ -n "$LAST_USED_TS" ]; then
+                DAYS_SINCE_USED=$(( ($CURRENT_TIME - $LAST_USED_TS) / 86400 ))
+                DAYS_UNTIL_DELETION=$((30 - $DAYS_SINCE_USED))
+                
+                if [ $DAYS_UNTIL_DELETION -le 7 ]; then
+                  cat >> issue_body.md <<EOL
+          #### 📦 $NAME
+          - **Repository**: $REPO
+          - **State**: $STATE
+          - **Last used**: $LAST_USED ($DAYS_SINCE_USED days ago)
+          - **⚠️ Will be deleted in**: ~$DAYS_UNTIL_DELETION days
+          - **Action**: [Continue using](https://github.com/codespaces)
+          
+          EOL
+                fi
+              fi
+            fi
+          done
+          
+          # Add recommendations
+          cat >> issue_body.md <<'EOF'
+          
+          ### Recommended Actions
+          
+          1. **Connect to codespace** to reset the retention timer:
+             ```bash
+             gh codespace code -c CODESPACE_NAME
+             ```
+          
+          2. **View all codespaces**: https://github.com/codespaces
+          
+          3. **Delete unused codespaces**:
+             ```bash
+             gh codespace delete -c CODESPACE_NAME
+             ```
+          
+          ### Automation
+          
+          This issue was automatically created by the Codespace Monitoring workflow.
+          To disable these notifications, remove or disable `.github/workflows/codespace-monitoring.yml`.
+          
+          ### Additional Resources
+          
+          - [Codespace Management Guide](./CODESPACE_MANAGEMENT.md)
+          - [GitHub Codespaces Documentation](https://docs.github.com/en/codespaces)
+          
+          ---
+          
+          *This issue will be automatically closed if no codespaces require attention in the next monitoring cycle.*
+          EOF
+          
+          # Create or update issue
+          gh issue create \
+            --title "⚠️ Codespace Retention Warning - Action Required" \
+            --body-file issue_body.md \
+            --label "codespace,maintenance" \
+            || echo "Issue may already exist or failed to create"
+      
+      - name: Close Old Warning Issues
+        if: steps.check.outputs.has_warnings == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Find and close old codespace warning issues
+          OPEN_ISSUES=$(gh issue list --label "codespace" --state open --json number,title --jq '.[] | select(.title | contains("Codespace Retention Warning")) | .number')
+          
+          if [ -n "$OPEN_ISSUES" ]; then
+            for issue in $OPEN_ISSUES; do
+              gh issue close $issue --comment "All codespaces are now active. Closing this warning issue."
+            done
+          fi

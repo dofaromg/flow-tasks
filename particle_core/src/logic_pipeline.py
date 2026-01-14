@@ -10,7 +10,7 @@ class LogicPipeline:
     """MRLiou 邏輯管線核心類別"""
     
     def __init__(self):
-        self.fn_steps = ["structure", "mark", "flow", "recurse", "store"]
+        self.pipeline_steps = ["structure", "mark", "flow", "recurse", "store"]
         self.explanations = {
             "structure": "定義輸入資料結構",
             "mark": "建立邏輯跳點標記", 
@@ -21,10 +21,10 @@ class LogicPipeline:
     
     def run_logic_chain(self, input_data: str) -> str:
         """執行完整邏輯鏈"""
-        result = input_data
-        for step in self.fn_steps:
-            result = f"[{step.upper()} → {result}]"
-        return result
+        current_result = input_data
+        for step in self.pipeline_steps:
+            current_result = f"[{step.upper()} → {current_result}]"
+        return current_result
     
     def process_step(self, step: str, data: str) -> str:
         """處理單一邏輯步驟"""
@@ -32,49 +32,49 @@ class LogicPipeline:
     
     def get_human_readable(self) -> List[str]:
         """取得人類可讀的步驟說明"""
-        return [self.explanations.get(step, step) for step in self.fn_steps]
+        return [self.explanations.get(step, step) for step in self.pipeline_steps]
     
     def compress_logic(self, steps: List[str]) -> str:
         """壓縮邏輯鏈為 .flpkg 格式"""
-        if steps == self.fn_steps:
+        if steps == self.pipeline_steps:
             return "SEED(X) = STORE(RECURSE(FLOW(MARK(STRUCTURE(X)))))"
         return "UNSUPPORTED_LOGIC_CHAIN"
     
     def decompress_logic(self, compressed: str) -> List[str]:
         """解壓縮邏輯鏈"""
         if "SEED(X)" in compressed and "STORE(RECURSE(FLOW(MARK(STRUCTURE" in compressed:
-            return self.fn_steps
+            return self.pipeline_steps
         return ["UNKNOWN"]
     
-    def store_result(self, input_val: str, result: str, output_dir: str = "examples") -> str:
+    def store_result(self, input_value: str, result: str, output_dir: str = "examples") -> str:
         """儲存執行結果"""
         os.makedirs(output_dir, exist_ok=True)
         
         data = {
             "timestamp": datetime.utcnow().isoformat(),
-            "input": input_val,
-            "logic_chain": self.fn_steps,
+            "input": input_value,
+            "logic_chain": self.pipeline_steps,
             "human_readable": self.get_human_readable(),
             "result": result,
-            "compressed": self.compress_logic(self.fn_steps)
+            "compressed": self.compress_logic(self.pipeline_steps)
         }
         
-        filename = os.path.join(output_dir, f"logic_result_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
-        with open(filename, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+        filename = os.path.join(output_dir, f"logic_result_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json")
+        with open(filename, "w", encoding="utf-8") as output_file:
+            json.dump(data, output_file, ensure_ascii=False, indent=2)
         
         return filename
     
     def simulate(self, input_data: str) -> Dict[str, Any]:
         """完整模擬執行流程"""
-        result = self.run_logic_chain(input_data)
+        execution_result = self.run_logic_chain(input_data)
         
         return {
             "input": input_data,
-            "steps": self.fn_steps,
+            "steps": self.pipeline_steps,
             "explanations": self.get_human_readable(),
-            "result": result,
-            "compressed": self.compress_logic(self.fn_steps)
+            "result": execution_result,
+            "compressed": self.compress_logic(self.pipeline_steps)
         }
 
 def main():

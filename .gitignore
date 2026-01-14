@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# C build artifacts (wire protocol)
+particle_core/src/wire/wire_test
+particle_core/src/wire/*.o
+
 # Distribution / packaging
 .Python
 build/
@@ -14,7 +18,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# lib/   # Commented out to allow Next.js lib/ directory with TypeScript utilities
 lib64/
 parts/
 sdist/
@@ -25,6 +29,19 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Node dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -205,3 +222,33 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Particle Core - Dynamic test output files
+# Keep static examples, exclude dynamically generated ones
+examples/logic_result_*.json
+particle_core/examples/logic_result_*.json
+test_output/
+memory_seeds/test_*.mseed.json
+dict_seeds/
+
+# Memory Quick Mount - Dynamic files
+particle_core/context/
+particle_core/snapshots/
+particle_core/backups/
+particle_core/cache/
+/tmp/test_context/
+/tmp/test_snapshots/
+/tmp/test_cache/
+/tmp/test_context/
+/tmp/test_snapshots/
+
+# Repository sync backups
+.sync_backups/
+# AMP ledger artifacts
+/data/chain.jsonl
+/data/dag_edges.jsonl
+/data/refs.json
+/data/notion_export.json
+/data/github_export.json
+/data/snapshots/*.json
+flowos/dist/

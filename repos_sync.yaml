@@ -1,0 +1,66 @@
+# Repository Synchronization Configuration
+# 倉庫同步配置檔案
+#
+# 定義需要從其他 GitHub 倉庫拉取的檔案和目錄
+# Define files and directories to pull from other GitHub repositories
+
+version: "1.0"
+
+# 倉庫列表 / Repository List
+repositories:
+  # 範例：從另一個倉庫拉取特定檔案
+  # Example: Pull specific files from another repository
+  # - name: "example-repo"
+  #   url: "https://github.com/username/repository.git"
+  #   branch: "main"
+  #   enabled: true
+  #   files:
+  #     - src: "path/to/source/file.txt"
+  #       dest: "local/destination/file.txt"
+  #     - src: "another/file.py"
+  #       dest: "scripts/imported_file.py"
+  #   directories:
+  #     - src: "source/directory"
+  #       dest: "local/directory"
+  #       exclude:
+  #         - "*.pyc"
+  #         - "__pycache__"
+
+  # 範例：拉取整個子目錄作為 Git Submodule
+  # Example: Pull entire subdirectory as Git Submodule
+  # - name: "shared-library"
+  #   url: "https://github.com/username/shared-lib.git"
+  #   branch: "main"
+  #   enabled: true
+  #   submodule: true
+  #   dest: "lib/shared-library"
+
+# 同步設定 / Sync Settings
+settings:
+  # 自動建立備份 / Auto backup before sync
+  backup_before_sync: true
+  
+  # 備份目錄 / Backup directory
+  backup_dir: ".sync_backups"
+  
+  # 衝突處理策略 / Conflict resolution strategy
+  # Options: "overwrite", "skip", "prompt"
+  conflict_strategy: "skip"
+  
+  # 驗證檔案完整性 / Verify file integrity
+  verify_integrity: true
+  
+  # 同步後執行的命令 / Commands to run after sync
+  post_sync_commands:
+    # - "pip install -r requirements.txt"
+    # - "npm install"
+
+# 排除模式 / Exclude Patterns (全域)
+exclude_patterns:
+  - "*.pyc"
+  - "__pycache__"
+  - ".git"
+  - ".github"
+  - "node_modules"
+  - ".DS_Store"
+  - "*.log"

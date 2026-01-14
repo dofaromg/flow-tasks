@@ -18,15 +18,15 @@ except ImportError:
     # 如果無法匯入，建立簡化版本
     class LogicPipeline:
         def __init__(self):
-            self.fn_steps = ["structure", "mark", "flow", "recurse", "store"]
+            self.pipeline_steps = ["structure", "mark", "flow", "recurse", "store"]
         
         def simulate(self, input_data):
             result = input_data
-            for step in self.fn_steps:
+            for step in self.pipeline_steps:
                 result = f"[{step.upper()} → {result}]"
             return {
                 "input": input_data,
-                "steps": self.fn_steps,
+                "steps": self.pipeline_steps,
                 "result": result
             }
 
@@ -92,7 +92,7 @@ class ParticleLanguageCLI:
         table.add_column("英文", style="yellow")
         table.add_column("說明", style="green")
         
-        for i, step in enumerate(self.pipeline.fn_steps, 1):
+        for i, step in enumerate(self.pipeline.pipeline_steps, 1):
             table.add_row(str(i), step.upper(), explanations.get(step, "未知"))
         
         self.console.print(table)

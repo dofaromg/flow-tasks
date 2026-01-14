@@ -12,6 +12,9 @@ try:
     from logic_pipeline import LogicPipeline
     from rebuild_fn import FunctionRestorer
     from logic_transformer import LogicTransformer
+    from memory_archive_seed import MemoryArchiveSeed
+    from particle_regressor import ParticleRegressor
+    from fluin_dict_agent import FluinDictAgent
 except ImportError as e:
     print(f"Import error: {e}")
     sys.exit(1)
@@ -56,25 +59,96 @@ def demo_basic_functionality():
     print("4. 檔案儲存功能:")
     
     # 儲存邏輯結果
-    filename = pipeline.store_result("Demo Data", result['result'], "examples")
-    print(f"   邏輯結果已儲存: {filename}")
+    output_filename = pipeline.store_result("Demo Data", result['result'], "examples")
+    print(f"   邏輯結果已儲存: {output_filename}")
     
     # 建立 FLPKG 封包
-    package = restorer.create_flpkg_package(
+    flpkg_package = restorer.create_flpkg_package(
         ["structure", "mark", "flow", "recurse", "store"],
         {"demo": True, "version": "1.0"}
     )
-    flpkg_file = restorer.save_flpkg(package, "examples/demo_package")
+    flpkg_file = restorer.save_flpkg(flpkg_package, "examples/demo_package")
     print(f"   FLPKG 封包已儲存: {flpkg_file}")
     
     # JSON 匯出
     json_export = transformer.export_to_json(["structure", "store"])
     json_file = "examples/demo_transform.json"
-    with open(json_file, 'w', encoding='utf-8') as f:
-        json.dump(json_export, f, ensure_ascii=False, indent=2)
+    with open(json_file, 'w', encoding='utf-8') as json_output_file:
+        json.dump(json_export, json_output_file, ensure_ascii=False, indent=2)
     print(f"   JSON 匯出已儲存: {json_file}")
     
+    # 5. 記憶封存種子示範
+    print("\n5. 記憶封存種子功能:")
+    archive = MemoryArchiveSeed()
+    
+    # 創建記憶種子
+    seed_data = {
+        "logic_result": result['result'],
+        "compressed": result['compressed'],
+        "timestamp": "demo_execution"
+    }
+    seed_result = archive.create_seed(
+        particle_data=seed_data,
+        metadata={"demo": True, "type": "test"},
+        seed_name="demo_memory_seed"
+    )
+    print(f"   記憶種子已創建: {seed_result['seed_name']}")
+    print(f"   種子檔案: {seed_result['seed_file']}")
+    print(f"   校驗碼: {seed_result['checksum'][:16]}...")
+    
+    # 壓縮種子
+    compressed_seed = archive.compress_seed("demo_memory_seed")
+    print(f"   壓縮格式: {compressed_seed}")
+    
+    # 6. 粒子回溯器示範 (Mrlword.v1)
+    print("\n6. 粒子回溯器功能 (MrLioū.Particle.Mrlword.v1):")
+    regressor = ParticleRegressor()
+    
+    # 回歸計算
+    p_k = 100.0
+    n, eta = 2.0, 0.5
+    p_k_minus_1 = regressor.regress_state(p_k, n, eta)
+    print(f"   回歸計算: P_{{k}} = {p_k} → P_{{k-1}} = {p_k_minus_1}")
+    
+    # Growth/Regress 互補驗證
+    initial = 50.0
+    grown = regressor.growth_state(initial, n, eta)
+    regressed = regressor.regress_state(grown, n, eta)
+    print(f"   互補驗證: {initial} → Growth → {grown} → Regress → {regressed}")
+    
+    # 逆向邏輯鏈
+    regress_sim = regressor.simulate("記憶資料")
+    print(f"   逆向步驟: {' → '.join(regress_sim['backward_steps'])}")
+    print(f"   壓縮格式: {regress_sim['compressed']}")
+    
+    # 7. Fluin Dict Agent 示範 (DictSeed.0003)
+    print("\n7. Fluin Dict Agent 字典種子記憶快照 (DictSeed.0003):")
+    dict_agent = FluinDictAgent()
+    
+    # Echo/Jump 融合
+    dict_agent.create_echo("demo_echo", "粒子記憶測試")
+    dict_agent.set_jump_point("start", 0)
+    echo_result = dict_agent.trigger_echo("demo_echo")
+    print(f"   Echo 觸發: {echo_result['content']} ({echo_result['symbol']})")
+    
+    # 字典種子
+    seed_result = dict_agent.create_dict_seed(
+        "demo_dict_seed",
+        {"key": "value", "data": [1, 2, 3]},
+        {"purpose": "demo"}
+    )
+    print(f"   字典種子: {seed_result['seed_id']} (Core ⟁{seed_result['core_index']})")
+    
+    # 人格註冊與展開
+    dict_agent.register_persona("demo_persona", "Demo Agent", ["helpful", "precise"])
+    persona = dict_agent.expand_persona("demo_persona")
+    print(f"   人格展開: {persona['persona']['name']} ({persona['symbol']})")
+    
+    # 粒子符號輸出
+    print(f"   狀態符號:\n{dict_agent.compress_to_particle_notation()}")
+    
     print("\n=== Demo 完成 ===")
+
 
 def run_performance_test():
     """執行效能測試"""
