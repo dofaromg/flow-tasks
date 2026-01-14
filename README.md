@@ -148,6 +148,55 @@ python src/ai_persona_toolkit.py
 
 ---
 
+## 📱 MrliouWord - iOS 3D Scanner | iOS 3D掃描器
+
+**革命性的3D內容創作生態系統** - 結合 LiDAR 精密掃描和 AI 快照建模的智慧3D掃描器，旨在成為「3D內容創作的TikTok」。
+
+### 核心特色 (Core Features)
+
+- **三模式系統** (Three-Mode System) - 輕鬆/探索/專業模式，同一引擎不同曝光
+- **AI 快照建模** (AI Snapshot Modeling) - 單張照片生成3D模型，90%成功率
+- **社群分享生態** (Community Sharing) - 一鍵分享到多平台
+- **智能品牌標識** (Smart Watermarking) - 自動浮水印系統
+
+### 技術架構 (Tech Stack)
+
+- **SwiftUI** - 現代化UI框架
+- **ARKit + LiDAR** - 3D掃描核心
+- **CoreML + Vision** - AI處理引擎
+- **RealityKit** - 3D渲染展示
+
+### 快速開始 (Quick Start)
+
+```bash
+cd MrliouWord
+
+# 參閱 XCODE_SETUP.md 創建 Xcode 項目
+# Refer to XCODE_SETUP.md for Xcode project creation
+
+# 選擇支援 LiDAR 的實體設備
+# Select a physical device with LiDAR support
+
+# Cmd + R 運行專案
+```
+
+### 硬體需求 (Hardware Requirements)
+
+- **開發** - Mac with macOS 13.0+, Xcode 15+
+- **測試** - iPhone 12 Pro+ or iPad Pro (2020+) with LiDAR sensor
+
+### 文檔 (Documentation)
+
+- [完整專案說明](MrliouWord/README.md) - 詳細的專案文檔
+- [Xcode 設置指南](MrliouWord/XCODE_SETUP.md) - Xcode 專案設置說明
+- [實作摘要](MRLIOUWORD_IMPLEMENTATION_SUMMARY.md) - 技術實作詳情
+
+### 參考提交 (Reference Commit)
+
+初始實作: [c785f4d](https://github.com/dofaromg/flow-tasks/commit/c785f4d33e92a46ce2515da4ab7360f1685ed43b)
+
+---
+
 ## 🔄 分支整合優化 (Branch Integration Optimization)
 
 本專案已實施完整的分支整合檢查機制，確保程式碼品質和部署穩定性：
