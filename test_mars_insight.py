@@ -9,30 +9,35 @@ import os
 import pytest
 from pathlib import Path
 
+# Constants
+MARS_INSIGHT_FILE = Path("particle_core/examples/Mars.InSight.20250813.json")
+COORDINATE_TOLERANCE = 0.1  # degrees
+
+
+@pytest.fixture
+def mars_insight_data():
+    """Fixture to load Mars InSight JSON data"""
+    with open(MARS_INSIGHT_FILE, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
 
 def test_mars_insight_json_exists():
     """Test that the Mars InSight JSON file exists"""
-    mars_file = Path("particle_core/examples/Mars.InSight.20250813.json")
-    assert mars_file.exists(), f"Mars InSight JSON file not found: {mars_file}"
+    assert MARS_INSIGHT_FILE.exists(), f"Mars InSight JSON file not found: {MARS_INSIGHT_FILE}"
 
 
 def test_mars_insight_json_valid():
     """Test that the Mars InSight JSON file is valid JSON"""
-    mars_file = Path("particle_core/examples/Mars.InSight.20250813.json")
-    
-    with open(mars_file, 'r', encoding='utf-8') as f:
+    with open(MARS_INSIGHT_FILE, 'r', encoding='utf-8') as f:
         try:
             data = json.load(f)
         except json.JSONDecodeError as e:
             pytest.fail(f"Invalid JSON in Mars InSight file: {e}")
 
 
-def test_mars_insight_json_structure():
+def test_mars_insight_json_structure(mars_insight_data):
     """Test that the Mars InSight JSON has the required structure"""
-    mars_file = Path("particle_core/examples/Mars.InSight.20250813.json")
-    
-    with open(mars_file, 'r', encoding='utf-8') as f:
-        data = json.load(f)
+    data = mars_insight_data
     
     # Check required top-level fields
     required_fields = ['id', 'body', 'coords', 'time', 'links']
@@ -72,12 +77,9 @@ def test_mars_insight_json_structure():
         assert link_field in data['links'], f"Missing link field: {link_field}"
 
 
-def test_mars_insight_coordinates():
+def test_mars_insight_coordinates(mars_insight_data):
     """Test that the Mars InSight coordinates are reasonable"""
-    mars_file = Path("particle_core/examples/Mars.InSight.20250813.json")
-    
-    with open(mars_file, 'r', encoding='utf-8') as f:
-        data = json.load(f)
+    data = mars_insight_data
     
     # Mars InSight landed at approximately 4.5°N, 135.9°E
     # These are the expected coordinates from the NASA mission
@@ -87,29 +89,33 @@ def test_mars_insight_coordinates():
     actual_lat = data['coords']['lat']
     actual_lon = data['coords']['lon']
     
-    # Allow for minor variations (within 0.1 degrees)
-    assert abs(actual_lat - expected_lat) < 0.1, \
+    # Allow for minor variations
+    assert abs(actual_lat - expected_lat) < COORDINATE_TOLERANCE, \
         f"Latitude mismatch: expected ~{expected_lat}, got {actual_lat}"
-    assert abs(actual_lon - expected_lon) < 0.1, \
+    assert abs(actual_lon - expected_lon) < COORDINATE_TOLERANCE, \
         f"Longitude mismatch: expected ~{expected_lon}, got {actual_lon}"
 
 
-def test_mars_insight_google_earth_link():
+def test_mars_insight_google_earth_link(mars_insight_data):
     """Test that the Google Earth link is properly formatted"""
-    mars_file = Path("particle_core/examples/Mars.InSight.20250813.json")
-    
-    with open(mars_file, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-    
+    data = mars_insight_data
     google_earth_link = data['links']['google_earth']
     
     # Check that it's a valid URL
     assert google_earth_link.startswith('https://earth.google.com/web/'), \
         f"Invalid Google Earth link format: {google_earth_link}"
     
-    # Check that it contains the coordinates
-    assert '4.5' in google_earth_link, "Google Earth link should contain latitude"
-    assert '135.9' in google_earth_link, "Google Earth link should contain longitude"
+    # Extract coordinates from the data and verify they appear in the URL
+    lat = data['coords']['lat']
+    lon = data['coords']['lon']
+    
+    # Check that the URL contains coordinate values (as strings)
+    lat_str = str(lat)
+    lon_str = str(lon)
+    assert lat_str in google_earth_link, \
+        f"Google Earth link should contain latitude {lat_str}"
+    assert lon_str in google_earth_link, \
+        f"Google Earth link should contain longitude {lon_str}"
 
 
 if __name__ == '__main__':
