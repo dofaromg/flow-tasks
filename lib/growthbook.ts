@@ -51,7 +51,7 @@ export function isFeatureOn(featureKey: string): boolean {
 
 export function getFeatureValue<T>(featureKey: string, defaultValue: T): T {
   const gb = getGrowthBook()
-  return gb.getFeatureValue(featureKey, defaultValue)
+  return gb.getFeatureValue(featureKey, defaultValue) as T
 }
 
 // Flag definitions
