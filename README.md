@@ -148,6 +148,39 @@ python src/ai_persona_toolkit.py
 
 ---
 
+## 📱 MrliouWord - 智慧3D掃描器
+
+**MrliouWord** 是一款結合 LiDAR 精密掃描和 AI 快照建模的智慧3D掃描器，旨在成為「3D內容創作的TikTok」。
+
+### 核心特色
+- **三模式系統** - 輕鬆/探索/專業模式，同一引擎不同曝光
+- **AI 快照建模** - 單張照片生成3D模型
+- **社群分享生態** - 一鍵分享到多平台
+- **智能品牌標識** - 自動浮水印系統
+
+### 技術架構
+- **iOS**: SwiftUI + ARKit + LiDAR + RealityKit
+- **AI 引擎**: 多模型融合，90%+ 成功率
+- **後端服務**: Supabase + Cloudflare R2 + Mixpanel
+
+### 快速開始
+```bash
+cd MrliouWord
+
+# 參閱 Xcode 專案設置說明
+cat XCODE_SETUP.md
+
+# 需要支援 LiDAR 的設備：
+# - iPhone 12 Pro+ 或 iPad Pro (2020+)
+```
+
+詳細說明請參閱：
+- [MrliouWord 專案文檔](MrliouWord/README.md)
+- [Xcode 專案設置指南](MrliouWord/XCODE_SETUP.md)
+- [專案初始化說明](MRLIOUWORD_INITIALIZATION.md) - 提交 [9250a088](https://github.com/dofaromg/flow-tasks/commit/9250a088fab4d2b594cef01310180ffeebe0d051)
+
+---
+
 ## 🔄 分支整合優化 (Branch Integration Optimization)
 
 本專案已實施完整的分支整合檢查機制，確保程式碼品質和部署穩定性：
