@@ -2,10 +2,9 @@
 // Integrate: Traffic Gate + Neural Link + Particle Core
 
 import { ParticleNeuralLink } from './core/neural_link';
-import { GateEngine } from './core/gate';
 
 // ============================================
-// 1. Environment Definition (per wrangler 2.json)
+// 1. Environment Definition (per wrangler.toml)
 // ============================================
 export interface Env {
   MRLIOUWORD_VAULT: KVNamespace;
@@ -13,7 +12,7 @@ export interface Env {
   GATE_CONFIG: KVNamespace;
   DB: D1Database;
   PARTICLES: R2Bucket;
-  GATE_ENGINE: DurableObjectNamespace;
+  GATE_ENGINE?: DurableObjectNamespace;
 
   // Secrets & Vars
   MASTER_KEY: string;
@@ -29,7 +28,6 @@ export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     // A. Build neural link (Synapse)
     const synapse = new ParticleNeuralLink(env, 'Edge-Node-L2');
-    const gateEngine = new GateEngine();
     const url = new URL(request.url);
     const path = url.pathname;
 
@@ -47,22 +45,26 @@ export default {
 
       // C. Traffic Gate
       if (path.startsWith('/gate/')) {
+        if (!env.GATE_ENGINE) {
+          return Response.json(
+            {
+              error: 'GATE_ENGINE_NOT_CONFIGURED',
+              message: 'Gate engine Durable Object is not bound; /gate/ endpoint is disabled.',
+              path,
+            },
+            { status: 501 },
+          );
+        }
         const gateStub = env.GATE_ENGINE.idFromName('global-gate').getStub();
         const payload = await safeJson(request);
         return await synapse.fireInternal(gateStub, path, payload);
       }
 
       // D. Core business logic
-      const memory = new Memory(env.MRLIOUWORD_VAULT);
       const persona = new Persona(env.MRLIOUWORD_VAULT);
-      const auth = new Auth(env.PARTICLE_AUTH_VAULT || env.MRLIOUWORD_VAULT);
       const vcs = new VersionControl(env.MRLIOUWORD_VAULT, synapse);
 
-      void auth;
-      void gateEngine;
-      void memory;
-
-      const key = request.headers.get('X-Master-Key') || url.searchParams.get('key');
+      const key = request.headers.get('X-Master-Key');
       const publicPaths = ['/', '/status', '/heartbeat', '/world/heartbeat', '/frequencies'];
       if (
         env.MASTER_KEY &&
@@ -70,7 +72,7 @@ export default {
         !publicPaths.includes(path) &&
         !path.startsWith('/auth/init')
       ) {
-        return new Response(JSON.stringify({ error: 'Unauthorized', origin: env.ORIGIN }), { status: 401 });
+        return Response.json({ error: 'Unauthorized', origin: env.ORIGIN }, { status: 401 });
       }
 
       // VCS - Sync GitHub
@@ -106,8 +108,6 @@ export default {
         }),
         { status: 503 },
       );
-    } finally {
-      ctx.waitUntil(Promise.resolve());
     }
   },
 };
@@ -157,7 +157,8 @@ const json = (data: unknown, status = 200) =>
 async function safeJson(request: Request): Promise<Record<string, unknown>> {
   try {
     return (await request.json()) as Record<string, unknown>;
-  } catch {
+  } catch (error) {
+    console.error('Failed to parse JSON request body in safeJson:', error);
     return {};
   }
 }
@@ -165,7 +166,7 @@ async function safeJson(request: Request): Promise<Record<string, unknown>> {
 // ============================================
 // 4. Improved VersionControl (Neural Link injected)
 // ============================================
-class VersionControl {
+export class VersionControl {
   constructor(
     private kv: KVNamespace,
     private synapse: ParticleNeuralLink,
@@ -198,14 +199,16 @@ class VersionControl {
 
 // ============================================
 // 5. Other Classes (Memory, Persona, Auth)
+// Note: These are stub implementations awaiting full implementation.
+// Methods return minimal/hardcoded values for scaffolding purposes.
 // ============================================
-class Memory {
+export class Memory {
   constructor(private kv: KVNamespace) {
     void this.kv;
   }
 }
 
-class Persona {
+export class Persona {
   constructor(private kv: KVNamespace) {
     void this.kv;
   }
@@ -219,7 +222,7 @@ class Persona {
   }
 }
 
-class Auth {
+export class Auth {
   constructor(private kv: KVNamespace) {
     void this.kv;
   }
@@ -289,3 +292,10 @@ declare const Response: {
   new (body?: BodyInit | null, init?: ResponseInit): Response;
   json(data: unknown, init?: ResponseInit): Response;
 };
+
+// ============================================
+// 7. Public API Exports
+// ============================================
+export { ParticleNeuralLink } from './core/neural_link';
+export { GateEngine, FlowGate } from './core/gate';
+export { ConfigManager } from './core/config';

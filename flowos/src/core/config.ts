@@ -20,6 +20,11 @@ export class ConfigManager {
     return { ...this.snapshot };
   }
 
+  /**
+   * Updates configuration with partial values.
+   * Note: Listeners are notified synchronously. If a listener modifies the config during
+   * notification, it could lead to unexpected behavior. Avoid modifying config in listeners.
+   */
   update(partial: ConfigSnapshot): void {
     const previous = this.snapshot;
     this.snapshot = { ...previous, ...partial };
@@ -31,6 +36,11 @@ export class ConfigManager {
     return () => this.listeners.delete(listener);
   }
 
+  /**
+   * Reloads configuration from a loader function.
+   * Note: This merges the loaded config with existing values rather than replacing them.
+   * If you need to completely replace the config, pass the full config from the loader.
+   */
   async reload(loader: () => ConfigSnapshot | Promise<ConfigSnapshot>): Promise<ConfigSnapshot> {
     const next = await loader();
     this.update(next);

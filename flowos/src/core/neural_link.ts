@@ -93,11 +93,13 @@ export class ParticleNeuralLink {
   ): Promise<unknown> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'X-GitHub-Api-Version': '2022-11-28',
+      'X-GitHub-Api-Version': '2024-11-28',
       'X-Node-Id': this.nodeId,
     };
     if (this.env.GITHUB_TOKEN) {
-      headers.Authorization = `Bearer ${this.env.GITHUB_TOKEN}`;
+      const rawToken = this.env.GITHUB_TOKEN.trim();
+      const hasBearerPrefix = /^Bearer\s+/i.test(rawToken);
+      headers.Authorization = hasBearerPrefix ? rawToken : `Bearer ${rawToken}`;
     }
     const response = await fetch(`https://api.github.com${path}`, {
       method,
@@ -105,7 +107,18 @@ export class ParticleNeuralLink {
       body: payload ? JSON.stringify(payload) : undefined,
     });
     if (!response.ok) {
-      throw new Error(`External call failed: ${response.status}`);
+      let bodyDescription = '';
+      try {
+        const errorBody = await response.json();
+        if (errorBody !== undefined && errorBody !== null) {
+          bodyDescription = ` Response body: ${JSON.stringify(errorBody)}`;
+        }
+      } catch {
+        // Ignore JSON parsing errors; keep the original status-focused message.
+      }
+      throw new Error(
+        `External call failed for ${method} ${path} with status ${response.status}.${bodyDescription}`,
+      );
     }
     return await response.json();
   }
