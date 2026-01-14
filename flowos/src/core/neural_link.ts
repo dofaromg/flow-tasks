@@ -1,3 +1,6 @@
+// Note: This module imports crypto utilities from '../utils' which may use Node.js crypto.
+// The wrangler.toml enables nodejs_compat for compatibility. Web Crypto API is preferred
+// for Cloudflare Workers, but nodejs_compat provides broader Node.js API support.
 import { FlowContext } from '../types';
 import { now, randomId } from '../utils';
 
@@ -17,6 +20,8 @@ interface NeuralLinkEnv {
   GITHUB_TOKEN?: string;
 }
 
+// Local type definitions for fetch API (duplicated for module isolation)
+// TODO: Consider using @cloudflare/workers-types to avoid duplication
 interface RequestInit {
   method?: string;
   headers?: Record<string, string>;
@@ -25,10 +30,17 @@ interface RequestInit {
 
 interface RequestInfo {}
 
+interface Headers {
+  get(name: string): string | null;
+}
+
 interface Response {
-  ok: boolean;
-  status: number;
-  json(): Promise<unknown>;
+  readonly ok: boolean;
+  readonly status: number;
+  readonly statusText: string;
+  readonly headers: Headers;
+  json<T = unknown>(): Promise<T>;
+  text(): Promise<string>;
 }
 
 declare function fetch(input: RequestInfo | string, init?: RequestInit): Promise<Response>;
@@ -93,11 +105,13 @@ export class ParticleNeuralLink {
   ): Promise<unknown> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'X-GitHub-Api-Version': '2022-11-28',
+      'X-GitHub-Api-Version': '2024-11-28',
       'X-Node-Id': this.nodeId,
     };
     if (this.env.GITHUB_TOKEN) {
-      headers.Authorization = `Bearer ${this.env.GITHUB_TOKEN}`;
+      const rawToken = this.env.GITHUB_TOKEN.trim();
+      const hasBearerPrefix = /^Bearer\s/i.test(rawToken);
+      headers.Authorization = hasBearerPrefix ? rawToken : `Bearer ${rawToken}`;
     }
     const response = await fetch(`https://api.github.com${path}`, {
       method,
@@ -105,7 +119,18 @@ export class ParticleNeuralLink {
       body: payload ? JSON.stringify(payload) : undefined,
     });
     if (!response.ok) {
-      throw new Error(`External call failed: ${response.status}`);
+      let bodyDescription = '';
+      try {
+        const errorBody = await response.json();
+        if (errorBody) {
+          bodyDescription = ` Response body: ${JSON.stringify(errorBody)}`;
+        }
+      } catch {
+        // Ignore JSON parsing errors; keep the original status-focused message.
+      }
+      throw new Error(
+        `External call failed for ${method} ${path} with status ${response.status}.${bodyDescription}`,
+      );
     }
     return await response.json();
   }

@@ -16,13 +16,29 @@ export class FlowGate {
   }
 
   evaluate(payload: Record<string, unknown>, context?: FlowContext): GateDecision {
+    let allowDecision: GateDecision | null = null;
+
     for (const check of this.checks) {
       const decision = check(payload, context);
-      if (decision) {
+
+      // Skip checks that choose not to make a decision
+      if (!decision) {
+        continue;
+      }
+
+      // Deny decisions are terminal and override any prior allows
+      if (decision.allowed === false) {
         return decision;
       }
+
+      // Remember the first explicit allow, but keep evaluating in case a later check denies
+      if (!allowDecision) {
+        allowDecision = decision;
+      }
     }
-    return { allowed: true };
+
+    // If we saw at least one explicit allow, use it; otherwise fall back to default allow
+    return allowDecision ?? { allowed: true };
   }
 }
 
