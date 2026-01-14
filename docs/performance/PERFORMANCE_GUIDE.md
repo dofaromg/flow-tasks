@@ -1,15 +1,3 @@
-# Performance Optimization Guide
-
-This consolidated guide combines all performance-related documentation for the FlowAgent project.
-
-## Quick Links
-- [Best Practices](#best-practices)
-- [Improvements Implemented](#improvements-implemented)
-- [Optimization Reports](#optimization-reports)
-- [Additional Suggestions](#additional-suggestions)
-
----
-
 # Performance Best Practices for Flow-Tasks
 
 ## Overview
@@ -515,6 +503,7 @@ Before merging code, verify:
 **Remember**: These patterns are proven to work in this repository. Use them as templates for new code!
 
 ---
+# Performance Improvements
 
 # Performance Improvements for Flow-Tasks Repository
 
@@ -1060,6 +1049,7 @@ The most impactful improvements would be:
 These changes should result in measurable performance improvements while maintaining code correctness and readability.
 
 ---
+# Improvements Implemented
 
 # Performance Improvements Implementation Summary
 
