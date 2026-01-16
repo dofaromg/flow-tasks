@@ -228,17 +228,13 @@ class VersionControl {
     return { success: true, msg: 'VCS Initialized (Stub)' };
   }
 
-  async add(path: string, content: string) {
+  async add(_path: string, _content: string) {
     // TODO: Implement VCS add functionality
-    void path;
-    void content;
     return { success: true };
   }
 
-  async commit(msg: string, pid: string) {
+  async commit(_msg: string, _pid: string) {
     // TODO: Implement VCS commit functionality
-    void msg;
-    void pid;
     return { success: true, hash: 'new_hash' };
   }
 
@@ -251,9 +247,7 @@ class VersionControl {
 // 6. Other Classes (Persona)
 // ============================================
 class Persona {
-  constructor(private kv: KVNamespace) {
-    void this.kv;
-  }
+  constructor(private _kv: KVNamespace) {}
 
   async wake(message: string) {
     return { awakened: true, message };
