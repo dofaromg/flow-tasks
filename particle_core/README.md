@@ -36,7 +36,7 @@ python src/ai_persona_toolkit.py
 python src/fluin_dict_agent.py
 
 # 對話知識提取器
-python demo_conversation_extractor.py
+python particle_core/demo_conversation_extractor.py
 ```
 
 ## Fluin Dict Agent - 字典種子記憶快照 (新功能)
