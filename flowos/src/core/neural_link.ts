@@ -28,6 +28,8 @@ interface RequestInfo {}
 interface Response {
   ok: boolean;
   status: number;
+  statusText?: string;
+  headers?: { get(name: string): string | null };
   json(): Promise<unknown>;
 }
 
@@ -97,21 +99,47 @@ export class ParticleNeuralLink {
       Accept: 'application/vnd.github+json',
       'X-Node-Id': this.nodeId,
     };
+    
+    // Validate token presence for authenticated operations
     if (this.env.GITHUB_TOKEN) {
       headers.Authorization = `Bearer ${this.env.GITHUB_TOKEN}`;
+    } else if (method !== 'GET' || !path.startsWith('/')) {
+      // Warn if attempting non-public operations without token
+      console.warn('⚠️ Attempting authenticated GitHub operation without token');
     }
-    const response = await fetch(`https://api.github.com${path}`, {
-      method,
-      headers,
-      body: payload ? JSON.stringify(payload) : undefined,
-    });
-    if (response.status === 400) {
-      console.warn('⚠️ GitHub API version may be unsupported or request is invalid.');
-      return null;
+    
+    try {
+      const response = await fetch(`https://api.github.com${path}`, {
+        method,
+        headers,
+        body: payload ? JSON.stringify(payload) : undefined,
+      });
+      
+      if (response.status === 400) {
+        console.warn('⚠️ GitHub API 400 error - version may be unsupported or request invalid', {
+          path,
+          method,
+          status: response.status
+        });
+        return null;
+      }
+      
+      if (!response.ok) {
+        // Try to get error details, but don't fail if response body is unavailable
+        let errorDetail = 'Unknown error';
+        try {
+          const errorBody = await response.json() as { message?: string };
+          errorDetail = errorBody.message || JSON.stringify(errorBody);
+        } catch {
+          errorDetail = `Status ${response.status}`;
+        }
+        throw new Error(`External call failed: ${response.status} - ${errorDetail}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('External call error:', { path, method, error });
+      throw error;
     }
-    if (!response.ok) {
-      throw new Error(`External call failed: ${response.status}`);
-    }
-    return await response.json();
   }
 }

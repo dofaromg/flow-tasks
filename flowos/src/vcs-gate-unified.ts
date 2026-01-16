@@ -3,6 +3,7 @@ import { ParticleDefensiveClient } from './core/defensive_client';
 export interface Env {
   GITHUB_TOKEN?: string;
   ENABLE_GITHUB_SYNC?: boolean;
+  GITHUB_REPO?: string; // Format: "owner/repo" (e.g., "mrliou/particles")
 }
 
 interface Request {
@@ -23,7 +24,7 @@ declare const Response: {
 };
 
 /**
- * 增強版的 VCS Commit 處理器
+ * Enhanced VCS Commit Handler with configurable repository
  */
 export async function handleVCSCommit(request: Request, env: Env): Promise<Response> {
   const defensiveClient = new ParticleDefensiveClient({
@@ -36,13 +37,17 @@ export async function handleVCSCommit(request: Request, env: Env): Promise<Respo
   const body = (await request.json()) as { files?: unknown };
 
   if (env.ENABLE_GITHUB_SYNC) {
+    // Use configured repo or default to mrliou/particles
+    const repo = env.GITHUB_REPO || 'mrliou/particles';
+    const repoPath = `/repos/${repo}/git/blobs`;
+    
     try {
-      await defensiveClient.callGitHub('/repos/mrliou/particles/git/blobs', 'POST', {
+      await defensiveClient.callGitHub(repoPath, 'POST', {
         content: JSON.stringify(body.files ?? {}),
         encoding: 'utf-8',
       });
     } catch (error) {
-      console.warn('GitHub 同步失敗，但粒子系統保持完整', error);
+      console.warn('GitHub sync failed, but particle system remains intact:', error);
     }
   }
 
