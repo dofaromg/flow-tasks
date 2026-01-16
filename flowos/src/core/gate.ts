@@ -25,3 +25,5 @@ export class FlowGate {
     return { allowed: true };
   }
 }
+
+export class GateEngine extends FlowGate {}
