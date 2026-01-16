@@ -94,8 +94,10 @@ export class ParticleDefensiveClient {
    * TODO: Implement actual internal layer communication when needed.
    */
   async callInternalLayer(layer: string, path: string, payload: Record<string, unknown>): Promise<unknown> {
-    // Log for debugging/monitoring
-    console.log(`Internal call to ${layer}${path} (stub)`);
+    // Debug logging (only in development)
+    if (process?.env?.NODE_ENV === 'development') {
+      console.log(`Internal call to ${layer}${path} (stub)`);
+    }
     void layer;
     void path;
     void payload;

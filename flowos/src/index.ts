@@ -203,7 +203,9 @@ class VersionControl {
 
   async add(path: string, content: string) {
     // TODO: Store file in KV with path as key
-    console.log(`VCS add: ${path} (stub)`);
+    if (process?.env?.NODE_ENV === 'development') {
+      console.log(`VCS add: ${path} (stub)`);
+    }
     void path;
     void content;
     return { success: true };
@@ -211,7 +213,9 @@ class VersionControl {
 
   async commit(msg: string, pid: string) {
     // TODO: Create commit record in KV and optionally sync to GitHub
-    console.log(`VCS commit: ${msg} by ${pid} (stub)`);
+    if (process?.env?.NODE_ENV === 'development') {
+      console.log(`VCS commit: ${msg} by ${pid} (stub)`);
+    }
     void msg;
     void pid;
     return { success: true, hash: 'new_hash' };

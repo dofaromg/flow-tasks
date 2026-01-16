@@ -103,9 +103,9 @@ export class ParticleNeuralLink {
     // Validate token presence for authenticated operations
     if (this.env.GITHUB_TOKEN) {
       headers.Authorization = `Bearer ${this.env.GITHUB_TOKEN}`;
-    } else if (method !== 'GET' || !path.startsWith('/')) {
-      // Warn if attempting non-public operations without token
-      console.warn('⚠️ Attempting authenticated GitHub operation without token');
+    } else if (method !== 'GET') {
+      // Warn if attempting non-GET operations without token (likely require auth)
+      console.warn('⚠️ Attempting authenticated GitHub operation without token', { path, method });
     }
     
     try {
