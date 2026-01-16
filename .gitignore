@@ -226,3 +226,5 @@ dict_seeds/
 /data/notion_export.json
 /data/github_export.json
 /data/snapshots/*.json
+/data_sandbox/
+/config.yaml
