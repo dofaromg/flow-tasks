@@ -21,8 +21,8 @@ export class ConfigManager {
   }
 
   update(partial: ConfigSnapshot): void {
-    const previous = this.snapshot;
-    this.snapshot = { ...previous, ...partial };
+    const previous = { ...this.snapshot };
+    this.snapshot = { ...this.snapshot, ...partial };
     this.notify(previous);
   }
 

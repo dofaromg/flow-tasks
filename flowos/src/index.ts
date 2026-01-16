@@ -86,7 +86,6 @@ export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     // A. Build neural link (Synapse)
     const synapse = new ParticleNeuralLink(env, 'Edge-Node-L2');
-    const gateEngine = new GateEngine();
     const url = new URL(request.url);
     const path = url.pathname;
 
@@ -111,16 +110,10 @@ export default {
       }
 
       // D. Core business logic
-      const memory = new Memory(env.MRLIOUWORD_VAULT);
       const persona = new Persona(env.MRLIOUWORD_VAULT);
-      const auth = new Auth(env.PARTICLE_AUTH_VAULT || env.MRLIOUWORD_VAULT);
       const vcs = new VersionControl(env.MRLIOUWORD_VAULT, synapse);
 
-      void auth;
-      void gateEngine;
-      void memory;
-
-      const key = request.headers.get('X-Master-Key') || url.searchParams.get('key');
+      const key = request.headers.get('X-Master-Key');
       const publicPaths = ['/', '/status', '/heartbeat', '/world/heartbeat', '/frequencies'];
       if (
         env.MASTER_KEY &&
@@ -128,7 +121,7 @@ export default {
         !publicPaths.includes(path) &&
         !path.startsWith('/auth/init')
       ) {
-        return new Response(JSON.stringify({ error: 'Unauthorized', origin: env.ORIGIN }), { status: 401 });
+        return json({ error: 'Unauthorized', origin: env.ORIGIN }, 401);
       }
 
       // VCS - Sync GitHub
@@ -164,8 +157,6 @@ export default {
         }),
         { status: 503 },
       );
-    } finally {
-      ctx.waitUntil(Promise.resolve());
     }
   },
 };
@@ -238,12 +229,14 @@ class VersionControl {
   }
 
   async add(path: string, content: string) {
+    // TODO: Implement VCS add functionality
     void path;
     void content;
     return { success: true };
   }
 
   async commit(msg: string, pid: string) {
+    // TODO: Implement VCS commit functionality
     void msg;
     void pid;
     return { success: true, hash: 'new_hash' };
@@ -255,14 +248,8 @@ class VersionControl {
 }
 
 // ============================================
-// 6. Other Classes (Memory, Persona, Auth)
+// 6. Other Classes (Persona)
 // ============================================
-class Memory {
-  constructor(private kv: KVNamespace) {
-    void this.kv;
-  }
-}
-
 class Persona {
   constructor(private kv: KVNamespace) {
     void this.kv;
@@ -274,12 +261,6 @@ class Persona {
 
   async list() {
     return [];
-  }
-}
-
-class Auth {
-  constructor(private kv: KVNamespace) {
-    void this.kv;
   }
 }
 

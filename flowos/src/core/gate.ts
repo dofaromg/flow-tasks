@@ -26,4 +26,4 @@ export class FlowGate {
   }
 }
 
-export class GateEngine extends FlowGate {}
+export type GateEngine = FlowGate;
