@@ -48,4 +48,4 @@ implementation_details:
     - "Pluggable gate check registration"
     - "Sequential evaluation with early exit"
     - "Support for throttling and reason reporting"
-philosophy: 怎麼過去，就怎麼回來
+philosophy: 怎麼過去，就怎麼回來  # "How you went, is how you return" - roundtrip integrity principle
