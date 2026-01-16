@@ -15,10 +15,9 @@ Features:
 """
 
 import json
-import time
 import threading
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional
 from datetime import datetime
 from collections import OrderedDict
 
@@ -301,8 +300,9 @@ class LRUCache:
         try:
             if hasattr(self, 'auto_persist') and self.auto_persist:
                 self.shutdown()
-        except:
-            pass
+        except Exception as exc:
+            # Ignore exceptions in destructor, but log for diagnostics
+            print(f"⚠ LRUCache destructor encountered an error during shutdown: {exc}")
 
 
 class MemoryCacheDiskMapper:
