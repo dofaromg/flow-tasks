@@ -23,10 +23,16 @@ from datetime import datetime
 
 # Import cache system
 try:
-    from memory_cache_disk import MemoryCacheDiskMapper
+    # Prefer absolute import to avoid context-dependent relative import issues
+    from particle_core.src.memory.memory_cache_disk import MemoryCacheDiskMapper
     CACHE_AVAILABLE = True
 except ImportError:
-    CACHE_AVAILABLE = False
+    try:
+        # Fallback to local-style import for backward compatibility
+        from memory_cache_disk import MemoryCacheDiskMapper
+        CACHE_AVAILABLE = True
+    except ImportError:
+        CACHE_AVAILABLE = False
 
 
 class ParticleCompressor:

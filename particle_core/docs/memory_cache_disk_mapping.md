@@ -83,7 +83,7 @@ performance:
 ### Python 配置
 
 ```python
-from memory_cache_disk import MemoryCacheDiskMapper
+from particle_core.src.memory.memory_cache_disk import MemoryCacheDiskMapper
 
 config = {
     "performance": {
