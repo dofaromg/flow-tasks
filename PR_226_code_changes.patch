@@ -1,18 +1,3 @@
-From 0e562fb4d3dab782a7e5b69543060ba09ed9a94d Mon Sep 17 00:00:00 2001
-From: "copilot-swe-agent[bot]" <198982749+Copilot@users.noreply.github.com>
-Date: Fri, 16 Jan 2026 15:48:42 +0000
-Subject: [PATCH] Fix PR #226 review comments - address security, code quality,
- and type issues
-
-Co-authored-by: dofaromg <217537952+dofaromg@users.noreply.github.com>
----
- flowos/README.md               |  4 +++-
- flowos/src/core/config.ts      |  4 ++--
- flowos/src/core/gate.ts        |  2 +-
- flowos/src/core/neural_link.ts |  2 +-
- flowos/src/index.ts            | 29 +++++------------------------
- 5 files changed, 12 insertions(+), 29 deletions(-)
-
 diff --git a/flowos/README.md b/flowos/README.md
 index e1a229f..c16c6ff 100644
 --- a/flowos/README.md
@@ -35,20 +20,18 @@ index e1a229f..c16c6ff 100644
  
  All data is stored in-memory using the `MemoryStorage` class, which provides:
 diff --git a/flowos/src/core/config.ts b/flowos/src/core/config.ts
-index fa12337..3d5164b 100644
+index fa12337..e41d375 100644
 --- a/flowos/src/core/config.ts
 +++ b/flowos/src/core/config.ts
-@@ -21,8 +21,8 @@ export class ConfigManager {
+@@ -21,7 +21,7 @@ export class ConfigManager {
    }
  
    update(partial: ConfigSnapshot): void {
 -    const previous = this.snapshot;
--    this.snapshot = { ...previous, ...partial };
 +    const previous = { ...this.snapshot };
-+    this.snapshot = { ...this.snapshot, ...partial };
+     this.snapshot = { ...previous, ...partial };
      this.notify(previous);
    }
- 
 diff --git a/flowos/src/core/gate.ts b/flowos/src/core/gate.ts
 index 948a1af..9be6b35 100644
 --- a/flowos/src/core/gate.ts
@@ -73,7 +56,7 @@ index ab92398..1f0cc37 100644
      const response = await fetch(`https://api.github.com${path}`, {
        method,
 diff --git a/flowos/src/index.ts b/flowos/src/index.ts
-index e050a4c..1ca4ecc 100644
+index e050a4c..fce0c89 100644
 --- a/flowos/src/index.ts
 +++ b/flowos/src/index.ts
 @@ -86,7 +86,6 @@ export default {
@@ -120,22 +103,27 @@ index e050a4c..1ca4ecc 100644
      }
    },
  };
-@@ -238,12 +229,14 @@ class VersionControl {
+@@ -237,15 +228,13 @@ class VersionControl {
+     return { success: true, msg: 'VCS Initialized (Stub)' };
    }
  
-   async add(path: string, content: string) {
+-  async add(path: string, content: string) {
+-    void path;
+-    void content;
++  async add(_path: string, _content: string) {
 +    // TODO: Implement VCS add functionality
-     void path;
-     void content;
      return { success: true };
    }
  
-   async commit(msg: string, pid: string) {
+-  async commit(msg: string, pid: string) {
+-    void msg;
+-    void pid;
++  async commit(_msg: string, _pid: string) {
 +    // TODO: Implement VCS commit functionality
-     void msg;
-     void pid;
      return { success: true, hash: 'new_hash' };
-@@ -255,14 +248,8 @@ class VersionControl {
+   }
+ 
+@@ -255,18 +244,10 @@ class VersionControl {
  }
  
  // ============================================
@@ -149,9 +137,14 @@ index e050a4c..1ca4ecc 100644
 -}
 -
  class Persona {
-   constructor(private kv: KVNamespace) {
-     void this.kv;
-@@ -277,12 +264,6 @@ class Persona {
+-  constructor(private kv: KVNamespace) {
+-    void this.kv;
+-  }
++  constructor(private _kv: KVNamespace) {}
+ 
+   async wake(message: string) {
+     return { awakened: true, message };
+@@ -277,12 +258,6 @@ class Persona {
    }
  }
  
@@ -164,6 +157,3 @@ index e050a4c..1ca4ecc 100644
  // ============================================
  // 7. Worker Runtime Types (stubs for build-time)
  // ============================================
--- 
-2.52.0
-
