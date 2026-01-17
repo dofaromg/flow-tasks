@@ -54,6 +54,7 @@ kubectl apply -f argocd/app.yaml
 - [應用程式說明](apps/README.md)
 - [分支整合優化指南](BRANCH_INTEGRATION_GUIDE.md) ⭐ 新增
 - [Codespace 管理指南](CODESPACE_MANAGEMENT.md) 🆕 新增
+- [FlowHub 整合套件](FLOWHUB_EXPORT_PACKAGE.md) 📦 [commit:ffebfa0](https://github.com/dofaromg/flow-tasks/commit/ffebfa0)
 
 ---
 
@@ -355,4 +356,3 @@ git am patches/*.patch
 - [FlowHub 整合指南](FLOWHUB_INTEGRATION_GUIDE.md)
 
 🔗 **版本追蹤**: [Commit ffebfa0](https://github.com/dofaromg/flow-tasks/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)
- 
