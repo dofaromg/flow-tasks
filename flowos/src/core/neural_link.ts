@@ -97,7 +97,7 @@ export class ParticleNeuralLink {
       'X-Node-Id': this.nodeId,
     };
     if (this.env.GITHUB_TOKEN) {
-      headers.Authorization = `Bearer ${this.env.GITHUB_TOKEN}`;
+      headers.Authorization = `token ${this.env.GITHUB_TOKEN}`;
     }
     const response = await fetch(`https://api.github.com${path}`, {
       method,

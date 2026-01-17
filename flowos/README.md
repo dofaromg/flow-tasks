@@ -132,12 +132,14 @@ const result = flow.enforce(context);
 # Build TypeScript
 npm run build
 
-# Run tests
+# Run demo (manual validation script, not automated tests)
 npm run test
 
 # Type check without emitting files
 npm run typecheck
 ```
+
+Note: `npm run test` runs a demonstration script (`test.ts`) that exercises the core FlowOS functionality. It's not an automated test suite, but rather a manual validation tool.
 
 ## Storage
 
