@@ -101,7 +101,7 @@
     "Durable Objects for stateful coordination"
   ],
   "integration_points": [
-    "GitHub API v2022-11-28",
+    "GitHub API v2024-12-01",
     "Cloudflare Workers Runtime",
     "Cloudflare KV (key-value storage)",
     "Cloudflare R2 (object storage)",

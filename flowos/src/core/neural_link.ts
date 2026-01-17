@@ -134,7 +134,7 @@ export class ParticleNeuralLink {
   ): Promise<unknown> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'X-GitHub-Api-Version': '2022-11-28',
+      'X-GitHub-Api-Version': '2024-12-01',
       'X-Node-Id': this.nodeId,
     };
     if (this.env.GITHUB_TOKEN) {
