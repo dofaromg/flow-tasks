@@ -3,6 +3,11 @@
 
 import { ParticleNeuralLink } from './core/neural_link';
 import { GateEngine } from './core/gate';
+
+// Export FlowOS class for backward compatibility
+export { FlowOS } from './flowos';
+
+// Export defensive client
 export * from './core/defensive_client';
 
 // ============================================
@@ -54,17 +59,23 @@ export default {
       }
 
       // D. Core business logic
+      // Note: These instances are created for future integration
+      // Current routes use them selectively based on path
       const memory = new Memory(env.MRLIOUWORD_VAULT);
       const persona = new Persona(env.MRLIOUWORD_VAULT);
       const auth = new Auth(env.PARTICLE_AUTH_VAULT || env.MRLIOUWORD_VAULT);
       const vcs = new VersionControl(env.MRLIOUWORD_VAULT, synapse);
 
-      void auth;
-      void gateEngine;
-      void memory;
+      // TODO: Integrate auth, gateEngine, and memory into request flow
+      void auth; // Auth will be used for token validation in future
+      void gateEngine; // Gate engine will be used for traffic control
+      void memory; // Memory system for context retention
 
       const key = request.headers.get('X-Master-Key') || url.searchParams.get('key');
       const publicPaths = ['/', '/status', '/heartbeat', '/world/heartbeat', '/frequencies'];
+      
+      // Security Note: This is a basic auth check
+      // TODO: Consider implementing rate limiting, JWT tokens, or OAuth for production
       if (
         env.MASTER_KEY &&
         key !== env.MASTER_KEY &&
@@ -77,6 +88,13 @@ export default {
       // VCS - Sync GitHub
       if (path === '/vcs/sync_github') {
         const githubData = await synapse.fireExternal('/user/repos', 'GET');
+        if (githubData === null) {
+          return Response.json({ 
+            success: false, 
+            error: 'Failed to sync with GitHub',
+            message: 'GitHub API returned an error or is unavailable'
+          }, { status: 503 });
+        }
         return Response.json({ success: true, github_data: githubData });
       }
 
@@ -107,9 +125,8 @@ export default {
         }),
         { status: 503 },
       );
-    } finally {
-      ctx.waitUntil(Promise.resolve());
     }
+    // Note: ctx.waitUntil could be used for background cleanup tasks if needed
   },
 };
 
@@ -164,7 +181,7 @@ async function safeJson(request: Request): Promise<Record<string, unknown>> {
 }
 
 // ============================================
-// 4. Improved VersionControl (Neural Link injected)
+// 4. VersionControl (with Neural Link integration)
 // ============================================
 class VersionControl {
   constructor(
@@ -176,38 +193,55 @@ class VersionControl {
     return await this.synapse.fireExternal(`/repos/${repo}/git/commits`, 'POST', commitData);
   }
 
+  // Note: The following methods are stub implementations
+  // They provide the interface for VCS operations but don't yet interact with actual storage
+  // TODO: Implement actual VCS logic when KV storage patterns are finalized
+
   async init() {
     return { success: true, msg: 'VCS Initialized (Stub)' };
   }
 
   async add(path: string, content: string) {
+    // TODO: Store file in KV with path as key
+    if (process?.env?.NODE_ENV === 'development') {
+      console.log(`VCS add: ${path} (stub)`);
+    }
     void path;
     void content;
     return { success: true };
   }
 
   async commit(msg: string, pid: string) {
+    // TODO: Create commit record in KV and optionally sync to GitHub
+    if (process?.env?.NODE_ENV === 'development') {
+      console.log(`VCS commit: ${msg} by ${pid} (stub)`);
+    }
     void msg;
     void pid;
     return { success: true, hash: 'new_hash' };
   }
 
   async status() {
+    // TODO: Retrieve current VCS state from KV
     return { head: 'latest' };
   }
 }
 
 // ============================================
-// 5. Other Classes (Memory, Persona, Auth)
+// 5. Support Classes (Memory, Persona, Auth)
+// Note: These are minimal stub implementations
+// Full implementation available via FlowOS class exported above
 // ============================================
 class Memory {
   constructor(private kv: KVNamespace) {
+    // TODO: Implement KV-based memory storage
     void this.kv;
   }
 }
 
 class Persona {
   constructor(private kv: KVNamespace) {
+    // TODO: Implement KV-based persona storage
     void this.kv;
   }
 
@@ -222,13 +256,16 @@ class Persona {
 
 class Auth {
   constructor(private kv: KVNamespace) {
+    // TODO: Implement KV-based auth token storage
     void this.kv;
   }
 }
 
-// ============================================
-// 6. Worker Runtime Types (stubs for build-time)
-// ============================================
+// Note: Worker runtime types are provided by @cloudflare/workers-types
+// The following types are minimal stubs for local development if the package is not installed
+// Consider installing @cloudflare/workers-types to avoid conflicts
+
+// Minimal type stubs (use @cloudflare/workers-types in production)
 interface KVNamespace {
   get(key: string): Promise<string | null>;
   put(key: string, value: string): Promise<void>;
@@ -284,7 +321,11 @@ interface Request {
   json(): Promise<unknown>;
 }
 
-interface Response {}
+interface Response {
+  ok: boolean;
+  status: number;
+  json(): Promise<unknown>;
+}
 
 declare const Response: {
   new (body?: BodyInit | null, init?: ResponseInit): Response;

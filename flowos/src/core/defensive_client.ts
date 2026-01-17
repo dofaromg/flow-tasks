@@ -7,10 +7,10 @@ export interface ClientConfig {
   baseUrl: string;
   token?: string;
   externalVersions: {
-    github: '2022-11-28';
-    openai?: '2024-02-15-preview';
+    github: '2022-11-28' | string; // Locked to 2022-11-28, but allows overrides if needed
+    openai?: '2024-02-15-preview' | string;
   };
-  internalVersion: '4.0.0';
+  internalVersion: '4.0.0' | string; // Locked to 4.0.0, but allows other versions for testing
 }
 
 interface RequestInit {
@@ -87,13 +87,20 @@ export class ParticleDefensiveClient {
   }
 
   /**
-   * 內部層級通訊 (Layer-to-Layer)
-   * 例如 L2 Router 呼叫 L5 Durable Object
+   * Internal layer communication (Layer-to-Layer)
+   * Example: L2 Router calling L5 Durable Object
+   * 
+   * Note: This is currently a stub implementation.
+   * TODO: Implement actual internal layer communication when needed.
    */
   async callInternalLayer(layer: string, path: string, payload: Record<string, unknown>): Promise<unknown> {
+    // Debug logging (only in development)
+    if (process?.env?.NODE_ENV === 'development') {
+      console.log(`Internal call to ${layer}${path} (stub)`);
+    }
     void layer;
     void path;
     void payload;
-    return { ok: true, note: '模擬內部通訊成功' };
+    return { ok: true, note: 'Simulated internal communication success (stub)' };
   }
 }

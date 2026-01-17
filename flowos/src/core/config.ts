@@ -1,3 +1,12 @@
+/**
+ * Configuration Manager
+ * 
+ * Manages runtime configuration with change notification support.
+ * Currently not integrated into the main worker, but available for future use.
+ * 
+ * TODO: Integrate ConfigManager into main application flow if needed
+ */
+
 export type ConfigSnapshot = Record<string, unknown>;
 
 export type ConfigListener = (next: ConfigSnapshot, previous: ConfigSnapshot) => void;
