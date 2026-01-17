@@ -151,9 +151,7 @@ export class ParticleNeuralLink {
       let bodyDescription = '';
       try {
         const errorBody = await response.json();
-        if (errorBody !== undefined && errorBody !== null) {
-          bodyDescription = ` Response body: ${JSON.stringify(errorBody)}`;
-        }
+        bodyDescription = ` Response body: ${JSON.stringify(errorBody)}`;
       } catch {
         // Ignore JSON parsing errors; keep the original status-focused message.
       }
