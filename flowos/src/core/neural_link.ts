@@ -153,7 +153,7 @@ export class ParticleNeuralLink {
         const errorBody = await response.json();
         bodyDescription = ` Response body: ${JSON.stringify(errorBody)}`;
       } catch {
-        // Ignore JSON parsing errors; keep the original status-focused message.
+        // Ignore JSON parsing errors; keep bodyDescription as empty string
       }
       throw new Error(
         `External call failed for ${method} ${path} with status ${response.status}.${bodyDescription}`,
