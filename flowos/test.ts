@@ -55,6 +55,32 @@ async function runTests() {
     console.error('✗ GateEngine test failed');
   }
 
+  // Test GateEngine terminal deny behavior (deny overrides allow)
+  const terminalGate = new GateEngine();
+  terminalGate.register((payload) => {
+    // First check: allow if trusted
+    if (payload.trusted) {
+      return { allowed: true };
+    }
+    return null;
+  });
+  terminalGate.register((payload) => {
+    // Second check: deny if blocked (should override earlier allow)
+    if (payload.blocked) {
+      return { allowed: false, reason: 'blocked' };
+    }
+    return null;
+  });
+
+  // Test case from PR description: trusted=true, blocked=true
+  const terminalDenyDecision = terminalGate.evaluate({ trusted: true, blocked: true });
+
+  if (!terminalDenyDecision.allowed && terminalDenyDecision.reason === 'blocked') {
+    console.log('✓ GateEngine terminal deny behavior working (deny overrides allow)');
+  } else {
+    console.error('✗ GateEngine terminal deny test failed');
+  }
+
   console.log(`\nFlowOS Neural Link System v${FLOWOS_VERSION} - Tests Complete`);
   console.log('Philosophy: 怎麼過去，就怎麼回來');
 }
