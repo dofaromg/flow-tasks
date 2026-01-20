@@ -45,6 +45,10 @@ Package conversation records into structured formats with multiple export option
 - **JSON**: Complete data structure with metadata and statistics
 - **Markdown**: Human-readable format for documentation
 - **Plain Text**: Simple text format
+- **YAML**: YAML format for easy configuration and reading
+- **CSV**: Tabular format for data analysis and processing
+- **HTML**: Web format with styled rendering for browser viewing
+- **XML**: Structured markup language for programmatic parsing
 
 ### 2. Attention Mechanism Analysis
 
@@ -117,6 +121,10 @@ package = extractor.package_conversation(
 extractor.export_to_file(package, "conversation.json", "json")
 extractor.export_to_file(package, "conversation.md", "markdown")
 extractor.export_to_file(package, "conversation.txt", "txt")
+extractor.export_to_file(package, "conversation.yaml", "yaml")
+extractor.export_to_file(package, "conversation.csv", "csv")
+extractor.export_to_file(package, "conversation.html", "html")
+extractor.export_to_file(package, "conversation.xml", "xml")
 extractor.export_to_file(package, "conversation.csv", "csv")
 extractor.export_to_file(package, "conversation.xml", "xml")
 extractor.export_to_file(package, "conversation.yaml", "yaml")
@@ -288,7 +296,7 @@ Export conversation package to file.
 **Parameters**:
 - `package`: Conversation package
 - `filepath`: File path
-- `format`: Format, options are "json", "markdown", "txt"
+- `format`: Format, options are "json", "markdown"/"md", "txt"/"text", "yaml"/"yml", "csv", "html"/"htm", "xml"
 
 #### `analyze_attention(messages: List[Dict]) -> Dict`
 
@@ -322,11 +330,12 @@ Generate complete analysis report.
 
 ```
 anthropic  # For AI deep analysis (optional)
+pyyaml     # For YAML format export (optional, system will gracefully degrade)
 ```
 
 Added to `particle_core/requirements.txt`.
 
-If AI analysis is not needed, the anthropic library is not required - the system degrades gracefully.
+If AI analysis is not needed, the anthropic library is not required; if YAML export is not needed, pyyaml is also not required - the system degrades gracefully.
 
 ## Output Examples
 
