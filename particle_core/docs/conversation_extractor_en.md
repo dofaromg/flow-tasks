@@ -1,11 +1,39 @@
 # Conversation Knowledge Extractor
 
 **Author**: MR.liou × Claude (empathetic.mirror)  
+**Version**: v1.1 (Added full format import support)  
 **Version**: v1.0  
 **Location**: `particle_core/src/conversation_extractor.py`
 
 ## Overview
 
+The Conversation Knowledge Extractor is a powerful tool for analyzing, packaging, importing, and exporting conversation records. It automatically identifies key points, logical structures, and knowledge insights from conversations, generating structured analysis reports. **Now supports bidirectional conversion for multiple file formats!**
+
+## Key Features
+
+### 1. Conversation Import & Export
+
+**Export Formats Supported**:
+- **JSON**: Complete data structure with metadata and statistics
+- **Markdown**: Human-readable format for documentation
+- **Plain Text**: Simple text format
+- **CSV**: Table format for data analysis
+- **XML**: Structured markup language
+- **YAML**: Human-friendly data serialization format
+
+**Import Formats Supported**:
+- **JSON**: Import complete conversation packages or message lists
+- **Markdown**: Automatically parse Markdown-formatted conversations
+- **Plain Text**: Support multiple text conversation formats ([USER]/[ASSISTANT], User:/Assistant:, etc.)
+- **CSV**: Import conversations from CSV tables
+- **XML**: Import XML-formatted conversation data
+- **YAML**: Import YAML-formatted conversation data
+
+**Special Features**:
+- ✅ Auto-detect file format (based on file extension)
+- ✅ Support multiple text conversation formats
+- ✅ Preserve complete metadata (supported formats: JSON, XML, YAML, Markdown)
+- ✅ Roundtrip export/import tested
 The Conversation Knowledge Extractor is a powerful tool for analyzing, packaging, and exporting conversation records. It automatically identifies key points, logical structures, and knowledge insights from conversations, generating structured analysis reports.
 
 ## Key Features
@@ -97,6 +125,62 @@ extractor.export_to_file(package, "conversation.yaml", "yaml")
 extractor.export_to_file(package, "conversation.csv", "csv")
 extractor.export_to_file(package, "conversation.html", "html")
 extractor.export_to_file(package, "conversation.xml", "xml")
+extractor.export_to_file(package, "conversation.csv", "csv")
+extractor.export_to_file(package, "conversation.xml", "xml")
+extractor.export_to_file(package, "conversation.yaml", "yaml")
+```
+
+### Import Conversations
+
+**Import from file** (auto-detect format):
+
+```python
+from conversation_extractor import ConversationExtractor
+
+extractor = ConversationExtractor()
+
+# Auto-detect file format and import
+package = extractor.import_from_file("conversation.json")
+package = extractor.import_from_file("conversation.md")
+package = extractor.import_from_file("conversation.csv")
+
+# Access messages after import
+messages = package["messages"]
+metadata = package.get("metadata", {})
+```
+
+**Import with specified format**:
+
+```python
+# Explicitly specify format
+package = extractor.import_from_file("my_file.txt", format="txt")
+package = extractor.import_from_file("data.xml", format="xml")
+```
+
+**Supported text formats**:
+
+```python
+# Format 1: [USER] and [ASSISTANT]
+text1 = """
+[USER]
+This is a user question
+
+[ASSISTANT]
+This is an assistant answer
+"""
+
+# Format 2: User: and Assistant:
+text2 = """
+User: This is a user question
+Assistant: This is an assistant answer
+"""
+
+# Both formats are correctly parsed
+with open("conversation.txt", "w") as f:
+    f.write(text1)
+
+package = extractor.import_from_file("conversation.txt")
+```
 ```
 
 ### Analyze Conversations

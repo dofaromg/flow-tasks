@@ -1,0 +1,88 @@
+# Vercel Ignore File
+# Excludes files and directories from Vercel deployment to optimize build size
+
+# Documentation and guides
+/docs
+*.md
+!README.md
+!VERCEL_DEPLOYMENT.md
+
+# Kubernetes and infrastructure files
+/cluster
+/argocd
+/apps
+/flowos
+
+# Development and testing
+/tasks
+/examples
+*.test.js
+*.test.ts
+test_*.py
+__tests__
+
+# Python files (not needed for Next.js deployment)
+*.py
+*.pyc
+__pycache__/
+
+# Data and logs
+/data
+*.log
+*.csv
+logs_result.*
+
+# Large binary files
+*.pdf
+*.zip
+*.svg
+*.png
+*.jpg
+*.jpeg
+!下載*.png
+
+# Temporary and build artifacts
+.devcontainer
+/particle_core
+/dll
+/patches
+/MrliouWord
+/adapters
+/amp
+/modules
+/scripts
+
+# Configuration examples
+*.example
+*.sample.yaml
+
+# Git and version control
+.git
+.gitignore
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+
+# Other text files
+*.txt
+!package*.json
+!tsconfig.json
+
+# JSON data files (keep only necessary ones)
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!vercel.json
+!.eslintrc.json
+!next-env.d.ts
+
+# Keep only essential files for Next.js deployment
+!pages/**
+!lib/**
+!public/**
+!.next/**
+!node_modules/**

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "public": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        }
+      ]
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_GROWTHBOOK_API_HOST": "@growthbook-api-host",
+    "NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY": "@growthbook-client-key"
+  }
+  "framework": "nextjs"
+}
