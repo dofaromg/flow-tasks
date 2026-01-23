@@ -8,6 +8,23 @@ version: "1.0"
 
 # 倉庫列表 / Repository List
 repositories:
+  # PyWikibot Core - Wikimedia 的 Python 機器人框架
+  # PyWikibot Core - Python MediaWiki bot framework from Wikimedia
+  - name: "pywikibot-core"
+    url: "https://gerrit.wikimedia.org/r/pywikibot/core"
+    branch: "master"
+    enabled: true
+    files:
+      - src: "README.rst"
+        dest: "examples/pywikibot_readme.rst"
+    directories:
+      - src: "pywikibot"
+        dest: "lib/python/pywikibot"
+        exclude:
+          - "*.pyc"
+          - "__pycache__"
+          - "*.egg-info"
+
   # 範例：從另一個倉庫拉取特定檔案
   # Example: Pull specific files from another repository
   # - name: "example-repo"
