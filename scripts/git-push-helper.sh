@@ -36,13 +36,24 @@ fi
 
 # Check remote status
 echo "Fetching remote status..."
-git fetch origin "$TARGET_BRANCH" 2>/dev/null || true
+if ! git fetch origin "$TARGET_BRANCH" 2>&1; then
+    echo -e "${YELLOW}Warning: Could not fetch remote branch (may not exist yet)${NC}"
+    echo -e "${YELLOW}Will attempt to push...${NC}"
+    git push -u origin "$TARGET_BRANCH"
+    echo -e "${GREEN}✓ Successfully pushed to origin/$TARGET_BRANCH${NC}"
+    exit 0
+fi
 
 # Compare with remote
 LOCAL=$(git rev-parse "$TARGET_BRANCH" 2>/dev/null || echo "")
 REMOTE=$(git rev-parse "origin/$TARGET_BRANCH" 2>/dev/null || echo "")
 
-if [ "$LOCAL" = "$REMOTE" ]; then
+if [ -z "$REMOTE" ]; then
+    # Remote branch doesn't exist, push with upstream tracking
+    echo -e "${YELLOW}Remote branch does not exist. Creating...${NC}"
+    git push -u origin "$TARGET_BRANCH"
+    echo -e "${GREEN}✓ Successfully pushed to origin/$TARGET_BRANCH${NC}"
+elif [ "$LOCAL" = "$REMOTE" ]; then
     echo -e "${GREEN}✓ Branch is up to date with origin${NC}"
     echo "Nothing to push"
 else
