@@ -24,5 +24,4 @@
     "NEXT_PUBLIC_GROWTHBOOK_API_HOST": "@growthbook-api-host",
     "NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY": "@growthbook-client-key"
   }
-  "framework": "nextjs"
 }
