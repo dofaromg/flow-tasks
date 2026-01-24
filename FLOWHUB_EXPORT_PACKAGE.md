@@ -4,7 +4,7 @@
 **生成日期 (Generated)**: 2026-01-03  
 **來源 (Source)**: dofaromg/flow-tasks  
 **目標 (Target)**: dofaromg/flowhub  
-**提交範圍 (Commit Range)**: ba6f6a8..efa908e (5 commits)
+**提交 (Commit)**: ffebfa0ecb172f43257bb565d7b0012e4b511763
 
 ## 版本歷史 / Version History
 
@@ -25,28 +25,50 @@
    - 三種應用方法說明
    - 測試驗證步驟
 
-2. **flowhub-integration.bundle** (24 KB)
-   - Git bundle 包含所有提交
-   - 可直接在 flowhub 儲存庫中應用
+2. **flowhub-integration.bundle** (3.6 MB)
+   - Git bundle 包含完整儲存庫
+   - ⚠️  **注意**: 由於儲存庫被 graft，bundle 可能無法直接應用於其他儲存庫
+   - 建議使用 patch 或手動複製方法
 
-3. **patches/** 目錄 (6 個 patch 檔案, 共 76 KB)
-   - 個別 commit 的 patch 檔案
-   - 可逐一應用
+3. **patches/** 目錄 (1 個 patch 檔案, 64 KB)
+   - 包含所有 FlowHub 整合相關檔案的綜合 patch
+   - 可直接應用到 flowhub 儲存庫
 
 ---
 
 ## 快速開始 (Quick Start)
 
-### 方法 1: 使用 Git Bundle (推薦)
+### 方法 1: 使用 Patch 檔案 (推薦)
 
 ```bash
 # 在 flowhub 儲存庫中
 cd /path/to/flowhub
 
-# 驗證 bundle
+# 建立新分支
+git checkout -b feature/memory-cache
+
+# 應用 patch
+git am /path/to/patches/0001-FlowHub-memory-cache-integration.patch
+```
+
+### 方法 2: 手動複製
+
+參見 `FLOWHUB_INTEGRATION_GUIDE.md` 的「方法 C」章節。
+
+### 方法 3: 使用 Git Bundle (進階)
+
+⚠️ **警告**: 由於來源儲存庫經過 graft 處理，bundle 可能缺少必要的前置提交，因此可能無法正常應用。建議使用方法 1 或方法 2。
+
+如仍想嘗試使用 bundle:
+
+```bash
+# 在 flowhub 儲存庫中
+cd /path/to/flowhub
+
+# 驗證 bundle (可能失敗)
 git bundle verify /path/to/flowhub-integration.bundle
 
-# 拉取提交
+# 如果驗證通過，拉取提交
 git remote add flow-tasks /path/to/flowhub-integration.bundle
 git fetch flow-tasks
 
@@ -54,21 +76,6 @@ git fetch flow-tasks
 git checkout -b feature/memory-cache
 git merge flow-tasks/copilot/update-flow-tasks
 ```
-
-### 方法 2: 使用 Patch 檔案
-
-```bash
-# 在 flowhub 儲存庫中
-cd /path/to/flowhub
-git checkout -b feature/memory-cache
-
-# 應用所有 patches
-git am /path/to/patches/*.patch
-```
-
-### 方法 3: 手動複製
-
-參見 `FLOWHUB_INTEGRATION_GUIDE.md` 的「方法 C」章節。
 
 ---
 
@@ -122,14 +129,14 @@ particle_core/src/memory/config.yaml                   +1 行
 
 ## Patch 檔案詳情
 
-| Patch | 檔案 | 大小 | 說明 |
-|-------|------|------|------|
-| 0001 | Add-Wire-Memory-Integration-quick-start-README.patch | 4.8 KB | Wire 文檔 |
-| 0002 | Initial-plan.patch | 231 B | 初始計劃 |
-| 0003 | Complete-validation-of-Wire-Memory-Integration-PR-19.patch | 12 KB | 驗證總結 |
-| 0004 | Add-task-completion-summary-for-PR-196-validation.patch | 3.2 KB | 任務總結 |
-| 0005 | Implement-memory-cache-disk-mapping-system-with-LRU-.patch | 48 KB | **主要實作** |
-| 0006 | Add-implementation-summary-for-memory-cache-disk-map.patch | 8.3 KB | 實作總結 |
+| Patch | 大小 | 說明 |
+|-------|------|------|
+| 0001-FlowHub-memory-cache-integration.patch | 64 KB | **綜合整合包** - 包含所有 FlowHub 記憶體快取相關檔案 |
+
+**包含內容**:
+- 6 個新增檔案 (memory cache system, tests, docs, summaries)
+- 3 個修改檔案 (memory_quick_mount.py, config.yaml, .gitignore)
+- 總計 2,013 行新增程式碼
 
 ---
 
@@ -178,11 +185,10 @@ python particle_core/tests/test_wire_memory_integration.py
 ---
 
 **總計**:
-- 提交數: 5 個
-- 新增行數: 1,858 行
-- 修改行數: 155 行
-- 檔案數: 9 個
-- Bundle 大小: 24 KB
-- Patches 大小: 76 KB
+- 提交: ffebfa0ecb172f43257bb565d7b0012e4b511763
+- 新增行數: 2,013 行
+- 檔案數: 9 個 (6 新增, 3 修改)
+- Bundle 大小: 3.6 MB
+- Patch 大小: 64 KB
 
-✅ 套件已準備就緒，可應用至 dofaromg/flowhub 儲存庫
+✅ 套件已準備就緒，建議使用 patch 方法應用至 dofaromg/flowhub 儲存庫
