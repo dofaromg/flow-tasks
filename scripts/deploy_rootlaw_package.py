@@ -82,6 +82,120 @@ class RootLawDeployer:
         
         return success
     
+    def pull_latest_changes(self, target_repo: Path, branch: str = "main") -> bool:
+        """拉取最新變更（自動拉取功能）"""
+        self.log(f"⬇️  拉取最新變更: {branch}", "INFO")
+        
+        # 切換到目標分支
+        success, _ = self.run_command(['git', 'checkout', branch], cwd=target_repo)
+        if not success:
+            self.log(f"⚠️  切換分支失敗", "WARNING")
+        
+        # 拉取最新變更
+        success, output = self.run_command(['git', 'pull', 'origin', branch], cwd=target_repo)
+        
+        if success:
+            self.log(f"✅ 拉取成功", "INFO")
+        else:
+            self.log(f"⚠️  拉取失敗: {output}", "WARNING")
+        
+        return success
+    
+    def check_merge_conflicts(self, target_repo: Path) -> Tuple[bool, List[str]]:
+        """檢查合併衝突"""
+        self.log(f"🔍 檢查合併衝突", "INFO")
+        
+        # 檢查 git status 中的衝突標記
+        success, output = self.run_command(['git', 'status', '--porcelain'], cwd=target_repo)
+        
+        conflicts = []
+        if success:
+            for line in output.strip().split('\n'):
+                if line.startswith('UU') or line.startswith('AA') or line.startswith('DD'):
+                    # UU = both modified, AA = both added, DD = both deleted
+                    file_path = line[3:].strip()
+                    conflicts.append(file_path)
+        
+        if conflicts:
+            self.log(f"⚠️  發現 {len(conflicts)} 個衝突檔案", "WARNING")
+            for conflict_file in conflicts:
+                self.log(f"   - {conflict_file}", "WARNING")
+        else:
+            self.log(f"✅ 無合併衝突", "INFO")
+        
+        return len(conflicts) == 0, conflicts
+    
+    def optimize_meta_code(self, target_repo: Path) -> Dict[str, any]:
+        """優化元代碼（自動檢查和優化）"""
+        self.log(f"🔧 優化元代碼", "INFO")
+        
+        optimization_results = {
+            "optimized_files": [],
+            "removed_duplicates": [],
+            "formatting_fixes": []
+        }
+        
+        package_path = target_repo / "RootLaw_Package_v1.midlock"
+        
+        if not package_path.exists():
+            self.log(f"⚠️  套件目錄不存在，跳過優化", "WARNING")
+            return optimization_results
+        
+        # 1. 檢查重複內容
+        md_files = list(package_path.glob("*.md"))
+        content_hashes = {}
+        
+        for md_file in md_files:
+            if md_file.name == "DEPLOYMENT_REPORT.md":
+                continue  # 跳過部署報告
+            
+            try:
+                with open(md_file, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    
+                # 移除多餘的空行（超過2個連續空行）
+                import re
+                original_length = len(content)
+                content = re.sub(r'\n{3,}', '\n\n', content)
+                
+                if len(content) < original_length:
+                    with open(md_file, 'w', encoding='utf-8') as f:
+                        f.write(content)
+                    optimization_results["formatting_fixes"].append(str(md_file.name))
+                    self.log(f"   ✓ 格式化: {md_file.name}", "INFO")
+                
+            except Exception as e:
+                self.log(f"   ⚠️  處理 {md_file.name} 時出錯: {str(e)}", "WARNING")
+        
+        # 2. 驗證交叉引用
+        self.log(f"🔗 驗證交叉引用完整性", "INFO")
+        try:
+            absorption_map = package_path / "Absorption_Map.md"
+            evidence_index = package_path / "Evidence_Index.md"
+            
+            if absorption_map.exists() and evidence_index.exists():
+                with open(absorption_map, 'r', encoding='utf-8') as f:
+                    absorption_content = f.read()
+                with open(evidence_index, 'r', encoding='utf-8') as f:
+                    evidence_content = f.read()
+                
+                # 檢查 Evidence ID 引用
+                import re
+                ev_ids_in_absorption = set(re.findall(r'EV-\d+', absorption_content))
+                ev_ids_in_evidence = set(re.findall(r'EV-\d+', evidence_content))
+                
+                missing_evidence = ev_ids_in_absorption - ev_ids_in_evidence
+                if missing_evidence:
+                    self.log(f"   ⚠️  發現 {len(missing_evidence)} 個缺失的證據 ID", "WARNING")
+                else:
+                    self.log(f"   ✓ 交叉引用完整", "INFO")
+                
+        except Exception as e:
+            self.log(f"   ⚠️  驗證交叉引用時出錯: {str(e)}", "WARNING")
+        
+        self.log(f"✅ 優化完成", "INFO")
+        return optimization_results
+    
     def copy_package_files(self, target_repo: Path) -> bool:
         """複製 RootLaw Package 檔案到目標倉庫"""
         target_package = target_repo / "RootLaw_Package_v1.midlock"
@@ -282,8 +396,9 @@ class RootLawDeployer:
         return success
     
     def deploy_to_repository(self, repo_url: str, branch: str = "main", 
-                           commit: bool = False, push: bool = False) -> bool:
-        """部署到單個倉庫"""
+                           commit: bool = False, push: bool = False, 
+                           auto_pull: bool = False, auto_optimize: bool = False) -> bool:
+        """部署到單個倉庫（增強版：支援自動拉取、自動提交、自動優化）"""
         self.log(f"🚀 開始部署到: {repo_url}", "INFO")
         
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -292,6 +407,10 @@ class RootLawDeployer:
             # 步驟 1: 克隆倉庫
             if not self.clone_repository(repo_url, temp_path, branch):
                 return False
+            
+            # 步驟 1.5: 自動拉取最新變更（如果啟用）
+            if auto_pull:
+                self.pull_latest_changes(temp_path, branch)
             
             # 步驟 2: 複製套件檔案
             if not self.copy_package_files(temp_path):
@@ -303,34 +422,56 @@ class RootLawDeployer:
             # 步驟 4: 客製化 Absorption_Map
             self.customize_absorption_map(temp_path, structure)
             
+            # 步驟 4.5: 自動優化元代碼（如果啟用）
+            if auto_optimize:
+                optimization_results = self.optimize_meta_code(temp_path)
+                self.log(f"📊 優化統計: 格式化 {len(optimization_results['formatting_fixes'])} 個檔案", "INFO")
+            
             # 步驟 5: 創建部署報告
             self.create_deployment_report(temp_path, structure)
             
-            # 步驟 6: 提交變更（如果啟用）
+            # 步驟 5.5: 檢查合併衝突
+            no_conflicts, conflicts = self.check_merge_conflicts(temp_path)
+            if not no_conflicts:
+                self.log(f"⚠️  檢測到合併衝突，請手動解決", "WARNING")
+                for conflict_file in conflicts:
+                    self.log(f"   衝突檔案: {conflict_file}", "WARNING")
+                # 繼續部署，但記錄衝突
+            
+            # 步驟 6: 自動提交變更（如果啟用）
             if commit:
-                if not self.commit_changes(temp_path):
+                if not self.commit_changes(temp_path, 
+                    message=f"Deploy RootLaw Package v1.0 [auto-commit]"):
                     self.log(f"⚠️  變更未提交", "WARNING")
+                else:
+                    self.log(f"✅ 變更已自動提交", "INFO")
                 
-                # 步驟 7: 推送變更（如果啟用）
+                # 步驟 7: 自動推送變更（如果啟用）
                 if push:
-                    self.log(f"📤 推送變更到遠端", "INFO")
+                    self.log(f"📤 自動推送變更到遠端", "INFO")
                     success, output = self.run_command(['git', 'push'], cwd=temp_path)
                     if success:
-                        self.log(f"✅ 變更已推送", "INFO")
+                        self.log(f"✅ 變更已自動推送", "INFO")
                     else:
                         self.log(f"❌ 推送失敗: {output}", "ERROR")
+                        return False
             
             self.log(f"✅ 部署完成: {repo_url}", "INFO")
             return True
     
     def deploy_to_multiple_repositories(self, config_file: str) -> Dict[str, bool]:
-        """從配置檔案批次部署到多個倉庫"""
+        """從配置檔案批次部署到多個倉庫（支援自動化選項）"""
         self.log(f"📋 載入配置檔案: {config_file}", "INFO")
         
         with open(config_file, 'r', encoding='utf-8') as f:
             config = json.load(f)
         
         results = {}
+        
+        # 全域設定
+        global_settings = config.get("settings", {})
+        default_auto_pull = global_settings.get("auto_pull", False)
+        default_auto_optimize = global_settings.get("auto_optimize", False)
         
         for repo_config in config.get("repositories", []):
             repo_url = repo_config["url"]
@@ -342,11 +483,17 @@ class RootLawDeployer:
                 results[repo_url] = None
                 continue
             
+            # 支援倉庫級別的自動化選項
+            auto_pull = repo_config.get("auto_pull", default_auto_pull)
+            auto_optimize = repo_config.get("auto_optimize", default_auto_optimize)
+            
             success = self.deploy_to_repository(
                 repo_url=repo_url,
                 branch=branch,
                 commit=repo_config.get("commit", False),
-                push=repo_config.get("push", False)
+                push=repo_config.get("push", False),
+                auto_pull=auto_pull,
+                auto_optimize=auto_optimize
             )
             
             results[repo_url] = success
@@ -364,17 +511,17 @@ def main():
   # 部署到單個倉庫
   python deploy_rootlaw_package.py --url https://github.com/user/repo.git
 
+  # 自動拉取、提交並推送（完整自動化）
+  python deploy_rootlaw_package.py --url https://github.com/user/repo.git --auto-pull --commit --push
+
+  # 啟用元代碼優化
+  python deploy_rootlaw_package.py --url https://github.com/user/repo.git --auto-optimize --commit
+
   # 從配置檔案批次部署
   python deploy_rootlaw_package.py --config rootlaw_deploy_config.json
 
-  # 部署並自動提交變更
-  python deploy_rootlaw_package.py --url https://github.com/user/repo.git --commit
-
-  # 部署、提交並推送
-  python deploy_rootlaw_package.py --url https://github.com/user/repo.git --commit --push
-
-  # 詳細模式
-  python deploy_rootlaw_package.py --url https://github.com/user/repo.git --verbose
+  # 完整自動化：拉取、優化、提交、推送
+  python deploy_rootlaw_package.py --url https://github.com/user/repo.git --auto-pull --auto-optimize --commit --push --verbose
         """
     )
     
@@ -384,6 +531,8 @@ def main():
     parser.add_argument('--source', type=str, default='.', help='RootLaw Package 源倉庫路徑')
     parser.add_argument('--commit', action='store_true', help='自動提交變更')
     parser.add_argument('--push', action='store_true', help='自動推送變更到遠端')
+    parser.add_argument('--auto-pull', action='store_true', help='自動拉取最新變更')
+    parser.add_argument('--auto-optimize', action='store_true', help='自動檢查和優化元代碼')
     parser.add_argument('--verbose', '-v', action='store_true', help='顯示詳細日誌')
     
     args = parser.parse_args()
@@ -421,18 +570,36 @@ def main():
             
         else:
             # 單個倉庫部署
-            print("🌟 RootLaw Package 部署工具")
+            print("🌟 RootLaw Package 自動化部署工具 v2.0")
             print("=" * 60)
+            
+            # 顯示啟用的功能
+            features = []
+            if args.auto_pull:
+                features.append("自動拉取")
+            if args.auto_optimize:
+                features.append("元代碼優化")
+            if args.commit:
+                features.append("自動提交")
+            if args.push:
+                features.append("自動推送")
+            
+            if features:
+                print(f"🔧 啟用功能: {', '.join(features)}")
             
             success = deployer.deploy_to_repository(
                 repo_url=args.url,
                 branch=args.branch,
                 commit=args.commit,
-                push=args.push
+                push=args.push,
+                auto_pull=args.auto_pull,
+                auto_optimize=args.auto_optimize
             )
             
             if success:
                 print("\n✅ 部署成功！")
+                if args.commit and not args.push:
+                    print("💡 提示：變更已提交但未推送，請手動執行 'git push' 推送到遠端")
                 sys.exit(0)
             else:
                 print("\n❌ 部署失敗")

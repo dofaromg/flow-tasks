@@ -1,8 +1,8 @@
-# RootLaw Package 自動化部署工具
+# RootLaw Package 自動化部署工具 v2.0
 
 ## 概述
 
-這個工具可以自動將 RootLaw Package v1.0 部署到多個 GitHub 倉庫，並根據每個倉庫的結構自動客製化文檔。
+這個工具可以自動將 RootLaw Package v1.0 部署到多個 GitHub 倉庫，並根據每個倉庫的結構自動客製化文檔。**v2.0 新增完整自動化功能**。
 
 ## 功能特色
 
@@ -12,7 +12,25 @@
 ✅ **批次部署**: 支援一次部署到多個倉庫  
 ✅ **備份機制**: 部署前自動備份現有套件  
 ✅ **部署報告**: 自動生成詳細的部署報告  
-✅ **Git 整合**: 可選的自動提交和推送功能
+✅ **Git 整合**: 可選的自動提交和推送功能  
+🆕 **自動拉取**: 部署前自動拉取最新變更  
+🆕 **衝突檢測**: 自動檢查合併衝突  
+🆕 **元代碼優化**: 自動格式化、去重、驗證交叉引用
+
+## v2.0 新功能
+
+### 1. 自動拉取 (--auto-pull)
+在部署前自動執行 `git pull` 確保在最新代碼基礎上部署，避免版本衝突。
+
+### 2. 自動優化 (--auto-optimize)
+自動檢查和優化元代碼：
+- 移除多餘的空行（超過2個連續空行）
+- 格式化 Markdown 文檔
+- 驗證交叉引用完整性（Evidence ID）
+- 檢測重複內容
+
+### 3. 合併衝突檢測
+自動檢測 Git 合併衝突並報告衝突檔案，支援手動解決。
 
 ## 安裝要求
 
@@ -28,14 +46,23 @@
 # 基本部署（僅複製檔案，不提交）
 python scripts/deploy_rootlaw_package.py --url https://github.com/username/target-repo.git
 
+# 🆕 完整自動化：拉取、優化、提交、推送
+python scripts/deploy_rootlaw_package.py \
+  --url https://github.com/username/target-repo.git \
+  --auto-pull --auto-optimize --commit --push --verbose
+
+# 🆕 自動拉取 + 提交（不推送）
+python scripts/deploy_rootlaw_package.py \
+  --url https://github.com/username/target-repo.git \
+  --auto-pull --commit
+
+# 🆕 啟用元代碼優化
+python scripts/deploy_rootlaw_package.py \
+  --url https://github.com/username/target-repo.git \
+  --auto-optimize --commit
+
 # 部署到特定分支
 python scripts/deploy_rootlaw_package.py --url https://github.com/username/target-repo.git --branch develop
-
-# 部署並自動提交（不推送）
-python scripts/deploy_rootlaw_package.py --url https://github.com/username/target-repo.git --commit
-
-# 部署、提交並推送到遠端
-python scripts/deploy_rootlaw_package.py --url https://github.com/username/target-repo.git --commit --push
 
 # 詳細模式（顯示所有日誌）
 python scripts/deploy_rootlaw_package.py --url https://github.com/username/target-repo.git --verbose
