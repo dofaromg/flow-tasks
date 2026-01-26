@@ -3,10 +3,7 @@ Dropbox Connector
 Dropbox 連接器
 """
 
-import requests
 from typing import Dict, List, Optional, Any
-from datetime import datetime
-import time
 
 from .base_connector import BaseConnector, ConnectorStatus, ConnectorConfig
 
@@ -26,73 +23,36 @@ class DropboxConnector(BaseConnector):
     def required_scopes(self) -> List[str]:
         return ["files.metadata.read", "files.content.read", "files.content.write"]
     
+    def _get_auth_headers(self) -> Dict[str, str]:
+        """Get Dropbox-specific headers / 獲取 Dropbox 特定標頭"""
+        headers = super()._get_auth_headers()
+        headers["Content-Type"] = "application/json"
+        return headers
+    
     def authenticate(self) -> bool:
-        token = self.config.credentials.get("token")
-        if not token:
-            self.health.status = ConnectorStatus.NOT_CONFIGURED
-            self.health.error_message = "Dropbox token not configured"
-            return False
-        
-        self.health.status = ConnectorStatus.AUTHENTICATING
-        return self.check_connection()
+        """Authenticate with Dropbox API / 使用 Dropbox API 進行身份驗證"""
+        return self._default_authenticate()
     
     def check_connection(self) -> bool:
-        token = self.config.credentials.get("token")
-        if not token:
-            self.health.status = ConnectorStatus.NOT_CONFIGURED
-            return False
-        
-        try:
-            start_time = time.time()
-            headers = {
-                "Authorization": f"Bearer {token}",
-                "Content-Type": "application/json"
+        """Check Dropbox API connection / 檢查 Dropbox API 連接"""
+        def extract_metadata(data: Dict[str, Any]) -> Dict[str, Any]:
+            return {
+                "account_id": data.get("account_id"),
+                "email": data.get("email")
             }
-            
-            response = requests.post(
-                f"{self.service_url}/users/get_current_account",
-                headers=headers,
-                json=None,
-                timeout=self.config.timeout
-            )
-            
-            latency = (time.time() - start_time) * 1000
-            self.health.latency_ms = latency
-            self.health.last_check = datetime.now()
-            
-            if response.status_code == 200:
-                self.health.status = ConnectorStatus.CONNECTED
-                self.health.last_success = datetime.now()
-                account = response.json()
-                self.health.metadata = {
-                    "account_id": account.get("account_id"),
-                    "email": account.get("email")
-                }
-                return True
-            elif response.status_code == 401:
-                self.health.status = ConnectorStatus.ERROR
-                self.health.error_message = "Invalid or expired token"
-                return False
-            else:
-                self.health.status = ConnectorStatus.ERROR
-                self.health.error_message = f"HTTP {response.status_code}"
-                return False
-                
-        except Exception as e:
-            self.health.status = ConnectorStatus.ERROR
-            self.health.error_message = str(e)
-            return False
+        
+        # Dropbox uses POST for this endpoint
+        return self._check_connection_with_request(
+            endpoint="users/get_current_account",
+            method="POST",
+            json_data=None,
+            extract_metadata=extract_metadata
+        )
     
     def get_auth_url(self) -> Optional[str]:
+        """Get OAuth authorization URL / 獲取 OAuth 授權 URL"""
         return "https://www.dropbox.com/developers/apps"
     
     def sync_data(self, direction: str = "pull") -> Dict[str, Any]:
-        if not self.check_connection():
-            return {"success": False, "error": "Not connected"}
-        
-        return {
-            "success": True,
-            "direction": direction,
-            "timestamp": datetime.now().isoformat(),
-            "items_synced": 0
-        }
+        """Sync Dropbox data / 同步 Dropbox 數據"""
+        return self._default_sync_data(direction)

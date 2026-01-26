@@ -3,10 +3,7 @@ Google Drive Connector
 Google Drive 連接器
 """
 
-import requests
 from typing import Dict, List, Optional, Any
-from datetime import datetime
-import time
 
 from .base_connector import BaseConnector, ConnectorStatus, ConnectorConfig
 
@@ -30,71 +27,27 @@ class GoogleDriveConnector(BaseConnector):
         ]
     
     def authenticate(self) -> bool:
-        token = self.config.credentials.get("token")
-        if not token:
-            self.health.status = ConnectorStatus.NOT_CONFIGURED
-            self.health.error_message = "Google Drive token not configured"
-            return False
-        
-        self.health.status = ConnectorStatus.AUTHENTICATING
-        return self.check_connection()
+        """Authenticate with Google Drive API / 使用 Google Drive API 進行身份驗證"""
+        return self._default_authenticate()
     
     def check_connection(self) -> bool:
-        token = self.config.credentials.get("token")
-        if not token:
-            self.health.status = ConnectorStatus.NOT_CONFIGURED
-            return False
-        
-        try:
-            start_time = time.time()
-            headers = {
-                "Authorization": f"Bearer {token}"
+        """Check Google Drive API connection / 檢查 Google Drive API 連接"""
+        def extract_metadata(data: Dict[str, Any]) -> Dict[str, Any]:
+            return {
+                "user_email": data.get("user", {}).get("emailAddress"),
+                "storage_used": data.get("storageQuota", {}).get("usage")
             }
-            
-            response = requests.get(
-                f"{self.service_url}/about",
-                headers=headers,
-                params={"fields": "user,storageQuota"},
-                timeout=self.config.timeout
-            )
-            
-            latency = (time.time() - start_time) * 1000
-            self.health.latency_ms = latency
-            self.health.last_check = datetime.now()
-            
-            if response.status_code == 200:
-                self.health.status = ConnectorStatus.CONNECTED
-                self.health.last_success = datetime.now()
-                about = response.json()
-                self.health.metadata = {
-                    "user_email": about.get("user", {}).get("emailAddress"),
-                    "storage_used": about.get("storageQuota", {}).get("usage")
-                }
-                return True
-            elif response.status_code == 401:
-                self.health.status = ConnectorStatus.ERROR
-                self.health.error_message = "Invalid or expired token"
-                return False
-            else:
-                self.health.status = ConnectorStatus.ERROR
-                self.health.error_message = f"HTTP {response.status_code}"
-                return False
-                
-        except Exception as e:
-            self.health.status = ConnectorStatus.ERROR
-            self.health.error_message = str(e)
-            return False
+        
+        return self._check_connection_with_request(
+            endpoint="about",
+            params={"fields": "user,storageQuota"},
+            extract_metadata=extract_metadata
+        )
     
     def get_auth_url(self) -> Optional[str]:
+        """Get OAuth authorization URL / 獲取 OAuth 授權 URL"""
         return "https://console.cloud.google.com/apis/credentials"
     
     def sync_data(self, direction: str = "pull") -> Dict[str, Any]:
-        if not self.check_connection():
-            return {"success": False, "error": "Not connected"}
-        
-        return {
-            "success": True,
-            "direction": direction,
-            "timestamp": datetime.now().isoformat(),
-            "items_synced": 0
-        }
+        """Sync Google Drive data / 同步 Google Drive 數據"""
+        return self._default_sync_data(direction)
