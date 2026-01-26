@@ -1,0 +1,70 @@
+{
+  "version": "1.0",
+  "description": "RootLaw Package 批次部署配置 - 定義要部署律法套件的目標倉庫（支援自動化功能）",
+  "repositories": [
+    {
+      "name": "example-repo-1",
+      "url": "https://github.com/username/repository1.git",
+      "branch": "main",
+      "enabled": true,
+      "commit": false,
+      "push": false,
+      "auto_pull": false,
+      "auto_optimize": false,
+      "description": "範例倉庫 1 - 基本部署"
+    },
+    {
+      "name": "example-repo-2",
+      "url": "https://github.com/username/repository2.git",
+      "branch": "develop",
+      "enabled": false,
+      "commit": false,
+      "push": false,
+      "auto_pull": false,
+      "auto_optimize": false,
+      "description": "範例倉庫 2 - 已停用"
+    },
+    {
+      "name": "production-repo",
+      "url": "https://github.com/username/production-repo.git",
+      "branch": "main",
+      "enabled": true,
+      "commit": true,
+      "push": false,
+      "auto_pull": true,
+      "auto_optimize": true,
+      "description": "生產環境倉庫 - 自動拉取、優化、提交（手動推送）"
+    },
+    {
+      "name": "automated-repo",
+      "url": "https://github.com/username/automated-repo.git",
+      "branch": "main",
+      "enabled": true,
+      "commit": true,
+      "push": true,
+      "auto_pull": true,
+      "auto_optimize": true,
+      "description": "完全自動化倉庫 - 自動拉取、優化、提交並推送"
+    }
+  ],
+  "settings": {
+    "auto_backup": true,
+    "backup_prefix": ".rootlaw_backup_",
+    "default_branch": "main",
+    "default_commit": false,
+    "default_push": false,
+    "auto_pull": false,
+    "auto_optimize": false
+  },
+  "notes": [
+    "enabled: true/false - 是否啟用此倉庫的部署",
+    "commit: true/false - 是否自動提交變更",
+    "push: true/false - 是否自動推送到遠端（需要認證）",
+    "auto_pull: true/false - 是否在部署前自動拉取最新變更",
+    "auto_optimize: true/false - 是否自動檢查和優化元代碼（格式化、去重、驗證交叉引用）",
+    "建議先設定 commit=false, push=false 進行測試",
+    "確認無誤後再啟用自動提交和推送",
+    "auto_pull 可確保在最新代碼基礎上部署",
+    "auto_optimize 會自動優化文檔格式和驗證完整性"
+  ]
+}
