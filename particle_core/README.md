@@ -13,6 +13,9 @@ MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行框架
 - **AI 人格套件**: 人格連結器與通用 ZIP 壓縮/解壓縮（無檔案名稱限制）
 - **字典種子記憶**: Fluin Dict Agent 字典種子記憶快照系統 (DictSeed.0003)
 - **對話知識提取器**: 對話分析、打包與知識圖譜生成系統 (v1.0) 🆕
+- **CLI 模擬器**: 命令列邏輯模擬與執行介面
+- **人類可讀**: 邏輯步驟的中文說明與視覺化
+- **模組化設計**: 可擴展的邏輯模組與人格生成系統
 
 ## 快速開始
 
@@ -261,6 +264,8 @@ restored = archive.restore_seed("my_memory_seed")
 
 詳細說明請參閱 [記憶封存種子說明](docs/記憶封存種子說明.md)
 
+```
+
 ## 需求
 
 - Python 3.10+
@@ -277,3 +282,18 @@ restored = archive.restore_seed("my_memory_seed")
 ## 授權
 
 FlowAgent 專用任務系統內部模組
+## 語言規格
+
+粒子語言的核心規格文件位於 [`language_spec/`](language_spec/) 目錄：
+- 語言結構定義（.fxmanifest, .fxintro）
+- 壓縮規則（.fxscale）
+- 粒子詞典（.fxjson）
+- 代碼範例（.pcode）
+- 封包種子與邏輯圖譜（.fltnz, .flynz.map）
+
+詳細說明請參考 [語言規格索引](language_spec/INDEX.md)。
+
+## 授權
+
+FlowAgent 專用任務系統內部模組
+粒子語言規格遵循 CPLL 授權條款（© MR.liou）

@@ -240,6 +240,8 @@ bash scripts/validate_branch_integration.sh
 
 ---
 
+這個壓縮包是「一次搞定」的部署骨架。你把整包丟到 GitHub（或上傳到你的空間）即可：
+
 ## 部署空間位置（你會用到的介面）
 - **GKE 叢集控制台**：`https://console.cloud.google.com/kubernetes/list?project=flowmemorysync`
 - **Artifact Registry**（容器倉庫）：`https://console.cloud.google.com/artifacts?project=flowmemorysync&supportedpurview=project`
@@ -388,3 +390,9 @@ docker run --rm -v "$PWD:/data" amp verify
 3. 使用 `python cli.py log --n 0` 匯出全部事件並據此重建需要的狀態。
 
 相關 CI 工作流程：`.github/workflows/ci.yml` 會自動跑一次 smoke test 並上傳 `data/` 產物。 
+- `apps/*`：Mongo、模組、監控、KEDA 等 YAML
+- `cluster/overlays/prod/kustomization.yaml`：列出所有資源
+- `argocd/app.yaml`：ArgoCD Application（指向你的 GitHub repo）
+- `.github/workflows/*`：CI（build/push 映像）與 CD（套用 K8s）
+- `scripts/oneclick_gke_init.sh`：Cloud Shell 一鍵初始化腳本
+

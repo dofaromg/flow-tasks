@@ -73,4 +73,30 @@
       "✅ All tasks passed validation. Great job!"
     ]
   }
+  "processing_time": "2025-10-05T11:00:09.215474",
+  "total_tasks": 2,
+  "passed": 1,
+  "failed": 1,
+  "tasks": [
+    {
+      "task_id": "particle-language-core",
+      "validation_time": "2025-10-05T11:00:09.216943",
+      "status": "passed",
+      "checks": [
+        "✓ Target directory exists: particle_core/"
+      ],
+      "errors": []
+    },
+    {
+      "task_id": "hello-world-api",
+      "validation_time": "2025-10-05T11:00:09.217577",
+      "status": "failed",
+      "checks": [
+        "✓ Target file exists: flow_code/hello_api.py"
+      ],
+      "errors": [
+        "Python import failed: No module named 'flask'"
+      ]
+    }
+  ]
 }

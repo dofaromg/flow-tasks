@@ -5,6 +5,7 @@
     "description": "MRLiou 粒子語言核心系統配置",
     "author": "FlowAgent Task System",
     "contact": "z814241@gmail.com"
+    "author": "FlowAgent Task System"
   },
   "function_chain": {
     "default_steps": ["structure", "mark", "flow", "recurse", "store"],
