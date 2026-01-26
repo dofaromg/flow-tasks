@@ -8,6 +8,7 @@ Tracks which documents and artifacts are absorbed by specific Root Laws or Execu
 ### Core Package Files
 | Artifact | Law(s) | Notes |
 | --- | --- | --- |
+| README.md | All | User guide and quick start documentation. |
 | RootLaws_v1.md | 1–42 | Canonical law list. Defines all root laws. |
 | Execution_Laws.md | E-1–E-5 | Execution rules and enforcement mechanisms. |
 | Evidence_Index.md | All | Evidence registry for all laws. |
