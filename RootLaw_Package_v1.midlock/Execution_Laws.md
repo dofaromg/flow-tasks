@@ -15,14 +15,14 @@ E-<number>: <title>
 
 **E-1: Automated Compliance Verification**
 - Statement: All Root Laws must be automatically verified through code review, linting, and testing pipelines before deployment.
-- Enforcement: GitHub Actions CI/CD workflows, pre-commit hooks, CodeQL security scanning
+- Enforcement: GitHub Actions CI/CD workflows configured in this repository (build, lint, and deployment checks)
 - Evidence: EV-101 (CI/CD configuration), EV-102 (test suites)
 - Related Root Laws: All laws
 - Implementation:
-  - `code_review` tool validates code changes
-  - `codeql_checker` scans for security vulnerabilities
-  - `pytest` validates functional requirements
-  - GitHub Actions workflows enforce checks on all PRs
+  - CI workflows run automated build and lint steps on code changes
+  - Security and quality scanners are added to the CI workflows as they are introduced
+  - Dedicated test scripts (for example `python test_integration.py`, `python test_comprehensive.py`) validate functional requirements
+  - GitHub Actions workflows enforce the configured checks on pull requests
 
 **E-2: Exception Handling and Escalation**
 - Statement: Violations of Root Laws must be logged, reported, and escalated according to severity levels (Critical, High, Medium, Low).

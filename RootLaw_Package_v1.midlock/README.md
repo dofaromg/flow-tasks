@@ -30,11 +30,7 @@ RootLaw_Package_v1.midlock/
 2. **Check Absorption_Map.md** to find which laws apply to the files you're working on
    - Example: Working on `particle_core/src/logic_pipeline.py`? See Laws 4, 7, 27, 28
 
-3. **Follow E-1 (Automated Compliance)** - Your code will be automatically checked by:
-   - `code_review` tool
-   - `codeql_checker` security scanner
-   - `pytest` test suite
-   - GitHub Actions CI/CD
+3. **Follow E-1 (Automated Compliance)** - Your code will be automatically checked by the GitHub Actions CI/CD workflows defined in `.github/workflows/` (build, test, and deployment pipelines). Refer to those workflow files for the exact jobs and tools currently in use.
 
 ### For Repository Maintainers
 
@@ -211,20 +207,12 @@ Every 90 days (next: 2026-04-26):
 - Provides feedback on violations
 - Must be run before finalizing PR
 
-### codeql_checker Tool
-- Scans for security vulnerabilities
-- Enforces Laws 15, 16 (data validation, checksums)
-- Must be run after code_review
-
-### pytest Test Suite
-- Validates functional requirements
-- Enforces Law 27 (deterministic execution)
-- Tests evidence implementations
-
 ### GitHub Actions CI/CD
 - Enforces E-1 (automated compliance)
-- Runs code_review, codeql_checker, pytest
+- Runs build, lint, and test workflows as configured in `.github/workflows/`
 - Blocks deployment on critical violations
+
+**Note**: Security scanning tools (such as CodeQL) and specialized testing tools can be added to the CI workflows as the project evolves. Current workflows focus on build verification and deployment automation.
 
 ## Troubleshooting
 

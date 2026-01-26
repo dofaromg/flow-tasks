@@ -8,7 +8,7 @@ Registry of evidence supporting Root Laws and Execution Laws, including versioni
 | Evidence ID | Law(s) | Source | Version | Notes |
 | --- | --- | --- | --- | --- |
 | EV-001 | 1 | particle_core/src/logic_pipeline.py | v1.0 | Particle unique ID generation and tracking |
-| EV-002 | 1 | flowos/src/types.ts | v1.0 | FlowParticleSnapshot type definition |
+| EV-002 | 1 | flowos/src/types/index.ts | v1.0 | FlowParticleSnapshot type definition |
 | EV-003 | 2 | flowos/src/lib/flow-law.ts:8-14 | v1.0 | PARTICLE_OVERFLOW violation check |
 | EV-004 | 3 | flowos/src/lib/flow-law.ts:16-23 | v1.0 | ORPHANED_PARTICLE violation check |
 | EV-005 | 4 | particle_core/README.md:7 | v1.0 | STRUCTURE→MARK→FLOW→RECURSE→STORE chain |
@@ -27,9 +27,9 @@ Registry of evidence supporting Root Laws and Execution Laws, including versioni
 | EV-018 | 17 | particle_core/src/website_manager.py | v1.0 | Backup functionality |
 | EV-019 | 18 | particle_core/src/rebuild_fn.py | v1.0 | Lossless compression/decompression |
 | EV-020 | 19 | data/*.json | v1.0 | JSON schema versioning |
-| EV-021 | 20 | flowos/src/types.ts | v1.0 | Optional types with null handling |
+| EV-021 | 20 | flowos/src/types/index.ts | v1.0 | Optional types with null handling |
 | EV-022 | 21 | .github/workflows/ci-build.yml | v1.0 | Timeout settings in CI jobs |
-| EV-023 | 22 | particle_core/src/ exception handling | v1.0 | Try-except with full context |
+| EV-023 | 22 | particle_core/src/logic_pipeline.py; particle_core/src/cli_runner.py | v1.0 | Try-except with full context |
 | EV-024 | 23 | Service initialization code | v1.0 | Graceful degradation patterns |
 | EV-025 | 24 | File handle management | v1.0 | Context managers for resource cleanup |
 | EV-026 | 25 | Database access code | v1.0 | Lock mechanisms implementation |

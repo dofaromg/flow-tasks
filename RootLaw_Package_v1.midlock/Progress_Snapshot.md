@@ -64,7 +64,7 @@ Tracks task progress, anchors, and archived milestones for the RootLaw Package v
 
 | Anchor ID | Description | Date | Notes |
 | --- | --- | --- | --- |
-| A-001 | Initial package scaffold | 2025-12-XX | Created directory structure and template files |
+| A-001 | Initial package scaffold | Unknown (approx. 2025-12) | Created directory structure and template files |
 | A-002 | RootLaws v1.0 complete | 2026-01-26 | All 42 root laws defined and documented |
 | A-003 | Execution Laws v1.0 complete | 2026-01-26 | 5 execution laws with enforcement mechanisms |
 | A-004 | Absorption Map v1.0 complete | 2026-01-26 | Comprehensive file-to-law mapping across repository |

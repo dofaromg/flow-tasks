@@ -33,7 +33,7 @@ Tracks which documents and artifacts are absorbed by specific Root Laws or Execu
 | Artifact | Law(s) | Notes |
 | --- | --- | --- |
 | flowos/src/lib/flow-law.ts | 2, 3, 22, 28 | Implements PARTICLE_OVERFLOW and ORPHANED_PARTICLE checks. |
-| flowos/src/types.ts | 1, 9, 13 | Type definitions with metadata. |
+| flowos/src/types/index.ts | 1, 9, 13 | Type definitions with metadata. |
 
 ### Task Management
 | Artifact | Law(s) | Notes |
@@ -46,16 +46,15 @@ Tracks which documents and artifacts are absorbed by specific Root Laws or Execu
 | --- | --- | --- |
 | test_integration.py | 27, E-1 | Integration testing for deterministic execution. |
 | test_comprehensive.py | 27, E-1 | Comprehensive test suite. |
-| test_conversation_extractor.py | 11, 18, E-1 | Tests for conversation extractor module. |
-| test_import_export.py | 8, 18, E-1 | Tests for reversibility and compression integrity. |
-| test_website_manager.py | 17, E-1 | Tests for backup and versioning. |
+| particle_core/test_conversation_extractor.py | 11, 18, E-1 | Tests for conversation extractor module. |
+| particle_core/test_import_export.py | 8, 18, E-1 | Tests for reversibility and compression integrity. |
+| particle_core/test_website_manager.py | 17, E-1 | Tests for backup and versioning. |
 
 ### CI/CD & Deployment
 | Artifact | Law(s) | Notes |
 | --- | --- | --- |
 | .github/workflows/ci-build.yml | 21, 29, E-1 | CI pipeline with timeout enforcement. |
 | .github/workflows/cd-deploy.yml | 23, 29, E-1 | CD pipeline with graceful degradation. |
-| .github/workflows/codeql.yml | 15, 16, E-1 | Security scanning for data validation. |
 
 ### Kubernetes Deployments
 | Artifact | Law(s) | Notes |
