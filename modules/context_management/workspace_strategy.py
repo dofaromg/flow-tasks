@@ -247,6 +247,7 @@ class WorkspaceStrategy(BaseStrategy):
         query_lower = query.lower()
         scored_files = []
         
+        # First pass: Score based on filename and extension only
         for rel_path, metadata in self.file_index.items():
             score = 0
             
@@ -258,19 +259,27 @@ class WorkspaceStrategy(BaseStrategy):
             if query_lower == metadata['extension'].lower().strip('.'):
                 score += 5
             
-            # Match content (for text files)
+            if score > 0:
+                scored_files.append((score, rel_path, metadata))
+        
+        # Sort by preliminary score
+        scored_files.sort(reverse=True, key=lambda x: x[0])
+        
+        # Second pass: Read content only for top candidates (limit * 2 to account for content matches)
+        final_scored_files = []
+        for score, rel_path, metadata in scored_files[:limit * 2]:
             content = self._read_file_content(Path(metadata['absolute_path']))
             if content and query_lower in content.lower():
                 score += 3
             
-            if score > 0:
-                scored_files.append((score, rel_path, metadata, content))
+            if content:  # Only include if we successfully read content
+                final_scored_files.append((score, rel_path, metadata, content))
         
-        # Sort by score
-        scored_files.sort(reverse=True, key=lambda x: x[0])
+        # Final sort by updated score
+        final_scored_files.sort(reverse=True, key=lambda x: x[0])
         
         # Convert to context items
-        for score, rel_path, metadata, content in scored_files[:limit]:
+        for score, rel_path, metadata, content in final_scored_files[:limit]:
             if content:
                 results.append(ContextItem(
                     id=f"file:{rel_path}",
@@ -302,11 +311,12 @@ class WorkspaceStrategy(BaseStrategy):
             File content or None if unable to read
         """
         try:
-            if file_path.stat().st_size > max_size:
+            file_size = file_path.stat().st_size
+            if file_size > max_size:
                 # File too large, return truncated content
                 with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                     content = f.read(max_size)
-                    return content + f"\n... (truncated, total size: {file_path.stat().st_size} bytes)"
+                    return content + f"\n... (truncated, total size: {file_size} bytes)"
             
             with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                 return f.read()
