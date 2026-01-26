@@ -1,0 +1,1 @@
+{"name":"vector-attention-engine","main":"src/index.ts","compatibility_date":"2025-03-07","compatibility_flags":["nodejs_compat"],"observability":{"enabled":true},"kv_namespaces":[{"binding":"PARTICLE_AUTH_VAULT","id":"8cd99b4a67f74afea367f394995d5c50"}],"r2_buckets":[{"binding":"MRLIOUBOOK","bucket_name":"mrlioubook"}]}
