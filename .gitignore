@@ -257,3 +257,6 @@ cluster/configs/google_templates/
 /data/github_export.json
 /data/snapshots/*.json
 flowos/dist/
+
+# Repository stability reports
+repo_stability_report_*.md
