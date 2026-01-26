@@ -6,10 +6,7 @@ Integration with Notion API for page and database management
 整合 Notion API 用於頁面和數據庫管理
 """
 
-import requests
 from typing import Dict, List, Optional, Any
-from datetime import datetime
-import time
 
 from .base_connector import BaseConnector, ConnectorStatus, ConnectorConfig, AuthType
 
@@ -29,68 +26,29 @@ class NotionConnector(BaseConnector):
     def required_scopes(self) -> List[str]:
         return ["read_content", "update_content", "insert_content"]
     
+    def _get_auth_headers(self) -> Dict[str, str]:
+        """Get Notion-specific headers / 獲取 Notion 特定標頭"""
+        headers = super()._get_auth_headers()
+        headers["Notion-Version"] = "2022-06-28"
+        headers["Content-Type"] = "application/json"
+        return headers
+    
     def authenticate(self) -> bool:
         """Authenticate with Notion API / 使用 Notion API 進行身份驗證"""
-        token = self.config.credentials.get("token")
-        if not token:
-            self.health.status = ConnectorStatus.NOT_CONFIGURED
-            self.health.error_message = "Notion token not configured"
-            return False
-        
-        self.health.status = ConnectorStatus.AUTHENTICATING
-        return self.check_connection()
+        return self._default_authenticate()
     
     def check_connection(self) -> bool:
         """Check Notion API connection / 檢查 Notion API 連接"""
-        token = self.config.credentials.get("token")
-        if not token:
-            self.health.status = ConnectorStatus.NOT_CONFIGURED
-            return False
-        
-        try:
-            start_time = time.time()
-            headers = {
-                "Authorization": f"Bearer {token}",
-                "Notion-Version": "2022-06-28",
-                "Content-Type": "application/json"
+        def extract_metadata(data: Dict[str, Any]) -> Dict[str, Any]:
+            return {
+                "user_id": data.get("id"),
+                "user_type": data.get("type")
             }
-            
-            response = requests.get(
-                f"{self.service_url}/users/me",
-                headers=headers,
-                timeout=self.config.timeout
-            )
-            
-            latency = (time.time() - start_time) * 1000
-            self.health.latency_ms = latency
-            self.health.last_check = datetime.now()
-            
-            if response.status_code == 200:
-                self.health.status = ConnectorStatus.CONNECTED
-                self.health.last_success = datetime.now()
-                user_data = response.json()
-                self.health.metadata = {
-                    "user_id": user_data.get("id"),
-                    "user_type": user_data.get("type")
-                }
-                return True
-            elif response.status_code == 401:
-                self.health.status = ConnectorStatus.ERROR
-                self.health.error_message = "Invalid or expired token"
-                return False
-            else:
-                self.health.status = ConnectorStatus.ERROR
-                self.health.error_message = f"HTTP {response.status_code}"
-                return False
-                
-        except requests.exceptions.Timeout:
-            self.health.status = ConnectorStatus.ERROR
-            self.health.error_message = "Connection timeout"
-            return False
-        except Exception as e:
-            self.health.status = ConnectorStatus.ERROR
-            self.health.error_message = str(e)
-            return False
+        
+        return self._check_connection_with_request(
+            endpoint="users/me",
+            extract_metadata=extract_metadata
+        )
     
     def get_auth_url(self) -> Optional[str]:
         """Get OAuth authorization URL / 獲取 OAuth 授權 URL"""
@@ -98,12 +56,4 @@ class NotionConnector(BaseConnector):
     
     def sync_data(self, direction: str = "pull") -> Dict[str, Any]:
         """Sync Notion data / 同步 Notion 數據"""
-        if not self.check_connection():
-            return {"success": False, "error": "Not connected"}
-        
-        return {
-            "success": True,
-            "direction": direction,
-            "timestamp": datetime.now().isoformat(),
-            "items_synced": 0
-        }
+        return self._default_sync_data(direction)

@@ -10,9 +10,12 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Callable
 import hashlib
 import json
+import time
+
+import requests
 
 
 class ConnectorStatus(Enum):
@@ -201,3 +204,237 @@ class BaseConnector(ABC):
         """
         cred_str = json.dumps(self.config.credentials, sort_keys=True)
         return hashlib.sha256(cred_str.encode()).hexdigest()[:16]
+
+    # =========================================================================
+    # Shared methods to reduce code duplication across connectors
+    # 共享方法以減少連接器之間的程式碼重複
+    # =========================================================================
+
+    @property
+    def credential_key(self) -> str:
+        """
+        Key used to retrieve the authentication token from credentials.
+        Override this property if your connector uses a different key.
+        用於從憑證中獲取認證令牌的鍵名。
+        如果您的連接器使用不同的鍵，請覆蓋此屬性。
+        """
+        return "token"
+
+    def _get_token(self) -> Optional[str]:
+        """
+        Get authentication token from credentials.
+        從憑證中獲取認證令牌。
+        
+        Returns:
+            Optional[str]: Token if available, None otherwise
+        """
+        return self.config.credentials.get(self.credential_key)
+
+    def _get_auth_headers(self) -> Dict[str, str]:
+        """
+        Get default authentication headers.
+        獲取預設的認證標頭。
+        Override this method for custom header requirements.
+        
+        Returns:
+            Dict[str, str]: Headers dictionary
+        """
+        token = self._get_token()
+        if not token:
+            return {}
+        return {"Authorization": f"Bearer {token}"}
+
+    def _make_request(
+        self,
+        method: str,
+        url: str,
+        headers: Optional[Dict[str, str]] = None,
+        params: Optional[Dict[str, Any]] = None,
+        json_data: Optional[Any] = None,
+    ) -> requests.Response:
+        """
+        Make an HTTP request with timing information.
+        執行帶有計時資訊的 HTTP 請求。
+        
+        Args:
+            method: HTTP method (GET, POST, etc.)
+            url: Request URL
+            headers: Optional headers (merged with auth headers)
+            params: Optional query parameters
+            json_data: Optional JSON body
+            
+        Returns:
+            requests.Response: The response object
+        """
+        start_time = time.time()
+        
+        # Merge auth headers with custom headers
+        request_headers = self._get_auth_headers()
+        if headers:
+            request_headers.update(headers)
+        
+        response = requests.request(
+            method=method,
+            url=url,
+            headers=request_headers,
+            params=params,
+            json=json_data,
+            timeout=self.config.timeout
+        )
+        
+        latency = (time.time() - start_time) * 1000
+        self.health.latency_ms = latency
+        self.health.last_check = datetime.now()
+        
+        return response
+
+    def _handle_connection_success(self, metadata: Optional[Dict[str, Any]] = None) -> bool:
+        """
+        Handle successful connection.
+        處理成功的連接。
+        
+        Args:
+            metadata: Optional metadata to store in health status
+            
+        Returns:
+            bool: Always returns True
+        """
+        self.health.status = ConnectorStatus.CONNECTED
+        self.health.last_success = datetime.now()
+        self.health.error_message = None
+        if metadata:
+            self.health.metadata = metadata
+        return True
+
+    def _handle_connection_error(self, error_message: str) -> bool:
+        """
+        Handle connection error.
+        處理連接錯誤。
+        
+        Args:
+            error_message: Error message to store
+            
+        Returns:
+            bool: Always returns False
+        """
+        self.health.status = ConnectorStatus.ERROR
+        self.health.error_message = error_message
+        return False
+
+    def _handle_not_configured(self, message: Optional[str] = None) -> bool:
+        """
+        Handle not configured state.
+        處理未配置狀態。
+        
+        Args:
+            message: Optional custom error message
+            
+        Returns:
+            bool: Always returns False
+        """
+        self.health.status = ConnectorStatus.NOT_CONFIGURED
+        self.health.error_message = message or f"{self.service_name} token not configured"
+        return False
+
+    def _default_authenticate(self) -> bool:
+        """
+        Default authentication implementation.
+        預設的認證實現。
+        Checks for token and calls check_connection().
+        
+        Returns:
+            bool: True if authentication successful
+        """
+        token = self._get_token()
+        if not token:
+            return self._handle_not_configured()
+        
+        self.health.status = ConnectorStatus.AUTHENTICATING
+        return self.check_connection()
+
+    def _default_sync_data(self, direction: str = "pull") -> Dict[str, Any]:
+        """
+        Default sync data implementation.
+        預設的數據同步實現。
+        
+        Args:
+            direction: "pull", "push", or "bidirectional"
+            
+        Returns:
+            Dict with sync results
+        """
+        if not self.check_connection():
+            return {"success": False, "error": "Not connected"}
+        
+        return {
+            "success": True,
+            "direction": direction,
+            "timestamp": datetime.now().isoformat(),
+            "items_synced": 0
+        }
+
+    def _check_connection_with_request(
+        self,
+        endpoint: str,
+        method: str = "GET",
+        headers: Optional[Dict[str, str]] = None,
+        params: Optional[Dict[str, Any]] = None,
+        json_data: Optional[Any] = None,
+        extract_metadata: Optional[Callable[[Dict[str, Any]], Dict[str, Any]]] = None,
+        extract_rate_limit: Optional[Callable[[requests.Response], Optional[int]]] = None,
+    ) -> bool:
+        """
+        Common implementation for check_connection.
+        check_connection 的通用實現。
+        
+        Args:
+            endpoint: API endpoint to check (relative to service_url)
+            method: HTTP method to use
+            headers: Optional additional headers
+            params: Optional query parameters
+            json_data: Optional JSON body
+            extract_metadata: Optional function to extract metadata from response JSON
+            extract_rate_limit: Optional function to extract rate limit from response
+            
+        Returns:
+            bool: True if connected successfully
+        """
+        token = self._get_token()
+        if not token:
+            return self._handle_not_configured()
+        
+        try:
+            url = f"{self.service_url}/{endpoint}" if endpoint else self.service_url
+            response = self._make_request(
+                method=method,
+                url=url,
+                headers=headers,
+                params=params,
+                json_data=json_data
+            )
+            
+            if response.status_code == 200:
+                metadata = {}
+                if extract_metadata and response.text:
+                    try:
+                        metadata = extract_metadata(response.json())
+                    except (json.JSONDecodeError, ValueError):
+                        pass
+                
+                if extract_rate_limit:
+                    self.health.rate_limit_remaining = extract_rate_limit(response)
+                
+                return self._handle_connection_success(metadata)
+            elif response.status_code == 401:
+                return self._handle_connection_error("Invalid or expired token")
+            elif response.status_code == 403:
+                return self._handle_connection_error("Access forbidden - check permissions")
+            else:
+                return self._handle_connection_error(f"HTTP {response.status_code}")
+                
+        except requests.exceptions.Timeout:
+            return self._handle_connection_error("Connection timeout")
+        except requests.exceptions.ConnectionError:
+            return self._handle_connection_error("Connection failed")
+        except Exception as e:
+            return self._handle_connection_error(str(e))
