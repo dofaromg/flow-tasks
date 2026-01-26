@@ -11,6 +11,7 @@ class LogicPipeline:
     
     def __init__(self):
         self.pipeline_steps = ["structure", "mark", "flow", "recurse", "store"]
+        self.fn_steps = ["structure", "mark", "flow", "recurse", "store"]
         self.explanations = {
             "structure": "定義輸入資料結構",
             "mark": "建立邏輯跳點標記", 
@@ -25,6 +26,10 @@ class LogicPipeline:
         for step in self.pipeline_steps:
             current_result = f"[{step.upper()} → {current_result}]"
         return current_result
+        result = input_data
+        for step in self.fn_steps:
+            result = f"[{step.upper()} → {result}]"
+        return result
     
     def process_step(self, step: str, data: str) -> str:
         """處理單一邏輯步驟"""
@@ -37,6 +42,11 @@ class LogicPipeline:
     def compress_logic(self, steps: List[str]) -> str:
         """壓縮邏輯鏈為 .flpkg 格式"""
         if steps == self.pipeline_steps:
+        return [self.explanations.get(step, step) for step in self.fn_steps]
+    
+    def compress_logic(self, steps: List[str]) -> str:
+        """壓縮邏輯鏈為 .flpkg 格式"""
+        if steps == self.fn_steps:
             return "SEED(X) = STORE(RECURSE(FLOW(MARK(STRUCTURE(X)))))"
         return "UNSUPPORTED_LOGIC_CHAIN"
     
@@ -47,6 +57,10 @@ class LogicPipeline:
         return ["UNKNOWN"]
     
     def store_result(self, input_value: str, result: str, output_dir: str = "examples") -> str:
+            return self.fn_steps
+        return ["UNKNOWN"]
+    
+    def store_result(self, input_val: str, result: str, output_dir: str = "examples") -> str:
         """儲存執行結果"""
         os.makedirs(output_dir, exist_ok=True)
         
@@ -62,6 +76,16 @@ class LogicPipeline:
         filename = os.path.join(output_dir, f"logic_result_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json")
         with open(filename, "w", encoding="utf-8") as output_file:
             json.dump(data, output_file, ensure_ascii=False, indent=2)
+            "input": input_val,
+            "logic_chain": self.fn_steps,
+            "human_readable": self.get_human_readable(),
+            "result": result,
+            "compressed": self.compress_logic(self.fn_steps)
+        }
+        
+        filename = os.path.join(output_dir, f"logic_result_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json")
+        with open(filename, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
         
         return filename
     
@@ -75,6 +99,14 @@ class LogicPipeline:
             "explanations": self.get_human_readable(),
             "result": execution_result,
             "compressed": self.compress_logic(self.pipeline_steps)
+        result = self.run_logic_chain(input_data)
+        
+        return {
+            "input": input_data,
+            "steps": self.fn_steps,
+            "explanations": self.get_human_readable(),
+            "result": result,
+            "compressed": self.compress_logic(self.fn_steps)
         }
 
 def main():

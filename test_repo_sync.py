@@ -166,6 +166,30 @@ def test_gitignore_updated():
         print("❌ .gitignore 未包含備份目錄 / .gitignore doesn't include backup directory")
         return False
 
+def test_stability_checker_exists():
+    """Test if stability checker script exists"""
+    print("\n📋 測試 9: 檢查穩定性檢查腳本 / Test 9: Check stability checker script")
+    script_path = Path("scripts/check_repo_stability.py")
+    
+    if script_path.exists() and os.access(script_path, os.X_OK):
+        print("✅ 穩定性檢查腳本存在且可執行 / Stability checker exists and is executable")
+        return True
+    else:
+        print("❌ 穩定性檢查腳本不存在或無執行權限 / Stability checker not found or not executable")
+        return False
+
+def test_stability_checker_help():
+    """Test stability checker help command"""
+    print("\n📋 測試 10: 測試穩定性檢查幫助命令 / Test 10: Test stability checker help")
+    success, output = run_command("python scripts/check_repo_stability.py --help")
+    
+    if success and "Repository Stability Checker" in output:
+        print("✅ 穩定性檢查幫助命令正常運作 / Stability checker help works")
+        return True
+    else:
+        print("❌ 穩定性檢查幫助命令失敗 / Stability checker help failed")
+        return False
+
 def main():
     """Run all tests"""
     print("="*60)
@@ -181,6 +205,8 @@ def main():
         ("文檔存在 / Docs exist", test_documentation_exists),
         ("Workflow 存在 / Workflow exists", test_workflow_exists),
         (".gitignore 更新 / .gitignore updated", test_gitignore_updated),
+        ("穩定性檢查腳本 / Stability checker", test_stability_checker_exists),
+        ("穩定性檢查幫助 / Stability help", test_stability_checker_help),
     ]
     
     results = []

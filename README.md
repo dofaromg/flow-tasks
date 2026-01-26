@@ -29,7 +29,17 @@ python scripts/sync_external_repos.py --list
 
 選擇一種部署方式開始：
 
-### 方式 1: 一鍵部署 (最簡單)
+### 方式 0: Vercel 前端部署 (最快速) 🆕
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdofaromg%2Fflow-tasks)
+
+一鍵部署 Next.js 前端應用到 Vercel：
+- ⚡ 即時全球 CDN
+- 🔄 自動 GitHub 整合
+- 📊 內建分析工具
+
+📚 詳見：[Vercel 部署指南](VERCEL_DEPLOYMENT.md)
+
+### 方式 1: 一鍵部署 GKE (最簡單)
 ```bash
 git clone https://github.com/dofaromg/flow-tasks.git
 cd flow-tasks
@@ -48,11 +58,13 @@ kubectl apply -f argocd/app.yaml
 設定 GitHub Secrets 後，推送到 main 分支自動部署
 
 📚 **詳細文檔**：
-- [完整部署指南](DEPLOYMENT.md)
+- [Vercel 部署指南](VERCEL_DEPLOYMENT.md) 🆕 新增 - Next.js 前端部署到 Vercel
+- [完整部署指南](DEPLOYMENT.md) - GKE 後端服務部署
 - [快速參考](QUICKSTART.md)
 - [架構圖表](ARCHITECTURE.md)
 - [應用程式說明](apps/README.md)
 - [分支整合優化指南](BRANCH_INTEGRATION_GUIDE.md) ⭐ 新增
+- [Development Container 配置](.devcontainer/README.md) 🆕 新增
 - [Codespace 管理指南](CODESPACE_MANAGEMENT.md) 🆕 新增
 
 ---
@@ -60,6 +72,8 @@ kubectl apply -f argocd/app.yaml
 ## 📦 GitHub Codespaces 開發環境
 
 使用 GitHub Codespaces 快速啟動雲端開發環境：
+
+本專案提供完整的 Development Container 配置，符合 [devcontainers/spec](https://github.com/devcontainers/spec) 標準。配置詳情請參閱 [.devcontainer/README.md](.devcontainer/README.md)。
 
 ### 快速開始
 ```bash
@@ -94,11 +108,13 @@ gh codespace stop -c CODESPACE_NAME
 gh codespace delete -c CODESPACE_NAME
 ```
 
-📖 **完整指南**：查看 [Codespace 管理指南](CODESPACE_MANAGEMENT.md) 了解：
-- 詳細的生命週期管理策略
-- 自動化監控和提醒設置
-- 最佳實踐和故障排除
-- 成本優化建議
+📖 **完整指南**：
+- [Development Container 配置說明](.devcontainer/README.md) - 開發環境配置與自訂
+- [Codespace 管理指南](CODESPACE_MANAGEMENT.md) - 生命週期管理與最佳實踐
+  - 詳細的生命週期管理策略
+  - 自動化監控和提醒設置
+  - 最佳實踐和故障排除
+  - 成本優化建議
 
 ---
 
@@ -148,6 +164,55 @@ python src/ai_persona_toolkit.py
 
 ---
 
+## 📱 MrliouWord - iOS 3D Scanner | iOS 3D掃描器
+
+**革命性的3D內容創作生態系統** - 結合 LiDAR 精密掃描和 AI 快照建模的智慧3D掃描器，旨在成為「3D內容創作的TikTok」。
+
+### 核心特色 (Core Features)
+
+- **三模式系統** (Three-Mode System) - 輕鬆/探索/專業模式，同一引擎不同曝光
+- **AI 快照建模** (AI Snapshot Modeling) - 單張照片生成3D模型，90%成功率
+- **社群分享生態** (Community Sharing) - 一鍵分享到多平台
+- **智能品牌標識** (Smart Watermarking) - 自動浮水印系統
+
+### 技術架構 (Tech Stack)
+
+- **SwiftUI** - 現代化UI框架
+- **ARKit + LiDAR** - 3D掃描核心
+- **CoreML + Vision** - AI處理引擎
+- **RealityKit** - 3D渲染展示
+
+### 快速開始 (Quick Start)
+
+```bash
+cd MrliouWord
+
+# 參閱 XCODE_SETUP.md 創建 Xcode 項目
+# Refer to XCODE_SETUP.md for Xcode project creation
+
+# 選擇支援 LiDAR 的實體設備
+# Select a physical device with LiDAR support
+
+# Cmd + R 運行專案
+```
+
+### 硬體需求 (Hardware Requirements)
+
+- **開發** - Mac with macOS 13.0+, Xcode 15+
+- **測試** - iPhone 12 Pro+ or iPad Pro (2020+) with LiDAR sensor
+
+### 文檔 (Documentation)
+
+- [完整專案說明](MrliouWord/README.md) - 詳細的專案文檔
+- [Xcode 設置指南](MrliouWord/XCODE_SETUP.md) - Xcode 專案設置說明
+- [實作摘要](MRLIOUWORD_IMPLEMENTATION_SUMMARY.md) - 技術實作詳情
+
+### 參考提交 (Reference Commit)
+
+初始實作: [c785f4d](https://github.com/dofaromg/flow-tasks/commit/c785f4d33e92a46ce2515da4ab7360f1685ed43b)
+
+---
+
 ## 🔄 分支整合優化 (Branch Integration Optimization)
 
 本專案已實施完整的分支整合檢查機制，確保程式碼品質和部署穩定性：
@@ -174,6 +239,8 @@ bash scripts/validate_branch_integration.sh
 詳細指南請參閱: [分支整合優化指南](BRANCH_INTEGRATION_GUIDE.md)
 
 ---
+
+這個壓縮包是「一次搞定」的部署骨架。你把整包丟到 GitHub（或上傳到你的空間）即可：
 
 ## 部署空間位置（你會用到的介面）
 - **GKE 叢集控制台**：`https://console.cloud.google.com/kubernetes/list?project=flowmemorysync`
@@ -323,3 +390,9 @@ docker run --rm -v "$PWD:/data" amp verify
 3. 使用 `python cli.py log --n 0` 匯出全部事件並據此重建需要的狀態。
 
 相關 CI 工作流程：`.github/workflows/ci.yml` 會自動跑一次 smoke test 並上傳 `data/` 產物。 
+- `apps/*`：Mongo、模組、監控、KEDA 等 YAML
+- `cluster/overlays/prod/kustomization.yaml`：列出所有資源
+- `argocd/app.yaml`：ArgoCD Application（指向你的 GitHub repo）
+- `.github/workflows/*`：CI（build/push 映像）與 CD（套用 K8s）
+- `scripts/oneclick_gke_init.sh`：Cloud Shell 一鍵初始化腳本
+

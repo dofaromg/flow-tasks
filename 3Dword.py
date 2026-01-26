@@ -30,6 +30,7 @@ class AI3DPersonality:
         """
         if emotion not in self._expressions:
             raise ValueError(f"不支持的情緒：{emotion}。有效情緒為：{'，'.join(self._expressions.keys())}")
+            引發 ValueError ( f"不支持的情緒：{ emotion } 。有效情緒為：{ '，' 。join ( self._expressions.keys ( ) ) } " )
         self.emotion = emotion
 
     def get_expression(self, language: str = "en") -> str:
@@ -42,6 +43,8 @@ class AI3DPersonality:
         """
         if language not in self.SUPPORTED_LANGUAGES:
             raise ValueError(f"語言必須是{self.SUPPORTED_LANGUAGES}之一")
+        如果 語言 不在  self.SUPPORTED_LANGUAGES中：
+            引發 ValueError ( f "語言必須是{ self . SUPPORTED_LANGUAGES }之一" )
         return self._expressions[self.emotion][language]
 
     def interact(self, message: str, language: str = "en") -> str:
@@ -60,6 +63,7 @@ class AI3DPersonality:
         }
         if language not in self.SUPPORTED_LANGUAGES:
             raise ValueError(f"語言必須是{self.SUPPORTED_LANGUAGES}之一")
+        self._validate_language（語言）
         return templates[language].format(
             name=self.name,
             emotion=self._expressions[self.emotion][language],

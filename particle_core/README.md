@@ -13,6 +13,9 @@ MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行框架
 - **AI 人格套件**: 人格連結器與通用 ZIP 壓縮/解壓縮（無檔案名稱限制）
 - **字典種子記憶**: Fluin Dict Agent 字典種子記憶快照系統 (DictSeed.0003)
 - **對話知識提取器**: 對話分析、打包與知識圖譜生成系統 (v1.0) 🆕
+- **CLI 模擬器**: 命令列邏輯模擬與執行介面
+- **人類可讀**: 邏輯步驟的中文說明與視覺化
+- **模組化設計**: 可擴展的邏輯模組與人格生成系統
 
 ## 快速開始
 
@@ -88,6 +91,7 @@ print(agent.compress_to_particle_notation())
 
 ## 對話知識提取器 - Conversation Knowledge Extractor (新功能)
 
+對話知識提取器是一個強大的工具，用於分析、打包、導入和導出對話記錄。支援注意力機制分析、邏輯結構提取和 AI 深度分析。**v1.1 新增全格式導入支援！**
 對話知識提取器是一個強大的工具，用於分析、打包和導出對話記錄。支援注意力機制分析、邏輯結構提取和 AI 深度分析。
 
 ```python
@@ -104,6 +108,20 @@ conversation = [
 
 package = extractor.package_conversation(
     conversation,
+    metadata={"title": "粒子語言討論", "date": "2026-01-05"}
+)
+
+# 導出為多種格式 (新增支援 CSV, XML, YAML)
+extractor.export_to_file(package, "conversation.json", "json")
+extractor.export_to_file(package, "conversation.md", "markdown")
+extractor.export_to_file(package, "conversation.csv", "csv")
+extractor.export_to_file(package, "conversation.xml", "xml")
+extractor.export_to_file(package, "conversation.yaml", "yaml")
+
+# 從檔案導入 (自動檢測格式)
+imported = extractor.import_from_file("conversation.json")
+imported = extractor.import_from_file("conversation.md")
+imported = extractor.import_from_file("conversation.csv")
     metadata={"title": "粒子語言討論", "date": "2026-01-04"}
 )
 
@@ -127,15 +145,69 @@ with open("analysis_report.md", "w", encoding="utf-8") as f:
 ```
 
 **主要功能**:
+- 📦 對話打包與導出 (JSON/Markdown/TXT/YAML/CSV/HTML/XML) - 支援所有常見檔案格式
+- 🎨 **主題調色盤系統** (6 種預設主題 + 自訂調色盤) - 🆕
+- 🌐 **網站套件生成** (多主題 HTML + 所有格式 + 美觀索引頁) - 🆕
+- 📦 **批次導出功能** (一次導出所有格式) - 🆕
+- 🤖 **AI 助手網站管家** (專案管理、自動備份、版本控制) - 🆕🆕
+- 📦 對話打包與導出 (JSON/Markdown/TXT/CSV/XML/YAML)
+- 📥 對話導入 (JSON/Markdown/TXT/CSV/XML/YAML) 🆕
+- 🔍 自動檢測檔案格式 🆕
 - 📦 對話打包與導出 (JSON/Markdown/TXT)
 - 🎯 注意力機制分析 (關鍵時刻、話題轉換、資訊密集段落)
 - 🧬 邏輯結構提取 (概念、因果關係、推理鏈、結論)
 - 🤖 AI 深度分析 (需要 Anthropic API Key)
 - 📊 完整分析報告生成
 
+**預設主題**:
+- 🎨 預設 (Default) - 清新綠色
+- 🌊 海洋 (Ocean) - 藍綠色調
+- 🌅 日落 (Sunset) - 橙紅色調
+- 🌙 夜晚 (Night) - 深色模式
+- 🌲 森林 (Forest) - 自然綠色
+- ⚪ 極簡 (Minimal) - 黑白灰色
+
 詳細說明請參閱:
 - [對話知識提取器使用說明 (中文)](docs/conversation_extractor_zh.md)
 - [Conversation Extractor Guide (English)](docs/conversation_extractor_en.md)
+
+### AI 助手網站管家
+
+完整的網站專案管理系統，提供專案建立、備份、版本控制等功能。
+
+```python
+from website_manager import WebsiteManager
+
+# 初始化管家
+manager = WebsiteManager(workspace_dir="./my_websites")
+
+# 建立專案
+project_id = manager.create_project(
+    project_name="我的對話網站",
+    conversation=conversation,
+    metadata={"title": "專案標題", "date": "2026-01-10"}
+)
+
+# 列出所有專案
+projects = manager.list_projects()
+
+# 備份專案
+manager.backup_project(project_id)
+
+# 更新主題
+manager.update_project_theme(project_id, "ocean")
+
+# 查看統計
+manager.print_statistics()
+```
+
+**網站管家功能**:
+- 🏗️ 專案建立與管理
+- 💾 自動備份與版本控制
+- 🎨 主題動態切換
+- 📊 統計分析
+- 🗂️ 多專案管理
+- 🔍 專案查詢與預覽
 
 ## 種子資料集
 
@@ -192,6 +264,8 @@ restored = archive.restore_seed("my_memory_seed")
 
 詳細說明請參閱 [記憶封存種子說明](docs/記憶封存種子說明.md)
 
+```
+
 ## 需求
 
 - Python 3.10+
@@ -208,3 +282,18 @@ restored = archive.restore_seed("my_memory_seed")
 ## 授權
 
 FlowAgent 專用任務系統內部模組
+## 語言規格
+
+粒子語言的核心規格文件位於 [`language_spec/`](language_spec/) 目錄：
+- 語言結構定義（.fxmanifest, .fxintro）
+- 壓縮規則（.fxscale）
+- 粒子詞典（.fxjson）
+- 代碼範例（.pcode）
+- 封包種子與邏輯圖譜（.fltnz, .flynz.map）
+
+詳細說明請參考 [語言規格索引](language_spec/INDEX.md)。
+
+## 授權
+
+FlowAgent 專用任務系統內部模組
+粒子語言規格遵循 CPLL 授權條款（© MR.liou）

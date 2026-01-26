@@ -1,0 +1,51 @@
+task_id: flowos-neural-link
+language: typescript
+description: FlowOS Edge Worker - Neural Link & Gate System Implementation
+commit_reference: https://github.com/dofaromg/flow-tasks/commit/b6725bd4e5b41231a0eb47cc9b14fd058da9a890
+target_directory: flowos/src/
+components:
+  - core/neural_link.ts         # Neural Link & Particle Neural Link classes
+  - core/config.ts              # Config Manager with listener pattern
+  - core/gate.ts                # Flow Gate & Gate Engine for traffic control
+  - adapters/envoy.ts           # Envoy adapter interface
+  - adapters/jetstream.ts       # JetStream adapter interface
+  - adapters/k8s.ts             # Kubernetes adapter interface
+  - adapters/index.ts           # Adapter exports
+  - index.ts                    # Main worker entry point
+  - ../wrangler.toml            # Worker configuration
+features:
+  - neural_link_system          # Event-driven neural link with packet transmission
+  - particle_neural_link        # GitHub API integration & internal service communication
+  - config_management           # Dynamic configuration with subscription pattern
+  - traffic_gate                # Request filtering and throttling
+  - adapter_interfaces          # Multi-platform adapter interfaces (Envoy, JetStream, K8s)
+  - edge_worker_entry          # Unified ASI Node entry point
+  - github_integration         # GitHub API calls with authentication
+  - durable_object_support     # Cloudflare Durable Objects integration
+architecture:
+  pattern: event_driven_microservices
+  runtime: cloudflare_workers
+  integration:
+    - github_api
+    - cloudflare_kv
+    - cloudflare_r2
+    - cloudflare_d1
+    - cloudflare_durable_objects
+implementation_details:
+  neural_link:
+    - "Event handler registration with on/off methods"
+    - "Async packet transmission to all registered handlers"
+    - "Packet structure: id, type, payload, context, createdAt"
+  particle_neural_link:
+    - "Internal communication via Durable Object stubs"
+    - "External GitHub API calls with Bearer token auth"
+    - "Node ID tracking for distributed systems"
+  config_manager:
+    - "Snapshot-based configuration storage"
+    - "Change notification to subscribers"
+    - "Async reload with custom loader functions"
+  flow_gate:
+    - "Pluggable gate check registration"
+    - "Sequential evaluation with early exit"
+    - "Support for throttling and reason reporting"
+philosophy: 怎麼過去，就怎麼回來  # "How you went, is how you return" - roundtrip integrity principle
