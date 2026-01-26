@@ -1,0 +1,13 @@
+name: RootLaw Symbiosis Audit
+on: [push]
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify RootLaw Integrity
+        run: |
+          # 檢查 1-42 條律法是否完整（防止人為刪除）
+          grep -c "第.*條" RootLaw_Package_v1.midlock/RootLaws_v1.md
+          # 執行 symbiosis_check
+          python3 scripts/symbiosis_audit.py --map RootLaw_Package_v1.midlock/Absorption_Map.md
