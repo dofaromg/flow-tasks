@@ -1,62 +1,20 @@
-// Test for FlowOS Neural Link System (v4.0.0)
-// This file validates the core neural link functionality
+import { FlowOS } from './src';
 
-import { NeuralLink, ParticleNeuralLink, NeuralLinkPacket } from './src/core/neural_link';
-import { ConfigManager } from './src/core/config';
-import { FlowGate, GateEngine } from './src/core/gate';
+const flow = new FlowOS();
+const context = flow.createContext({ persona: 'demo-persona' });
 
-const FLOWOS_VERSION = '4.0.0';
+const particle = flow.particles.createParticle('Hello FlowOS', context, 'intro message');
+flow.particles.collapseParticle(particle.id, 'demo');
 
-async function runTests() {
-  // Test NeuralLink event system
-  const link = new NeuralLink();
-  const packets: NeuralLinkPacket[] = [];
+const conversation = flow.conversations.startConversation(context);
+flow.conversations.appendMessage(conversation.id, 'user', 'Hello there', context);
 
-  link.on('test-event', async (packet) => {
-    packets.push(packet);
-    console.log('Received packet:', packet.type);
-  });
+const project = flow.projects.registerProject('FlowOS Sandbox', 'Playground for FlowOS runtime');
+const artifact = flow.artifacts.registerArtifact(project.id, 'Transcript');
+flow.artifacts.addVersion(artifact.id, 'v1');
 
-  await link.transmit('test-event', { message: 'Hello Neural Link' });
+flow.memory.remember('project', 'first-run', { project: project.name, conversation: conversation.id });
 
-  if (packets.length > 0 && packets[0].type === 'test-event') {
-    console.log('✓ NeuralLink event transmission working');
-  } else {
-    console.error('✗ NeuralLink test failed');
-  }
-
-  // Test ConfigManager
-  const config = new ConfigManager({ version: FLOWOS_VERSION });
-  config.update({ philosophy: '怎麼過去，就怎麼回來' });
-  const version = config.get('version');
-  const philosophy = config.get('philosophy');
-
-  if (version === FLOWOS_VERSION && philosophy === '怎麼過去，就怎麼回來') {
-    console.log('✓ ConfigManager working');
-  } else {
-    console.error('✗ ConfigManager test failed');
-  }
-
-  // Test GateEngine
-  const gate = new GateEngine();
-  gate.register((payload) => {
-    if (payload.blocked) {
-      return { allowed: false, reason: 'Test block' };
-    }
-    return null;
-  });
-
-  const allowedDecision = gate.evaluate({ test: true });
-  const blockedDecision = gate.evaluate({ blocked: true });
-
-  if (allowedDecision.allowed && !blockedDecision.allowed) {
-    console.log('✓ GateEngine working');
-  } else {
-    console.error('✗ GateEngine test failed');
-  }
-
-  console.log(`\nFlowOS Neural Link System v${FLOWOS_VERSION} - Tests Complete`);
-  console.log('Philosophy: 怎麼過去，就怎麼回來');
-}
-
-runTests().catch(console.error);
+console.log('Flow snapshot:', JSON.stringify(flow.snapshot(), null, 2));
+console.log('Chain digest:', flow.chain.digest());
+console.log('FlowLaw:', flow.enforce());

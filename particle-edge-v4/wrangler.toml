@@ -1,0 +1,41 @@
+name = "particle-edge-v4"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+VERSION = "4.0.0"
+ORIGIN = "MrLiouWord"
+
+# KV Namespaces for particle storage and authentication
+[[kv_namespaces]]
+binding = "PARTICLE_VAULT"
+id = "particle_vault_id"
+preview_id = "particle_vault_preview_id"
+
+[[kv_namespaces]]
+binding = "AUTH_VAULT"
+id = "auth_vault_id"
+preview_id = "auth_vault_preview_id"
+
+# R2 Bucket for particle data storage
+[[r2_buckets]]
+binding = "PARTICLES"
+bucket_name = "mrliouword-particles"
+preview_bucket_name = "mrliouword-particles-preview"
+
+# D1 Database for structured data
+[[d1_databases]]
+binding = "DB"
+database_name = "particle_edge_db"
+database_id = "particle_edge_db_id"
+
+# Durable Objects for stateful operations
+[[durable_objects.bindings]]
+name = "GATE_ENGINE"
+class_name = "GateEngine"
+script_name = "particle-edge-v4"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["GateEngine"]

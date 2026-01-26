@@ -1,3 +1,12 @@
+/**
+ * Configuration Manager
+ * 
+ * Manages runtime configuration with change notification support.
+ * Currently not integrated into the main worker, but available for future use.
+ * 
+ * TODO: Integrate ConfigManager into main application flow if needed
+ */
+
 export type ConfigSnapshot = Record<string, unknown>;
 
 export type ConfigListener = (next: ConfigSnapshot, previous: ConfigSnapshot) => void;
@@ -31,13 +40,6 @@ export class ConfigManager {
     return () => this.listeners.delete(listener);
   }
 
-  /**
-   * Reload configuration from a custom loader function.
-   * Note: This method merges the loaded config with existing values using the spread operator.
-   * If you need to replace the entire configuration, call update with the complete new config.
-   * @param loader - Async or sync function that returns a ConfigSnapshot
-   * @returns The updated configuration snapshot
-   */
   async reload(loader: () => ConfigSnapshot | Promise<ConfigSnapshot>): Promise<ConfigSnapshot> {
     const next = await loader();
     this.update(next);

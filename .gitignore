@@ -252,5 +252,3 @@ particle_core/cache/
 /data/github_export.json
 /data/snapshots/*.json
 flowos/dist/
-flowos/src/**/*.js
-flowos/test.js
