@@ -77,8 +77,8 @@ class TaskProcessor:
                     "status": "passed",
                     "message": f"Target directory exists: {target_file}"
                 })
-                # Count files in directory
-                file_count = len(list(target_path.rglob("*")))
+                # Count files in directory (using generator for efficiency)
+                file_count = sum(1 for _ in target_path.rglob("*"))
                 result["metrics"]["files_checked"] = file_count
                 result["status"] = "passed"
             else:
@@ -151,7 +151,7 @@ class TaskProcessor:
         processing_start = time.time()
         
         # Use more specific glob pattern to avoid filtering
-        task_files = list(self.tasks_dir.glob("2025-*.yaml"))
+        task_files = sorted(self.tasks_dir.glob("2025-*.yaml"))
         
         summary = {
             "processing_time": datetime.now().isoformat(),

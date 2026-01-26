@@ -257,3 +257,12 @@ cluster/configs/google_templates/
 /data/github_export.json
 /data/snapshots/*.json
 flowos/dist/
+
+# Repository stability reports
+repo_stability_report_*.md
+
+# Cloud sync memory and deployed files
+.cloud_sync_memory/
+deployed/
+sandbox/
+cloud_spaces_sync.yaml
