@@ -247,10 +247,18 @@ class RAGStrategy(BaseStrategy):
             query_embedding = self.embedding_model.encode(query).tolist()
             doc_embedding = self.embeddings[doc_data['embedding_index']]
             
-            # Calculate cosine similarity
-            dot_product = sum(a * b for a, b in zip(query_embedding, doc_embedding))
-            query_norm = math.sqrt(sum(a ** 2 for a in query_embedding))
-            doc_norm = math.sqrt(sum(b ** 2 for b in doc_embedding))
+            # Calculate cosine similarity in a single pass
+            dot_product = 0.0
+            query_norm = 0.0
+            doc_norm = 0.0
+            
+            for a, b in zip(query_embedding, doc_embedding):
+                dot_product += a * b
+                query_norm += a * a
+                doc_norm += b * b
+            
+            query_norm = math.sqrt(query_norm)
+            doc_norm = math.sqrt(doc_norm)
             
             if query_norm > 0 and doc_norm > 0:
                 return dot_product / (query_norm * doc_norm)

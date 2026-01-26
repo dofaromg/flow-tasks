@@ -1,39 +1,14 @@
 {
-  "processing_time": "2025-12-19T15:16:19.469174",
+  "processing_time": "2026-01-26T05:46:58.679045",
   "total_tasks": 2,
   "passed": 2,
   "failed": 0,
   "warnings": 0,
   "tasks": [
     {
-      "task_id": "particle-language-core",
-      "task_name": "Unknown Task",
-      "validation_time": "2025-12-19T15:16:19.471212",
-      "status": "passed",
-      "checks": [
-        {
-          "check": "directory_exists",
-          "status": "passed",
-          "message": "Target directory exists: particle_core/"
-        }
-      ],
-      "errors": [],
-      "warnings": [],
-      "metrics": {
-        "execution_time_ms": 0.66,
-        "files_checked": 67,
-        "lines_of_code": 0
-      },
-      "metadata": {
-        "description": "MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統",
-        "priority": "medium",
-        "tags": []
-      }
-    },
-    {
       "task_id": "hello-world-api",
       "task_name": "Unknown Task",
-      "validation_time": "2025-12-19T15:16:19.472599",
+      "validation_time": "2026-01-26T05:46:58.679807",
       "status": "passed",
       "checks": [
         {
@@ -50,7 +25,7 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 103.5,
+        "execution_time_ms": 178.01,
         "files_checked": 1,
         "lines_of_code": 36
       },
@@ -59,13 +34,38 @@
         "priority": "medium",
         "tags": []
       }
+    },
+    {
+      "task_id": "particle-language-core",
+      "task_name": "Unknown Task",
+      "validation_time": "2026-01-26T05:46:58.860115",
+      "status": "passed",
+      "checks": [
+        {
+          "check": "directory_exists",
+          "status": "passed",
+          "message": "Target directory exists: particle_core/"
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "metrics": {
+        "execution_time_ms": 0.87,
+        "files_checked": 93,
+        "lines_of_code": 0
+      },
+      "metadata": {
+        "description": "MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統",
+        "priority": "medium",
+        "tags": []
+      }
     }
   ],
   "overall_metrics": {
-    "total_execution_time_ms": 107.32,
-    "total_files_checked": 68,
+    "total_execution_time_ms": 182.27,
+    "total_files_checked": 94,
     "total_lines_of_code": 36,
-    "average_task_time_ms": 53.66
+    "average_task_time_ms": 91.13
   },
   "summary": {
     "pass_rate": 100.0,

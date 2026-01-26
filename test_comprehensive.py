@@ -36,8 +36,8 @@ def test_task_processor():
     assert results_dir.exists(), "Results directory missing"
     print(f"✓ Results directory exists: {results_dir}")
 
-    # List result files
-    result_files = list(results_dir.glob("*.json"))
+    # List result files (avoid unnecessary list conversion)
+    result_files = sorted(results_dir.glob("*.json"))
     print(f"✓ Found {len(result_files)} result files:")
     for result_file in result_files:
         print(f"  - {result_file.name}")
