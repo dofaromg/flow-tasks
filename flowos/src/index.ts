@@ -105,6 +105,7 @@ export default {
       }
 
       // VCS - Defensive Commit Handler with GitHub sync
+      // Note: This route is protected by the authentication check above (line 85-92)
       if (path === '/vcs/commit_defensive' && request.method === 'POST') {
         return handleVCSCommit(request, env);
       }

@@ -35,6 +35,9 @@ export async function handleVCSCommit(
   if (env.ENABLE_GITHUB_SYNC) {
     // Use configured repo or default to mrliou/particles
     const repo = env.GITHUB_REPO || 'mrliou/particles';
+    // Note: Using git/blobs endpoint for defensive particle synchronization
+    // This creates a blob object in GitHub's object database without committing
+    // Full commit workflow would use additional endpoints (trees, commits, refs)
     const repoPath = `/repos/${repo}/git/blobs`;
     
     try {
