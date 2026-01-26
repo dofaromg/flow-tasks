@@ -1,32 +1,28 @@
 import { ParticleDefensiveClient } from './core/defensive_client';
 
-export interface Env {
-  GITHUB_TOKEN?: string;
-  ENABLE_GITHUB_SYNC?: boolean;
-  GITHUB_REPO?: string; // Format: "owner/repo" (e.g., "mrliou/particles")
-}
-
-interface Request {
-  json(): Promise<unknown>;
-}
-
-interface ResponseInit {
-  status?: number;
-  headers?: Record<string, string>;
-}
-
-interface Response {
-  json(): Promise<unknown>;
-}
-
-declare const Response: {
-  json(data: unknown, init?: ResponseInit): Response;
-};
-
 /**
  * Enhanced VCS Commit Handler with configurable repository
+ * 
+ * This handler provides defensive GitHub synchronization for VCS commits.
+ * It can be used via the `/vcs/commit_defensive` route in the main application.
+ * 
+ * Environment variables required:
+ * - GITHUB_TOKEN: GitHub personal access token for API authentication
+ * - ENABLE_GITHUB_SYNC: Set to true to enable GitHub synchronization
+ * - GITHUB_REPO: Repository in format "owner/repo" (defaults to "mrliou/particles")
+ * 
+ * @param request - The incoming request with commit data
+ * @param env - Environment configuration including GitHub token and sync settings
+ * @returns A Response indicating success or failure
  */
-export async function handleVCSCommit(request: Request, env: Env): Promise<Response> {
+export async function handleVCSCommit(
+  request: { json(): Promise<unknown> },
+  env: {
+    GITHUB_TOKEN?: string;
+    ENABLE_GITHUB_SYNC?: boolean;
+    GITHUB_REPO?: string;
+  }
+): Promise<Response> {
   const defensiveClient = new ParticleDefensiveClient({
     baseUrl: 'https://api.github.com',
     token: env.GITHUB_TOKEN,
@@ -39,6 +35,9 @@ export async function handleVCSCommit(request: Request, env: Env): Promise<Respo
   if (env.ENABLE_GITHUB_SYNC) {
     // Use configured repo or default to mrliou/particles
     const repo = env.GITHUB_REPO || 'mrliou/particles';
+    // Note: Using git/blobs endpoint for defensive particle synchronization
+    // This creates a blob object in GitHub's object database without committing
+    // Full commit workflow would use additional endpoints (trees, commits, refs)
     const repoPath = `/repos/${repo}/git/blobs`;
     
     try {

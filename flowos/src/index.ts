@@ -3,12 +3,16 @@
 
 import { ParticleNeuralLink } from './core/neural_link';
 import { GateEngine } from './core/gate';
+import { handleVCSCommit } from './vcs-gate-unified';
 
 // Export FlowOS class for backward compatibility
 export { FlowOS } from './flowos';
 
 // Export defensive client
 export * from './core/defensive_client';
+
+// Export VCS gate handler
+export { handleVCSCommit } from './vcs-gate-unified';
 
 // ============================================
 // 1. Environment Definition (per wrangler 2.json)
@@ -24,6 +28,8 @@ export interface Env {
   // Secrets & Vars
   MASTER_KEY: string;
   GITHUB_TOKEN?: string;
+  ENABLE_GITHUB_SYNC?: boolean;
+  GITHUB_REPO?: string; // Format: "owner/repo" (e.g., "mrliou/particles")
   VERSION: string;
   ORIGIN: string;
 }
@@ -96,6 +102,12 @@ export default {
           }, { status: 503 });
         }
         return Response.json({ success: true, github_data: githubData });
+      }
+
+      // VCS - Defensive Commit Handler with GitHub sync
+      // Note: This route is protected by the authentication check above (line 85-92)
+      if (path === '/vcs/commit_defensive' && request.method === 'POST') {
+        return handleVCSCommit(request, env);
       }
 
       if (path.startsWith('/vcs/')) {
