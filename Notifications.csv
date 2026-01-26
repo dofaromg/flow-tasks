@@ -1,0 +1,5 @@
+﻿Date,Criticality,Description,Group,Category
+"Jan 9, 2025",Medium,"
+Welcome to the HPE Support Center. For the latest updates, refer to the https://support.hpe.com/hpsc/doc/public/display?docId=a00040470en_us (EN) or view the Support Center https://support.hpe.com/hpesc/public/videoDisplay?videoId=vpsg00004759en_us.",-,System
+"Nov 18, 2024",High,New feature alert: Group admins can move individual https://support.hpe.com/hpesc/public/docDisplay?docId=cep-help_en_us&page=GUID-203780B5-A9A2-4BE4-8652-755691B5E571.html and https://support.hpe.com/hpesc/public/docDisplay?docId=cep-help_en_us&page=GUID-E45EE5F8-4A30-49E5-B0C1-2B8852A94200.html between groups for improved case visibility and collaboration.,-,System
+"Feb 20, 2024",High,HPE Complete Care customers may now use the HPE Care Concierge virtual agent to order self-repair replacement parts for failed hard disk drives in ProLiant ML/BL/DL series products. Important note: Spares Management Service (SMS) customers should continue to use SMS for replacement parts and not the virtual agent.,-,System
