@@ -1,0 +1,47 @@
+{
+  "version": "1.0",
+  "description": "RootLaw Package 批次部署配置 - 定義要部署律法套件的目標倉庫",
+  "repositories": [
+    {
+      "name": "example-repo-1",
+      "url": "https://github.com/username/repository1.git",
+      "branch": "main",
+      "enabled": true,
+      "commit": false,
+      "push": false,
+      "description": "範例倉庫 1 - 啟用但不自動提交"
+    },
+    {
+      "name": "example-repo-2",
+      "url": "https://github.com/username/repository2.git",
+      "branch": "develop",
+      "enabled": false,
+      "commit": false,
+      "push": false,
+      "description": "範例倉庫 2 - 已停用"
+    },
+    {
+      "name": "production-repo",
+      "url": "https://github.com/username/production-repo.git",
+      "branch": "main",
+      "enabled": true,
+      "commit": true,
+      "push": false,
+      "description": "生產環境倉庫 - 自動提交但不推送（需手動審核）"
+    }
+  ],
+  "settings": {
+    "auto_backup": true,
+    "backup_prefix": ".rootlaw_backup_",
+    "default_branch": "main",
+    "default_commit": false,
+    "default_push": false
+  },
+  "notes": [
+    "enabled: true/false - 是否啟用此倉庫的部署",
+    "commit: true/false - 是否自動提交變更",
+    "push: true/false - 是否自動推送到遠端（需要認證）",
+    "建議先設定 commit=false, push=false 進行測試",
+    "確認無誤後再啟用自動提交和推送"
+  ]
+}
