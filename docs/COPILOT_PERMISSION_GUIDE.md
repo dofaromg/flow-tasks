@@ -8,6 +8,49 @@ If you see an error message saying "the assistant doesn't have permission to use
 
 ---
 
+## 🔧 自託管開發模式 / Self-Hosted Development Mode
+
+**適用於自己部署系統的用戶 / For self-deployed system users**
+
+如果您是自行部署本系統，可以使用開發模式配置來移除所有權限限制並開啟全部功能：
+
+### 快速啟用 / Quick Setup
+
+```bash
+# 1. 使用開發模式配置
+export FLOW_CONFIG=config/dev-mode.yaml
+
+# 2. 啟動服務（無限制模式）
+python app.py
+
+# 或使用 uvicorn
+uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### 配置文件位置 / Config File Location
+
+- **開發模式配置**: `config/dev-mode.yaml`
+- **生產模式配置**: `config.sample.yaml`
+
+### 開發模式功能 / Dev Mode Features
+
+| 功能 / Feature | 狀態 / Status |
+|----------------|---------------|
+| 權限檢查 / Permission Check | ❌ 已關閉 |
+| 速率限制 / Rate Limiting | ❌ 已關閉 |
+| 認證要求 / Authentication | ❌ 已關閉 |
+| 所有工具存取 / All Tools Access | ✅ 已開啟 |
+| 調試模式 / Debug Mode | ✅ 已開啟 |
+| 無限資源 / Unlimited Resources | ✅ 已開啟 |
+
+### ⚠️ 注意事項 / Important Notes
+
+1. **僅限開發環境**: 開發模式配置會關閉所有安全檢查，切勿用於生產環境！
+2. **資料安全**: 開發模式下無輸入驗證，請確保環境隔離
+3. **切換到生產**: 部署時請使用 `config.sample.yaml` 作為基礎
+
+---
+
 ## 重要連結 / Important Links
 
 ### 🔑 GitHub Copilot 訂閱管理

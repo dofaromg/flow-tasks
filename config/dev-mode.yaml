@@ -1,0 +1,138 @@
+# 開發模式配置 / Development Mode Configuration
+# 此配置移除所有權限限制，開啟全部功能
+# This configuration removes all permission restrictions and enables all features
+#
+# ⚠️ 警告 / WARNING: 
+# 此配置僅供開發和測試環境使用，不應用於生產環境！
+# This configuration is for development and testing only, NOT for production!
+
+version: "1.0"
+mode: development
+environment: dev
+
+# 權限設定 / Permission Settings
+# 開發模式：無限制 / Dev mode: No restrictions
+permissions:
+  enabled: false  # 關閉權限檢查 / Disable permission checks
+  bypass_all: true  # 繞過所有限制 / Bypass all restrictions
+  
+  # 功能權限 / Feature Permissions
+  features:
+    code_completion: true
+    chat: true
+    coding_agent: true
+    custom_instructions: true
+    knowledge_base: true
+    file_operations: true
+    network_access: true
+    shell_execution: true
+    database_access: true
+
+# 功能開關 / Feature Toggles
+# 全開模式 / All features enabled
+features:
+  all_enabled: true
+  
+  # 核心功能 / Core Features
+  particle_core:
+    enabled: true
+    unrestricted: true
+    debug_mode: true
+  
+  # API 功能 / API Features
+  api:
+    enabled: true
+    rate_limiting: false  # 關閉速率限制 / Disable rate limiting
+    authentication: false  # 關閉認證 / Disable authentication (dev only!)
+    cors_all_origins: true  # 允許所有來源 / Allow all origins
+  
+  # 儲存功能 / Storage Features
+  storage:
+    enabled: true
+    unlimited_quota: true
+    all_formats_allowed: true
+  
+  # 網路功能 / Network Features
+  network:
+    enabled: true
+    external_access: true
+    proxy_bypass: true
+
+# 安全設定 / Security Settings
+# ⚠️ 開發模式專用，生產環境請勿使用！
+security:
+  strict_mode: false
+  sandbox_mode: false
+  audit_logging: false  # 關閉審計日誌 / Disable audit logging in dev
+  input_validation: false  # 關閉輸入驗證 / Disable input validation in dev
+
+# 調試設定 / Debug Settings
+debug:
+  enabled: true
+  verbose_logging: true
+  stack_traces: true
+  performance_metrics: true
+
+# 資源限制 / Resource Limits
+# 開發模式：無限制 / Dev mode: Unlimited
+resources:
+  cpu_limit: null  # 無限制 / No limit
+  memory_limit: null  # 無限制 / No limit
+  storage_limit: null  # 無限制 / No limit
+  request_timeout: null  # 無超時 / No timeout
+  max_concurrent_requests: null  # 無限制 / No limit
+
+# Agent 設定 / Agent Settings
+agent:
+  enabled: true
+  unrestricted_tools: true  # 允許使用所有工具 / Allow all tools
+  allowed_actions:
+    - read
+    - write
+    - execute
+    - delete
+    - create
+    - modify
+    - deploy
+    - admin
+
+# 整合設定 / Integration Settings
+integrations:
+  github:
+    enabled: true
+    full_access: true
+  notion:
+    enabled: true
+    full_access: true
+  mongodb:
+    enabled: true
+    admin_access: true
+  external_apis:
+    enabled: true
+    unrestricted: true
+
+# 開發者工具 / Developer Tools
+dev_tools:
+  hot_reload: true
+  auto_restart: true
+  live_debugging: true
+  memory_profiling: true
+  request_inspector: true
+
+# 如何使用 / How to Use
+# 
+# 1. 複製此文件到您的配置目錄
+#    Copy this file to your config directory
+#
+# 2. 設定環境變數 / Set environment variable:
+#    export FLOW_CONFIG=config/dev-mode.yaml
+#
+# 3. 啟動服務 / Start services:
+#    python -c "import yaml; print(yaml.safe_load(open('config/dev-mode.yaml')))"
+#
+# 4. 或在程式碼中載入 / Or load in code:
+#    with open('config/dev-mode.yaml', 'r') as f:
+#        config = yaml.safe_load(f)
+#        if config['mode'] == 'development':
+#            # 開發模式邏輯 / Dev mode logic
+#            pass
