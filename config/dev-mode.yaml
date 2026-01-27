@@ -122,15 +122,20 @@ dev_tools:
 # 如何使用 / How to Use
 # 
 # 1. 複製此文件到您的配置目錄
-#    Copy this file to your config directory
+#    Copy this file to your config directory:
+#    cp config/dev-mode.yaml config.yaml
 #
 # 2. 設定環境變數 / Set environment variable:
 #    export FLOW_CONFIG=config/dev-mode.yaml
 #
-# 3. 啟動服務 / Start services:
-#    python -c "import yaml; print(yaml.safe_load(open('config/dev-mode.yaml')))"
+# 3. 啟動 Flask API 服務 / Start Flask API service:
+#    python src_server_api_Version3.py
 #
-# 4. 或在程式碼中載入 / Or load in code:
+# 4. 或使用 CLI 工具 / Or use CLI tool:
+#    python cli.py --config config/dev-mode.yaml
+#
+# 5. 在程式碼中載入配置 / Load config in code:
+#    import yaml
 #    with open('config/dev-mode.yaml', 'r') as f:
 #        config = yaml.safe_load(f)
 #        if config['mode'] == 'development':

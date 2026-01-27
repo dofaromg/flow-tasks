@@ -17,14 +17,17 @@ If you see an error message saying "the assistant doesn't have permission to use
 ### 快速啟用 / Quick Setup
 
 ```bash
-# 1. 使用開發模式配置
+# 1. 複製開發模式配置（如需自訂）
+cp config/dev-mode.yaml config.yaml
+
+# 2. 設定環境變數
 export FLOW_CONFIG=config/dev-mode.yaml
 
-# 2. 啟動服務（無限制模式）
-python app.py
+# 3. 啟動 Flask API 服務（無限制模式）
+python src_server_api_Version3.py
 
-# 或使用 uvicorn
-uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+# 或使用 CLI 工具
+python cli.py --config config/dev-mode.yaml
 ```
 
 ### 配置文件位置 / Config File Location
