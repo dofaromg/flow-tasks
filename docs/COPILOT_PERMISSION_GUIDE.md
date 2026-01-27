@@ -130,25 +130,21 @@ If you see an error message saying "the assistant doesn't have permission to use
 如果您想在本地使用 Copilot 功能：
 
 ### VS Code
-```bash
-# 1. 安裝 GitHub Copilot 擴展
-# 在 VS Code 中搜索 "GitHub Copilot" 並安裝
+1. 安裝 GitHub Copilot 擴展
+   - 在 VS Code 中搜索 "GitHub Copilot" 並安裝
 
-# 2. 登入 GitHub 帳戶
-# 點擊 VS Code 左下角的帳戶圖標
-# 選擇「使用 GitHub 登入」
+2. 登入 GitHub 帳戶
+   - 點擊 VS Code 左下角的帳戶圖標
+   - 選擇「使用 GitHub 登入」
 
-# 3. 確認 Copilot 已啟用
-# 查看 VS Code 右下角是否顯示 Copilot 圖標
-```
+3. 確認 Copilot 已啟用
+   - 查看 VS Code 右下角是否顯示 Copilot 圖標
 
 ### JetBrains IDEs
-```bash
-# 1. 前往 Settings > Plugins
-# 2. 搜索 "GitHub Copilot"
-# 3. 安裝並重啟 IDE
-# 4. 登入您的 GitHub 帳戶
-```
+1. 前往 Settings > Plugins
+2. 搜索 "GitHub Copilot"
+3. 安裝並重啟 IDE
+4. 登入您的 GitHub 帳戶
 
 ---
 
