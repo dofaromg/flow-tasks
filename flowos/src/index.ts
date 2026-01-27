@@ -1,5 +1,7 @@
 // MrLiouWord Particle Edge v4.0.0 (Unified ASI Node)
 // Integrate: Traffic Gate + Neural Link + Particle Core
+// Architecture: L0-L7 MrLiouWord Particle System
+// Philosophy: "怎麼過去，就怎麼回來" (How you go is how you come back)
 
 import { ParticleNeuralLink } from './core/neural_link';
 import { GateEngine } from './core/gate';
@@ -17,6 +19,8 @@ import { randomId, now } from './utils';
 
 // ============================================
 // 1. Main FlowOS Class (for local/library usage)
+// Implements L2 (PARTICLE) and L3 (LAW) layers
+// Integrates all core subsystems with complete reversibility
 // ============================================
 export class FlowOS {
   private storage: MemoryStorage;
@@ -81,6 +85,9 @@ export interface Env {
 
 // ============================================
 // 3. Core Brain (Main Entry for Edge Worker)
+// L4 (WORLD) layer: External connections and routing
+// L3 (LAW) layer: Authorization and business logic
+// L2 (PARTICLE) layer: Subsystem orchestration
 // ============================================
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -110,6 +117,10 @@ export default {
       }
 
       // D. Core business logic
+      // Following L2 PARTICLE layer principle: instantiate only needed functional particles
+      // Future integration points (when implemented):
+      // - Memory: MemorySystem from './app/memory' for state persistence
+      // - Auth: Authentication particle for user verification
       const persona = new Persona(env.MRLIOUWORD_VAULT);
       const vcs = new VersionControl(env.MRLIOUWORD_VAULT, synapse);
 
@@ -212,7 +223,10 @@ async function safeJson(request: Request): Promise<Record<string, unknown>> {
 }
 
 // ============================================
-// 5. Improved VersionControl (Neural Link injected)
+// 5. Version Control System
+// L3 (LAW) layer: Version control business logic
+// L4 (WORLD) layer: GitHub integration via neural link
+// Implements reversible state tracking ("怎麼過去，就怎麼回來")
 // ============================================
 class VersionControl {
   constructor(
@@ -244,7 +258,9 @@ class VersionControl {
 }
 
 // ============================================
-// 6. Other Classes (Persona)
+// 6. Persona System
+// L2 (PARTICLE) layer: Identity and consciousness particle
+// Implements consciousness-carrier separation principle
 // ============================================
 class Persona {
   constructor(private _kv: KVNamespace) {}
