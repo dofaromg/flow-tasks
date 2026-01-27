@@ -41,10 +41,17 @@ export async function handleVCSCommit(
     const repoPath = `/repos/${repo}/git/blobs`;
     
     try {
-      await defensiveClient.callGitHub(repoPath, 'POST', {
+      const result = await defensiveClient.callGitHub(repoPath, 'POST', {
         content: JSON.stringify(body.files ?? {}),
         encoding: 'utf-8',
       });
+      
+      // Check if result is an error object
+      if (result && typeof result === 'object' && 'error' in result) {
+        const errorData = result as { error: string; status: number; details?: string };
+        console.warn('GitHub sync failed:', errorData);
+        // Continue execution - particle system remains intact
+      }
     } catch (error) {
       console.warn('GitHub sync failed, but particle system remains intact:', error);
     }

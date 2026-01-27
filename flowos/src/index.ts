@@ -94,13 +94,18 @@ export default {
       // VCS - Sync GitHub
       if (path === '/vcs/sync_github') {
         const githubData = await synapse.fireExternal('/user/repos', 'GET');
-        if (githubData === null) {
+        
+        // Check if response is an error object
+        if (githubData && typeof githubData === 'object' && 'error' in githubData) {
+          const errorData = githubData as { error: string; status: number; details?: string };
           return Response.json({ 
             success: false, 
-            error: 'Failed to sync with GitHub',
-            message: 'GitHub API returned an error or is unavailable'
-          }, { status: 503 });
+            error: errorData.error,
+            details: errorData.details,
+            message: 'Failed to sync with GitHub'
+          }, { status: errorData.status || 503 });
         }
+        
         return Response.json({ success: true, github_data: githubData });
       }
 
@@ -195,6 +200,19 @@ async function safeJson(request: Request): Promise<Record<string, unknown>> {
 // ============================================
 // 4. VersionControl (with Neural Link integration)
 // ============================================
+/**
+ * Version Control system with GitHub integration
+ * 
+ * Note: The add, commit, and status methods are stub implementations that provide
+ * the VCS interface but don't yet interact with actual KV storage. These stubs
+ * allow the application to accept VCS operations without failing, while the actual
+ * implementation is being developed.
+ * 
+ * TODO: Implement actual VCS logic when KV storage patterns are finalized
+ * - Store files in KV with path as key
+ * - Create commit records with timestamps and persona info
+ * - Track HEAD and branch references
+ */
 class VersionControl {
   constructor(
     private kv: KVNamespace,
@@ -241,9 +259,22 @@ class VersionControl {
 
 // ============================================
 // 5. Support Classes (Memory, Persona, Auth)
-// Note: These are minimal stub implementations
-// Full implementation available via FlowOS class exported above
 // ============================================
+/**
+ * Stub implementations for core FlowOS services
+ * 
+ * These classes provide minimal implementations to support the worker architecture.
+ * For full-featured implementations, use the FlowOS class exported from flowos.ts.
+ * 
+ * Memory: KV-based memory storage for conversation context and state
+ * TODO: Implement memory storage, retrieval, and archival patterns
+ * 
+ * Persona: KV-based persona storage for AI character definitions
+ * TODO: Implement persona CRUD operations and wake/sleep state management
+ * 
+ * Auth: KV-based authentication token storage
+ * TODO: Implement token generation, validation, and expiration
+ */
 class Memory {
   constructor(private kv: KVNamespace) {
     // TODO: Implement KV-based memory storage
@@ -273,9 +304,25 @@ class Auth {
   }
 }
 
-// Note: Worker runtime types are provided by @cloudflare/workers-types
-// The following types are minimal stubs for local development if the package is not installed
-// Consider installing @cloudflare/workers-types to avoid conflicts
+// ============================================
+// 6. Runtime Type Declarations
+// ============================================
+/**
+ * Cloudflare Workers Runtime Types
+ * 
+ * IMPORTANT: These are minimal type stubs for local development.
+ * 
+ * RECOMMENDED: Install @cloudflare/workers-types for production use:
+ *   npm install --save-dev @cloudflare/workers-types
+ * 
+ * Then add to tsconfig.json:
+ *   "compilerOptions": {
+ *     "types": ["@cloudflare/workers-types"]
+ *   }
+ * 
+ * This avoids type conflicts and ensures you have the latest Cloudflare Workers APIs.
+ * The stubs below are provided only as fallback for environments without the package.
+ */
 
 // Minimal type stubs (use @cloudflare/workers-types in production)
 interface KVNamespace {
