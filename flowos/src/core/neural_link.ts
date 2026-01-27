@@ -1,18 +1,3 @@
-import { FlowContext } from '../types';
-import { now, randomId } from '../utils';
-
-export type NeuralLinkPayload = Record<string, unknown>;
-
-export interface NeuralLinkPacket {
-  id: string;
-  type: string;
-  payload: NeuralLinkPayload;
-  context?: FlowContext;
-  createdAt: number;
-}
-
-export type NeuralLinkHandler = (packet: NeuralLinkPacket) => void | Promise<void>;
-
 interface NeuralLinkEnv {
   GITHUB_TOKEN?: string;
 }
@@ -35,41 +20,6 @@ interface Response {
 
 declare function fetch(input: RequestInfo | string, init?: RequestInit): Promise<Response>;
 
-export class NeuralLink {
-  private readonly handlers = new Map<string, NeuralLinkHandler[]>();
-
-  on(type: string, handler: NeuralLinkHandler): () => void {
-    const existing = this.handlers.get(type) ?? [];
-    existing.push(handler);
-    this.handlers.set(type, existing);
-    return () => this.off(type, handler);
-  }
-
-  off(type: string, handler: NeuralLinkHandler): void {
-    const existing = this.handlers.get(type);
-    if (!existing) return;
-    this.handlers.set(
-      type,
-      existing.filter((candidate) => candidate !== handler),
-    );
-  }
-
-  async transmit(type: string, payload: NeuralLinkPayload, context?: FlowContext): Promise<NeuralLinkPacket> {
-    const packet: NeuralLinkPacket = {
-      id: randomId(),
-      type,
-      payload,
-      context,
-      createdAt: now(),
-    };
-    const handlers = this.handlers.get(type) ?? [];
-    for (const handler of handlers) {
-      await handler(packet);
-    }
-    return packet;
-  }
-}
-
 export class ParticleNeuralLink {
   constructor(
     private readonly env: NeuralLinkEnv,
@@ -88,11 +38,17 @@ export class ParticleNeuralLink {
     });
   }
 
+  /**
+   * Fire external API call with defensive error handling
+   * 
+   * @returns The response data on success, or an error object with details on failure
+   * @throws Error for non-400 failures that should be handled by caller
+   */
   async fireExternal(
     path: string,
     method: string,
     payload?: Record<string, unknown>,
-  ): Promise<unknown | null> {
+  ): Promise<unknown | { error: string; status: number; details?: string }> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       'X-GitHub-Api-Version': '2022-11-28',
@@ -121,11 +77,15 @@ export class ParticleNeuralLink {
           method,
           status: response.status
         });
-        return null;
+        return {
+          error: 'Bad Request',
+          status: 400,
+          details: 'GitHub API version may be unsupported or request is invalid'
+        };
       }
       
       if (!response.ok) {
-        // Try to get error details, but don't fail if response body is unavailable
+        // Try to get error details from response
         let errorDetail = 'Unknown error';
         try {
           const errorBody = await response.json() as { message?: string };
@@ -133,13 +93,24 @@ export class ParticleNeuralLink {
         } catch {
           errorDetail = `Status ${response.status}`;
         }
-        throw new Error(`External call failed: ${response.status} - ${errorDetail}`);
+        
+        // Return error object instead of throwing for better error handling
+        return {
+          error: `GitHub API Error: ${response.status}`,
+          status: response.status,
+          details: errorDetail
+        };
       }
       
       return await response.json();
     } catch (error) {
       console.error('External call error:', { path, method, error });
-      throw error;
+      // Return error object for network failures
+      return {
+        error: 'Network Error',
+        status: 0,
+        details: error instanceof Error ? error.message : String(error)
+      };
     }
   }
 }

@@ -3,14 +3,24 @@
  * 核心原則：鎖定時間維度，確保「怎麼過去，就怎麼回來」
  */
 
+/**
+ * Configuration for the defensive client
+ * 
+ * Recommended API versions:
+ * - GitHub: '2022-11-28' (locked for stability)
+ * - OpenAI: '2024-02-15-preview'
+ * - Internal: '4.0.0'
+ * 
+ * Note: Version strings can be overridden for testing, but production should use recommended values
+ */
 export interface ClientConfig {
   baseUrl: string;
   token?: string;
   externalVersions: {
-    github: '2022-11-28' | string; // Locked to 2022-11-28, but allows overrides if needed
-    openai?: '2024-02-15-preview' | string;
+    github: string; // Recommended: '2022-11-28'
+    openai?: string; // Recommended: '2024-02-15-preview'
   };
-  internalVersion: '4.0.0' | string; // Locked to 4.0.0, but allows other versions for testing
+  internalVersion: string; // Recommended: '4.0.0'
 }
 
 interface RequestInit {
@@ -41,12 +51,14 @@ export class ParticleDefensiveClient {
   /**
    * 安全地呼叫 GitHub API (用於 VCS 系統)
    * 應用了我們剛才討論的 Header 鎖定策略
+   * 
+   * @returns The response data on success, or an error object with details on failure
    */
   async callGitHub(
     endpoint: string,
     method: string = 'GET',
     body?: Record<string, unknown>,
-  ): Promise<unknown | null> {
+  ): Promise<unknown | { error: string; status: number; details?: string }> {
     const url = `${this.config.baseUrl}${endpoint}`;
     const headers: Record<string, string> = {
       'X-GitHub-Api-Version': this.config.externalVersions.github,
@@ -72,17 +84,38 @@ export class ParticleDefensiveClient {
         console.error(
           `⚠️ 警告：GitHub API 版本協定脫鉤。預期: ${this.config.externalVersions.github}`,
         );
-        throw new Error('External_System_Protocol_Mismatch');
+        return {
+          error: 'External_System_Protocol_Mismatch',
+          status: 400,
+          details: `Expected API version: ${this.config.externalVersions.github}`
+        };
       }
 
       if (!response.ok) {
-        throw new Error(`GitHub Error: ${response.status} ${response.statusText}`);
+        // Try to get error details from response
+        let errorDetail = 'Unknown error';
+        try {
+          const errorBody = await response.json() as { message?: string };
+          errorDetail = errorBody.message || JSON.stringify(errorBody);
+        } catch {
+          errorDetail = response.statusText || `Status ${response.status}`;
+        }
+        
+        return {
+          error: `GitHub Error: ${response.status}`,
+          status: response.status,
+          details: errorDetail
+        };
       }
 
       return await response.json();
     } catch (error) {
       console.error('粒子傳輸失敗 (GitHub):', error);
-      return null;
+      return {
+        error: 'Network Error',
+        status: 0,
+        details: error instanceof Error ? error.message : String(error)
+      };
     }
   }
 
