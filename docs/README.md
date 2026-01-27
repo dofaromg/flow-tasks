@@ -16,6 +16,7 @@ Key documents that are actively maintained and referenced:
 ### 🎯 Consolidated Guides (`docs/`)
 - `performance/PERFORMANCE_GUIDE.md` - Consolidated performance optimization guide
 - `implementation/IMPLEMENTATION_GUIDE.md` - Consolidated implementation documentation
+- `COPILOT_PERMISSION_GUIDE.md` - GitHub Copilot 權限升級指南 / Permission upgrade guide
 
 ### 📦 Archive (`docs/archive/`)
 Historical documents and superseded files:
