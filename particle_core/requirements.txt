@@ -1,4 +1,5 @@
 fastapi
 uvicorn
 rich
+pyyaml>=6.0
 anthropic

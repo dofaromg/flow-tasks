@@ -1,0 +1,4 @@
+context_dir: context
+snapshot_dir: snapshots
+seeds:
+  - particle_core/examples/memory_seed_example.json
