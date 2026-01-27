@@ -118,9 +118,9 @@ export default {
 
       // D. Core business logic
       // Following L2 PARTICLE layer principle: instantiate only needed functional particles
-      // Future integration points (when implemented):
-      // - Memory: MemorySystem from './app/memory' for state persistence
-      // - Auth: Authentication particle for user verification
+      // Future integration points for worker entrypoint (when implemented):
+      // - Memory: Worker-scoped MemorySystem instance for request-level state persistence
+      // - Auth: Authentication particle for user/token verification in worker context
       const persona = new Persona(env.MRLIOUWORD_VAULT);
       const vcs = new VersionControl(env.MRLIOUWORD_VAULT, synapse);
 
