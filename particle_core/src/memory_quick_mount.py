@@ -14,11 +14,10 @@ import argparse
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, Any, Optional
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
-from rich import print as rprint
 
 
 class ParticleCompressor:

@@ -8,14 +8,10 @@ Test suite for Memory Quick Mount module
 import unittest
 import json
 import os
+import sys
 import tempfile
 import shutil
 from pathlib import Path
-from datetime import datetime
-
-# 添加 src 目錄到路徑
-import sys
-sys.path.insert(0, str(Path(__file__).parent / 'src'))
 
 from memory_quick_mount import (
     ParticleCompressor,
