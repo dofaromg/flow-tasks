@@ -58,6 +58,8 @@ WARNING_COUNT=0
 
 # Process each codespace
 echo "$CODESPACES" | jq -r '.[] | @json' | while read -r codespace; do
+# Process each codespace using process substitution to avoid subshell
+while read -r codespace; do
     NAME=$(echo "$codespace" | jq -r '.name')
     REPO=$(echo "$codespace" | jq -r '.repository')
     STATE=$(echo "$codespace" | jq -r '.state')
@@ -92,6 +94,7 @@ echo "$CODESPACES" | jq -r '.[] | @json' | while read -r codespace; do
     
     echo ""
 done
+done < <(echo "$CODESPACES" | jq -r '.[] | @json')
 
 # Summary
 echo -e "\n${BLUE}=== Summary ===${NC}"

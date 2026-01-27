@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# C build artifacts (wire protocol)
+particle_core/src/wire/wire_test
+particle_core/src/wire/*.o
+
 # Distribution / packaging
 .Python
 build/
@@ -230,6 +234,16 @@ dict_seeds/
 # Memory Quick Mount (MQM) runtime directories
 context/
 snapshots/
+# Memory Quick Mount - Dynamic files
+particle_core/context/
+particle_core/snapshots/
+particle_core/backups/
+particle_core/cache/
+/tmp/test_context/
+/tmp/test_snapshots/
+/tmp/test_cache/
+/tmp/test_context/
+/tmp/test_snapshots/
 
 # Repository sync backups
 .sync_backups/
@@ -240,3 +254,4 @@ snapshots/
 /data/notion_export.json
 /data/github_export.json
 /data/snapshots/*.json
+flowos/dist/

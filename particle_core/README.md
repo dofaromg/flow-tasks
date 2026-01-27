@@ -12,6 +12,7 @@ MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行框架
 - **模組化設計**: 可擴展的邏輯模組與人格生成系統
 - **AI 人格套件**: 人格連結器與通用 ZIP 壓縮/解壓縮（無檔案名稱限制）
 - **字典種子記憶**: Fluin Dict Agent 字典種子記憶快照系統 (DictSeed.0003)
+- **對話知識提取器**: 對話分析、打包與知識圖譜生成系統 (v1.0) 🆕
 
 ## 快速開始
 
@@ -33,6 +34,9 @@ python src/ai_persona_toolkit.py
 
 # Fluin Dict Agent 字典種子
 python src/fluin_dict_agent.py
+
+# 對話知識提取器
+python particle_core/demo_conversation_extractor.py
 ```
 
 ## Fluin Dict Agent - 字典種子記憶快照 (新功能)
@@ -81,6 +85,57 @@ print(agent.compress_to_particle_notation())
 ```
 
 詳細說明請參閱 [Fluin Dict Agent 使用說明](docs/fluin_dict_agent_guide.md)
+
+## 對話知識提取器 - Conversation Knowledge Extractor (新功能)
+
+對話知識提取器是一個強大的工具，用於分析、打包和導出對話記錄。支援注意力機制分析、邏輯結構提取和 AI 深度分析。
+
+```python
+from conversation_extractor import ConversationExtractor
+
+# 初始化提取器
+extractor = ConversationExtractor()
+
+# 打包對話
+conversation = [
+    {"role": "user", "content": "什麼是粒子語言？"},
+    {"role": "assistant", "content": "粒子語言是創新的邏輯執行框架..."}
+]
+
+package = extractor.package_conversation(
+    conversation,
+    metadata={"title": "粒子語言討論", "date": "2026-01-04"}
+)
+
+# 導出為不同格式
+extractor.export_to_file(package, "conversation.json", "json")
+extractor.export_to_file(package, "conversation.md", "markdown")
+
+# 注意力分析
+attention = extractor.analyze_attention(conversation)
+print(f"關鍵時刻: {len(attention['key_moments'])} 個")
+print(f"話題轉換: {len(attention['topic_shifts'])} 個")
+
+# 邏輯結構提取
+structure = extractor.extract_logical_structure(conversation)
+print(f"核心概念: {structure['concepts']}")
+
+# 生成完整報告
+report = extractor.generate_report(conversation)
+with open("analysis_report.md", "w", encoding="utf-8") as f:
+    f.write(report)
+```
+
+**主要功能**:
+- 📦 對話打包與導出 (JSON/Markdown/TXT)
+- 🎯 注意力機制分析 (關鍵時刻、話題轉換、資訊密集段落)
+- 🧬 邏輯結構提取 (概念、因果關係、推理鏈、結論)
+- 🤖 AI 深度分析 (需要 Anthropic API Key)
+- 📊 完整分析報告生成
+
+詳細說明請參閱:
+- [對話知識提取器使用說明 (中文)](docs/conversation_extractor_zh.md)
+- [Conversation Extractor Guide (English)](docs/conversation_extractor_en.md)
 
 ## 種子資料集
 
