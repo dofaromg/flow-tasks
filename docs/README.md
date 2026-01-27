@@ -16,6 +16,11 @@ Key documents that are actively maintained and referenced:
 ### 🎯 Consolidated Guides (`docs/`)
 - `performance/PERFORMANCE_GUIDE.md` - Consolidated performance optimization guide
 - `implementation/IMPLEMENTATION_GUIDE.md` - Consolidated implementation documentation
+- `COPILOT_PERMISSION_GUIDE.md` - GitHub Copilot 權限升級指南 / Permission upgrade guide
+
+### ⚙️ Configuration Files (`config/`)
+- `config.sample.yaml` - 生產環境配置範本 / Production config template
+- `dev-mode.yaml` - 開發模式配置（無限制）/ Dev mode config (unrestricted)
 
 ### 📦 Archive (`docs/archive/`)
 Historical documents and superseded files:
