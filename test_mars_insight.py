@@ -5,7 +5,6 @@ Validates the structure and content of the Mars InSight coordinate snapshot
 """
 
 import json
-import os
 import pytest
 from pathlib import Path
 
