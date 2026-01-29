@@ -104,17 +104,27 @@ def test_mars_insight_google_earth_link(mars_insight_data):
     assert google_earth_link.startswith('https://earth.google.com/web/'), \
         f"Invalid Google Earth link format: {google_earth_link}"
     
-    # Extract coordinates from the data and verify they appear in the URL
-    lat = data['coords']['lat']
-    lon = data['coords']['lon']
+    # Extract expected coordinates from the data
+    expected_lat = data['coords']['lat']
+    expected_lon = data['coords']['lon']
     
-    # Check that the URL contains coordinate values (as strings)
-    lat_str = str(lat)
-    lon_str = str(lon)
-    assert lat_str in google_earth_link, \
-        f"Google Earth link should contain latitude {lat_str}"
-    assert lon_str in google_earth_link, \
-        f"Google Earth link should contain longitude {lon_str}"
+    # Parse coordinates from the Google Earth URL and compare numerically
+    try:
+        # Google Earth URLs typically contain coordinates after an '@' symbol,
+        # e.g. '@4.5,135.9,0a,0d,0y,0h'
+        coord_section = google_earth_link.split('@', 1)[1]
+        coord_parts = coord_section.split(',')
+        parsed_lat = float(coord_parts[0])
+        parsed_lon = float(coord_parts[1])
+    except (IndexError, ValueError) as exc:
+        pytest.fail(f"Could not parse coordinates from Google Earth link: {google_earth_link} ({exc})")
+    
+    assert abs(parsed_lat - expected_lat) < COORDINATE_TOLERANCE, (
+        f"Google Earth link latitude mismatch: expected ~{expected_lat}, got {parsed_lat}"
+    )
+    assert abs(parsed_lon - expected_lon) < COORDINATE_TOLERANCE, (
+        f"Google Earth link longitude mismatch: expected ~{expected_lon}, got {parsed_lon}"
+    )
 
 
 if __name__ == '__main__':
