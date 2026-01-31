@@ -31,6 +31,13 @@ export class ConfigManager {
     return () => this.listeners.delete(listener);
   }
 
+  /**
+   * Reload configuration from a custom loader function.
+   * Note: This method merges the loaded config with existing values using the spread operator.
+   * If you need to replace the entire configuration, call update with the complete new config.
+   * @param loader - Async or sync function that returns a ConfigSnapshot
+   * @returns The updated configuration snapshot
+   */
   async reload(loader: () => ConfigSnapshot | Promise<ConfigSnapshot>): Promise<ConfigSnapshot> {
     const next = await loader();
     this.update(next);

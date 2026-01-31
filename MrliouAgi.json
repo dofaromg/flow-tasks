@@ -1,0 +1,355 @@
+openapi: 3.1.0
+info:
+  title: Mr.liou MetaEnv Control API
+  version: v1.0.0
+  description: >
+    控制與保護元代碼沙盒（MetaEnv）的最小可用 API。對齊主線/分支：
+    1) 反推器：上傳 trace → 產出規則/通道地圖
+    2) 通道推演與掛載（Channel Map）
+    3) Guard.v1 護欄（policy、鎖死、快照）
+servers:
+  - url: https://metaenv.local
+    description: 內網控制器
+  - url: http://localhost:8000
+    description: 開發測試
+
+tags:
+  - name: env
+    description: 環境生命週期（spawn/health）
+  - name: policy
+    description: Guard.v1 安全政策與 attestation
+  - name: snapshot
+    description: 加密快照（不可匯出）
+  - name: channel
+    description: 通道地圖推演與掛載
+  - name: reverse
+    description: 反推器（trace → 規則/通道地圖）
+  - name: guard
+    description: 風險處理（鎖死）
+  - name: backtrace
+    description: Canary 事件上報
+
+paths:
+  /api/v1/env/spawn:
+    post:
+      tags: [env]
+      operationId: SpawnEnv
+      summary: 啟動一個新的元代碼沙盒
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpawnRequest'
+      responses:
+        '200':
+          description: 啟動成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpawnResponse'
+
+  /api/v1/env/health:
+    get:
+      tags: [env]
+      operationId: EnvHealth
+      summary: 查詢控制器健康狀態
+      parameters:
+        - in: query
+          name: env_id
+          required: false
+          schema: { type: string }
+      responses:
+        '200':
+          description: 健康資訊
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  time: { type: string, format: date-time }
+                  env_id: { type: string, nullable: true }
+
+  /api/v1/policy/apply:
+    post:
+      tags: [policy]
+      operationId: ApplyPolicy
+      summary: 對指定環境套用 Guard.v1 政策
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplyPolicyRequest'
+      responses:
+        '200':
+          description: 已套用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplyPolicyResponse'
+
+  /api/v1/policy/attest/check:
+    post:
+      tags: [policy]
+      operationId: AttestationCheck
+      summary: （可選）驗證環境 attestation 證據
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttestCheckRequest'
+      responses:
+        '200':
+          description: 驗證通過或失敗狀態
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttestCheckResponse'  /api/v1/snapshot/create:
+    post:
+      tags: [snapshot]
+      operationId: CreateSnapshot
+      summary: 建立加密快照（不可匯出）
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SnapshotCreateRequest'
+      responses:
+        '200':
+          description: 已建立
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnapshotCreateResponse'
+
+  /api/v1/channel/map:
+    post:
+      tags: [channel]
+      operationId: ChannelMapApply
+      summary: 依通道地圖掛載或回滾
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelMapRequest'
+      responses:
+        '200':
+          description: 已處理
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelMapResponse'
+
+  /api/v1/reverse/miner:
+    post:
+      tags: [reverse]
+      operationId: ReverseMine
+      summary: 上傳追蹤資料（trace）以產出規則與通道地圖
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                trace_fs:
+                  type: string
+                  format: binary
+                  description: trace_fs.csv（fullpath,op,ts）
+                trace_ops:
+                  type: string
+                  format: binary
+                  description: trace_ops.csv（ts,case,app,action,path,elevation）
+      responses:
+        '200':
+          description: 產出規則與通道地圖
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReverseMineResponse'
+
+  /api/v1/guard/lockdown:
+    post:
+      tags: [guard]
+      operationId: GuardLockdown
+      summary: 一鍵鎖死（斷外連、撤 token、凍結快照）
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LockdownRequest'
+      responses:
+        '200':
+          description: 已執行
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  actions:
+                    type: array
+                    items: { type: string }
+
+  /api/v1/backtrace/report:
+    post:
+      tags: [backtrace]
+      operationId: BacktraceReport
+      summary: 上報 Canary/水印被觸發的事件
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BacktraceEvent'
+      responses:
+        '200':
+          description: 已記錄
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  id: { type: string }
+components:
+  schemas:
+    SpawnRequest:
+      type: object
+      required: [shape]
+      properties:
+        env_id:
+          type: string
+          description: 可自定，未填由系統產生
+        role:
+          type: string
+          enum: [core, node]
+          default: core
+        shape:
+          type: object
+          properties:
+            cpu: { type: integer, minimum: 1 }
+            gpu: { type: integer, minimum: 0, default: 0 }
+            ram: { type: string, example: "8G" }
+          required: [cpu, ram]
+        policy:
+          type: string
+          description: 預設套用的安全政策（建議 Mr.liou.MetaCode.Guard.v1）
+
+    SpawnResponse:
+      type: object
+      properties:
+        ok: { type: boolean }
+        env_id: { type: string }
+        status: { type: string, example: "starting" }
+
+    ApplyPolicyRequest:
+      type: object
+      required: [env_id, policy]
+      properties:
+        env_id: { type: string }
+        policy: { type: string, example: "Mr.liou.MetaCode.Guard.v1" }
+
+    ApplyPolicyResponse:
+      type: object
+      properties:
+        ok: { type: boolean }
+        env_id: { type: string }
+        policy: { type: string }
+
+    AttestCheckRequest:
+      type: object
+      required: [env_id]
+      properties:
+        env_id: { type: string }
+        quotes:
+          type: array
+          items: { type: string }
+          description: TEE/機密 VM attestation 證據（可留空於 v1）
+
+    AttestCheckResponse:
+      type: object
+      properties:
+        ok: { type: boolean }
+        env_id: { type: string }
+        status:
+          type: string
+          enum: ["running","terminated","failed","pending"]
+
+    SnapshotCreateRequest:
+      type: object
+      required: [env_id]
+      properties:
+        env_id: { type: string }
+        encrypted: { type: boolean, default: true }
+        exportable: { type: boolean, default: false }
+        label: { type: string }
+
+    SnapshotCreateResponse:
+      type: object
+      properties:
+        ok: { type: boolean }
+        snapshot_id: { type: string }
+        encrypted: { type: boolean }
+        exportable: { type: boolean }
+
+    ChannelMapRequest:
+      type: object
+      required: [app, to]
+      properties:
+        app:
+          type: string
+          description: 目標應用名（用於記錄與回滾）
+        mode:
+          type: string
+          enum: [dry-run, apply, revert]
+          default: dry-run
+        from:
+          type: string
+          description: FlowMemory 路徑，如 FlowMemory:/persona/MyApp
+        to:
+          type: string
+          description: 目標掛載點，如 '%USERPROFILE%/Documents/MyApp'
+        map:
+          type: object
+          description: 直接提供通道地圖（若不提供則使用 server 端已保存的預設檔）
+      example:
+        app: "MyApp"
+        mode: "apply"
+        from: "FlowMemory:/persona/MyApp"
+        to: "%USERPROFILE%/Documents/MyApp"
+
+    ChannelMapResponse:
+      type: object
+      properties:
+        ok: { type: boolean }
+        changes:
+          type: array
+          items: { type: string }
+        revert_token: { type: string }
+
+    ReverseMineResponse:
+      type: object
+      properties:
+        ok: { type: boolean }
+        rules_yaml: { type: string }
+        channel_map_yaml: { type: string }
+        report_url: { type: string }
+
+    LockdownRequest:
+      type: object
+      properties:
+        reason: { type: string }
+        scope:
+          type: string
+          enum: [env, global]
+          default: env
+        env_id:
+          type: string
+          description: 若 scope=env 需提供
