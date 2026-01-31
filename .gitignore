@@ -257,6 +257,8 @@ cluster/configs/google_templates/
 /data/github_export.json
 /data/snapshots/*.json
 flowos/dist/
+flowos/src/**/*.js
+flowos/test.js
 
 # Repository stability reports
 repo_stability_report_*.md
