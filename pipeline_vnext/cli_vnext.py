@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, List
@@ -54,6 +55,103 @@ class PipelineGraph:
             description=str(graph.get("description", "")),
             nodes=nodes,
         )
+
+    def validate(self) -> None:
+        """Validate the pipeline graph structure.
+        
+        Raises:
+            ValueError: If the graph structure is invalid.
+        """
+        # Validate required fields are not empty
+        if not self.name:
+            raise ValueError("Pipeline name is required and cannot be empty")
+        if not self.description:
+            raise ValueError("Pipeline description is required and cannot be empty")
+        if not self.nodes:
+            raise ValueError("Pipeline must contain at least one node")
+
+        # Validate node IDs are unique
+        node_ids = [node.id for node in self.nodes]
+        if len(node_ids) != len(set(node_ids)):
+            duplicates = [nid for nid in node_ids if node_ids.count(nid) > 1]
+            raise ValueError(f"Duplicate node IDs found: {set(duplicates)}")
+
+        # Validate each node has required fields
+        for node in self.nodes:
+            if not node.id:
+                raise ValueError("Node ID is required and cannot be empty")
+            if not node.name:
+                raise ValueError(f"Node '{node.id}' name is required and cannot be empty")
+            if not node.type:
+                raise ValueError(f"Node '{node.id}' type is required and cannot be empty")
+
+        # Build output map for connectivity validation
+        output_map = {}
+        for node in self.nodes:
+            for output in node.outputs:
+                if output in output_map:
+                    raise ValueError(
+                        f"Output '{output}' is produced by multiple nodes: "
+                        f"{output_map[output]} and {node.id}"
+                    )
+                output_map[output] = node.id
+
+        # Validate graph connectivity - all inputs must reference existing outputs
+        for node in self.nodes:
+            for input_ref in node.inputs:
+                if input_ref not in output_map:
+                    raise ValueError(
+                        f"Node '{node.id}' references input '{input_ref}' "
+                        f"which is not produced by any node"
+                    )
+
+        # Validate no cycles (DAG validation)
+        self._validate_no_cycles()
+
+    def _validate_no_cycles(self) -> None:
+        """Validate that the graph is a DAG (no cycles).
+        
+        Raises:
+            ValueError: If a cycle is detected.
+        """
+        # Build adjacency list for dependency graph
+        node_map = {node.id: node for node in self.nodes}
+        output_to_node = {}
+        for node in self.nodes:
+            for output in node.outputs:
+                output_to_node[output] = node.id
+
+        # Build graph: node -> list of nodes it depends on
+        dependencies = {node.id: [] for node in self.nodes}
+        for node in self.nodes:
+            for input_ref in node.inputs:
+                if input_ref in output_to_node:
+                    dependencies[node.id].append(output_to_node[input_ref])
+
+        # DFS to detect cycles
+        visited = set()
+        rec_stack = set()
+
+        def has_cycle(node_id: str) -> bool:
+            visited.add(node_id)
+            rec_stack.add(node_id)
+
+            for dependency in dependencies[node_id]:
+                if dependency not in visited:
+                    if has_cycle(dependency):
+                        return True
+                elif dependency in rec_stack:
+                    return True
+
+            rec_stack.remove(node_id)
+            return False
+
+        for node_id in dependencies:
+            if node_id not in visited:
+                if has_cycle(node_id):
+                    raise ValueError(
+                        f"Cycle detected in pipeline graph involving node '{node_id}'"
+                    )
 
     def format_summary(self) -> str:
         lines: List[str] = [f"Pipeline: {self.name}", f"Description: {self.description}"]
@@ -118,6 +216,7 @@ def command_run(args: argparse.Namespace) -> int:
 
     ensure_data_root(data_root)
     graph = load_graph(graph_path)
+    graph.validate()
 
     print("Inputs validated. Pipeline summary:\n")
     print(graph.format_summary())
@@ -142,13 +241,26 @@ def command_list_graphs(args: argparse.Namespace) -> int:
 
 
 def main(argv: Iterable[str] | None = None) -> int:
-    args = parse_args(argv)
-    if args.command == "run":
-        return command_run(args)
-    if args.command == "list-graphs":
-        return command_list_graphs(args)
+    try:
+        args = parse_args(argv)
+        if args.command == "run":
+            return command_run(args)
+        if args.command == "list-graphs":
+            return command_list_graphs(args)
 
-    raise ValueError(f"Unknown command: {args.command}")
+        raise ValueError(f"Unknown command: {args.command}")
+    except FileNotFoundError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+    except NotADirectoryError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+    except ValueError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+    except Exception as e:
+        print(f"Unexpected error: {e}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":
