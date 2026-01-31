@@ -58,7 +58,8 @@ settings:
   
   # 同步後執行的命令 / Commands to run after sync
   post_sync_commands: []
-    # - "echo 'Sync completed!'"
+    # - "echo 'Sync completed with quotes!'"
+    # - ["python", "scripts/validate_deployment.sh"]
 
 # 排除模式 / Exclude Patterns (全域)
 exclude_patterns:

@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 import tempfile
 import argparse
+import shlex
 
 
 class RepoSyncManager:
@@ -264,8 +265,11 @@ class RepoSyncManager:
         print("🔧 Running post-sync commands...")
         
         for cmd in commands:
-            print(f"\n▶ {cmd}")
-            success, output = self._run_command(cmd.split(), cwd=str(self.repo_root))
+            cmd_args = cmd if isinstance(cmd, list) else shlex.split(str(cmd))
+            if not cmd_args:
+                continue
+            print(f"\n▶ {' '.join(cmd_args)}")
+            success, output = self._run_command(cmd_args, cwd=str(self.repo_root))
             if success:
                 print(f"✅ 成功")
                 if output:
