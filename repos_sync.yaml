@@ -8,6 +8,45 @@ version: "1.0"
 
 # 倉庫列表 / Repository List
 repositories:
+  # GitHub's Hello World - 用於測試和示範
+  # GitHub's Hello World - For testing and demonstration
+  - name: "github-hello-world"
+    url: "https://github.com/octocat/Hello-World.git"
+    branch: "master"
+    enabled: true
+    files:
+      - src: "README"
+        dest: "examples/synced_files/hello_world_readme.txt"
+
+  # Python .gitignore 模板
+  # Python .gitignore template
+  - name: "python-gitignore"
+    url: "https://github.com/github/gitignore.git"
+    branch: "main"
+    enabled: false  # 預設停用，需要時啟用 / Disabled by default, enable when needed
+    files:
+      - src: "Python.gitignore"
+        dest: "examples/synced_files/python.gitignore.template"
+  
+  # PyWikibot Core - Wikimedia 的 Python 機器人框架
+  # PyWikibot Core - Python MediaWiki bot framework from Wikimedia
+  # 注意：此倉庫可能在某些網路環境中無法訪問
+  # Note: This repository may be inaccessible in some network environments
+  - name: "pywikibot-core"
+    url: "https://gerrit.wikimedia.org/r/pywikibot/core"
+    branch: "master"
+    enabled: false  # 預設停用，因網路限制 / Disabled by default due to network restrictions
+    files:
+      - src: "README.rst"
+        dest: "examples/pywikibot_readme.rst"
+    directories:
+      - src: "pywikibot"
+        dest: "lib/python/pywikibot"
+        exclude:
+          - "*.pyc"
+          - "__pycache__"
+          - "*.egg-info"
+
   # 範例：從另一個倉庫拉取特定檔案
   # Example: Pull specific files from another repository
   # - name: "example-repo"

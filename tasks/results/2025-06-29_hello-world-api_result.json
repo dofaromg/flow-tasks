@@ -1,10 +1,38 @@
 {
   "task_id": "hello-world-api",
-  "validation_time": "2025-12-13T03:08:51.013894",
+  "task_name": "Unknown Task",
+  "validation_time": "2026-01-26T08:17:27.424547",
   "status": "passed",
   "checks": [
-    "✓ Target file exists: flow_code/hello_api.py",
-    "✓ Python module imports successfully"
+    {
+      "check": "file_exists",
+      "status": "passed",
+      "message": "Target file exists: flow_code/hello_api.py"
+    },
+    {
+      "check": "python_import",
+      "status": "passed",
+      "message": "Python module imports successfully"
+    }
   ],
-  "errors": []
+  "errors": [],
+  "warnings": [],
+  "metrics": {
+    "execution_time_ms": 135.79,
+    "files_checked": 1,
+    "lines_of_code": 36
+  },
+  "metadata": {
+    "description": "寫一個 Flask 的 hello world API，輸出 \"你好，世界\"",
+    "priority": "medium",
+    "tags": []
+  }
+  "validation_time": "2025-10-05T11:00:09.217577",
+  "status": "failed",
+  "checks": [
+    "✓ Target file exists: flow_code/hello_api.py"
+  ],
+  "errors": [
+    "Python import failed: No module named 'flask'"
+  ]
 }

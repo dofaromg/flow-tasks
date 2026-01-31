@@ -219,6 +219,11 @@ def build_app() -> Flask:
                     projects.append(meta)
         return jsonify(projects)
 
+    @app.route("/health")
+    def health():
+        """Health check endpoint"""
+        return jsonify({"status": "healthy", "service": "flowcore-web"}), 200
+
     @app.route("/api/project/<project>/sessions")
     def api_sessions(project: str):
         _, sessions = load_project(project)

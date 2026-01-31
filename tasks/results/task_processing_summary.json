@@ -1,12 +1,86 @@
 {
-  "processing_time": "2025-12-13T03:08:51.011139",
+  "processing_time": "2026-01-26T08:17:27.423841",
   "total_tasks": 2,
   "passed": 2,
   "failed": 0,
+  "warnings": 0,
+  "tasks": [
+    {
+      "task_id": "hello-world-api",
+      "task_name": "Unknown Task",
+      "validation_time": "2026-01-26T08:17:27.424547",
+      "status": "passed",
+      "checks": [
+        {
+          "check": "file_exists",
+          "status": "passed",
+          "message": "Target file exists: flow_code/hello_api.py"
+        },
+        {
+          "check": "python_import",
+          "status": "passed",
+          "message": "Python module imports successfully"
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "metrics": {
+        "execution_time_ms": 135.79,
+        "files_checked": 1,
+        "lines_of_code": 36
+      },
+      "metadata": {
+        "description": "寫一個 Flask 的 hello world API，輸出 \"你好，世界\"",
+        "priority": "medium",
+        "tags": []
+      }
+    },
+    {
+      "task_id": "particle-language-core",
+      "task_name": "Unknown Task",
+      "validation_time": "2026-01-26T08:17:27.562578",
+      "status": "passed",
+      "checks": [
+        {
+          "check": "directory_exists",
+          "status": "passed",
+          "message": "Target directory exists: particle_core/"
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "metrics": {
+        "execution_time_ms": 0.87,
+        "files_checked": 93,
+        "lines_of_code": 0
+      },
+      "metadata": {
+        "description": "MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統",
+        "priority": "medium",
+        "tags": []
+      }
+    }
+  ],
+  "overall_metrics": {
+    "total_execution_time_ms": 139.92,
+    "total_files_checked": 94,
+    "total_lines_of_code": 36,
+    "average_task_time_ms": 69.96
+  },
+  "summary": {
+    "pass_rate": 100.0,
+    "recommendations": [
+      "✅ All tasks passed validation. Great job!"
+    ]
+  }
+  "processing_time": "2025-10-05T11:00:09.215474",
+  "total_tasks": 2,
+  "passed": 1,
+  "failed": 1,
   "tasks": [
     {
       "task_id": "particle-language-core",
-      "validation_time": "2025-12-13T03:08:51.013126",
+      "validation_time": "2025-10-05T11:00:09.216943",
       "status": "passed",
       "checks": [
         "✓ Target directory exists: particle_core/"
@@ -15,13 +89,14 @@
     },
     {
       "task_id": "hello-world-api",
-      "validation_time": "2025-12-13T03:08:51.013894",
-      "status": "passed",
+      "validation_time": "2025-10-05T11:00:09.217577",
+      "status": "failed",
       "checks": [
-        "✓ Target file exists: flow_code/hello_api.py",
-        "✓ Python module imports successfully"
+        "✓ Target file exists: flow_code/hello_api.py"
       ],
-      "errors": []
+      "errors": [
+        "Python import failed: No module named 'flask'"
+      ]
     }
   ]
 }

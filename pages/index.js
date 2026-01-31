@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react';
 import { getGrowthBook, isFeatureOn, getFeatureValue, FLAGS } from '../lib/growthbook';
 
 const features = [
-  '一鍵部署 GKE 基礎設施與 GitOps 設定',
-  '預設 CI/CD 流程，推送即可自動驗證與部署',
-  '可觀察性與調試友善：結構化配置、可重複的腳本',
+  '⚡ Vercel 一鍵部署 - 全球 CDN 加速',
+  '🔄 自動 CI/CD - GitHub 整合自動部署',
+  '🎯 功能旗標 - GrowthBook 動態控制',
+  '☸️ GKE 基礎設施 - 完整 Kubernetes 配置',
+  '📊 可觀察性 - 監控與調試友善',
 ];
 
 export default function Home() {
@@ -52,11 +54,14 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Flow Tasks - GrowthBook Demo</title>
+        <title>FlowAgent - GitOps Starter with Vercel & GKE</title>
         <meta
           name="description"
-          content="FlowAgent GKE Starter：快速部署、GitOps、CI/CD 的參考範本。"
+          content="FlowAgent GKE Starter: 快速部署到 Vercel 與 GKE 的完整 GitOps + CI/CD 解決方案。支援功能旗標、粒子語言核心系統與 Kubernetes 編排。"
         />
+        <meta property="og:title" content="FlowAgent - GitOps Starter" />
+        <meta property="og:description" content="完整的 Vercel + GKE 部署框架" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main
         style={{
@@ -123,13 +128,14 @@ export default function Home() {
           }}
         >
           <p style={{ color: '#64748b', fontWeight: 600, letterSpacing: 1.2, marginBottom: 12 }}>
-            FLOWAGENT GKE STARTER + GROWTHBOOK
+            FLOWAGENT - VERCEL + GKE DEPLOYMENT
           </p>
           <h1 style={{ fontSize: '2.5rem', margin: '0 0 1rem', lineHeight: 1.2 }}>
-            快速啟動你的雲端 GitOps 與 CI/CD
+            完整的 GitOps 與 CI/CD 解決方案
           </h1>
           <p style={{ color: '#475569', marginBottom: '1.5rem', fontSize: '1.05rem', lineHeight: 1.7 }}>
-            以同一套配置管理 Kubernetes、CI/CD、與部署快照。複製、推送、開啟驗證腳本，即可把服務穩定送上線。
+            輕鬆部署前端到 Vercel，後端到 GKE。同一套配置管理 Next.js、Kubernetes、CI/CD 與功能旗標。
+            支援粒子語言核心系統與記憶封存，開箱即用的雲端架構。
           </p>
 
           <div
@@ -178,6 +184,8 @@ export default function Home() {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
             <a
               href="https://github.com/dofaromg/flow-tasks"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 background: colorMap[checkoutColor] || colorMap.blue,
                 color: '#ffffff',
@@ -190,10 +198,12 @@ export default function Home() {
               onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
             >
-              查看 Repository
+              🚀 查看 Repository
             </a>
             <a
-              href="/DEPLOYMENT.md"
+              href="https://github.com/dofaromg/flow-tasks/blob/main/VERCEL_DEPLOYMENT.md"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 padding: '0.85rem 1.4rem',
                 borderRadius: 12,
@@ -202,9 +212,31 @@ export default function Home() {
                 border: '1px solid #e2e8f0',
                 color: '#0f172a',
                 background: '#ffffff',
+                transition: 'box-shadow 0.2s',
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)')}
+              onMouseLeave={(e) => (e.currentTarget.style.boxShadow = 'none')}
             >
-              快速部署指南
+              ⚡ Vercel 部署
+            </a>
+            <a
+              href="https://github.com/dofaromg/flow-tasks/blob/main/DEPLOYMENT.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                padding: '0.85rem 1.4rem',
+                borderRadius: 12,
+                textDecoration: 'none',
+                fontWeight: 700,
+                border: '1px solid #e2e8f0',
+                color: '#0f172a',
+                background: '#ffffff',
+                transition: 'box-shadow 0.2s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)')}
+              onMouseLeave={(e) => (e.currentTarget.style.boxShadow = 'none')}
+            >
+              ☸️ GKE 部署指南
             </a>
           </div>
 
