@@ -27,6 +27,15 @@ except ImportError:
             return {
                 "input": input_data,
                 "steps": self.pipeline_steps,
+            self.fn_steps = ["structure", "mark", "flow", "recurse", "store"]
+        
+        def simulate(self, input_data):
+            result = input_data
+            for step in self.fn_steps:
+                result = f"[{step.upper()} → {result}]"
+            return {
+                "input": input_data,
+                "steps": self.fn_steps,
                 "result": result
             }
 
@@ -93,6 +102,7 @@ class ParticleLanguageCLI:
         table.add_column("說明", style="green")
         
         for i, step in enumerate(self.pipeline.pipeline_steps, 1):
+        for i, step in enumerate(self.pipeline.fn_steps, 1):
             table.add_row(str(i), step.upper(), explanations.get(step, "未知"))
         
         self.console.print(table)

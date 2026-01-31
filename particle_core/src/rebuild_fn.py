@@ -44,6 +44,9 @@ class FunctionRestorer:
         for pattern, steps_list in self.restore_map.items():
             if pattern in normalized:
                 return steps_list
+        for pattern, steps in self.restore_map.items():
+            if pattern in normalized:
+                return steps
         
         # 嘗試解析其他格式
         if "SEED" in normalized:
@@ -62,6 +65,17 @@ class FunctionRestorer:
         if len(function_steps) > 0:
             nested = function_steps[0].upper() + "(X)"
             for step in function_steps[1:]:
+    def compress_fn(self, fn_steps: List[str]) -> str:
+        """壓縮函數步驟為 .flpkg 格式"""
+        standard_steps = ["structure", "mark", "flow", "recurse", "store"]
+        
+        if fn_steps == standard_steps:
+            return "SEED(X) = STORE(RECURSE(FLOW(MARK(STRUCTURE(X)))))"
+        
+        # 建構動態壓縮
+        if len(fn_steps) > 0:
+            nested = fn_steps[0].upper() + "(X)"
+            for step in fn_steps[1:]:
                 nested = f"{step.upper()}({nested})"
             return f"CUSTOM_SEED(X) = {nested}"
         
@@ -79,6 +93,18 @@ class FunctionRestorer:
         return current_output
     
     def create_flpkg_package(self, function_steps: List[str], metadata: Optional[Dict] = None) -> Dict[str, Any]:
+    def to_human_readable(self, fn_steps: List[str]) -> List[str]:
+        """轉換為人類可讀說明"""
+        return [self.explanations.get(step, f"未知步驟: {step}") for step in fn_steps]
+    
+    def simulate_execution(self, fn_steps: List[str], input_data: str = "X") -> str:
+        """模擬執行函數鏈"""
+        output = input_data
+        for step in fn_steps:
+            output = f"[{step.upper()} → {output}]"
+        return output
+    
+    def create_flpkg_package(self, fn_steps: List[str], metadata: Optional[Dict] = None) -> Dict[str, Any]:
         """建立 .flpkg 封包格式"""
         if metadata is None:
             metadata = {}
@@ -91,6 +117,10 @@ class FunctionRestorer:
             "functions": function_steps,
             "human_readable": self.to_human_readable(function_steps),
             "signature": f"MRLSIG-{hash(str(function_steps)) % 10000:04d}",
+            "compressed": self.compress_fn(fn_steps),
+            "functions": fn_steps,
+            "human_readable": self.to_human_readable(fn_steps),
+            "signature": f"MRLSIG-{hash(str(fn_steps)) % 10000:04d}",
             "metadata": metadata
         }
         
@@ -109,6 +139,17 @@ class FunctionRestorer:
         """載入 .flpkg 檔案"""
         with open(filename, 'r', encoding='utf-8') as input_file:
             return json.load(input_file)
+        filepath = filename if filename.endswith('.flpkg.json') else f"{filename}.flpkg.json"
+        
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump(package, f, ensure_ascii=False, indent=2)
+        
+        return filepath
+    
+    def load_flpkg(self, filename: str) -> Dict[str, Any]:
+        """載入 .flpkg 檔案"""
+        with open(filename, 'r', encoding='utf-8') as f:
+            return json.load(f)
     
     def validate_flpkg(self, package: Dict[str, Any]) -> bool:
         """驗證 .flpkg 封包完整性"""
@@ -136,18 +177,26 @@ def interactive_demo():
             print(f"\n還原步驟: {' → '.join(function_steps)}")
             print("\n人類可讀解釋:")
             for line in restorer.to_human_readable(function_steps):
+            steps = restorer.decompress_fn(compressed)
+            print(f"\n還原步驟: {' → '.join(steps)}")
+            print("\n人類可讀解釋:")
+            for line in restorer.to_human_readable(steps):
                 print(f"  - {line}")
                 
         elif choice == "2":
             steps_input = input("請輸入函數步驟 (用逗號分隔): ")
             function_steps = [s.strip() for s in steps_input.split(",")]
             compressed = restorer.compress_fn(function_steps)
+            steps = [s.strip() for s in steps_input.split(",")]
+            compressed = restorer.compress_fn(steps)
             print(f"\n壓縮結果: {compressed}")
             
         elif choice == "3":
             steps_input = input("請輸入函數步驟 (用逗號分隔): ")
             function_steps = [s.strip() for s in steps_input.split(",")]
             package = restorer.create_flpkg_package(function_steps)
+            steps = [s.strip() for s in steps_input.split(",")]
+            package = restorer.create_flpkg_package(steps)
             filename = input("輸入檔案名稱 (不含副檔名): ")
             
             if not os.path.exists("examples"):
@@ -161,6 +210,9 @@ def interactive_demo():
             function_steps = [s.strip() for s in steps_input.split(",")]
             input_data = input("請輸入測試資料: ")
             result = restorer.simulate_execution(function_steps, input_data)
+            steps = [s.strip() for s in steps_input.split(",")]
+            input_data = input("請輸入測試資料: ")
+            result = restorer.simulate_execution(steps, input_data)
             print(f"\n模擬執行結果: {result}")
             
         elif choice.lower() == "q":
@@ -189,6 +241,18 @@ def main():
         
         print("\n模擬執行流程:")
         print(restorer.simulate_execution(function_steps))
+        steps = restorer.decompress_fn(compressed)
+        
+        print("還原步驟:")
+        for step in steps:
+            print(f"- {step}")
+        
+        print("\n人類可讀解釋:")
+        for line in restorer.to_human_readable(steps):
+            print(f"- {line}")
+        
+        print("\n模擬執行流程:")
+        print(restorer.simulate_execution(steps))
     else:
         # 互動模式
         interactive_demo()

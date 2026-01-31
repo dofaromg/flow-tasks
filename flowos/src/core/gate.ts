@@ -46,6 +46,14 @@ export class FlowGate {
 
     // If we saw at least one explicit allow, use it; otherwise fall back to default allow
     return allowDecision ?? { allowed: true };
+  evaluate(payload: Record<string, unknown>, context?: FlowContext): GateDecision {
+    for (const check of this.checks) {
+      const decision = check(payload, context);
+      if (decision) {
+        return decision;
+      }
+    }
+    return { allowed: true };
   }
 }
 

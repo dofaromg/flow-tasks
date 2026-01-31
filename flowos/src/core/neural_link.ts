@@ -26,12 +26,14 @@ interface RequestInit {
 interface RequestInfo {}
 
 interface FetchResponse {
+interface Response {
   ok: boolean;
   status: number;
   json(): Promise<unknown>;
 }
 
 declare function fetch(input: RequestInfo | string, init?: RequestInit): Promise<FetchResponse>;
+declare function fetch(input: RequestInfo | string, init?: RequestInit): Promise<Response>;
 
 export class NeuralLink {
   private readonly handlers = new Map<string, NeuralLinkHandler[]>();
@@ -79,6 +81,10 @@ export class ParticleNeuralLink {
     path: string,
     payload: Record<string, unknown>,
   ): Promise<any> {
+    stub: { fetch(input: RequestInfo, init?: RequestInit): Promise<Response> },
+    path: string,
+    payload: Record<string, unknown>,
+  ): Promise<Response> {
     return await stub.fetch(`https://internal${path}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Node-Id': this.nodeId },
@@ -100,6 +106,11 @@ export class ParticleNeuralLink {
       const rawToken = this.env.GITHUB_TOKEN.trim();
       const hasBearerPrefix = /^Bearer\s+/i.test(rawToken);
       headers.Authorization = hasBearerPrefix ? rawToken : `Bearer ${rawToken}`;
+      'X-GitHub-Api-Version': '2022-11-28',
+      'X-Node-Id': this.nodeId,
+    };
+    if (this.env.GITHUB_TOKEN) {
+      headers.Authorization = `Bearer ${this.env.GITHUB_TOKEN}`;
     }
     const response = await fetch(`https://api.github.com${path}`, {
       method,
@@ -119,6 +130,7 @@ export class ParticleNeuralLink {
       throw new Error(
         `External call failed for ${method} ${path} with status ${response.status}.${bodyDescription}`,
       );
+      throw new Error(`External call failed: ${response.status}`);
     }
     return await response.json();
   }
