@@ -75,16 +75,6 @@ def test_task_integration():
     create_task_result()
 
     print("✓ All integration tests passed!")
-        result = pipeline.simulate("Integration Test")
-        print(f"✓ Logic pipeline test: {result['result'][:50]}...")
-    except Exception as e:
-        print(f"✗ Logic pipeline import failed: {e}")
-        return False
-    
-    # Create task result
-    create_task_result()
-    
-    print("✓ All integration tests passed!")
     return True
 
 def create_task_result():
