@@ -142,6 +142,8 @@ class Handler(BaseHTTPRequestHandler):
             base = "memory/derived/l1"
             if os.path.isdir(base):
                 for fn in os.listdir(base):
+                    if not fn.endswith(".l1.json"):
+                        continue
                     obj = json.load(open(os.path.join(base, fn)))
                     score = sum(1 for t in l1_tokens(q) if t in obj.get("tokens", []))
                     if score:
