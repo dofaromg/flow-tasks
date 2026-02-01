@@ -4,6 +4,14 @@ from urllib.parse import urlparse, parse_qs
 
 ROOT = os.getcwd()
 
+# Import AI providers
+try:
+    from ai_providers import AIProviderManager
+    AI_PROVIDERS_AVAILABLE = True
+except ImportError:
+    AI_PROVIDERS_AVAILABLE = False
+    print("Warning: AI providers not available. Install ai_providers.py to enable AI features.")
+
 # -------------------------
 # Utilities
 # -------------------------
@@ -105,6 +113,125 @@ def judge_write_text(vault, tracer, path, text):
     tracer.emit("judge_postwrite", {"path": path, "sha256": res["sha256"], "snapshot": snap})
     return res, snap
 
+def judge_ai_complete(manager, tracer, vault, prompt, provider_name=None, options=None):
+    """AI completion with Judge Loop pattern / AI 完成與裁決循環模式"""
+    options = options or {}
+    request_id = uuid.uuid4().hex
+    
+    # 1. Emit pre-completion trace
+    tracer.emit("judge_ai_precomplete", {
+        "request_id": request_id,
+        "provider": provider_name or "default",
+        "prompt_sha256": _sha256_bytes(prompt.encode()),
+        "prompt_length": len(prompt)
+    })
+    
+    try:
+        # 2. Call AI provider with fallback
+        result = manager.complete_with_fallback(prompt, provider_name, **options)
+        
+        # 3. Save response to memory/ingest/ai_responses/
+        _ensure_dir("memory/ingest/ai_responses")
+        ts = _dt.datetime.utcnow().strftime("%Y%m%d%H%M%S")
+        response_path = f"memory/ingest/ai_responses/{ts}_{request_id}.json"
+        
+        # Create snapshot if file exists (for overwrite protection)
+        snap = None
+        if os.path.exists(os.path.join(vault.root, response_path)):
+            prev = vault.read_text(response_path)
+            snap_path = f"memory/snapshot/{_snapshot_name(response_path)}"
+            vault.write_text(snap_path, prev["text"])
+            snap = {"src": response_path, "snapshot": snap_path, "sha256": prev["sha256"]}
+        
+        # 4. Save response
+        response_data = {
+            "request_id": request_id,
+            "prompt": prompt,
+            "result": result,
+            "timestamp": now_iso()
+        }
+        vault.write_text(response_path, _json(response_data))
+        
+        # 5. Track costs
+        usage = result.get("usage", {})
+        cost_data = _calculate_cost(result.get("provider"), result.get("model"), usage)
+        _log_ai_cost(cost_data)
+        
+        # 6. Emit post-completion trace with cost tracking
+        tracer.emit("judge_ai_postcomplete", {
+            "request_id": request_id,
+            "provider": result.get("provider"),
+            "model": result.get("model"),
+            "response_path": response_path,
+            "response_sha256": _sha256_bytes(result.get("content", "").encode()),
+            "usage": usage,
+            "cost": cost_data,
+            "fallback_used": result.get("fallback_used", False),
+            "snapshot": snap
+        })
+        
+        # 7. Return result with Merkle proof
+        return {
+            "ok": True,
+            "request_id": request_id,
+            "content": result.get("content"),
+            "provider": result.get("provider"),
+            "model": result.get("model"),
+            "usage": usage,
+            "cost": cost_data,
+            "response_path": response_path,
+            "merkle_root": tracer._state["merkle_root"]
+        }
+        
+    except Exception as e:
+        # Emit error trace
+        tracer.emit("judge_ai_error", {
+            "request_id": request_id,
+            "error": str(e)
+        })
+        raise
+
+def _calculate_cost(provider, model, usage):
+    """Calculate cost based on provider pricing / 根據提供商定價計算費用"""
+    # Simple cost calculation - can be enhanced with actual pricing
+    pricing = {
+        "openai": {
+            "gpt-4": {"input": 0.03, "output": 0.06},  # per 1K tokens
+            "gpt-3.5-turbo": {"input": 0.0015, "output": 0.002}
+        },
+        "claude": {
+            "claude-3-opus-20240229": {"input": 0.015, "output": 0.075},
+            "claude-3-sonnet-20240229": {"input": 0.003, "output": 0.015}
+        }
+    }
+    
+    cost = 0.0
+    input_tokens = usage.get("prompt_tokens", 0) or usage.get("input_tokens", 0) or usage.get("prompt_eval_count", 0)
+    output_tokens = usage.get("completion_tokens", 0) or usage.get("output_tokens", 0) or usage.get("eval_count", 0)
+    
+    if provider in pricing and model in pricing[provider]:
+        prices = pricing[provider][model]
+        cost = (input_tokens / 1000 * prices["input"]) + (output_tokens / 1000 * prices["output"])
+    
+    return {
+        "provider": provider,
+        "model": model,
+        "input_tokens": input_tokens,
+        "output_tokens": output_tokens,
+        "total_tokens": input_tokens + output_tokens,
+        "estimated_cost_usd": round(cost, 6)
+    }
+
+def _log_ai_cost(cost_data):
+    """Log AI costs to jsonl file / 記錄 AI 費用到 jsonl 檔案"""
+    _ensure_dir("log")
+    log_entry = {
+        "timestamp": now_iso(),
+        **cost_data
+    }
+    with open("log/ai_costs.jsonl", "a", encoding="utf-8") as f:
+        f.write(json.dumps(log_entry, ensure_ascii=False) + "\n")
+
 # -------------------------
 # L1 Derived (low resolution)
 # -------------------------
@@ -150,6 +277,15 @@ class Handler(BaseHTTPRequestHandler):
                         hits.append({"file": fn, "score": score})
             hits.sort(key=lambda x: x["score"], reverse=True)
             return self._send(200, {"ok": True, "hits": hits})
+        if u.path == "/ai/providers":
+            # List all available AI providers
+            if not AI_PROVIDERS_AVAILABLE or not ai_manager:
+                return self._send(503, {"ok": False, "error": "AI providers not initialized"})
+            try:
+                providers = ai_manager.list_providers()
+                return self._send(200, {"ok": True, "providers": providers})
+            except Exception as e:
+                return self._send(500, {"ok": False, "error": str(e)})
         return self._send(404, {"ok": False})
 
     def do_POST(self):
@@ -158,6 +294,78 @@ class Handler(BaseHTTPRequestHandler):
         if self.path == "/vault/write_text":
             res, snap = judge_write_text(vault, tracer, data["path"], data["text"])
             return self._send(200, {"ok": True, "res": res, "snapshot": snap})
+        if self.path == "/ai/complete":
+            # Synchronous AI completion
+            if not AI_PROVIDERS_AVAILABLE or not ai_manager:
+                return self._send(503, {"ok": False, "error": "AI providers not initialized"})
+            try:
+                prompt = data.get("prompt")
+                if not prompt:
+                    return self._send(400, {"ok": False, "error": "Missing 'prompt' field"})
+                
+                provider = data.get("provider")
+                options = data.get("options", {})
+                
+                result = judge_ai_complete(ai_manager, tracer, vault, prompt, provider, options)
+                return self._send(200, result)
+            except Exception as e:
+                return self._send(500, {"ok": False, "error": str(e)})
+        if self.path == "/ai/stream":
+            # Streaming AI completion (Server-Sent Events)
+            if not AI_PROVIDERS_AVAILABLE or not ai_manager:
+                return self._send(503, {"ok": False, "error": "AI providers not initialized"})
+            try:
+                prompt = data.get("prompt")
+                if not prompt:
+                    return self._send(400, {"ok": False, "error": "Missing 'prompt' field"})
+                
+                provider_name = data.get("provider")
+                options = data.get("options", {})
+                
+                # Get provider
+                provider = ai_manager.get_provider(provider_name)
+                if not provider.is_available():
+                    return self._send(503, {"ok": False, "error": f"Provider '{provider_name}' not available"})
+                
+                # Send SSE headers
+                self.send_response(200)
+                self.send_header("Content-Type", "text/event-stream")
+                self.send_header("Cache-Control", "no-cache")
+                self.send_header("Connection", "keep-alive")
+                self.end_headers()
+                
+                # Stream response
+                request_id = uuid.uuid4().hex
+                tracer.emit("judge_ai_stream_start", {
+                    "request_id": request_id,
+                    "provider": provider_name or ai_manager.config.get("default_provider"),
+                    "prompt_length": len(prompt)
+                })
+                
+                collected = []
+                for chunk in provider.stream(prompt, **options):
+                    collected.append(chunk)
+                    # Send SSE format: "data: {json}\n\n"
+                    event_data = json.dumps({"chunk": chunk})
+                    self.wfile.write(f"data: {event_data}\n\n".encode())
+                    self.wfile.flush()
+                
+                # Send done event
+                full_response = "".join(collected)
+                tracer.emit("judge_ai_stream_end", {
+                    "request_id": request_id,
+                    "provider": provider_name,
+                    "response_length": len(full_response),
+                    "response_sha256": _sha256_bytes(full_response.encode())
+                })
+                
+                self.wfile.write(b"data: [DONE]\n\n")
+                return
+                
+            except Exception as e:
+                error_event = json.dumps({"error": str(e)})
+                self.wfile.write(f"data: {error_event}\n\n".encode())
+                return
         return self._send(404, {"ok": False})
 
 # -------------------------
@@ -167,7 +375,22 @@ if __name__ == "__main__":
     tracer = Tracer()
     vault = Vault(ROOT)
     _ensure_dir("memory/ingest/raw")
+    _ensure_dir("memory/ingest/ai_responses")
     _ensure_dir("memory/derived/l1")
     _ensure_dir("memory/snapshot")
+    
+    # Initialize AI provider manager
+    ai_manager = None
+    if AI_PROVIDERS_AVAILABLE:
+        config_path = "config/ai_providers.json"
+        if os.path.exists(config_path):
+            try:
+                ai_manager = AIProviderManager(config_path)
+                print(f"✓ AI providers initialized: {list(ai_manager.providers.keys())}")
+            except Exception as e:
+                print(f"⚠ Failed to initialize AI providers: {e}")
+        else:
+            print(f"⚠ AI config not found: {config_path}")
+    
     print("AI SuperComputer running on http://127.0.0.1:8787")
     ThreadingHTTPServer(("127.0.0.1", 8787), Handler).serve_forever()
