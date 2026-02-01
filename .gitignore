@@ -268,3 +268,18 @@ repo_stability_report_*.md
 deployed/
 sandbox/
 cloud_spaces_sync.yaml
+
+# MrLiou AI SuperComputer - Runtime generated files
+MrLiou_AI_SuperComputer/log/trace.jsonl
+MrLiou_AI_SuperComputer/log/trace_state.json
+MrLiou_AI_SuperComputer/memory/snapshot/*
+MrLiou_AI_SuperComputer/memory/derived/l1/*
+MrLiou_AI_SuperComputer/memory/ingest/raw/*
+
+# Keep directory structure
+!MrLiou_AI_SuperComputer/memory/snapshot/.gitkeep
+!MrLiou_AI_SuperComputer/memory/derived/l1/.gitkeep
+!MrLiou_AI_SuperComputer/memory/ingest/raw/.gitkeep
+!MrLiou_AI_SuperComputer/memory/domain/A/.gitkeep
+!MrLiou_AI_SuperComputer/memory/domain/R/.gitkeep
+!MrLiou_AI_SuperComputer/log/.gitkeep
