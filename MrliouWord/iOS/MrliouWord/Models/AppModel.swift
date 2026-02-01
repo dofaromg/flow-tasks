@@ -11,7 +11,7 @@
 //  A data model for the app state.
 //
 
-import SwiftUI
+import Observation
 
 public enum ImmersiveSpaceState {
     case closed
