@@ -1,7 +1,7 @@
 {
   "task_id": "hello-world-api",
   "task_name": "Unknown Task",
-  "validation_time": "2026-01-26T08:17:27.424547",
+  "validation_time": "2026-02-01T07:48:35.800214",
   "status": "passed",
   "checks": [
     {
@@ -18,7 +18,7 @@
   "errors": [],
   "warnings": [],
   "metrics": {
-    "execution_time_ms": 135.79,
+    "execution_time_ms": 106.25,
     "files_checked": 1,
     "lines_of_code": 36
   },
@@ -27,12 +27,4 @@
     "priority": "medium",
     "tags": []
   }
-  "validation_time": "2025-10-05T11:00:09.217577",
-  "status": "failed",
-  "checks": [
-    "✓ Target file exists: flow_code/hello_api.py"
-  ],
-  "errors": [
-    "Python import failed: No module named 'flask'"
-  ]
 }

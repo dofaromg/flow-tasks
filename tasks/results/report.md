@@ -1,6 +1,6 @@
 # FlowAgent Task Processing Report
 
-**Report Generated:** 2026-01-26T08:17:27.423841
+**Report Generated:** 2026-02-01T07:48:35.799489
 
 ## Executive Summary
 
@@ -9,12 +9,12 @@
 - **Failed:** 0 ❌
 - **Warnings:** 0 ⚠️
 - **Pass Rate:** 100.0%
-- **Total Execution Time:** 139.92ms
-- **Average Task Time:** 69.96ms
+- **Total Execution Time:** 110.09ms
+- **Average Task Time:** 55.05ms
 
 ## Overall Metrics
 
-- **Total Files Checked:** 94
+- **Total Files Checked:** 106
 - **Total Lines of Code:** 36
 
 ## Recommendations
@@ -30,7 +30,7 @@
 **Description:** 寫一個 Flask 的 hello world API，輸出 "你好，世界"
 
 **Metrics:**
-- Execution Time: 135.79ms
+- Execution Time: 106.25ms
 - Files Checked: 1
 - Lines of Code: 36
 
@@ -47,8 +47,8 @@
 **Description:** MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統
 
 **Metrics:**
-- Execution Time: 0.87ms
-- Files Checked: 93
+- Execution Time: 0.96ms
+- Files Checked: 105
 - Lines of Code: 0
 
 **Checks:**
