@@ -248,10 +248,6 @@ def test_system_integration():
             pytest.fail(f"Task definition missing: {task_file}")
 
     print("✓ System integration checks passed!")
-            print(f"✗ Task definition missing: {task_file}")
-            return False
-    
-    print("✓ System integration checks passed!")
     return True
 
 def main():

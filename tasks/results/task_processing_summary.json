@@ -1,5 +1,5 @@
 {
-  "processing_time": "2026-01-26T08:17:27.423841",
+  "processing_time": "2026-02-01T07:48:35.799489",
   "total_tasks": 2,
   "passed": 2,
   "failed": 0,
@@ -8,7 +8,7 @@
     {
       "task_id": "hello-world-api",
       "task_name": "Unknown Task",
-      "validation_time": "2026-01-26T08:17:27.424547",
+      "validation_time": "2026-02-01T07:48:35.800214",
       "status": "passed",
       "checks": [
         {
@@ -25,7 +25,7 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 135.79,
+        "execution_time_ms": 106.25,
         "files_checked": 1,
         "lines_of_code": 36
       },
@@ -38,7 +38,7 @@
     {
       "task_id": "particle-language-core",
       "task_name": "Unknown Task",
-      "validation_time": "2026-01-26T08:17:27.562578",
+      "validation_time": "2026-02-01T07:48:35.908440",
       "status": "passed",
       "checks": [
         {
@@ -50,8 +50,8 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 0.87,
-        "files_checked": 93,
+        "execution_time_ms": 0.96,
+        "files_checked": 105,
         "lines_of_code": 0
       },
       "metadata": {
@@ -62,10 +62,10 @@
     }
   ],
   "overall_metrics": {
-    "total_execution_time_ms": 139.92,
-    "total_files_checked": 94,
+    "total_execution_time_ms": 110.09,
+    "total_files_checked": 106,
     "total_lines_of_code": 36,
-    "average_task_time_ms": 69.96
+    "average_task_time_ms": 55.05
   },
   "summary": {
     "pass_rate": 100.0,
@@ -73,30 +73,4 @@
       "✅ All tasks passed validation. Great job!"
     ]
   }
-  "processing_time": "2025-10-05T11:00:09.215474",
-  "total_tasks": 2,
-  "passed": 1,
-  "failed": 1,
-  "tasks": [
-    {
-      "task_id": "particle-language-core",
-      "validation_time": "2025-10-05T11:00:09.216943",
-      "status": "passed",
-      "checks": [
-        "✓ Target directory exists: particle_core/"
-      ],
-      "errors": []
-    },
-    {
-      "task_id": "hello-world-api",
-      "validation_time": "2025-10-05T11:00:09.217577",
-      "status": "failed",
-      "checks": [
-        "✓ Target file exists: flow_code/hello_api.py"
-      ],
-      "errors": [
-        "Python import failed: No module named 'flask'"
-      ]
-    }
-  ]
 }
