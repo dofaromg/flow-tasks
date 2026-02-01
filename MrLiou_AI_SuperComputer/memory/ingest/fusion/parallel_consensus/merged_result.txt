@@ -1,0 +1,9 @@
+=== Consensus Merge ===
+
+[openai]: [openai/gpt-4] Response to: Should AI be regulated?...
+
+[claude]: [claude/claude-3-opus] Response to: Should AI be regulated?...
+
+[gemini]: [gemini/gemini-pro] Response to: Should AI be regulated?...
+
+=== End Merge ===

@@ -1,0 +1,33 @@
+{
+  "fusion_id": "sequential_refine",
+  "mode": "sequential",
+  "prompt": "Explain quantum entanglement",
+  "outputs": [
+    {
+      "timestamp": "2026-02-01T11:13:40.016921+00:00",
+      "input": "Explain quantum entanglement",
+      "output": "[openai/gpt-4] Response to: Explain quantum entanglement...",
+      "provider": "openai",
+      "model": "gpt-4",
+      "role": "initial_draft"
+    },
+    {
+      "timestamp": "2026-02-01T11:13:40.016933+00:00",
+      "input": "[openai/gpt-4] Response to: Explain quantum entanglement...",
+      "output": "[claude/claude-3-opus] Response to: [openai/gpt-4] Response to: Explain quantum entang...",
+      "provider": "claude",
+      "model": "claude-3-opus",
+      "role": "critic_refine"
+    },
+    {
+      "timestamp": "2026-02-01T11:13:40.016937+00:00",
+      "input": "[claude/claude-3-opus] Response to: [openai/gpt-4] Response to: Explain quantum entang...",
+      "output": "[gemini/gemini-pro] Response to: [claude/claude-3-opus] Response to: [openai/gpt-4]...",
+      "provider": "gemini",
+      "model": "gemini-pro",
+      "role": "final_polish"
+    }
+  ],
+  "final_result": "[gemini/gemini-pro] Response to: [claude/claude-3-opus] Response to: [openai/gpt-4]...",
+  "particle_count": 3
+}

@@ -1,0 +1,33 @@
+{
+  "fusion_id": "parallel_consensus",
+  "mode": "parallel",
+  "prompt": "Should AI be regulated?",
+  "outputs": [
+    {
+      "timestamp": "2026-02-01T11:13:47.391179+00:00",
+      "input": "Should AI be regulated?",
+      "output": "[openai/gpt-4] Response to: Should AI be regulated?...",
+      "provider": "openai",
+      "model": "gpt-4",
+      "role": "analyzer"
+    },
+    {
+      "timestamp": "2026-02-01T11:13:47.391195+00:00",
+      "input": "Should AI be regulated?",
+      "output": "[claude/claude-3-opus] Response to: Should AI be regulated?...",
+      "provider": "claude",
+      "model": "claude-3-opus",
+      "role": "validator"
+    },
+    {
+      "timestamp": "2026-02-01T11:13:47.391202+00:00",
+      "input": "Should AI be regulated?",
+      "output": "[gemini/gemini-pro] Response to: Should AI be regulated?...",
+      "provider": "gemini",
+      "model": "gemini-pro",
+      "role": "synthesizer"
+    }
+  ],
+  "final_result": "=== Consensus Merge ===\n\n[openai]: [openai/gpt-4] Response to: Should AI be regulated?...\n\n[claude]: [claude/claude-3-opus] Response to: Should AI be regulated?...\n\n[gemini]: [gemini/gemini-pro] Response to: Should AI be regulated?...\n\n=== End Merge ===",
+  "particle_count": 3
+}
