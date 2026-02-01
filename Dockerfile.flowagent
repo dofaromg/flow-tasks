@@ -1,0 +1,61 @@
+# 🧠 FlowAgent 系統人格容器 Dockerfile
+# FlowAgent Personality Container System
+# Author: MR.liou
+# Version: v1.0
+
+FROM python:3.11-slim
+
+LABEL maintainer="MR.liou"
+LABEL description="FlowAgent 系統人格容器 - 語場人格執行環境"
+LABEL version="1.0"
+
+# 設定工作目錄
+WORKDIR /flowagent
+
+# 安裝系統依賴
+RUN apt-get update && apt-get install -y \
+    git \
+    zip \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# 複製 requirements 並安裝 Python 依賴
+COPY requirements.txt ./
+COPY particle_core/requirements.txt ./particle_requirements.txt
+
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir -r particle_requirements.txt
+
+# 複製 particle_core 核心模組
+COPY particle_core/ ./particle_core/
+
+# 複製 FlowAgent 核心文件
+COPY FlowAgent.TotalCore.StructureIndex.json ./
+COPY FlowAgent_Persona_Registry.json ./
+COPY SeedPersona_Founder_MrLiou.json ./
+
+# 複製啟動腳本
+COPY start.sh ./
+RUN chmod +x start.sh
+
+# 設定環境變數
+ENV PYTHONPATH=/flowagent
+ENV FLOWAGENT_HOME=/flowagent
+ENV FLOWAGENT_PERSONA=EchoBody.IdentityBase
+ENV PYTHONIOENCODING=utf-8
+
+# 創建人格數據目錄
+RUN mkdir -p /flowagent/persona_data \
+    /flowagent/memory_seeds \
+    /flowagent/runtime_modules
+
+# 設定容器啟動時的預設命令
+ENTRYPOINT ["/flowagent/start.sh"]
+CMD ["--persona", "EchoBody.IdentityBase"]
+
+# 暴露人格 CLI 端口（可選，用於未來 API 擴展）
+EXPOSE 8088
+
+# 設定健康檢查
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "print('FlowAgent is running')" || exit 1
