@@ -1,0 +1,9 @@
+=== Consensus Merge ===
+
+[openai]: [openai/gpt-4] Response to: What are the benefits and risks of artificial inte...
+
+[claude]: [claude/claude-3-opus] Response to: What are the benefits and risks of artificial inte...
+
+[gemini]: [gemini/gemini-pro] Response to: What are the benefits and risks of artificial inte...
+
+=== End Merge ===
