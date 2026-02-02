@@ -7,8 +7,32 @@ import os
 import json
 import urllib.request
 import urllib.error
+import re
 from abc import ABC, abstractmethod
 from typing import Iterator, Dict, Any, Optional
+
+
+# -------------------------
+# Utility Functions
+# -------------------------
+def _sanitize_error_message(error_msg: str) -> str:
+    """
+    Sanitize error messages to prevent API key leakage.
+    移除錯誤訊息中的敏感資訊，防止 API 密鑰洩漏
+    """
+    # Remove common API key patterns
+    patterns = [
+        (r'Bearer\s+[A-Za-z0-9\-_]+', 'Bearer [REDACTED]'),
+        (r'api[_-]?key["\']?\s*[:=]\s*["\']?[A-Za-z0-9\-_]+', 'api_key=[REDACTED]'),
+        (r'sk-[A-Za-z0-9]{20,}', 'sk-[REDACTED]'),  # OpenAI keys
+        (r'x-api-key:\s*[A-Za-z0-9\-_]+', 'x-api-key: [REDACTED]'),
+    ]
+    
+    sanitized = error_msg
+    for pattern, replacement in patterns:
+        sanitized = re.sub(pattern, replacement, sanitized, flags=re.IGNORECASE)
+    
+    return sanitized
 
 
 # -------------------------
@@ -104,9 +128,11 @@ class OpenAIProvider(BaseAIProvider):
                 }
         except urllib.error.HTTPError as e:
             error_body = e.read().decode() if e.fp else ""
-            raise RuntimeError(f"OpenAI API error {e.code}: {error_body}")
+            sanitized_error = _sanitize_error_message(error_body)
+            raise RuntimeError(f"OpenAI API error {e.code}: {sanitized_error}")
         except Exception as e:
-            raise RuntimeError(f"OpenAI API request failed: {str(e)}")
+            sanitized_error = _sanitize_error_message(str(e))
+            raise RuntimeError(f"OpenAI API request failed: {sanitized_error}")
     
     def stream(self, prompt: str, **kwargs) -> Iterator[str]:
         """Streaming completion using OpenAI API"""
@@ -144,15 +170,21 @@ class OpenAIProvider(BaseAIProvider):
                     if not line or line == "data: [DONE]":
                         continue
                     if line.startswith("data: "):
-                        chunk = json.loads(line[6:])
-                        delta = chunk["choices"][0].get("delta", {})
-                        if "content" in delta:
-                            yield delta["content"]
+                        try:
+                            chunk = json.loads(line[6:])
+                            delta = chunk["choices"][0].get("delta", {})
+                            if "content" in delta:
+                                yield delta["content"]
+                        except json.JSONDecodeError:
+                            # Skip malformed JSON chunks and continue streaming
+                            continue
         except urllib.error.HTTPError as e:
             error_body = e.read().decode() if e.fp else ""
-            raise RuntimeError(f"OpenAI API error {e.code}: {error_body}")
+            sanitized_error = _sanitize_error_message(error_body)
+            raise RuntimeError(f"OpenAI API error {e.code}: {sanitized_error}")
         except Exception as e:
-            raise RuntimeError(f"OpenAI streaming failed: {str(e)}")
+            sanitized_error = _sanitize_error_message(str(e))
+            raise RuntimeError(f"OpenAI streaming failed: {sanitized_error}")
 
 
 # -------------------------
@@ -213,9 +245,11 @@ class ClaudeProvider(BaseAIProvider):
                 }
         except urllib.error.HTTPError as e:
             error_body = e.read().decode() if e.fp else ""
-            raise RuntimeError(f"Claude API error {e.code}: {error_body}")
+            sanitized_error = _sanitize_error_message(error_body)
+            raise RuntimeError(f"Claude API error {e.code}: {sanitized_error}")
         except Exception as e:
-            raise RuntimeError(f"Claude API request failed: {str(e)}")
+            sanitized_error = _sanitize_error_message(str(e))
+            raise RuntimeError(f"Claude API request failed: {sanitized_error}")
     
     def stream(self, prompt: str, **kwargs) -> Iterator[str]:
         """Streaming completion using Claude API"""
@@ -268,9 +302,11 @@ class ClaudeProvider(BaseAIProvider):
                         continue
         except urllib.error.HTTPError as e:
             error_body = e.read().decode() if e.fp else ""
-            raise RuntimeError(f"Claude API error {e.code}: {error_body}")
+            sanitized_error = _sanitize_error_message(error_body)
+            raise RuntimeError(f"Claude API error {e.code}: {sanitized_error}")
         except Exception as e:
-            raise RuntimeError(f"Claude streaming failed: {str(e)}")
+            sanitized_error = _sanitize_error_message(str(e))
+            raise RuntimeError(f"Claude streaming failed: {sanitized_error}")
 
 
 # -------------------------
@@ -329,9 +365,11 @@ class GeminiProvider(BaseAIProvider):
                 }
         except urllib.error.HTTPError as e:
             error_body = e.read().decode() if e.fp else ""
-            raise RuntimeError(f"Gemini API error {e.code}: {error_body}")
+            sanitized_error = _sanitize_error_message(error_body)
+            raise RuntimeError(f"Gemini API error {e.code}: {sanitized_error}")
         except Exception as e:
-            raise RuntimeError(f"Gemini API request failed: {str(e)}")
+            sanitized_error = _sanitize_error_message(str(e))
+            raise RuntimeError(f"Gemini API request failed: {sanitized_error}")
     
     def stream(self, prompt: str, **kwargs) -> Iterator[str]:
         """Streaming completion using Gemini API"""
@@ -377,9 +415,11 @@ class GeminiProvider(BaseAIProvider):
                         continue
         except urllib.error.HTTPError as e:
             error_body = e.read().decode() if e.fp else ""
-            raise RuntimeError(f"Gemini API error {e.code}: {error_body}")
+            sanitized_error = _sanitize_error_message(error_body)
+            raise RuntimeError(f"Gemini API error {e.code}: {sanitized_error}")
         except Exception as e:
-            raise RuntimeError(f"Gemini streaming failed: {str(e)}")
+            sanitized_error = _sanitize_error_message(str(e))
+            raise RuntimeError(f"Gemini streaming failed: {sanitized_error}")
 
 
 # -------------------------
@@ -398,7 +438,7 @@ class OllamaProvider(BaseAIProvider):
             req = urllib.request.Request(f"{self.base_url}/api/tags")
             with urllib.request.urlopen(req, timeout=2) as response:
                 return response.status == 200
-        except:
+        except (urllib.error.URLError, TimeoutError, OSError):
             return False
     
     def complete(self, prompt: str, **kwargs) -> Dict[str, Any]:
@@ -443,9 +483,11 @@ class OllamaProvider(BaseAIProvider):
                 }
         except urllib.error.HTTPError as e:
             error_body = e.read().decode() if e.fp else ""
-            raise RuntimeError(f"Ollama API error {e.code}: {error_body}")
+            sanitized_error = _sanitize_error_message(error_body)
+            raise RuntimeError(f"Ollama API error {e.code}: {sanitized_error}")
         except Exception as e:
-            raise RuntimeError(f"Ollama API request failed: {str(e)}")
+            sanitized_error = _sanitize_error_message(str(e))
+            raise RuntimeError(f"Ollama API request failed: {sanitized_error}")
     
     def stream(self, prompt: str, **kwargs) -> Iterator[str]:
         """Streaming completion using Ollama API"""
@@ -488,9 +530,11 @@ class OllamaProvider(BaseAIProvider):
                         continue
         except urllib.error.HTTPError as e:
             error_body = e.read().decode() if e.fp else ""
-            raise RuntimeError(f"Ollama API error {e.code}: {error_body}")
+            sanitized_error = _sanitize_error_message(error_body)
+            raise RuntimeError(f"Ollama API error {e.code}: {sanitized_error}")
         except Exception as e:
-            raise RuntimeError(f"Ollama streaming failed: {str(e)}")
+            sanitized_error = _sanitize_error_message(str(e))
+            raise RuntimeError(f"Ollama streaming failed: {sanitized_error}")
 
 
 # -------------------------
@@ -552,9 +596,11 @@ class AzureOpenAIProvider(BaseAIProvider):
                 }
         except urllib.error.HTTPError as e:
             error_body = e.read().decode() if e.fp else ""
-            raise RuntimeError(f"Azure OpenAI API error {e.code}: {error_body}")
+            sanitized_error = _sanitize_error_message(error_body)
+            raise RuntimeError(f"Azure OpenAI API error {e.code}: {sanitized_error}")
         except Exception as e:
-            raise RuntimeError(f"Azure OpenAI API request failed: {str(e)}")
+            sanitized_error = _sanitize_error_message(str(e))
+            raise RuntimeError(f"Azure OpenAI API request failed: {sanitized_error}")
     
     def stream(self, prompt: str, **kwargs) -> Iterator[str]:
         """Streaming completion using Azure OpenAI API"""
@@ -591,15 +637,21 @@ class AzureOpenAIProvider(BaseAIProvider):
                     if not line or line == "data: [DONE]":
                         continue
                     if line.startswith("data: "):
-                        chunk = json.loads(line[6:])
-                        delta = chunk["choices"][0].get("delta", {})
-                        if "content" in delta:
-                            yield delta["content"]
+                        try:
+                            chunk = json.loads(line[6:])
+                            delta = chunk["choices"][0].get("delta", {})
+                            if "content" in delta:
+                                yield delta["content"]
+                        except json.JSONDecodeError:
+                            # Skip malformed JSON chunks and continue streaming
+                            continue
         except urllib.error.HTTPError as e:
             error_body = e.read().decode() if e.fp else ""
-            raise RuntimeError(f"Azure OpenAI API error {e.code}: {error_body}")
+            sanitized_error = _sanitize_error_message(error_body)
+            raise RuntimeError(f"Azure OpenAI API error {e.code}: {sanitized_error}")
         except Exception as e:
-            raise RuntimeError(f"Azure OpenAI streaming failed: {str(e)}")
+            sanitized_error = _sanitize_error_message(str(e))
+            raise RuntimeError(f"Azure OpenAI streaming failed: {sanitized_error}")
 
 
 # -------------------------
@@ -678,21 +730,26 @@ class AIProviderManager:
         return [p.get_info() for p in self.providers.values()]
     
     def complete_with_fallback(self, prompt: str, provider_name: Optional[str] = None, **kwargs) -> dict:
-        """Try primary provider, fallback to alternatives on failure"""
+        """
+        Try primary provider, fallback to alternatives on failure.
+        If provider_name is explicitly specified, no fallback is used (user choice is respected).
+        """
         fallback_enabled = self.config.get("fallback_enabled", True)
         
         # Determine providers to try
         if provider_name:
+            # Explicit provider specified: respect the choice, do not use fallbacks
             providers_to_try = [provider_name]
         else:
+            # No explicit provider: use default and optional fallback chain
             providers_to_try = [self.config.get("default_provider")]
-        
-        # Add fallback providers if enabled
-        if fallback_enabled:
-            fallback_order = self.config.get("fallback_order", [])
-            for fb in fallback_order:
-                if fb not in providers_to_try and fb in self.providers:
-                    providers_to_try.append(fb)
+            
+            # Add fallback providers if enabled
+            if fallback_enabled:
+                fallback_order = self.config.get("fallback_order", [])
+                for fb in fallback_order:
+                    if fb not in providers_to_try and fb in self.providers:
+                        providers_to_try.append(fb)
         
         errors = []
         

@@ -79,6 +79,22 @@ Edit `config/ai_providers.json` to customize provider settings:
 }
 ```
 
+### 4. ⚠️ 安全與隱私注意事項 / Security & Privacy Considerations
+
+**重要提醒 / Important Notices:**
+
+- **提示詞會被保存到磁碟** / Prompts are persisted to disk  
+  所有 AI 請求的提示詞和回應都會保存在 `memory/ingest/ai_responses/` 目錄中，用於完整的審計追蹤和 Merkle 鏈驗證。請勿在提示詞中包含敏感資訊（PII、API 金鑰、機密數據等）。  
+  All AI request prompts and responses are saved in `memory/ingest/ai_responses/` for complete audit trails and Merkle chain verification. Do not include sensitive information (PII, API keys, confidential data) in prompts.
+
+- **無身份驗證機制** / No authentication mechanism  
+  目前 HTTP 端點沒有身份驗證。請勿在公開網路上暴露此服務。  
+  HTTP endpoints currently have no authentication. Do not expose this service on public networks.
+
+- **費用追蹤** / Cost tracking  
+  所有 AI 請求的成本會記錄在 `log/ai_costs.jsonl` 中。請定期監控以避免意外費用。  
+  All AI request costs are logged in `log/ai_costs.jsonl`. Monitor regularly to avoid unexpected charges.
+
 ## 📖 使用範例 / Usage Examples
 
 ### 健康檢查 / Health Check
@@ -298,7 +314,7 @@ tail -f log/ai_costs.jsonl
 範例記錄 / Example entry:
 ```json
 {
-  "timestamp": "2026-02-01T12:00:00Z",
+  "timestamp": "2026-XX-XXT12:00:00Z",
   "provider": "openai",
   "model": "gpt-4",
   "input_tokens": 50,

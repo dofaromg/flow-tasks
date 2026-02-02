@@ -101,8 +101,7 @@ def test_ai_completion():
                 print(f"Request ID: {result.get('request_id')}\n")
                 print(f"Response:\n{result.get('content', 'N/A')}\n")
                 
-                # Show usage and cost
-                usage = result.get('usage', {})
+                # Show cost
                 cost = result.get('cost', {})
                 
                 print(f"Token Usage:")
