@@ -283,8 +283,9 @@ def test_server_startup():
         try:
             if 'server_process' in locals():
                 server_process.kill()
-        except:
-            pass
+        except Exception as cleanup_error:
+            # Ignore cleanup errors - process may already be terminated
+            print(f"Note: failed to kill server process during cleanup: {cleanup_error}")
         
         os.chdir(original_dir)
         return False

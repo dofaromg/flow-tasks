@@ -1,4 +1,4 @@
-import os, json, time, uuid, hashlib, datetime as _dt, re
+import os, json, time, uuid, hashlib, datetime as _dt, re, threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
@@ -42,6 +42,7 @@ class Tracer:
         self.state_path = "log/trace_state.json"
         self._state = self._load_state()
         self.rid = self._state.get("rid") or uuid.uuid4().hex
+        self._lock = threading.Lock()  # Thread safety for concurrent access
 
     def _load_state(self):
         if os.path.exists(self.state_path):
@@ -49,23 +50,25 @@ class Tracer:
         return {"tick": 0, "merkle_root": "0"*64, "rid": uuid.uuid4().hex}
 
     def emit(self, event, payload):
-        self._state["tick"] += 1
-        rec = {
-            "rid": self._state["rid"],
-            "tick": self._state["tick"],
-            "event": event,
-            "ts": now_iso(),
-            "payload": payload
-        }
-        raw = json.dumps(rec, sort_keys=True).encode()
-        leaf = hashlib.sha256(raw).hexdigest()
-        combo = (self._state["merkle_root"] + leaf).encode()
-        self._state["merkle_root"] = hashlib.sha256(combo).hexdigest()
-        rec["merkle_root"] = self._state["merkle_root"]
-        with open(self.path, "a", encoding="utf-8") as f:
-            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
-        json.dump(self._state, open(self.state_path, "w"))
-        return rec
+        # Thread-safe emission with lock to prevent race conditions
+        with self._lock:
+            self._state["tick"] += 1
+            rec = {
+                "rid": self._state["rid"],
+                "tick": self._state["tick"],
+                "event": event,
+                "ts": now_iso(),
+                "payload": payload
+            }
+            raw = json.dumps(rec, sort_keys=True).encode()
+            leaf = hashlib.sha256(raw).hexdigest()
+            combo = (self._state["merkle_root"] + leaf).encode()
+            self._state["merkle_root"] = hashlib.sha256(combo).hexdigest()
+            rec["merkle_root"] = self._state["merkle_root"]
+            with open(self.path, "a", encoding="utf-8") as f:
+                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+            json.dump(self._state, open(self.state_path, "w"))
+            return rec
 
 # -------------------------
 # Vault
@@ -222,6 +225,9 @@ def _calculate_cost(provider, model, usage):
         "estimated_cost_usd": round(cost, 6)
     }
 
+# Thread-safe lock for ai_costs.jsonl writes
+_ai_cost_lock = threading.Lock()
+
 def _log_ai_cost(cost_data):
     """Log AI costs to jsonl file / 記錄 AI 費用到 jsonl 檔案"""
     _ensure_dir("log")
@@ -229,8 +235,10 @@ def _log_ai_cost(cost_data):
         "timestamp": now_iso(),
         **cost_data
     }
-    with open("log/ai_costs.jsonl", "a", encoding="utf-8") as f:
-        f.write(json.dumps(log_entry, ensure_ascii=False) + "\n")
+    # Thread-safe file write to prevent interleaved writes
+    with _ai_cost_lock:
+        with open("log/ai_costs.jsonl", "a", encoding="utf-8") as f:
+            f.write(json.dumps(log_entry, ensure_ascii=False) + "\n")
 
 # -------------------------
 # L1 Derived (low resolution)
@@ -303,10 +311,32 @@ class Handler(BaseHTTPRequestHandler):
                 if not prompt:
                     return self._send(400, {"ok": False, "error": "Missing 'prompt' field"})
                 
+                # Validate prompt
+                if not isinstance(prompt, str):
+                    return self._send(400, {"ok": False, "error": "Prompt must be a string"})
+                if len(prompt) > 100000:  # 100K character limit
+                    return self._send(400, {"ok": False, "error": "Prompt exceeds maximum length (100K characters)"})
+                if '\x00' in prompt:  # Check for null bytes
+                    return self._send(400, {"ok": False, "error": "Prompt contains invalid characters"})
+                
                 provider = data.get("provider")
                 options = data.get("options", {})
                 
-                result = judge_ai_complete(ai_manager, tracer, vault, prompt, provider, options)
+                # Validate and whitelist options
+                allowed_options = {"max_tokens", "temperature", "top_p", "frequency_penalty", "presence_penalty"}
+                filtered_options = {k: v for k, v in options.items() if k in allowed_options}
+                
+                # Validate option ranges
+                if "temperature" in filtered_options:
+                    temp = filtered_options["temperature"]
+                    if not isinstance(temp, (int, float)) or temp < 0 or temp > 2:
+                        return self._send(400, {"ok": False, "error": "Temperature must be between 0 and 2"})
+                if "max_tokens" in filtered_options:
+                    mt = filtered_options["max_tokens"]
+                    if not isinstance(mt, int) or mt < 1 or mt > 32000:
+                        return self._send(400, {"ok": False, "error": "max_tokens must be between 1 and 32000"})
+                
+                result = judge_ai_complete(ai_manager, tracer, vault, prompt, provider, filtered_options)
                 return self._send(200, result)
             except Exception as e:
                 return self._send(500, {"ok": False, "error": str(e)})
@@ -319,13 +349,27 @@ class Handler(BaseHTTPRequestHandler):
                 if not prompt:
                     return self._send(400, {"ok": False, "error": "Missing 'prompt' field"})
                 
+                # Validate prompt
+                if not isinstance(prompt, str):
+                    return self._send(400, {"ok": False, "error": "Prompt must be a string"})
+                if len(prompt) > 100000:  # 100K character limit
+                    return self._send(400, {"ok": False, "error": "Prompt exceeds maximum length (100K characters)"})
+                if '\x00' in prompt:  # Check for null bytes
+                    return self._send(400, {"ok": False, "error": "Prompt contains invalid characters"})
+                
                 provider_name = data.get("provider")
                 options = data.get("options", {})
                 
+                # Validate and whitelist options
+                allowed_options = {"max_tokens", "temperature", "top_p", "frequency_penalty", "presence_penalty"}
+                filtered_options = {k: v for k, v in options.items() if k in allowed_options}
+                
                 # Get provider
+                # Fix: Get effective provider name for error messages
+                effective_provider_name = provider_name or ai_manager.config.get("default_provider")
                 provider = ai_manager.get_provider(provider_name)
                 if not provider.is_available():
-                    return self._send(503, {"ok": False, "error": f"Provider '{provider_name}' not available"})
+                    return self._send(503, {"ok": False, "error": f"Provider '{effective_provider_name}' not available"})
                 
                 # Send SSE headers
                 self.send_response(200)
@@ -338,12 +382,12 @@ class Handler(BaseHTTPRequestHandler):
                 request_id = uuid.uuid4().hex
                 tracer.emit("judge_ai_stream_start", {
                     "request_id": request_id,
-                    "provider": provider_name or ai_manager.config.get("default_provider"),
+                    "provider": effective_provider_name,
                     "prompt_length": len(prompt)
                 })
                 
                 collected = []
-                for chunk in provider.stream(prompt, **options):
+                for chunk in provider.stream(prompt, **filtered_options):
                     collected.append(chunk)
                     # Send SSE format: "data: {json}\n\n"
                     event_data = json.dumps({"chunk": chunk})
@@ -354,7 +398,7 @@ class Handler(BaseHTTPRequestHandler):
                 full_response = "".join(collected)
                 tracer.emit("judge_ai_stream_end", {
                     "request_id": request_id,
-                    "provider": provider_name,
+                    "provider": effective_provider_name,
                     "response_length": len(full_response),
                     "response_sha256": _sha256_bytes(full_response.encode())
                 })
@@ -363,8 +407,17 @@ class Handler(BaseHTTPRequestHandler):
                 return
                 
             except Exception as e:
-                error_event = json.dumps({"error": str(e)})
+                # Emit error trace for audit consistency
+                error_message = str(e)
+                request_id = uuid.uuid4().hex
+                tracer.emit("judge_ai_stream_error", {
+                    "request_id": request_id,
+                    "provider": data.get("provider") or ai_manager.config.get("default_provider"),
+                    "error": error_message
+                })
+                error_event = json.dumps({"error": error_message})
                 self.wfile.write(f"data: {error_event}\n\n".encode())
+                self.wfile.write(b"data: [DONE]\n\n")  # Properly close the stream
                 return
         return self._send(404, {"ok": False})
 
