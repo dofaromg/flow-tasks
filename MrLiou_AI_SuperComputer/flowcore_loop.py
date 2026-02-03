@@ -2,6 +2,17 @@ import os, json, time, uuid, hashlib, datetime as _dt, re, threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
+# Import fusion system
+try:
+    from ai_fusion_core import (
+        AIParticle, FusionStack, MobiusLoop, BaseAIProvider,
+        load_fusion_manifest, create_stack_from_manifest
+    )
+    from fusion_strategies import apply_strategy
+    FUSION_AVAILABLE = True
+except ImportError:
+    FUSION_AVAILABLE = False
+
 ROOT = os.getcwd()
 
 # Import AI providers
@@ -256,6 +267,102 @@ def l1_build(vault, src):
     return {"out": out, "sha256": sig}
 
 # -------------------------
+# AI Fusion Judge Functions
+# -------------------------
+def judge_ai_fusion(fusion_stack, tracer, vault, prompt, manifest_name):
+    """
+    Execute AI fusion with full audit trail
+    執行 AI 融合並完整稽核追蹤
+    """
+    fusion_id = fusion_stack.fusion_id
+    
+    # Emit pre-fusion trace
+    tracer.emit("fusion_pre", {
+        "fusion_id": fusion_id,
+        "manifest": manifest_name,
+        "mode": fusion_stack.fusion_mode,
+        "prompt": prompt[:100]
+    })
+    
+    # Execute fusion
+    result = fusion_stack.execute(prompt)
+    
+    # Save outputs to memory
+    fusion_dir = f"memory/ingest/fusion/{fusion_id}"
+    _ensure_dir(fusion_dir)
+    
+    # Save each cycle/output
+    for i, output in enumerate(result.get("outputs", [])):
+        output_path = f"{fusion_dir}/output_{i}_{output.get('provider', 'unknown')}.txt"
+        vault.write_text(output_path, output.get("output", ""))
+    
+    # Save final result
+    result_path = f"{fusion_dir}/merged_result.txt"
+    vault.write_text(result_path, result.get("final_result", ""))
+    
+    # Save full result JSON
+    result_json_path = f"{fusion_dir}/fusion_result.json"
+    vault.write_text(result_json_path, _json(result))
+    
+    # Emit post-fusion trace
+    tracer.emit("fusion_post", {
+        "fusion_id": fusion_id,
+        "manifest": manifest_name,
+        "outputs_saved": len(result.get("outputs", [])),
+        "result_path": result_path
+    })
+    
+    return result
+
+def judge_mobius_loop(mobius, tracer, vault, prompt, max_cycles):
+    """
+    Execute Möbius loop with cycle tracking
+    執行莫比烏斯循環並追蹤循環
+    """
+    loop_id = mobius.loop_id
+    
+    # Emit pre-loop trace
+    tracer.emit("mobius_pre", {
+        "loop_id": loop_id,
+        "prompt": prompt[:100],
+        "max_cycles": max_cycles
+    })
+    
+    # Execute loop
+    result = mobius.run(prompt, max_cycles=max_cycles)
+    
+    # Save cycle history
+    loop_dir = f"memory/ingest/mobius/{loop_id}"
+    _ensure_dir(loop_dir)
+    
+    # Save each cycle
+    for cycle_data in result.get("cycle_history", []):
+        cycle_num = cycle_data["cycle"]
+        cycle_dir = f"{loop_dir}/cycle_{cycle_num}"
+        _ensure_dir(cycle_dir)
+        
+        vault.write_text(f"{cycle_dir}/input.txt", cycle_data["input"])
+        vault.write_text(f"{cycle_dir}/output.txt", cycle_data["output"])
+        vault.write_text(f"{cycle_dir}/cycle_data.json", _json(cycle_data))
+    
+    # Save convergence report
+    convergence_report = {
+        "converged": result.get("converged", False),
+        "total_cycles": result.get("total_cycles", 0),
+        "final_output": result.get("final_output", "")
+    }
+    vault.write_text(f"{loop_dir}/convergence_report.json", _json(convergence_report))
+    
+    # Emit post-loop trace
+    tracer.emit("mobius_post", {
+        "loop_id": loop_id,
+        "converged": result.get("converged", False),
+        "cycles": result.get("total_cycles", 0)
+    })
+    
+    return result
+
+# -------------------------
 # HTTP
 # -------------------------
 class Handler(BaseHTTPRequestHandler):
@@ -294,11 +401,36 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(200, {"ok": True, "providers": providers})
             except Exception as e:
                 return self._send(500, {"ok": False, "error": str(e)})
+        
+        # AI Fusion endpoints (GET)
+        if u.path == "/ai/fusion/manifests":
+            if not FUSION_AVAILABLE:
+                return self._send(503, {"ok": False, "error": "Fusion system not available"})
+            
+            # List all fusion manifests
+            manifests = []
+            manifest_dir = "fusion_manifests"
+            if os.path.isdir(manifest_dir):
+                for fn in os.listdir(manifest_dir):
+                    if fn.endswith(".manifest.json"):
+                        try:
+                            manifest = load_fusion_manifest(os.path.join(manifest_dir, fn))
+                            manifests.append({
+                                "filename": fn,
+                                "name": manifest.get("fusion_name", ""),
+                                "mode": manifest.get("fusion_mode", ""),
+                                "description": manifest.get("description", "")
+                            })
+                        except:
+                            pass
+            return self._send(200, {"ok": True, "manifests": manifests})
+        
         return self._send(404, {"ok": False})
 
     def do_POST(self):
         ln = int(self.headers.get("Content-Length", 0))
         data = json.loads(self.rfile.read(ln) or "{}")
+        
         if self.path == "/vault/write_text":
             res, snap = judge_write_text(vault, tracer, data["path"], data["text"])
             return self._send(200, {"ok": True, "res": res, "snapshot": snap})
@@ -419,6 +551,98 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(f"data: {error_event}\n\n".encode())
                 self.wfile.write(b"data: [DONE]\n\n")  # Properly close the stream
                 return
+        
+        # AI Fusion endpoints (POST)
+        if self.path == "/ai/fusion/execute":
+            if not FUSION_AVAILABLE:
+                return self._send(503, {"ok": False, "error": "Fusion system not available"})
+            
+            prompt = data.get("prompt", "")
+            manifest_name = data.get("manifest", "")
+            
+            if not prompt:
+                return self._send(400, {"ok": False, "error": "prompt required"})
+            
+            if not manifest_name:
+                return self._send(400, {"ok": False, "error": "manifest required"})
+            
+            # Load manifest
+            manifest_path = f"fusion_manifests/{manifest_name}.manifest.json"
+            if not os.path.exists(manifest_path):
+                return self._send(404, {"ok": False, "error": f"Manifest '{manifest_name}' not found"})
+            
+            try:
+                manifest = load_fusion_manifest(manifest_path)
+                stack = create_stack_from_manifest(manifest)
+                result = judge_ai_fusion(stack, tracer, vault, prompt, manifest_name)
+                return self._send(200, {"ok": True, "result": result})
+            except Exception as e:
+                return self._send(500, {"ok": False, "error": str(e)})
+        
+        if self.path == "/ai/fusion/mobius":
+            if not FUSION_AVAILABLE:
+                return self._send(503, {"ok": False, "error": "Fusion system not available"})
+            
+            prompt = data.get("prompt", "")
+            max_cycles = data.get("max_cycles", 5)
+            convergence_threshold = data.get("convergence_threshold", 0.9)
+            manifest_name = data.get("manifest", "mobius_evolve")
+            
+            if not prompt:
+                return self._send(400, {"ok": False, "error": "prompt required"})
+            
+            # Load manifest for Möbius loop
+            manifest_path = f"fusion_manifests/{manifest_name}.manifest.json"
+            if not os.path.exists(manifest_path):
+                return self._send(404, {"ok": False, "error": f"Manifest '{manifest_name}' not found"})
+            
+            try:
+                manifest = load_fusion_manifest(manifest_path)
+                stack = create_stack_from_manifest(manifest)
+                
+                # Get transform prompt from manifest
+                transform_prompt = manifest.get("transform_prompt", "Improve and expand: {output}")
+                
+                mobius = MobiusLoop(stack)
+                result = judge_mobius_loop(mobius, tracer, vault, prompt, max_cycles)
+                return self._send(200, {"ok": True, "result": result})
+            except Exception as e:
+                return self._send(500, {"ok": False, "error": str(e)})
+        
+        if self.path == "/ai/fusion/custom":
+            if not FUSION_AVAILABLE:
+                return self._send(503, {"ok": False, "error": "Fusion system not available"})
+            
+            prompt = data.get("prompt", "")
+            mode = data.get("mode", "sequential")
+            particles_config = data.get("particles", [])
+            
+            if not prompt:
+                return self._send(400, {"ok": False, "error": "prompt required"})
+            
+            if not particles_config:
+                return self._send(400, {"ok": False, "error": "particles required"})
+            
+            try:
+                # Create custom stack
+                stack = FusionStack()
+                stack.set_mode(mode)
+                
+                for particle_config in particles_config:
+                    provider_name = particle_config.get("provider", "mock")
+                    model = particle_config.get("model", "default")
+                    weight = particle_config.get("weight", 1.0)
+                    role = particle_config.get("role", "")
+                    
+                    provider = BaseAIProvider(provider_name, model)
+                    particle = AIParticle(provider, weight=weight, role=role)
+                    stack.add_particle(particle)
+                
+                result = judge_ai_fusion(stack, tracer, vault, prompt, "custom")
+                return self._send(200, {"ok": True, "result": result})
+            except Exception as e:
+                return self._send(500, {"ok": False, "error": str(e)})
+        
         return self._send(404, {"ok": False})
 
 # -------------------------
@@ -446,4 +670,14 @@ if __name__ == "__main__":
             print(f"⚠ AI config not found: {config_path}")
     
     print("AI SuperComputer running on http://127.0.0.1:8787")
+    _ensure_dir("memory/ingest/fusion")
+    _ensure_dir("memory/ingest/mobius")
+    _ensure_dir("memory/derived/l1")
+    _ensure_dir("memory/snapshot")
+    _ensure_dir("memory/domain/mobius_cycles")
+    
+    fusion_status = "enabled" if FUSION_AVAILABLE else "disabled"
+    print(f"AI SuperComputer running on http://127.0.0.1:8787")
+    print(f"Fusion System: {fusion_status}")
+    
     ThreadingHTTPServer(("127.0.0.1", 8787), Handler).serve_forever()
