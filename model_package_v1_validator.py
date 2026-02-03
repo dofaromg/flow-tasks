@@ -307,6 +307,9 @@ def main() -> int:
                     except Exception:
                         # Best-effort cleanup: ignore errors when removing temp artifacts.
                         pass
+                    except Exception as cleanup_error:
+                        # Best-effort cleanup: log and ignore errors when removing temp artifacts.
+                        sys.stderr.write(f"[WARN] Failed to remove {p}: {cleanup_error}\n")
             workdir.mkdir(parents=True, exist_ok=True)
         except Exception as e:
             findings.append(Finding("ERROR", "WORKDIR_PREP_FAILED", f"Failed to prepare workdir: {e}", str(workdir)))
