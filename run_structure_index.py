@@ -8,12 +8,13 @@ AI 超級電腦結構表情索引代理系統 - 主入口
 import sys
 from pathlib import Path
 
-# 添加當前目錄到 Python 路徑
-sys.path.insert(0, str(Path(__file__).parent))
+# 添加 .copilot 目錄到 Python 路徑
+copilot_dir = Path(__file__).parent / '.copilot'
+sys.path.insert(0, str(copilot_dir))
 
-from .copilot.scanner.structure_scanner import StructureScanner
-from .copilot.generator.emoji_indexer import EmojiIndexer
-from .copilot.triggers.smart_updater import SmartUpdater
+from scanner.structure_scanner import StructureScanner
+from generator.emoji_indexer import EmojiIndexer
+from triggers.smart_updater import SmartUpdater
 
 
 def run_full_scan(root_path: str = '.', max_depth: int = 8, check_triggers: bool = False):

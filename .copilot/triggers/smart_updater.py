@@ -137,7 +137,15 @@ class SmartUpdater:
                     old_lines = old_data.get('statistics', {}).get('total_lines', 0)
                 
                 # 執行新的掃描（簡化版）
-                from .scanner.structure_scanner import StructureScanner
+                import sys
+                from pathlib import Path as PathLib
+                
+                # 添加 .copilot 目錄到 Python 路徑
+                copilot_dir = PathLib(__file__).parent.parent
+                if str(copilot_dir) not in sys.path:
+                    sys.path.insert(0, str(copilot_dir))
+                
+                from scanner.structure_scanner import StructureScanner
                 scanner = StructureScanner(root_path=str(self.root_path), max_depth=8)
                 scanner.scan()
                 new_lines = scanner.scan_results['statistics']['total_lines']
@@ -204,13 +212,21 @@ class SmartUpdater:
         
         # 執行掃描
         try:
-            from .scanner.structure_scanner import StructureScanner
+            import sys
+            from pathlib import Path
+            
+            # 添加 .copilot 目錄到 Python 路徑
+            copilot_dir = Path(__file__).parent.parent
+            if str(copilot_dir) not in sys.path:
+                sys.path.insert(0, str(copilot_dir))
+            
+            from scanner.structure_scanner import StructureScanner
             scanner = StructureScanner(root_path=str(self.root_path), max_depth=8)
             scanner.scan()
             scanner.save_json('.copilot/structure-scan.json')
             
             # 生成索引
-            from .generator.emoji_indexer import EmojiIndexer
+            from generator.emoji_indexer import EmojiIndexer
             indexer = EmojiIndexer(scan_data=scanner.scan_results)
             indexer.generate_all()
             
