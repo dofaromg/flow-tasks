@@ -20,6 +20,7 @@ import sys
 import os
 import re
 from enum import Enum
+from dataclasses import dataclass
 
 # 加入 core 到路徑（若存在）
 _core_path = os.path.join(os.path.dirname(__file__), "core")
@@ -62,6 +63,12 @@ except ModuleNotFoundError:
 try:
     from memory_system import FlowMemoryCore, MemoryType
 except ModuleNotFoundError:
+    @dataclass
+    class MemoryResult:
+        """Fallback 記憶搜尋結果。"""
+        content: str
+
+
     class MemoryType(Enum):
         """Fallback 記憶類型定義。"""
 
@@ -95,7 +102,7 @@ except ModuleNotFoundError:
             results = []
             for entry in self._store:
                 if query.lower() in entry['content'].lower():
-                    results.append(type('obj', (object,), {'content': entry['content']})())
+                    results.append(MemoryResult(content=entry['content']))
             return results
 
         def get_status(self) -> dict:
