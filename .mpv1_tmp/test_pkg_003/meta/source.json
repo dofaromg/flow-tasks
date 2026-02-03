@@ -1,0 +1,8 @@
+{
+  "source_type": "LIDAR_SCAN",
+  "inputs": {
+    "has_depth": true,
+    "has_pointcloud": false,
+    "has_arkit_frames": false
+  }
+}

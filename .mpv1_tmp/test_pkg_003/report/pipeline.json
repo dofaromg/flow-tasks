@@ -1,0 +1,17 @@
+{
+  "status": "completed",
+  "stages": [
+    {
+      "name": "scan",
+      "ok": true
+    },
+    {
+      "name": "process",
+      "ok": true
+    },
+    {
+      "name": "validate",
+      "ok": true
+    }
+  ]
+}
