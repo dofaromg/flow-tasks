@@ -7,6 +7,7 @@ resources:
 - deployment.yaml
 - secret.yaml
 
-commonLabels:
-  project: flowagent
-  managed-by: kustomize
+labels:
+- pairs:
+    project: flowagent
+    managed-by: kustomize
