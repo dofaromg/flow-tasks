@@ -80,8 +80,9 @@ def cmd_run(args):
     for tick in range(args.max_ticks):
         projection.advance_tick()
         
-        # 對每個節點執行壓力投影
-        for node in structure.nodes.values():
+        # 對每個節點執行壓力投影（創建快照避免運行時修改）
+        nodes_snapshot = list(structure.nodes.values())
+        for node in nodes_snapshot:
             # 獲取前一步壓力
             prev_pressure = projection.get_pressure(node.node_id) or 1.0
             
