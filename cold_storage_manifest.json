@@ -1,0 +1,130 @@
+{
+  "version": "1.0",
+  "created_at": "2026-02-04T16:09:59.868747",
+  "files": {
+    "下載 file3.txt": {
+      "checksum": "dab741b6289e7dccc1ed42330cae1accc2b755ce8079c2cd5d4b5366c9f769a6",
+      "particle_file": "particles/dab741b6289e7dcc.particle.json",
+      "archived_at": "2026-02-04T16:09:59.874030",
+      "file_size": 8
+    },
+    "下載 file1.txt": {
+      "checksum": "a482fe7e3ceaa5965921a5b047ccb57fe9c91145cee6cb2672862eb4ec672cf4",
+      "particle_file": "particles/a482fe7e3ceaa596.particle.json",
+      "archived_at": "2026-02-04T16:11:27.853265",
+      "file_size": 40
+    },
+    "下載 file0.txt": {
+      "checksum": "b8964a0e9532f50af2da42593bb9acfeb7f7505f180b5d0611e7be216b82e1b1",
+      "particle_file": "particles/b8964a0e9532f50a.particle.json",
+      "archived_at": "2026-02-04T16:09:59.869815",
+      "file_size": 9
+    },
+    "下載 file2.txt": {
+      "checksum": "1b8707533d362a48d03c920654cb5ac752445f17ca8255fe50e615e344edcd55",
+      "particle_file": "particles/1b8707533d362a48.particle.json",
+      "archived_at": "2026-02-04T16:09:59.870290",
+      "file_size": 9
+    },
+    "下載 file4.txt": {
+      "checksum": "0ef28ca6cbfb8d548a9a062aea2f5293f7d5ee7d057c1c98e1e0e98c042032ce",
+      "particle_file": "particles/0ef28ca6cbfb8d54.particle.json",
+      "archived_at": "2026-02-04T16:09:59.870793",
+      "file_size": 9
+    },
+    "下載 test.txt": {
+      "checksum": "8aa8109ec0e62a0401e10b4b9f3302297e86cd1b65b8f4cd94afed83ddf6138f",
+      "particle_file": "particles/8aa8109ec0e62a04.particle.json",
+      "archived_at": "2026-02-04T16:11:27.867284",
+      "file_size": 25
+    },
+    "下載 image.bin": {
+      "checksum": "02a3e298f1533f62558c58e4c70edcab9af5a50d62d925fd5390942020fb0fb8",
+      "particle_file": "particles/02a3e298f1533f62.particle.json",
+      "archived_at": "2026-02-04T16:11:27.851663",
+      "file_size": 16
+    }
+  },
+  "checksums": {
+    "d4e737c5336fcbf8a69550032d107520beb62e222a338591b004f09ba43ab857": {
+      "particle_file": "particles/d4e737c5336fcbf8.particle.json",
+      "occurrences": [
+        "下載 file3.txt"
+      ]
+    },
+    "cd56d06409d269dbc1ace470081f1d32ed50906679b2bacfd4044348770493c4": {
+      "particle_file": "particles/cd56d06409d269db.particle.json",
+      "occurrences": [
+        "下載 file1.txt"
+      ]
+    },
+    "b8964a0e9532f50af2da42593bb9acfeb7f7505f180b5d0611e7be216b82e1b1": {
+      "particle_file": "particles/b8964a0e9532f50a.particle.json",
+      "occurrences": [
+        "下載 file0.txt"
+      ]
+    },
+    "1b8707533d362a48d03c920654cb5ac752445f17ca8255fe50e615e344edcd55": {
+      "particle_file": "particles/1b8707533d362a48.particle.json",
+      "occurrences": [
+        "下載 file2.txt"
+      ]
+    },
+    "0ef28ca6cbfb8d548a9a062aea2f5293f7d5ee7d057c1c98e1e0e98c042032ce": {
+      "particle_file": "particles/0ef28ca6cbfb8d54.particle.json",
+      "occurrences": [
+        "下載 file4.txt"
+      ]
+    },
+    "dab741b6289e7dccc1ed42330cae1accc2b755ce8079c2cd5d4b5366c9f769a6": {
+      "particle_file": "particles/dab741b6289e7dcc.particle.json",
+      "occurrences": [
+        "下載 file3.txt"
+      ]
+    },
+    "d0b425e00e15a0d36b9b361f02bab63563aed6cb4665083905386c55d5b679fa": {
+      "particle_file": "particles/d0b425e00e15a0d3.particle.json",
+      "occurrences": [
+        "下載 file1.txt",
+        "下載 file2.txt"
+      ]
+    },
+    "b596788b52c72d8ff2f0263c1c4908196e304852cd7f59c81f410acf4a1a5b29": {
+      "particle_file": "particles/b596788b52c72d8f.particle.json",
+      "occurrences": [
+        "下載 test.txt"
+      ]
+    },
+    "02a3e298f1533f62558c58e4c70edcab9af5a50d62d925fd5390942020fb0fb8": {
+      "particle_file": "particles/02a3e298f1533f62.particle.json",
+      "occurrences": [
+        "下載 image.bin"
+      ]
+    },
+    "a482fe7e3ceaa5965921a5b047ccb57fe9c91145cee6cb2672862eb4ec672cf4": {
+      "particle_file": "particles/a482fe7e3ceaa596.particle.json",
+      "occurrences": [
+        "下載 file1.txt",
+        "下載 file2.txt"
+      ]
+    },
+    "9d9595c5d94fb65b824f56e9999527dba9542481580d69feb89056aabaa0aa87": {
+      "particle_file": "particles/9d9595c5d94fb65b.particle.json",
+      "occurrences": [
+        "下載 test.txt"
+      ]
+    },
+    "8aa8109ec0e62a0401e10b4b9f3302297e86cd1b65b8f4cd94afed83ddf6138f": {
+      "particle_file": "particles/8aa8109ec0e62a04.particle.json",
+      "occurrences": [
+        "下載 test.txt"
+      ]
+    }
+  },
+  "statistics": {
+    "total_files": 12,
+    "total_size": 192,
+    "deduplicated_size": 57
+  },
+  "updated_at": "2026-02-04T16:11:27.867588"
+}

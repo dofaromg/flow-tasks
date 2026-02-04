@@ -94,11 +94,11 @@ class ColdStorageManager:
             r'\.tmp$',  # 臨時檔案
             r'\.temp$',
             r'^temp_',
-            r'^\.',  # 隱藏檔案（排除 .git 等）
+            # 注意：不包含通用隱藏檔案模式，避免歸檔 .gitignore, .env 等重要配置檔案
         ]
         
         for pattern in patterns:
-            if re.match(pattern, filename):
+            if re.search(pattern, filename):
                 return True
         
         return False
@@ -183,7 +183,7 @@ class ColdStorageManager:
     
     def archive_file(
         self,
-        file_path: Path,
+        file_path,  # Can be str or Path
         keep_original: bool = True,
         create_redirect: bool = True
     ) -> Dict[str, Any]:
@@ -191,99 +191,115 @@ class ColdStorageManager:
         歸檔單一檔案到冷儲存
         
         Args:
-            file_path: 檔案路徑
+            file_path: 檔案路徑 (str or Path)
             keep_original: 是否保留原始檔案（預設 True）
             create_redirect: 是否創建重定向檔案（預設 True）
             
         Returns:
             歸檔結果資訊
         """
+        # Convert to Path if string
+        if isinstance(file_path, str):
+            file_path = Path(file_path)
+            
         if not file_path.exists():
-            raise FileNotFoundError(f"檔案不存在: {file_path}")
-        
-        # 粒子化檔案
-        particle = self.particlize_file(file_path)
-        checksum = particle["checksum"]
-        
-        # 檢查是否已存在（去重）
-        if checksum in self.manifest["checksums"]:
-            existing_record = self.manifest["checksums"][checksum]
-            # 添加到去重記錄中
-            if relative_path not in existing_record["occurrences"]:
-                existing_record["occurrences"].append(relative_path)
-                self._save_manifest()
-            result = {
-                "status": "deduplicated",
-                "checksum": checksum,
-                "existing_particle": existing_record["particle_file"],
-                "original_path": str(file_path.relative_to(self.source_root))
+            return {
+                "status": "error",
+                "error": f"檔案不存在: {file_path}",
+                "file": str(file_path)
             }
-        else:
-            # 儲存粒子到冷儲存
-            particle_filename = f"{particle['particle_id']}.particle.json"
-            particle_path = self.cold_storage_root / "particles" / particle_filename
-            
-            # 如果是二進制檔案，複製原始檔案
-            if particle["content_type"] == "binary":
-                binary_filename = f"{particle['particle_id']}{particle['file_type']}"
-                binary_path = self.cold_storage_root / "particles" / binary_filename
-                shutil.copy2(file_path, binary_path)
-                particle["binary_file"] = str(binary_path.relative_to(self.cold_storage_root))
-            
-            # 儲存粒子 JSON
-            with open(particle_path, 'w', encoding='utf-8') as f:
-                json.dump(particle, f, indent=2, ensure_ascii=False)
-            
-            # 更新清單
+        
+        try:
+            # 粒子化檔案
+            particle = self.particlize_file(file_path)
+            checksum = particle["checksum"]
             relative_path = str(file_path.relative_to(self.source_root))
-            self.manifest["files"][relative_path] = {
-                "checksum": checksum,
-                "particle_file": str(particle_path.relative_to(self.cold_storage_root)),
-                "archived_at": particle["archived_at"],
-                "file_size": particle["file_size"]
-            }
             
-            self.manifest["checksums"][checksum] = {
-                "particle_file": str(particle_path.relative_to(self.cold_storage_root)),
-                "occurrences": [relative_path]
+            # 檢查是否已存在（去重）
+            if checksum in self.manifest["checksums"]:
+                existing_record = self.manifest["checksums"][checksum]
+                # 添加到去重記錄中
+                if relative_path not in existing_record["occurrences"]:
+                    existing_record["occurrences"].append(relative_path)
+                    self._save_manifest()
+                return {
+                    "status": "success",
+                    "action": "deduplicated",
+                    "checksum": checksum,
+                    "existing_particle": existing_record["particle_file"],
+                    "original_path": relative_path
+                }
+            else:
+                # 儲存粒子到冷儲存
+                particle_filename = f"{particle['particle_id']}.particle.json"
+                particle_path = self.cold_storage_root / "particles" / particle_filename
+                
+                # 如果是二進制檔案，複製原始檔案
+                if particle["content_type"] == "binary":
+                    binary_filename = f"{particle['particle_id']}{particle['file_type']}"
+                    binary_path = self.cold_storage_root / "particles" / binary_filename
+                    shutil.copy2(file_path, binary_path)
+                    particle["binary_file"] = str(binary_path.relative_to(self.cold_storage_root))
+                
+                # 儲存粒子 JSON
+                with open(particle_path, 'w', encoding='utf-8') as f:
+                    json.dump(particle, f, indent=2, ensure_ascii=False)
+                
+                # 更新清單
+                self.manifest["files"][relative_path] = {
+                    "checksum": checksum,
+                    "particle_file": str(particle_path.relative_to(self.cold_storage_root)),
+                    "archived_at": particle["archived_at"],
+                    "file_size": particle["file_size"]
+                }
+                
+                self.manifest["checksums"][checksum] = {
+                    "particle_file": str(particle_path.relative_to(self.cold_storage_root)),
+                    "occurrences": [relative_path]
+                }
+                
+                # 更新統計
+                self.manifest["statistics"]["total_files"] += 1
+                self.manifest["statistics"]["total_size"] += particle["file_size"]
+                
+                # 創建重定向檔案
+                if create_redirect:
+                    redirect_path = self.cold_storage_root / "redirects" / f"{particle['particle_id']}.redirect.txt"
+                    redirect_info = {
+                        "原始路徑": relative_path,
+                        "粒子 ID": particle["particle_id"],
+                        "校驗碼": checksum,
+                        "歸檔時間": datetime.now().isoformat(),
+                        "備註": "此檔案已歸檔至冷儲存。原始檔案保留在源位置。"
+                    }
+                    
+                    with open(redirect_path, 'w', encoding='utf-8') as f:
+                        f.write("=" * 60 + "\n")
+                        f.write("冷儲存重定向檔案 (Cold Storage Redirect)\n")
+                        f.write("=" * 60 + "\n\n")
+                        for key, value in redirect_info.items():
+                            f.write(f"{key}: {value}\n")
+                        f.write("\n")
+                        f.write("如需還原此檔案，請使用冷儲存管理工具。\n")
+                        f.write("To restore this file, use the cold storage management tool.\n")
+                
+                # 儲存清單
+                self._save_manifest()
+                
+                return {
+                    "status": "success",
+                    "action": "archived",
+                    "checksum": checksum,
+                    "particle_file": str(particle_path.relative_to(self.cold_storage_root)),
+                    "original_path": relative_path
+                }
+        except Exception as e:
+            print(f"Error archiving {file_path}: {e}")
+            return {
+                "status": "error",
+                "error": str(e),
+                "file": str(file_path)
             }
-            
-            # 更新統計
-            self.manifest["statistics"]["total_files"] += 1
-            self.manifest["statistics"]["total_size"] += particle["file_size"]
-            
-            result = {
-                "status": "archived",
-                "checksum": checksum,
-                "particle_file": str(particle_path.relative_to(self.cold_storage_root)),
-                "original_path": relative_path
-            }
-        
-        # 創建重定向檔案
-        if create_redirect:
-            redirect_path = self.cold_storage_root / "redirects" / f"{particle['particle_id']}.redirect.txt"
-            redirect_info = {
-                "original_path": str(file_path.relative_to(self.source_root)),
-                "particle_id": particle["particle_id"],
-                "checksum": checksum,
-                "archived_at": datetime.now().isoformat(),
-                "note": "此檔案已歸檔至冷儲存。原始檔案保留在源位置。"
-            }
-            
-            with open(redirect_path, 'w', encoding='utf-8') as f:
-                f.write("=" * 60 + "\n")
-                f.write("冷儲存重定向檔案 (Cold Storage Redirect)\n")
-                f.write("=" * 60 + "\n\n")
-                for key, value in redirect_info.items():
-                    f.write(f"{key}: {value}\n")
-                f.write("\n")
-                f.write("如需還原此檔案，請使用冷儲存管理工具。\n")
-                f.write("To restore this file, use the cold storage management tool.\n")
-        
-        # 儲存清單
-        self._save_manifest()
-        
-        return result
     
     def archive_batch(
         self,
@@ -309,17 +325,14 @@ class ColdStorageManager:
         }
         
         for file_path in file_paths:
-            try:
-                result = self.archive_file(file_path, keep_original, create_redirect)
-                if result["status"] == "archived":
+            result = self.archive_file(file_path, keep_original, create_redirect)
+            if result["status"] == "success":
+                if result["action"] == "archived":
                     results["archived"].append(result)
-                elif result["status"] == "deduplicated":
+                elif result["action"] == "deduplicated":
                     results["deduplicated"].append(result)
-            except Exception as e:
-                results["errors"].append({
-                    "file": str(file_path),
-                    "error": str(e)
-                })
+            elif result["status"] == "error":
+                results["errors"].append(result)
         
         # 計算去重節省的空間
         deduplicated_size = sum(
