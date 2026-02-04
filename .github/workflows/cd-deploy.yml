@@ -67,6 +67,7 @@ jobs:
         kubectl rollout status deployment/module-a -n flowagent --timeout=5m
         kubectl rollout status deployment/orchestrator -n flowagent --timeout=5m
         kubectl rollout status deployment/mongodb -n flowagent --timeout=5m
+        kubectl rollout status deployment/nextjs-frontend -n flowagent --timeout=5m
     
     - name: Get service endpoints
       run: |
