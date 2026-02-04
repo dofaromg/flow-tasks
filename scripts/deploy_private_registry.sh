@@ -52,16 +52,47 @@ echo ""
 
 echo -e "${YELLOW}[5/5] 創建 ImagePullSecret...${NC}"
 
-# Check if password is still the default
+# Generate or prompt for password
 DEFAULT_PASSWORD="FlowAgent2026!"
+PASSWORD_FILE="/tmp/.registry-password-${NS}"
+
 if kubectl get secret registry-auth -n $NS -o jsonpath='{.data.htpasswd}' 2>/dev/null | base64 -d | grep -q "\$2y\$05\$HqvOB0fOkH1ZZ1xd6QbaQ"; then
   echo -e "${RED}⚠️  警告: 檢測到使用預設密碼！${NC}"
   echo -e "${RED}⚠️  生產環境中必須更改密碼！${NC}"
   echo ""
-  read -p "輸入新密碼（或按 Enter 繼續使用預設密碼 - 僅用於開發）: " NEW_PASSWORD
-  if [ ! -z "$NEW_PASSWORD" ]; then
-    DEFAULT_PASSWORD="$NEW_PASSWORD"
-  fi
+  echo "選項:"
+  echo "  1) 輸入自定義密碼"
+  echo "  2) 生成隨機密碼（推薦用於生產環境）"
+  echo "  3) 使用預設密碼（僅用於開發/測試）"
+  read -p "請選擇 (1/2/3): " CHOICE
+  
+  case $CHOICE in
+    1)
+      read -sp "輸入新密碼: " NEW_PASSWORD
+      echo ""
+      read -sp "確認密碼: " CONFIRM_PASSWORD
+      echo ""
+      if [ "$NEW_PASSWORD" = "$CONFIRM_PASSWORD" ] && [ ! -z "$NEW_PASSWORD" ]; then
+        DEFAULT_PASSWORD="$NEW_PASSWORD"
+        echo "$DEFAULT_PASSWORD" > "$PASSWORD_FILE"
+        chmod 600 "$PASSWORD_FILE"
+        echo -e "${GREEN}✅ 密碼已設置${NC}"
+      else
+        echo -e "${RED}密碼不匹配或為空，使用預設密碼${NC}"
+      fi
+      ;;
+    2)
+      # Generate random password (20 characters: letters, numbers, special chars)
+      DEFAULT_PASSWORD=$(LC_ALL=C tr -dc 'A-Za-z0-9!@#$%^&*' < /dev/urandom | head -c 20)
+      echo "$DEFAULT_PASSWORD" > "$PASSWORD_FILE"
+      chmod 600 "$PASSWORD_FILE"
+      echo -e "${GREEN}✅ 隨機密碼已生成並保存到: $PASSWORD_FILE${NC}"
+      echo -e "${YELLOW}⚠️  請妥善保管此文件！${NC}"
+      ;;
+    *)
+      echo -e "${YELLOW}使用預設密碼（僅用於開發/測試）${NC}"
+      ;;
+  esac
 fi
 
 kubectl create secret docker-registry registry-cred \
@@ -71,6 +102,9 @@ kubectl create secret docker-registry registry-cred \
   --namespace=$NS \
   --dry-run=client -o yaml | kubectl apply -f -
 echo -e "${GREEN}✅ ImagePullSecret 創建完成${NC}"
+
+# Clear password from memory
+unset DEFAULT_PASSWORD NEW_PASSWORD CONFIRM_PASSWORD
 echo ""
 
 echo -e "${GREEN}========================================${NC}"
@@ -103,7 +137,14 @@ echo "  ${NODE_IP}:30500"
 echo ""
 echo "認證信息:"
 echo "  用戶名: admin"
-echo "  密碼: [請查看 Secret 或使用您設置的密碼]"
+if [ -f "$PASSWORD_FILE" ]; then
+  echo "  密碼: 已保存到 $PASSWORD_FILE (chmod 600)"
+  echo ""
+  echo "  查看密碼命令:"
+  echo "    cat $PASSWORD_FILE"
+else
+  echo "  密碼: [使用您設置的密碼或查看 Secret]"
+fi
 echo ""
 echo -e "${RED}⚠️  安全提醒:${NC}"
 echo -e "${RED}  1. 立即更改預設密碼（生產環境）${NC}"
