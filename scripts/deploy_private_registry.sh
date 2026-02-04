@@ -42,7 +42,7 @@ echo ""
 
 echo -e "${YELLOW}[4/5] 驗證 Registry 服務...${NC}"
 sleep 5
-kubectl exec -it deployment/registry -n $NS -- wget -qO- http://localhost:5000/v2/ || {
+kubectl exec deployment/registry -n $NS -- wget -qO- http://localhost:5000/v2/ || {
     echo -e "${RED}❌ Registry 健康檢查失敗${NC}"
     kubectl logs deployment/registry -n $NS --tail=50
     exit 1

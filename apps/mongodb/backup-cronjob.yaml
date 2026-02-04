@@ -42,7 +42,10 @@ spec:
               fi
             env:
             - name: MONGODB_URI
-              value: "mongodb://admin:changeme123@mongodb:27017"
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: mongodb-uri
             volumeMounts:
             - name: backup-storage
               mountPath: /backup

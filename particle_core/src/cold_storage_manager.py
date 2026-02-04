@@ -18,7 +18,7 @@ import hashlib
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any, Optional
 import re
 
 
@@ -99,9 +99,7 @@ class ColdStorageManager:
         
         for pattern in patterns:
             if re.match(pattern, filename):
-                # 排除 .git 和其他重要隱藏目錄
-                if not filename.startswith('.git'):
-                    return True
+                return True
         
         return False
     
@@ -157,12 +155,13 @@ class ColdStorageManager:
                     content = f.read()
                 content_type = 'text'
             else:
-                with open(file_path, 'rb') as f:
-                    content = f.read()
+                # 對於二進制檔案，不讀取內容到內存（會直接複製檔案）
+                content = None
                 content_type = 'binary'
         except Exception as e:
             content = None
             content_type = 'error'
+            print(f"⚠️  無法讀取檔案 {file_path}: {e}")
         
         # 建立粒子結構
         particle = {
@@ -209,6 +208,10 @@ class ColdStorageManager:
         # 檢查是否已存在（去重）
         if checksum in self.manifest["checksums"]:
             existing_record = self.manifest["checksums"][checksum]
+            # 添加到去重記錄中
+            if relative_path not in existing_record["occurrences"]:
+                existing_record["occurrences"].append(relative_path)
+                self._save_manifest()
             result = {
                 "status": "deduplicated",
                 "checksum": checksum,

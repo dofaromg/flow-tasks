@@ -6,7 +6,6 @@
 """
 
 import sys
-import os
 from pathlib import Path
 
 # 添加 particle_core/src 到路徑
