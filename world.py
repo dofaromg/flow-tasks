@@ -18,12 +18,100 @@
 
 import sys
 import os
+import re
+from enum import Enum
+from dataclasses import dataclass
+from typing import Optional
 
-# 加入 core 到路徑
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'core'))
+# 加入 core 到路徑（若存在）
+_core_path = os.path.join(os.path.dirname(__file__), "core")
+if os.path.isdir(_core_path):
+    sys.path.insert(0, _core_path)
 
-from particle_dict import ParticleDictionary, Particle, ParticleChain
-from memory_system import FlowMemoryCore, MemoryType
+# 嘗試匯入粒子字典與記憶系統，若不存在則使用最小實作以避免匯入錯誤
+try:
+    from particle_dict import ParticleDictionary
+except ModuleNotFoundError:
+    class Particle:
+        """Fallback Particle data holder."""
+
+        def __init__(self, name: Optional[str] = None, **kwargs):
+            self.name = name
+            self.meta = kwargs
+            self.fx_code = kwargs.get('fx_code', 'UNKNOWN')
+            self.human_view = kwargs.get('human_view', 'No description')
+
+
+    class ParticleChain(list):
+        """Fallback ParticleChain as a simple list of Particle."""
+
+        def __init__(self, particles: Optional[list] = None):
+            super().__init__(particles or [])
+
+
+    class ParticleDictionary:
+        """
+        Fallback 粒子字典實作。
+
+        提供 _particles 屬性，以符合 world.py 既有使用方式。
+        """
+
+        def __init__(self) -> None:
+            self._particles: dict[str, Particle] = {}
+            self._patterns: dict[str, list[str]] = {}
+
+
+try:
+    from memory_system import FlowMemoryCore, MemoryType
+except ModuleNotFoundError:
+    @dataclass
+    class MemoryResult:
+        """Fallback 記憶搜尋結果。"""
+        content: str
+
+
+    class MemoryType(Enum):
+        """Fallback 記憶類型定義。"""
+
+        GENERIC = "generic"
+        SEMANTIC = "semantic"
+
+
+    class FlowMemoryCore:
+        """
+        Fallback 記憶系統實作。
+
+        提供最基本的 in-memory 儲存功能，確保 world.py 可正常初始化。
+        """
+
+        def __init__(self) -> None:
+            self._store: list[dict] = []
+
+        def commit(self, content: str, memory_type=None, tags: Optional[list] = None) -> dict:
+            """新增一筆記憶到暫存列表。"""
+            entry = {
+                'entry_id': f'mem_{len(self._store)}',
+                'content': content,
+                'memory_type': memory_type,
+                'tags': tags or []
+            }
+            self._store.append(entry)
+            return entry
+
+        def recall(self, query: str) -> list:
+            """簡單的記憶搜尋。"""
+            results = []
+            for entry in self._store:
+                if query.lower() in entry['content'].lower():
+                    results.append(MemoryResult(content=entry['content']))
+            return results
+
+        def get_status(self) -> dict:
+            """取得記憶系統狀態。"""
+            return {
+                'long_term_memory_size': len(self._store),
+                'total_entries': len(self._store)
+            }
 
 # ==================== 常數 ====================
 
@@ -124,7 +212,6 @@ class ParticleWorld:
         """分析文本，匹配粒子"""
         matches = []
         for pattern, fx_codes in self.particle_dict._patterns.items():
-            import re
             if re.search(pattern, text, re.IGNORECASE):
                 for code in fx_codes:
                     p = self.particle_dict._particles.get(code)
@@ -153,6 +240,7 @@ class ParticleWorld:
         print("🌍 Particle World 互動模式")
         print("="*50)
         print("指令:")
+        print("  /help            - 顯示此說明")
         print("  /wake <訊息>     - 喚醒測試")
         print("  /commit <內容>   - 提交記憶")
         print("  /recall <查詢>   - 回憶搜索")
@@ -171,6 +259,17 @@ class ParticleWorld:
                 if user_input == '/quit':
                     print("再見，夥伴。")
                     break
+                
+                if user_input == '/help':
+                    print("\n--- 可用指令 ---")
+                    print("  /help            - 顯示此說明")
+                    print("  /wake <訊息>     - 喚醒測試")
+                    print("  /commit <內容>   - 提交記憶")
+                    print("  /recall <查詢>   - 回憶搜索")
+                    print("  /analyze <文本>  - 分析粒子")
+                    print("  /status          - 系統狀態")
+                    print("  /quit            - 退出")
+                    continue
                 
                 if user_input == '/status':
                     status = self.get_status()
