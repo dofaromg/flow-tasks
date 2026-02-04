@@ -208,6 +208,9 @@ cython_debug/
 # Ruff stuff:
 .ruff_cache/
 
+# Model Package Validator temp directory
+.mpv1_tmp/
+
 # PyPI configuration file
 .pypirc
 
