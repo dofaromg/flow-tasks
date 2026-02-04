@@ -30,7 +30,8 @@ kubectl apply -k cluster/overlays/prod/
 This project integrates:
 
 1) **GKE 部署架構** - 完整的 Kubernetes 微服務部署
-   - Next.js Frontend (前端應用)
+   - Next.js Frontend (React 前端應用)
+   - Astro Frontend (靜態網站前端)
    - Module-A (主服務模組)
    - Orchestrator (協調器)
    - MongoDB (資料庫)
@@ -70,7 +71,24 @@ kubectl get pods -n flowagent
 kubectl get svc -n flowagent
 ```
 
-### 選項 2: 本地開發 (粒子語言核心)
+### 選項 2: 本地開發 (Astro Frontend)
+```bash
+# 1) 進入 Astro 目錄
+cd apps/astro-frontend
+
+# 2) 安裝依賴
+npm install
+
+# 3) 啟動開發伺服器
+npm run dev
+# 訪問 http://localhost:4321
+
+# 4) 或建置生產版本
+npm run build
+npm run preview
+```
+
+### 選項 3: 本地開發 (粒子語言核心)
 ```bash
 # 1) 建立與設定環境
 python -m venv .venv && . .venv/bin/activate  # Windows: .\.venv\Scripts\activate
@@ -94,6 +112,7 @@ uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 flow-tasks/
 ├── 📂 apps/                    # Kubernetes 應用部署清單
 │   ├── nextjs-frontend/       # Next.js 前端應用
+│   ├── astro-frontend/        # Astro 靜態網站前端
 │   ├── module-a/              # 主服務模組
 │   ├── orchestrator/          # 協調器服務
 │   ├── mongodb/               # 資料庫
@@ -119,7 +138,8 @@ flow-tasks/
 ## 🎯 核心功能 / Core Features
 
 ### 1. GKE 微服務部署
-- ✅ Next.js Frontend: 前端應用 (2 replicas, LoadBalancer)
+- ✅ Next.js Frontend: React 前端應用 (2 replicas, LoadBalancer)
+- ✅ Astro Frontend: 靜態網站前端 (2 replicas, LoadBalancer, nginx-based)
 - ✅ Module-A: 主服務模組 (2-10 replicas, HPA)
 - ✅ Orchestrator: 協調器與入口 (LoadBalancer)
 - ✅ MongoDB: 持久化資料庫 (10Gi PVC)
