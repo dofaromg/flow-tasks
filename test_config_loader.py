@@ -59,7 +59,7 @@ def test_get_config_value():
     
     # Test nested key
     notion_enabled = loader.get('notion.enabled')
-    assert notion_enabled == False
+    assert notion_enabled is False
     
     # Test default value
     nonexistent = loader.get('nonexistent.key', 'default')
@@ -77,10 +77,10 @@ def test_helper_methods():
     assert isinstance(data_dir, Path)
     
     # Test notion enabled
-    assert loader.is_notion_enabled() == False
+    assert loader.is_notion_enabled() is False
     
     # Test github enabled
-    assert loader.is_github_enabled() == False
+    assert loader.is_github_enabled() is False
     
     # Test default context strategy
     strategy = loader.get_default_context_strategy()
@@ -96,7 +96,7 @@ def test_context_strategy_config():
     # Test workspace strategy config
     workspace_config = loader.get_context_strategy_config('workspace')
     assert workspace_config['path'] == './workspace'
-    assert workspace_config['watch_enabled'] == False
+    assert workspace_config['watch_enabled'] is False
     
     # Test sliding_window strategy config
     window_config = loader.get_context_strategy_config('sliding_window')

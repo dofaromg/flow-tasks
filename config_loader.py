@@ -88,6 +88,14 @@ class ConfigLoader:
         if self._config is not None:
             return self._config
         
+        # Check file size to prevent DoS from extremely large files
+        file_size = self.config_path.stat().st_size
+        max_size = 10 * 1024 * 1024  # 10MB
+        if file_size > max_size:
+            raise ConfigurationError(
+                f"Config file too large: {file_size} bytes (max: {max_size} bytes)"
+            )
+        
         try:
             with self.config_path.open('r', encoding='utf-8') as f:
                 self._config = yaml.safe_load(f)
@@ -241,7 +249,7 @@ class ConfigLoader:
                 workspace_path = config.get('path', './workspace')
                 return WorkspaceStrategy(
                     workspace_path=workspace_path,
-                    file_patterns=config.get('file_patterns', ['*.py', '*.md', '*.txt']),
+                    file_patterns=config.get('file_patterns', ['*.py', '*.md', '*.txt', '*.json', '*.yaml']),
                     ignore_patterns=config.get('ignore_patterns', ['.git', 'node_modules']),
                     watch_enabled=config.get('watch_enabled', False)
                 )

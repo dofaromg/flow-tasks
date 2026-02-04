@@ -23,12 +23,16 @@ def example_basic_config_loading():
     print("範例 1：基本配置加載")
     print("=" * 60)
     
-    # Method 1: Using convenience function
-    config = load_config()
+    # Method 1: Using convenience function (with fallback to sample)
+    try:
+        config = load_config()
+    except Exception:
+        # Fallback to sample config if config.yaml doesn't exist
+        config = load_config('config.sample.yaml')
     print(f"✓ Loaded config: {config.get('data_dir', 'N/A')}")
     
-    # Method 2: Using ConfigLoader class
-    loader = ConfigLoader('config.yaml')
+    # Method 2: Using ConfigLoader class (uses automatic fallback)
+    loader = ConfigLoader()  # Will search config.yaml, then config.sample.yaml
     data_dir = loader.get('data_dir')
     print(f"✓ Data directory: {data_dir}")
     
@@ -236,19 +240,19 @@ def example_integration_flags():
 
 def example_custom_config_path():
     """
-    Example 9: Using Custom Config Path
-    範例 9：使用自訂配置路徑
+    Example 9: Loading from Specific Config Path
+    範例 9：從特定配置路徑加載
     """
     print("\n" + "=" * 60)
-    print("Example 9: Using Custom Config Path")
-    print("範例 9：使用自訂配置路徑")
+    print("Example 9: Loading from Specific Config Path")
+    print("範例 9：從特定配置路徑加載")
     print("=" * 60)
     
-    # Load from sample config
+    # Load from a specific path (e.g., sample config)
     loader = ConfigLoader('config.sample.yaml')
     config = loader.load()
     
-    print(f"✓ Loaded from custom path: config.sample.yaml")
+    print(f"✓ Loaded from specific path: config.sample.yaml")
     print(f"  - Data dir: {config.get('data_dir')}")
     print(f"  - Default strategy: {loader.get_default_context_strategy()}")
 
