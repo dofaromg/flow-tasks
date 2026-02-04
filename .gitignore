@@ -37,6 +37,10 @@ node_modules/
 .next/
 out/
 
+# Astro build output
+.astro/
+dist/
+
 # Environment variables
 .env.local
 .env.development.local
