@@ -782,8 +782,9 @@ class FluinDictAgent:
             }
         }
         
-        # JSON round-trip creates an isolated copy (faster than deepcopy for nested dicts)
-        state_copy = json.loads(json.dumps(state, ensure_ascii=False))
+        # Use copy.deepcopy for proper deep copying instead of JSON round-trip
+        # This is more reliable and typically faster for complex nested structures
+        state_copy = copy.deepcopy(state)
         
         snapshot = {
             "snapshot_id": snapshot_id,

@@ -57,7 +57,8 @@ class Tracer:
 
     def _load_state(self):
         if os.path.exists(self.state_path):
-            return json.load(open(self.state_path))
+            with open(self.state_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
         return {"tick": 0, "merkle_root": "0"*64, "rid": uuid.uuid4().hex}
 
     def emit(self, event, payload):
@@ -78,7 +79,8 @@ class Tracer:
             rec["merkle_root"] = self._state["merkle_root"]
             with open(self.path, "a", encoding="utf-8") as f:
                 f.write(json.dumps(rec, ensure_ascii=False) + "\n")
-            json.dump(self._state, open(self.state_path, "w"))
+            with open(self.state_path, "w", encoding="utf-8") as f:
+                json.dump(self._state, f)
             return rec
 
 # -------------------------
@@ -386,8 +388,11 @@ class Handler(BaseHTTPRequestHandler):
                 for fn in os.listdir(base):
                     if not fn.endswith(".l1.json"):
                         continue
-                    obj = json.load(open(os.path.join(base, fn)))
-                    score = sum(1 for t in l1_tokens(q) if t in obj.get("tokens", []))
+                    with open(os.path.join(base, fn), 'r', encoding='utf-8') as f:
+                        obj = json.load(f)
+                    # Convert tokens list to set for O(1) lookup instead of O(n)
+                    tokens_set = set(obj.get("tokens", []))
+                    score = sum(1 for t in l1_tokens(q) if t in tokens_set)
                     if score:
                         hits.append({"file": fn, "score": score})
             hits.sort(key=lambda x: x["score"], reverse=True)

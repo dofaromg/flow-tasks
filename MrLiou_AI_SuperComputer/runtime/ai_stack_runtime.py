@@ -70,15 +70,18 @@ class AIStack:
         elif self.mode == "recursive":
             # Particles execute in cycles until convergence
             max_cycles = 10
+            previous_data = None
             for cycle in range(max_cycles):
                 for particle in self.particles:
                     result = particle.execute(current_data)
                     current_data = result["result"]
                     self.execution_history.append(result)
                 
-                # Check convergence (simplified)
-                if cycle > 0 and current_data == input_data:
+                # Early exit if data hasn't changed (convergence detection)
+                # Compare with previous cycle's data for more reliable convergence check
+                if cycle > 0 and current_data == previous_data:
                     break
+                previous_data = current_data
         
         return current_data
 
