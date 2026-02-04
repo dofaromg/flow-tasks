@@ -9,6 +9,7 @@ resources:
 - ../../../apps/mongodb
 - ../../../apps/module-a
 - ../../../apps/orchestrator
+- ../../../apps/registry
 
 labels:
 - pairs:

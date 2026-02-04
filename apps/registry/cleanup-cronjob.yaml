@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: registry-cleanup
+  namespace: flowagent
+  labels:
+    app: registry
+    component: cleanup
+spec:
+  # Run cleanup weekly on Sunday at 3 AM
+  schedule: "0 3 * * 0"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: registry-cleanup
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: registry-garbage-collect
+            image: registry:2.8
+            command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Starting registry garbage collection at $(date)"
+              /bin/registry garbage-collect /etc/docker/registry/config.yml --delete-untagged
+              
+              if [ $? -eq 0 ]; then
+                echo "Garbage collection completed successfully at $(date)"
+              else
+                echo "Garbage collection failed at $(date)"
+                exit 1
+              fi
+            volumeMounts:
+            - name: registry-data
+              mountPath: /var/lib/registry
+            resources:
+              requests:
+                memory: "128Mi"
+                cpu: "100m"
+              limits:
+                memory: "256Mi"
+                cpu: "200m"
+          volumes:
+          - name: registry-data
+            persistentVolumeClaim:
+              claimName: registry-pvc

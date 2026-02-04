@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: registry-netpol
+  namespace: flowagent
+spec:
+  podSelector:
+    matchLabels:
+      app: registry
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  # Allow all pods in flowagent namespace to pull/push images
+  - from:
+    - podSelector: {}
+    ports:
+    - protocol: TCP
+      port: 5000
+  # Allow from all namespaces (for image pulling)
+  - from:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 5000
+  egress:
+  # Allow DNS
+  - to:
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53

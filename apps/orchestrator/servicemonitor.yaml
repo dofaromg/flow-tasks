@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: orchestrator
+  namespace: flowagent
+  labels:
+    app: orchestrator
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: orchestrator
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
+  namespaceSelector:
+    matchNames:
+    - flowagent

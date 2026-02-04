@@ -1,0 +1,107 @@
+# Harbor Private Registry Deployment
+# 使用 Docker Registry v2 作為轻量级私人仓库
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+  namespace: flowagent
+  labels:
+    app: registry
+    component: container-registry
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      containers:
+      - name: registry
+        image: registry:2.8
+        ports:
+        - containerPort: 5000
+          name: http
+        env:
+        - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
+          value: "/var/lib/registry"
+        - name: REGISTRY_AUTH
+          value: "htpasswd"
+        - name: REGISTRY_AUTH_HTPASSWD_REALM
+          value: "Registry Realm"
+        - name: REGISTRY_AUTH_HTPASSWD_PATH
+          value: "/auth/htpasswd"
+        - name: REGISTRY_HTTP_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: registry-secret
+              key: http-secret
+        - name: REGISTRY_STORAGE_DELETE_ENABLED
+          value: "true"
+        volumeMounts:
+        - name: registry-data
+          mountPath: /var/lib/registry
+        - name: registry-auth
+          mountPath: /auth
+          readOnly: true
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
+      volumes:
+      - name: registry-data
+        persistentVolumeClaim:
+          claimName: registry-pvc
+      - name: registry-auth
+        secret:
+          secretName: registry-auth
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registry
+  namespace: flowagent
+  labels:
+    app: registry
+spec:
+  type: NodePort
+  ports:
+  - port: 5000
+    targetPort: 5000
+    nodePort: 30500
+    protocol: TCP
+    name: http
+  selector:
+    app: registry
