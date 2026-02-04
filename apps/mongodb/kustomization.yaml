@@ -5,3 +5,5 @@ resources:
 - deployment.yaml
 - pvc.yaml
 - secret.yaml
+- networkpolicy.yaml
+- backup-cronjob.yaml

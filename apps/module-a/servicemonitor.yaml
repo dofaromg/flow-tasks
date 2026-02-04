@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: module-a
+  namespace: flowagent
+  labels:
+    app: module-a
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: module-a
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
+  namespaceSelector:
+    matchNames:
+    - flowagent

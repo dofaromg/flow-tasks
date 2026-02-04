@@ -3,8 +3,8 @@ kind: Kustomization
 
 resources:
 - deployment.yaml
-- hpa.yaml
-- pdb.yaml
+- pvc.yaml
+- secret.yaml
 - networkpolicy.yaml
+- cleanup-cronjob.yaml
 - configmap.yaml
-- servicemonitor.yaml

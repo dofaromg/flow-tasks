@@ -1,0 +1,75 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mongodb-backup
+  namespace: flowagent
+  labels:
+    app: mongodb
+    component: backup
+spec:
+  # Run backup daily at 2 AM
+  schedule: "0 2 * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: mongodb-backup
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: mongodb-backup
+            image: mongo:6.0
+            command:
+            - /bin/sh
+            - -c
+            - |
+              TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+              BACKUP_DIR="/backup/mongodb_backup_${TIMESTAMP}"
+              
+              echo "Starting MongoDB backup to ${BACKUP_DIR}"
+              mongodump --uri="${MONGODB_URI}" --out="${BACKUP_DIR}"
+              
+              if [ $? -eq 0 ]; then
+                echo "Backup completed successfully"
+                # Keep only last 7 days of backups
+                find /backup -name "mongodb_backup_*" -type d -mtime +7 -exec rm -rf {} \;
+              else
+                echo "Backup failed"
+                exit 1
+              fi
+            env:
+            - name: MONGODB_URI
+              value: "mongodb://admin:changeme123@mongodb:27017"
+            volumeMounts:
+            - name: backup-storage
+              mountPath: /backup
+            resources:
+              requests:
+                memory: "128Mi"
+                cpu: "100m"
+              limits:
+                memory: "256Mi"
+                cpu: "200m"
+          volumes:
+          - name: backup-storage
+            persistentVolumeClaim:
+              claimName: mongodb-backup-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-backup-pvc
+  namespace: flowagent
+  labels:
+    app: mongodb
+    component: backup
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: standard

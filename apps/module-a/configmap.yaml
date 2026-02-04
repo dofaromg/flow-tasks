@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: module-a-config
+  namespace: flowagent
+  labels:
+    app: module-a
+data:
+  MODULE_NAME: "module-a"
+  LOG_LEVEL: "INFO"
+  ENVIRONMENT: "production"
+  PORT: "8080"

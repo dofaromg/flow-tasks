@@ -1,0 +1,12 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: module-a-pdb
+  namespace: flowagent
+  labels:
+    app: module-a
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: module-a

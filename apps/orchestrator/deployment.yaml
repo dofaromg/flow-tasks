@@ -8,6 +8,11 @@ metadata:
     component: orchestrator
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
       app: orchestrator
@@ -47,7 +52,15 @@ spec:
             cpu: "100m"
           limits:
             memory: "256Mi"
-            cpu: "500m"
+            cpu: "200m"
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
 ---
 apiVersion: v1
 kind: Service
