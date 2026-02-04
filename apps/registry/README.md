@@ -80,7 +80,14 @@ docker pull registry.flowagent.svc.cluster.local:5000/myapp:latest
 
 ### 從集群外訪問（使用 NodePort）
 
-Registry 通過 NodePort 30500 暴露。
+⚠️ **安全警告**: NodePort 暴露在 30500 端口，使用 HTTP 未加密連接。
+
+**生產環境建議**:
+1. 使用 Ingress 並配置 TLS/SSL
+2. 或限制 NodePort 訪問僅限內部網絡
+3. 或配置防火牆規則限制訪問源
+
+Registry 通過 NodePort 30500 暴露（僅用於開發/測試）。
 
 ```bash
 # 獲取節點 IP
@@ -93,12 +100,40 @@ fi
 
 echo "Registry URL: ${NODE_IP}:30500"
 
-# 登入 Registry
-docker login ${NODE_IP}:30500 -u admin -p FlowAgent2026!
+# ⚠️ 注意: 以下命令通過 HTTP 傳輸憑證，僅用於開發環境
+# 登入 Registry（請先更改預設密碼！）
+docker login ${NODE_IP}:30500 -u admin -p YourNewPassword
 
 # 推送鏡像
 docker tag myapp:latest ${NODE_IP}:30500/myapp:latest
 docker push ${NODE_IP}:30500/myapp:latest
+```
+
+**生產環境配置 TLS**:
+建議使用 Ingress Controller 配置 HTTPS:
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: registry-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - registry.yourdomain.com
+    secretName: registry-tls
+  rules:
+  - host: registry.yourdomain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: registry
+            port:
+              number: 5000
 ```
 
 ## 🔑 配置 ImagePullSecret

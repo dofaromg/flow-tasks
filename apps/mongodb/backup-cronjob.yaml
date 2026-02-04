@@ -35,7 +35,7 @@ spec:
               if [ $? -eq 0 ]; then
                 echo "Backup completed successfully"
                 # Keep only last 7 days of backups
-                find /backup -name "mongodb_backup_*" -type d -mtime +7 -exec rm -rf {} \;
+                find /backup -name "mongodb_backup_*" -type d -mtime +7 -print0 | xargs -0 -r rm -rf || echo "Warning: failed to clean up some old backups"
               else
                 echo "Backup failed"
                 exit 1

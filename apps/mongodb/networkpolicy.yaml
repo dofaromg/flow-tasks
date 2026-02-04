@@ -22,9 +22,11 @@ spec:
     - protocol: TCP
       port: 27017
   egress:
-  # Allow DNS
+  # Allow DNS (restricted to kube-system namespace)
   - to:
-    - namespaceSelector: {}
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
       podSelector:
         matchLabels:
           k8s-app: kube-dns

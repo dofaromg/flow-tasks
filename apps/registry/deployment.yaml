@@ -1,5 +1,5 @@
-# Harbor Private Registry Deployment
-# 使用 Docker Registry v2 作為轻量级私人仓库
+# Docker Registry v2 Private Registry Deployment
+# 使用 Docker Registry v2 作為輕量級私人容器映像倉庫
 
 apiVersion: apps/v1
 kind: Deployment
@@ -49,6 +49,9 @@ spec:
         - name: registry-auth
           mountPath: /auth
           readOnly: true
+        - name: registry-config
+          mountPath: /etc/docker/registry
+          readOnly: true
         livenessProbe:
           httpGet:
             path: /
@@ -87,6 +90,9 @@ spec:
       - name: registry-auth
         secret:
           secretName: registry-auth
+      - name: registry-config
+        configMap:
+          name: registry-config
 ---
 apiVersion: v1
 kind: Service

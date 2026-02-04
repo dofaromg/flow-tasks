@@ -38,6 +38,9 @@ spec:
             volumeMounts:
             - name: registry-data
               mountPath: /var/lib/registry
+            - name: registry-config
+              mountPath: /etc/docker/registry
+              readOnly: true
             resources:
               requests:
                 memory: "128Mi"
@@ -49,3 +52,6 @@ spec:
           - name: registry-data
             persistentVolumeClaim:
               claimName: registry-pvc
+          - name: registry-config
+            configMap:
+              name: registry-config
