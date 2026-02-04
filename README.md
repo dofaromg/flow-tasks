@@ -84,6 +84,21 @@ python demo.py demo
 uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 ```
 
+### 選項 3: 冷儲存管理 (新增功能)
+```bash
+# 掃描需要歸檔的檔案
+python particle_core/src/cold_storage_manager.py scan
+
+# 歸檔檔案到冷儲存（保留原檔案，不刪除）
+python scripts/archive_to_cold_storage.py
+
+# 查看統計資訊
+python particle_core/src/cold_storage_manager.py stats
+
+# 詳細說明
+查看: COLD_STORAGE_QUICKSTART.md
+```
+
 ---
 
 ## 🗂️ 專案結構 / Project Structure

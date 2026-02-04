@@ -289,3 +289,8 @@ MrLiou_AI_SuperComputer/memory/ingest/ai_responses/*
 !MrLiou_AI_SuperComputer/memory/domain/A/.gitkeep
 !MrLiou_AI_SuperComputer/memory/domain/R/.gitkeep
 !MrLiou_AI_SuperComputer/log/.gitkeep
+
+# Cold Storage (archive directory - keep manifest only)
+cold_storage/particles/
+cold_storage/metadata/
+cold_storage/redirects/
