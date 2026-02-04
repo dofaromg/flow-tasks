@@ -11,6 +11,7 @@
 - ⚡ [**部署快速參考 / Deployment Quick Reference**](./DEPLOYMENT_QUICK_REFERENCE.md) - 快速命令和配置速查表
 - 🚀 [**部署指南 / Deployment Guide**](./DEPLOYMENT.md) - 詳細的部署步驟和故障排除
 - 🏗️ [**架構說明 / Architecture**](./ARCHITECTURE.md) - 系統架構與流程圖
+- 🔄 [**GKE 遷移指南 / GKE Migration Guide**](./GKE_MIGRATION.md) - Next.js 從 Vercel 遷移到 GKE
 
 ### 🎯 一鍵部署 / One-Click Deployment
 ```bash
@@ -29,6 +30,7 @@ kubectl apply -k cluster/overlays/prod/
 This project integrates:
 
 1) **GKE 部署架構** - 完整的 Kubernetes 微服務部署
+   - Next.js Frontend (前端應用)
    - Module-A (主服務模組)
    - Orchestrator (協調器)
    - MongoDB (資料庫)
@@ -91,6 +93,7 @@ uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 ```
 flow-tasks/
 ├── 📂 apps/                    # Kubernetes 應用部署清單
+│   ├── nextjs-frontend/       # Next.js 前端應用
 │   ├── module-a/              # 主服務模組
 │   ├── orchestrator/          # 協調器服務
 │   ├── mongodb/               # 資料庫
@@ -100,11 +103,14 @@ flow-tasks/
 │   └── overlays/              # 環境覆蓋 (prod, monitoring)
 ├── 📂 argocd/                 # GitOps 配置
 ├── 📂 particle_core/          # 粒子語言核心系統
+├── 📂 pages/                  # Next.js 頁面
+├── 📂 lib/                    # Next.js 工具庫
 ├── 📂 scripts/                # 部署和工具腳本
 └── 📚 文檔 / Documentation
     ├── DEPLOYMENT_STRUCTURE_INDEX.md    # 🌍 部署結構索引
     ├── DEPLOYMENT_QUICK_REFERENCE.md    # ⚡ 快速參考
     ├── DEPLOYMENT.md                    # 📖 部署指南
+    ├── GKE_MIGRATION.md                 # 🔄 GKE 遷移指南
     └── ARCHITECTURE.md                  # 🏗️ 架構說明
 ```
 
@@ -113,6 +119,7 @@ flow-tasks/
 ## 🎯 核心功能 / Core Features
 
 ### 1. GKE 微服務部署
+- ✅ Next.js Frontend: 前端應用 (2 replicas, LoadBalancer)
 - ✅ Module-A: 主服務模組 (2-10 replicas, HPA)
 - ✅ Orchestrator: 協調器與入口 (LoadBalancer)
 - ✅ MongoDB: 持久化資料庫 (10Gi PVC)
@@ -138,6 +145,7 @@ flow-tasks/
 | 🌍 [部署結構索引](./DEPLOYMENT_STRUCTURE_INDEX.md) | 完整的部署組件、配置和拓撲圖 |
 | ⚡ [部署快速參考](./DEPLOYMENT_QUICK_REFERENCE.md) | 快速命令和配置速查表 |
 | 📖 [部署指南](./DEPLOYMENT.md) | 詳細的部署步驟和故障排除 |
+| 🔄 [GKE 遷移指南](./GKE_MIGRATION.md) | Next.js 從 Vercel 遷移到 GKE |
 | 🏗️ [架構說明](./ARCHITECTURE.md) | 系統架構與流程圖 |
 | 📊 [結構索引](./STRUCTURE.md) | 專案檔案結構統計 |
 | ⚡ [快速開始](./QUICKSTART.md) | 快速部署指南 |
@@ -158,6 +166,7 @@ CLUSTER_NAME=modular-cluster
 ### Container Registry
 ```
 asia-east1-docker.pkg.dev/flowmemorysync/flowagent/
+├── nextjs-frontend:latest
 ├── module-a:latest
 └── orchestrator:latest
 ```
