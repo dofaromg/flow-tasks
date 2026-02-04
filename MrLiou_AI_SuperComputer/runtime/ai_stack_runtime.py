@@ -72,7 +72,6 @@ class AIStack:
             max_cycles = 10
             previous_data = None
             for cycle in range(max_cycles):
-                cycle_start_data = current_data
                 for particle in self.particles:
                     result = particle.execute(current_data)
                     current_data = result["result"]
