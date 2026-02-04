@@ -4,6 +4,7 @@ Test script for Model Package v1 Validator
 Validates the workflow and script functionality
 """
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -113,7 +114,6 @@ def create_valid_test_package(package_dir: Path) -> None:
     (package_dir / "meta/source.json").write_text(json.dumps(source, indent=2), encoding="utf-8")
     
     # Update artifact hashes to match actual content
-    import hashlib
     for artifact in manifest["artifacts"]:
         file_path = package_dir / artifact["path"]
         if file_path.exists():

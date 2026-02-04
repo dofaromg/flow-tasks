@@ -21,6 +21,7 @@ import os
 import re
 from enum import Enum
 from dataclasses import dataclass
+from typing import Optional
 
 # 加入 core 到路徑（若存在）
 _core_path = os.path.join(os.path.dirname(__file__), "core")
@@ -34,7 +35,7 @@ except ModuleNotFoundError:
     class Particle:
         """Fallback Particle data holder."""
 
-        def __init__(self, name: str | None = None, **kwargs):
+        def __init__(self, name: Optional[str] = None, **kwargs):
             self.name = name
             self.meta = kwargs
             self.fx_code = kwargs.get('fx_code', 'UNKNOWN')
@@ -44,7 +45,7 @@ except ModuleNotFoundError:
     class ParticleChain(list):
         """Fallback ParticleChain as a simple list of Particle."""
 
-        def __init__(self, particles: list[Particle] | None = None):
+        def __init__(self, particles: Optional[list] = None):
             super().__init__(particles or [])
 
 
@@ -86,7 +87,7 @@ except ModuleNotFoundError:
         def __init__(self) -> None:
             self._store: list[dict] = []
 
-        def commit(self, content: str, memory_type=None, tags: list = None) -> dict:
+        def commit(self, content: str, memory_type=None, tags: Optional[list] = None) -> dict:
             """新增一筆記憶到暫存列表。"""
             entry = {
                 'entry_id': f'mem_{len(self._store)}',
