@@ -24,7 +24,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 import sys
 import textwrap
 import zipfile
@@ -225,7 +224,7 @@ def validate_json_files(root: Path, findings: List[Finding]) -> None:
                 findings.append(Finding("ERROR", "QUALITY_MISSING_FIELDS", "quality.json missing required fields.", rel))
 
 
-def validate_artifact_hashes(root: Path, manifest: dict, by_path: Dict[str, dict], findings: List[Finding]) -> None:
+def validate_artifact_hashes(root: Path, manifest: dict, findings: List[Finding]) -> None:
     artifacts = manifest.get("artifacts", [])
     if not isinstance(artifacts, list):
         return
@@ -293,7 +292,6 @@ def main() -> int:
     findings: List[Finding] = []
 
     # Prepare root
-    extracted = False
     root = input_path
     if input_path.is_file() and input_path.suffix.lower() == ".zip":
         # clean workdir
@@ -306,6 +304,9 @@ def main() -> int:
                             p.unlink()
                         elif p.is_dir():
                             p.rmdir()
+                    except Exception:
+                        # Best-effort cleanup: ignore errors when removing temp artifacts.
+                        pass
                     except Exception as cleanup_error:
                         # Best-effort cleanup: log and ignore errors when removing temp artifacts.
                         sys.stderr.write(f"[WARN] Failed to remove {p}: {cleanup_error}\n")
@@ -314,7 +315,7 @@ def main() -> int:
             findings.append(Finding("ERROR", "WORKDIR_PREP_FAILED", f"Failed to prepare workdir: {e}", str(workdir)))
             return report(findings, json_out=args.json)
 
-        root, extracted, f2 = ensure_extracted(input_path, workdir)
+        root, _extracted, f2 = ensure_extracted(input_path, workdir)
         findings.extend(f2)
 
     if not root.exists() or not root.is_dir():
@@ -338,7 +339,7 @@ def main() -> int:
     validate_json_files(root, findings)
 
     # Validate artifact hashes & sizes
-    validate_artifact_hashes(root, manifest, idx["by_path"], findings)
+    validate_artifact_hashes(root, manifest, findings)
 
     # Source-specific constraints
     source_path = root / "meta/source.json"
