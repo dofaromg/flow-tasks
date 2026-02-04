@@ -187,7 +187,7 @@ def test_parallel_file_reading_performance():
             'test': 'parallel_file_reading',
             'sequential_time_ms': seq_time * 1000,
             'parallel_time_ms': par_time * 1000,
-            'speedup': max(seq_time / par_time, par_time / seq_time),
+            'speedup': seq_time / par_time,  # Can be < 1.0 if parallel is slower
             'files_read': len(seeds_parallel),
             'note': 'Benefit scales with file count/size'
         }
@@ -276,14 +276,23 @@ def main():
         print("📈 PERFORMANCE TEST SUMMARY")
         print("="*70)
         
-        total_speedup = 0
+        total_improved_speedup = 0
+        improved_count = 0
+        
         for result in results:
             print(f"\n✅ {result['test']}")
-            print(f"   Speedup: {result['speedup']:.2f}x")
-            total_speedup += result['speedup']
+            speedup = result['speedup']
+            if speedup >= 1.0:
+                print(f"   Speedup: {speedup:.2f}x")
+                total_improved_speedup += speedup
+                improved_count += 1
+            else:
+                print(f"   Overhead: {1/speedup:.2f}x (slower due to thread overhead)")
+                print(f"   Note: {result.get('note', 'Optimization may benefit larger datasets')}")
         
-        avg_speedup = total_speedup / len(results)
-        print(f"\n🎯 Average speedup across all optimizations: {avg_speedup:.2f}x")
+        if improved_count > 0:
+            avg_speedup = total_improved_speedup / improved_count
+            print(f"\n🎯 Average speedup for improved operations: {avg_speedup:.2f}x")
         print("="*70)
         
         print("\n✅ All performance tests completed successfully!")

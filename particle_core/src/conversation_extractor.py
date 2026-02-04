@@ -189,7 +189,8 @@ class ConversationExtractor:
             package: 對話包 (Conversation package)
             filepath: 檔案路徑 (File path)
             format: 格式 - Format
-                   支援: json, markdown, txt, csv, xml, yaml
+                   Supported formats: json, markdown (or md), txt (or text), 
+                   yaml (or yml), csv, html (or htm), xml
         """
         # Normalize format to handle aliases efficiently
         format = format.lower()
@@ -201,7 +202,7 @@ class ConversationExtractor:
         }
         format = format_map.get(format, format)
         
-        # Use dictionary dispatch for cleaner and more efficient branching
+        # Handle normalized format with clean branching
         if format == "json":
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(package, f, ensure_ascii=False, indent=2)
