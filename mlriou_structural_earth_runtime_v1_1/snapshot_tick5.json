@@ -1,0 +1,327 @@
+{
+  "tick": 5,
+  "node_states": {
+    "center": {
+      "tick": 5,
+      "pressure": 0.158640139306647,
+      "energy": 0.025166693799232365,
+      "pressure_delta": -0.05697416466408803,
+      "metadata": {
+        "N": 1.0,
+        "eta": 1.0,
+        "alpha": 1.0,
+        "beta": 0.0,
+        "P_prev": 0.21561430397073503,
+        "external_force": 0.0
+      }
+    },
+    "n1": {
+      "tick": 5,
+      "pressure": 434.69846407048345,
+      "energy": 188962.7546652374,
+      "pressure_delta": 273.5419268468712,
+      "metadata": {
+        "N": 2.0,
+        "eta": 0.8,
+        "alpha": 1.2,
+        "beta": 0.5,
+        "P_prev": 161.15653722361222,
+        "external_force": 0.0
+      }
+    },
+    "n2": {
+      "tick": 5,
+      "pressure": 37.68618710388618,
+      "energy": 1420.2486984291172,
+      "pressure_delta": 16.687763683804057,
+      "metadata": {
+        "N": 1.8,
+        "eta": 0.9,
+        "alpha": 1.1,
+        "beta": 0.3,
+        "P_prev": 20.998423420082126,
+        "external_force": 0.0
+      }
+    },
+    "n3": {
+      "tick": 5,
+      "pressure": 4754.20929553263,
+      "energy": 22602506.025728863,
+      "pressure_delta": 3582.6391401948504,
+      "metadata": {
+        "N": 2.2,
+        "eta": 0.7,
+        "alpha": 1.3,
+        "beta": 0.4,
+        "P_prev": 1171.5701553377792,
+        "external_force": 0.0
+      }
+    },
+    "n4": {
+      "tick": 5,
+      "pressure": 2.3799306651985215,
+      "energy": 5.664069971152277,
+      "pressure_delta": 0.29015657179799215,
+      "metadata": {
+        "N": 1.5,
+        "eta": 1.0,
+        "alpha": 1.0,
+        "beta": 0.2,
+        "P_prev": 2.0897740934005293,
+        "external_force": 0.0
+      }
+    },
+    "n5": {
+      "tick": 5,
+      "pressure": 18.758553945745792,
+      "energy": 351.88334613545504,
+      "pressure_delta": 7.034393990324652,
+      "metadata": {
+        "N": 1.7,
+        "eta": 0.95,
+        "alpha": 1.15,
+        "beta": 0.25,
+        "P_prev": 11.72415995542114,
+        "external_force": 0.0
+      }
+    },
+    "jump_n1_1": {
+      "tick": 5,
+      "pressure": 0.5145522837184388,
+      "energy": 0.2647640526798607,
+      "pressure_delta": -0.08963458868472451,
+      "metadata": {
+        "N": 1.0,
+        "eta": 1.2000000000000002,
+        "alpha": 1.2,
+        "beta": 0.5,
+        "P_prev": 0.6041868724031633,
+        "external_force": 0.0
+      }
+    },
+    "jump_n3_2": {
+      "tick": 5,
+      "pressure": 1.2665341126247824,
+      "energy": 1.604108658442245,
+      "pressure_delta": 0.084618639143065,
+      "metadata": {
+        "N": 1.1,
+        "eta": 1.0499999999999998,
+        "alpha": 1.3,
+        "beta": 0.4,
+        "P_prev": 1.1819154734817174,
+        "external_force": 0.0
+      }
+    },
+    "jump_n1_3": {
+      "tick": 5,
+      "pressure": 0.6041868724031633,
+      "energy": 0.36504177678431626,
+      "pressure_delta": -0.14879865737734177,
+      "metadata": {
+        "N": 1.0,
+        "eta": 1.2000000000000002,
+        "alpha": 1.2,
+        "beta": 0.5,
+        "P_prev": 0.752985529780505,
+        "external_force": 0.0
+      }
+    },
+    "jump_n3_4": {
+      "tick": 5,
+      "pressure": 1.1819154734817174,
+      "energy": 1.3969241864555124,
+      "pressure_delta": 0.08877660006782206,
+      "metadata": {
+        "N": 1.1,
+        "eta": 1.0499999999999998,
+        "alpha": 1.3,
+        "beta": 0.4,
+        "P_prev": 1.0931388734138954,
+        "external_force": 0.0
+      }
+    },
+    "jump_n1_5": {
+      "tick": 5,
+      "pressure": 0.752985529780505,
+      "energy": 0.5669872080588279,
+      "pressure_delta": -0.24701447021949496,
+      "metadata": {
+        "N": 1.0,
+        "eta": 1.2000000000000002,
+        "alpha": 1.2,
+        "beta": 0.5,
+        "P_prev": 1.0,
+        "external_force": 0.0
+      }
+    },
+    "jump_n2_6": {
+      "tick": 5,
+      "pressure": 0.45799112714107504,
+      "energy": 0.20975587253995237,
+      "pressure_delta": -0.542008872858925,
+      "metadata": {
+        "N": 0.9,
+        "eta": 1.35,
+        "alpha": 1.1,
+        "beta": 0.3,
+        "P_prev": 1.0,
+        "external_force": 0.0
+      }
+    },
+    "jump_n3_7": {
+      "tick": 5,
+      "pressure": 1.0931388734138954,
+      "energy": 1.1949525965686003,
+      "pressure_delta": 0.09313887341389537,
+      "metadata": {
+        "N": 1.1,
+        "eta": 1.0499999999999998,
+        "alpha": 1.3,
+        "beta": 0.4,
+        "P_prev": 1.0,
+        "external_force": 0.0
+      }
+    }
+  },
+  "jump_nodes": [
+    {
+      "tick": 2,
+      "source_node_id": "n1",
+      "jump_node_id": "jump_n1_1",
+      "pressure": 22.058355105765095,
+      "target_ring": 3,
+      "metadata": {
+        "excess_pressure": 2.058355105765095,
+        "jump_distance": 1,
+        "source_ring": 2,
+        "source_sector": 0
+      }
+    },
+    {
+      "tick": 2,
+      "source_node_id": "n3",
+      "jump_node_id": "jump_n3_2",
+      "pressure": 71.09057348340694,
+      "target_ring": 4,
+      "metadata": {
+        "excess_pressure": 51.09057348340694,
+        "jump_distance": 2,
+        "source_ring": 2,
+        "source_sector": 2
+      }
+    },
+    {
+      "tick": 3,
+      "source_node_id": "n1",
+      "jump_node_id": "jump_n1_3",
+      "pressure": 59.69341158087815,
+      "target_ring": 3,
+      "metadata": {
+        "excess_pressure": 39.69341158087815,
+        "jump_distance": 1,
+        "source_ring": 2,
+        "source_sector": 0
+      }
+    },
+    {
+      "tick": 3,
+      "source_node_id": "n3",
+      "jump_node_id": "jump_n3_4",
+      "pressure": 288.67076933778696,
+      "target_ring": 15,
+      "metadata": {
+        "excess_pressure": 268.67076933778696,
+        "jump_distance": 13,
+        "source_ring": 2,
+        "source_sector": 2
+      }
+    },
+    {
+      "tick": 4,
+      "source_node_id": "n1",
+      "jump_node_id": "jump_n1_5",
+      "pressure": 161.15653722361222,
+      "target_ring": 9,
+      "metadata": {
+        "excess_pressure": 141.15653722361222,
+        "jump_distance": 7,
+        "source_ring": 2,
+        "source_sector": 0
+      }
+    },
+    {
+      "tick": 4,
+      "source_node_id": "n2",
+      "jump_node_id": "jump_n2_6",
+      "pressure": 20.998423420082126,
+      "target_ring": 3,
+      "metadata": {
+        "excess_pressure": 0.9984234200821263,
+        "jump_distance": 1,
+        "source_ring": 2,
+        "source_sector": 1
+      }
+    },
+    {
+      "tick": 4,
+      "source_node_id": "n3",
+      "jump_node_id": "jump_n3_7",
+      "pressure": 1171.5701553377792,
+      "target_ring": 59,
+      "metadata": {
+        "excess_pressure": 1151.5701553377792,
+        "jump_distance": 57,
+        "source_ring": 2,
+        "source_sector": 2
+      }
+    },
+    {
+      "tick": 5,
+      "source_node_id": "n1",
+      "jump_node_id": "jump_n1_8",
+      "pressure": 434.69846407048345,
+      "target_ring": 22,
+      "metadata": {
+        "excess_pressure": 414.69846407048345,
+        "jump_distance": 20,
+        "source_ring": 2,
+        "source_sector": 0
+      }
+    },
+    {
+      "tick": 5,
+      "source_node_id": "n2",
+      "jump_node_id": "jump_n2_9",
+      "pressure": 37.68618710388618,
+      "target_ring": 3,
+      "metadata": {
+        "excess_pressure": 17.686187103886184,
+        "jump_distance": 1,
+        "source_ring": 2,
+        "source_sector": 1
+      }
+    },
+    {
+      "tick": 5,
+      "source_node_id": "n3",
+      "jump_node_id": "jump_n3_10",
+      "pressure": 4754.20929553263,
+      "target_ring": 238,
+      "metadata": {
+        "excess_pressure": 4734.20929553263,
+        "jump_distance": 236,
+        "source_ring": 2,
+        "source_sector": 2
+      }
+    }
+  ],
+  "statistics": {
+    "tick": 5,
+    "total_nodes": 13,
+    "total_jumps": 10,
+    "total_energy": 22793252.20420968,
+    "avg_pressure": 404.1355673638319,
+    "max_pressure": 4754.20929553263
+  }
+}
