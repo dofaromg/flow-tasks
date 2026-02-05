@@ -1,0 +1,43 @@
+name: ParticleKit CI
+
+on:
+  push:
+    paths:
+      - 'auto_composer.py'
+      - 'fx_register.json'
+      - 'trace_compressor.py'
+      - 'tensor_compiler.py'
+  workflow_dispatch:
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt || true
+
+      - name: Run auto-composer test
+        run: |
+          echo '建立人格模組並封存' > input.txt
+          python -c "from auto_composer import auto_compose; print(auto_compose(open('input.txt').read()))"
+
+      - name: Compress trace to fxz
+        run: python trace_compressor.py
+
+      - name: Create zip archive
+        run: zip -r mrl_particlekit.zip auto_composer.py fx_register.json trace_compressor.py tensor_compiler.py
+
+      - name: Publish Release (optional)
+        uses: softprops/action-gh-release@v1
+        with:
+          files: mrl_particlekit.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,12 @@
+{
+  "id": "Mars.InSight.20250813",
+  "body": "Mars",
+  "coords": { "lon": 135.9, "lat": 4.5 },
+  "time": "2025-08-13T00:00:00Z",
+  "links": {
+    "snapshot": "CoreBond.MRliou.20250813.flsnap.json",
+    "kmz": "Mars.InSight.20250813.kmz",
+    "google_earth": "https://earth.google.com/web/@4.5,135.9,0a,0d,0y,0h",
+    "image": "123.jpeg"
+  }
+}

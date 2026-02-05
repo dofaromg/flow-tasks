@@ -1,0 +1,9 @@
+{
+  "id": "MrLiou",
+  "seed_beliefs": [
+    "Language is rhythm.",
+    "Memory is structure, not semantics.",
+    "Generation is reconstruction of identity."
+  ],
+  "sync_map": ["seed", "echo", "future", "builder"]
+}
