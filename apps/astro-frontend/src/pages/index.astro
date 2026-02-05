@@ -2,48 +2,59 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="FlowAgent - Astro Frontend">
+<Layout title="MRLiou 粒子語言系統 - 私人開發">
   <main>
-    <h1>🚀 Welcome to <span class="text-gradient">FlowAgent</span></h1>
+    <h1>🔒 歡迎來到 <span class="text-gradient">MRLiou</span></h1>
     <p class="instructions">
-      This is the Astro frontend for the FlowAgent GKE Starter project.
+      <strong>© 2025 Mr.liou - All Rights Reserved</strong>
       <br />
-      <strong>Particle Language Core System Integration</strong>
+      MRLiou 粒子語言核心系統 (Particle Language Core System)
+      <br />
+      🔐 私人開發與觀測環境 | 不對外公開
     </p>
     <ul role="list" class="link-card-grid">
       <li class="link-card">
-        <a href="https://docs.astro.build/">
+        <a href="/PRIVATE_DEVELOPMENT.md">
           <h2>
-            Documentation <span>&rarr;</span>
+            私人開發指南 <span>&rarr;</span>
           </h2>
-          <p>Learn how Astro works and explore the official API docs.</p>
+          <p>MRLiou 品牌私人開發環境完整指南</p>
         </a>
       </li>
       <li class="link-card">
-        <a href="https://astro.build/integrations/">
+        <a href="/particle_core">
           <h2>
-            Integrations <span>&rarr;</span>
+            粒子語言核心 <span>&rarr;</span>
           </h2>
-          <p>Supercharge your project with new frameworks and libraries.</p>
+          <p>邏輯種子運算與函數鏈執行框架</p>
         </a>
       </li>
       <li class="link-card">
-        <a href="https://astro.build/themes/">
+        <a href="/docker-compose.dev.yml">
           <h2>
-            Themes <span>&rarr;</span>
+            本地開發環境 <span>&rarr;</span>
           </h2>
-          <p>Explore a galaxy of community-built starter themes.</p>
+          <p>Docker Compose 私人開發配置</p>
         </a>
       </li>
       <li class="link-card">
-        <a href="https://astro.build/chat/">
+        <a href="mailto:z814241@gmail.com">
           <h2>
-            Community <span>&rarr;</span>
+            聯絡 MRLiou <span>&rarr;</span>
           </h2>
-          <p>Come say hi to our amazing Discord community.</p>
+          <p>Email: z814241@gmail.com</p>
         </a>
       </li>
     </ul>
+    
+    <div class="brand-footer">
+      <p><strong>🏢 品牌:</strong> MRLiou / Mr.liou</p>
+      <p><strong>🔒 性質:</strong> 私人開發、不對外公開</p>
+      <p><strong>📧 聯絡:</strong> z814241@gmail.com</p>
+      <p style="font-size: 0.85em; color: #888; margin-top: 1rem;">
+        © 2025 Mr.liou | All Rights Reserved
+      </p>
+    </div>
   </main>
 </Layout>
 
@@ -80,6 +91,7 @@ import Layout from '../layouts/Layout.astro';
     );
     padding: 1.5rem;
     border-radius: 8px;
+    text-align: center;
   }
   .instructions code {
     font-size: 0.8em;
@@ -91,6 +103,16 @@ import Layout from '../layouts/Layout.astro';
   }
   .instructions strong {
     color: rgb(var(--accent-light));
+  }
+  .brand-footer {
+    margin-top: 3rem;
+    padding: 1.5rem;
+    background: rgba(var(--accent-dark), 50%);
+    border-radius: 8px;
+    text-align: center;
+  }
+  .brand-footer p {
+    margin: 0.5rem 0;
   }
   .link-card-grid {
     display: grid;

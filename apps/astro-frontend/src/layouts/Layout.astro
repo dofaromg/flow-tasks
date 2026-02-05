@@ -7,17 +7,22 @@ const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="zh-TW">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Astro Frontend for FlowAgent" />
+    <meta name="description" content="MRLiou 粒子語言系統 - © Mr.liou 私人開發" />
     <meta name="viewport" content="width=device-width" />
+    <meta name="author" content="MRLiou / Mr.liou" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
   <body>
     <slot />
+    <footer style="text-align: center; padding: 2rem; font-size: 0.85em; color: #888;">
+      <p>© 2025 Mr.liou | MRLiou 品牌 - All Rights Reserved</p>
+      <p>私人開發環境 | 不對外公開</p>
+    </footer>
   </body>
 </html>
 

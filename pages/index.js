@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import { getGrowthBook, isFeatureOn, getFeatureValue, FLAGS } from '../lib/growthbook';
 
 const features = [
-  '⚡ Vercel 一鍵部署 - 全球 CDN 加速',
-  '🔄 自動 CI/CD - GitHub 整合自動部署',
-  '🎯 功能旗標 - GrowthBook 動態控制',
-  '☸️ GKE 基礎設施 - 完整 Kubernetes 配置',
-  '📊 可觀察性 - 監控與調試友善',
+  '🧠 MRLiou 粒子語言核心 - 邏輯種子運算',
+  '💾 記憶封存系統 - 完整狀態保存',
+  '🔄 函數鏈執行 - STRUCTURE → MARK → FLOW',
+  '🐳 Docker 本地開發 - 私人環境部署',
+  '📊 私人觀測工具 - 本地監控與記錄',
 ];
 
 export default function Home() {
@@ -54,14 +54,15 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>FlowAgent - GitOps Starter with Vercel & GKE</title>
+        <title>MRLiou 粒子語言系統 - 私人開發環境</title>
         <meta
           name="description"
-          content="FlowAgent GKE Starter: 快速部署到 Vercel 與 GKE 的完整 GitOps + CI/CD 解決方案。支援功能旗標、粒子語言核心系統與 Kubernetes 編排。"
+          content="MRLiou Particle Language Core System - 私人開發與觀測環境。© Mr.liou - All Rights Reserved"
         />
-        <meta property="og:title" content="FlowAgent - GitOps Starter" />
-        <meta property="og:description" content="完整的 Vercel + GKE 部署框架" />
+        <meta property="og:title" content="MRLiou 粒子語言系統" />
+        <meta property="og:description" content="© Mr.liou 私人開發專案" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="author" content="MRLiou / Mr.liou" />
       </Head>
       <main
         style={{
@@ -128,14 +129,15 @@ export default function Home() {
           }}
         >
           <p style={{ color: '#64748b', fontWeight: 600, letterSpacing: 1.2, marginBottom: 12 }}>
-            FLOWAGENT - VERCEL + GKE DEPLOYMENT
+            🔒 MRLIOU 私人開發環境
           </p>
           <h1 style={{ fontSize: '2.5rem', margin: '0 0 1rem', lineHeight: 1.2 }}>
-            完整的 GitOps 與 CI/CD 解決方案
+            MRLiou 粒子語言核心系統
           </h1>
           <p style={{ color: '#475569', marginBottom: '1.5rem', fontSize: '1.05rem', lineHeight: 1.7 }}>
-            輕鬆部署前端到 Vercel，後端到 GKE。同一套配置管理 Next.js、Kubernetes、CI/CD 與功能旗標。
-            支援粒子語言核心系統與記憶封存，開箱即用的雲端架構。
+            © 2025 Mr.liou - All Rights Reserved<br/>
+            私人開發與觀測環境 | Particle Language Core System<br/>
+            不對外公開 | Private Development Only
           </p>
 
           <div
@@ -183,9 +185,7 @@ export default function Home() {
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
             <a
-              href="https://github.com/dofaromg/flow-tasks"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/PRIVATE_DEVELOPMENT.md"
               style={{
                 background: colorMap[checkoutColor] || colorMap.blue,
                 color: '#ffffff',
@@ -198,12 +198,10 @@ export default function Home() {
               onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
             >
-              🚀 查看 Repository
+              🔒 私人開發指南
             </a>
             <a
-              href="https://github.com/dofaromg/flow-tasks/blob/main/VERCEL_DEPLOYMENT.md"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/particle_core"
               style={{
                 padding: '0.85rem 1.4rem',
                 borderRadius: 12,
@@ -217,12 +215,10 @@ export default function Home() {
               onMouseEnter={(e) => (e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)')}
               onMouseLeave={(e) => (e.currentTarget.style.boxShadow = 'none')}
             >
-              ⚡ Vercel 部署
+              🧠 粒子語言核心
             </a>
             <a
-              href="https://github.com/dofaromg/flow-tasks/blob/main/DEPLOYMENT.md"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="mailto:z814241@gmail.com"
               style={{
                 padding: '0.85rem 1.4rem',
                 borderRadius: 12,
@@ -236,30 +232,31 @@ export default function Home() {
               onMouseEnter={(e) => (e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)')}
               onMouseLeave={(e) => (e.currentTarget.style.boxShadow = 'none')}
             >
-              ☸️ GKE 部署指南
+              📧 聯絡 MRLiou
             </a>
           </div>
 
-          {/* GrowthBook Debug Info */}
-          {isLoaded && (
-            <div
-              style={{
-                marginTop: '2rem',
-                padding: '1rem',
-                background: '#f1f5f9',
-                borderRadius: 8,
-                fontSize: '0.875rem',
-                color: '#475569',
-              }}
-            >
-              <p style={{ fontWeight: 600, marginBottom: '0.5rem' }}>🎯 Feature Flags Active:</p>
-              <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
-                <li>Summer Sale Banner: {showSummerSale ? '✅ ON' : '❌ OFF'}</li>
-                <li>Free Delivery Banner: {showFreeDelivery ? '✅ ON' : '❌ OFF'}</li>
-                <li>Checkout Button Color: <span style={{ fontWeight: 600, color: colorMap[checkoutColor] }}>{checkoutColor.toUpperCase()}</span></li>
-              </ul>
-            </div>
-          )}
+          {/* Brand and Copyright Info */}
+          <div
+            style={{
+              marginTop: '2rem',
+              padding: '1rem',
+              background: '#f1f5f9',
+              borderRadius: 8,
+              fontSize: '0.875rem',
+              color: '#475569',
+              textAlign: 'center',
+            }}
+          >
+            <p style={{ fontWeight: 600, marginBottom: '0.5rem' }}>
+              🏢 MRLiou 品牌 | Mr.liou
+            </p>
+            <p style={{ fontSize: '0.75rem', color: '#64748b' }}>
+              © 2025 Mr.liou - All Rights Reserved<br/>
+              私人開發環境 | 不對外公開<br/>
+              Particle Language Core System
+            </p>
+          </div>
         </section>
       </main>
     </>
