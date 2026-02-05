@@ -12,6 +12,8 @@
 - 🚀 [**部署指南 / Deployment Guide**](./DEPLOYMENT.md) - 詳細的部署步驟和故障排除
 - 🏗️ [**架構說明 / Architecture**](./ARCHITECTURE.md) - 系統架構與流程圖
 - 🔄 [**GKE 遷移指南 / GKE Migration Guide**](./GKE_MIGRATION.md) - Next.js 從 Vercel 遷移到 GKE
+- 🌟 [**部署替代方案 / Deployment Alternatives**](./DEPLOYMENT_ALTERNATIVES.md) - 不用 Vercel？10+ 種替代方案
+- 🐳 [**Docker Compose 指南 / Docker Compose Guide**](./DOCKER_COMPOSE_GUIDE.md) - 本地/自託管部署
 
 ### 🎯 一鍵部署 / One-Click Deployment
 ```bash
@@ -30,7 +32,8 @@ kubectl apply -k cluster/overlays/prod/
 This project integrates:
 
 1) **GKE 部署架構** - 完整的 Kubernetes 微服務部署
-   - Next.js Frontend (前端應用)
+   - Next.js Frontend (React 前端應用)
+   - Astro Frontend (靜態網站前端)
    - Module-A (主服務模組)
    - Orchestrator (協調器)
    - MongoDB (資料庫)
@@ -70,7 +73,47 @@ kubectl get pods -n flowagent
 kubectl get svc -n flowagent
 ```
 
-### 選項 2: 本地開發 (粒子語言核心)
+### 選項 2: Docker Compose 本地部署 (最簡單)
+```bash
+# 1) 克隆 repository
+git clone https://github.com/dofaromg/flow-tasks.git
+cd flow-tasks
+
+# 2) (可選) 配置環境變數
+cp .env.docker-example .env
+# 編輯 .env 如需要
+
+# 3) 啟動所有服務
+docker-compose up -d
+
+# 4) 訪問應用
+# Next.js Frontend: http://localhost:3000
+# MongoDB: localhost:27017
+
+# 查看日誌
+docker-compose logs -f
+```
+
+📖 完整指南: [Docker Compose 部署指南](./DOCKER_COMPOSE_GUIDE.md)
+
+### 選項 3: 本地開發 (Astro Frontend)
+```bash
+# 1) 進入 Astro 目錄
+cd apps/astro-frontend
+
+# 2) 安裝依賴
+npm install
+
+# 3) 啟動開發伺服器
+npm run dev
+# 訪問 http://localhost:4321
+
+# 4) 或建置生產版本
+npm run build
+npm run preview
+```
+
+### 選項 4: 本地開發 (粒子語言核心)
 ```bash
 # 1) 建立與設定環境
 python -m venv .venv && . .venv/bin/activate  # Windows: .\.venv\Scripts\activate
@@ -94,6 +137,7 @@ uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 flow-tasks/
 ├── 📂 apps/                    # Kubernetes 應用部署清單
 │   ├── nextjs-frontend/       # Next.js 前端應用
+│   ├── astro-frontend/        # Astro 靜態網站前端
 │   ├── module-a/              # 主服務模組
 │   ├── orchestrator/          # 協調器服務
 │   ├── mongodb/               # 資料庫
@@ -119,7 +163,8 @@ flow-tasks/
 ## 🎯 核心功能 / Core Features
 
 ### 1. GKE 微服務部署
-- ✅ Next.js Frontend: 前端應用 (2 replicas, LoadBalancer)
+- ✅ Next.js Frontend: React 前端應用 (2 replicas, LoadBalancer)
+- ✅ Astro Frontend: 靜態網站前端 (2 replicas, LoadBalancer, nginx-based)
 - ✅ Module-A: 主服務模組 (2-10 replicas, HPA)
 - ✅ Orchestrator: 協調器與入口 (LoadBalancer)
 - ✅ MongoDB: 持久化資料庫 (10Gi PVC)

@@ -1,0 +1,2 @@
+# No external dependencies required for v1.1
+# All functionality uses Python standard library
