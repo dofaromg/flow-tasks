@@ -160,23 +160,17 @@ class LogicTransformer:
         else:
             return "advanced"
     
-    def export_to_json(self, function_list: List[str], metadata: Dict = None) -> Dict[str, Any]:
     def export_to_json(self, fn_list: List[str], metadata: Dict = None) -> Dict[str, Any]:
         """匯出為 JSON 模組描述"""
         if metadata is None:
             metadata = {}
         
-        transformation_map = self.create_transformation_map(function_list)
         transformation_map = self.create_transformation_map(fn_list)
         
         return {
             "module_type": "logic_function_chain",
             "version": "1.0",
             "timestamp": datetime.utcnow().isoformat(),
-            "functions": function_list,
-            "transformations": transformation_map,
-            "compressed": transformation_map["flpkg_standard"],
-            "signature": f"MRLSIG-TRANSFORM-{hash(str(function_list)) % 10000:04d}",
             "functions": fn_list,
             "transformations": transformation_map,
             "compressed": transformation_map["flpkg_standard"],
@@ -189,8 +183,6 @@ class LogicTransformer:
         """批次轉換多個預設規則"""
         results = {}
         for preset in preset_names:
-            function_list = self.transform_to_preset(preset)
-            results[preset] = self.create_transformation_map(function_list)
             fn_list = self.transform_to_preset(preset)
             results[preset] = self.create_transformation_map(fn_list)
         return results

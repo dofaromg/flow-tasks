@@ -94,10 +94,6 @@ class FunctionRestorer:
             "functions": function_steps,
             "human_readable": self.to_human_readable(function_steps),
             "signature": f"MRLSIG-{hash(str(function_steps)) % 10000:04d}",
-            "compressed": self.compress_fn(fn_steps),
-            "functions": fn_steps,
-            "human_readable": self.to_human_readable(fn_steps),
-            "signature": f"MRLSIG-{hash(str(function_steps)) % 10000:04d}",
             "metadata": metadata
         }
         

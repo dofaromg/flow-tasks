@@ -3,4 +3,3 @@ uvicorn
 rich
 anthropic
 pyyaml
-rich
