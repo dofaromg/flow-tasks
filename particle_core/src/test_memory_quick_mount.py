@@ -8,6 +8,7 @@ Test suite for Memory Quick Mount module
 import unittest
 import json
 import os
+import sys
 import tempfile
 import shutil
 from pathlib import Path
