@@ -195,6 +195,43 @@ flow-tasks/
 | 📊 [結構索引](./STRUCTURE.md) | 專案檔案結構統計 |
 | ⚡ [快速開始](./QUICKSTART.md) | 快速部署指南 |
 | 🧠 [Particle Core](./particle_core/README.md) | 粒子語言核心系統 |
+| 💻 [Codespaces 快速參考](./CODESPACE_QUICK_REFERENCE_ZH.md) | GitHub Codespaces 管理命令 (中文) |
+| 📖 [Codespaces 管理指南](./CODESPACE_MANAGEMENT.md) | 完整的 Codespaces 管理文檔 (English) |
+
+---
+
+## 💻 GitHub Codespaces 管理 / GitHub Codespaces Management
+
+### 快速命令 / Quick Commands
+
+```bash
+# 列出所有 Codespaces / List all codespaces
+gh codespace list
+
+# 連接到 Codespace / Connect to a codespace
+gh codespace code -c CODESPACE_NAME
+
+# 停止 Codespace（節省使用時數）/ Stop codespace (save core hours)
+gh codespace stop -c CODESPACE_NAME
+
+# 刪除 Codespace / Delete a codespace
+gh codespace delete -c CODESPACE_NAME
+```
+
+### 監控工具 / Monitoring Tools
+
+```bash
+# 檢查 Codespace 保留狀態 / Check retention status
+./scripts/check-codespace-retention.sh
+
+# 詳細監控（含警告）/ Detailed monitoring with warnings
+./scripts/monitor-codespaces.sh
+```
+
+### 相關文檔 / Related Documentation
+- 📖 [中文快速參考 / Chinese Quick Reference](./CODESPACE_QUICK_REFERENCE_ZH.md)
+- 📖 [英文完整指南 / English Complete Guide](./CODESPACE_MANAGEMENT.md)
+- ⚡ [緊急行動指南 / Emergency Action Guide](./QUICK_ACTION_CODESPACE.md)
 
 ---
 
