@@ -3,38 +3,44 @@ info:
   title: Mr.liou MetaEnv Control API
   version: v1.0.0
   description: >
-    控制與保護元代碼沙盒（MetaEnv）的最小可用 API。對齊主線/分支：
-    1) 反推器：上傳 trace → 產出規則/通道地圖
-    2) 通道推演與掛載（Channel Map）
-    3) Guard.v1 護欄（policy、鎖死、快照）
+    Minimal viable API for controlling and protecting the metacode sandbox (MetaEnv).
+    控制與保護元代碼沙盒（MetaEnv）的最小可用 API。
+    
+    Features / 功能:
+    1) Reverse Miner: Upload trace → Generate rules/channel map
+       反推器：上傳 trace → 產出規則/通道地圖
+    2) Channel Map derivation and mounting
+       通道推演與掛載（Channel Map）
+    3) Guard.v1 guardrails (policy, lockdown, snapshot)
+       Guard.v1 護欄（policy、鎖死、快照）
 servers:
   - url: https://metaenv.local
-    description: 內網控制器
+    description: Internal controller / 內網控制器
   - url: http://localhost:8000
-    description: 開發測試
+    description: Development/Testing / 開發測試
 
 tags:
   - name: env
-    description: 環境生命週期（spawn/health）
+    description: Environment lifecycle (spawn/health) / 環境生命週期（spawn/health）
   - name: policy
-    description: Guard.v1 安全政策與 attestation
+    description: Guard.v1 security policy and attestation / Guard.v1 安全政策與 attestation
   - name: snapshot
-    description: 加密快照（不可匯出）
+    description: Encrypted snapshots (non-exportable) / 加密快照（不可匯出）
   - name: channel
-    description: 通道地圖推演與掛載
+    description: Channel map derivation and mounting / 通道地圖推演與掛載
   - name: reverse
-    description: 反推器（trace → 規則/通道地圖）
+    description: Reverse miner (trace → rules/channel map) / 反推器（trace → 規則/通道地圖）
   - name: guard
-    description: 風險處理（鎖死）
+    description: Risk handling (lockdown) / 風險處理（鎖死）
   - name: backtrace
-    description: Canary 事件上報
+    description: Canary event reporting / Canary 事件上報
 
 paths:
   /api/v1/env/spawn:
     post:
       tags: [env]
       operationId: SpawnEnv
-      summary: 啟動一個新的元代碼沙盒
+      summary: Start a new metacode sandbox / 啟動一個新的元代碼沙盒
       requestBody:
         required: true
         content:
@@ -43,7 +49,7 @@ paths:
               $ref: '#/components/schemas/SpawnRequest'
       responses:
         '200':
-          description: 啟動成功
+          description: Started successfully / 啟動成功
           content:
             application/json:
               schema:
@@ -53,15 +59,16 @@ paths:
     get:
       tags: [env]
       operationId: EnvHealth
-      summary: 查詢控制器健康狀態
+      summary: Query controller health status / 查詢控制器健康狀態
       parameters:
         - in: query
           name: env_id
           required: false
           schema: { type: string }
+          description: Optional environment ID to check / 要檢查的環境 ID（可選）
       responses:
         '200':
-          description: 健康資訊
+          description: Health information / 健康資訊
           content:
             application/json:
               schema:
@@ -75,7 +82,7 @@ paths:
     post:
       tags: [policy]
       operationId: ApplyPolicy
-      summary: 對指定環境套用 Guard.v1 政策
+      summary: Apply Guard.v1 policy to an environment / 對指定環境套用 Guard.v1 政策
       requestBody:
         required: true
         content:
@@ -84,7 +91,7 @@ paths:
               $ref: '#/components/schemas/ApplyPolicyRequest'
       responses:
         '200':
-          description: 已套用
+          description: Policy applied / 已套用
           content:
             application/json:
               schema:
@@ -94,7 +101,7 @@ paths:
     post:
       tags: [policy]
       operationId: AttestationCheck
-      summary: （可選）驗證環境 attestation 證據
+      summary: (Optional) Verify environment attestation evidence / （可選）驗證環境 attestation 證據
       requestBody:
         required: true
         content:
@@ -103,15 +110,17 @@ paths:
               $ref: '#/components/schemas/AttestCheckRequest'
       responses:
         '200':
-          description: 驗證通過或失敗狀態
+          description: Verification passed or failed status / 驗證通過或失敗狀態
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttestCheckResponse'  /api/v1/snapshot/create:
+                $ref: '#/components/schemas/AttestCheckResponse'
+
+  /api/v1/snapshot/create:
     post:
       tags: [snapshot]
       operationId: CreateSnapshot
-      summary: 建立加密快照（不可匯出）
+      summary: Create encrypted snapshot (non-exportable) / 建立加密快照（不可匯出）
       requestBody:
         required: true
         content:
@@ -120,7 +129,7 @@ paths:
               $ref: '#/components/schemas/SnapshotCreateRequest'
       responses:
         '200':
-          description: 已建立
+          description: Snapshot created / 已建立
           content:
             application/json:
               schema:
@@ -130,7 +139,7 @@ paths:
     post:
       tags: [channel]
       operationId: ChannelMapApply
-      summary: 依通道地圖掛載或回滾
+      summary: Mount or rollback by channel map / 依通道地圖掛載或回滾
       requestBody:
         required: true
         content:
@@ -139,7 +148,7 @@ paths:
               $ref: '#/components/schemas/ChannelMapRequest'
       responses:
         '200':
-          description: 已處理
+          description: Processed / 已處理
           content:
             application/json:
               schema:
@@ -149,7 +158,7 @@ paths:
     post:
       tags: [reverse]
       operationId: ReverseMine
-      summary: 上傳追蹤資料（trace）以產出規則與通道地圖
+      summary: Upload trace data to generate rules and channel map / 上傳追蹤資料（trace）以產出規則與通道地圖
       requestBody:
         required: true
         content:
@@ -160,14 +169,14 @@ paths:
                 trace_fs:
                   type: string
                   format: binary
-                  description: trace_fs.csv（fullpath,op,ts）
+                  description: trace_fs.csv (fullpath, op, ts) / trace_fs.csv（fullpath,op,ts）
                 trace_ops:
                   type: string
                   format: binary
-                  description: trace_ops.csv（ts,case,app,action,path,elevation）
+                  description: trace_ops.csv (ts, case, app, action, path, elevation) / trace_ops.csv（ts,case,app,action,path,elevation）
       responses:
         '200':
-          description: 產出規則與通道地圖
+          description: Rules and channel map generated / 產出規則與通道地圖
           content:
             application/json:
               schema:
@@ -177,7 +186,7 @@ paths:
     post:
       tags: [guard]
       operationId: GuardLockdown
-      summary: 一鍵鎖死（斷外連、撤 token、凍結快照）
+      summary: One-click lockdown (disconnect, revoke token, freeze snapshot) / 一鍵鎖死（斷外連、撤 token、凍結快照）
       requestBody:
         required: true
         content:
@@ -186,7 +195,7 @@ paths:
               $ref: '#/components/schemas/LockdownRequest'
       responses:
         '200':
-          description: 已執行
+          description: Executed / 已執行
           content:
             application/json:
               schema:
@@ -196,12 +205,13 @@ paths:
                   actions:
                     type: array
                     items: { type: string }
+                    description: List of executed actions / 已執行的操作列表
 
   /api/v1/backtrace/report:
     post:
       tags: [backtrace]
       operationId: BacktraceReport
-      summary: 上報 Canary/水印被觸發的事件
+      summary: Report Canary/watermark triggered events / 上報 Canary/水印被觸發的事件
       requestBody:
         required: true
         content:
@@ -210,14 +220,14 @@ paths:
               $ref: '#/components/schemas/BacktraceEvent'
       responses:
         '200':
-          description: 已記錄
+          description: Recorded / 已記錄
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   ok: { type: boolean }
-                  id: { type: string }
+                  id: { type: string, description: Event ID / 事件 ID }
 components:
   schemas:
     SpawnRequest:
@@ -226,78 +236,91 @@ components:
       properties:
         env_id:
           type: string
-          description: 可自定，未填由系統產生
+          description: Custom ID, auto-generated if not provided / 可自定，未填由系統產生
         role:
           type: string
           enum: [core, node]
           default: core
+          description: Environment role (core or node) / 環境角色（core 或 node）
         shape:
           type: object
+          description: Resource configuration / 資源配置
           properties:
-            cpu: { type: integer, minimum: 1 }
-            gpu: { type: integer, minimum: 0, default: 0 }
-            ram: { type: string, example: "8G" }
+            cpu:
+              type: integer
+              minimum: 1
+              description: CPU count (minimum 1) / CPU 數量（最少 1）
+            gpu:
+              type: integer
+              minimum: 0
+              default: 0
+              description: GPU count / GPU 數量
+            ram:
+              type: string
+              example: "8G"
+              description: RAM size (e.g., "8G") / 記憶體大小
           required: [cpu, ram]
         policy:
           type: string
-          description: 預設套用的安全政策（建議 Mr.liou.MetaCode.Guard.v1）
+          description: Default security policy to apply (recommended Mr.liou.MetaCode.Guard.v1) / 預設套用的安全政策（建議 Mr.liou.MetaCode.Guard.v1）
 
     SpawnResponse:
       type: object
       properties:
-        ok: { type: boolean }
-        env_id: { type: string }
-        status: { type: string, example: "starting" }
+        ok: { type: boolean, description: Success status / 成功狀態 }
+        env_id: { type: string, description: Environment ID / 環境 ID }
+        status: { type: string, example: "starting", description: Current status / 目前狀態 }
 
     ApplyPolicyRequest:
       type: object
       required: [env_id, policy]
       properties:
-        env_id: { type: string }
-        policy: { type: string, example: "Mr.liou.MetaCode.Guard.v1" }
+        env_id: { type: string, description: Target environment ID / 目標環境 ID }
+        policy: { type: string, example: "Mr.liou.MetaCode.Guard.v1", description: Policy to apply / 要套用的政策 }
 
     ApplyPolicyResponse:
       type: object
       properties:
-        ok: { type: boolean }
-        env_id: { type: string }
-        policy: { type: string }
+        ok: { type: boolean, description: Success status / 成功狀態 }
+        env_id: { type: string, description: Environment ID / 環境 ID }
+        policy: { type: string, description: Applied policy name / 已套用的政策名稱 }
 
     AttestCheckRequest:
       type: object
       required: [env_id]
       properties:
-        env_id: { type: string }
+        env_id: { type: string, description: Target environment ID / 目標環境 ID }
         quotes:
           type: array
           items: { type: string }
-          description: TEE/機密 VM attestation 證據（可留空於 v1）
+          description: TEE/Confidential VM attestation evidence (can be empty in v1) / TEE/機密 VM attestation 證據（可留空於 v1）
 
     AttestCheckResponse:
       type: object
       properties:
-        ok: { type: boolean }
-        env_id: { type: string }
+        ok: { type: boolean, description: Verification success / 驗證成功 }
+        env_id: { type: string, description: Environment ID / 環境 ID }
         status:
           type: string
           enum: ["running","terminated","failed","pending"]
+          description: Environment status / 環境狀態
 
     SnapshotCreateRequest:
       type: object
       required: [env_id]
       properties:
-        env_id: { type: string }
-        encrypted: { type: boolean, default: true }
-        exportable: { type: boolean, default: false }
-        label: { type: string }
+        env_id: { type: string, description: Target environment ID / 目標環境 ID }
+        encrypted: { type: boolean, default: true, description: Whether to encrypt the snapshot / 是否加密快照 }
+        exportable: { type: boolean, default: false, description: Whether the snapshot can be exported / 快照是否可匯出 }
+        label: { type: string, description: Optional label for the snapshot / 快照標籤（可選）}
 
     SnapshotCreateResponse:
       type: object
       properties:
-        ok: { type: boolean }
-        snapshot_id: { type: string }
-        encrypted: { type: boolean }
-        exportable: { type: boolean }
+        ok: { type: boolean, description: Success status / 成功狀態 }
+        snapshot_id: { type: string, description: Generated snapshot ID / 生成的快照 ID }
+        encrypted: { type: boolean, description: Whether snapshot is encrypted / 快照是否已加密 }
+        exportable: { type: boolean, description: Whether snapshot can be exported / 快照是否可匯出 }
 
     ChannelMapRequest:
       type: object
@@ -305,20 +328,21 @@ components:
       properties:
         app:
           type: string
-          description: 目標應用名（用於記錄與回滾）
+          description: Target application name (used for logging and rollback) / 目標應用名（用於記錄與回滾）
         mode:
           type: string
           enum: [dry-run, apply, revert]
           default: dry-run
+          description: Operation mode - dry-run, apply, or revert / 操作模式 - dry-run、apply 或 revert
         from:
           type: string
-          description: FlowMemory 路徑，如 FlowMemory:/persona/MyApp
+          description: FlowMemory path, e.g., FlowMemory:/persona/MyApp / FlowMemory 路徑，如 FlowMemory:/persona/MyApp
         to:
           type: string
-          description: 目標掛載點，如 '%USERPROFILE%/Documents/MyApp'
+          description: Target mount point, e.g., '%USERPROFILE%/Documents/MyApp' / 目標掛載點，如 '%USERPROFILE%/Documents/MyApp'
         map:
           type: object
-          description: 直接提供通道地圖（若不提供則使用 server 端已保存的預設檔）
+          description: Directly provide channel map (uses server default if not provided) / 直接提供通道地圖（若不提供則使用 server 端已保存的預設檔）
       example:
         app: "MyApp"
         mode: "apply"
@@ -328,28 +352,30 @@ components:
     ChannelMapResponse:
       type: object
       properties:
-        ok: { type: boolean }
+        ok: { type: boolean, description: Success status / 成功狀態 }
         changes:
           type: array
           items: { type: string }
-        revert_token: { type: string }
+          description: List of changes made / 所做的變更列表
+        revert_token: { type: string, description: Token for reverting changes / 用於回滾變更的 token }
 
     ReverseMineResponse:
       type: object
       properties:
-        ok: { type: boolean }
-        rules_yaml: { type: string }
-        channel_map_yaml: { type: string }
-        report_url: { type: string }
+        ok: { type: boolean, description: Success status / 成功狀態 }
+        rules_yaml: { type: string, description: Generated rules in YAML format / 生成的規則（YAML 格式）}
+        channel_map_yaml: { type: string, description: Generated channel map in YAML format / 生成的通道地圖（YAML 格式）}
+        report_url: { type: string, description: URL to the detailed report / 詳細報告的 URL }
 
     LockdownRequest:
       type: object
       properties:
-        reason: { type: string }
+        reason: { type: string, description: Reason for lockdown / 鎖死原因 }
         scope:
           type: string
           enum: [env, global]
           default: env
+          description: Lockdown scope - env (single environment) or global / 鎖死範圍 - env（單一環境）或 global
         env_id:
           type: string
-          description: 若 scope=env 需提供
+          description: Required if scope=env / 若 scope=env 需提供
