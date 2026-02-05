@@ -56,6 +56,12 @@ This project integrates:
 
 ## 快速開始 / Quick Start
 
+> 💡 **提示 / Tip**: 在開始之前，您可以運行驗證腳本來檢查所有必要的文件和工具:
+> ```bash
+> bash scripts/verify_quickstart.sh
+> ```
+> Before starting, you can run the verification script to check all necessary files and tools.
+
 ### 選項 1: GKE 部署 (推薦用於生產環境)
 ```bash
 # 1) 克隆 repository
@@ -128,6 +134,37 @@ python demo.py demo
 # 3) 或啟動 FastAPI 服務
 uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 ```
+
+---
+
+## 🎯 本地部署的優勢 / Benefits of Local Deployment
+
+通過在本地克隆並部署此專案，您可以獲得以下優勢：
+By cloning and deploying this project locally, you gain the following benefits:
+
+- ✅ **完全控制源代碼** / Full control over source code
+  - 可以自由修改和定制功能 / Free to modify and customize features
+  - 無需依賴第三方平台 / No dependency on third-party platforms
+  
+- ✅ **完整的配置管理** / Complete configuration management
+  - 自定義環境變數和配置 / Customize environment variables and configs
+  - 靈活調整部署架構 / Flexibly adjust deployment architecture
+  
+- ✅ **數據主權** / Data sovereignty
+  - 數據完全存儲在您的基礎設施中 / Data stored entirely in your infrastructure
+  - 符合數據隱私和合規要求 / Meet data privacy and compliance requirements
+  
+- ✅ **不受下載限制** / No download restrictions
+  - 避免網絡限制和訪問問題 / Avoid network restrictions and access issues
+  - 離線開發和測試 / Offline development and testing
+  
+- ✅ **完整的開發環境** / Complete development environment
+  - 本地調試和測試 / Local debugging and testing
+  - 快速迭代和實驗 / Rapid iteration and experimentation
+
+> 💡 如果您需要對其他倉庫（例如 flow-webset）做類似測試，按照同樣的方法克隆即可。
+> 
+> If you need to test other repositories (e.g., flow-webset) similarly, simply clone them using the same method.
 
 ---
 
