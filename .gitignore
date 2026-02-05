@@ -386,7 +386,9 @@ obj/
 
 # Core dumps and debugging
 # 核心轉儲與除錯
-core
+# Note: Only ignore core dump files, not the core/ directory
+# Core dumps typically appear as: core, core.12345, etc.
+# Our core/ directory for modules should NOT be ignored
 core.*
 *.core
 vgcore.*
