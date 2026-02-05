@@ -448,13 +448,34 @@ class CloudSpaceSyncManager:
         print("="*70)
         
         checkpoints = sorted(memory_dir.glob("cloud_sync_*.json"))
-        for checkpoint in checkpoints[-10:]:  # Show last 10
-            with open(checkpoint, 'r', encoding='utf-8') as f:
-                data = json.load(f)
+        
+        # Use parallel reading for better performance
+        from concurrent.futures import ThreadPoolExecutor
+        import os
+        
+        def read_checkpoint(checkpoint):
+            """Helper function to read a single checkpoint"""
+            try:
+                with open(checkpoint, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                return (checkpoint.name, data)
+            except Exception as e:
+                return (checkpoint.name, {"error": str(e)})
+        
+        # Read last 10 checkpoints in parallel
+        last_checkpoints = checkpoints[-10:]
+        if last_checkpoints:
+            max_workers = min(4, os.cpu_count() or 1)
+            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                results = list(executor.map(read_checkpoint, last_checkpoints))
             
-            print(f"\n📍 {checkpoint.name}")
-            print(f"   時間 / Time: {data.get('created_at', 'N/A')}")
-            print(f"   校驗碼 / Checksum: {data.get('checksum', 'N/A')[:16]}...")
+            for checkpoint_name, data in results:
+                print(f"\n📍 {checkpoint_name}")
+                if "error" in data:
+                    print(f"   ❌ 讀取錯誤 / Read Error: {data['error']}")
+                else:
+                    print(f"   時間 / Time: {data.get('created_at', 'N/A')}")
+                    print(f"   校驗碼 / Checksum: {data.get('checksum', 'N/A')[:16]}...")
 
 
 def main():

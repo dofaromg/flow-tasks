@@ -248,11 +248,25 @@ class TaskProcessor:
                 "✅ All tasks passed validation. Great job!"
             )
         
-        # Batch write all individual task results (reduces disk I/O from N writes to 1 pass)
-        for task_stem, result in task_results_to_write:
+        # Batch write all individual task results using ThreadPoolExecutor for parallel I/O
+        from concurrent.futures import ThreadPoolExecutor
+        import os
+        
+        def write_result_file(task_stem_result_tuple):
+            """Helper function to write a single result file"""
+            task_stem, result = task_stem_result_tuple
             result_file = self.results_dir / f"{task_stem}_result.json"
             with open(result_file, 'w', encoding='utf-8') as result_output_file:
                 json.dump(result, result_output_file, ensure_ascii=False, indent=2)
+        
+        # Use parallel writing for better performance with multiple files
+        if len(task_results_to_write) > 1:
+            max_workers = min(4, os.cpu_count() or 1)
+            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                executor.map(write_result_file, task_results_to_write)
+        elif len(task_results_to_write) == 1:
+            # Single file, write directly without thread overhead
+            write_result_file(task_results_to_write[0])
         
         # Save summary
         summary_file = self.results_dir / "task_processing_summary.json"
