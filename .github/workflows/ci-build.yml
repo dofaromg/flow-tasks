@@ -7,6 +7,10 @@ on:
       - 'apps/**'
       - 'particle_core/**'
       - 'flow_code/**'
+      - 'pages/**'
+      - 'lib/**'
+      - 'package.json'
+      - 'next.config.mjs'
       - '.github/workflows/ci-build.yml'
   workflow_dispatch:
 
@@ -32,6 +36,9 @@ jobs:
           - name: orchestrator
             context: ./apps/orchestrator
             dockerfile: ./apps/orchestrator/Dockerfile
+          - name: nextjs-frontend
+            context: .
+            dockerfile: ./apps/nextjs-frontend/Dockerfile
     
     steps:
     - name: Checkout code
@@ -56,6 +63,8 @@ jobs:
         docker build \
           -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flowagent/${{ matrix.service.name }}:${{ github.sha }} \
           -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flowagent/${{ matrix.service.name }}:latest \
+          --build-arg NEXT_PUBLIC_GROWTHBOOK_API_HOST="${{ secrets.NEXT_PUBLIC_GROWTHBOOK_API_HOST }}" \
+          --build-arg NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY="${{ secrets.NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY }}" \
           -f ${{ matrix.service.dockerfile }} \
           ${{ matrix.service.context }}
     

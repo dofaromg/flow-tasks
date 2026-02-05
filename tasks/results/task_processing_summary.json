@@ -1,20 +1,27 @@
 {
   "processing_time": "2026-01-14T17:17:01.913805",
+  "processing_time": "2026-02-04T13:43:23.657636",
   "total_tasks": 2,
   "passed": 1,
   "failed": 1,
   "warnings": 0,
   "tasks": [
     {
-      "task_id": "particle-language-core",
+      "task_id": "hello-world-api",
       "task_name": "Unknown Task",
       "validation_time": "2026-01-14T17:17:01.915839",
+      "validation_time": "2026-02-04T13:43:23.658354",
       "status": "passed",
       "checks": [
         {
-          "check": "directory_exists",
+          "check": "file_exists",
           "status": "passed",
-          "message": "Target directory exists: particle_core/"
+          "message": "Target file exists: flow_code/hello_api.py"
+        },
+        {
+          "check": "python_import",
+          "status": "passed",
+          "message": "Python module imports successfully"
         }
       ],
       "errors": [],
@@ -23,15 +30,18 @@
         "execution_time_ms": 0.86,
         "files_checked": 91,
         "lines_of_code": 0
+        "execution_time_ms": 104.08,
+        "files_checked": 1,
+        "lines_of_code": 36
       },
       "metadata": {
-        "description": "MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統",
+        "description": "寫一個 Flask 的 hello world API，輸出 \"你好，世界\"",
         "priority": "medium",
         "tags": []
       }
     },
     {
-      "task_id": "hello-world-api",
+      "task_id": "particle-language-core",
       "task_name": "Unknown Task",
       "validation_time": "2026-01-14T17:17:01.917467",
       "status": "failed",
@@ -48,6 +58,13 @@
           "message": "Python import failed: No module named 'flask'",
           "severity": "error",
           "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/flow-tasks/flow-tasks/process_tasks.py\", line 119, in validate_task_implementation\n    module_spec.loader.exec_module(task_module)\n  File \"<frozen importlib._bootstrap_external>\", line 883, in exec_module\n  File \"<frozen importlib._bootstrap>\", line 241, in _call_with_frames_removed\n  File \"/home/runner/work/flow-tasks/flow-tasks/flow_code/hello_api.py\", line 8, in <module>\n    from flask import Flask, jsonify\nModuleNotFoundError: No module named 'flask'\n"
+      "validation_time": "2026-02-04T13:43:23.764462",
+      "status": "passed",
+      "checks": [
+        {
+          "check": "directory_exists",
+          "status": "passed",
+          "message": "Target directory exists: particle_core/"
         }
       ],
       "warnings": [],
@@ -55,9 +72,12 @@
         "execution_time_ms": 1.89,
         "files_checked": 1,
         "lines_of_code": 36
+        "execution_time_ms": 0.96,
+        "files_checked": 107,
+        "lines_of_code": 0
       },
       "metadata": {
-        "description": "寫一個 Flask 的 hello world API，輸出 \"你好，世界\"",
+        "description": "MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統",
         "priority": "medium",
         "tags": []
       }
@@ -68,6 +88,10 @@
     "total_files_checked": 92,
     "total_lines_of_code": 36,
     "average_task_time_ms": 2.94
+    "total_execution_time_ms": 107.96,
+    "total_files_checked": 108,
+    "total_lines_of_code": 36,
+    "average_task_time_ms": 53.98
   },
   "summary": {
     "pass_rate": 50.0,

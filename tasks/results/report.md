@@ -1,6 +1,7 @@
 # FlowAgent Task Processing Report
 
 **Report Generated:** 2026-01-14T17:17:01.913805
+**Report Generated:** 2026-02-04T13:43:23.657636
 
 ## Executive Summary
 
@@ -15,6 +16,13 @@
 ## Overall Metrics
 
 - **Total Files Checked:** 92
+- **Pass Rate:** 100.0%
+- **Total Execution Time:** 107.96ms
+- **Average Task Time:** 53.98ms
+
+## Overall Metrics
+
+- **Total Files Checked:** 108
 - **Total Lines of Code:** 36
 
 ## Recommendations
@@ -23,27 +31,32 @@
 
 ## Task Details
 
-### ✅ particle-language-core
+### ✅ hello-world-api
 
 **Name:** Unknown Task
 
-**Description:** MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統
+**Description:** 寫一個 Flask 的 hello world API，輸出 "你好，世界"
 
 **Metrics:**
 - Execution Time: 0.86ms
 - Files Checked: 91
 - Lines of Code: 0
+- Execution Time: 104.08ms
+- Files Checked: 1
+- Lines of Code: 36
 
 **Checks:**
-- ✅ Target directory exists: particle_core/
+- ✅ Target file exists: flow_code/hello_api.py
+- ✅ Python module imports successfully
 
 ---
 
 ### ❌ hello-world-api
+### ✅ particle-language-core
 
 **Name:** Unknown Task
 
-**Description:** 寫一個 Flask 的 hello world API，輸出 "你好，世界"
+**Description:** MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統
 
 **Metrics:**
 - Execution Time: 1.89ms
@@ -55,6 +68,12 @@
 
 **Errors:**
 - ❌ **[python_import]** Python import failed: No module named 'flask'
+- Execution Time: 0.96ms
+- Files Checked: 107
+- Lines of Code: 0
+
+**Checks:**
+- ✅ Target directory exists: particle_core/
 
 ---
 

@@ -12,6 +12,7 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional, Tuple, Union
 from pathlib import Path
 from functools import lru_cache
+from concurrent.futures import ThreadPoolExecutor
 
 
 # Checksum caching helpers
@@ -161,24 +162,50 @@ class MemoryArchiveSeed:
         
         return compressed
     
-    def list_seeds(self) -> List[Dict[str, Any]]:
-        """
-        列出所有記憶種子
+    def _read_seed_file(self, seed_file: Path) -> Optional[Dict[str, Any]]:
+        """Helper method to read a single seed file.
         
+        Performance optimization: Enables parallel file reading.
+        
+        Args:
+            seed_file: Path to the seed file
+            
         Returns:
-            種子資訊列表
+            Seed info dict or None if read fails
         """
-        seeds = []
-        
-        for seed_file in self.storage_path.glob("*.mseed.json"):
+        try:
             with open(seed_file, 'r', encoding='utf-8') as f:
                 seed = json.load(f)
-                seeds.append({
+                return {
                     "seed_name": seed["seed_name"],
                     "created_at": seed["created_at"],
                     "checksum": seed["checksum"],
                     "file": str(seed_file)
-                })
+                }
+        except Exception:
+            # Silently skip malformed seed files
+            return None
+    
+    def list_seeds(self) -> List[Dict[str, Any]]:
+        """
+        列出所有記憶種子
+        
+        Performance optimization: Uses parallel file I/O for faster reading
+        when multiple seed files exist.
+        
+        Returns:
+            種子資訊列表
+        """
+        seed_files = list(self.storage_path.glob("*.mseed.json"))
+        
+        # Use parallel reading for better I/O performance
+        # Auto-scale workers: min(4, cpu_count) for optimal performance
+        max_workers = min(4, os.cpu_count() or 1)
+        
+        seeds = []
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            results = executor.map(self._read_seed_file, seed_files)
+            seeds = [seed for seed in results if seed is not None]
         
         return sorted(seeds, key=lambda x: x["created_at"], reverse=True)
     
