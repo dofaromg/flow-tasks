@@ -296,3 +296,114 @@ MrLiou_AI_SuperComputer/memory/ingest/ai_responses/*
 !MrLiou_AI_SuperComputer/memory/domain/A/.gitkeep
 !MrLiou_AI_SuperComputer/memory/domain/R/.gitkeep
 !MrLiou_AI_SuperComputer/log/.gitkeep
+
+# ============================================================================
+# Additional Language-Specific Patterns / 額外語言特定模式
+# ============================================================================
+
+# Tcl temporary files and build artifacts
+# Tcl 暫存檔案與編譯產物
+*.tcl~
+*.tm~
+*.tbc
+*.tclsh
+*.wish
+.tclsh_history
+tclIndex
+
+# Perl temporary files and build artifacts
+# Perl 暫存檔案與編譯產物
+*.pl~
+*.pm~
+*.pod~
+*.bak
+*.old
+*.swp
+*~
+Makefile.old
+pm_to_blib
+blib/
+_build/
+Build
+MYMETA.*
+META.yml
+META.json
+*.bs
+cover_db/
+nytprof.out
+nytprof/
+
+# C/C++ compilation artifacts (extended)
+# C/C++ 編譯產物（擴充）
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+*.d
+*.su
+*.slo
+*.lo
+*.la
+*.al
+.libs/
+*.lai
+*.dSYM/
+*.gch
+*.pch
+*.gcno
+*.gcda
+*.gcov
+.deps/
+.dirstamp
+compile_commands.json
+CTestTestfile.cmake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+
+# Build directories
+# 編譯目錄
+build/
+Build/
+Debug/
+Release/
+RelWithDebInfo/
+MinSizeRel/
+.build/
+bin/
+obj/
+
+# Core dumps and debugging
+# 核心轉儲與除錯
+core
+core.*
+*.core
+vgcore.*
+*.stackdump
+
+# Static analysis
+# 靜態分析
+cppcheck-build-dir/
+*.cppcheck
+.clang-format
+.clang-tidy
+
+# IDE and editor temporaries
+# IDE 與編輯器暫存
+tags
+TAGS
+.ccls-cache/
+.clangd/
+*.sublime-workspace
+*.sublime-project
