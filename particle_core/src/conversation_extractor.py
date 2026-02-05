@@ -13,6 +13,9 @@
 
 import json
 import re
+from datetime import datetime
+from typing import List, Dict, Tuple, Optional
+from collections import Counter, defaultdict
 import csv
 import xml.etree.ElementTree as ET
 from datetime import datetime
@@ -36,6 +39,7 @@ except ImportError:
 class ConversationExtractor:
     """對話知識提取器核心類別"""
     
+    def __init__(self, api_key: str = None):
     # 預定義調色盤主題
     COLOR_PALETTES = {
         "default": {
@@ -130,6 +134,8 @@ class ConversationExtractor:
         
         Args:
             api_key: Anthropic API Key (用於深度分析)
+        """
+        self.api_key = api_key
             theme: HTML 輸出的主題調色盤 (default/ocean/sunset/night/forest/minimal)
         """
         self.api_key = api_key
@@ -180,6 +186,12 @@ class ConversationExtractor:
     def export_to_file(self, package: Dict, filepath: str, format: str = "json"):
         """
         導出對話包到檔案
+        
+        Args:
+            package: 對話包
+            filepath: 檔案路徑
+            format: 格式 (json/markdown/txt)
+        """
         Export conversation package to file
         
         Performance optimization: Uses normalized format mapping to avoid

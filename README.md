@@ -49,6 +49,14 @@ This project integrates:
    - ArgoCD (GitOps)
    - Kustomize (配置管理)
 
+📚 **詳細文檔**：
+- [完整部署指南](DEPLOYMENT.md)
+- [快速參考](QUICKSTART.md)
+- [架構圖表](ARCHITECTURE.md)
+- [應用程式說明](apps/README.md)
+- [分支整合優化指南](BRANCH_INTEGRATION_GUIDE.md) ⭐ 新增
+- [Codespace 管理指南](CODESPACE_MANAGEMENT.md) 🆕 新增
+- [FlowHub 整合套件](FLOWHUB_EXPORT_PACKAGE.md) 📦 [commit:ffebfa0](https://github.com/dofaromg/flow-tasks/commit/ffebfa0)
 > 注意：本專案包含完整的 GKE 部署配置和粒子語言核心系統。
 > Note: This project includes complete GKE deployment configurations and the Particle Language Core system.
 
@@ -292,3 +300,36 @@ asia-east1-docker.pkg.dev/flowmemorysync/flowagent/
 
 ---
 
+相關 CI 工作流程：`.github/workflows/ci.yml` 會自動跑一次 smoke test 並上傳 `data/` 產物。 
+
+---
+
+## 📦 FlowHub Integration Export Package
+
+**新功能！** 完整的 FlowHub 整合套件已準備就緒，可將 Memory Cache 和 Wire-Memory Integration 功能匯出到 dofaromg/flowhub 儲存庫。
+
+### 快速開始
+
+```bash
+# 方法 1: 使用 Git Bundle (推薦)
+git bundle verify flowhub-integration.bundle
+git remote add flow-tasks flowhub-integration.bundle
+git fetch flow-tasks
+git merge flow-tasks/copilot/update-flow-tasks
+
+# 方法 2: 使用 Patch 檔案
+git am patches/*.patch
+```
+
+### 套件內容
+- 6 個 patch 檔案 (76 KB)
+- Git bundle 包含完整提交歷史 (24 KB)
+- Wire-Memory Integration 驗證
+- Memory Cache Disk Mapping 系統 (LRU 快取，自動持久化)
+- 完整測試和文檔
+
+📚 **詳細文檔**：
+- [FlowHub 整合套件說明](FLOWHUB_EXPORT_PACKAGE.md)
+- [FlowHub 整合指南](FLOWHUB_INTEGRATION_GUIDE.md)
+
+🔗 **版本追蹤**: [Commit ffebfa0](https://github.com/dofaromg/flow-tasks/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)

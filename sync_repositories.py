@@ -8,6 +8,7 @@ Created by: MR.liou
 import os
 import subprocess
 import json
+from pathlib import Path
 import shutil
 import tempfile
 from pathlib import Path
@@ -99,6 +100,14 @@ def sync_repositories():
         # 創建目標目錄
         os.makedirs(config['target_dir'], exist_ok=True)
         
+        # 這裡可以擴展實際的同步邏輯
+        # 基於您的需求和權限設定
+        
+    print("\n✅ 同步完成")
+    print("🫶 怎麼過去，就怎麼回來")
+
+if __name__ == "__main__":
+    sync_repositories()
         # 使用臨時目錄進行克隆
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
