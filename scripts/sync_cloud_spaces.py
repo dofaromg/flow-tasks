@@ -451,7 +451,6 @@ class CloudSpaceSyncManager:
         
         # Use parallel reading for better performance
         from concurrent.futures import ThreadPoolExecutor
-        import os
         
         def read_checkpoint(checkpoint):
             """Helper function to read a single checkpoint"""

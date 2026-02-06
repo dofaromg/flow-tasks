@@ -12,7 +12,6 @@ import tempfile
 import time
 import json
 from pathlib import Path
-from typing import List, Dict, Any
 
 
 def test_batch_directory_creation():
@@ -246,9 +245,9 @@ def test_reduced_filesystem_calls():
         # Old approach: stat() then open()
         start = time.perf_counter()
         for _ in range(100):
-            file_size = test_file.stat().st_size
+            _ = test_file.stat().st_size
             with test_file.open('r') as f:
-                content = f.read()
+                _ = f.read()
         old_time = time.perf_counter() - start
         
         # New approach: open() and use tell() for size
@@ -256,9 +255,9 @@ def test_reduced_filesystem_calls():
         for _ in range(100):
             with test_file.open('r') as f:
                 f.seek(0, 2)
-                file_size = f.tell()
+                _ = f.tell()
                 f.seek(0)
-                content = f.read()
+                _ = f.read()
         new_time = time.perf_counter() - start
         
         # Results
