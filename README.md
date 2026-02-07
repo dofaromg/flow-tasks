@@ -7,6 +7,8 @@
 
 **⭐ 快速查看完整的"地球結構"部署架構 / Quick View Complete "Earth Structure" Deployment:**
 
+- 🎯 [**實際部署指南 / Actual Deployment Guide**](./實際部署指南.md) - ⭐ **新增** 完整的生產環境實際部署流程
+- ✅ [**部署後檢查清單 / Post-Deployment Checklist**](./部署後檢查清單.md) - ⭐ **新增** 部署完成後必須檢查的項目
 - 📖 [**部署結構索引 / Deployment Structure Index**](./DEPLOYMENT_STRUCTURE_INDEX.md) - 完整的部署組件、配置和拓撲圖
 - ⚡ [**部署快速參考 / Deployment Quick Reference**](./DEPLOYMENT_QUICK_REFERENCE.md) - 快速命令和配置速查表
 - 🚀 [**部署指南 / Deployment Guide**](./DEPLOYMENT.md) - 詳細的部署步驟和故障排除
@@ -17,11 +19,15 @@
 
 ### 🎯 一鍵部署 / One-Click Deployment
 ```bash
-# 快速開始 - 一鍵初始化 GKE 叢集並部署所有服務
-bash scripts/oneclick_gke_init.sh
+# 🚀 實際部署 - 完整的生產環境部署 (推薦)
+bash scripts/actual_deploy.sh
 
-# 或使用 kubectl + kustomize
-kubectl apply -k cluster/overlays/prod/
+# 或分步驟部署
+bash scripts/oneclick_gke_init.sh  # 初始化 GKE 叢集
+kubectl apply -k cluster/overlays/prod/  # 部署應用
+
+# 檢查部署狀態
+bash scripts/check_deployment_status.sh
 ```
 
 ---
@@ -76,8 +82,11 @@ This project integrates:
 git clone https://github.com/dofaromg/flow-tasks.git
 cd flow-tasks
 
-# 2) 一鍵初始化 GKE 叢集
-bash scripts/oneclick_gke_init.sh
+# 2) 實際部署到 GKE (完整自動化流程)
+bash scripts/actual_deploy.sh
+
+# 或手動分步驟
+bash scripts/oneclick_gke_init.sh  # 初始化叢集
 
 # 3) 部署應用
 kubectl apply -k cluster/overlays/prod/
