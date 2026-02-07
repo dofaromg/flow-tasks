@@ -410,3 +410,4 @@ TAGS
 *.sublime-workspace
 *.sublime-project
 .merkle/
+.merkle/
