@@ -204,7 +204,10 @@ class RepoSyncManager:
             # Create destination directory
             dest.mkdir(parents=True, exist_ok=True)
             
-            # Copy directory contents
+            # Copy directory contents (optimized: collect files first, then create dirs once)
+            files_to_copy = []
+            dirs_to_create = set()
+            
             for item in src.rglob('*'):
                 if item.is_file():
                     rel_path = item.relative_to(src)
@@ -215,10 +218,18 @@ class RepoSyncManager:
                         continue
                     
                     dest_file = dest / rel_path
-                    dest_file.parent.mkdir(parents=True, exist_ok=True)
-                    
-                    shutil.copy2(item, dest_file)
-                    print(f"  ✅ {rel_path}")
+                    files_to_copy.append((item, dest_file, rel_path))
+                    # Collect unique parent directories
+                    dirs_to_create.add(dest_file.parent)
+            
+            # Create all directories once (batch operation)
+            for dir_path in dirs_to_create:
+                dir_path.mkdir(parents=True, exist_ok=True)
+            
+            # Copy all files
+            for src_file, dest_file, rel_path in files_to_copy:
+                shutil.copy2(src_file, dest_file)
+                print(f"  ✅ {rel_path}")
         
         return True
     

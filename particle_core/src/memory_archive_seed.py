@@ -227,21 +227,25 @@ class MemoryArchiveSeed:
         if not seed_names:
             raise ValueError("至少需要一個種子來合併")
         
-        # 載入所有種子
-        seeds = [self.restore_seed(name) for name in seed_names]
-        
-        # 合併粒子資料
+        # 合併粒子資料 (使用生成器避免一次性載入所有種子到記憶體)
+        # Merge particle data (using generator to avoid loading all seeds at once)
         merged_data = {
             "merged_from": seed_names,
             "merged_at": datetime.now().isoformat(),
             "particles": []
         }
         
-        for seed in seeds:
+        # 逐個處理種子以節省記憶體
+        # Process seeds one by one to save memory
+        for seed_name in seed_names:
+            seed = self.restore_seed(seed_name)
             if isinstance(seed["particle_data"], list):
                 merged_data["particles"].extend(seed["particle_data"])
             else:
                 merged_data["particles"].append(seed["particle_data"])
+            # 釋放當前種子的參考以允許垃圾回收
+            # Release reference to allow garbage collection
+            del seed
         
         # 創建合併後的種子
         if merged_name is None:

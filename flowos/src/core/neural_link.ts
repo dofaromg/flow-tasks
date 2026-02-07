@@ -25,14 +25,12 @@ interface RequestInit {
 
 interface RequestInfo {}
 
-interface FetchResponse {
 interface Response {
   ok: boolean;
   status: number;
   json(): Promise<unknown>;
 }
 
-declare function fetch(input: RequestInfo | string, init?: RequestInit): Promise<FetchResponse>;
 declare function fetch(input: RequestInfo | string, init?: RequestInit): Promise<Response>;
 
 export class NeuralLink {
@@ -77,10 +75,6 @@ export class ParticleNeuralLink {
   ) {}
 
   async fireInternal(
-    stub: { fetch(input: RequestInfo, init?: RequestInit): Promise<any> },
-    path: string,
-    payload: Record<string, unknown>,
-  ): Promise<any> {
     stub: { fetch(input: RequestInfo, init?: RequestInit): Promise<Response> },
     path: string,
     payload: Record<string, unknown>,
@@ -106,11 +100,6 @@ export class ParticleNeuralLink {
       const rawToken = this.env.GITHUB_TOKEN.trim();
       const hasBearerPrefix = /^Bearer\s+/i.test(rawToken);
       headers.Authorization = hasBearerPrefix ? rawToken : `Bearer ${rawToken}`;
-      'X-GitHub-Api-Version': '2022-11-28',
-      'X-Node-Id': this.nodeId,
-    };
-    if (this.env.GITHUB_TOKEN) {
-      headers.Authorization = `Bearer ${this.env.GITHUB_TOKEN}`;
     }
     const response = await fetch(`https://api.github.com${path}`, {
       method,

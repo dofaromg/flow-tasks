@@ -1,6 +1,7 @@
 {
   "task_id": "hello-world-api",
   "task_name": "Unknown Task",
+  "validation_time": "2026-02-05T05:14:16.266555",
   "validation_time": "2026-01-14T17:17:01.917467",
   "status": "failed",
   "validation_time": "2026-02-04T13:43:23.658354",
@@ -22,6 +23,7 @@
   ],
   "warnings": [],
   "metrics": {
+    "execution_time_ms": 91.16,
     "execution_time_ms": 1.89,
     "execution_time_ms": 104.08,
     "files_checked": 1,
