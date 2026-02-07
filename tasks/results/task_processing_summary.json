@@ -1,14 +1,18 @@
 {
   "processing_time": "2026-02-05T05:14:16.265936",
+  "processing_time": "2026-01-14T17:17:01.913805",
+  "processing_time": "2026-02-04T13:43:23.657636",
   "total_tasks": 2,
-  "passed": 2,
-  "failed": 0,
+  "passed": 1,
+  "failed": 1,
   "warnings": 0,
   "tasks": [
     {
       "task_id": "hello-world-api",
       "task_name": "Unknown Task",
       "validation_time": "2026-02-05T05:14:16.266555",
+      "validation_time": "2026-01-14T17:17:01.915839",
+      "validation_time": "2026-02-04T13:43:23.658354",
       "status": "passed",
       "checks": [
         {
@@ -26,6 +30,10 @@
       "warnings": [],
       "metrics": {
         "execution_time_ms": 91.16,
+        "execution_time_ms": 0.86,
+        "files_checked": 91,
+        "lines_of_code": 0
+        "execution_time_ms": 104.08,
         "files_checked": 1,
         "lines_of_code": 36
       },
@@ -39,6 +47,22 @@
       "task_id": "particle-language-core",
       "task_name": "Unknown Task",
       "validation_time": "2026-02-05T05:14:16.359467",
+      "validation_time": "2026-01-14T17:17:01.917467",
+      "status": "failed",
+      "checks": [
+        {
+          "check": "file_exists",
+          "status": "passed",
+          "message": "Target file exists: flow_code/hello_api.py"
+        }
+      ],
+      "errors": [
+        {
+          "type": "python_import",
+          "message": "Python import failed: No module named 'flask'",
+          "severity": "error",
+          "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/flow-tasks/flow-tasks/process_tasks.py\", line 119, in validate_task_implementation\n    module_spec.loader.exec_module(task_module)\n  File \"<frozen importlib._bootstrap_external>\", line 883, in exec_module\n  File \"<frozen importlib._bootstrap>\", line 241, in _call_with_frames_removed\n  File \"/home/runner/work/flow-tasks/flow-tasks/flow_code/hello_api.py\", line 8, in <module>\n    from flask import Flask, jsonify\nModuleNotFoundError: No module named 'flask'\n"
+      "validation_time": "2026-02-04T13:43:23.764462",
       "status": "passed",
       "checks": [
         {
@@ -47,11 +71,15 @@
           "message": "Target directory exists: particle_core/"
         }
       ],
-      "errors": [],
       "warnings": [],
       "metrics": {
         "execution_time_ms": 0.73,
         "files_checked": 102,
+        "execution_time_ms": 1.89,
+        "files_checked": 1,
+        "lines_of_code": 36
+        "execution_time_ms": 0.96,
+        "files_checked": 107,
         "lines_of_code": 0
       },
       "metadata": {
@@ -64,13 +92,19 @@
   "overall_metrics": {
     "total_execution_time_ms": 94.42,
     "total_files_checked": 103,
+    "total_execution_time_ms": 5.88,
+    "total_files_checked": 92,
+    "total_lines_of_code": 36,
+    "average_task_time_ms": 2.94
+    "total_execution_time_ms": 107.96,
+    "total_files_checked": 108,
     "total_lines_of_code": 36,
     "average_task_time_ms": 47.21
   },
   "summary": {
-    "pass_rate": 100.0,
+    "pass_rate": 50.0,
     "recommendations": [
-      "✅ All tasks passed validation. Great job!"
+      "⚠️  1 task(s) failed validation. Review errors and fix issues."
     ]
   }
 }
