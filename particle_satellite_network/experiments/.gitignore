@@ -1,0 +1,48 @@
+# Experimental Data (Private)
+# 實驗數據（私有）
+
+# Data directory
+data/
+*.csv
+*.json
+*.h5
+*.parquet
+*.pickle
+*.db
+*.sqlite
+
+# Results directory
+results/
+*.log
+*.txt
+*.pdf
+*.png
+*.jpg
+
+# Private configurations
+config/private/
+secrets/
+.env.local
+*.key
+*.pem
+
+# Large files
+*.tar.gz
+*.zip
+*.rar
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
