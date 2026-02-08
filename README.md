@@ -62,6 +62,7 @@ This project integrates:
 - [應用程式說明](apps/README.md)
 - [分支整合優化指南](BRANCH_INTEGRATION_GUIDE.md) ⭐ 新增
 - [Codespace 管理指南](CODESPACE_MANAGEMENT.md) 🆕 新增
+- [分支神經網絡系統](BRANCH_NEURAL_MAP.md) 🧠 新增 - 視覺化分支連結關係
 - [FlowHub 整合套件](FLOWHUB_EXPORT_PACKAGE.md) 📦 [commit:ffebfa0](https://github.com/dofaromg/flow-tasks/commit/ffebfa0)
 > 注意：本專案包含完整的 GKE 部署配置和粒子語言核心系統。
 > Note: This project includes complete GKE deployment configurations and the Particle Language Core system.
