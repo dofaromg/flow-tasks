@@ -1,0 +1,92 @@
+version: '3.8'
+
+# ═══════════════════════════════════════════════════════════════════
+#  MRLiou 私人開發環境
+#  © 2025 Mr.liou - All Rights Reserved
+#  
+#  性質: 私人開發與觀測
+#  狀態: 不對外公開
+#  品牌: MRLiou / Mr.liou
+# ═══════════════════════════════════════════════════════════════════
+
+services:
+  # Next.js 前端開發
+  nextjs-dev:
+    build:
+      context: .
+      dockerfile: apps/nextjs-frontend/Dockerfile
+    container_name: mrliou-nextjs-dev
+    ports:
+      - "127.0.0.1:3000:3000"  # 只綁定 localhost（私人開發）
+    environment:
+      - NODE_ENV=development
+      - OWNER=MRLiou
+      - BRAND=MRLiou
+      - PRIVATE_DEV=true
+      - PUBLIC_ACCESS=false
+      # GrowthBook（可選，私人開發用）
+      - NEXT_PUBLIC_GROWTHBOOK_API_HOST=${NEXT_PUBLIC_GROWTHBOOK_API_HOST:-}
+      - NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY=${NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY:-}
+    volumes:
+      # 開發時實時更新（可選）
+      # - ./apps/nextjs-frontend:/app
+      # - /app/node_modules
+      - ./private_notes:/app/private_notes:ro
+    networks:
+      - mrliou-private-network
+    restart: unless-stopped
+    labels:
+      - "com.mrliou.project=flow-tasks"
+      - "com.mrliou.owner=Mr.liou"
+      - "com.mrliou.environment=private-development"
+
+  # MongoDB 數據庫（私人開發）
+  mongodb-dev:
+    image: mongo:6.0
+    container_name: mrliou-mongodb-dev
+    ports:
+      - "127.0.0.1:27017:27017"  # 只綁定 localhost
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mrliou_dev
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD:-請修改此私人密碼}
+    volumes:
+      - mrliou-mongodb-dev-data:/data/db
+      - ./observations/db-backup:/backup  # 備份目錄
+    networks:
+      - mrliou-private-network
+    restart: unless-stopped
+    labels:
+      - "com.mrliou.project=flow-tasks"
+      - "com.mrliou.owner=Mr.liou"
+      - "com.mrliou.type=database"
+
+  # Astro 前端（可選）
+  # astro-dev:
+  #   build:
+  #     context: .
+  #     dockerfile: apps/astro-frontend/Dockerfile
+  #   container_name: mrliou-astro-dev
+  #   ports:
+  #     - "127.0.0.1:4321:4321"
+  #   environment:
+  #     - OWNER=MRLiou
+  #     - PRIVATE_DEV=true
+  #   networks:
+  #     - mrliou-private-network
+
+volumes:
+  # MongoDB 數據卷（持久化）
+  mrliou-mongodb-dev-data:
+    driver: local
+    labels:
+      - "com.mrliou.owner=Mr.liou"
+      - "com.mrliou.type=database"
+
+networks:
+  # 私人網絡（不暴露到公網）
+  mrliou-private-network:
+    driver: bridge
+    labels:
+      - "com.mrliou.owner=Mr.liou"
+      - "com.mrliou.environment=private-development"
+    # internal: true  # 如果不需要外部訪問，啟用此選項

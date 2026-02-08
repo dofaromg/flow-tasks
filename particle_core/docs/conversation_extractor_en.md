@@ -296,6 +296,7 @@ Export conversation package to file.
 **Parameters**:
 - `package`: Conversation package
 - `filepath`: File path
+- `format`: Format, options are "json", "markdown", "txt"
 - `format`: Format, options are "json", "markdown"/"md", "txt"/"text", "yaml"/"yml", "csv", "html"/"htm", "xml"
 
 #### `analyze_attention(messages: List[Dict]) -> Dict`
@@ -335,6 +336,7 @@ pyyaml     # For YAML format export (optional, system will gracefully degrade)
 
 Added to `particle_core/requirements.txt`.
 
+If AI analysis is not needed, the anthropic library is not required - the system degrades gracefully.
 If AI analysis is not needed, the anthropic library is not required; if YAML export is not needed, pyyaml is also not required - the system degrades gracefully.
 
 ## Output Examples

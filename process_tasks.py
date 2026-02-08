@@ -57,17 +57,6 @@ class TaskProcessor:
                 "priority": task.get("priority", "medium"),
                 "tags": task.get("tags", [])
             }
-        with open(task_path, 'r', encoding='utf-8') as f:
-            return yaml.safe_load(f)
-    
-    def validate_task_implementation(self, task: Dict[str, Any]) -> Dict[str, Any]:
-        """Validate if task has been implemented correctly"""
-        result = {
-            "task_id": task.get("task_id", "unknown"),
-            "validation_time": datetime.now().isoformat(),
-            "status": "unknown",
-            "checks": [],
-            "errors": []
         }
         
         target_file = task.get("target_file")
@@ -79,8 +68,6 @@ class TaskProcessor:
             })
             result["status"] = "failed"
             result["metrics"]["execution_time_ms"] = (time.time() - start_time) * 1000
-            result["errors"].append("No target_file specified in task")
-            result["status"] = "failed"
             return result
             
         # Check if target file exists
@@ -103,10 +90,6 @@ class TaskProcessor:
                     "message": f"Target directory missing: {target_file}",
                     "severity": "error"
                 })
-                result["checks"].append(f"✓ Target directory exists: {target_file}")
-                result["status"] = "passed"
-            else:
-                result["errors"].append(f"Target directory missing: {target_file}")
                 result["status"] = "failed"
         else:
             # File target
@@ -130,7 +113,8 @@ class TaskProcessor:
                         "type": "metrics",
                         "message": f"Could not count lines: {str(e)}"
                     })
-                result["checks"].append(f"✓ Target file exists: {target_file}")
+                
+                result["status"] = "passed"
                 
                 # Try to import/validate Python files
                 if target_file.endswith('.py'):
@@ -151,16 +135,7 @@ class TaskProcessor:
                             "severity": "error",
                             "traceback": traceback.format_exc()
                         })
-                        spec = importlib.util.spec_from_file_location("task_module", target_path)
-                        module = importlib.util.module_from_spec(spec)
-                        spec.loader.exec_module(module)
-                        result["checks"].append(f"✓ Python module imports successfully")
-                        result["status"] = "passed"
-                    except Exception as e:
-                        result["errors"].append(f"Python import failed: {str(e)}")
                         result["status"] = "failed"
-                else:
-                    result["status"] = "passed"
             else:
                 result["errors"].append({
                     "type": "validation",
@@ -172,9 +147,6 @@ class TaskProcessor:
         # Calculate execution time
         result["metrics"]["execution_time_ms"] = round((time.time() - start_time) * 1000, 2)
         
-                result["errors"].append(f"Target file missing: {target_file}")
-                result["status"] = "failed"
-                
         return result
     
     def process_all_tasks(self) -> Dict[str, Any]:
@@ -203,6 +175,9 @@ class TaskProcessor:
             }
         }
         
+        # Batch results for writing later (reduces disk I/O)
+        task_results_to_write = []
+        
         # Process task files
         for task_file in task_files:
             try:
@@ -224,10 +199,8 @@ class TaskProcessor:
                     
                 summary["tasks"].append(result)
                 
-                # Save individual task result
-                result_file = self.results_dir / f"{task_file.stem}_result.json"
-                with open(result_file, 'w', encoding='utf-8') as result_output_file:
-                    json.dump(result, result_output_file, ensure_ascii=False, indent=2)
+                # Queue individual task result for batch writing
+                task_results_to_write.append((task_file.stem, result))
                     
             except Exception as processing_error:
                 error_result = {
@@ -275,6 +248,25 @@ class TaskProcessor:
                 "✅ All tasks passed validation. Great job!"
             )
         
+        # Batch write all individual task results using ThreadPoolExecutor for parallel I/O
+        from concurrent.futures import ThreadPoolExecutor
+        
+        def write_result_file(task_stem_result_tuple):
+            """Helper function to write a single result file"""
+            task_stem, result = task_stem_result_tuple
+            result_file = self.results_dir / f"{task_stem}_result.json"
+            with open(result_file, 'w', encoding='utf-8') as result_output_file:
+                json.dump(result, result_output_file, ensure_ascii=False, indent=2)
+        
+        # Use parallel writing for better performance with multiple files
+        if len(task_results_to_write) > 1:
+            max_workers = min(4, os.cpu_count() or 1)
+            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                executor.map(write_result_file, task_results_to_write)
+        elif len(task_results_to_write) == 1:
+            # Single file, write directly without thread overhead
+            write_result_file(task_results_to_write[0])
+        
         # Save summary
         summary_file = self.results_dir / "task_processing_summary.json"
         with open(summary_file, 'w', encoding='utf-8') as summary_output_file:
@@ -287,84 +279,93 @@ class TaskProcessor:
         return summary
     
     def _generate_markdown_report(self, summary: Dict[str, Any]) -> None:
-        """Generate a Markdown report for easy reading"""
+        """Generate a Markdown report for easy reading
+        
+        Performance optimization: Build report content in memory before writing
+        to reduce disk I/O operations.
+        """
         report_file = self.results_dir / "report.md"
         
-        with open(report_file, 'w', encoding='utf-8') as f:
-            f.write("# FlowAgent Task Processing Report\n\n")
-            f.write(f"**Report Generated:** {summary['processing_time']}\n\n")
+        # Build entire report in memory to reduce disk I/O
+        lines = []
+        lines.append("# FlowAgent Task Processing Report\n\n")
+        lines.append(f"**Report Generated:** {summary['processing_time']}\n\n")
+        
+        # Executive Summary
+        lines.append("## Executive Summary\n\n")
+        lines.append(f"- **Total Tasks:** {summary['total_tasks']}\n")
+        lines.append(f"- **Passed:** {summary['passed']} ✅\n")
+        lines.append(f"- **Failed:** {summary['failed']} ❌\n")
+        lines.append(f"- **Warnings:** {summary['warnings']} ⚠️\n")
+        lines.append(f"- **Pass Rate:** {summary['summary']['pass_rate']}%\n")
+        lines.append(f"- **Total Execution Time:** {summary['overall_metrics']['total_execution_time_ms']:.2f}ms\n")
+        lines.append(f"- **Average Task Time:** {summary['overall_metrics']['average_task_time_ms']:.2f}ms\n\n")
+        
+        # Metrics
+        lines.append("## Overall Metrics\n\n")
+        lines.append(f"- **Total Files Checked:** {summary['overall_metrics']['total_files_checked']}\n")
+        lines.append(f"- **Total Lines of Code:** {summary['overall_metrics']['total_lines_of_code']}\n\n")
+        
+        # Recommendations
+        if summary['summary']['recommendations']:
+            lines.append("## Recommendations\n\n")
+            for rec in summary['summary']['recommendations']:
+                lines.append(f"- {rec}\n")
+            lines.append("\n")
+        
+        # Task Details
+        lines.append("## Task Details\n\n")
+        for task in summary['tasks']:
+            status_emoji = "✅" if task['status'] == 'passed' else "❌"
+            lines.append(f"### {status_emoji} {task['task_id']}\n\n")
             
-            # Executive Summary
-            f.write("## Executive Summary\n\n")
-            f.write(f"- **Total Tasks:** {summary['total_tasks']}\n")
-            f.write(f"- **Passed:** {summary['passed']} ✅\n")
-            f.write(f"- **Failed:** {summary['failed']} ❌\n")
-            f.write(f"- **Warnings:** {summary['warnings']} ⚠️\n")
-            f.write(f"- **Pass Rate:** {summary['summary']['pass_rate']}%\n")
-            f.write(f"- **Total Execution Time:** {summary['overall_metrics']['total_execution_time_ms']:.2f}ms\n")
-            f.write(f"- **Average Task Time:** {summary['overall_metrics']['average_task_time_ms']:.2f}ms\n\n")
+            if task.get('task_name'):
+                lines.append(f"**Name:** {task['task_name']}\n\n")
+            
+            if task.get('metadata', {}).get('description'):
+                lines.append(f"**Description:** {task['metadata']['description']}\n\n")
             
             # Metrics
-            f.write("## Overall Metrics\n\n")
-            f.write(f"- **Total Files Checked:** {summary['overall_metrics']['total_files_checked']}\n")
-            f.write(f"- **Total Lines of Code:** {summary['overall_metrics']['total_lines_of_code']}\n\n")
+            lines.append("**Metrics:**\n")
+            lines.append(f"- Execution Time: {task['metrics']['execution_time_ms']:.2f}ms\n")
+            lines.append(f"- Files Checked: {task['metrics']['files_checked']}\n")
+            lines.append(f"- Lines of Code: {task['metrics']['lines_of_code']}\n\n")
             
-            # Recommendations
-            if summary['summary']['recommendations']:
-                f.write("## Recommendations\n\n")
-                for rec in summary['summary']['recommendations']:
-                    f.write(f"- {rec}\n")
-                f.write("\n")
+            # Checks
+            if task.get('checks'):
+                lines.append("**Checks:**\n")
+                for check in task['checks']:
+                    if isinstance(check, dict):
+                        lines.append(f"- ✅ {check.get('message', check.get('check'))}\n")
+                    else:
+                        lines.append(f"- {check}\n")
+                lines.append("\n")
             
-            # Task Details
-            f.write("## Task Details\n\n")
-            for task in summary['tasks']:
-                status_emoji = "✅" if task['status'] == 'passed' else "❌"
-                f.write(f"### {status_emoji} {task['task_id']}\n\n")
-                
-                if task.get('task_name'):
-                    f.write(f"**Name:** {task['task_name']}\n\n")
-                
-                if task.get('metadata', {}).get('description'):
-                    f.write(f"**Description:** {task['metadata']['description']}\n\n")
-                
-                # Metrics
-                f.write("**Metrics:**\n")
-                f.write(f"- Execution Time: {task['metrics']['execution_time_ms']:.2f}ms\n")
-                f.write(f"- Files Checked: {task['metrics']['files_checked']}\n")
-                f.write(f"- Lines of Code: {task['metrics']['lines_of_code']}\n\n")
-                
-                # Checks
-                if task.get('checks'):
-                    f.write("**Checks:**\n")
-                    for check in task['checks']:
-                        if isinstance(check, dict):
-                            f.write(f"- ✅ {check.get('message', check.get('check'))}\n")
-                        else:
-                            f.write(f"- {check}\n")
-                    f.write("\n")
-                
-                # Errors
-                if task.get('errors'):
-                    f.write("**Errors:**\n")
-                    for error in task['errors']:
-                        if isinstance(error, dict):
-                            f.write(f"- ❌ **[{error.get('type', 'error')}]** {error.get('message')}\n")
-                        else:
-                            f.write(f"- ❌ {error}\n")
-                    f.write("\n")
-                
-                # Warnings
-                if task.get('warnings'):
-                    f.write("**Warnings:**\n")
-                    for warning in task['warnings']:
-                        if isinstance(warning, dict):
-                            f.write(f"- ⚠️ **[{warning.get('type', 'warning')}]** {warning.get('message')}\n")
-                        else:
-                            f.write(f"- ⚠️ {warning}\n")
-                    f.write("\n")
-                
-                f.write("---\n\n")
+            # Errors
+            if task.get('errors'):
+                lines.append("**Errors:**\n")
+                for error in task['errors']:
+                    if isinstance(error, dict):
+                        lines.append(f"- ❌ **[{error.get('type', 'error')}]** {error.get('message')}\n")
+                    else:
+                        lines.append(f"- ❌ {error}\n")
+                lines.append("\n")
+            
+            # Warnings
+            if task.get('warnings'):
+                lines.append("**Warnings:**\n")
+                for warning in task['warnings']:
+                    if isinstance(warning, dict):
+                        lines.append(f"- ⚠️ **[{warning.get('type', 'warning')}]** {warning.get('message')}\n")
+                    else:
+                        lines.append(f"- ⚠️ {warning}\n")
+                lines.append("\n")
+            
+            lines.append("---\n\n")
+        
+        # Write all content at once
+        with open(report_file, 'w', encoding='utf-8') as f:
+            f.write(''.join(lines))
     
     def _generate_html_report(self, summary: Dict[str, Any]) -> None:
         """Generate an HTML report with visual elements"""
