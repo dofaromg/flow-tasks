@@ -231,7 +231,7 @@ flow-tasks/
 
 ---
 
-**版本 / Version**: v1.0.0  
+**版本 / Version**: v3.0.0  
 **最後更新 / Last Updated**: 2026-02-04  
 **維護者 / Maintainer**: FlowAgent Team
 

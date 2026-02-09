@@ -2,7 +2,7 @@
 # FlowAgent Earth Structure Deployment Index
 
 **生成時間 / Generated**: 2026-02-04  
-**版本 / Version**: v1.0.0  
+**版本 / Version**: v3.0.0  
 **專案 / Project**: FlowAgent GKE Starter
 
 ---

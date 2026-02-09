@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-🌍 Particle World Module v1.0.0
+🌍 Particle World Module v3.0.0
 怎麼過去，就怎麼回來
 
 整合：

@@ -1,7 +1,7 @@
 # FlowAgent — GKE Starter with Particle Language Core
 # FlowAgent — GKE 啟動器與粒子語言核心
 
-版本 / Version: v1.0.0  •  更新時間 / Updated: 2026-02-04
+版本 / Version: v3.0.0  •  更新時間 / Updated: 2026-02-09
 
 ## 🌍 部署結構索引 / Deployment Structure Index
 
