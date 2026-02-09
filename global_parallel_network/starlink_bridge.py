@@ -18,7 +18,7 @@ import math
 import hashlib
 from enum import Enum
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Tuple
 
 
 class OrbitLayer(Enum):
