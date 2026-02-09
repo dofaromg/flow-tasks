@@ -20,11 +20,11 @@ Layer mapping:
 import time
 from typing import Dict, List, Optional
 
-from .cloud_on_cloud import CloudOnCloud, CloudRegion, WorkloadPlacement
+from .cloud_on_cloud import CloudOnCloud, WorkloadPlacement
 from .edge_on_edge import EdgeOnEdge, EdgeNode, EdgePacket
 from .starlink_bridge import StarlinkBridge, SatelliteRoute
 from .parallel_world_router import (
-    ParallelWorldRouter, RouteDecision, LayerID, NetworkPlane,
+    ParallelWorldRouter, RouteDecision, LayerID,
 )
 
 
