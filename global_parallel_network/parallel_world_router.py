@@ -162,6 +162,7 @@ class ParallelWorldRouter:
             cl for cl in self.cross_links
             if cl.is_active and cl.source_plane == src_plane and cl.target_plane == tgt_plane
         ]
+        is_reversed = False
 
         # Also consider reverse direction
         if not candidates:
@@ -169,6 +170,7 @@ class ParallelWorldRouter:
                 cl for cl in self.cross_links
                 if cl.is_active and cl.source_plane == tgt_plane and cl.target_plane == src_plane
             ]
+            is_reversed = True
 
         # Also consider two-hop: src → intermediate → tgt
         if not candidates:
@@ -233,11 +235,17 @@ class ParallelWorldRouter:
             best = candidates[0]
             best_score = best.latency_ms
 
+        # When using a reverse link, invert the hop direction
+        if is_reversed:
+            path = [f"{best.target_node}→{best.source_node}"]
+        else:
+            path = [f"{best.source_node}→{best.target_node}"]
+
         decision = RouteDecision(
             request_id=request_id,
             source_plane=src_plane, target_plane=tgt_plane,
             source_layer=source_layer, target_layer=target_layer,
-            selected_path=[f"{best.source_node}→{best.target_node}"],
+            selected_path=path,
             estimated_latency_ms=best.latency_ms,
             estimated_cost=best.cost_per_gb,
             reliability=0.999 if best.bandwidth_gbps >= 10 else 0.99,
