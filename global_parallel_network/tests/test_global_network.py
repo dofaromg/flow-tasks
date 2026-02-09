@@ -530,6 +530,70 @@ def test_global_event_log():
     print(f"✓ global_event_log events={len(g.event_log)}")
 
 
+# ── Runner Fleet (cloud-on-cloud infrastructure) ──
+
+def test_runner_register_compliant():
+    c = CloudOnCloud()
+    r = c.register_runner("runner-tw-01", "gcp-asia-east1", "2.329.0",
+                          labels=["self-hosted", "linux", "cloud-tw"])
+    assert r["compliant"] is True
+    assert "warning" not in r
+    print("✓ runner_register_compliant")
+
+
+def test_runner_register_non_compliant():
+    c = CloudOnCloud()
+    r = c.register_runner("runner-old", "aws-us-east-1", "2.320.0")
+    assert r["compliant"] is False
+    assert "warning" in r
+    assert "2.329.0" in r["warning"]
+    print(f"✓ runner_register_non_compliant warning={r['warning'][:50]}...")
+
+
+def test_runner_register_newer():
+    c = CloudOnCloud()
+    r = c.register_runner("runner-new", "azure-eastus", "2.335.0")
+    assert r["compliant"] is True
+    print("✓ runner_register_newer")
+
+
+def test_runner_fleet_compliance():
+    c = CloudOnCloud()
+    c.register_runner("r1", "gcp-asia-east1", "2.329.0")
+    c.register_runner("r2", "aws-us-east-1", "2.335.0")
+    c.register_runner("r3", "azure-eastus", "2.310.0")
+    c.register_runner("r4", "private-tw", "2.200.0")
+    report = c.check_fleet_compliance()
+    assert report["total_runners"] == 4
+    assert report["compliant"] == 2
+    assert report["non_compliant"] == 2
+    assert report["deadline"] == "2026-03-16"
+    assert len(report["non_compliant_runners"]) == 2
+    print(f"✓ runner_fleet_compliance {report['compliant']}/{report['total_runners']} compliant")
+
+
+def test_runner_version_compare():
+    c = CloudOnCloud()
+    assert c._version_gte("2.329.0", "2.329.0") is True
+    assert c._version_gte("2.330.0", "2.329.0") is True
+    assert c._version_gte("2.328.9", "2.329.0") is False
+    assert c._version_gte("3.0.0", "2.329.0") is True
+    assert c._version_gte("invalid", "2.329.0") is False
+    print("✓ runner_version_compare")
+
+
+def test_runner_in_stats():
+    c = CloudOnCloud()
+    s0 = c.stats()
+    assert s0["runners"] == 0
+    c.register_runner("r1", "gcp-asia-east1", "2.329.0")
+    c.register_runner("r2", "aws-us-east-1", "2.310.0")
+    s = c.stats()
+    assert s["runners"] == 2
+    assert s["runners_compliant"] == 1
+    print("✓ runner_in_stats")
+
+
 # ── Run all ──
 
 if __name__ == "__main__":
@@ -587,6 +651,13 @@ if __name__ == "__main__":
         test_global_satellite_route_invalid,
         test_global_edge_route_failed,
         test_global_event_log,
+        # Runner fleet tests (7)
+        test_runner_register_compliant,
+        test_runner_register_non_compliant,
+        test_runner_register_newer,
+        test_runner_fleet_compliance,
+        test_runner_version_compare,
+        test_runner_in_stats,
     ]
 
     passed = 0

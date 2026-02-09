@@ -224,6 +224,62 @@ class CloudOnCloud:
     def get_replication(self, service: str) -> Optional[ReplicationPolicy]:
         return self.replication_policies.get(service)
 
+    # ── Runner Fleet ──
+
+    MIN_RUNNER_VERSION = "2.329.0"
+    ENFORCEMENT_DEADLINE = "2026-03-16"
+
+    def __init_runners(self):
+        if not hasattr(self, 'runners'):
+            self.runners: Dict[str, Dict] = {}
+
+    def register_runner(self, runner_id: str, region_id: str, version: str,
+                        labels: Optional[List[str]] = None) -> Dict:
+        """Register a self-hosted runner in a cloud region."""
+        self.__init_runners()
+        compliant = self._version_gte(version, self.MIN_RUNNER_VERSION)
+        runner = {
+            "id": runner_id,
+            "region_id": region_id,
+            "version": version,
+            "labels": labels or ["self-hosted", "linux", "x64"],
+            "compliant": compliant,
+            "registered_at": time.time(),
+        }
+        if not compliant:
+            runner["warning"] = (
+                f"Runner {version} < minimum {self.MIN_RUNNER_VERSION}. "
+                f"Must upgrade before {self.ENFORCEMENT_DEADLINE}."
+            )
+        self.runners[runner_id] = runner
+        return runner
+
+    def check_fleet_compliance(self) -> Dict:
+        """Check all runners against the minimum version requirement."""
+        self.__init_runners()
+        compliant = [r for r in self.runners.values() if r["compliant"]]
+        non_compliant = [r for r in self.runners.values() if not r["compliant"]]
+        return {
+            "total_runners": len(self.runners),
+            "compliant": len(compliant),
+            "non_compliant": len(non_compliant),
+            "min_version": self.MIN_RUNNER_VERSION,
+            "deadline": self.ENFORCEMENT_DEADLINE,
+            "non_compliant_runners": [
+                {"id": r["id"], "version": r["version"], "region": r["region_id"]}
+                for r in non_compliant
+            ],
+        }
+
+    def _version_gte(self, version: str, minimum: str) -> bool:
+        """Compare semver strings: version >= minimum."""
+        def parse(v):
+            return tuple(int(x) for x in v.split("."))
+        try:
+            return parse(version) >= parse(minimum)
+        except (ValueError, AttributeError):
+            return False
+
     # ── Stats ──
 
     def stats(self) -> Dict:
@@ -231,6 +287,7 @@ class CloudOnCloud:
         providers = set(r.provider.value for r in active)
         total_vcpu = sum(r.capacity_vcpu for r in active)
         total_gpu = sum(r.capacity_gpu for r in active)
+        self.__init_runners()
         return {
             "total_regions": len(self.regions),
             "active_regions": len(active),
@@ -240,5 +297,7 @@ class CloudOnCloud:
             "total_links": len(self.links),
             "placements": len(self.placements),
             "replication_policies": len(self.replication_policies),
+            "runners": len(self.runners),
+            "runners_compliant": len([r for r in self.runners.values() if r["compliant"]]),
             "origin_signature": self.origin_signature,
         }
