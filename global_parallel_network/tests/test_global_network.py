@@ -10,9 +10,9 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from global_parallel_network.cloud_on_cloud import CloudOnCloud, ReplicationPolicy
-from global_parallel_network.edge_on_edge import EdgeOnEdge
-from global_parallel_network.starlink_bridge import StarlinkBridge
-from global_parallel_network.parallel_world_router import ParallelWorldRouter, LayerID
+from global_parallel_network.edge_on_edge import EdgeOnEdge, EdgeProvider
+from global_parallel_network.starlink_bridge import StarlinkBridge, OrbitLayer, SatelliteRelay
+from global_parallel_network.parallel_world_router import ParallelWorldRouter, LayerID, NetworkPlane, CrossPlaneLink
 from global_parallel_network.global_network import GlobalParallelNetwork
 
 
