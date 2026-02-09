@@ -247,12 +247,21 @@ class EdgeOnEdge:
         return packet
 
     def _get_neighbors(self, node_id: str) -> List[str]:
-        neighbors = []
-        for (a, b) in self.links:
+        neighbors: List[str] = []
+        # Only consider links that are active, and only return neighbors whose nodes are ACTIVE.
+        for (a, b), link in self.links.items():
+            if not link.is_active:
+                continue
             if a == node_id:
-                neighbors.append(b)
+                neighbor_id = b
             elif b == node_id:
-                neighbors.append(a)
+                neighbor_id = a
+            else:
+                continue
+            neighbor_node = self.nodes.get(neighbor_id)
+            if neighbor_node is None or neighbor_node.status != EdgeNodeStatus.ACTIVE:
+                continue
+            neighbors.append(neighbor_id)
         return neighbors
 
     def _haversine_raw(self, lat1, lon1, lat2, lon2) -> float:

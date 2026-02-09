@@ -15,7 +15,6 @@ and edge/cloud layers. Provides:
 
 import time
 import math
-import hashlib
 from enum import Enum
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
@@ -187,7 +186,7 @@ class StarlinkBridge:
                     bandwidth_gbps=min(gs.uplink_gbps, sat.bandwidth_gbps),
                 )
 
-        # Auto-connect: LEO inter-satellite laser links (neighbors within 2000 km)
+        # Auto-connect: LEO inter-satellite laser links (neighbors within 5000 km)
         leo_ids = [s.id for s in self.satellites.values() if s.orbit == OrbitLayer.LEO]
         for i, a in enumerate(leo_ids):
             for b in leo_ids[i + 1:]:
@@ -238,7 +237,7 @@ class StarlinkBridge:
     def compute_route(self, source_gs: str, dest_gs: str) -> Optional[SatelliteRoute]:
         """
         Compute optimal route between two ground stations through the constellation.
-        Uses BFS over the link graph.
+        Uses a latency-weighted shortest path search (Dijkstra) over the active link graph.
         """
         if source_gs not in self.ground_stations or dest_gs not in self.ground_stations:
             return None
