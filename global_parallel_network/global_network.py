@@ -5,6 +5,9 @@ origin_signature: MrLiouWord
 Unifies Cloud-on-Cloud, Edge-on-Edge, and Starlink Bridge into a single
 global network with cross-plane routing.
 
+This is a standalone simulation system. Integration with particle_satellite_network,
+flowos/adapters, and MrLiou_AI_SuperComputer runtime is planned for future versions.
+
 Layer mapping:
   L-1  Starlink / Physical hardware
   L0   Cloud IaaS (AWS, GCP, Azure, CF, Private)
