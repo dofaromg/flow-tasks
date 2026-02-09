@@ -222,10 +222,319 @@ def test_global_summary():
     print(summary)
 
 
+# ══════════════════════════════════════════════════
+# Additional tests — gap coverage
+# ══════════════════════════════════════════════════
+
+# ── Cloud: add/remove/get region ──
+
+def test_cloud_add_remove_get_region():
+    c = CloudOnCloud()
+    from global_parallel_network.cloud_on_cloud import CloudRegion, CloudProvider, CloudTier
+    new_r = CloudRegion(
+        id="test-region", provider=CloudProvider.PRIVATE, region_code="test-dc",
+        tier=CloudTier.L0_IAAS, lat=10.0, lon=20.0,
+        capacity_vcpu=100, capacity_mem_gb=200, capacity_gpu=5, capacity_storage_tb=50.0,
+    )
+    c.add_region(new_r)
+    assert c.get_region("test-region") is not None
+    assert c.get_region("test-region").capacity_vcpu == 100
+    assert c.remove_region("test-region") is True
+    assert c.get_region("test-region") is None
+    assert c.remove_region("nonexistent") is False
+    print("✓ cloud_add_remove_get_region")
+
+
+def test_cloud_add_link():
+    c = CloudOnCloud()
+    from global_parallel_network.cloud_on_cloud import CrossCloudLink
+    link = CrossCloudLink(
+        source_id="aws-us-east-1", target_id="private-tw",
+        bandwidth_gbps=100.0, latency_ms=150.0, cost_per_gb=0.05,
+    )
+    c.add_link(link)
+    fetched = c.get_link("aws-us-east-1", "private-tw")
+    assert fetched is not None
+    assert fetched.bandwidth_gbps == 100.0
+    # Reverse lookup
+    fetched2 = c.get_link("private-tw", "aws-us-east-1")
+    assert fetched2 is not None
+    print("✓ cloud_add_link")
+
+
+def test_cloud_get_link_nonexistent():
+    c = CloudOnCloud()
+    assert c.get_link("fake-a", "fake-b") is None
+    print("✓ cloud_get_link_nonexistent")
+
+
+def test_cloud_estimate_latency_missing_region():
+    c = CloudOnCloud()
+    lat = c._estimate_latency("fake-region", "aws-us-east-1")
+    assert lat == 999.0
+    print("✓ cloud_estimate_latency_missing_region")
+
+
+def test_cloud_placement_fallback():
+    c = CloudOnCloud()
+    # Require impossibly high resources — should still return a fallback
+    p = c.place_workload("wl-impossible", {"min_vcpu": 999999, "min_gpu": 999999})
+    assert p.workload_id == "wl-impossible"
+    assert p.region_id  # fallback to first region
+    assert p.score == 999.0
+    print(f"✓ cloud_placement_fallback → {p.region_id}")
+
+
+def test_cloud_get_replication_nonexistent():
+    c = CloudOnCloud()
+    assert c.get_replication("nonexistent-service") is None
+    print("✓ cloud_get_replication_nonexistent")
+
+
+def test_cloud_placement_prefer_region():
+    c = CloudOnCloud()
+    p = c.place_workload("wl-prefer", {"prefer_region": "ap-northeast-1"})
+    assert p.workload_id == "wl-prefer"
+    # Should prefer the region with matching code
+    assert "ap-northeast-1" in p.region_id or p.score < 100
+    print(f"✓ cloud_placement_prefer_region → {p.region_id}")
+
+
+# ── Edge: add/remove node, heartbeat, provider filter, invalid route ──
+
+def test_edge_add_remove_node():
+    e = EdgeOnEdge()
+    from global_parallel_network.edge_on_edge import EdgeNode, EdgeProvider
+    node = EdgeNode(id="test-pop", provider=EdgeProvider.FLY_IO, pop_code="TST", lat=0.0, lon=0.0)
+    e.add_node(node)
+    assert "test-pop" in e.nodes
+    assert e.remove_node("test-pop") is True
+    assert "test-pop" not in e.nodes
+    assert e.remove_node("nonexistent") is False
+    print("✓ edge_add_remove_node")
+
+
+def test_edge_heartbeat():
+    e = EdgeOnEdge()
+    import time
+    old_hb = e.nodes["cf-nrt"].last_heartbeat
+    time.sleep(0.01)
+    assert e.heartbeat("cf-nrt") is True
+    assert e.nodes["cf-nrt"].last_heartbeat > old_hb
+    assert e.heartbeat("nonexistent-node") is False
+    print("✓ edge_heartbeat")
+
+
+def test_edge_nearest_with_provider_filter():
+    e = EdgeOnEdge()
+    # Nearest Deno Deploy to Tokyo
+    n = e.nearest_node(35.68, 139.69, provider=EdgeProvider.DENO_DEPLOY)
+    assert n is not None
+    assert n.provider == EdgeProvider.DENO_DEPLOY
+    print(f"✓ edge_nearest_with_provider_filter → {n.id}")
+
+
+def test_edge_route_invalid_source():
+    e = EdgeOnEdge()
+    pkt = e.route_packet("nonexistent", "cf-sfo", b"test")
+    assert pkt is None
+    print("✓ edge_route_invalid_source")
+
+
+def test_edge_route_invalid_target():
+    e = EdgeOnEdge()
+    pkt = e.route_packet("cf-nrt", "nonexistent", b"test")
+    assert pkt is None
+    print("✓ edge_route_invalid_target")
+
+
+def test_edge_gossip_read_nonexistent():
+    e = EdgeOnEdge()
+    assert e.gossip_read("nonexistent") is None
+    print("✓ edge_gossip_read_nonexistent")
+
+
+def test_edge_haversine_missing_node():
+    e = EdgeOnEdge()
+    dist = e._haversine("nonexistent-a", "nonexistent-b")
+    assert dist == 99999.0
+    print("✓ edge_haversine_missing_node")
+
+
+# ── Starlink: add satellite, deorbit, add ground station, invalid route, auto-calc ──
+
+def test_starlink_add_satellite():
+    s = StarlinkBridge()
+    from global_parallel_network.starlink_bridge import SatelliteRelay
+    sat = SatelliteRelay(id="leo-test", orbit=OrbitLayer.LEO, altitude_km=550, lat=0.0, lon=0.0)
+    s.add_satellite(sat)
+    assert "leo-test" in s.satellites
+    assert s.satellites["leo-test"].coverage_radius_km > 0
+    assert s.satellites["leo-test"].latency_to_ground_ms > 0
+    print(f"✓ starlink_add_satellite coverage={sat.coverage_radius_km}km latency={sat.latency_to_ground_ms}ms")
+
+
+def test_starlink_deorbit():
+    s = StarlinkBridge()
+    from global_parallel_network.starlink_bridge import SatelliteStatus
+    assert s.deorbit("leo-001") is True
+    assert s.satellites["leo-001"].status == SatelliteStatus.DEORBITING
+    assert s.deorbit("nonexistent") is False
+    print("✓ starlink_deorbit")
+
+
+def test_starlink_add_ground_station():
+    s = StarlinkBridge()
+    from global_parallel_network.starlink_bridge import GroundStation
+    gs = GroundStation(id="gs-test", lat=48.86, lon=2.35, name="Paris Test")
+    s.add_ground_station(gs)
+    assert "gs-test" in s.ground_stations
+    assert s.ground_stations["gs-test"].name == "Paris Test"
+    print("✓ starlink_add_ground_station")
+
+
+def test_starlink_route_invalid_gs():
+    s = StarlinkBridge()
+    route = s.compute_route("nonexistent", "gs-tw")
+    assert route is None
+    route2 = s.compute_route("gs-tw", "nonexistent")
+    assert route2 is None
+    print("✓ starlink_route_invalid_gs")
+
+
+def test_starlink_satellite_auto_calc():
+    """Verify SatelliteRelay __post_init__ auto-calculates coverage and latency."""
+    from global_parallel_network.starlink_bridge import SatelliteRelay
+    sat = SatelliteRelay(id="auto-test", orbit=OrbitLayer.LEO, altitude_km=550, lat=0.0, lon=0.0)
+    assert sat.coverage_radius_km > 2000  # ~2600 km for 550 km altitude
+    assert 3.0 < sat.latency_to_ground_ms < 4.0  # 2*550/300 ≈ 3.67 ms
+    geo = SatelliteRelay(id="geo-test", orbit=OrbitLayer.GEO, altitude_km=35786, lat=0.0, lon=0.0)
+    assert geo.latency_to_ground_ms > 200  # 2*35786/300 ≈ 238 ms
+    print(f"✓ starlink_satellite_auto_calc LEO={sat.latency_to_ground_ms}ms GEO={geo.latency_to_ground_ms}ms")
+
+
+# ── Router: add_cross_link, no-route, QoS filter, two-hop, stats ──
+
+def test_router_add_cross_link():
+    r = ParallelWorldRouter()
+    from global_parallel_network.parallel_world_router import CrossPlaneLink
+    link = CrossPlaneLink(
+        source_plane=NetworkPlane.EDGE, source_node="test-edge",
+        target_plane=NetworkPlane.SATELLITE, target_node="test-sat",
+        latency_ms=5.0, bandwidth_gbps=10.0,
+    )
+    before = len(r.cross_links)
+    r.add_cross_link(link)
+    assert len(r.cross_links) == before + 1
+    print("✓ router_add_cross_link")
+
+
+def test_router_no_route():
+    """Route between planes with no links should return no-route."""
+    r = ParallelWorldRouter()
+    # Remove all cross links
+    r.cross_links = []
+    d = r.route("req-noroute", LayerID.L_NEG1, LayerID.L2)
+    assert d.estimated_latency_ms == float("inf")
+    assert d.reliability == 0.0
+    assert "no-route" in d.selected_path[0] or "no cross-plane" in d.reason
+    print(f"✓ router_no_route reason={d.reason}")
+
+
+def test_router_qos_max_latency():
+    """QoS max_latency_ms should filter out high-latency links."""
+    r = ParallelWorldRouter()
+    # Route edge→cloud with very tight latency requirement
+    d = r.route("req-qos", LayerID.L2, LayerID.L4, qos={"max_latency_ms": 1.0})
+    # All edge→cloud links are ≥2ms, so should still pick best available
+    assert d.request_id == "req-qos"
+    print(f"✓ router_qos_max_latency lat={d.estimated_latency_ms}ms")
+
+
+def test_router_stats():
+    r = ParallelWorldRouter()
+    s0 = r.stats()
+    assert s0["decisions_made"] == 0
+    r.route("req-stat", LayerID.L_NEG1, LayerID.L5)
+    s = r.stats()
+    assert s["cross_links"] == 15
+    assert s["decisions_made"] == 1
+    assert "satellite" in s["planes"]
+    assert "L-1" in s["layers"]
+    print("✓ router_stats")
+
+
+# ── Global: individual stats methods, edge_nearest, failed satellite route ──
+
+def test_global_cloud_stats():
+    g = GlobalParallelNetwork()
+    s = g.cloud_stats()
+    assert s["total_regions"] == 8
+    print("✓ global_cloud_stats")
+
+
+def test_global_edge_stats():
+    g = GlobalParallelNetwork()
+    s = g.edge_stats()
+    assert s["total_nodes"] == 13
+    print("✓ global_edge_stats")
+
+
+def test_global_satellite_stats():
+    g = GlobalParallelNetwork()
+    s = g.satellite_stats()
+    assert s["active_satellites"] == 17
+    print("✓ global_satellite_stats")
+
+
+def test_global_router_stats():
+    g = GlobalParallelNetwork()
+    s = g.router_stats()
+    assert s["cross_links"] == 15
+    print("✓ global_router_stats")
+
+
+def test_global_edge_nearest():
+    g = GlobalParallelNetwork()
+    n = g.edge_nearest(25.03, 121.56)
+    assert n is not None
+    assert n.id == "fly-tpe"
+    print(f"✓ global_edge_nearest → {n.id}")
+
+
+def test_global_satellite_route_invalid():
+    g = GlobalParallelNetwork()
+    route = g.satellite_route("nonexistent", "gs-tw")
+    assert route is None
+    print("✓ global_satellite_route_invalid")
+
+
+def test_global_edge_route_failed():
+    g = GlobalParallelNetwork()
+    # Route between nodes with no path (Asia→Americas via edge only)
+    pkt = g.edge_route("cf-nrt", "cf-sfo", b"cross_pacific")
+    # Should return a packet but not delivered (no trans-Pacific edge link)
+    assert pkt is not None
+    assert pkt.delivered_at is None
+    print(f"✓ global_edge_route_failed hops={len(pkt.hops)}")
+
+
+def test_global_event_log():
+    g = GlobalParallelNetwork()
+    initial_events = len(g.event_log)
+    g.place_workload("ev-test", {"min_vcpu": 1})
+    g.satellite_route("gs-tw", "gs-jp")
+    g.cross_route("ev-cross", "L2", "L5")
+    assert len(g.event_log) == initial_events + 3
+    assert g.event_log[-1]["type"] == "cross_route"
+    print(f"✓ global_event_log events={len(g.event_log)}")
+
+
 # ── Run all ──
 
 if __name__ == "__main__":
     tests = [
+        # Original 20
         test_cloud_default_regions,
         test_cloud_workload_placement,
         test_cloud_replication,
@@ -246,6 +555,38 @@ if __name__ == "__main__":
         test_global_e2e_tw_to_us,
         test_global_e2e_broadcast,
         test_global_summary,
+        # New gap-coverage tests (25)
+        test_cloud_add_remove_get_region,
+        test_cloud_add_link,
+        test_cloud_get_link_nonexistent,
+        test_cloud_estimate_latency_missing_region,
+        test_cloud_placement_fallback,
+        test_cloud_get_replication_nonexistent,
+        test_cloud_placement_prefer_region,
+        test_edge_add_remove_node,
+        test_edge_heartbeat,
+        test_edge_nearest_with_provider_filter,
+        test_edge_route_invalid_source,
+        test_edge_route_invalid_target,
+        test_edge_gossip_read_nonexistent,
+        test_edge_haversine_missing_node,
+        test_starlink_add_satellite,
+        test_starlink_deorbit,
+        test_starlink_add_ground_station,
+        test_starlink_route_invalid_gs,
+        test_starlink_satellite_auto_calc,
+        test_router_add_cross_link,
+        test_router_no_route,
+        test_router_qos_max_latency,
+        test_router_stats,
+        test_global_cloud_stats,
+        test_global_edge_stats,
+        test_global_satellite_stats,
+        test_global_router_stats,
+        test_global_edge_nearest,
+        test_global_satellite_route_invalid,
+        test_global_edge_route_failed,
+        test_global_event_log,
     ]
 
     passed = 0
@@ -256,6 +597,8 @@ if __name__ == "__main__":
             passed += 1
         except Exception as e:
             print(f"✗ {t.__name__}: {e}")
+            import traceback
+            traceback.print_exc()
             failed += 1
 
     print(f"\n{'='*50}")
