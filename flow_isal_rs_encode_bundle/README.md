@@ -3,7 +3,7 @@
 交付：ISA-L RS(預設 k=4,m=2,w=8) 編碼可執行檔 + Go 封裝器（分片、呼叫、manifest、trace、merkle_root）。
 
 ## 需求
-- Ubuntu 22.04 / gcc / make
+- Ubuntu 22.04+ / gcc / make
 - Go 1.21+
 - ISA-L 已安裝 (libisal, isal.h)
   - 例：sudo apt-get update && sudo apt-get install -y libisal-dev

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
@@ -97,18 +96,49 @@ func splitToKShards(inPath, dataDir string, k int) (shardSize int64, inputSize i
 
 func randID(n int) string {
 	b := make([]byte, n)
-	_, _ = rand.Read(b)
+	if _, err := rand.Read(b); err != nil {
+		panic(fmt.Sprintf("crypto/rand.Read failed: %v", err))
+	}
 	return hex.EncodeToString(b)
 }
 
 func merkleDir(dir string) (string, error) {
-	// deterministic sha256 fold implemented with system sha256sum for parity with scripts/merkle_dir.sh
-	cmd := exec.Command("bash", "-lc", fmt.Sprintf(`cd %q && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}'`, dir))
-	out, err := cmd.Output()
+	// Pure Go implementation to avoid shell injection risks
+	// Collect all files with their paths
+	var filePaths []string
+	err := filepath.Walk(dir, func(p string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.Mode().IsRegular() {
+			filePaths = append(filePaths, p)
+		}
+		return nil
+	})
 	if err != nil {
 		return "", err
 	}
-	return string(bytes.TrimSpace(out)), nil
+
+	// Sort for deterministic ordering
+	sort.Strings(filePaths)
+
+	// Compute sha256 for each file, then fold
+	h := blake3.New()
+	for _, p := range filePaths {
+		f, err := os.Open(p)
+		if err != nil {
+			return "", err
+		}
+		fh := blake3.New()
+		if _, err := io.Copy(fh, f); err != nil {
+			f.Close()
+			return "", err
+		}
+		f.Close()
+		// Write path and hash to merkle fold
+		fmt.Fprintf(h, "%s:%s\n", p, hex.EncodeToString(fh.Sum(nil)))
+	}
+	return hex.EncodeToString(h.Sum(nil)), nil
 }
 
 func listFiles(dir string) ([]string, error) {
@@ -198,7 +228,10 @@ func main() {
 		Data:      dataShards,
 		Parity:    parityShards,
 	}
-	mb, _ := json.MarshalIndent(man, "", "  ")
+	mb, err := json.MarshalIndent(man, "", "  ")
+	if err != nil {
+		panic(fmt.Sprintf("failed to marshal manifest: %v", err))
+	}
 	if err := writeFile(filepath.Join(*outDir, "manifest.json"), mb); err != nil {
 		panic(err)
 	}
@@ -215,7 +248,10 @@ func main() {
 		PersonaID:  *persona,
 		MerkleRoot: mr,
 	}
-	tb, _ := json.MarshalIndent(t, "", "  ")
+	tb, err := json.MarshalIndent(t, "", "  ")
+	if err != nil {
+		panic(fmt.Sprintf("failed to marshal trace: %v", err))
+	}
 	if err := writeFile(filepath.Join(*outDir, "trace.json"), tb); err != nil {
 		panic(err)
 	}
