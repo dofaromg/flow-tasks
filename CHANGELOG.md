@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-02-09
+
+### Changed
+- **Version Update**: Updated project version from v1.0.0 to v3.0.0 across all documentation
+- Updated version references in:
+  - README.md - Main project documentation
+  - package.json - Node.js package version
+  - All deployment documentation (DEPLOYMENT_*.md files)
+  - API specifications (P.MetaEnv.openapi.*)
+  - Structure documentation (STRUCTURE.md)
+  - Configuration files (MrliouAgi.json)
+  - Python modules (world.py)
+
 ### Added
 
 #### 2026-01-03 - FlowHub Integration Export Package

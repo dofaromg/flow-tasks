@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Mr.liou MetaEnv Control API
-  version: v1.0.0
+  version: v3.0.0
   description: >
     控制與保護元代碼沙盒（MetaEnv）的最小可用 API。對齊主線/分支：
     1) 反推器：上傳 trace → 產出規則/通道地圖

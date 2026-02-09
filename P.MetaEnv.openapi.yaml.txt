@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Mr.liou MetaEnv Control API
-  version: v1.0.0
+  version: v3.0.0
   description: >
     Minimal viable API for controlling and protecting the metacode sandbox (MetaEnv).
     控制與保護元代碼沙盒（MetaEnv）的最小可用 API。

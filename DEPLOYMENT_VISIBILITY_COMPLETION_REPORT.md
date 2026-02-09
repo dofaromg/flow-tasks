@@ -285,7 +285,7 @@ Thanks to the user who raised this issue, making us aware of the need to improve
 ---
 
 **報告生成時間 / Report Generated**: 2026-02-04  
-**版本 / Version**: v1.0.0  
+**版本 / Version**: v3.0.0  
 **狀態 / Status**: ✅ 完成 / Completed
 
 ---
