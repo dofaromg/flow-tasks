@@ -15,7 +15,7 @@
 #### 1. Fluin_Dict.fxjson
 粒子語言詞典，定義核心語素單元：
 ```json
-{'⋄fx.unit.point': '單位跳點', '⋄fx.logic.combine': '邏輯組合器'}
+{"⋄fx.unit.point": "單位跳點", "⋄fx.logic.combine": "邏輯組合器"}
 ```
 
 #### 2. Format_Structure.fxmanifest

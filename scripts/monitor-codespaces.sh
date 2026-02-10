@@ -56,8 +56,6 @@ CURRENT_TIME=$(date +%s)
 # Track warnings
 WARNING_COUNT=0
 
-# Process each codespace
-echo "$CODESPACES" | jq -r '.[] | @json' | while read -r codespace; do
 # Process each codespace using process substitution to avoid subshell
 while read -r codespace; do
     NAME=$(echo "$codespace" | jq -r '.name')
@@ -93,7 +91,6 @@ while read -r codespace; do
     fi
     
     echo ""
-done
 done < <(echo "$CODESPACES" | jq -r '.[] | @json')
 
 # Summary
