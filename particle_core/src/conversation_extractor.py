@@ -13,6 +13,9 @@
 
 import json
 import re
+from datetime import datetime
+from typing import List, Dict, Tuple, Optional
+from collections import Counter, defaultdict
 import csv
 import xml.etree.ElementTree as ET
 from datetime import datetime
@@ -36,6 +39,7 @@ except ImportError:
 class ConversationExtractor:
     """對話知識提取器核心類別"""
     
+    def __init__(self, api_key: str = None):
     # 預定義調色盤主題
     COLOR_PALETTES = {
         "default": {
@@ -130,6 +134,8 @@ class ConversationExtractor:
         
         Args:
             api_key: Anthropic API Key (用於深度分析)
+        """
+        self.api_key = api_key
             theme: HTML 輸出的主題調色盤 (default/ocean/sunset/night/forest/minimal)
         """
         self.api_key = api_key
@@ -180,42 +186,53 @@ class ConversationExtractor:
     def export_to_file(self, package: Dict, filepath: str, format: str = "json"):
         """
         導出對話包到檔案
+        
+        Args:
+            package: 對話包
+            filepath: 檔案路徑
+            format: 格式 (json/markdown/txt)
+        """
         Export conversation package to file
+        
+        Performance optimization: Uses normalized format mapping to avoid
+        redundant condition checks.
         
         Args:
             package: 對話包 (Conversation package)
             filepath: 檔案路徑 (File path)
             format: 格式 - Format
-                   支援: json, markdown, txt, csv, xml, yaml
+                   Supported formats: json, markdown (or md), txt (or text), 
+                   yaml (or yml), csv, html (or htm), xml
         """
+        # Normalize format to handle aliases efficiently
         format = format.lower()
+        format_map = {
+            'md': 'markdown',
+            'text': 'txt',
+            'yml': 'yaml',
+            'htm': 'html'
+        }
+        format = format_map.get(format, format)
         
-        
-        Args:
-            package: 對話包
-            filepath: 檔案路徑
-            format: 格式 (json/markdown/txt/yaml/csv/html/xml)
-        """
+        # Handle normalized format with clean branching
         if format == "json":
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(package, f, ensure_ascii=False, indent=2)
             print(f"✓ 已導出 JSON: {filepath}")
         
-        elif format == "markdown" or format == "md":
-        elif format in ["markdown", "md"]:
         elif format == "markdown":
             md_content = self._convert_to_markdown(package)
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(md_content)
             print(f"✓ 已導出 Markdown: {filepath}")
         
-        elif format == "txt" or format == "text":
+        elif format == "txt":
             txt_content = self._convert_to_text(package)
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(txt_content)
             print(f"✓ 已導出 TXT: {filepath}")
         
-        elif format == "yaml" or format == "yml":
+        elif format == "yaml":
             yaml_content = self._convert_to_yaml(package)
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(yaml_content)
@@ -225,7 +242,7 @@ class ConversationExtractor:
             self._convert_to_csv(package, filepath)
             print(f"✓ 已導出 CSV: {filepath}")
         
-        elif format == "html" or format == "htm":
+        elif format == "html":
             html_content = self._convert_to_html(package)
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(html_content)
@@ -455,20 +472,6 @@ class ConversationExtractor:
             f.write("\n".join(lines))
         
         print(f"  ✓ index.html")
-        elif format == "csv":
-            self._export_to_csv(package, filepath)
-            print(f"✓ 已導出 CSV: {filepath}")
-        
-        elif format == "xml":
-            self._export_to_xml(package, filepath)
-            print(f"✓ 已導出 XML: {filepath}")
-        
-        elif format in ["yaml", "yml"]:
-            self._export_to_yaml(package, filepath)
-            print(f"✓ 已導出 YAML: {filepath}")
-        
-        else:
-            raise ValueError(f"不支援的導出格式: {format}")
     
     def _convert_to_markdown(self, package: Dict) -> str:
         """轉換為 Markdown 格式"""

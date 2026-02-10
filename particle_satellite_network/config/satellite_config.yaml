@@ -1,0 +1,91 @@
+# Satellite Configuration
+# 粒子AI未來星鏈平行粒子雲網路 - 衛星配置
+
+satellite_layers:
+  geo:
+    orbit_altitude: 35786  # km - 地球同步軌道高度
+    satellite_count: 3
+    coverage: "global"
+    sync_interval: 60  # seconds
+    sync_mode: "geostationary"
+    persona_seeds:
+      - id: "seed-core-001"
+        traits: ["origin-seed", "persona-regeneration", "global-sync"]
+        sync_targets: ["meo-all", "leo-all"]
+      - id: "seed-core-002"
+        traits: ["backup-seed", "failover-ready"]
+        sync_targets: ["meo-regional"]
+      - id: "seed-core-003"
+        traits: ["analytics-seed", "monitoring"]
+        sync_targets: ["ground-stations"]
+    
+  meo:
+    orbit_altitude: 10000  # km - 中軌道高度
+    satellite_count: 12
+    coverage: "regional"
+    relay_capacity: 1000  # Mbps
+    logic_pipeline_enabled: true
+    inter_satellite_links:
+      enabled: true
+      link_type: "laser"
+      bandwidth: 100  # Gbps
+    regions:
+      - name: "asia-pacific"
+        satellite_ids: ["meo-ap-001", "meo-ap-002", "meo-ap-003"]
+      - name: "europe"
+        satellite_ids: ["meo-eu-001", "meo-eu-002", "meo-eu-003"]
+      - name: "americas"
+        satellite_ids: ["meo-am-001", "meo-am-002", "meo-am-003"]
+      - name: "global-relay"
+        satellite_ids: ["meo-gr-001", "meo-gr-002", "meo-gr-003"]
+    
+  leo:
+    orbit_altitude: 1000  # km - 低軌道高度
+    satellite_count: 50
+    coverage: "local"
+    latency_target: 1  # ms
+    edge_compute: true
+    particle_runtime_enabled: true
+    handover:
+      enabled: true
+      handover_threshold: 10  # degrees elevation
+      prediction_window: 60  # seconds
+    load_balancing:
+      strategy: "round-robin"
+      health_check_interval: 5  # seconds
+    
+  ground:
+    station_count: 20
+    connection_types:
+      - "satellite_link"
+      - "fiber_backup"
+    locations:
+      - id: "gs-asia-01"
+        name: "Tokyo Ground Station"
+        coordinates: [35.6762, 139.6503]
+      - id: "gs-europe-01"
+        name: "Frankfurt Ground Station"
+        coordinates: [50.1109, 8.6821]
+      - id: "gs-americas-01"
+        name: "Virginia Ground Station"
+        coordinates: [37.4316, -78.6569]
+
+network:
+  mesh_topology: true
+  inter_satellite_links: true
+  dynamic_routing: true
+  handover_enabled: true
+  routing_algorithm: "dijkstra"
+  path_optimization:
+    enabled: true
+    factors:
+      - latency
+      - bandwidth
+      - reliability
+      - hop_count
+
+performance:
+  max_latency_ms: 50
+  min_bandwidth_mbps: 100
+  reliability_target: 0.9999  # 99.99%
+  monitoring_interval: 10  # seconds

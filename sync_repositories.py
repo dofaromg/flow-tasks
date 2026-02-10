@@ -8,6 +8,7 @@ Created by: MR.liou
 import os
 import subprocess
 import json
+from pathlib import Path
 import shutil
 import tempfile
 from pathlib import Path
@@ -28,25 +29,39 @@ def run_command(cmd, cwd=None):
         return False, e.stderr
 
 def sync_files_by_pattern(src_dir, dest_dir, patterns):
-    """根據模式同步檔案"""
+    """根據模式同步檔案
+    
+    Performance optimization: Scan directory once and filter by all patterns
+    instead of scanning multiple times (one per pattern).
+    """
     src_path = Path(src_dir)
     dest_path = Path(dest_dir)
     synced_count = 0
     
-    for pattern in patterns:
-        for file_path in src_path.rglob(pattern):
-            if file_path.is_file():
-                # 計算相對路徑
-                rel_path = file_path.relative_to(src_path)
-                dest_file = dest_path / rel_path
-                
-                # 創建目標目錄
-                dest_file.parent.mkdir(parents=True, exist_ok=True)
-                
-                # 複製檔案
-                shutil.copy2(file_path, dest_file)
-                synced_count += 1
-                print(f"   ✓ {rel_path}")
+    # Scan directory tree once and filter by all patterns
+    # This is much faster than calling rglob() for each pattern
+    all_files = list(src_path.rglob("*"))
+    
+    for file_path in all_files:
+        if not file_path.is_file():
+            continue
+            
+        # Check if file matches any pattern
+        matches = any(fnmatch(file_path.name, pattern) for pattern in patterns)
+        if not matches:
+            continue
+            
+        # 計算相對路徑
+        rel_path = file_path.relative_to(src_path)
+        dest_file = dest_path / rel_path
+        
+        # 創建目標目錄
+        dest_file.parent.mkdir(parents=True, exist_ok=True)
+        
+        # 複製檔案
+        shutil.copy2(file_path, dest_file)
+        synced_count += 1
+        print(f"   ✓ {rel_path}")
     
     return synced_count
 
@@ -85,6 +100,14 @@ def sync_repositories():
         # 創建目標目錄
         os.makedirs(config['target_dir'], exist_ok=True)
         
+        # 這裡可以擴展實際的同步邏輯
+        # 基於您的需求和權限設定
+        
+    print("\n✅ 同步完成")
+    print("🫶 怎麼過去，就怎麼回來")
+
+if __name__ == "__main__":
+    sync_repositories()
         # 使用臨時目錄進行克隆
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)

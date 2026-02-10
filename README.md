@@ -1,24 +1,51 @@
 # FlowAgent — GKE Starter with Particle Language Core
 # FlowAgent — GKE 啟動器與粒子語言核心
 
-版本 / Version: v1.0.0  •  更新時間 / Updated: 2026-02-04
+版本 / Version: v3.0.0  •  更新時間 / Updated: 2026-02-09
 
 ## 🌍 部署結構索引 / Deployment Structure Index
 
 **⭐ 快速查看完整的"地球結構"部署架構 / Quick View Complete "Earth Structure" Deployment:**
 
+### 🎯 專業部署分析 (Professional Analysis) - ⭐ NEW!
+
+- 📊 [**專業部署分析報告 / Professional Deployment Analysis**](./專業部署分析報告.md) - ⭐ **NEW** 完整的專業部署架構分析（19,000+ 字）
+  - 架構評估與評分
+  - 安全性分析
+  - 成本分析
+  - 性能基準
+  - 最佳實踐建議
+  - 完整的行動計劃
+
+- 📋 [**部署執行摘要 / Deployment Execution Summary**](./部署執行摘要.md) - ⭐ **NEW** 部署驗證結果與實際部署指南
+  - Dry-run 測試結果
+  - 部署就緒度評估
+  - 實際部署流程
+  - 風險分析與建議
+
+### 📚 部署實施文檔 (Deployment Implementation)
+
+- 🎯 [**實際部署指南 / Actual Deployment Guide**](./實際部署指南.md) - 完整的生產環境實際部署流程
+- ✅ [**部署後檢查清單 / Post-Deployment Checklist**](./部署後檢查清單.md) - 部署完成後必須檢查的項目
 - 📖 [**部署結構索引 / Deployment Structure Index**](./DEPLOYMENT_STRUCTURE_INDEX.md) - 完整的部署組件、配置和拓撲圖
 - ⚡ [**部署快速參考 / Deployment Quick Reference**](./DEPLOYMENT_QUICK_REFERENCE.md) - 快速命令和配置速查表
 - 🚀 [**部署指南 / Deployment Guide**](./DEPLOYMENT.md) - 詳細的部署步驟和故障排除
 - 🏗️ [**架構說明 / Architecture**](./ARCHITECTURE.md) - 系統架構與流程圖
+- 🔄 [**GKE 遷移指南 / GKE Migration Guide**](./GKE_MIGRATION.md) - Next.js 從 Vercel 遷移到 GKE
+- 🌟 [**部署替代方案 / Deployment Alternatives**](./DEPLOYMENT_ALTERNATIVES.md) - 不用 Vercel？10+ 種替代方案
+- 🐳 [**Docker Compose 指南 / Docker Compose Guide**](./DOCKER_COMPOSE_GUIDE.md) - 本地/自託管部署
 
 ### 🎯 一鍵部署 / One-Click Deployment
 ```bash
-# 快速開始 - 一鍵初始化 GKE 叢集並部署所有服務
-bash scripts/oneclick_gke_init.sh
+# 🚀 實際部署 - 完整的生產環境部署 (推薦)
+bash scripts/actual_deploy.sh
 
-# 或使用 kubectl + kustomize
-kubectl apply -k cluster/overlays/prod/
+# 或分步驟部署
+bash scripts/oneclick_gke_init.sh  # 初始化 GKE 叢集
+kubectl apply -k cluster/overlays/prod/  # 部署應用
+
+# 檢查部署狀態
+bash scripts/check_deployment_status.sh
 ```
 
 ---
@@ -29,6 +56,8 @@ kubectl apply -k cluster/overlays/prod/
 This project integrates:
 
 1) **GKE 部署架構** - 完整的 Kubernetes 微服務部署
+   - Next.js Frontend (React 前端應用)
+   - Astro Frontend (靜態網站前端)
    - Module-A (主服務模組)
    - Orchestrator (協調器)
    - MongoDB (資料庫)
@@ -44,6 +73,15 @@ This project integrates:
    - ArgoCD (GitOps)
    - Kustomize (配置管理)
 
+📚 **詳細文檔**：
+- [完整部署指南](DEPLOYMENT.md)
+- [快速參考](QUICKSTART.md)
+- [架構圖表](ARCHITECTURE.md)
+- [應用程式說明](apps/README.md)
+- [分支整合優化指南](BRANCH_INTEGRATION_GUIDE.md) ⭐ 新增
+- [Codespace 管理指南](CODESPACE_MANAGEMENT.md) 🆕 新增
+- [分支神經網絡系統](BRANCH_NEURAL_MAP.md) 🧠 新增 - 視覺化分支連結關係
+- [FlowHub 整合套件](FLOWHUB_EXPORT_PACKAGE.md) 📦 [commit:ffebfa0](https://github.com/dofaromg/flow-tasks/commit/ffebfa0)
 > 注意：本專案包含完整的 GKE 部署配置和粒子語言核心系統。
 > Note: This project includes complete GKE deployment configurations and the Particle Language Core system.
 
@@ -51,14 +89,23 @@ This project integrates:
 
 ## 快速開始 / Quick Start
 
+> 💡 **提示 / Tip**: 在開始之前，您可以運行驗證腳本來檢查所有必要的文件和工具:
+> ```bash
+> bash scripts/verify_quickstart.sh
+> ```
+> Before starting, you can run the verification script to check all necessary files and tools.
+
 ### 選項 1: GKE 部署 (推薦用於生產環境)
 ```bash
 # 1) 克隆 repository
 git clone https://github.com/dofaromg/flow-tasks.git
 cd flow-tasks
 
-# 2) 一鍵初始化 GKE 叢集
-bash scripts/oneclick_gke_init.sh
+# 2) 實際部署到 GKE (完整自動化流程)
+bash scripts/actual_deploy.sh
+
+# 或手動分步驟
+bash scripts/oneclick_gke_init.sh  # 初始化叢集
 
 # 3) 部署應用
 kubectl apply -k cluster/overlays/prod/
@@ -68,7 +115,47 @@ kubectl get pods -n flowagent
 kubectl get svc -n flowagent
 ```
 
-### 選項 2: 本地開發 (粒子語言核心)
+### 選項 2: Docker Compose 本地部署 (最簡單)
+```bash
+# 1) 克隆 repository
+git clone https://github.com/dofaromg/flow-tasks.git
+cd flow-tasks
+
+# 2) (可選) 配置環境變數
+cp .env.docker-example .env
+# 編輯 .env 如需要
+
+# 3) 啟動所有服務
+docker-compose up -d
+
+# 4) 訪問應用
+# Next.js Frontend: http://localhost:3000
+# MongoDB: localhost:27017
+
+# 查看日誌
+docker-compose logs -f
+```
+
+📖 完整指南: [Docker Compose 部署指南](./DOCKER_COMPOSE_GUIDE.md)
+
+### 選項 3: 本地開發 (Astro Frontend)
+```bash
+# 1) 進入 Astro 目錄
+cd apps/astro-frontend
+
+# 2) 安裝依賴
+npm install
+
+# 3) 啟動開發伺服器
+npm run dev
+# 訪問 http://localhost:4321
+
+# 4) 或建置生產版本
+npm run build
+npm run preview
+```
+
+### 選項 4: 本地開發 (粒子語言核心)
 ```bash
 # 1) 建立與設定環境
 python -m venv .venv && . .venv/bin/activate  # Windows: .\.venv\Scripts\activate
@@ -86,11 +173,44 @@ uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 
 ---
 
+## 🎯 本地部署的優勢 / Benefits of Local Deployment
+
+通過在本地克隆並部署此專案，您可以獲得以下優勢：
+By cloning and deploying this project locally, you gain the following benefits:
+
+- ✅ **完全控制源代碼** / Full control over source code
+  - 可以自由修改和定制功能 / Free to modify and customize features
+  - 無需依賴第三方平台 / No dependency on third-party platforms
+  
+- ✅ **完整的配置管理** / Complete configuration management
+  - 自定義環境變數和配置 / Customize environment variables and configs
+  - 靈活調整部署架構 / Flexibly adjust deployment architecture
+  
+- ✅ **數據主權** / Data sovereignty
+  - 數據完全存儲在您的基礎設施中 / Data stored entirely in your infrastructure
+  - 符合數據隱私和合規要求 / Meet data privacy and compliance requirements
+  
+- ✅ **不受下載限制** / No download restrictions
+  - 避免網絡限制和訪問問題 / Avoid network restrictions and access issues
+  - 離線開發和測試 / Offline development and testing
+  
+- ✅ **完整的開發環境** / Complete development environment
+  - 本地調試和測試 / Local debugging and testing
+  - 快速迭代和實驗 / Rapid iteration and experimentation
+
+> 💡 如果您需要對其他倉庫（例如 flow-webset）做類似測試，按照同樣的方法克隆即可。
+> 
+> If you need to test other repositories (e.g., flow-webset) similarly, simply clone them using the same method.
+
+---
+
 ## 🗂️ 專案結構 / Project Structure
 
 ```
 flow-tasks/
 ├── 📂 apps/                    # Kubernetes 應用部署清單
+│   ├── nextjs-frontend/       # Next.js 前端應用
+│   ├── astro-frontend/        # Astro 靜態網站前端
 │   ├── module-a/              # 主服務模組
 │   ├── orchestrator/          # 協調器服務
 │   ├── mongodb/               # 資料庫
@@ -100,11 +220,14 @@ flow-tasks/
 │   └── overlays/              # 環境覆蓋 (prod, monitoring)
 ├── 📂 argocd/                 # GitOps 配置
 ├── 📂 particle_core/          # 粒子語言核心系統
+├── 📂 pages/                  # Next.js 頁面
+├── 📂 lib/                    # Next.js 工具庫
 ├── 📂 scripts/                # 部署和工具腳本
 └── 📚 文檔 / Documentation
     ├── DEPLOYMENT_STRUCTURE_INDEX.md    # 🌍 部署結構索引
     ├── DEPLOYMENT_QUICK_REFERENCE.md    # ⚡ 快速參考
     ├── DEPLOYMENT.md                    # 📖 部署指南
+    ├── GKE_MIGRATION.md                 # 🔄 GKE 遷移指南
     └── ARCHITECTURE.md                  # 🏗️ 架構說明
 ```
 
@@ -113,6 +236,8 @@ flow-tasks/
 ## 🎯 核心功能 / Core Features
 
 ### 1. GKE 微服務部署
+- ✅ Next.js Frontend: React 前端應用 (2 replicas, LoadBalancer)
+- ✅ Astro Frontend: 靜態網站前端 (2 replicas, LoadBalancer, nginx-based)
 - ✅ Module-A: 主服務模組 (2-10 replicas, HPA)
 - ✅ Orchestrator: 協調器與入口 (LoadBalancer)
 - ✅ MongoDB: 持久化資料庫 (10Gi PVC)
@@ -138,10 +263,48 @@ flow-tasks/
 | 🌍 [部署結構索引](./DEPLOYMENT_STRUCTURE_INDEX.md) | 完整的部署組件、配置和拓撲圖 |
 | ⚡ [部署快速參考](./DEPLOYMENT_QUICK_REFERENCE.md) | 快速命令和配置速查表 |
 | 📖 [部署指南](./DEPLOYMENT.md) | 詳細的部署步驟和故障排除 |
+| 🔄 [GKE 遷移指南](./GKE_MIGRATION.md) | Next.js 從 Vercel 遷移到 GKE |
 | 🏗️ [架構說明](./ARCHITECTURE.md) | 系統架構與流程圖 |
 | 📊 [結構索引](./STRUCTURE.md) | 專案檔案結構統計 |
 | ⚡ [快速開始](./QUICKSTART.md) | 快速部署指南 |
 | 🧠 [Particle Core](./particle_core/README.md) | 粒子語言核心系統 |
+| 💻 [Codespaces 快速參考](./CODESPACE_QUICK_REFERENCE_ZH.md) | GitHub Codespaces 管理命令 (中文) |
+| 📖 [Codespaces 管理指南](./CODESPACE_MANAGEMENT.md) | 完整的 Codespaces 管理文檔 (English) |
+
+---
+
+## 💻 GitHub Codespaces 管理 / GitHub Codespaces Management
+
+### 快速命令 / Quick Commands
+
+```bash
+# 列出所有 Codespaces / List all codespaces
+gh codespace list
+
+# 連接到 Codespace / Connect to a codespace
+gh codespace code -c CODESPACE_NAME
+
+# 停止 Codespace（節省使用時數）/ Stop codespace (save core hours)
+gh codespace stop -c CODESPACE_NAME
+
+# 刪除 Codespace / Delete a codespace
+gh codespace delete -c CODESPACE_NAME
+```
+
+### 監控工具 / Monitoring Tools
+
+```bash
+# 檢查 Codespace 保留狀態 / Check retention status
+./scripts/check-codespace-retention.sh
+
+# 詳細監控（含警告）/ Detailed monitoring with warnings
+./scripts/monitor-codespaces.sh
+```
+
+### 相關文檔 / Related Documentation
+- 📖 [中文快速參考 / Chinese Quick Reference](./CODESPACE_QUICK_REFERENCE_ZH.md)
+- 📖 [英文完整指南 / English Complete Guide](./CODESPACE_MANAGEMENT.md)
+- ⚡ [緊急行動指南 / Emergency Action Guide](./QUICK_ACTION_CODESPACE.md)
 
 ---
 
@@ -158,9 +321,43 @@ CLUSTER_NAME=modular-cluster
 ### Container Registry
 ```
 asia-east1-docker.pkg.dev/flowmemorysync/flowagent/
+├── nextjs-frontend:latest
 ├── module-a:latest
 └── orchestrator:latest
 ```
 
 ---
 
+相關 CI 工作流程：`.github/workflows/ci.yml` 會自動跑一次 smoke test 並上傳 `data/` 產物。 
+
+---
+
+## 📦 FlowHub Integration Export Package
+
+**新功能！** 完整的 FlowHub 整合套件已準備就緒，可將 Memory Cache 和 Wire-Memory Integration 功能匯出到 dofaromg/flowhub 儲存庫。
+
+### 快速開始
+
+```bash
+# 方法 1: 使用 Git Bundle (推薦)
+git bundle verify flowhub-integration.bundle
+git remote add flow-tasks flowhub-integration.bundle
+git fetch flow-tasks
+git merge flow-tasks/copilot/update-flow-tasks
+
+# 方法 2: 使用 Patch 檔案
+git am patches/*.patch
+```
+
+### 套件內容
+- 6 個 patch 檔案 (76 KB)
+- Git bundle 包含完整提交歷史 (24 KB)
+- Wire-Memory Integration 驗證
+- Memory Cache Disk Mapping 系統 (LRU 快取，自動持久化)
+- 完整測試和文檔
+
+📚 **詳細文檔**：
+- [FlowHub 整合套件說明](FLOWHUB_EXPORT_PACKAGE.md)
+- [FlowHub 整合指南](FLOWHUB_INTEGRATION_GUIDE.md)
+
+🔗 **版本追蹤**: [Commit ffebfa0](https://github.com/dofaromg/flow-tasks/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)

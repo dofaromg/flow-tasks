@@ -1,0 +1,164 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="MRLiou 粒子語言系統 - 私人開發">
+  <main>
+    <h1>🔒 歡迎來到 <span class="text-gradient">MRLiou</span></h1>
+    <p class="instructions">
+      <strong>© 2025 Mr.liou - All Rights Reserved</strong>
+      <br />
+      MRLiou 粒子語言核心系統 (Particle Language Core System)
+      <br />
+      🔐 私人開發與觀測環境 | 不對外公開
+    </p>
+    <ul role="list" class="link-card-grid">
+      <li class="link-card">
+        <a href="/PRIVATE_DEVELOPMENT.md">
+          <h2>
+            私人開發指南 <span>&rarr;</span>
+          </h2>
+          <p>MRLiou 品牌私人開發環境完整指南</p>
+        </a>
+      </li>
+      <li class="link-card">
+        <a href="/particle_core">
+          <h2>
+            粒子語言核心 <span>&rarr;</span>
+          </h2>
+          <p>邏輯種子運算與函數鏈執行框架</p>
+        </a>
+      </li>
+      <li class="link-card">
+        <a href="/docker-compose.dev.yml">
+          <h2>
+            本地開發環境 <span>&rarr;</span>
+          </h2>
+          <p>Docker Compose 私人開發配置</p>
+        </a>
+      </li>
+      <li class="link-card">
+        <a href="mailto:z814241@gmail.com">
+          <h2>
+            聯絡 MRLiou <span>&rarr;</span>
+          </h2>
+          <p>Email: z814241@gmail.com</p>
+        </a>
+      </li>
+    </ul>
+    
+    <div class="brand-footer">
+      <p><strong>🏢 品牌:</strong> MRLiou / Mr.liou</p>
+      <p><strong>🔒 性質:</strong> 私人開發、不對外公開</p>
+      <p><strong>📧 聯絡:</strong> z814241@gmail.com</p>
+      <p style="font-size: 0.85em; color: #888; margin-top: 1rem;">
+        © 2025 Mr.liou | All Rights Reserved
+      </p>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  main {
+    margin: auto;
+    padding: 1rem;
+    width: 800px;
+    max-width: calc(100% - 2rem);
+    color: white;
+    font-size: 20px;
+    line-height: 1.6;
+  }
+  h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    margin-bottom: 1em;
+  }
+  .text-gradient {
+    background-image: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 400%;
+    background-position: 0%;
+  }
+  .instructions {
+    margin-bottom: 2rem;
+    border: 1px solid rgba(var(--accent-light), 25%);
+    background: linear-gradient(
+      rgba(var(--accent-dark), 66%),
+      rgba(var(--accent-dark), 33%)
+    );
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .instructions code {
+    font-size: 0.8em;
+    font-weight: bold;
+    background: rgba(var(--accent-light), 12%);
+    color: rgb(var(--accent-light));
+    border-radius: 4px;
+    padding: 0.3em 0.4em;
+  }
+  .instructions strong {
+    color: rgb(var(--accent-light));
+  }
+  .brand-footer {
+    margin-top: 3rem;
+    padding: 1.5rem;
+    background: rgba(var(--accent-dark), 50%);
+    border-radius: 8px;
+    text-align: center;
+  }
+  .brand-footer p {
+    margin: 0.5rem 0;
+  }
+  .link-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+    gap: 2rem;
+    padding: 0;
+  }
+  .link-card {
+    list-style: none;
+    display: flex;
+    padding: 1px;
+    background-color: #23262d;
+    background-image: none;
+    background-size: 400%;
+    border-radius: 7px;
+    background-position: 100%;
+    transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+  .link-card > a {
+    width: 100%;
+    text-decoration: none;
+    line-height: 1.4;
+    padding: calc(1.5rem - 1px);
+    border-radius: 8px;
+    color: white;
+    background-color: #23262d;
+    opacity: 0.8;
+  }
+  .link-card:is(:hover, :focus-within) {
+    background-position: 0;
+    background-image: var(--accent-gradient);
+  }
+  .link-card:is(:hover, :focus-within) > a {
+    opacity: 1;
+  }
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .link-card:is(:hover, :focus-within) h2 {
+    color: rgb(var(--accent-light));
+  }
+  p {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+  }
+</style>

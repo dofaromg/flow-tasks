@@ -88,16 +88,20 @@ class ConfigLoader:
         if self._config is not None:
             return self._config
         
-        # Check file size to prevent DoS from extremely large files
-        file_size = self.config_path.stat().st_size
-        max_size = 10 * 1024 * 1024  # 10MB
-        if file_size > max_size:
-            raise ConfigurationError(
-                f"Config file too large: {file_size} bytes (max: {max_size} bytes)"
-            )
-        
         try:
+            # Use a single open() call which implicitly checks existence and gets file handle
             with self.config_path.open('r', encoding='utf-8') as f:
+                # Check file size from the file descriptor to prevent DoS
+                f.seek(0, 2)  # Seek to end
+                file_size = f.tell()
+                f.seek(0)  # Seek back to beginning
+                
+                max_size = 10 * 1024 * 1024  # 10MB
+                if file_size > max_size:
+                    raise ConfigurationError(
+                        f"Config file too large: {file_size} bytes (max: {max_size} bytes)"
+                    )
+                
                 self._config = yaml.safe_load(f)
         except yaml.YAMLError as e:
             raise ConfigurationError(f"Invalid YAML in config file: {e}")

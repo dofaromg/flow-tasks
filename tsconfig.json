@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["@webgpu/types", "jest", "node"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,

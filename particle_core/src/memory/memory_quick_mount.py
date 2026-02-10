@@ -344,6 +344,12 @@ class MemoryQuickMounter:
             Restored state
         """
         if snapshot_path is None:
+            # Find latest snapshot
+            snapshots = list(self.snapshot_dir.glob("*.snapshot.json"))
+            if not snapshots:
+                print("⚠ No snapshots found")
+                return {}
+            snapshot_path = max(snapshots, key=lambda p: p.stat().st_mtime)
             # Find latest snapshot (efficient: avoid list conversion)
             snapshots = sorted(self.snapshot_dir.glob("*.snapshot.json"), 
                              key=lambda p: p.stat().st_mtime, reverse=True)

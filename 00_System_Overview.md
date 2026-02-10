@@ -295,7 +295,7 @@ Documentation:
 | **LUX Engine** | 3D geometry engine | Active |
 | **ParticleGlobe** | Earth visualization | v3.0 |
 | **MrLiou Scanner Pro** | 3D scanning app | Development |
-| **3D AI Camera** | iOS App + Pipeline | v1.0.0 |
+| **3D AI Camera** | iOS App + Pipeline | v3.0.0 |
 | **Mrl_Zero** | AGI → ASI evolution | Active |
 
 ---
