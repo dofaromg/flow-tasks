@@ -237,7 +237,8 @@ def build_app() -> Flask:
         if DATA_ROOT.exists():
             for path in DATA_ROOT.iterdir():
                 if path.is_dir() and _project_file(path.name).exists():
-                    meta = _read_json(_project_file(path.name), {})
+                    # Use cached read to avoid repeated disk I/O
+                    meta = _cached_read_project(path.name)
                     projects.append(meta)
         return jsonify(projects)
 

@@ -57,10 +57,63 @@ class Storage:
         return snapshot_path
 
     def tail_chain(self, n: int) -> List[Dict[str, Any]]:
-        entries = self.load_chain_entries()
+        """
+        Get the last n entries from the chain efficiently.
+        
+        Args:
+            n: Number of entries to retrieve from the end
+            
+        Returns:
+            List of the last n entries (or all if fewer than n exist)
+        """
         if n <= 0:
-            return entries
-        return entries[-n:]
+            return self.load_chain_entries()
+        
+        # For small n, read from the end of the file more efficiently
+        if not self.chain_file.exists():
+            return []
+        
+        # Read only last n lines instead of entire file
+        entries: List[Dict[str, Any]] = []
+        with self.chain_file.open('rb') as f:
+            # Seek to end
+            f.seek(0, 2)  # Move to end of file
+            file_size = f.tell()
+            
+            # If file is small, just read all
+            if file_size < 10000:  # Less than 10KB
+                f.seek(0)
+                for line in f:
+                    line_str = line.decode('utf-8').strip()
+                    if line_str:
+                        entries.append(json.loads(line_str))
+                return entries[-n:] if len(entries) > n else entries
+            
+            # For larger files, read backwards to find last n lines
+            # Start with a reasonable buffer size
+            buffer_size = min(8192, file_size)
+            f.seek(max(0, file_size - buffer_size))
+            
+            # Read and process lines
+            lines = []
+            remaining_bytes = f.read().decode('utf-8', errors='ignore')
+            lines = [l for l in remaining_bytes.split('\n') if l.strip()]
+            
+            # If we don't have enough lines, read more
+            while len(lines) < n and buffer_size < file_size:
+                buffer_size = min(buffer_size * 2, file_size)
+                f.seek(max(0, file_size - buffer_size))
+                remaining_bytes = f.read().decode('utf-8', errors='ignore')
+                lines = [l for l in remaining_bytes.split('\n') if l.strip()]
+            
+            # Parse the last n lines
+            for line in lines[-n:]:
+                try:
+                    entries.append(json.loads(line))
+                except json.JSONDecodeError:
+                    continue
+        
+        return entries
 
     def reset(self) -> None:
         """Remove all ledger data. Useful for clean init."""

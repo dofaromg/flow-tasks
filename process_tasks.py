@@ -81,8 +81,16 @@ class TaskProcessor:
                     "message": f"Target directory exists: {target_file}"
                 })
                 # Count files in directory (using generator for efficiency)
-                file_count = sum(1 for _ in target_path.rglob("*"))
+                # Limit count to avoid performance issues with very large directories
+                max_count = 10000
+                file_count = 0
+                for _ in target_path.rglob("*"):
+                    file_count += 1
+                    if file_count >= max_count:
+                        break
                 result["metrics"]["files_checked"] = file_count
+                if file_count >= max_count:
+                    result["metrics"]["files_note"] = f"Limited to {max_count} files for performance"
                 result["status"] = "passed"
             else:
                 result["errors"].append({
