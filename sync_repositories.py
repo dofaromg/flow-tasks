@@ -6,9 +6,6 @@ Created by: MR.liou
 """
 
 import os
-import subprocess
-import json
-from pathlib import Path
 
 def sync_repositories():
     """同步外部倉庫到本地系統"""

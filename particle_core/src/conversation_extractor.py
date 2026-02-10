@@ -14,8 +14,8 @@
 import json
 import re
 from datetime import datetime
-from typing import List, Dict, Tuple, Optional
-from collections import Counter, defaultdict
+from typing import List, Dict
+from collections import Counter
 
 try:
     import anthropic
