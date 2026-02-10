@@ -319,8 +319,8 @@ class WorkspaceStrategy(BaseStrategy):
     
     def _read_file_content(self, file_path: Path, max_size: int = 1024 * 100) -> Optional[str]:
         """
-        Read file content safely with caching
-        安全讀取檔案內容（帶緩存）
+        Read file content safely with LRU caching
+        安全讀取檔案內容（帶LRU緩存）
         
         Args:
             file_path: Path to file
@@ -333,9 +333,12 @@ class WorkspaceStrategy(BaseStrategy):
             stat = file_path.stat()
             cache_key = (str(file_path), stat.st_mtime)
             
-            # Check cache first
+            # Check cache first (LRU: move accessed item to end)
             if cache_key in self._content_cache:
-                return self._content_cache[cache_key]
+                # Move to end (most recently used)
+                content = self._content_cache.pop(cache_key)
+                self._content_cache[cache_key] = content
+                return content
             
             # Read from disk
             file_size = stat.st_size
@@ -348,11 +351,11 @@ class WorkspaceStrategy(BaseStrategy):
             with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                 content = f.read()
             
-            # Cache the content (LRU eviction)
+            # Cache the content (LRU eviction - remove least recently used)
             if len(self._content_cache) >= self._cache_max_size:
-                # Remove oldest entry (simple FIFO for now)
-                oldest_key = next(iter(self._content_cache))
-                del self._content_cache[oldest_key]
+                # Remove first entry (least recently used)
+                lru_key = next(iter(self._content_cache))
+                del self._content_cache[lru_key]
             
             self._content_cache[cache_key] = content
             return content

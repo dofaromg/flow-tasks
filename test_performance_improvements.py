@@ -114,6 +114,54 @@ def test_cache_size_limit():
         print(f"✓ Cache size limit working correctly: {len(strategy._content_cache)}/{strategy._cache_max_size}")
 
 
+def test_lru_eviction():
+    """Test that LRU eviction works correctly"""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        workspace = Path(tmpdir)
+        
+        # Create workspace with size limit of 3
+        strategy = WorkspaceStrategy(str(workspace))
+        strategy._cache_max_size = 3
+        
+        # Create and read 3 files
+        files = []
+        for i in range(3):
+            test_file = workspace / f"test{i}.txt"
+            test_file.write_text(f"Content {i}")
+            files.append(test_file)
+            strategy._read_file_content(test_file)
+        
+        # Cache should have all 3
+        assert len(strategy._content_cache) == 3
+        
+        # Access file 0 again (makes it most recently used)
+        strategy._read_file_content(files[0])
+        
+        # Add a new file (should evict file 1, the least recently used)
+        new_file = workspace / "new.txt"
+        new_file.write_text("New content")
+        strategy._read_file_content(new_file)
+        
+        # Cache should still be 3
+        assert len(strategy._content_cache) == 3
+        
+        # File 0 should still be cached (was accessed recently)
+        cache_key_0 = (str(files[0]), files[0].stat().st_mtime)
+        assert cache_key_0 in strategy._content_cache
+        
+        # File 1 should be evicted (least recently used)
+        cache_key_1 = (str(files[1]), files[1].stat().st_mtime)
+        assert cache_key_1 not in strategy._content_cache
+        
+        # File 2 and new file should be cached
+        cache_key_2 = (str(files[2]), files[2].stat().st_mtime)
+        cache_key_new = (str(new_file), new_file.stat().st_mtime)
+        assert cache_key_2 in strategy._content_cache
+        assert cache_key_new in strategy._content_cache
+        
+        print(f"✓ LRU eviction working correctly")
+
+
 def test_performance_comparison():
     """Compare performance with and without optimizations"""
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -145,5 +193,6 @@ if __name__ == "__main__":
     test_content_caching()
     test_cache_invalidation_on_scan()
     test_cache_size_limit()
+    test_lru_eviction()
     test_performance_comparison()
     print("\n✅ All performance tests passed!")
