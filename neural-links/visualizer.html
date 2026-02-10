@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MrLiou Neural Branch Visualizer</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0a0e27;
+      color: #e0e0e0;
+      padding: 20px;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    h1 {
+      color: #4ecdc4;
+      margin-bottom: 10px;
+    }
+    
+    .signature {
+      color: #95a5a6;
+      font-style: italic;
+      font-size: 14px;
+    }
+    
+    #controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    button {
+      background: #4ecdc4;
+      color: #0a0e27;
+      border: none;
+      padding: 10px 20px;
+      margin: 0 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    
+    button:hover {
+      background: #45b8ae;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(78, 205, 196, 0.3);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    button.layer-btn {
+      background: #95e1d3;
+    }
+    
+    button.layer-btn:hover {
+      background: #7dd3c0;
+    }
+    
+    button.layer-btn.active {
+      background: #ff6b6b;
+    }
+    
+    #neural-canvas {
+      width: 100%;
+      height: 75vh;
+      border: 2px solid #4ecdc4;
+      border-radius: 8px;
+      background: #111828;
+    }
+    
+    .node {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      stroke: #333;
+      stroke-width: 2px;
+    }
+    
+    .node:hover {
+      filter: brightness(1.5);
+      stroke-width: 3px;
+    }
+    
+    .synapse {
+      stroke-width: 2px;
+      opacity: 0.6;
+      transition: opacity 0.3s, stroke-width 0.3s;
+      fill: none;
+    }
+    
+    .synapse:hover {
+      opacity: 1;
+      stroke-width: 4px;
+    }
+    
+    .label {
+      font-size: 12px;
+      fill: #e0e0e0;
+      text-anchor: middle;
+      pointer-events: none;
+      user-select: none;
+    }
+    
+    #info-panel {
+      position: fixed;
+      top: 100px;
+      right: 30px;
+      background: #1a2332;
+      border: 2px solid #4ecdc4;
+      border-radius: 8px;
+      padding: 15px;
+      min-width: 200px;
+      max-width: 300px;
+      display: none;
+    }
+    
+    #info-panel.visible {
+      display: block;
+    }
+    
+    #info-panel h3 {
+      color: #4ecdc4;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    
+    #info-panel p {
+      margin: 5px 0;
+      font-size: 13px;
+    }
+    
+    #info-panel .close-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: transparent;
+      color: #95a5a6;
+      padding: 5px 10px;
+      font-size: 18px;
+    }
+    
+    #stats {
+      text-align: center;
+      margin-top: 20px;
+      padding: 15px;
+      background: #1a2332;
+      border-radius: 8px;
+      border: 1px solid #4ecdc4;
+    }
+    
+    #stats p {
+      display: inline-block;
+      margin: 0 15px;
+      font-size: 14px;
+    }
+    
+    .stat-label {
+      color: #95a5a6;
+    }
+    
+    .stat-value {
+      color: #4ecdc4;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🧠 MrLiou Branch Neural Network</h1>
+    <p class="signature">origin_signature: MrLiouWord</p>
+  </header>
+  
+  <div id="controls">
+    <button onclick="loadBranchData()">🔄 Refresh Network</button>
+    <button onclick="exportToJSON()">💾 Export JSON</button>
+    <button onclick="resetView()">🎯 Reset View</button>
+    <button class="layer-btn" data-layer="L7" onclick="toggleLayer('L7')">L7</button>
+    <button class="layer-btn" data-layer="L6" onclick="toggleLayer('L6')">L6</button>
+    <button class="layer-btn" data-layer="L5" onclick="toggleLayer('L5')">L5</button>
+    <button class="layer-btn" data-layer="L4" onclick="toggleLayer('L4')">L4</button>
+    <button class="layer-btn" data-layer="L3" onclick="toggleLayer('L3')">L3</button>
+  </div>
+  
+  <svg id="neural-canvas"></svg>
+  
+  <div id="info-panel">
+    <button class="close-btn" onclick="closeInfoPanel()">×</button>
+    <h3 id="info-title">Node Info</h3>
+    <div id="info-content"></div>
+  </div>
+  
+  <div id="stats">
+    <p><span class="stat-label">Total Nodes:</span> <span class="stat-value" id="stat-nodes">0</span></p>
+    <p><span class="stat-label">Total Synapses:</span> <span class="stat-value" id="stat-synapses">0</span></p>
+    <p><span class="stat-label">Active:</span> <span class="stat-value" id="stat-active">0</span></p>
+    <p><span class="stat-label">Merged:</span> <span class="stat-value" id="stat-merged">0</span></p>
+    <p><span class="stat-label">Avg Energy:</span> <span class="stat-value" id="stat-energy">0</span></p>
+  </div>
+  
+  <script>
+    let currentData = null;
+    let simulation = null;
+    let hiddenLayers = new Set();
+    
+    // 載入並渲染神經網絡
+    async function loadBranchData() {
+      try {
+        const response = await fetch('./branch-map.json');
+        currentData = await response.json();
+        renderNeuralNetwork(currentData);
+        updateStats(currentData);
+      } catch (error) {
+        console.error('Failed to load branch data:', error);
+        alert('Failed to load branch data. Please ensure branch-map.json exists.');
+      }
+    }
+    
+    function renderNeuralNetwork(data) {
+      const svg = d3.select("#neural-canvas");
+      svg.selectAll("*").remove();
+      
+      const width = svg.node().clientWidth;
+      const height = svg.node().clientHeight;
+      
+      // 過濾隱藏的圖層
+      const visibleNodes = data.neural_network.nodes.filter(n => !hiddenLayers.has(n.layer));
+      const visibleNodeIds = new Set(visibleNodes.map(n => n.id));
+      const visibleSynapses = data.neural_network.synapses.filter(s => 
+        visibleNodeIds.has(s.from) && visibleNodeIds.has(s.to)
+      );
+      
+      // D3.js force simulation
+      simulation = d3.forceSimulation(visibleNodes)
+        .force("link", d3.forceLink(visibleSynapses).id(d => d.id).distance(150))
+        .force("charge", d3.forceManyBody().strength(-400))
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force("collision", d3.forceCollide().radius(40));
+      
+      // 建立群組
+      const g = svg.append("g");
+      
+      // 添加縮放功能
+      const zoom = d3.zoom()
+        .scaleExtent([0.1, 4])
+        .on("zoom", (event) => {
+          g.attr("transform", event.transform);
+        });
+      
+      svg.call(zoom);
+      
+      // 渲染連結（突觸）
+      const links = g.append("g")
+        .selectAll("path")
+        .data(visibleSynapses)
+        .enter().append("path")
+        .attr("class", "synapse")
+        .attr("stroke", d => getSynapseColor(d.type))
+        .attr("stroke-width", d => Math.max(1, d.weight * 5))
+        .attr("marker-end", "url(#arrowhead)")
+        .on("mouseover", function(event, d) {
+          d3.select(this).style("opacity", 1);
+        })
+        .on("mouseout", function(event, d) {
+          d3.select(this).style("opacity", 0.6);
+        });
+      
+      // 添加箭頭標記
+      svg.append("defs").append("marker")
+        .attr("id", "arrowhead")
+        .attr("viewBox", "-0 -5 10 10")
+        .attr("refX", 25)
+        .attr("refY", 0)
+        .attr("orient", "auto")
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .append("path")
+        .attr("d", "M 0,-5 L 10,0 L 0,5")
+        .attr("fill", "#4ecdc4");
+      
+      // 渲染節點（神經元）
+      const nodes = g.append("g")
+        .selectAll("circle")
+        .data(visibleNodes)
+        .enter().append("circle")
+        .attr("class", "node")
+        .attr("r", d => 10 + d.energy * 20)
+        .attr("fill", d => getLayerColor(d.layer))
+        .on("click", function(event, d) {
+          showNodeInfo(d);
+        })
+        .call(d3.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended));
+      
+      // 節點標籤
+      const labels = g.append("g")
+        .selectAll("text")
+        .data(visibleNodes)
+        .enter().append("text")
+        .attr("class", "label")
+        .text(d => d.id.length > 20 ? d.id.substring(0, 20) + '...' : d.id)
+        .attr("dy", d => 15 + d.energy * 20 + 10);
+      
+      simulation.on("tick", () => {
+        links.attr("d", d => {
+          const dx = d.target.x - d.source.x;
+          const dy = d.target.y - d.source.y;
+          const dr = Math.sqrt(dx * dx + dy * dy);
+          return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`;
+        });
+        
+        nodes
+          .attr("cx", d => d.x)
+          .attr("cy", d => d.y);
+        
+        labels
+          .attr("x", d => d.x)
+          .attr("y", d => d.y);
+      });
+      
+      function dragstarted(event, d) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      }
+      
+      function dragged(event, d) {
+        d.fx = event.x;
+        d.fy = event.y;
+      }
+      
+      function dragended(event, d) {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+      }
+    }
+    
+    function getLayerColor(layer) {
+      const colors = {
+        'L7': '#ff6b6b',
+        'L6': '#4ecdc4',
+        'L5': '#95e1d3',
+        'L4': '#f9ca24',
+        'L3': '#6c5ce7'
+      };
+      return colors[layer] || '#95a5a6';
+    }
+    
+    function getSynapseColor(type) {
+      const colors = {
+        'merge': '#4ecdc4',
+        'rebase': '#f9ca24',
+        'cherry-pick': '#6c5ce7',
+        'influence': '#95a5a6'
+      };
+      return colors[type] || '#95a5a6';
+    }
+    
+    function toggleLayer(layer) {
+      const btn = document.querySelector(`button[data-layer="${layer}"]`);
+      if (hiddenLayers.has(layer)) {
+        hiddenLayers.delete(layer);
+        btn.classList.remove('active');
+      } else {
+        hiddenLayers.add(layer);
+        btn.classList.add('active');
+      }
+      if (currentData) {
+        renderNeuralNetwork(currentData);
+      }
+    }
+    
+    function showNodeInfo(node) {
+      const panel = document.getElementById('info-panel');
+      const title = document.getElementById('info-title');
+      const content = document.getElementById('info-content');
+      
+      title.textContent = node.id;
+      content.innerHTML = `
+        <p><strong>Type:</strong> ${node.type}</p>
+        <p><strong>Layer:</strong> ${node.layer}</p>
+        <p><strong>Status:</strong> ${node.status}</p>
+        <p><strong>Energy:</strong> ${(node.energy * 100).toFixed(1)}%</p>
+        ${node.frequency_hz ? `<p><strong>Frequency:</strong> ${node.frequency_hz} Hz</p>` : ''}
+        ${node.merged_pr ? `<p><strong>PR:</strong> #${node.merged_pr}</p>` : ''}
+        ${node.parent ? `<p><strong>Parent:</strong> ${node.parent}</p>` : ''}
+      `;
+      
+      panel.classList.add('visible');
+    }
+    
+    function closeInfoPanel() {
+      document.getElementById('info-panel').classList.remove('visible');
+    }
+    
+    function resetView() {
+      hiddenLayers.clear();
+      document.querySelectorAll('.layer-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      if (currentData) {
+        renderNeuralNetwork(currentData);
+      }
+    }
+    
+    function exportToJSON() {
+      if (!currentData) {
+        alert('No data to export');
+        return;
+      }
+      const dataStr = JSON.stringify(currentData, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+      const exportFileDefaultName = `branch-neural-network-${new Date().toISOString().split('T')[0]}.json`;
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+    }
+    
+    function updateStats(data) {
+      const nodes = data.neural_network.nodes;
+      const synapses = data.neural_network.synapses;
+      
+      document.getElementById('stat-nodes').textContent = nodes.length;
+      document.getElementById('stat-synapses').textContent = synapses.length;
+      document.getElementById('stat-active').textContent = nodes.filter(n => n.status === 'active').length;
+      document.getElementById('stat-merged').textContent = nodes.filter(n => n.status === 'merged').length;
+      
+      const avgEnergy = nodes.reduce((sum, n) => sum + n.energy, 0) / nodes.length;
+      document.getElementById('stat-energy').textContent = (avgEnergy * 100).toFixed(1) + '%';
+    }
+    
+    // 初始載入
+    loadBranchData();
+  </script>
+</body>
+</html>

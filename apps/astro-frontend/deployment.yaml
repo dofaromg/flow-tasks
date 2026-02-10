@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: astro-frontend
+  namespace: flowagent
+  labels:
+    app: astro-frontend
+    component: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: astro-frontend
+  template:
+    metadata:
+      labels:
+        app: astro-frontend
+        component: frontend
+    spec:
+      containers:
+      - name: astro
+        image: asia-east1-docker.pkg.dev/flowmemorysync/flowagent/astro-frontend:latest
+        ports:
+        - containerPort: 80
+          name: http
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: astro-frontend
+  namespace: flowagent
+  labels:
+    app: astro-frontend
+    component: frontend
+spec:
+  type: LoadBalancer
+  selector:
+    app: astro-frontend
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  sessionAffinity: ClientIP

@@ -1,0 +1,33 @@
+{
+  "origin_signature": "MrLiouWord",
+  "updated_at": "2026-02-08T09:04:52.253Z",
+  "neural_network": {
+    "nodes": [
+      {
+        "id": "main",
+        "type": "trunk",
+        "layer": "L7",
+        "frequency_hz": 164.88,
+        "status": "active",
+        "energy": 1
+      },
+      {
+        "id": "copilot/create-branch-neural-map",
+        "type": "cognitive",
+        "layer": "L6",
+        "parent": "main",
+        "status": "active",
+        "energy": 0.7
+      }
+    ],
+    "synapses": [
+      {
+        "from": "main",
+        "to": "copilot/create-branch-neural-map",
+        "type": "influence",
+        "weight": 0.5,
+        "timestamp": "2026-02-08T09:04:52.254Z"
+      }
+    ]
+  }
+}

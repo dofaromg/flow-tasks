@@ -37,6 +37,10 @@ node_modules/
 .next/
 out/
 
+# Astro build output
+.astro/
+dist/
+
 # Environment variables
 .env.local
 .env.development.local
@@ -208,6 +212,9 @@ cython_debug/
 # Ruff stuff:
 .ruff_cache/
 
+# Model Package Validator temp directory
+.mpv1_tmp/
+
 # PyPI configuration file
 .pypirc
 
@@ -244,6 +251,11 @@ particle_core/cache/
 
 # Repository sync backups
 .sync_backups/
+
+# Synced external repository files
+# These are auto-synced from external repos, not part of this codebase
+particle_core/examples/claude_recipes/
+cluster/configs/google_templates/
 # AMP ledger artifacts
 /data/chain.jsonl
 /data/dag_edges.jsonl
@@ -252,3 +264,150 @@ particle_core/cache/
 /data/github_export.json
 /data/snapshots/*.json
 flowos/dist/
+flowos/src/**/*.js
+flowos/test.js
+
+# Repository stability reports
+repo_stability_report_*.md
+
+# Cloud sync memory and deployed files
+.cloud_sync_memory/
+deployed/
+sandbox/
+cloud_spaces_sync.yaml
+
+# Configuration files (keep sample, ignore local config)
+config.yaml
+
+# MrLiou AI SuperComputer - Runtime generated files
+MrLiou_AI_SuperComputer/log/trace.jsonl
+MrLiou_AI_SuperComputer/log/trace_state.json
+MrLiou_AI_SuperComputer/log/ai_costs.jsonl
+MrLiou_AI_SuperComputer/memory/snapshot/*
+MrLiou_AI_SuperComputer/memory/derived/l1/*
+MrLiou_AI_SuperComputer/memory/ingest/raw/*
+MrLiou_AI_SuperComputer/memory/ingest/ai_responses/*
+
+# Keep directory structure
+!MrLiou_AI_SuperComputer/memory/snapshot/.gitkeep
+!MrLiou_AI_SuperComputer/memory/derived/l1/.gitkeep
+!MrLiou_AI_SuperComputer/memory/ingest/raw/.gitkeep
+!MrLiou_AI_SuperComputer/memory/ingest/ai_responses/.gitkeep
+!MrLiou_AI_SuperComputer/memory/domain/A/.gitkeep
+!MrLiou_AI_SuperComputer/memory/domain/R/.gitkeep
+!MrLiou_AI_SuperComputer/log/.gitkeep
+
+# ============================================================================
+# Additional Language-Specific Patterns / 額外語言特定模式
+# ============================================================================
+
+# Tcl temporary files and build artifacts
+# Tcl 暫存檔案與編譯產物
+*.tcl~
+*.tm~
+*.tbc
+*.tclsh
+*.wish
+.tclsh_history
+tclIndex
+
+# Perl temporary files and build artifacts
+# Perl 暫存檔案與編譯產物
+*.pl~
+*.pm~
+*.pod~
+*.bak
+*.old
+*.swp
+*~
+Makefile.old
+pm_to_blib
+blib/
+_build/
+Build
+MYMETA.*
+META.yml
+META.json
+*.bs
+cover_db/
+nytprof.out
+nytprof/
+
+# C/C++ compilation artifacts (extended)
+# C/C++ 編譯產物（擴充）
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+*.d
+*.su
+*.slo
+*.lo
+*.la
+*.al
+.libs/
+*.lai
+*.dSYM/
+*.gch
+*.pch
+*.gcno
+*.gcda
+*.gcov
+.deps/
+.dirstamp
+compile_commands.json
+CTestTestfile.cmake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+
+# Build directories
+# 編譯目錄
+build/
+Build/
+Debug/
+Release/
+RelWithDebInfo/
+MinSizeRel/
+.build/
+bin/
+obj/
+
+# Core dumps and debugging
+# 核心轉儲與除錯
+# Note: Only ignore core dump files, not the core/ directory
+# Core dumps typically appear as: core, core.12345, etc.
+# Our core/ directory for modules should NOT be ignored
+core.*
+*.core
+vgcore.*
+*.stackdump
+
+# Static analysis
+# 靜態分析
+cppcheck-build-dir/
+*.cppcheck
+.clang-format
+.clang-tidy
+
+# IDE and editor temporaries
+# IDE 與編輯器暫存
+tags
+TAGS
+.ccls-cache/
+.clangd/
+*.sublime-workspace
+*.sublime-project
+.merkle/
+.merkle/

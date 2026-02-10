@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Next.js Frontend
+  nextjs-frontend:
+    build:
+      context: .
+      dockerfile: apps/nextjs-frontend/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_GROWTHBOOK_API_HOST=${NEXT_PUBLIC_GROWTHBOOK_API_HOST:-https://cdn.growthbook.io}
+      - NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY=${NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY:-}
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - flowagent-network
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD:-changeme123}
+    volumes:
+      - mongodb-data:/data/db
+    restart: unless-stopped
+    networks:
+      - flowagent-network
+
+  # Python Backend (Optional - if you have backend services)
+  # backend:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - ./config.yaml:/data/config.yaml
+  #   environment:
+  #     - AMP_CONFIG=/data/config.yaml
+  #   depends_on:
+  #     - mongodb
+  #   restart: unless-stopped
+  #   networks:
+  #     - flowagent-network
+
+volumes:
+  mongodb-data:
+    driver: local
+
+networks:
+  flowagent-network:
+    driver: bridge
