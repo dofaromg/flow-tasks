@@ -65,17 +65,8 @@ export default {
       }
 
       // D. Core business logic
-      // Note: These instances are created for future integration
-      // Current routes use them selectively based on path
-      const memory = new Memory(env.MRLIOUWORD_VAULT);
-      const persona = new Persona(env.MRLIOUWORD_VAULT);
-      const auth = new Auth(env.PARTICLE_AUTH_VAULT || env.MRLIOUWORD_VAULT);
+      // Create service instances only when needed based on route
       const vcs = new VersionControl(env.MRLIOUWORD_VAULT, synapse);
-
-      // TODO: Integrate auth, gateEngine, and memory into request flow
-      void auth; // Auth will be used for token validation in future
-      void gateEngine; // Gate engine will be used for traffic control
-      void memory; // Memory system for context retention
 
       const key = request.headers.get('X-Master-Key') || url.searchParams.get('key');
       const publicPaths = ['/', '/status', '/heartbeat', '/world/heartbeat', '/frequencies'];
@@ -124,6 +115,7 @@ export default {
       }
 
       if (path.startsWith('/persona/')) {
+        const persona = new Persona(env.MRLIOUWORD_VAULT);
         return handlePersona(path, request, persona);
       }
 
@@ -165,8 +157,7 @@ async function handleVCS(path: string, request: Request, vcs: VersionControl) {
   return json(await vcs.status());
 }
 
-async function handleR2(path: string, request: Request, env: Env) {
-  void request;
+async function handleR2(path: string, _request: Request, env: Env) {
   if (path === '/r2/list') {
     const list = await env.PARTICLES.list({ limit: 100 });
     return json({ count: list.objects.length, objects: list.objects });
@@ -276,16 +267,14 @@ class VersionControl {
  * TODO: Implement token generation, validation, and expiration
  */
 class Memory {
-  constructor(private kv: KVNamespace) {
+  constructor(private _kv: KVNamespace) {
     // TODO: Implement KV-based memory storage
-    void this.kv;
   }
 }
 
 class Persona {
-  constructor(private kv: KVNamespace) {
+  constructor(private _kv: KVNamespace) {
     // TODO: Implement KV-based persona storage
-    void this.kv;
   }
 
   async wake(message: string) {
@@ -298,9 +287,8 @@ class Persona {
 }
 
 class Auth {
-  constructor(private kv: KVNamespace) {
+  constructor(private _kv: KVNamespace) {
     // TODO: Implement KV-based auth token storage
-    void this.kv;
   }
 }
 
