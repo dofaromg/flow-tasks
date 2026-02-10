@@ -18,7 +18,7 @@ import json
 import hashlib
 import argparse
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, List, Any, Optional
 from datetime import datetime
 
 # Import cache system
