@@ -15,6 +15,7 @@ from typing import List, Dict, Any, Optional, Set
 from datetime import datetime
 import fnmatch
 import hashlib
+from functools import lru_cache
 
 from .base_strategy import BaseStrategy, ContextItem
 
@@ -65,6 +66,11 @@ class WorkspaceStrategy(BaseStrategy):
         
         # File index: path -> metadata
         self.file_index: Dict[str, Dict[str, Any]] = {}
+        
+        # File content cache: (path, mtime) -> content
+        # Using LRU cache to limit memory usage
+        self._content_cache: Dict[tuple, str] = {}
+        self._cache_max_size = 100  # Cache up to 100 files
         
         # Initial scan
         self.scan_workspace()
@@ -161,13 +167,24 @@ class WorkspaceStrategy(BaseStrategy):
         try:
             stat = file_path.stat()
             rel_path = str(file_path.relative_to(self.workspace_path))
+            modified_time = datetime.fromtimestamp(stat.st_mtime)
+            
+            # Check if file has changed before recomputing hash
+            existing = self.file_index.get(rel_path)
+            file_hash = ""
+            if existing and existing.get('modified') == modified_time and existing.get('size') == stat.st_size:
+                # File unchanged, reuse cached hash
+                file_hash = existing.get('hash', '')
+            else:
+                # File changed or new, compute hash
+                file_hash = self._get_file_hash(file_path)
             
             self.file_index[rel_path] = {
                 'absolute_path': str(file_path),
                 'size': stat.st_size,
-                'modified': datetime.fromtimestamp(stat.st_mtime),
+                'modified': modified_time,
                 'extension': file_path.suffix,
-                'hash': self._get_file_hash(file_path)
+                'hash': file_hash
             }
         except Exception as e:
             print(f"Error indexing file {file_path}: {e}")
@@ -180,6 +197,8 @@ class WorkspaceStrategy(BaseStrategy):
         更新檔案索引，包含工作區中所有匹配的檔案。
         """
         self.file_index.clear()
+        # Clear content cache on full scan to avoid stale entries
+        self._content_cache.clear()
         
         for file_path in self.workspace_path.rglob('*'):
             if file_path.is_file():
@@ -300,8 +319,8 @@ class WorkspaceStrategy(BaseStrategy):
     
     def _read_file_content(self, file_path: Path, max_size: int = 1024 * 100) -> Optional[str]:
         """
-        Read file content safely
-        安全讀取檔案內容
+        Read file content safely with caching
+        安全讀取檔案內容（帶緩存）
         
         Args:
             file_path: Path to file
@@ -311,15 +330,32 @@ class WorkspaceStrategy(BaseStrategy):
             File content or None if unable to read
         """
         try:
-            file_size = file_path.stat().st_size
+            stat = file_path.stat()
+            cache_key = (str(file_path), stat.st_mtime)
+            
+            # Check cache first
+            if cache_key in self._content_cache:
+                return self._content_cache[cache_key]
+            
+            # Read from disk
+            file_size = stat.st_size
             if file_size > max_size:
-                # File too large, return truncated content
+                # File too large, return truncated content (don't cache)
                 with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                     content = f.read(max_size)
                     return content + f"\n... (truncated, total size: {file_size} bytes)"
             
             with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-                return f.read()
+                content = f.read()
+            
+            # Cache the content (LRU eviction)
+            if len(self._content_cache) >= self._cache_max_size:
+                # Remove oldest entry (simple FIFO for now)
+                oldest_key = next(iter(self._content_cache))
+                del self._content_cache[oldest_key]
+            
+            self._content_cache[cache_key] = content
+            return content
         except Exception:
             return None
     
