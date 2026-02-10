@@ -756,8 +756,8 @@ class FluinDictAgent:
     
     def create_snapshot(self, snapshot_id: Optional[str] = None) -> Dict[str, Any]:
         """
-        Create a full system snapshot using JSON round-trip for efficiency
-        創建完整系統快照（使用 JSON 往返提升效率）
+        Create a full system snapshot using deep copy for reliability
+        創建完整系統快照（使用深度複製確保可靠性）
         
         Args:
             snapshot_id: Optional snapshot identifier

@@ -385,6 +385,8 @@ class Handler(BaseHTTPRequestHandler):
             hits = []
             base = "memory/derived/l1"
             if os.path.isdir(base):
+                # Precompute query tokens once before loop to avoid repeated tokenization
+                query_tokens = l1_tokens(q)
                 for fn in os.listdir(base):
                     if not fn.endswith(".l1.json"):
                         continue
@@ -392,7 +394,7 @@ class Handler(BaseHTTPRequestHandler):
                         obj = json.load(f)
                     # Convert tokens list to set for O(1) lookup instead of O(n)
                     tokens_set = set(obj.get("tokens", []))
-                    score = sum(1 for t in l1_tokens(q) if t in tokens_set)
+                    score = sum(1 for t in query_tokens if t in tokens_set)
                     if score:
                         hits.append({"file": fn, "score": score})
             hits.sort(key=lambda x: x["score"], reverse=True)
