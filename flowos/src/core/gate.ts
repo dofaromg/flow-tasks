@@ -15,6 +15,14 @@ export class FlowGate {
     this.checks.push(check);
   }
 
+  evaluate(payload: Record<string, unknown>, context?: FlowContext): GateDecision {
+    for (const check of this.checks) {
+      const decision = check(payload, context);
+      if (decision) {
+        return decision;
+      }
+    }
+    return { allowed: true };
   /**
    * Evaluate all registered gate checks against the payload and context.
    * Checks are evaluated sequentially. If a check returns an explicit deny (allowed: false),
