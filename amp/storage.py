@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Iterator
 
 
 class Storage:
@@ -23,17 +23,36 @@ class Storage:
         if not self.refs_file.exists():
             self.save_refs({"head": None, "length": 0})
 
-    def load_chain_entries(self) -> List[Dict[str, Any]]:
-        entries: List[Dict[str, Any]] = []
+    def iter_chain_entries(self) -> Iterator[Dict[str, Any]]:
+        """
+        Iterator for chain entries - memory efficient for large files.
+        Use this for processing large chain files without loading everything into memory.
+        
+        Yields:
+            Individual chain entries as dictionaries
+        """
         if not self.chain_file.exists():
-            return entries
+            return
         with self.chain_file.open() as f:
             for line in f:
                 line = line.strip()
                 if not line:
                     continue
-                entries.append(json.loads(line))
-        return entries
+                try:
+                    yield json.loads(line)
+                except json.JSONDecodeError:
+                    # Skip malformed lines
+                    continue
+
+    def load_chain_entries(self) -> List[Dict[str, Any]]:
+        """
+        Load all chain entries into memory.
+        For large files, consider using iter_chain_entries() instead.
+        
+        Returns:
+            List of all chain entries
+        """
+        return list(self.iter_chain_entries())
 
     def append_chain_entry(self, entry: Dict[str, Any]) -> None:
         with self.chain_file.open("a") as f:

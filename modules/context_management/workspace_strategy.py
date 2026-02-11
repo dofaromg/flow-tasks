@@ -67,9 +67,10 @@ class WorkspaceStrategy(BaseStrategy):
         # File index: path -> metadata
         self.file_index: Dict[str, Dict[str, Any]] = {}
         
-        # File content cache: (path, mtime) -> content
-        # Using LRU cache to limit memory usage
-        self._content_cache: Dict[tuple, str] = {}
+        # File content cache with proper LRU eviction policy
+        # Using OrderedDict to maintain insertion order for LRU
+        from collections import OrderedDict
+        self._content_cache: OrderedDict = OrderedDict()
         self._cache_max_size = 100  # Cache up to 100 files
         
         # Initial scan
@@ -146,10 +147,22 @@ class WorkspaceStrategy(BaseStrategy):
         return False
     
     def _get_file_hash(self, file_path: Path) -> str:
-        """Get MD5 hash of file content"""
+        """
+        Get MD5 hash of file content using streaming to handle large files efficiently.
+        
+        Args:
+            file_path: Path to the file
+            
+        Returns:
+            MD5 hash as hexadecimal string
+        """
         try:
+            hash_md5 = hashlib.md5()
+            # Read file in chunks to avoid loading entire file into memory
             with open(file_path, 'rb') as f:
-                return hashlib.md5(f.read()).hexdigest()
+                for chunk in iter(lambda: f.read(8192), b''):
+                    hash_md5.update(chunk)
+            return hash_md5.hexdigest()
         except Exception:
             return ""
     

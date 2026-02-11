@@ -39,7 +39,6 @@ except ImportError:
 class ConversationExtractor:
     """對話知識提取器核心類別"""
     
-    def __init__(self, api_key: str = None):
     # 預定義調色盤主題
     COLOR_PALETTES = {
         "default": {
@@ -134,8 +133,6 @@ class ConversationExtractor:
         
         Args:
             api_key: Anthropic API Key (用於深度分析)
-        """
-        self.api_key = api_key
             theme: HTML 輸出的主題調色盤 (default/ocean/sunset/night/forest/minimal)
         """
         self.api_key = api_key
@@ -170,29 +167,42 @@ class ConversationExtractor:
         return package
     
     def _calculate_statistics(self, messages: List[Dict]) -> Dict:
-        """計算對話統計資訊"""
-        user_msgs = [m for m in messages if m["role"] == "user"]
-        assistant_msgs = [m for m in messages if m["role"] == "assistant"]
+        """
+        計算對話統計資訊
+        Optimized with single-pass aggregation for better performance.
+        """
+        # Single-pass aggregation instead of multiple list comprehensions
+        total_messages = len(messages)
+        user_count = 0
+        assistant_count = 0
+        total_chars = 0
+        user_chars = 0
+        assistant_chars = 0
+        
+        for msg in messages:
+            content_len = len(msg["content"])
+            total_chars += content_len
+            
+            if msg["role"] == "user":
+                user_count += 1
+                user_chars += content_len
+            elif msg["role"] == "assistant":
+                assistant_count += 1
+                assistant_chars += content_len
         
         return {
-            "total_messages": len(messages),
-            "user_messages": len(user_msgs),
-            "assistant_messages": len(assistant_msgs),
-            "total_chars": sum(len(m["content"]) for m in messages),
-            "avg_user_length": sum(len(m["content"]) for m in user_msgs) / len(user_msgs) if user_msgs else 0,
-            "avg_assistant_length": sum(len(m["content"]) for m in assistant_msgs) / len(assistant_msgs) if assistant_msgs else 0
+            "total_messages": total_messages,
+            "user_messages": user_count,
+            "assistant_messages": assistant_count,
+            "total_chars": total_chars,
+            "avg_user_length": user_chars / user_count if user_count > 0 else 0,
+            "avg_assistant_length": assistant_chars / assistant_count if assistant_count > 0 else 0
         }
     
     def export_to_file(self, package: Dict, filepath: str, format: str = "json"):
         """
-        導出對話包到檔案
-        
-        Args:
-            package: 對話包
-            filepath: 檔案路徑
-            format: 格式 (json/markdown/txt)
-        """
         Export conversation package to file
+        導出對話包到檔案
         
         Performance optimization: Uses normalized format mapping to avoid
         redundant condition checks.
@@ -1093,6 +1103,7 @@ class ConversationExtractor:
     def analyze_attention(self, messages: List[Dict]) -> Dict:
         """
         使用注意力機制識別對話重點
+        Optimized with keyword extraction caching to avoid redundant computation.
         
         Returns:
             {
@@ -1107,9 +1118,14 @@ class ConversationExtractor:
             "high_density_segments": []
         }
         
+        # Pre-compute and cache all keyword sets to avoid repeated extraction
+        keyword_cache = {}
+        for i, msg in enumerate(messages):
+            keyword_cache[i] = self._extract_keywords(msg["content"])
+        
         # 1. 識別關鍵詞密度
         for i, msg in enumerate(messages):
-            keywords = self._extract_keywords(msg["content"])
+            keywords = keyword_cache[i]
             
             if len(keywords) > 5:  # 資訊密集
                 analysis["high_density_segments"].append({
@@ -1119,10 +1135,10 @@ class ConversationExtractor:
                     "preview": msg["content"][:100] + "..."
                 })
         
-        # 2. 識別話題轉換
+        # 2. 識別話題轉換 (using cached keyword sets)
         for i in range(1, len(messages)):
-            prev_keywords = set(self._extract_keywords(messages[i-1]["content"]))
-            curr_keywords = set(self._extract_keywords(messages[i]["content"]))
+            prev_keywords = set(keyword_cache[i-1])
+            curr_keywords = set(keyword_cache[i])
             
             overlap = len(prev_keywords & curr_keywords)
             if overlap < 2 and len(curr_keywords) > 3:  # 話題大幅轉換
