@@ -7,12 +7,16 @@ Different strategies for merging multiple AI outputs:
 - consensus_merge: Use majority voting/consensus
 - meta_ai_merge: Use another AI to merge outputs
 - diff_merge: Keep common parts, highlight differences
+- voting_merge: Democratic voting on answers (NEW)
+- ensemble_merge: Statistical ensemble approach (NEW)
+- confidence_weighted: Weight by confidence scores (NEW)
 """
 
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from difflib import SequenceMatcher
 from collections import Counter
 import re
+import math
 
 
 def weighted_merge(outputs: List[Dict[str, Any]]) -> str:
@@ -241,6 +245,210 @@ def extract_best(outputs: List[Dict[str, Any]], criterion: str = "length") -> st
     return result
 
 
+def voting_merge(outputs: List[Dict[str, Any]], min_agreement: float = 0.5) -> str:
+    """
+    Democratic voting approach - Enhanced computational method
+    民主投票方法 - 增強的計算方法
+    
+    Uses similarity matching to group similar answers and vote
+    """
+    if not outputs:
+        return ""
+    
+    if len(outputs) == 1:
+        return outputs[0]["output"]
+    
+    result = "=== Voting Fusion Result ===\n\n"
+    
+    # Group similar outputs
+    groups = []
+    for output in outputs:
+        text = output["output"]
+        matched = False
+        
+        for group in groups:
+            # Check similarity with group representative
+            similarity = SequenceMatcher(None, text, group["representative"]).ratio()
+            if similarity >= min_agreement:
+                group["members"].append(output)
+                group["votes"] += output.get("weight", 1.0)
+                matched = True
+                break
+        
+        if not matched:
+            groups.append({
+                "representative": text,
+                "members": [output],
+                "votes": output.get("weight", 1.0)
+            })
+    
+    # Sort by votes
+    groups.sort(key=lambda x: x["votes"], reverse=True)
+    
+    result += f"Total Groups: {len(groups)}\n\n"
+    
+    for i, group in enumerate(groups, 1):
+        vote_percentage = (group["votes"] / len(outputs)) * 100
+        result += f"Group {i} ({len(group['members'])} members, {vote_percentage:.1f}% votes):\n"
+        result += f"{group['representative'][:300]}...\n"
+        
+        providers = ", ".join(m.get("provider", "Unknown") for m in group["members"])
+        result += f"Providers: {providers}\n\n"
+        result += "-" * 60 + "\n\n"
+    
+    result += "=== End Voting Fusion ==="
+    return result
+
+
+def ensemble_merge(outputs: List[Dict[str, Any]]) -> str:
+    """
+    Statistical ensemble approach - Enhanced computational method
+    統計集成方法 - 增強的計算方法
+    
+    Combines outputs using statistical aggregation
+    """
+    if not outputs:
+        return ""
+    
+    if len(outputs) == 1:
+        return outputs[0]["output"]
+    
+    result = "=== Ensemble Fusion Result ===\n\n"
+    
+    # Compute statistics
+    lengths = [len(o["output"]) for o in outputs]
+    weights = [o.get("weight", 1.0) for o in outputs]
+    
+    avg_length = sum(lengths) / len(lengths)
+    avg_weight = sum(weights) / len(weights)
+    
+    # Calculate diversity score
+    diversity_scores = []
+    for i, out1 in enumerate(outputs):
+        for j, out2 in enumerate(outputs):
+            if i < j:
+                similarity = SequenceMatcher(None, out1["output"], out2["output"]).ratio()
+                diversity_scores.append(1 - similarity)
+    
+    avg_diversity = sum(diversity_scores) / len(diversity_scores) if diversity_scores else 0
+    
+    result += f"Ensemble Statistics:\n"
+    result += f"  • Number of models: {len(outputs)}\n"
+    result += f"  • Average response length: {avg_length:.0f} chars\n"
+    result += f"  • Average weight: {avg_weight:.2f}\n"
+    result += f"  • Response diversity: {avg_diversity:.2%}\n\n"
+    
+    # Find most representative output (closest to average length)
+    closest_idx = min(range(len(outputs)), key=lambda i: abs(lengths[i] - avg_length))
+    representative = outputs[closest_idx]
+    
+    result += f"Representative Output (from {representative.get('provider', 'Unknown')}):\n"
+    result += f"{representative['output']}\n\n"
+    
+    result += "=" * 60 + "\n\n"
+    result += "All Ensemble Members:\n\n"
+    
+    for i, output in enumerate(outputs, 1):
+        provider = output.get("provider", "Unknown")
+        weight = output.get("weight", 1.0)
+        result += f"{i}. {provider} (weight: {weight:.2f}):\n"
+        result += f"{output['output'][:200]}...\n\n"
+    
+    result += "=== End Ensemble Fusion ==="
+    return result
+
+
+def confidence_weighted_merge(outputs: List[Dict[str, Any]]) -> str:
+    """
+    Confidence-weighted merge - Enhanced computational method
+    置信度加權合併 - 增強的計算方法
+    
+    Uses confidence scores and adaptive weighting
+    """
+    if not outputs:
+        return ""
+    
+    if len(outputs) == 1:
+        return outputs[0]["output"]
+    
+    result = "=== Confidence-Weighted Fusion Result ===\n\n"
+    
+    # Calculate confidence scores based on multiple factors
+    for output in outputs:
+        # Base confidence from weight
+        base_conf = output.get("weight", 1.0)
+        
+        # Length factor (longer responses might be more detailed)
+        length = len(output["output"])
+        length_factor = min(1.0, length / 1000)  # Normalize to 1.0 at 1000 chars
+        
+        # Combined confidence
+        confidence = (base_conf * 0.7 + length_factor * 0.3)
+        output["_confidence"] = confidence
+    
+    # Sort by confidence
+    sorted_outputs = sorted(outputs, key=lambda x: x["_confidence"], reverse=True)
+    
+    result += "Confidence Rankings:\n\n"
+    
+    for i, output in enumerate(sorted_outputs, 1):
+        provider = output.get("provider", "Unknown")
+        confidence = output["_confidence"]
+        
+        result += f"{i}. {provider} (confidence: {confidence:.2%})\n"
+        result += f"{output['output']}\n\n"
+        result += "-" * 60 + "\n\n"
+    
+    result += "=== End Confidence-Weighted Fusion ==="
+    return result
+
+
+def adaptive_fusion(outputs: List[Dict[str, Any]], convergence_threshold: float = 0.8) -> str:
+    """
+    Adaptive fusion with convergence detection - Enhanced computational method
+    自適應融合與收斂檢測 - 增強的計算方法
+    
+    Dynamically selects the best fusion strategy based on output characteristics
+    """
+    if not outputs:
+        return ""
+    
+    if len(outputs) == 1:
+        return outputs[0]["output"]
+    
+    result = "=== Adaptive Fusion Result ===\n\n"
+    
+    # Analyze output characteristics
+    similarities = []
+    for i, out1 in enumerate(outputs):
+        for j, out2 in enumerate(outputs):
+            if i < j:
+                sim = SequenceMatcher(None, out1["output"], out2["output"]).ratio()
+                similarities.append(sim)
+    
+    avg_similarity = sum(similarities) / len(similarities) if similarities else 0
+    
+    result += f"Output Analysis:\n"
+    result += f"  • Number of outputs: {len(outputs)}\n"
+    result += f"  • Average similarity: {avg_similarity:.2%}\n"
+    
+    # Select strategy based on similarity
+    if avg_similarity >= convergence_threshold:
+        result += f"  • Strategy: CONSENSUS (high agreement)\n\n"
+        strategy_result = consensus_merge(outputs)
+    elif avg_similarity < 0.3:
+        result += f"  • Strategy: VOTING (low agreement)\n\n"
+        strategy_result = voting_merge(outputs)
+    else:
+        result += f"  • Strategy: ENSEMBLE (moderate agreement)\n\n"
+        strategy_result = ensemble_merge(outputs)
+    
+    result += "=" * 60 + "\n\n"
+    result += strategy_result
+    
+    return result
+
+
 # Strategy registry
 STRATEGIES = {
     "weighted": weighted_merge,
@@ -250,6 +458,10 @@ STRATEGIES = {
     "concatenate": simple_concatenate,
     "best_length": lambda x: extract_best(x, "length"),
     "best_weight": lambda x: extract_best(x, "weight"),
+    "voting": voting_merge,  # NEW
+    "ensemble": ensemble_merge,  # NEW
+    "confidence": confidence_weighted_merge,  # NEW
+    "adaptive": adaptive_fusion,  # NEW
 }
 
 
