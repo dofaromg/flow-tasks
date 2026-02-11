@@ -365,6 +365,9 @@ def confidence_weighted_merge(outputs: List[Dict[str, Any]]) -> str:
     
     Uses confidence scores and adaptive weighting
     """
+    # Configuration constant
+    MAX_NORMALIZED_LENGTH = 1000  # Maximum length for normalization
+    
     if not outputs:
         return ""
     
@@ -380,7 +383,7 @@ def confidence_weighted_merge(outputs: List[Dict[str, Any]]) -> str:
         
         # Length factor (longer responses might be more detailed)
         length = len(output["output"])
-        length_factor = min(1.0, length / 1000)  # Normalize to 1.0 at 1000 chars
+        length_factor = min(1.0, length / MAX_NORMALIZED_LENGTH)  # Normalize to 1.0
         
         # Combined confidence
         confidence = (base_conf * 0.7 + length_factor * 0.3)

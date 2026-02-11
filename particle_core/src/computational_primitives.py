@@ -249,14 +249,16 @@ class ParallelComputations:
         chunk_size = max(1, len(data) // max_workers)
         chunks = [data[i:i + chunk_size] for i in range(0, len(data), chunk_size)]
         
-        # Reduce each chunk in parallel
+        # Reduce each chunk in parallel (without initial value)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             partial_results = list(executor.map(
-                lambda chunk: reduce(func, chunk, initial) if initial is not None else reduce(func, chunk),
+                lambda chunk: reduce(func, chunk),
                 chunks
             ))
         
-        # Combine partial results
+        # Combine partial results with initial value if provided
+        if initial is not None:
+            return reduce(func, partial_results, initial)
         return reduce(func, partial_results)
     
     @staticmethod

@@ -267,13 +267,15 @@ def test_tensor_operations():
     
     tensor_ops = TensorOperations()
     
-    # Reshape
+    # Flatten (using public API through reshape)
     data = [[1, 2], [3, 4]]
-    flat = tensor_ops._flatten(data)
-    assert flat == [1, 2, 3, 4], f"Flatten failed: {flat}"
-    print("  ✅ 張量展平")
+    # Test reshape which internally uses flatten
+    reshaped = tensor_ops.reshape(data, (4,))
+    assert reshaped == [1, 2, 3, 4], f"Reshape to 1D failed: {reshaped}"
+    print("  ✅ 張量展平 (via reshape)")
     
-    reshaped = tensor_ops.reshape(flat, (2, 2))
+    # Reshape back
+    reshaped = tensor_ops.reshape([1, 2, 3, 4], (2, 2))
     assert reshaped == data, f"Reshape failed: {reshaped}"
     print("  ✅ 張量重塑")
     

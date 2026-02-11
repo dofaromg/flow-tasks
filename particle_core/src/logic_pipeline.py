@@ -13,6 +13,10 @@ import threading
 class LogicPipeline:
     """MRLiou 邏輯管線核心類別 - Enhanced with parallel execution and caching"""
     
+    # Use Python's built-in hash for faster caching (non-cryptographic)
+    # For production use with security requirements, switch to hashlib.sha256
+    USE_FAST_HASH = True
+    
     def __init__(self, enable_cache: bool = True, max_workers: int = 4):
         self.pipeline_steps = ["structure", "mark", "flow", "recurse", "store"]
         self.explanations = {
@@ -37,7 +41,13 @@ class LogicPipeline:
         """計算快取鍵值"""
         steps_str = ",".join(steps) if steps else ",".join(self.pipeline_steps)
         content = f"{input_data}:{steps_str}"
-        return hashlib.sha256(content.encode()).hexdigest()
+        
+        if self.USE_FAST_HASH:
+            # Use built-in hash for speed (not cryptographically secure)
+            return str(hash(content))
+        else:
+            # Use SHA-256 for security (slower)
+            return hashlib.sha256(content.encode()).hexdigest()
     
     def _get_from_cache(self, cache_key: str) -> Optional[Any]:
         """從快取取得結果"""
