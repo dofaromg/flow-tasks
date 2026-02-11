@@ -3,13 +3,21 @@
 
 import json
 from datetime import datetime
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Callable, Optional
 import os
+import hashlib
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from functools import lru_cache
+import threading
 
 class LogicPipeline:
-    """MRLiou 邏輯管線核心類別"""
+    """MRLiou 邏輯管線核心類別 - Enhanced with parallel execution and caching"""
     
-    def __init__(self):
+    # Use Python's built-in hash for faster caching (non-cryptographic)
+    # For production use with security requirements, switch to hashlib.sha256
+    USE_FAST_HASH = True
+    
+    def __init__(self, enable_cache: bool = True, max_workers: int = 4):
         self.pipeline_steps = ["structure", "mark", "flow", "recurse", "store"]
         self.explanations = {
             "structure": "定義輸入資料結構",
@@ -18,13 +26,124 @@ class LogicPipeline:
             "recurse": "遞歸展開為細部結構",
             "store": "封存至邏輯記憶模組"
         }
+        self.enable_cache = enable_cache
+        self.max_workers = max_workers
+        self._cache = {}
+        self._cache_lock = threading.Lock()
+        self._metrics = {
+            "total_executions": 0,
+            "cache_hits": 0,
+            "cache_misses": 0,
+            "parallel_executions": 0
+        }
+    
+    def _compute_cache_key(self, input_data: str, steps: Optional[List[str]] = None) -> str:
+        """計算快取鍵值"""
+        steps_str = ",".join(steps) if steps else ",".join(self.pipeline_steps)
+        content = f"{input_data}:{steps_str}"
+        
+        if self.USE_FAST_HASH:
+            # Use built-in hash for speed (not cryptographically secure)
+            return str(hash(content))
+        else:
+            # Use SHA-256 for security (slower)
+            return hashlib.sha256(content.encode()).hexdigest()
+    
+    def _get_from_cache(self, cache_key: str) -> Optional[Any]:
+        """從快取取得結果"""
+        if not self.enable_cache:
+            return None
+        with self._cache_lock:
+            if cache_key in self._cache:
+                self._metrics["cache_hits"] += 1
+                return self._cache[cache_key]
+            self._metrics["cache_misses"] += 1
+            return None
+    
+    def _put_to_cache(self, cache_key: str, value: Any):
+        """將結果放入快取"""
+        if not self.enable_cache:
+            return
+        with self._cache_lock:
+            self._cache[cache_key] = value
+    
+    def clear_cache(self):
+        """清除快取"""
+        with self._cache_lock:
+            self._cache.clear()
+    
+    def get_metrics(self) -> Dict[str, Any]:
+        """取得效能指標"""
+        cache_hit_rate = (
+            self._metrics["cache_hits"] / 
+            (self._metrics["cache_hits"] + self._metrics["cache_misses"])
+            if (self._metrics["cache_hits"] + self._metrics["cache_misses"]) > 0 
+            else 0
+        )
+        return {
+            **self._metrics,
+            "cache_hit_rate": cache_hit_rate,
+            "cache_size": len(self._cache)
+        }
     
     def run_logic_chain(self, input_data: str) -> str:
         """執行完整邏輯鏈"""
+        self._metrics["total_executions"] += 1
+        
+        # Check cache
+        cache_key = self._compute_cache_key(input_data)
+        cached_result = self._get_from_cache(cache_key)
+        if cached_result is not None:
+            return cached_result
+        
+        # Execute logic chain
         current_result = input_data
         for step in self.pipeline_steps:
             current_result = f"[{step.upper()} → {current_result}]"
+        
+        # Store in cache
+        self._put_to_cache(cache_key, current_result)
         return current_result
+    
+    def run_logic_chain_parallel(self, input_batch: List[str]) -> List[str]:
+        """並行執行多個邏輯鏈 - Enhanced computational capacity"""
+        self._metrics["parallel_executions"] += 1
+        
+        results = [None] * len(input_batch)
+        
+        def process_item(idx: int, data: str) -> tuple:
+            result = self.run_logic_chain(data)
+            return idx, result
+        
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            futures = {
+                executor.submit(process_item, idx, data): idx 
+                for idx, data in enumerate(input_batch)
+            }
+            
+            for future in as_completed(futures):
+                idx, result = future.result()
+                results[idx] = result
+        
+        return results
+    
+    def batch_simulate(self, input_batch: List[str], parallel: bool = True) -> List[Dict[str, Any]]:
+        """批次模擬執行 - Enhanced for batch processing"""
+        if parallel and len(input_batch) > 1:
+            execution_results = self.run_logic_chain_parallel(input_batch)
+        else:
+            execution_results = [self.run_logic_chain(data) for data in input_batch]
+        
+        return [
+            {
+                "input": input_data,
+                "steps": self.pipeline_steps,
+                "explanations": self.get_human_readable(),
+                "result": result,
+                "compressed": self.compress_logic(self.pipeline_steps)
+            }
+            for input_data, result in zip(input_batch, execution_results)
+        ]
     
     def process_step(self, step: str, data: str) -> str:
         """處理單一邏輯步驟"""
