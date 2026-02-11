@@ -411,3 +411,8 @@ TAGS
 *.sublime-project
 .merkle/
 .merkle/
+
+# Enterprise Task Manager storage
+task_storage/
+test_task_storage*/
+
