@@ -48,11 +48,15 @@ def _reconstruct(hashable_data: Union[Tuple, Any]) -> Any:
 
 @lru_cache(maxsize=256)
 def _cached_checksum(hashable_data: Tuple) -> str:
-    """Cached checksum calculation for repeated data."""
-    # Reconstruct data from hashable format for JSON serialization
-    reconstructed = _reconstruct(hashable_data)
-    data_str = json.dumps(reconstructed, sort_keys=True, ensure_ascii=False)
-    return hashlib.sha256(data_str.encode('utf-8')).hexdigest()
+    """
+    Cached checksum calculation for repeated data.
+    Optimized to hash the hashable representation directly without reconstruction.
+    """
+    # Hash the hashable representation directly instead of converting to JSON
+    # This avoids the double serialization overhead
+    hash_obj = hashlib.sha256()
+    hash_obj.update(str(hashable_data).encode('utf-8'))
+    return hash_obj.hexdigest()
 
 
 class FluinDictAgent:
