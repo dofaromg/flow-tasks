@@ -248,11 +248,20 @@ flow-tasks/
 - ✅ 函數鏈管道處理
 - ✅ 記憶封存與還原系統
 - ✅ CLI 運行器與模擬器
+- 🆕 **並行執行與快取機制** - 增強系統演算能力
+- 🆕 **計算原語模組** - 矩陣、統計、圖算法、張量運算
+- 🆕 **批次處理** - 高效能批次資料處理
 
 ### 3. GitOps + CI/CD
 - ✅ GitHub Actions (CI 建置 + CD 部署)
 - ✅ ArgoCD (自動同步與自我修復)
 - ✅ Kustomize (配置管理)
+
+### 4. AI 超級電腦 (AI SuperComputer) 🆕
+- ✅ 多 AI 提供者融合系統 (OpenAI, Claude, Gemini)
+- 🆕 **進階融合策略** - 投票、集成、自適應融合
+- ✅ 莫比烏斯循環 (Möbius Loop)
+- ✅ HTTP API 界面
 
 ---
 
@@ -270,6 +279,7 @@ flow-tasks/
 | 🧠 [Particle Core](./particle_core/README.md) | 粒子語言核心系統 |
 | 💻 [Codespaces 快速參考](./CODESPACE_QUICK_REFERENCE_ZH.md) | GitHub Codespaces 管理命令 (中文) |
 | 📖 [Codespaces 管理指南](./CODESPACE_MANAGEMENT.md) | 完整的 Codespaces 管理文檔 (English) |
+| 🚀 [**增強演算能力指南**](./ENHANCED_COMPUTATION_GUIDE.md) | **🆕 並行處理、快取、計算原語、AI融合** |
 
 ---
 
