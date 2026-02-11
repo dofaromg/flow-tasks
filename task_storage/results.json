@@ -1,0 +1,39 @@
+{
+  "5ff6e561-58e7-41d6-ab7c-d7fc5ce4c27a": {
+    "task_id": "5ff6e561-58e7-41d6-ab7c-d7fc5ce4c27a",
+    "status": "completed",
+    "result": "Task completed after 3 seconds",
+    "error": null,
+    "start_time": "2026-02-11T20:38:28.708570",
+    "end_time": "2026-02-11T20:38:31.712460",
+    "duration_seconds": 3.00389,
+    "retry_count": 0,
+    "progress": 1.0
+  },
+  "e52fc7f4-db67-484d-af51-2b0523b4733b": {
+    "task_id": "e52fc7f4-db67-484d-af51-2b0523b4733b",
+    "status": "completed",
+    "result": "Task completed after 5 seconds",
+    "error": null,
+    "start_time": "2026-02-11T20:38:31.712932",
+    "end_time": "2026-02-11T20:38:36.718218",
+    "duration_seconds": 5.005286,
+    "retry_count": 0,
+    "progress": 1.0
+  },
+  "9f3e81df-4648-4ffd-bbef-4cb0a98228f2": {
+    "task_id": "9f3e81df-4648-4ffd-bbef-4cb0a98228f2",
+    "status": "completed",
+    "result": {
+      "n": 1000000,
+      "result": 333332833333500000,
+      "computation_type": "sum of squares"
+    },
+    "error": null,
+    "start_time": "2026-02-11T20:38:36.718740",
+    "end_time": "2026-02-11T20:38:36.776371",
+    "duration_seconds": 0.057631,
+    "retry_count": 0,
+    "progress": 1.0
+  }
+}
