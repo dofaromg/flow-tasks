@@ -48,7 +48,6 @@ def test_task_integration():
     create_task_result()
 
     print("✓ All integration tests passed!")
-    return True
 
 def create_task_result():
     """Create a task result following flow-tasks pattern"""
