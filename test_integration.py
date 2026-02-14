@@ -5,44 +5,22 @@ import json
 
 import pytest
 
+
 def test_task_integration():
     """Test integration with flow-tasks system"""
     print("=== Flow-Tasks Integration Test ===")
-
+    
     # Check if we're in the right location
     assert os.path.exists("tasks"), "Not in flow-tasks root directory"
-
+        
     # Check task definition
     task_file = "tasks/2025-07-31_particle-language-core.yaml"
     assert os.path.exists(task_file), f"Task definition missing: {task_file}"
     print(f"✓ Task definition exists: {task_file}")
-
+    
     # Check particle core directory
     assert os.path.exists("particle_core"), "Particle core directory missing"
     print("✓ Particle core directory exists")
-def test_task_integration():
-    """Test integration with flow-tasks system"""
-    print("=== Flow-Tasks Integration Test ===")
-    
-    # Check if we're in the right location
-    if not os.path.exists("tasks"):
-        print("ERROR: Not in flow-tasks root directory")
-        return False
-        
-    # Check task definition
-    task_file = "tasks/2025-07-31_particle-language-core.yaml"
-    if os.path.exists(task_file):
-        print(f"✓ Task definition exists: {task_file}")
-    else:
-        print(f"✗ Task definition missing: {task_file}")
-        return False
-    
-    # Check particle core directory
-    if os.path.exists("particle_core"):
-        print("✓ Particle core directory exists")
-    else:
-        print("✗ Particle core directory missing")
-        return False
     
     # Check core modules
     required_modules = [
@@ -55,11 +33,6 @@ def test_task_integration():
     for module in required_modules:
         assert os.path.exists(module), f"Module missing: {module}"
         print(f"✓ Module exists: {module}")
-        if os.path.exists(module):
-            print(f"✓ Module exists: {module}")
-        else:
-            print(f"✗ Module missing: {module}")
-            return False
     
     # Test importing modules
     sys.path.insert(0, "particle_core/src")
@@ -75,7 +48,6 @@ def test_task_integration():
     create_task_result()
 
     print("✓ All integration tests passed!")
-    return True
 
 def create_task_result():
     """Create a task result following flow-tasks pattern"""
@@ -100,8 +72,6 @@ def create_task_result():
     
     results = []
     for input_data in test_inputs:
-        simulation_result = pipeline.simulate(input_data)
-        results.append(simulation_result)
         result = pipeline.simulate(input_data)
         results.append(result)
     
@@ -138,13 +108,10 @@ def create_task_result():
     
     # Save task result
     result_file = "tasks/results/2025-07-31_particle-language-core_result.json"
-    with open(result_file, 'w', encoding='utf-8') as result_output_file:
-        json.dump(task_result, result_output_file, ensure_ascii=False, indent=2)
     with open(result_file, 'w', encoding='utf-8') as f:
         json.dump(task_result, f, ensure_ascii=False, indent=2)
     
     print(f"✓ Task result created: {result_file}")
 
 if __name__ == "__main__":
-    test_task_integration()
     test_task_integration()

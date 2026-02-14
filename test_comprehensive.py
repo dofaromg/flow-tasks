@@ -20,30 +20,7 @@ def test_task_processor():
     print("=== Testing Task Processor ===")
     
     # Run task processor
-    process_result = subprocess.run([sys.executable, "process_tasks.py"],
-                          capture_output=True, text=True)
-    
-    print(f"Exit code: {process_result.returncode}")
-    print("STDOUT:")
-    print(process_result.stdout)
-    
-    if process_result.stderr:
-        print("STDERR:")
-        print(process_result.stderr)
-    
-    # Check if results were created
-    results_dir = Path("tasks/results")
-    assert results_dir.exists(), "Results directory missing"
-    print(f"✓ Results directory exists: {results_dir}")
-
-    # List result files (sort for consistent ordering)
-    result_files = sorted(results_dir.glob("*.json"))
-    print(f"✓ Found {len(result_files)} result files:")
-    for result_file in result_files:
-        print(f"  - {result_file.name}")
-
-    assert process_result.returncode == 0, "Task processor exited with errors"
-    result = subprocess.run([sys.executable, "process_tasks.py"], 
+    result = subprocess.run([sys.executable, "process_tasks.py"],
                           capture_output=True, text=True)
     
     print(f"Exit code: {result.returncode}")
@@ -56,19 +33,17 @@ def test_task_processor():
     
     # Check if results were created
     results_dir = Path("tasks/results")
-    if results_dir.exists():
-        print(f"✓ Results directory exists: {results_dir}")
-        
-        # List result files
-        result_files = list(results_dir.glob("*.json"))
-        print(f"✓ Found {len(result_files)} result files:")
-        for f in result_files:
-            print(f"  - {f.name}")
-    else:
-        print("✗ Results directory missing")
-        return False
-    
-    return result.returncode == 0
+    assert results_dir.exists(), "Results directory missing"
+    print(f"✓ Results directory exists: {results_dir}")
+
+    # List result files (sort for consistent ordering)
+    result_files = sorted(results_dir.glob("*.json"))
+    print(f"✓ Found {len(result_files)} result files:")
+    for result_file in result_files:
+        print(f"  - {result_file.name}")
+
+    assert result.returncode == 0, "Task processor exited with errors"
+    return True
 
 def test_flask_api():
     """Test the Flask API by starting it and making requests"""
