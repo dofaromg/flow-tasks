@@ -44,6 +44,9 @@ class FunctionRestorer:
         for pattern, steps_list in self.restore_map.items():
             if pattern in normalized:
                 return steps_list
+        for pattern, steps in self.restore_map.items():
+            if pattern in normalized:
+                return steps
         
         # 嘗試解析其他格式
         if "SEED" in normalized:
@@ -189,6 +192,18 @@ def main():
         
         print("\n模擬執行流程:")
         print(restorer.simulate_execution(function_steps))
+        steps = restorer.decompress_fn(compressed)
+        
+        print("還原步驟:")
+        for step in steps:
+            print(f"- {step}")
+        
+        print("\n人類可讀解釋:")
+        for line in restorer.to_human_readable(steps):
+            print(f"- {line}")
+        
+        print("\n模擬執行流程:")
+        print(restorer.simulate_execution(steps))
     else:
         # 互動模式
         interactive_demo()

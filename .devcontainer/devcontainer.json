@@ -44,4 +44,6 @@
   "mounts": [
     "source=flow-tasks-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
   ]
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {}
 }

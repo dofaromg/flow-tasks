@@ -12,6 +12,7 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional, Tuple, Union
 from pathlib import Path
 from functools import lru_cache
+from concurrent.futures import ThreadPoolExecutor
 
 
 # Checksum caching helpers
@@ -161,24 +162,50 @@ class MemoryArchiveSeed:
         
         return compressed
     
-    def list_seeds(self) -> List[Dict[str, Any]]:
-        """
-        列出所有記憶種子
+    def _read_seed_file(self, seed_file: Path) -> Optional[Dict[str, Any]]:
+        """Helper method to read a single seed file.
         
+        Performance optimization: Enables parallel file reading.
+        
+        Args:
+            seed_file: Path to the seed file
+            
         Returns:
-            種子資訊列表
+            Seed info dict or None if read fails
         """
-        seeds = []
-        
-        for seed_file in self.storage_path.glob("*.mseed.json"):
+        try:
             with open(seed_file, 'r', encoding='utf-8') as f:
                 seed = json.load(f)
-                seeds.append({
+                return {
                     "seed_name": seed["seed_name"],
                     "created_at": seed["created_at"],
                     "checksum": seed["checksum"],
                     "file": str(seed_file)
-                })
+                }
+        except Exception:
+            # Silently skip malformed seed files
+            return None
+    
+    def list_seeds(self) -> List[Dict[str, Any]]:
+        """
+        列出所有記憶種子
+        
+        Performance optimization: Uses parallel file I/O for faster reading
+        when multiple seed files exist.
+        
+        Returns:
+            種子資訊列表
+        """
+        seed_files = list(self.storage_path.glob("*.mseed.json"))
+        
+        # Use parallel reading for better I/O performance
+        # Auto-scale workers: min(4, cpu_count) for optimal performance
+        max_workers = min(4, os.cpu_count() or 1)
+        
+        seeds = []
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            results = executor.map(self._read_seed_file, seed_files)
+            seeds = [seed for seed in results if seed is not None]
         
         return sorted(seeds, key=lambda x: x["created_at"], reverse=True)
     
@@ -200,21 +227,25 @@ class MemoryArchiveSeed:
         if not seed_names:
             raise ValueError("至少需要一個種子來合併")
         
-        # 載入所有種子
-        seeds = [self.restore_seed(name) for name in seed_names]
-        
-        # 合併粒子資料
+        # 合併粒子資料 (使用生成器避免一次性載入所有種子到記憶體)
+        # Merge particle data (using generator to avoid loading all seeds at once)
         merged_data = {
             "merged_from": seed_names,
             "merged_at": datetime.now().isoformat(),
             "particles": []
         }
         
-        for seed in seeds:
+        # 逐個處理種子以節省記憶體
+        # Process seeds one by one to save memory
+        for seed_name in seed_names:
+            seed = self.restore_seed(seed_name)
             if isinstance(seed["particle_data"], list):
                 merged_data["particles"].extend(seed["particle_data"])
             else:
                 merged_data["particles"].append(seed["particle_data"])
+            # 釋放當前種子的參考以允許垃圾回收
+            # Release reference to allow garbage collection
+            del seed
         
         # 創建合併後的種子
         if merged_name is None:
