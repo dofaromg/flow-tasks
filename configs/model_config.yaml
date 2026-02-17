@@ -1,0 +1,202 @@
+# AI Model Configuration
+# 所有AI模型的配置和路徑
+
+model_storage:
+  base_path: "/models"
+  cache_path: "/models/cache"
+  preload_all: true  # 啟動時預加載所有模型到記憶體
+
+# 數字人引擎模型
+digital_human_models:
+  sadtalker_v2:
+    path: "checkpoints/SadTalker_V2"
+    memory_required: 6  # GB
+    preload: true
+    backend: "pytorch"
+    
+  musetalk:
+    path: "checkpoints/MuseTalk"
+    memory_required: 5  # GB
+    preload: true
+    backend: "pytorch"
+    
+  liveportrait:
+    path: "checkpoints/LivePortrait"
+    memory_required: 4  # GB
+    preload: true
+    backend: "onnx"
+    
+  geneface_plus:
+    path: "checkpoints/GeneFacePlusPlus"
+    memory_required: 7  # GB
+    preload: true
+    backend: "pytorch"
+
+# 聲音克隆模型
+voice_clone_models:
+  f5_tts_v2:
+    path: "checkpoints/F5-TTS-V2"
+    memory_required: 4  # GB
+    preload: true
+    languages: ["zh", "en", "ja"]
+    
+  cosyvoice:
+    path: "checkpoints/CosyVoice"
+    memory_required: 3  # GB
+    preload: true
+    languages: ["zh", "en"]
+    
+  gpt_sovits_v2:
+    path: "checkpoints/GPT-SoVITS-V2"
+    memory_required: 5  # GB
+    preload: true
+    languages: ["zh", "en", "ja", "ko"]
+    
+  xtts_v3:
+    path: "checkpoints/XTTS-V3"
+    memory_required: 4  # GB
+    preload: true
+    languages: ["multi"]
+
+# 照片轉視頻模型
+photo_to_video_models:
+  liveportrait_video:
+    path: "checkpoints/LivePortrait-Video"
+    memory_required: 6  # GB
+    preload: true
+    
+  animate_anyone:
+    path: "checkpoints/AnimateAnyone"
+    memory_required: 8  # GB
+    preload: true
+    
+  stable_video_diffusion:
+    path: "checkpoints/StableVideoDiffusion"
+    memory_required: 10  # GB
+    preload: true
+
+# 視頻增強模型
+video_enhancement_models:
+  real_esrgan:
+    path: "checkpoints/Real-ESRGAN"
+    memory_required: 4  # GB
+    preload: true
+    scales: [2, 4, 8]
+    
+  gfpgan:
+    path: "checkpoints/GFPGAN"
+    memory_required: 3  # GB
+    preload: true
+    
+  codeformer:
+    path: "checkpoints/CodeFormer"
+    memory_required: 3  # GB
+    preload: true
+    
+  basicvsr_plus:
+    path: "checkpoints/BasicVSR++"
+    memory_required: 5  # GB
+    preload: true
+
+# 換臉模型
+face_swap_models:
+  insightface:
+    path: "checkpoints/InsightFace"
+    memory_required: 2  # GB
+    preload: true
+    
+  simswap:
+    path: "checkpoints/SimSwap"
+    memory_required: 3  # GB
+    preload: true
+    
+  ghost:
+    path: "checkpoints/Ghost"
+    memory_required: 4  # GB
+    preload: true
+
+# 動作遷移模型
+motion_transfer_models:
+  openpose:
+    path: "checkpoints/OpenPose"
+    memory_required: 2  # GB
+    preload: true
+    
+  dwpose:
+    path: "checkpoints/DWPose"
+    memory_required: 3  # GB
+    preload: true
+    
+  bodymocap:
+    path: "checkpoints/BodyMoCap"
+    memory_required: 4  # GB
+    preload: true
+
+# 3D虛擬人模型
+virtual_human_3d_models:
+  metahuman:
+    path: "checkpoints/MetaHuman"
+    memory_required: 8  # GB
+    preload: false  # 按需加載
+    
+  readyplayerme:
+    path: "checkpoints/ReadyPlayerMe"
+    memory_required: 5  # GB
+    preload: false
+
+# 音樂生成模型
+music_generation_models:
+  musicgen:
+    path: "checkpoints/MusicGen"
+    memory_required: 6  # GB
+    preload: true
+    
+  audiocraft:
+    path: "checkpoints/AudioCraft"
+    memory_required: 5  # GB
+    preload: true
+    
+  stable_audio:
+    path: "checkpoints/StableAudio"
+    memory_required: 7  # GB
+    preload: true
+
+# 智能剪輯模型
+smart_editing_models:
+  scene_detection:
+    path: "checkpoints/SceneDetection"
+    memory_required: 2  # GB
+    preload: true
+    
+  auto_edit:
+    path: "checkpoints/AutoEdit"
+    memory_required: 3  # GB
+    preload: true
+
+# VFX特效模型
+vfx_models:
+  rvm:  # Robust Video Matting
+    path: "checkpoints/RVM"
+    memory_required: 3  # GB
+    preload: true
+    
+  particle_system:
+    path: "checkpoints/ParticleSystem"
+    memory_required: 2  # GB
+    preload: true
+
+# 模型下載源
+model_sources:
+  huggingface:
+    base_url: "https://huggingface.co"
+    token: "${HF_TOKEN}"
+    
+  modelscope:
+    base_url: "https://www.modelscope.cn"
+    token: "${MS_TOKEN}"
+
+# 總記憶體預算檢查
+memory_budget:
+  total_required: 120  # GB (預計使用)
+  max_allowed: 180  # GB (3TB中預留180GB給模型)
+  warning_threshold: 150  # GB
