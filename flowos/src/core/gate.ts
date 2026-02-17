@@ -23,6 +23,10 @@ export class FlowGate {
       }
     }
     return { allowed: true };
+  }
+}
+
+export type GateEngine = FlowGate;
   /**
    * Evaluate all registered gate checks against the payload and context.
    * Checks are evaluated sequentially. If a check returns an explicit deny (allowed: false),
