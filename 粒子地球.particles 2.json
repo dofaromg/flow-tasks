@@ -1,0 +1,114 @@
+[
+  {
+    "type": "poi",
+    "id": "09BE1D884F39BF389329",
+    "name": "粒子語言地球儀",
+    "lat": 24.9823232,
+    "lon": 121.2481536,
+    "alt": 110.39696895727,
+    "tags": [
+      "kml"
+    ],
+    "meta": {
+      "lookAt": {
+        "lon": 121.2481536403291,
+        "lat": 24.98232320573424,
+        "alt": -269.1549740809884,
+        "heading": 307.2092921544116,
+        "tilt": 60.0,
+        "fovy": 34.99999419398673,
+        "range": 8624.184150284764,
+        "altMode": "absolute"
+      },
+      "accuracy_m": 984
+    }
+  },
+  {
+    "type": "poi",
+    "id": "01FF4943903A0B3EDEDA",
+    "name": "美國",
+    "lat": 38.7945952,
+    "lon": -106.5348379,
+    "alt": 0,
+    "tags": [
+      "kml"
+    ],
+    "meta": {
+      "lookAt": {
+        "lon": -119.8093025,
+        "lat": 44.24236485,
+        "alt": 0,
+        "heading": 0,
+        "tilt": 0,
+        "fovy": 35,
+        "range": 36917167.02015329,
+        "altMode": "relativeToGround"
+      }
+    }
+  },
+  {
+    "type": "poi",
+    "id": "0AF9D45C7A3A0B43BD50",
+    "name": "Marque",
+    "lat": 50.5885559,
+    "lon": 3.185437,
+    "alt": 0,
+    "tags": [
+      "kml"
+    ],
+    "meta": {
+      "lookAt": {
+        "lon": 3.158532,
+        "lat": 50.60112065,
+        "alt": 0,
+        "heading": 0,
+        "tilt": 0,
+        "fovy": 35,
+        "range": 63882.9467459471,
+        "altMode": "relativeToGround"
+      }
+    }
+  },
+  {
+    "type": "poi",
+    "id": "0CAA4549383A0C811713",
+    "name": "未命名地標",
+    "lat": 24.9549,
+    "lon": 121.2371,
+    "alt": 131.8659882255046,
+    "tags": [
+      "kml"
+    ],
+    "meta": {
+      "lookAt": {
+        "lon": 121.2370997358721,
+        "lat": 24.95490004749782,
+        "alt": 132.0330368526329,
+        "heading": 0,
+        "tilt": 0,
+        "fovy": 35,
+        "range": 34256.96584059731,
+        "altMode": "absolute"
+      },
+      "accuracy_m": 3912
+    }
+  },
+  {
+    "type": "overlay",
+    "subtype": "ground",
+    "id": "0C7D86CC1C3A0C9257A3",
+    "name": "未命名疊加層",
+    "bounds": {
+      "north": 85,
+      "south": -85,
+      "east": 180,
+      "west": -180
+    },
+    "meta": {
+      "tilePyramid": {
+        "minLevel": 0,
+        "maxLevel": 22
+      }
+    }
+  }
+]
