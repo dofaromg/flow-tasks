@@ -72,6 +72,9 @@ export default {
       }
 
       // D. Core business logic
+      // Create service instances only when needed based on route
+      const vcs = new VersionControl(env.MRLIOUWORD_VAULT, synapse);
+
       // Note: These instances are created for future integration
       // Current routes use them selectively based on path
       const memory = new Memory(env.MRLIOUWORD_VAULT);
@@ -131,6 +134,7 @@ export default {
       }
 
       if (path.startsWith('/persona/')) {
+        const persona = new Persona(env.MRLIOUWORD_VAULT);
         return handlePersona(path, request, persona);
       }
 
@@ -168,6 +172,73 @@ async function handleVCS(path: string, request: Request, vcs: VersionControl) {
   if (path === '/vcs/commit' && request.method === 'POST') {
     const b = (await body()) as { message?: string; persona_id?: string };
     return json(await vcs.commit(b.message ?? '', b.persona_id ?? ''));
+  }
+  return json(await vcs.status());
+}
+
+async function handleR2(path: string, _request: Request, env: Env) {
+  if (path === '/r2/list') {
+    const list = await env.PARTICLES.list({ limit: 100 });
+    return json({ count: list.objects.length, objects: list.objects });
+  }
+  return json({ error: 'R2 Path Not Found' }, 404);
+}
+
+async function handlePersona(path: string, request: Request, persona: Persona) {
+  const body = async () => safeJson(request);
+  if (path === '/persona/wake' && request.method === 'POST') {
+    const b = (await body()) as { message?: string };
+    return json(await persona.wake(b.message ?? ''));
+  }
+  return json({ personas: await persona.list() });
+}
+
+const json = (data: unknown, status = 200) =>
+  new Response(JSON.stringify(data), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+async function safeJson(request: Request): Promise<Record<string, unknown>> {
+  try {
+    return (await request.json()) as Record<string, unknown>;
+  } catch {
+    return {};
+  }
+}
+
+// ============================================
+// 4. VersionControl (with Neural Link integration)
+// ============================================
+/**
+ * Version Control system with GitHub integration
+ * 
+ * Note: The add, commit, and status methods are stub implementations that provide
+ * the VCS interface but don't yet interact with actual KV storage. These stubs
+ * allow the application to accept VCS operations without failing, while the actual
+ * implementation is being developed.
+ * 
+ * TODO: Implement actual VCS logic when KV storage patterns are finalized
+ * - Store files in KV with path as key
+ * - Create commit records with timestamps and persona info
+ * - Track HEAD and branch references
+ */
+class VersionControl {
+  constructor(
+    private kv: KVNamespace,
+    private synapse: ParticleNeuralLink,
+  ) {}
+
+  async syncToGitHub(repo: string, commitData: Record<string, unknown>) {
+    return await this.synapse.fireExternal(`/repos/${repo}/git/commits`, 'POST', commitData);
+  }
+
+  // Note: The following methods are stub implementations
+  // They provide the interface for VCS operations but don't yet interact with actual storage
+  // TODO: Implement actual VCS logic when KV storage patterns are finalized
+
+  async init() {
+    return { success: true, msg: 'VCS Initialized (Stub)' };
 import { FlowContext, FlowEvent, FlowSnapshot } from './types';
 import { MemoryStorage } from './storage';
 import { ParticleEngine } from './core/particles';
@@ -251,6 +322,14 @@ export class FlowOS {
   return json(await vcs.status());
 }
 
+  async add(path: string, content: string) {
+    // TODO: Store file in KV with path as key
+    if (process?.env?.NODE_ENV === 'development') {
+      console.log(`VCS add: ${path} (stub)`);
+    }
+    void path;
+    void content;
+    return { success: true };
   createContext(options: { persona?: string; project?: string; seed?: string; metadata?: Record<string, unknown> }): FlowContext {
     return {
       id: randomId(),
@@ -269,6 +348,14 @@ async function handleR2(path: string, request: Request, env: Env) {
   return json({ error: 'R2 Path Not Found' }, 404);
 }
 
+  async commit(msg: string, pid: string) {
+    // TODO: Create commit record in KV and optionally sync to GitHub
+    if (process?.env?.NODE_ENV === 'development') {
+      console.log(`VCS commit: ${msg} by ${pid} (stub)`);
+    }
+    void msg;
+    void pid;
+    return { success: true, hash: 'new_hash' };
   snapshot(): FlowSnapshot {
     return this.storage.snapshot();
 async function handlePersona(path: string, request: Request, persona: Persona) {
@@ -280,6 +367,43 @@ async function handlePersona(path: string, request: Request, persona: Persona) {
   return json({ personas: await persona.list() });
 }
 
+  async status() {
+    // TODO: Retrieve current VCS state from KV
+    return { head: 'latest' };
+  }
+}
+
+// ============================================
+// 5. Support Classes (Memory, Persona, Auth)
+// ============================================
+/**
+ * Stub implementations for core FlowOS services
+ * 
+ * These classes provide minimal implementations to support the worker architecture.
+ * For full-featured implementations, use the FlowOS class exported from flowos.ts.
+ * 
+ * Memory: KV-based memory storage for conversation context and state
+ * TODO: Implement memory storage, retrieval, and archival patterns
+ * 
+ * Persona: KV-based persona storage for AI character definitions
+ * TODO: Implement persona CRUD operations and wake/sleep state management
+ * 
+ * Auth: KV-based authentication token storage
+ * TODO: Implement token generation, validation, and expiration
+ */
+class Memory {
+  constructor(private _kv: KVNamespace) {
+    // TODO: Implement KV-based memory storage
+  }
+}
+
+class Persona {
+  constructor(private _kv: KVNamespace) {
+    // TODO: Implement KV-based persona storage
+  }
+
+  async wake(message: string) {
+    return { awakened: true, message };
 const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), {
     status,
@@ -294,6 +418,17 @@ async function safeJson(request: Request): Promise<Record<string, unknown>> {
     return (await request.json()) as Record<string, unknown>;
   } catch {
     return {};
+  }
+}
+
+  async list() {
+    return [];
+  }
+}
+
+class Auth {
+  constructor(private _kv: KVNamespace) {
+    // TODO: Implement KV-based auth token storage
   }
 }
 
