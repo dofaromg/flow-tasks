@@ -379,4 +379,78 @@ git am patches/*.patch
 - [FlowHub 整合套件說明](FLOWHUB_EXPORT_PACKAGE.md)
 - [FlowHub 整合指南](FLOWHUB_INTEGRATION_GUIDE.md)
 
-🔗 **版本追蹤**: [Commit ffebfa0](https://github.com/dofaromg/flow-tasks/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)
+
+## AMP（Index-only Ledger）
+
+這個倉庫現在包含一個可直接執行的 AMP index-only ledger。以下步驟可以在本地或 CI 中重放：
+
+### 安裝與設定
+1. 建立虛擬環境並安裝依賴：
+   ```bash
+   python -m venv .venv && source .venv/bin/activate
+   pip install -r requirements.txt
+   ```
+2. 建立設定檔：
+   ```bash
+   cp config.sample.yaml config.yaml
+   ```
+
+### 基本操作（Smoke Test）
+```bash
+python cli.py init
+python cli.py append "A"
+python cli.py append "B"
+python cli.py snapshot s1
+python cli.py verify
+python cli.py log --n 10
+```
+
+資料會寫入 `data/`：
+- `chain.jsonl`: 交易鏈（每筆一行 JSON）。
+- `dag_edges.jsonl`: 節點邊索引。
+- `refs.json`: 目前 head 與長度。
+- `snapshots/*.json`: 命名快照。
+
+### Docker 執行
+```bash
+docker build -t amp .
+docker run --rm -v "$PWD:/data" amp init
+docker run --rm -v "$PWD:/data" amp append "hello"
+docker run --rm -v "$PWD:/data" amp verify
+```
+
+### （可選）Notion 同步
+- 需要 `NOTION_TOKEN`（可放在環境變數或 GitHub Secrets）。
+- 將 `config.yaml` 中的 `notion` 區段填入 root page/database id。
+- 執行：
+  ```bash
+  python cli.py notion-sync
+  ```
+
+### 重播 (Replay)
+1. 確認 `data/chain.jsonl` 在工作目錄中。
+2. 重新執行 `python cli.py verify` 以驗證鏈條完整性。
+3. 使用 `python cli.py log --n 0` 匯出全部事件並據此重建需要的狀態。
+
+### 推送與部署責任說明
+- 本倉庫未代替你自動推送或佈署；請依照你的 Git 運維流程自行 push 到遠端或目標環境。
+- 如果要在 CI/CD 或 GitOps 環境佈署，將上方產生的 `data/` 內容隨同程式碼一起提交並觸發你的流水線即可。
+- 本 README 的指令與 Docker 範例確保本地可重放與驗證，但實際上線發佈仍需由你執行。
+
+### 生命週期自我成長優化沙盒比對
+使用沙盒目錄快速驗證「自我成長」變更是否與正式鏈條保持一致：
+
+```bash
+# 先複製正式資料到沙盒（預設路徑 data_sandbox，可在 config.yaml 變更）
+cp -r data data_sandbox
+
+# 確認沙盒與正式鏈條完全一致
+python cli.py sandbox-compare
+
+# 或自訂沙盒目錄
+python cli.py sandbox-compare --sandbox-dir /tmp/amp_sandbox
+```
+
+該指令會先驗證雙方鏈條，再逐 entry 比對 hash/head，便於在沙盒中試驗優化後再推進正式生命週期。
+
+相關 CI 工作流程：`.github/workflows/ci.yml` 會自動跑一次 smoke test 並上傳 `data/` 產物。
