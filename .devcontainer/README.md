@@ -4,6 +4,21 @@
 
 This directory contains the configuration for GitHub Codespaces and VS Code Dev Containers.
 
+This configuration is based on the [Development Container Specification](https://containers.dev/) and follows the standards defined in the [devcontainers/spec](https://github.com/devcontainers/spec) repository.
+
+### Specification Compliance
+
+Our configuration aligns with the devcontainer specification as demonstrated in [PR #675](https://github.com/devcontainers/spec/pull/675), which establishes the baseline configuration:
+
+```json
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {}
+}
+```
+
+We extend this minimal specification with project-specific features, extensions, and lifecycle commands to support the FlowAgent development workflow.
+
 ## Configuration
 
 ### devcontainer.json
@@ -144,6 +159,20 @@ gh codespace rebuild -c CODESPACE_NAME
 1. Check port is listening: `netstat -tuln | grep PORT`
 2. Forward manually: Ports view → Forward a Port
 3. Check firewall settings
+
+## Validation
+
+To validate the devcontainer configuration:
+
+```bash
+python3 .devcontainer/validate_config.py
+```
+
+This script checks:
+- JSON syntax validity
+- Base image compliance with devcontainer spec
+- Property validation against the specification
+- Configuration summary
 
 ## Resources
 

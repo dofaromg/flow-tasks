@@ -1,0 +1,93 @@
+# Network Topology Configuration
+# 動態網狀拓撲配置
+
+topology:
+  type: "dynamic_mesh"
+  auto_discovery: true
+  self_healing: true
+  
+  nodes:
+    geo_layer:
+      - id: "geo-001"
+        position: [0.0, 0.0, 35786]  # [lon, lat, altitude_km]
+        connections: ["meo-001", "meo-002", "meo-003", "meo-004"]
+      - id: "geo-002"
+        position: [120.0, 0.0, 35786]
+        connections: ["meo-005", "meo-006", "meo-007", "meo-008"]
+      - id: "geo-003"
+        position: [-120.0, 0.0, 35786]
+        connections: ["meo-009", "meo-010", "meo-011", "meo-012"]
+    
+    meo_layer:
+      region_asia_pacific:
+        - id: "meo-ap-001"
+          orbit_plane: 1
+          initial_position: [120.0, 35.0, 10000]
+        - id: "meo-ap-002"
+          orbit_plane: 1
+          initial_position: [125.0, 35.0, 10000]
+        - id: "meo-ap-003"
+          orbit_plane: 2
+          initial_position: [130.0, 35.0, 10000]
+      
+    leo_layer:
+      constellation_1:
+        orbit_planes: 10
+        satellites_per_plane: 5
+        inclination: 53.0  # degrees
+        altitude: 1000  # km
+      
+  links:
+    geo_to_meo:
+      bandwidth: 50  # Gbps
+      latency_ms: 119  # theoretical
+      reliability: 0.999
+      
+    meo_to_meo:
+      bandwidth: 100  # Gbps (laser links)
+      latency_ms: 33  # theoretical
+      reliability: 0.9995
+      
+    meo_to_leo:
+      bandwidth: 10  # Gbps
+      latency_ms: 30  # theoretical
+      reliability: 0.998
+      
+    leo_to_leo:
+      bandwidth: 25  # Gbps (laser links)
+      latency_ms: 3  # theoretical
+      reliability: 0.999
+      
+    leo_to_ground:
+      bandwidth: 1  # Gbps
+      latency_ms: 3  # theoretical
+      reliability: 0.995
+
+routing:
+  algorithm: "adaptive_dijkstra"
+  update_interval: 5  # seconds
+  path_caching: true
+  cache_ttl: 30  # seconds
+  
+  metrics:
+    - name: "latency"
+      weight: 0.4
+    - name: "bandwidth"
+      weight: 0.3
+    - name: "reliability"
+      weight: 0.2
+    - name: "hop_count"
+      weight: 0.1
+  
+  failover:
+    enabled: true
+    detection_timeout: 2  # seconds
+    reroute_delay: 0.5  # seconds
+    max_retries: 3
+
+resilience:
+  redundancy_level: 2  # number of backup paths
+  health_check_interval: 5  # seconds
+  node_failure_threshold: 3  # consecutive failures
+  auto_recovery: true
+  isolation_on_failure: true

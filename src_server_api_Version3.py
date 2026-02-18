@@ -1,3 +1,34 @@
+"""FlowAgent REST API Server v3.
+
+This module provides a Flask-based REST API server for the FlowAgent system.
+It exposes endpoints for text translation and trace restoration.
+
+API Endpoints:
+    - POST /translate: Translate text using the advanced parser
+    - POST /restore: Restore trace from file using Fluin interpreter
+    - GET /health: Health check endpoint
+
+Usage:
+    python src_server_api_Version3.py
+    # Server starts on http://0.0.0.0:8080
+
+Example requests:
+    # Translate text
+    curl -X POST http://localhost:8080/translate \\
+        -H "Content-Type: application/json" \\
+        -d '{"text": "Hello World"}'
+    
+    # Restore trace
+    curl -X POST http://localhost:8080/restore \\
+        -H "Content-Type: application/json" \\
+        -d '{"file": "./traces/example.trace"}'
+    
+    # Health check
+    curl http://localhost:8080/health
+
+Version: 3.0
+"""
+
 from flask import Flask, request, jsonify
 import subprocess
 import sys
@@ -39,8 +70,22 @@ def run_safe_command(script: str, argument: str) -> str:
 def translate() -> Any:
     """Translate input text using advanced parser.
     
+    Endpoint: POST /translate
+    
+    Request Body:
+        text (str): The input text to translate/parse
+    
+    Response:
+        200: {"result": "Translated/parsed output"}
+        400: {"error": "Missing text parameter"}
+    
+    Example:
+        curl -X POST http://localhost:8080/translate \\
+            -H "Content-Type: application/json" \\
+            -d '{"text": "Hello World"}'
+    
     Returns:
-        JSON response with result or error
+        JSON response with parsed result or error message
     """
     input_text = request.json.get('text', '')
     if not input_text:
@@ -54,8 +99,22 @@ def translate() -> Any:
 def restore() -> Any:
     """Restore trace from file using Fluin interpreter.
     
+    Endpoint: POST /restore
+    
+    Request Body:
+        file (str): Path to the trace file to restore
+    
+    Response:
+        200: {"result": "Restored trace data"}
+        400: {"error": "Missing file parameter"}
+    
+    Example:
+        curl -X POST http://localhost:8080/restore \\
+            -H "Content-Type: application/json" \\
+            -d '{"file": "./traces/example.trace"}'
+    
     Returns:
-        JSON response with result or error
+        JSON response with restored trace data or error message
     """
     file_path = request.json.get('file', '')
     if not file_path:
@@ -63,6 +122,24 @@ def restore() -> Any:
     
     interpreter_output = run_safe_command('FluinTraceInterpreter.py', file_path)
     return jsonify({'result': interpreter_output})
+
+
+@app.route('/health', methods=['GET'])
+def health() -> Any:
+    """Health check endpoint.
+    
+    Endpoint: GET /health
+    
+    Response:
+        200: {"status": "healthy", "version": "3.0"}
+    
+    Example:
+        curl http://localhost:8080/health
+    
+    Returns:
+        JSON response with server health status
+    """
+    return jsonify({'status': 'healthy', 'version': '3.0'})
 
 
 if __name__ == "__main__":
