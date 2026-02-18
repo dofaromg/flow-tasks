@@ -1,0 +1,184 @@
+name: 🗂️ AI 結構索引更新
+
+on:
+  # 定期觸發
+  schedule:
+    - cron: '0 0 * * 1'  # 每週一 00:00 UTC
+    - cron: '0 2 * * *'  # 每天 02:00 UTC (增量)
+  
+  # Push 觸發 (僅主分支)
+  push:
+    branches: [main]
+    paths:
+      - '**/*.py'
+      - '**/*.ts'
+      - '**/*.js'
+      - '**/*.jsx'
+      - '**/*.tsx'
+      - '**/README.md'
+      - 'MrLiou_AI_SuperComputer/**'
+      - 'particle_core/**'
+  
+  # 手動觸發
+  workflow_dispatch:
+    inputs:
+      scan_depth:
+        description: '掃描深度'
+        required: false
+        default: '8'
+      force_update:
+        description: '強制完整更新'
+        required: false
+        default: 'false'
+  
+  # Issue 評論觸發
+  issue_comment:
+    types: [created]
+
+jobs:
+  update-structure-index:
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name != 'issue_comment' ||
+      (github.event.comment.body == '@copilot update-structure-index')
+    
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 完整歷史記錄
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+      
+      - name: 📦 Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml requests
+      
+      - name: 🔍 Run Structure Scanner
+        id: scan
+        run: |
+          python .copilot/scanner/structure_scanner.py \
+            --root . \
+            --depth ${{ github.event.inputs.scan_depth || '8' }} \
+            --output .copilot/structure-scan.json
+        continue-on-error: false
+      
+      - name: 🎨 Generate Emoji Index
+        id: index
+        run: |
+          python .copilot/generator/emoji_indexer.py \
+            --input .copilot/structure-scan.json \
+            --output-dir .
+        continue-on-error: false
+      
+      - name: 📊 Check for Changes
+        id: check_changes
+        run: |
+          if git diff --quiet HEAD -- STRUCTURE.md .copilot/structure-index.json .copilot/structure.fltnz; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "✅ 無變更需要提交"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "🔄 檢測到結構變更"
+          fi
+      
+      - name: 📝 Generate Diff Report
+        if: steps.check_changes.outputs.has_changes == 'true'
+        id: diff
+        run: |
+          echo "## 📊 結構索引變更報告" > diff-report.md
+          echo "" >> diff-report.md
+          echo "**更新時間**: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> diff-report.md
+          echo "**觸發方式**: ${{ github.event_name }}" >> diff-report.md
+          echo "" >> diff-report.md
+          
+          if [ -f .copilot/structure-index.json ]; then
+            echo "### 📈 統計變更" >> diff-report.md
+            echo "\`\`\`" >> diff-report.md
+            git diff --no-color HEAD -- .copilot/structure-index.json | head -50 >> diff-report.md
+            echo "\`\`\`" >> diff-report.md
+          fi
+          
+          cat diff-report.md
+      
+      - name: 💾 Commit and Push Changes
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          git add STRUCTURE.md
+          git add .copilot/structure-index.json
+          git add .copilot/structure.fltnz
+          git add .copilot/structure-scan.json
+          
+          git commit -m "🗂️ Auto-update structure index
+
+          - Updated by GitHub Actions
+          - Triggered by: ${{ github.event_name }}
+          - Scan depth: ${{ github.event.inputs.scan_depth || '8' }}
+          - Timestamp: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
+          "
+          
+          git push
+      
+      - name: 💬 Comment on Issue (if triggered by comment)
+        if: |
+          github.event_name == 'issue_comment' &&
+          steps.check_changes.outputs.has_changes == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ 結構索引已自動更新！\n\n請查看最新的 [STRUCTURE.md](../blob/main/STRUCTURE.md) 和 [結構索引](.copilot/structure-index.json)。'
+            })
+      
+      - name: 📤 Upload Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: structure-index-${{ github.run_number }}
+          path: |
+            .copilot/structure-scan.json
+            .copilot/structure-index.json
+            .copilot/structure.fltnz
+            STRUCTURE.md
+          retention-days: 30
+      
+      - name: ✅ Summary
+        if: always()
+        run: |
+          echo "## 🗂️ 結構索引更新摘要" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **執行時間**: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "- **觸發方式**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **掃描深度**: ${{ github.event.inputs.scan_depth || '8' }} 層" >> $GITHUB_STEP_SUMMARY
+          echo "- **有變更**: ${{ steps.check_changes.outputs.has_changes }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f .copilot/structure-scan.json ]; then
+            echo "### 📊 掃描統計" >> $GITHUB_STEP_SUMMARY
+            python -c "
+import json
+with open('.copilot/structure-scan.json', 'r') as f:
+    data = json.load(f)
+    stats = data.get('statistics', {})
+    print(f'- 總檔案數: {stats.get(\"total_files\", 0):,}')
+    print(f'- 總目錄數: {stats.get(\"total_dirs\", 0):,}')
+    print(f'- 總代碼行數: {stats.get(\"total_lines\", 0):,}')
+            " >> $GITHUB_STEP_SUMMARY
+          fi

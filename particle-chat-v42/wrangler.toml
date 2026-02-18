@@ -1,0 +1,23 @@
+# MrLiouWord Particle Chat v4.2
+# 完整整合版 - Notion 架構文檔實現
+# origin_signature: MrLiouWord
+
+name = "particle-chat"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+VERSION = "4.2.0"
+ORIGIN_SIGNATURE = "MrLiouWord"
+PHI = "1.618033988749895"
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "mrl-ai-db"
+database_id = "3e91888d-3614-4abd-85a4-79db981b3fb6"
+
+# KV Namespace binding (optional)
+# [[kv_namespaces]]
+# binding = "KV"
+# id = "your-kv-id"

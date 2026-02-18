@@ -1,0 +1,33 @@
+{
+  "fusion_id": "sequential_refine",
+  "mode": "sequential",
+  "prompt": "Explain quantum entanglement in simple terms",
+  "outputs": [
+    {
+      "timestamp": "2026-02-01T11:15:54.428388+00:00",
+      "input": "Explain quantum entanglement in simple terms",
+      "output": "[openai/gpt-4] Response to: Explain quantum entanglement in simple terms...",
+      "provider": "openai",
+      "model": "gpt-4",
+      "role": "initial_draft"
+    },
+    {
+      "timestamp": "2026-02-01T11:15:54.428403+00:00",
+      "input": "[openai/gpt-4] Response to: Explain quantum entanglement in simple terms...",
+      "output": "[claude/claude-3-opus] Response to: [openai/gpt-4] Response to: Explain quantum entang...",
+      "provider": "claude",
+      "model": "claude-3-opus",
+      "role": "critic_refine"
+    },
+    {
+      "timestamp": "2026-02-01T11:15:54.428407+00:00",
+      "input": "[claude/claude-3-opus] Response to: [openai/gpt-4] Response to: Explain quantum entang...",
+      "output": "[gemini/gemini-pro] Response to: [claude/claude-3-opus] Response to: [openai/gpt-4]...",
+      "provider": "gemini",
+      "model": "gemini-pro",
+      "role": "final_polish"
+    }
+  ],
+  "final_result": "[gemini/gemini-pro] Response to: [claude/claude-3-opus] Response to: [openai/gpt-4]...",
+  "particle_count": 3
+}
