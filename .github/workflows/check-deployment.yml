@@ -1,0 +1,88 @@
+name: 檢查部署 (Check Deployment Status)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'
+
+env:
+  PROJECT_ID: flowmemorysync
+  REGION: asia-east1
+  ZONE: asia-east1-a
+  CLUSTER_NAME: modular-cluster
+  NAMESPACE: flowagent
+  DEPLOYMENTS: "module-a orchestrator mongodb"
+  ROLLOUT_TIMEOUT: "300s"
+
+jobs:
+  check-deployment:
+    name: 檢查部署狀態 (Check Deployment Status)
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_DEPLOYER_SA }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Install gke-gcloud-auth-plugin
+        run: gcloud components install gke-gcloud-auth-plugin --quiet
+
+      - name: Get GKE credentials
+        run: |
+          gcloud container clusters get-credentials ${{ env.CLUSTER_NAME }} \
+            --zone ${{ env.ZONE }} \
+            --project ${{ env.PROJECT_ID }}
+
+      - name: Check deployments
+        id: check_deployments
+        run: |
+          echo "### 🔍 Deployment Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "**Deployments:**" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          kubectl get deployments -n ${{ env.NAMESPACE }} >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "**Pods:**" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          kubectl get pods -n ${{ env.NAMESPACE }} >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "**Services:**" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          kubectl get svc -n ${{ env.NAMESPACE }} >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+      - name: Verify rollout status
+        run: |
+          FAILED=0
+          for deploy in ${{ env.DEPLOYMENTS }}; do
+            if kubectl get deployment/$deploy -n ${{ env.NAMESPACE }} &>/dev/null; then
+              if ! kubectl rollout status deployment/$deploy -n ${{ env.NAMESPACE }} --timeout=${{ env.ROLLOUT_TIMEOUT }}; then
+                echo "❌ $deploy rollout not complete" | tee -a $GITHUB_STEP_SUMMARY
+                FAILED=1
+              else
+                echo "✅ $deploy is healthy" | tee -a $GITHUB_STEP_SUMMARY
+              fi
+            else
+              echo "⚠️  $deploy deployment not found in namespace ${{ env.NAMESPACE }}" | tee -a $GITHUB_STEP_SUMMARY
+            fi
+          done
+          exit $FAILED
