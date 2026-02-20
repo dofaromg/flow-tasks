@@ -7,6 +7,7 @@ Computational Primitives for Enhanced System Computation
 
 from typing import List, Dict, Any, Optional, Tuple, Callable
 import math
+from collections import deque
 from concurrent.futures import ThreadPoolExecutor
 from functools import reduce
 
@@ -154,11 +155,11 @@ class GraphAlgorithms:
         if start not in graph:
             return None
         
-        queue = [(start, [start])]
+        queue = deque([(start, [start])])
         visited = {start}
         
         while queue:
-            node, path = queue.pop(0)
+            node, path = queue.popleft()
             
             if node == end:
                 return path
@@ -211,11 +212,11 @@ class GraphAlgorithms:
                     in_degree[neighbor] = 0
                 in_degree[neighbor] += 1
         
-        queue = [node for node, degree in in_degree.items() if degree == 0]
+        queue = deque([node for node, degree in in_degree.items() if degree == 0])
         result = []
         
         while queue:
-            node = queue.pop(0)
+            node = queue.popleft()
             result.append(node)
             
             for neighbor in graph.get(node, []):
