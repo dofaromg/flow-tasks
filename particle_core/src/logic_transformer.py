@@ -19,7 +19,6 @@ class LogicTransformer:
             "store": "ST"
         }
         
-        self.expand_map = {symbol: function_name for function_name, symbol in self.compress_map.items()}
         self.expand_map = {v: k for k, v in self.compress_map.items()}
         
         # 預定義轉換規則
@@ -30,11 +29,6 @@ class LogicTransformer:
             "debug": ["structure", "mark", "debug", "flow", "recurse", "store"]
         }
     
-    def compress_to_symbols(self, function_list: List[str]) -> str:
-        """壓縮函數列表為符號表示"""
-        symbols = []
-        for function_name in function_list:
-            symbol = self.compress_map.get(function_name, function_name[0].upper())
     def compress_to_symbols(self, fn_list: List[str]) -> str:
         """壓縮函數列表為符號表示"""
         symbols = []
@@ -56,21 +50,6 @@ class LogicTransformer:
         
         return expanded
     
-    def compress_to_flpkg(self, function_list: List[str], compact: bool = False) -> str:
-        """壓縮函數鏈為 .flpkg 形式"""
-        if compact:
-            # 緊湊模式
-            return self.compress_to_symbols(function_list)
-        
-        # 標準模式
-        if function_list == self.transformation_rules["standard"]:
-            return "SEED(X) = ST(R(F(M(S(X)))))"
-        
-        # 動態建構
-        if len(function_list) > 0:
-            nested = "X"
-            for function_name in function_list:
-                symbol = self.compress_map.get(function_name, function_name[0].upper())
     def compress_to_flpkg(self, fn_list: List[str], compact: bool = False) -> str:
         """壓縮函數鏈為 .flpkg 形式"""
         if compact:
@@ -123,20 +102,6 @@ class LogicTransformer:
         """轉換為預設規則"""
         return self.transformation_rules.get(preset_name, [])
     
-    def create_transformation_map(self, function_list: List[str]) -> Dict[str, Any]:
-        """建立轉換映射表"""
-        return {
-            "original": function_list,
-            "symbols": self.compress_to_symbols(function_list),
-            "flpkg_standard": self.compress_to_flpkg(function_list, compact=False),
-            "flpkg_compact": self.compress_to_flpkg(function_list, compact=True),
-            "length": len(function_list),
-            "complexity": self._calculate_complexity(function_list)
-        }
-    
-    def _calculate_complexity(self, function_list: List[str]) -> str:
-        """計算邏輯複雜度"""
-        length = len(function_list)
     def create_transformation_map(self, fn_list: List[str]) -> Dict[str, Any]:
         """建立轉換映射表"""
         return {
@@ -247,10 +212,6 @@ def interactive_transformer():
         
         if choice == "1":
             functions_input = input("請輸入函數 (用逗號分隔): ")
-            function_list = [f.strip() for f in functions_input.split(",")]
-            
-            symbols = transformer.compress_to_symbols(function_list)
-            flpkg = transformer.compress_to_flpkg(function_list)
             functions = [f.strip() for f in functions_input.split(",")]
             
             symbols = transformer.compress_to_symbols(functions)
@@ -267,8 +228,6 @@ def interactive_transformer():
         elif choice == "3":
             print("可用預設: standard, minimal, extended, debug")
             preset = input("請選擇預設規則: ")
-            function_list = transformer.transform_to_preset(preset)
-            print(f"{preset} 規則: {' → '.join(function_list)}")
             functions = transformer.transform_to_preset(preset)
             print(f"{preset} 規則: {' → '.join(functions)}")
             
@@ -279,9 +238,6 @@ def interactive_transformer():
                 
         elif choice == "5":
             functions_input = input("請輸入函數 (用逗號分隔): ")
-            function_list = [f.strip() for f in functions_input.split(",")]
-            
-            json_export = transformer.export_to_json(function_list)
             functions = [f.strip() for f in functions_input.split(",")]
             
             json_export = transformer.export_to_json(functions)
@@ -291,8 +247,6 @@ def interactive_transformer():
                 os.makedirs("examples")
             
             filepath = f"examples/{filename}.json"
-            with open(filepath, 'w', encoding='utf-8') as output_file:
-                json.dump(json_export, output_file, ensure_ascii=False, indent=2)
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(json_export, f, ensure_ascii=False, indent=2)
             
