@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { getGrowthBook, isFeatureOn, getFeatureValue, FLAGS } from '../lib/growthbook';
+import styles from '../styles/Home.module.css';
 
 const features = [
   '一鍵部署 GKE 基礎設施與 GitOps 設定',
@@ -53,22 +54,13 @@ export default function Home() {
     <>
       <Head>
         <title>Flow Tasks - GrowthBook Demo</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
           name="description"
           content="FlowAgent GKE Starter：快速部署、GitOps、CI/CD 的參考範本。"
         />
       </Head>
-      <main
-        style={{
-          minHeight: '100vh',
-          display: 'grid',
-          placeItems: 'center',
-          fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
-          background: 'radial-gradient(circle at 20% 20%, #e0f2fe 0, transparent 25%), radial-gradient(circle at 80% 10%, #fee2e2 0, transparent 25%), #f8fafc',
-          color: '#0f172a',
-          padding: '3rem 1.5rem',
-        }}
-      >
+      <main className={styles.main}>
         {/* Feature Flag Banners */}
         {isLoaded && showSummerSale && (
           <div
@@ -111,21 +103,13 @@ export default function Home() {
         )}
 
         <section
-          style={{
-            maxWidth: 720,
-            width: '100%',
-            background: '#ffffff',
-            borderRadius: 16,
-            boxShadow: '0 16px 48px rgba(15, 23, 42, 0.08)',
-            padding: '2.5rem',
-            border: '1px solid #e2e8f0',
-            marginTop: getContentMarginTop(),
-          }}
+          className={styles.section}
+          style={{ marginTop: getContentMarginTop() }}
         >
           <p style={{ color: '#64748b', fontWeight: 600, letterSpacing: 1.2, marginBottom: 12 }}>
             FLOWAGENT GKE STARTER + GROWTHBOOK
           </p>
-          <h1 style={{ fontSize: '2.5rem', margin: '0 0 1rem', lineHeight: 1.2 }}>
+          <h1 className={styles.heading}>
             快速啟動你的雲端 GitOps 與 CI/CD
           </h1>
           <p style={{ color: '#475569', marginBottom: '1.5rem', fontSize: '1.05rem', lineHeight: 1.7 }}>
@@ -175,17 +159,13 @@ export default function Home() {
             ))}
           </div>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <div className={styles.actions}>
             <a
               href="https://github.com/dofaromg/flow-tasks"
+              className={styles.actionBtn}
               style={{
                 background: colorMap[checkoutColor] || colorMap.blue,
                 color: '#ffffff',
-                padding: '0.85rem 1.4rem',
-                borderRadius: 12,
-                textDecoration: 'none',
-                fontWeight: 700,
-                transition: 'opacity 0.2s',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
@@ -194,11 +174,8 @@ export default function Home() {
             </a>
             <a
               href="/DEPLOYMENT.md"
+              className={styles.actionBtn}
               style={{
-                padding: '0.85rem 1.4rem',
-                borderRadius: 12,
-                textDecoration: 'none',
-                fontWeight: 700,
                 border: '1px solid #e2e8f0',
                 color: '#0f172a',
                 background: '#ffffff',
