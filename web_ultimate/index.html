@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小影AI終極版 - 家庭專用AI視頻生成系統</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- 新年主題背景 -->
+    <div class="chinese-new-year-bg"></div>
+    
+    <!-- 頭部 -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">🎬 小影AI終極版</h1>
+                <div class="user-selector">
+                    <label>用戶：</label>
+                    <select id="userSelect">
+                        <option value="admin">管理員</option>
+                        <option value="parent1">家長1</option>
+                        <option value="parent2">家長2</option>
+                        <option value="child1">小朋友1</option>
+                        <option value="child2">小朋友2</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要內容 -->
+    <main class="container">
+        <!-- 系統狀態 -->
+        <section class="status-panel">
+            <h2>🖥️ 系統狀態</h2>
+            <div class="status-grid">
+                <div class="status-card">
+                    <div class="status-label">GPU使用率</div>
+                    <div id="gpuStatus" class="status-value">載入中...</div>
+                </div>
+                <div class="status-card">
+                    <div class="status-label">記憶體</div>
+                    <div id="memoryStatus" class="status-value">載入中...</div>
+                </div>
+                <div class="status-card">
+                    <div class="status-label">已載入模型</div>
+                    <div id="modelStatus" class="status-value">載入中...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 功能選擇 -->
+        <section class="feature-tabs">
+            <button class="tab-button active" data-tab="digital-human">
+                👤 數字人生成
+            </button>
+            <button class="tab-button" data-tab="voice-clone">
+                🎤 聲音克隆
+            </button>
+            <button class="tab-button" data-tab="photo-video">
+                📸 照片動畫
+            </button>
+            <button class="tab-button" data-tab="quick-mode">
+                ⚡ 快速模式
+            </button>
+        </section>
+
+        <!-- 數字人生成 -->
+        <section id="digital-human" class="tab-content active">
+            <h2>👤 數字人生成</h2>
+            <div class="form-container">
+                <div class="upload-area" id="imageUpload">
+                    <div class="upload-icon">📷</div>
+                    <p>拖拽或點擊上傳照片</p>
+                    <input type="file" id="imageFile" accept="image/*" hidden>
+                    <div id="imagePreview" class="preview"></div>
+                </div>
+
+                <div class="upload-area" id="audioUpload">
+                    <div class="upload-icon">🎵</div>
+                    <p>拖拽或點擊上傳語音</p>
+                    <input type="file" id="audioFile" accept="audio/*" hidden>
+                    <div id="audioPreview" class="preview"></div>
+                </div>
+
+                <div class="settings-panel">
+                    <h3>⚙️ 設置</h3>
+                    
+                    <div class="setting-group">
+                        <label>分辨率：</label>
+                        <select id="resolution">
+                            <option value="720p">720p (快速)</option>
+                            <option value="1080p">1080p (標準)</option>
+                            <option value="4k" selected>4K (高質量)</option>
+                            <option value="8k">8K (極致)</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>幀率：</label>
+                        <select id="fps">
+                            <option value="30">30 FPS</option>
+                            <option value="60" selected>60 FPS</option>
+                            <option value="120">120 FPS</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>質量：</label>
+                        <select id="quality">
+                            <option value="fast">快速</option>
+                            <option value="balanced" selected>平衡</option>
+                            <option value="high">高質量</option>
+                            <option value="ultra">極致</option>
+                        </select>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" id="enableBlink" checked>
+                            真實眨眼
+                        </label>
+                        <label>
+                            <input type="checkbox" id="enableMicro" checked>
+                            微表情
+                        </label>
+                        <label>
+                            <input type="checkbox" id="enableBreathing" checked>
+                            呼吸動畫
+                        </label>
+                    </div>
+                </div>
+
+                <button id="generateDigitalHuman" class="primary-button">
+                    🎬 開始生成
+                </button>
+            </div>
+
+            <!-- 進度條 -->
+            <div id="progressBar" class="progress-container" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p id="progressText" class="progress-text">處理中...</p>
+            </div>
+
+            <!-- 結果預覽 -->
+            <div id="resultPreview" class="result-container" style="display: none;">
+                <h3>✨ 生成完成！</h3>
+                <video id="resultVideo" controls></video>
+                <div class="result-info">
+                    <p>處理時間：<span id="processingTime"></span></p>
+                    <p>分辨率：<span id="resultResolution"></span></p>
+                    <p>幀率：<span id="resultFPS"></span></p>
+                </div>
+                <button id="downloadResult" class="secondary-button">
+                    📥 下載視頻
+                </button>
+            </div>
+        </section>
+
+        <!-- 聲音克隆 -->
+        <section id="voice-clone" class="tab-content">
+            <h2>🎤 聲音克隆</h2>
+            <div class="form-container">
+                <div class="upload-area" id="referenceAudioUpload">
+                    <div class="upload-icon">🎙️</div>
+                    <p>上傳參考音頻 (30秒-10分鐘)</p>
+                    <input type="file" id="referenceAudioFile" accept="audio/*" hidden>
+                    <div id="referenceAudioPreview" class="preview"></div>
+                </div>
+
+                <div class="text-input-area">
+                    <label>要合成的文本：</label>
+                    <textarea id="voiceText" rows="5" placeholder="請輸入要合成的文本..."></textarea>
+                    <p class="char-count">字數：<span id="charCount">0</span></p>
+                </div>
+
+                <div class="settings-panel">
+                    <h3>⚙️ 設置</h3>
+                    
+                    <div class="setting-group">
+                        <label>模型：</label>
+                        <select id="voiceModel">
+                            <option value="f5_tts_v2" selected>F5-TTS v2 (推薦)</option>
+                            <option value="cosyvoice">CosyVoice</option>
+                            <option value="gpt_sovits_v2">GPT-SoVITS v2</option>
+                            <option value="xtts_v3">XTTS v3</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>語言：</label>
+                        <select id="voiceLanguage">
+                            <option value="zh" selected>中文</option>
+                            <option value="en">English</option>
+                            <option value="ja">日本語</option>
+                            <option value="ko">한국어</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>情感：</label>
+                        <select id="voiceEmotion">
+                            <option value="neutral" selected>中性</option>
+                            <option value="happy">開心</option>
+                            <option value="sad">悲傷</option>
+                            <option value="angry">生氣</option>
+                            <option value="excited">興奮</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>速度：<span id="speedValue">1.0x</span></label>
+                        <input type="range" id="voiceSpeed" min="0.5" max="2.0" step="0.1" value="1.0">
+                    </div>
+                </div>
+
+                <button id="generateVoice" class="primary-button">
+                    🎤 克隆聲音
+                </button>
+            </div>
+
+            <!-- 進度和結果 -->
+            <div id="voiceProgressBar" class="progress-container" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="voiceProgressFill"></div>
+                </div>
+                <p id="voiceProgressText" class="progress-text">處理中...</p>
+            </div>
+
+            <div id="voiceResultPreview" class="result-container" style="display: none;">
+                <h3>✨ 克隆完成！</h3>
+                <audio id="resultAudio" controls></audio>
+                <div class="result-info">
+                    <p>處理時間：<span id="voiceProcessingTime"></span></p>
+                    <p>音頻長度：<span id="resultDuration"></span></p>
+                </div>
+                <button id="downloadVoiceResult" class="secondary-button">
+                    📥 下載音頻
+                </button>
+            </div>
+        </section>
+
+        <!-- 照片動畫 -->
+        <section id="photo-video" class="tab-content">
+            <h2>📸 照片動畫 (即將推出)</h2>
+            <p>此功能正在開發中...</p>
+        </section>
+
+        <!-- 快速模式（兒童友好） -->
+        <section id="quick-mode" class="tab-content">
+            <h2>⚡ 快速模式 - 給小朋友</h2>
+            <div class="quick-mode-grid">
+                <div class="quick-card" onclick="quickGenerate('family-greeting')">
+                    <div class="quick-icon">🧧</div>
+                    <h3>家庭拜年視頻</h3>
+                    <p>一鍵生成新年祝福</p>
+                </div>
+                <div class="quick-card" onclick="quickGenerate('photo-album')">
+                    <div class="quick-icon">📸</div>
+                    <h3>家庭相冊</h3>
+                    <p>自動處理全家福</p>
+                </div>
+                <div class="quick-card" onclick="quickGenerate('cartoon')">
+                    <div class="quick-icon">🎨</div>
+                    <h3>卡通動畫</h3>
+                    <p>照片變卡通</p>
+                </div>
+                <div class="quick-card" onclick="quickGenerate('fireworks')">
+                    <div class="quick-icon">🎆</div>
+                    <h3>煙火特效</h3>
+                    <p>新年煙火動畫</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 頁腳 -->
+    <footer class="footer">
+        <p>🎊 小影AI終極版 v1.0 | 專為家庭打造的AI視頻生成系統 🎊</p>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

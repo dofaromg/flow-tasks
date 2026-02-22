@@ -1,0 +1,27 @@
+{
+  "name": "Sample pipeline",
+  "description": "Validates inputs and prints the sample node wiring.",
+  "nodes": [
+    {
+      "id": "source",
+      "name": "Load input data",
+      "type": "data_source",
+      "inputs": [],
+      "outputs": ["raw_data"]
+    },
+    {
+      "id": "transform",
+      "name": "Transform raw data",
+      "type": "transformation",
+      "inputs": ["raw_data"],
+      "outputs": ["clean_data"]
+    },
+    {
+      "id": "export",
+      "name": "Export results",
+      "type": "sink",
+      "inputs": ["clean_data"],
+      "outputs": []
+    }
+  ]
+}

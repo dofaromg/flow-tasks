@@ -1,0 +1,74 @@
+name: Neural Branch Sync
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    types: [opened, closed, merged, synchronize]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  sync-neural-network:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Update Neural Map
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/update-neural-map.js
+      
+      - name: Generate Mermaid Graph
+        run: |
+          node scripts/generate-mermaid.js
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --exit-code neural-links/ || echo "has_changes=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit Neural Updates
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git config --global user.name "MrLiouWord Neural Bot"
+          git config --global user.email "neural@mrliouword.dev"
+          git add neural-links/
+          git commit -m "🧠 Auto-sync neural network map [skip ci]" || echo "No changes to commit"
+          git push origin HEAD || echo "Push failed, may need manual intervention"
+      
+      - name: Display Neural Stats
+        run: |
+          echo "## 🧠 Neural Network Statistics" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          node -e "
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('neural-links/branch-map.json', 'utf-8'));
+          const nodes = data.neural_network.nodes;
+          const synapses = data.neural_network.synapses;
+          console.log('| Metric | Value |');
+          console.log('|--------|-------|');
+          console.log('| Total Nodes | ' + nodes.length + ' |');
+          console.log('| Total Synapses | ' + synapses.length + ' |');
+          console.log('| Active Nodes | ' + nodes.filter(n => n.status === 'active').length + ' |');
+          console.log('| Merged Nodes | ' + nodes.filter(n => n.status === 'merged').length + ' |');
+          const avgEnergy = (nodes.reduce((sum, n) => sum + n.energy, 0) / nodes.length * 100).toFixed(1);
+          console.log('| Average Energy | ' + avgEnergy + '% |');
+          " >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Neural Network Visualization" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cat neural-links/synaptic-graph.mermaid >> $GITHUB_STEP_SUMMARY

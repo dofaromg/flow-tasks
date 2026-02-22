@@ -1,0 +1,161 @@
+# Family User Configuration
+# 家庭成員配置 (5人)
+
+users:
+  - id: "admin"
+    name: "管理員"
+    role: "admin"
+    priority: 10
+    max_concurrent_tasks: 5
+    quota:
+      daily_tasks: 1000
+      gpu_hours: 24
+    preferences:
+      default_quality: "ultimate"
+      default_resolution: "4k"
+      default_fps: 60
+    workspace: "/workspaces/admin"
+    
+  - id: "parent1"
+    name: "家長1"
+    role: "user"
+    priority: 8
+    max_concurrent_tasks: 3
+    quota:
+      daily_tasks: 100
+      gpu_hours: 12
+    preferences:
+      default_quality: "balanced"
+      default_resolution: "1080p"
+      default_fps: 60
+    workspace: "/workspaces/parent1"
+    features:
+      - "batch_processing"
+      - "advanced_editing"
+      - "export_formats"
+    
+  - id: "parent2"
+    name: "家長2"
+    role: "user"
+    priority: 8
+    max_concurrent_tasks: 3
+    quota:
+      daily_tasks: 100
+      gpu_hours: 12
+    preferences:
+      default_quality: "balanced"
+      default_resolution: "1080p"
+      default_fps: 60
+    workspace: "/workspaces/parent2"
+    features:
+      - "batch_processing"
+      - "advanced_editing"
+      - "export_formats"
+    
+  - id: "child1"
+    name: "小朋友1"
+    role: "child"
+    priority: 5
+    max_concurrent_tasks: 2
+    quota:
+      daily_tasks: 50
+      gpu_hours: 6
+    preferences:
+      default_quality: "fast"
+      default_resolution: "720p"
+      default_fps: 30
+    workspace: "/workspaces/child1"
+    child_mode:
+      enabled: true
+      simplified_ui: true
+      templates_only: true
+      parental_control: true
+    features:
+      - "quick_preview"
+      - "templates"
+      - "simple_effects"
+    
+  - id: "child2"
+    name: "小朋友2"
+    role: "child"
+    priority: 5
+    max_concurrent_tasks: 2
+    quota:
+      daily_tasks: 50
+      gpu_hours: 6
+    preferences:
+      default_quality: "fast"
+      default_resolution: "720p"
+      default_fps: 30
+    workspace: "/workspaces/child2"
+    child_mode:
+      enabled: true
+      simplified_ui: true
+      templates_only: true
+      parental_control: true
+    features:
+      - "quick_preview"
+      - "templates"
+      - "simple_effects"
+
+# 兒童模式設置
+child_mode_settings:
+  max_video_length: 30  # seconds
+  allowed_effects:
+    - "cartoon"
+    - "animation"
+    - "stickers"
+    - "chinese_new_year"
+  blocked_features:
+    - "face_swap"
+    - "3d_modeling"
+    - "advanced_vfx"
+  auto_approve: false  # 需要家長審核
+  content_filter: true
+
+# 工作區配置
+workspace_config:
+  base_path: "/workspaces"
+  quota_per_user: 100  # GB
+  auto_cleanup:
+    enabled: true
+    days_to_keep: 30
+    archive_old_projects: true
+
+# 共享資源
+shared_resources:
+  templates_path: "/shared/templates"
+  music_library: "/shared/music"
+  effects_library: "/shared/effects"
+  fonts_library: "/shared/fonts"
+
+# 新年特別設置
+chinese_new_year:
+  enabled: true
+  theme: "spring_festival_2026"
+  special_effects:
+    - "fireworks"
+    - "lanterns"
+    - "spring_couplets"
+    - "lucky_money"
+  music_themes:
+    - "celebration"
+    - "family_reunion"
+    - "fortune"
+  templates:
+    - "family_greeting"
+    - "year_review"
+    - "lucky_wishes"
+    - "photo_album"
+
+# 家庭相冊功能
+family_album:
+  enabled: true
+  shared_path: "/shared/family_album"
+  auto_backup: true
+  face_recognition: true  # 自動識別家庭成員
+  auto_tagging: true
+  batch_processing:
+    max_photos: 100
+    auto_enhance: true
+    create_video: true

@@ -1,27 +1,83 @@
 {
   "processing_time": "2025-09-14T05:05:20.473375",
+  "processing_time": "2026-02-11T18:02:48.995849",
   "total_tasks": 2,
   "passed": 2,
   "failed": 0,
+  "warnings": 0,
   "tasks": [
     {
       "task_id": "hello-world-api",
       "validation_time": "2025-09-14T05:05:20.474667",
+      "task_name": "Unknown Task",
+      "validation_time": "2026-02-11T18:02:48.996540",
       "status": "passed",
       "checks": [
-        "✓ Target file exists: flow_code/hello_api.py",
-        "✓ Python module imports successfully"
+        {
+          "check": "file_exists",
+          "status": "passed",
+          "message": "Target file exists: flow_code/hello_api.py"
+        },
+        {
+          "check": "python_import",
+          "status": "passed",
+          "message": "Python module imports successfully"
+        }
       ],
-      "errors": []
+      "errors": [],
+      "warnings": [],
+      "metrics": {
+        "execution_time_ms": 95.63,
+        "files_checked": 1,
+        "lines_of_code": 36
+      },
+      "metadata": {
+        "description": "寫一個 Flask 的 hello world API，輸出 \"你好，世界\"",
+        "priority": "medium",
+        "tags": []
+      }
     },
     {
       "task_id": "particle-language-core",
+<<<<<<< 記憶
       "validation_time": "2025-09-14T05:05:20.701032",
+=======
+      "task_name": "Unknown Task",
+      "validation_time": "2026-02-11T18:02:49.093994",
+>>>>>>> main
       "status": "passed",
       "checks": [
-        "✓ Target directory exists: particle_core/"
+        {
+          "check": "directory_exists",
+          "status": "passed",
+          "message": "Target directory exists: particle_core/"
+        }
       ],
-      "errors": []
+      "errors": [],
+      "warnings": [],
+      "metrics": {
+        "execution_time_ms": 0.76,
+        "files_checked": 105,
+        "lines_of_code": 0
+      },
+      "metadata": {
+        "description": "MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統",
+        "priority": "medium",
+        "tags": []
+      }
     }
   ]
+  ],
+  "overall_metrics": {
+    "total_execution_time_ms": 99.08,
+    "total_files_checked": 106,
+    "total_lines_of_code": 36,
+    "average_task_time_ms": 49.54
+  },
+  "summary": {
+    "pass_rate": 100.0,
+    "recommendations": [
+      "✅ All tasks passed validation. Great job!"
+    ]
+  }
 }

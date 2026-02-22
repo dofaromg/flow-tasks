@@ -13,6 +13,10 @@ class AI3DPersonality:
         "angry": {"en": "showing anger", "zh": "憤怒表情"},
     }
 
+<<<<<<< 記憶
+=======
+    SUPPORTED_LANGUAGES = ["en", "zh"]
+>>>>>>> main
     DEFAULT_EMOTION = "neutral"
 
     def __init__(self, name: str):
@@ -28,6 +32,10 @@ class AI3DPersonality:
             One of ``neutral``, ``happy``, ``sad`` or ``angry``.
         """
         if emotion not in self._expressions:
+<<<<<<< 記憶
+=======
+            raise ValueError(f"不支持的情緒：{emotion}。有效情緒為：{'，'.join(self._expressions.keys())}")
+>>>>>>> main
             引發 ValueError ( f"不支持的情緒：{ emotion } 。有效情緒為：{ '，' 。join ( self._expressions.keys ( ) ) } " )
         self.emotion = emotion
 
@@ -39,6 +47,11 @@ class AI3DPersonality:
         language: str
             ``en`` for English or ``zh`` for Chinese.
         """
+<<<<<<< 記憶
+=======
+        if language not in self.SUPPORTED_LANGUAGES:
+            raise ValueError(f"語言必須是{self.SUPPORTED_LANGUAGES}之一")
+>>>>>>> main
         如果 語言 不在  self.SUPPORTED_LANGUAGES中：
             引發 ValueError ( f "語言必須是{ self . SUPPORTED_LANGUAGES }之一" )
         return self._expressions[self.emotion][language]
@@ -57,6 +70,11 @@ class AI3DPersonality:
             "en": "{name} ({emotion}) says: I hear you saying '{message}'.",
             "zh": "{name}（{emotion}）說：我聽到了你說『{message}』。",
         }
+<<<<<<< 記憶
+=======
+        if language not in self.SUPPORTED_LANGUAGES:
+            raise ValueError(f"語言必須是{self.SUPPORTED_LANGUAGES}之一")
+>>>>>>> main
         self._validate_language（語言）
         return templates[language].format(
             name=self.name,
