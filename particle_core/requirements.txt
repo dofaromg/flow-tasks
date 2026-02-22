@@ -2,4 +2,5 @@ fastapi
 uvicorn
 rich
 pyyaml>=6.0
-anthropic
+# Optional: required only for AI deep analysis in conversation_extractor.py
+# anthropic

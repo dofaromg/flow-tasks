@@ -300,8 +300,7 @@ class LRUCache:
         try:
             if hasattr(self, 'auto_persist') and self.auto_persist:
                 self.shutdown()
-        except:
-            # Silently ignore exceptions during cleanup to prevent issues in destructor
+        except Exception:  # noqa: BLE001 - intentionally broad in destructor to prevent crash during GC
             pass
 
 

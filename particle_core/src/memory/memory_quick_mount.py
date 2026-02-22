@@ -196,7 +196,7 @@ class AdvancedParticleCompressor(ParticleCompressor):
                 if value_type == "dict" and isinstance(value, str):
                     try:
                         value = json.loads(value)
-                    except:
+                    except Exception:
                         pass
                 
                 result[key] = value
