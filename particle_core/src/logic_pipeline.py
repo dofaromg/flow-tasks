@@ -179,8 +179,13 @@ class LogicPipeline:
         }
         
         filename = os.path.join(output_dir, f"logic_result_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json")
+<<<<<<< 記憶
+        with open(filename, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+=======
         with open(filename, "w", encoding="utf-8") as output_file:
             json.dump(data, output_file, ensure_ascii=False, indent=2)
+>>>>>>> main
         
         return filename
     

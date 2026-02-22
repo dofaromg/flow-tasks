@@ -1,4 +1,5 @@
 {
+  "processing_time": "2025-09-14T05:05:20.473375",
   "processing_time": "2026-02-11T18:02:48.995849",
   "total_tasks": 2,
   "passed": 2,
@@ -7,6 +8,7 @@
   "tasks": [
     {
       "task_id": "hello-world-api",
+      "validation_time": "2025-09-14T05:05:20.474667",
       "task_name": "Unknown Task",
       "validation_time": "2026-02-11T18:02:48.996540",
       "status": "passed",
@@ -37,8 +39,12 @@
     },
     {
       "task_id": "particle-language-core",
+<<<<<<< 記憶
+      "validation_time": "2025-09-14T05:05:20.701032",
+=======
       "task_name": "Unknown Task",
       "validation_time": "2026-02-11T18:02:49.093994",
+>>>>>>> main
       "status": "passed",
       "checks": [
         {
@@ -60,6 +66,7 @@
         "tags": []
       }
     }
+  ]
   ],
   "overall_metrics": {
     "total_execution_time_ms": 99.08,
