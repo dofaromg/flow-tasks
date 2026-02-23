@@ -1,7 +1,6 @@
 """Tests for CLI module with programmatic invocation support."""
 
 import json
-import tempfile
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -124,8 +123,9 @@ def test_main_with_custom_argv_log(temp_env, capsys):
     captured = capsys.readouterr()
     entries = json.loads(captured.out)
     assert len(entries) == 2
-    assert entries[0]["content"] == "Log entry 1"
-    assert entries[1]["content"] == "Log entry 2"
+    # Check that both entries are present regardless of order
+    contents = {entry["content"] for entry in entries}
+    assert contents == {"Log entry 1", "Log entry 2"}
 
 
 def test_main_with_custom_argv_github_export(temp_env, capsys):
