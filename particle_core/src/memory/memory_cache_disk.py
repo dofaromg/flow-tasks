@@ -15,6 +15,7 @@ Features:
 """
 
 import json
+import hashlib
 import time
 import threading
 from pathlib import Path
@@ -209,7 +210,6 @@ class LRUCache:
     def _get_disk_path(self, key: str) -> Path:
         """Get disk path for cache key"""
         # Use hash of key to avoid filesystem issues
-        import hashlib
         key_hash = hashlib.md5(key.encode('utf-8')).hexdigest()
         return self.cache_dir / f"{key_hash}.cache.json"
     
