@@ -16,10 +16,11 @@ Architecture:
 
 import time
 import hashlib
-import math
 from enum import Enum
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Set, Tuple
+
+from .geo_utils import haversine
 
 
 class EdgeProvider(Enum):
@@ -140,12 +141,7 @@ class EdgeOnEdge:
         a, b = self.nodes.get(a_id), self.nodes.get(b_id)
         if not a or not b:
             return 99999.0
-        dlat = math.radians(b.lat - a.lat)
-        dlon = math.radians(b.lon - a.lon)
-        h = (math.sin(dlat / 2) ** 2 +
-             math.cos(math.radians(a.lat)) * math.cos(math.radians(b.lat)) *
-             math.sin(dlon / 2) ** 2)
-        return 2 * 6371 * math.asin(math.sqrt(h))
+        return haversine(a.lat, a.lon, b.lat, b.lon)
 
     # ── Node management ──
 
@@ -190,12 +186,7 @@ class EdgeOnEdge:
                 continue
             if provider and n.provider != provider:
                 continue
-            dlat = math.radians(n.lat - lat)
-            dlon = math.radians(n.lon - lon)
-            h = (math.sin(dlat / 2) ** 2 +
-                 math.cos(math.radians(lat)) * math.cos(math.radians(n.lat)) *
-                 math.sin(dlon / 2) ** 2)
-            dist = 2 * 6371 * math.asin(math.sqrt(h))
+            dist = haversine(lat, lon, n.lat, n.lon)
             if dist < best_dist:
                 best_dist = dist
                 best = n
@@ -227,7 +218,7 @@ class EdgeOnEdge:
                 if nb in visited:
                     continue
                 n = self.nodes[nb]
-                dist = self._haversine_raw(n.lat, n.lon, target.lat, target.lon)
+                dist = haversine(n.lat, n.lon, target.lat, target.lon)
                 if dist < best_dist:
                     best_dist = dist
                     best_next = nb
@@ -263,14 +254,6 @@ class EdgeOnEdge:
                 continue
             neighbors.append(neighbor_id)
         return neighbors
-
-    def _haversine_raw(self, lat1, lon1, lat2, lon2) -> float:
-        dlat = math.radians(lat2 - lat1)
-        dlon = math.radians(lon2 - lon1)
-        h = (math.sin(dlat / 2) ** 2 +
-             math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
-             math.sin(dlon / 2) ** 2)
-        return 2 * 6371 * math.asin(math.sqrt(h))
 
     # ── Stats ──
 

@@ -18,6 +18,8 @@ from enum import Enum
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
+from .geo_utils import haversine
+
 
 class CloudTier(Enum):
     L0_IAAS = "L0_IaaS"
@@ -142,13 +144,7 @@ class CloudOnCloud:
         if not a or not b:
             return 999.0
         # Rough great-circle estimate: ~0.05 ms per km of fiber
-        import math
-        dlat = math.radians(b.lat - a.lat)
-        dlon = math.radians(b.lon - a.lon)
-        h = (math.sin(dlat / 2) ** 2 +
-             math.cos(math.radians(a.lat)) * math.cos(math.radians(b.lat)) *
-             math.sin(dlon / 2) ** 2)
-        km = 2 * 6371 * math.asin(math.sqrt(h))
+        km = haversine(a.lat, a.lon, b.lat, b.lon)
         return round(km * 0.05, 2)
 
     # ── Region management ──
