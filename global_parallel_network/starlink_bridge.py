@@ -19,6 +19,8 @@ from enum import Enum
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
+from .geo_utils import haversine
+
 
 class OrbitLayer(Enum):
     LEO = "LEO"    # ~550 km (Starlink)
@@ -190,7 +192,7 @@ class StarlinkBridge:
         leo_ids = [s.id for s in self.satellites.values() if s.orbit == OrbitLayer.LEO]
         for i, a in enumerate(leo_ids):
             for b in leo_ids[i + 1:]:
-                dist = self._haversine(
+                dist = haversine(
                     self.satellites[a].lat, self.satellites[a].lon,
                     self.satellites[b].lat, self.satellites[b].lon,
                 )
@@ -218,19 +220,11 @@ class StarlinkBridge:
                 )
 
     def _find_nearest_sats(self, lat: float, lon: float, orbit: OrbitLayer, n: int = 3) -> List[SatelliteRelay]:
-        sats = [(s, self._haversine(lat, lon, s.lat, s.lon))
+        sats = [(s, haversine(lat, lon, s.lat, s.lon))
                 for s in self.satellites.values()
                 if s.orbit == orbit and s.status == SatelliteStatus.ACTIVE]
         sats.sort(key=lambda x: x[1])
         return [s for s, _ in sats[:n]]
-
-    def _haversine(self, lat1, lon1, lat2, lon2) -> float:
-        dlat = math.radians(lat2 - lat1)
-        dlon = math.radians(lon2 - lon1)
-        h = (math.sin(dlat / 2) ** 2 +
-             math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
-             math.sin(dlon / 2) ** 2)
-        return 2 * 6371 * math.asin(math.sqrt(h))
 
     # ── Routing ──
 
