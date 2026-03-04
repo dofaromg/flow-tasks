@@ -197,11 +197,13 @@ class EdgeOnEdge:
         if source_id not in self.nodes or target_id not in self.nodes:
             return None
 
+        # Compute hash once and reuse to avoid redundant SHA-256 calls.
+        payload_digest = hashlib.sha256(payload).hexdigest()
         packet = EdgePacket(
-            id=hashlib.sha256(payload).hexdigest()[:16],
+            id=payload_digest[:16],
             source_node=source_id,
             target_node=target_id,
-            payload_hash=hashlib.sha256(payload).hexdigest(),
+            payload_hash=payload_digest,
             hops=[source_id],
         )
 
@@ -209,9 +211,22 @@ class EdgeOnEdge:
         target = self.nodes[target_id]
         visited: Set[str] = {source_id}
 
+        # Build adjacency index once per routing call instead of scanning all
+        # links on every hop, reducing per-hop cost from O(links) to O(degree).
+        adj: Dict[str, List[str]] = {}
+        for (a, b), link in self.links.items():
+            if not link.is_active:
+                continue
+            node_b = self.nodes.get(b)
+            if node_b and node_b.status == EdgeNodeStatus.ACTIVE:
+                adj.setdefault(a, []).append(b)
+            node_a = self.nodes.get(a)
+            if node_a and node_a.status == EdgeNodeStatus.ACTIVE:
+                adj.setdefault(b, []).append(a)
+
         while current != target_id and packet.ttl > 0:
             # Find neighbor closest to target
-            neighbors = self._get_neighbors(current)
+            neighbors = adj.get(current, [])
             best_next = None
             best_dist = float("inf")
             for nb in neighbors:

@@ -115,6 +115,7 @@ class StarlinkBridge:
         self.links: Dict[Tuple[str, str], SatelliteLink] = {}
         self.routes_log: List[SatelliteRoute] = []
         self.origin_signature = "MrLiouWord"
+        self._adj_cache: Optional[Dict[str, List[Tuple[str, float]]]] = None
         self._init_constellation()
 
     # ── Bootstrap ──
@@ -226,6 +227,27 @@ class StarlinkBridge:
         sats.sort(key=lambda x: x[1])
         return [s for s, _ in sats[:n]]
 
+    def _invalidate_adj_cache(self) -> None:
+        """Invalidate the cached adjacency list when the link topology changes."""
+        self._adj_cache = None
+
+    def _get_adj(self) -> Dict[str, List[Tuple[str, float]]]:
+        """Return (building once) the adjacency dict used by Dijkstra routing.
+
+        The cache is valid as long as the link topology does not change.
+        Call _invalidate_adj_cache() before adding, removing, or toggling
+        links to ensure the next routing call sees the updated topology.
+        """
+        if self._adj_cache is None:
+            adj: Dict[str, List[Tuple[str, float]]] = {}
+            for (a, b), link in self.links.items():
+                if not link.is_active:
+                    continue
+                adj.setdefault(a, []).append((b, link.latency_ms))
+                adj.setdefault(b, []).append((a, link.latency_ms))
+            self._adj_cache = adj
+        return self._adj_cache
+
     # ── Routing ──
 
     def compute_route(self, source_gs: str, dest_gs: str) -> Optional[SatelliteRoute]:
@@ -236,13 +258,8 @@ class StarlinkBridge:
         if source_gs not in self.ground_stations or dest_gs not in self.ground_stations:
             return None
 
-        # Build adjacency from links
-        adj: Dict[str, List[Tuple[str, float]]] = {}
-        for (a, b), link in self.links.items():
-            if not link.is_active:
-                continue
-            adj.setdefault(a, []).append((b, link.latency_ms))
-            adj.setdefault(b, []).append((a, link.latency_ms))
+        # Use cached adjacency list to avoid O(links) rebuild on every call.
+        adj = self._get_adj()
 
         # Dijkstra
         import heapq

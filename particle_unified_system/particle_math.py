@@ -38,8 +38,9 @@ class ParticleMath:
         """
         P_expanded(n) = α · ∫₀ⁿ P_base(λ) · e^(λ·t) dλ
 
-        Numerical integration using the trapezoidal rule.
-        P_base(λ) is modeled as particle.energy (constant base).
+        Closed-form solution (P_base is constant = particle.energy):
+          t ≠ 0: α · P_base · (e^(n·t) − 1) / t
+          t = 0: α · P_base · n
 
         Returns the expanded energy value.
         """
@@ -47,18 +48,10 @@ class ParticleMath:
             return particle.energy
 
         p_base = particle.energy
-        h = n / steps
-        total = 0.0
-
-        for i in range(steps + 1):
-            lam = i * h
-            val = p_base * math.exp(lam * t)
-            if i == 0 or i == steps:
-                total += val / 2
-            else:
-                total += val
-
-        result = self.alpha * total * h
+        if abs(t) < 1e-12:
+            result = self.alpha * p_base * n
+        else:
+            result = self.alpha * p_base * (math.exp(n * t) - 1.0) / t
         return round(result, 8)
 
     def expand_particle(self, particle: Particle, n: int, t: float = 1.0) -> Particle:
