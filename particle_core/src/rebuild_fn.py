@@ -5,35 +5,18 @@ import json
 import os
 from typing import List, Dict, Any, Optional
 from datetime import datetime
+from pipeline_constants import PIPELINE_STEPS, STEP_EXPLANATIONS, COMPRESSED_SEED
 
 class FunctionRestorer:
     """MRLiou 函數還原重建器"""
     
     def __init__(self):
         self.restore_map = {
-            "SEED(X) = STORE(RECURSE(FLOW(MARK(STRUCTURE(X)))))": [
-                "structure",
-                "mark", 
-                "flow",
-                "recurse",
-                "store"
-            ],
-            "COMPACT_SEED": [
-                "structure",
-                "mark",
-                "flow", 
-                "recurse",
-                "store"
-            ]
+            COMPRESSED_SEED: list(PIPELINE_STEPS),
+            "COMPACT_SEED": list(PIPELINE_STEPS)
         }
         
-        self.explanations = {
-            "structure": "定義輸入資料結構",
-            "mark": "建立邏輯跳點標記",
-            "flow": "轉換為流程結構節奏",
-            "recurse": "遞歸展開為細部結構",
-            "store": "封存至模組記憶結構"
-        }
+        self.explanations = dict(STEP_EXPLANATIONS)
     
     def decompress_fn(self, compressed_code: str) -> List[str]:
         """解壓縮 .flpkg 格式至函數步驟"""
@@ -47,16 +30,16 @@ class FunctionRestorer:
         
         # 嘗試解析其他格式
         if "SEED" in normalized:
-            return ["structure", "mark", "flow", "recurse", "store"]
+            return list(PIPELINE_STEPS)
         
         return ["UNKNOWN_LOGIC"]
     
     def compress_fn(self, function_steps: List[str]) -> str:
         """壓縮函數步驟為 .flpkg 格式"""
-        standard_steps = ["structure", "mark", "flow", "recurse", "store"]
+        standard_steps = list(PIPELINE_STEPS)
         
         if function_steps == standard_steps:
-            return "SEED(X) = STORE(RECURSE(FLOW(MARK(STRUCTURE(X)))))"
+            return COMPRESSED_SEED
         
         # 建構動態壓縮
         if len(function_steps) > 0:

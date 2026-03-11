@@ -9,6 +9,7 @@ import hashlib
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from functools import lru_cache
 import threading
+from pipeline_constants import PIPELINE_STEPS, STEP_EXPLANATIONS, COMPRESSED_SEED
 
 class LogicPipeline:
     """MRLiou 邏輯管線核心類別 - Enhanced with parallel execution and caching"""
@@ -18,14 +19,8 @@ class LogicPipeline:
     USE_FAST_HASH = True
     
     def __init__(self, enable_cache: bool = True, max_workers: int = 4):
-        self.pipeline_steps = ["structure", "mark", "flow", "recurse", "store"]
-        self.explanations = {
-            "structure": "定義輸入資料結構",
-            "mark": "建立邏輯跳點標記", 
-            "flow": "轉換為流程結構節奏",
-            "recurse": "遞歸展開為細部結構",
-            "store": "封存至邏輯記憶模組"
-        }
+        self.pipeline_steps = list(PIPELINE_STEPS)
+        self.explanations = dict(STEP_EXPLANATIONS)
         self.enable_cache = enable_cache
         self.max_workers = max_workers
         self._cache = {}
@@ -156,7 +151,7 @@ class LogicPipeline:
     def compress_logic(self, steps: List[str]) -> str:
         """壓縮邏輯鏈為 .flpkg 格式"""
         if steps == self.pipeline_steps:
-            return "SEED(X) = STORE(RECURSE(FLOW(MARK(STRUCTURE(X)))))"
+            return COMPRESSED_SEED
         return "UNSUPPORTED_LOGIC_CHAIN"
     
     def decompress_logic(self, compressed: str) -> List[str]:

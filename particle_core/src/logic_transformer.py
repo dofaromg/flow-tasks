@@ -5,6 +5,7 @@ import json
 import os
 from typing import List, Dict, Any, Tuple
 from datetime import datetime
+from pipeline_constants import PIPELINE_STEPS, COMPRESSED_SEED
 
 class LogicTransformer:
     """MRLiou 邏輯轉化器"""
@@ -23,7 +24,7 @@ class LogicTransformer:
         
         # 預定義轉換規則
         self.transformation_rules = {
-            "standard": ["structure", "mark", "flow", "recurse", "store"],
+            "standard": list(PIPELINE_STEPS),
             "minimal": ["structure", "store"],
             "extended": ["structure", "mark", "flow", "recurse", "generate_persona", "store"],
             "debug": ["structure", "mark", "debug", "flow", "recurse", "store"]
