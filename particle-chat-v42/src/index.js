@@ -895,6 +895,225 @@ ${Object.keys(DEPLOYED_WORKERS).join(', ')}
   }
 }
 
+// ============================================================
+// 爽度導演 — FunDirector (金字塔底層堆疊 v1.0.0)
+//
+// 三層架構：
+//   Layer 1 回饋物理層 (Feel Physics)   — HIT_STOP / SCREEN_SHAKE / KNOCKBACK …
+//   Layer 2 反轉邏輯層 (Twist Logic)    — IDENTITY_FLIP / RULE_GLITCH_BURST …
+//   Layer 3 人格導演層 (Persona Director) — HYPE / PRANK / SPOOKY
+//
+// 遵循 MrLiouWord 粒子哲學 LAW-0/1/2：
+//   LAW-0 起源簽名律、LAW-1 記憶體守恆律（可追溯 eventLog）、
+//   LAW-2 記憶體單調性律（相同 seed 可重現）
+// ============================================================
+
+// ── 粒子資料（內嵌，Cloudflare Workers 不支援 require） ──
+
+const FUN_PARTICLES = {
+  feelPhysics: [
+    { id: 'HIT_STOP',        name: '命中停頓',   params: { duration_ms: 80,  intensity: 1.0 } },
+    { id: 'SCREEN_SHAKE',    name: '震屏',       params: { amplitude: 10,    duration_ms: 300 } },
+    { id: 'KNOCKBACK',       name: '擊退',       params: { force: 500,       angle: 30 } },
+    { id: 'RAGDOLL',         name: '布娃娃',     params: { joint_loose: 0.7, duration_ms: 2000 } },
+    { id: 'PROP_BREAK',      name: '道具破壞',   params: { fragments: 12,    fragment_damage: 5 } },
+    { id: 'CHAIN_REACTION',  name: '連鎖反應',   params: { radius: 200,      chain_count: 3, delay_ms: 200 } }
+  ],
+  twistLogic: [
+    { id: 'IDENTITY_FLIP',        name: '身分反轉', params: { probability: 0.15, duration_s: 10 } },
+    { id: 'RULE_GLITCH_BURST',    name: '規則爆衝', params: { probability: 0.20, burst_count: 3 } },
+    { id: 'COMEDY_CHAIN_REACTION',name: '搞笑連鎖', params: { trigger_count: 2,  laugh_factor: 1.5 } }
+  ],
+  personaDirector: [
+    { id: 'HYPE',   name: '炒熱者',   bias: { comfort: 0.2, humor: 0.3, thrill: 0.4, power: 0.1 } },
+    { id: 'PRANK',  name: '惡作劇者', bias: { comfort: 0.1, humor: 0.6, thrill: 0.2, power: 0.1 } },
+    { id: 'SPOOKY', name: '驚恐者',   bias: { comfort: 0.0, humor: 0.2, thrill: 0.6, power: 0.2 } }
+  ]
+};
+
+const FUN_MODULES = [
+  { id: 'HIT_STOP',              category: 'feelPhysics', cooldown_s: 0.5, duration_s: 0.08, weight: 10 },
+  { id: 'SCREEN_SHAKE',          category: 'feelPhysics', cooldown_s: 1.0, duration_s: 0.3,  weight: 8  },
+  { id: 'KNOCKBACK',             category: 'feelPhysics', cooldown_s: 0.8, duration_s: 0.2,  weight: 9  },
+  { id: 'RAGDOLL',               category: 'feelPhysics', cooldown_s: 3.0, duration_s: 2.0,  weight: 7  },
+  { id: 'PROP_BREAK',            category: 'feelPhysics', cooldown_s: 2.0, duration_s: 0.5,  weight: 8  },
+  { id: 'CHAIN_REACTION',        category: 'feelPhysics', cooldown_s: 5.0, duration_s: 3.0,  weight: 6  },
+  { id: 'IDENTITY_FLIP',         category: 'twistLogic',  cooldown_s: 8.0, duration_s: 10.0, weight: 5  },
+  { id: 'RULE_GLITCH_BURST',     category: 'twistLogic',  cooldown_s: 4.0, duration_s: 2.0,  weight: 6  },
+  { id: 'COMEDY_CHAIN_REACTION', category: 'twistLogic',  cooldown_s: 6.0, duration_s: 4.0,  weight: 7  }
+];
+
+const FUN_PERSONA_PRESETS = {
+  HYPE:   { funIntensity: 1.5, chaos: 1.0, vfxScale: 1.5, sfxPunch: 1.5, slowMo: true  },
+  PRANK:  { funIntensity: 1.2, chaos: 1.8, vfxScale: 1.0, sfxPunch: 1.0, slowMo: false },
+  SPOOKY: { funIntensity: 1.0, chaos: 0.7, vfxScale: 1.2, sfxPunch: 0.8, slowMo: true  }
+};
+
+const FUN_HIGH_IMPACT_IDS = [
+  'HIT_STOP', 'SCREEN_SHAKE', 'KNOCKBACK',
+  'RAGDOLL', 'CHAIN_REACTION', 'COMEDY_CHAIN_REACTION'
+];
+
+// ── LAW-2：Mulberry32 可重現 PRNG ──
+
+function funSeedToNumber(seed) {
+  if (typeof seed === 'number') return seed >>> 0;
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) {
+    h = (Math.imul(31, h) + seed.charCodeAt(i)) | 0;
+  }
+  return h >>> 0;
+}
+
+function funMulberry32(seed) {
+  let s = seed >>> 0;
+  return function () {
+    s += 0x6D2B79F5;
+    let t = Math.imul(s ^ (s >>> 15), s | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function funWeightedPick(rng, items) {
+  const total = items.reduce((s, item) => s + (item.weight || 1), 0);
+  let threshold = rng() * total;
+  for (const item of items) {
+    threshold -= item.weight || 1;
+    if (threshold <= 0) return item;
+  }
+  return items[items.length - 1];
+}
+
+function funApplyPersonaBias(modules, personaId) {
+  const persona = FUN_PARTICLES.personaDirector.find(p => p.id === personaId);
+  if (!persona) return modules;
+  return modules.map(mod => {
+    let weight = mod.weight;
+    if (persona.bias.humor > 0.4 &&
+        ['RAGDOLL', 'COMEDY_CHAIN_REACTION', 'RULE_GLITCH_BURST', 'PROP_BREAK'].includes(mod.id)) {
+      weight *= 1 + persona.bias.humor;
+    }
+    if (persona.bias.thrill > 0.3 &&
+        ['SCREEN_SHAKE', 'KNOCKBACK', 'CHAIN_REACTION'].includes(mod.id)) {
+      weight *= 1 + persona.bias.thrill;
+    }
+    if (persona.bias.power > 0.3 &&
+        ['HIT_STOP', 'KNOCKBACK'].includes(mod.id)) {
+      weight *= 1 + persona.bias.power;
+    }
+    return { ...mod, weight };
+  });
+}
+
+function funBuildParams(moduleId, personaId, rng) {
+  const preset = FUN_PERSONA_PRESETS[personaId] || FUN_PERSONA_PRESETS['HYPE'];
+  const allParticles = [...FUN_PARTICLES.feelPhysics, ...FUN_PARTICLES.twistLogic];
+  const particle = allParticles.find(p => p.id === moduleId);
+  if (!particle) return {};
+
+  const params = JSON.parse(JSON.stringify(particle.params));
+  const scale = preset.funIntensity || 1.0;
+  const chaos  = preset.chaos || 1.0;
+  const noise  = 0.8 + rng() * 0.4;
+
+  if (params.intensity    !== undefined) params.intensity    = +((params.intensity * scale * noise).toFixed(2));
+  if (params.amplitude    !== undefined) params.amplitude    = Math.round(params.amplitude * scale * noise);
+  if (params.force        !== undefined) params.force        = Math.round(params.force * scale * noise);
+  if (params.joint_loose  !== undefined) params.joint_loose  = Math.min(1.0, +((params.joint_loose * chaos * noise).toFixed(2)));
+  if (params.chain_count  !== undefined) params.chain_count  = Math.max(1, Math.round(params.chain_count * chaos));
+  if (params.burst_count  !== undefined) params.burst_count  = Math.max(1, Math.round(params.burst_count * chaos));
+  if (params.laugh_factor !== undefined) params.laugh_factor = +((params.laugh_factor * chaos * noise).toFixed(2));
+  if (params.probability  !== undefined) params.probability  = Math.min(1.0, +((params.probability * chaos).toFixed(2)));
+
+  params.slowMo   = preset.slowMo;
+  params.vfxScale = +((preset.vfxScale * noise).toFixed(2));
+  params.sfxPunch = +((preset.sfxPunch * noise).toFixed(2));
+  return params;
+}
+
+/**
+ * runFunDirector — 爽度導演核心
+ * @param {object} opts  { playerState, roomState, personaState, seed }
+ * @returns {object}     { twistRecipe, duration_s, cooldown_s, persona, eventLog, … }
+ */
+function runFunDirector({ playerState = {}, roomState = {}, personaState = 'HYPE', seed = Date.now() } = {}) {
+  const rng = funMulberry32(funSeedToNumber(seed));
+  const timestamp = new Date().toISOString();
+
+  const validPersonas = FUN_PARTICLES.personaDirector.map(p => p.id);
+  const persona = validPersonas.includes(personaState) ? personaState : 'HYPE';
+
+  const biasedModules = funApplyPersonaBias(FUN_MODULES, persona);
+
+  // 保底爆點：第一個模組必定是高衝擊粒子
+  const highPool = biasedModules.filter(m => FUN_HIGH_IMPACT_IDS.includes(m.id));
+  const firstPick = funWeightedPick(rng, highPool);
+
+  const selected = [firstPick];
+  const usedIds = new Set([firstPick.id]);
+
+  if (rng() < 0.5) {
+    const remaining = biasedModules.filter(m => !usedIds.has(m.id));
+    if (remaining.length > 0) {
+      const secondPick = funWeightedPick(rng, remaining);
+      selected.push(secondPick);
+      usedIds.add(secondPick.id);
+    }
+  }
+
+  const twistRecipe = selected.map(mod => ({
+    moduleId:   mod.id,
+    category:   mod.category,
+    duration_s: mod.duration_s,
+    cooldown_s: mod.cooldown_s,
+    params:     funBuildParams(mod.id, persona, rng)
+  }));
+
+  const duration_s = 10;
+  const cooldown_s = Math.max(...selected.map(m => m.cooldown_s));
+
+  // LAW-1：eventLog
+  const personaMeta  = FUN_PARTICLES.personaDirector.find(p => p.id === persona);
+  const personaName  = personaMeta ? personaMeta.name : persona;
+  const allPList     = [...FUN_PARTICLES.feelPhysics, ...FUN_PARTICLES.twistLogic];
+  const moduleNames  = selected
+    .map(m => allPList.find(p => p.id === m.id))
+    .filter(Boolean)
+    .map(p => p.name)
+    .join('、');
+
+  const seedNum = funSeedToNumber(seed);
+  const eventLog = {
+    id:         `evt_${seedNum.toString(16).padStart(8, '0')}_${Date.now().toString(36)}`,
+    timestamp,
+    seed:       String(seed),
+    persona,
+    why:        `人格[${personaName}]在第 ${roomState.wave || '?'} 波（玩家 HP=${playerState.hp !== undefined ? playerState.hp : '?'}）偵測到爆點條件，啟動保底爆點：${moduleNames}`,
+    what:       selected.map(m => m.id).join(' + '),
+    duration_s,
+    cooldown_s,
+    intensity:  +(twistRecipe.reduce((max, r) => {
+      const p = r.params;
+      const v = p.intensity || (p.amplitude ? p.amplitude / 30 : 0) || (p.force ? p.force / 1200 : 0) || 1;
+      return Math.max(max, v);
+    }, 0).toFixed(2)),
+    inputs:     { playerState, roomState, personaState: persona, seed: String(seed) },
+    modules:    twistRecipe.map(r => ({ id: r.moduleId, category: r.category, duration_s: r.duration_s, cooldown_s: r.cooldown_s }))
+  };
+
+  return {
+    twistRecipe,
+    duration_s,
+    cooldown_s,
+    persona,
+    eventLog,
+    law:              'LAW-1: 記憶體守恆律 — 每次決策可追溯',
+    origin_signature: 'MrLiouWord.FunDirector',
+    version:          '1.0.0'
+  };
+}
+
 // ============================================
 // Worker 主入口
 // ============================================
@@ -942,6 +1161,7 @@ export default {
         laws: ['LAW-0: 起源簽名律', 'LAW-1: 記憶體守恆律', 'LAW-2: 記憶體單調性律'],
         endpoints: {
           chat: '/api/chat',
+          fun_next: '/api/fun/next',
           connectors: '/api/connectors/list',
           cache: '/api/cache/metrics',
           coherence: '/api/memory/coherence',
@@ -1045,12 +1265,32 @@ export default {
         version: VERSION
       });
     }
+    // 爽度導演 — 金字塔底層堆疊
+    else if (path === '/api/fun/next' && request.method === 'POST') {
+      try {
+        const body = await request.json().catch(() => ({}));
+        const { playerState = {}, roomState = {}, personaState = 'HYPE', seed } = body;
+        const result = runFunDirector({
+          playerState,
+          roomState,
+          personaState,
+          seed: seed !== undefined ? seed : Date.now()
+        });
+        response = Response.json(result);
+      } catch (error) {
+        response = Response.json({
+          error: error.message,
+          origin_signature: ORIGIN_SIGNATURE
+        }, { status: 400 });
+      }
+    }
     // 404
     else {
       response = Response.json({ 
         error: 'Not Found',
         available: [
-          '/api/chat', 
+          '/api/chat',
+          '/api/fun/next',
           '/api/connectors/list', 
           '/api/cache/metrics',
           '/api/memory/coherence',
