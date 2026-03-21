@@ -21,7 +21,10 @@ const MODULES = require('../fun/modules.json');
 const MAPPING = require('../fun/mapping.json');
 
 const ORIGIN_SIGNATURE = 'MrLiouWord.FunDirector';
-const DIRECTOR_VERSION = '1.0.0';
+const DIRECTOR_VERSION = '1.1.0';
+
+// Fibonacci hashing constant (2^32 / φ) — 視窗 seed 衍生，確保跨視窗 seed 不重疊
+const GOLDEN_INT = 0x9E3779B9;
 
 // ============================================================
 // LAW-2：可重現隨機數生成器 — Mulberry32 PRNG
@@ -305,10 +308,73 @@ function computeIntensity(twistRecipe) {
 }
 
 // ============================================================
+// runFunSequence — 生成完整場次爽度序列 (v1.1.0 新增)
+// ============================================================
+
+/**
+ * 生成連續多個 10 秒視窗的爽度序列
+ *
+ * 遵循 MrLiouWord 粒子系統哲學：
+ *   LAW-0: 起源簽名律 — 輸出帶 origin_signature
+ *   LAW-1: 記憶體守恆律 — 每個視窗含完整可追溯 eventLog
+ *   LAW-2: 記憶體單調性律 — 相同 seed + windows 永遠產生相同序列
+ *
+ * @param {object} opts
+ * @param {number}        opts.windows      視窗數量（每個 10 秒，預設 6 = 60 秒）
+ * @param {object}        opts.playerState  玩家狀態
+ * @param {object}        opts.roomState    房間狀態
+ * @param {string}        opts.personaState 人格 ID：HYPE / PRANK / SPOOKY
+ * @param {string|number} opts.seed         基礎隨機種子（相同 seed 可重現）
+ * @returns {object} { sessionId, windows, totalDuration_s, cooldown_s, origin_signature, version, law }
+ */
+function runFunSequence({
+  windows = 6,
+  playerState = {},
+  roomState = {},
+  personaState = 'HYPE',
+  seed = Date.now()
+} = {}) {
+  // 限制視窗數量在合理範圍
+  const windowCount = Math.max(1, Math.min(100, Math.floor(windows)));
+
+  const baseSeed = seedToNumber(seed);
+
+  // 每個視窗使用衍生 seed：baseSeed + i * 黃金比例整數常數（Fibonacci 合流數）
+  // 確保視窗間 seed 不重疊、不規律，同時序列完全可重現（LAW-2）
+  const windowResults = [];
+  for (let i = 0; i < windowCount; i++) {
+    const windowSeed = (baseSeed + Math.imul(i + 1, GOLDEN_INT)) >>> 0;
+    windowResults.push(runDirector({
+      playerState,
+      roomState,
+      personaState,
+      seed: windowSeed
+    }));
+  }
+
+  const totalDuration_s = windowResults.reduce((sum, r) => sum + r.duration_s, 0);
+  const cooldown_s = Math.max(...windowResults.map(r => r.cooldown_s));
+
+  // sessionId：可追溯但不影響可重現性（baseSeed 決定視窗內容）
+  const sessionId = `ses_${baseSeed.toString(16).padStart(8, '0')}_${Date.now().toString(36)}`;
+
+  return {
+    sessionId,
+    windows: windowResults,
+    totalDuration_s,
+    cooldown_s,
+    law: 'LAW-2: 記憶體單調性律 — 相同 seed 序列永遠可重現',
+    origin_signature: `${ORIGIN_SIGNATURE}.Sequence`,
+    version: DIRECTOR_VERSION
+  };
+}
+
+// ============================================================
 // 匯出
 // ============================================================
 module.exports = {
   runDirector,
+  runFunSequence,
   mulberry32,
   seedToNumber,
   ORIGIN_SIGNATURE,
