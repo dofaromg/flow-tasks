@@ -2,6 +2,8 @@
 
 **✅ 完整的 GKE 部署基礎設施已就緒！** 這個 repository 提供完整的 Kubernetes 部署配置、CI/CD 流程和 GitOps 支援。
 
+**🤖 GitHub Copilot Coding Agent 支援：可以在這裡使用！** This repository supports GitHub Copilot Coding Agent — it can be used here to implement features, fix bugs, and assist with development tasks.
+
 ## 🔄 外部倉庫檔案同步 / External Repository File Sync
 
 **全新功能！** 自動從其他 GitHub 倉庫拉取檔案到本地倉庫。
