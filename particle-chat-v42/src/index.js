@@ -896,7 +896,7 @@ ${Object.keys(DEPLOYED_WORKERS).join(', ')}
 }
 
 // ============================================================
-// 爽度導演 — FunDirector (金字塔底層堆疊 v1.0.0)
+// 爽度導演 — FunDirector (金字塔底層堆疊 v1.1.0)
 //
 // 三層架構：
 //   Layer 1 回饋物理層 (Feel Physics)   — HIT_STOP / SCREEN_SHAKE / KNOCKBACK …
@@ -1110,7 +1110,42 @@ function runFunDirector({ playerState = {}, roomState = {}, personaState = 'HYPE
     eventLog,
     law:              'LAW-1: 記憶體守恆律 — 每次決策可追溯',
     origin_signature: 'MrLiouWord.FunDirector',
-    version:          '1.0.0'
+    version:          '1.1.0'
+  };
+}
+
+// ============================================================
+// runFunSequence — 生成完整場次爽度序列 (v1.1.0 新增)
+// ============================================================
+
+/**
+ * 生成連續多個 10 秒視窗的爽度序列（LAW-0/1/2）
+ * @param {object} opts  { windows, playerState, roomState, personaState, seed }
+ * @returns {object}     { sessionId, windows, totalDuration_s, cooldown_s, … }
+ */
+function runFunSequence({ windows = 6, playerState = {}, roomState = {}, personaState = 'HYPE', seed = Date.now() } = {}) {
+  const windowCount = Math.max(1, Math.min(100, Math.floor(windows)));
+  const baseSeed = funSeedToNumber(seed);
+  const GOLDEN_INT = 0x9E3779B9;
+
+  const windowResults = [];
+  for (let i = 0; i < windowCount; i++) {
+    const windowSeed = (baseSeed + Math.imul(i + 1, GOLDEN_INT)) >>> 0;
+    windowResults.push(runFunDirector({ playerState, roomState, personaState, seed: windowSeed }));
+  }
+
+  const totalDuration_s = windowResults.reduce((sum, r) => sum + r.duration_s, 0);
+  const cooldown_s = Math.max(...windowResults.map(r => r.cooldown_s));
+  const sessionId = `ses_${baseSeed.toString(16).padStart(8, '0')}_${Date.now().toString(36)}`;
+
+  return {
+    sessionId,
+    windows: windowResults,
+    totalDuration_s,
+    cooldown_s,
+    law:              'LAW-2: 記憶體單調性律 — 相同 seed 序列永遠可重現',
+    origin_signature: 'MrLiouWord.FunDirector.Sequence',
+    version:          '1.1.0'
   };
 }
 
@@ -1162,6 +1197,7 @@ export default {
         endpoints: {
           chat: '/api/chat',
           fun_next: '/api/fun/next',
+          fun_sequence: '/api/fun/sequence',
           connectors: '/api/connectors/list',
           cache: '/api/cache/metrics',
           coherence: '/api/memory/coherence',
@@ -1284,6 +1320,26 @@ export default {
         }, { status: 400 });
       }
     }
+    // 爽度導演序列 — 多視窗場次
+    else if (path === '/api/fun/sequence' && request.method === 'POST') {
+      try {
+        const body = await request.json().catch(() => ({}));
+        const { windows = 6, playerState = {}, roomState = {}, personaState = 'HYPE', seed } = body;
+        const result = runFunSequence({
+          windows,
+          playerState,
+          roomState,
+          personaState,
+          seed: seed !== undefined ? seed : Date.now()
+        });
+        response = Response.json(result);
+      } catch (error) {
+        response = Response.json({
+          error: error.message,
+          origin_signature: ORIGIN_SIGNATURE
+        }, { status: 400 });
+      }
+    }
     // 404
     else {
       response = Response.json({ 
@@ -1291,6 +1347,7 @@ export default {
         available: [
           '/api/chat',
           '/api/fun/next',
+          '/api/fun/sequence',
           '/api/connectors/list', 
           '/api/cache/metrics',
           '/api/memory/coherence',

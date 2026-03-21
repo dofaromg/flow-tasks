@@ -1,7 +1,7 @@
 # 爽度導演 FunDirector — 金字塔底層堆疊模組
 
 > MrLiouWord 粒子系統哲學 × 遊戲爽度生成框架  
-> 版本：1.0.0 ｜ 遵循 LAW-0 / LAW-1 / LAW-2
+> 版本：1.1.0 ｜ 遵循 LAW-0 / LAW-1 / LAW-2
 
 ---
 
@@ -45,13 +45,14 @@ fun-director/
 │   ├── modules.json     # 模組規格（cooldown / duration / weight）
 │   └── mapping.json     # 情緒向量映射（comfort / humor / thrill / power）
 ├── src/
-│   └── director.js      # 導演核心實作
+│   └── director.js      # 導演核心實作（runDirector + runFunSequence）
 ├── tests/
-│   └── director.test.js # 自動測試（60 個斷言）
+│   ├── director.test.js # 自動測試（60 個斷言）
+│   └── sequence.test.js # Sequence 自動測試（58 個斷言）v1.1.0 新增
 └── README.md            # 本文件
 ```
 
-Worker 整合：`particle-chat-v42/src/index.js` — 新增 `POST /api/fun/next` 端點
+Worker 整合：`particle-chat-v42/src/index.js` — `POST /api/fun/next` 與 `POST /api/fun/sequence` 端點
 
 ---
 
@@ -223,7 +224,56 @@ curl -X POST https://your-worker.workers.dev/api/fun/next \
   "eventLog": { ... },
   "law":             "LAW-1: 記憶體守恆律 — 每次決策可追溯",
   "origin_signature":"MrLiouWord.FunDirector",
-  "version":         "1.0.0"
+  "version":         "1.1.0"
+}
+```
+
+### `POST /api/fun/sequence` *(v1.1.0 新增)*
+
+一次生成 N 個連續 10 秒視窗，適合完整場次規劃。相同 `seed` 永遠回傳相同序列（LAW-2）。
+
+**請求格式**
+
+```json
+{
+  "windows":      6,
+  "playerState":  { "hp": 100, "combo": 0 },
+  "roomState":    { "wave": 1, "enemyCount": 5 },
+  "personaState": "PRANK",
+  "seed":         42
+}
+```
+
+| 欄位 | 類型 | 說明 | 預設 |
+|------|------|------|------|
+| `windows` | number | 生成視窗數量（1–100，每個 10 秒） | `6` |
+| `playerState` | object | 玩家狀態 | `{}` |
+| `roomState` | object | 房間狀態 | `{}` |
+| `personaState` | string | 人格 ID | `HYPE` |
+| `seed` | string \| number | 基礎隨機種子 | `Date.now()` |
+
+**curl 範例**
+
+```bash
+curl -X POST https://your-worker.workers.dev/api/fun/sequence \
+  -H "Content-Type: application/json" \
+  -d '{"windows":4,"personaState":"SPOOKY","seed":99}'
+```
+
+**回應範例**
+
+```json
+{
+  "sessionId":      "ses_0000002a_m7x2k9",
+  "windows": [
+    { "twistRecipe": [...], "duration_s": 10, "cooldown_s": 3.0, "persona": "SPOOKY", "eventLog": {...} },
+    { "twistRecipe": [...], "duration_s": 10, "cooldown_s": 5.0, "persona": "SPOOKY", "eventLog": {...} }
+  ],
+  "totalDuration_s": 40,
+  "cooldown_s":      5.0,
+  "law":             "LAW-2: 記憶體單調性律 — 相同 seed 序列永遠可重現",
+  "origin_signature":"MrLiouWord.FunDirector.Sequence",
+  "version":         "1.1.0"
 }
 ```
 
@@ -283,7 +333,12 @@ curl -X POST https://your-worker.workers.dev/api/fun/next \
 
 ```bash
 cd fun-director
+
+# 單視窗測試（60 個斷言）
 node tests/director.test.js
+
+# 序列測試（58 個斷言）v1.1.0 新增
+node tests/sequence.test.js
 ```
 
 預期輸出：
@@ -293,6 +348,12 @@ node tests/director.test.js
 ╚═══════════════════════════════════╝
 ...
 ✅ 通過：60  ❌ 失敗：0
+
+╔══════════════════════════════════════════╗
+║   FunDirector Sequence 測試套件 v1.1.0  ║
+╚══════════════════════════════════════════╝
+...
+✅ 通過：58  ❌ 失敗：0
 ```
 
 ---
