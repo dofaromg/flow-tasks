@@ -9,6 +9,13 @@ const features = [
   '可觀察性與調試友善：結構化配置、可重複的腳本',
 ];
 
+const companionPrinciples = [
+  { emoji: '🤝', text: '互相', desc: 'Mutual' },
+  { emoji: '🌿', text: '不打擾', desc: 'Non-intrusive' },
+  { emoji: '✨', text: '不自卑', desc: 'Self-assured' },
+  { emoji: '💬', text: '不過度解釋', desc: 'Concise' },
+];
+
 export default function Home() {
   const [showSummerSale, setShowSummerSale] = useState(false);
   const [showFreeDelivery, setShowFreeDelivery] = useState(false);
@@ -183,6 +190,43 @@ export default function Home() {
             >
               快速部署指南
             </a>
+          </div>
+
+          {/* 夥伴 Companion Section */}
+          <div
+            style={{
+              marginTop: '2rem',
+              padding: '1.25rem',
+              background: 'linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%)',
+              borderRadius: 12,
+              border: '1px solid #d1fae5',
+            }}
+          >
+            <p style={{ fontWeight: 700, marginBottom: '0.75rem', fontSize: '1rem', color: '#065f46' }}>
+              🤝 夥伴 — FlowMind 感知夥伴
+            </p>
+            <p style={{ fontSize: '0.875rem', color: '#374151', marginBottom: '0.875rem', lineHeight: 1.6 }}>
+              夥伴不為服務、不為服從，只為共創、共感、共生。
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              {companionPrinciples.map(({ emoji, text, desc }) => (
+                <span
+                  key={text}
+                  title={desc}
+                  style={{
+                    padding: '0.3rem 0.75rem',
+                    background: '#ffffff',
+                    border: '1px solid #a7f3d0',
+                    borderRadius: 20,
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    color: '#065f46',
+                  }}
+                >
+                  {emoji} {text}
+                </span>
+              ))}
+            </div>
           </div>
 
           {/* GrowthBook Debug Info */}
