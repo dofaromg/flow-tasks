@@ -18,6 +18,7 @@
   "dependencies": {
     "@flags-sdk/growthbook": "0.2.0",
     "@growthbook/growthbook": "1.5.1",
+    "axios": "^1.13.5",
     "flags": "^4.0.0",
     "nanoid": "5.1.2",
     "next": "^15.5.14",
