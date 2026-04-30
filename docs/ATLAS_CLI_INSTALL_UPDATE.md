@@ -1,25 +1,31 @@
 # Install or Update the Atlas CLI
+# 安裝或更新 Atlas CLI
 
-Install the Atlas CLI to quickly provision and manage Atlas database deployments from the terminal.
+Use the Atlas CLI to quickly provision and manage Atlas database deployments from the terminal.
 
-To verify packages before installation, see [Verify the Integrity of Atlas CLI Packages](https://mongodbcom-cdn.staging.corp.mongodb.com/docs/atlas/cli/verify-packages/#std-label-verify-packages).
+使用 Atlas CLI 從終端機快速配置和管理 Atlas 資料庫部署。
 
-## Install the Atlas CLI
+- Package integrity verification / 套件完整性驗證: [Verify the Integrity of Atlas CLI Packages](https://www.mongodb.com/docs/atlas/cli/verify-packages/#std-label-verify-packages)
+- OS compatibility / 作業系統相容性: [Check Compatibility](https://www.mongodb.com/docs/atlas/cli/compatibility/#std-label-compatibility-atlas-cli)
+
+---
+
+## Install the Atlas CLI / 安裝 Atlas CLI
 
 Select one of the following installation methods and follow the steps to install the Atlas CLI.
 
-To check whether your operating system is compatible with the Atlas CLI, see [Check Compatibility](https://mongodbcom-cdn.staging.corp.mongodb.com/docs/atlas/cli/compatibility/#std-label-compatibility-atlas-cli).
+選擇以下其中一種安裝方法並按照步驟安裝 Atlas CLI。
 
 ### Homebrew
 
-#### Complete the Prerequisites
+#### Complete the Prerequisites / 完成先決條件
 
 To install the Atlas CLI using Homebrew, you must:
 
 1. Use a MacOS or Linux operating system.
 2. Install [Homebrew](https://brew.sh/).
 
-#### Install and Verify
+#### Install and Verify / 安裝並驗證
 
 Install the Atlas CLI and [`mongosh`](https://www.mongodb.com/docs/mongodb-shell/#mongodb-binary-bin.mongosh):
 
@@ -41,9 +47,11 @@ Verify successful installation:
 atlas
 ```
 
+---
+
 ### Yum
 
-#### Configure `yum` for your edition of MongoDB
+#### Configure `yum` for your edition of MongoDB / 為您的 MongoDB 版本配置 `yum`
 
 For **MongoDB Community Edition**, create `/etc/yum.repos.d/mongodb-org-7.0.repo` (replace `7.0` as needed).
 
@@ -111,9 +119,11 @@ Verify installation:
 atlas
 ```
 
+---
+
 ### Apt
 
-#### Complete the Prerequisites
+#### Complete the Prerequisites / 完成先決條件
 
 Install `gnupg` and `curl`:
 
@@ -121,7 +131,7 @@ Install `gnupg` and `curl`:
 sudo apt-get install gnupg curl
 ```
 
-#### Import the public key used by `apt`
+#### Import the public key used by `apt` / 匯入 `apt` 使用的公開金鑰
 
 ```sh
 curl -fsSL https://pgp.mongodb.com/server-7.0.asc | \
@@ -131,7 +141,7 @@ curl -fsSL https://pgp.mongodb.com/server-7.0.asc | \
 
 A successful command returns `OK`.
 
-#### Create list files for your distribution
+#### Create list files for your distribution / 為您的發行版建立清單檔案
 
 For **MongoDB Community Edition**:
 
@@ -156,13 +166,13 @@ echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gp
 **Debian 12 (Bookworm)**
 
 ```sh
-echo "deb http://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
 ```
 
 **Debian 11 (Bullseye)**
 
 ```sh
-echo "deb http://repo.mongodb.org/apt/debian bullseye/mongodb-org/7.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/debian bullseye/mongodb-org/7.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
 ```
 
 For **MongoDB Enterprise Edition**:
@@ -188,7 +198,7 @@ echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gp
 **Debian 11 (Bullseye)**
 
 ```sh
-echo "deb http://repo.mongodb.com/apt/debian bullseye/mongodb-enterprise/7.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-enterprise.list
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.com/apt/debian bullseye/mongodb-enterprise/7.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-enterprise.list
 ```
 
 Refresh package database:
@@ -215,14 +225,16 @@ Verify installation:
 atlas
 ```
 
+---
+
 ### Chocolatey
 
-#### Complete the Prerequisites
+#### Complete the Prerequisites / 完成先決條件
 
 1. Ensure your system meets [Chocolatey requirements](https://docs.chocolatey.org/en-us/choco/setup#requirements).
 2. Install Chocolatey by following [Installing Chocolatey](https://docs.chocolatey.org/en-us/choco/setup#installing-chocolatey).
 
-#### Install and Verify
+#### Install and Verify / 安裝並驗證
 
 ```shell
 choco install mongodb-atlas
@@ -236,13 +248,15 @@ Verify:
 atlas
 ```
 
+---
+
 ### Docker
 
-#### Complete the Prerequisites
+#### Complete the Prerequisites / 完成先決條件
 
 Install [Docker Engine](https://docs.docker.com/engine/install/) or [Docker Desktop](https://docs.docker.com/desktop/).
 
-#### Pull and Use the Image
+#### Pull and Use the Image / 拉取並使用映像
 
 Pull latest image:
 
@@ -256,9 +270,11 @@ Pull specific version:
 docker pull mongodb/atlas:<tag>
 ```
 
-To run Atlas CLI commands with Docker, see [Run Atlas CLI Commands with Docker](https://mongodbcom-cdn.staging.corp.mongodb.com/docs/atlas/cli/atlas-cli-docker/#std-label-atlas-cli-docker).
+To run Atlas CLI commands with Docker, see [Run Atlas CLI Commands with Docker](https://www.mongodb.com/docs/atlas/cli/atlas-cli-docker/#std-label-atlas-cli-docker).
 
-### Download Binary
+---
+
+### Download Binary / 下載二進位檔案
 
 Download and extract the binary for your platform:
 
@@ -268,13 +284,18 @@ Download and extract the binary for your platform:
 - RHEL/CentOS/SLES/AMZ: [.rpm (x86-64)](https://fastdl.mongodb.org/mongocli/mongodb-atlas-cli_1.51.0_linux_x86_64.rpm), [.rpm (ARM)](https://fastdl.mongodb.org/mongocli/mongodb-atlas-cli_1.51.0_linux_arm64.rpm)
 - Linux: [.tar.gz (x86-64)](https://fastdl.mongodb.org/mongocli/mongodb-atlas-cli_1.51.0_linux_x86_64.tar.gz), [.tar.gz (ARM)](https://fastdl.mongodb.org/mongocli/mongodb-atlas-cli_1.51.0_linux_arm64.tar.gz)
 
-Replace or remove any existing MongoDB CLI binaries to prevent conflicts, then run the executable.
-
-(Optional) Add Atlas CLI to your `PATH`:
+Replace or remove any existing MongoDB CLI binaries to prevent conflicts, then add the Atlas CLI to your `PATH`:
 
 ```sh
-cd atlascli_1.51.0-macOS_x86_64
-mv atlas /usr/local/bin
+cd atlascli_<version>-macOS_x86_64
+
+# Option 1: Install system-wide (may require sudo):
+sudo mv atlas /usr/local/bin
+
+# Option 2: Install to a user-writable directory (ensure it's on your PATH):
+# mkdir -p "$HOME/.local/bin"
+# mv atlas "$HOME/.local/bin/"
+# export PATH="$HOME/.local/bin:$PATH"
 ```
 
 Verify installation:
@@ -283,9 +304,13 @@ Verify installation:
 atlas
 ```
 
-## Update the Atlas CLI
+---
+
+## Update the Atlas CLI / 更新 Atlas CLI
 
 Follow the method matching your installation.
+
+按照您安裝時所使用的方法進行更新。
 
 ### Homebrew
 
@@ -355,7 +380,7 @@ Verify:
 atlas --version
 ```
 
-### Download Binary
+### Download Binary / 下載二進位檔案
 
 - Remove existing Atlas CLI binaries.
 - Download and extract the latest binary for your platform.
@@ -367,6 +392,8 @@ Verify:
 atlas --version
 ```
 
-## Take the Next Steps
+---
 
-[Connect from the Atlas CLI](https://mongodbcom-cdn.staging.corp.mongodb.com/docs/atlas/cli/connect-atlas-cli/#std-label-connect-atlas-cli) to start using the [Atlas CLI commands](https://mongodbcom-cdn.staging.corp.mongodb.com/docs/atlas/cli/command/atlas/#std-label-atlas).
+## Next Steps / 後續步驟
+
+[Connect from the Atlas CLI](https://www.mongodb.com/docs/atlas/cli/connect-atlas-cli/#std-label-connect-atlas-cli) to start using the [Atlas CLI commands](https://www.mongodb.com/docs/atlas/cli/command/atlas/#std-label-atlas).
