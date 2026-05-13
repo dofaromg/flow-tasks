@@ -8,6 +8,18 @@ from functools import lru_cache
 
 from flask import Flask, abort, jsonify, redirect, render_template_string, request, url_for
 
+try:
+    from flowcore_naming import (
+        PRODUCT,
+        cli_description,
+        event_name,
+        health_metadata,
+        server_banner,
+    )
+    _NAMING_AVAILABLE = True
+except ImportError:
+    _NAMING_AVAILABLE = False
+
 DATA_ROOT = Path(".flowcore")
 
 # Simple cache for project metadata (avoids repeated disk reads)
@@ -163,6 +175,7 @@ def build_app() -> Flask:
         return render_template_string(
             """
             <h1>FlowCore Projects</h1>
+            <p style="font-size:0.85em;color:#888">{{ product_label }}</p>
             {% if projects %}
               <ul>
               {% for project in projects %}
@@ -174,6 +187,7 @@ def build_app() -> Flask:
             {% endif %}
             """,
             projects=projects,
+            product_label=server_banner("web") if _NAMING_AVAILABLE else "FlowCore Web",
         )
 
     @app.route("/project/<project>")
@@ -245,7 +259,10 @@ def build_app() -> Flask:
     @app.route("/health")
     def health():
         """Health check endpoint"""
-        return jsonify({"status": "healthy", "service": "flowcore-web"}), 200
+        payload: Dict[str, Any] = {"status": "healthy", "service": "flowcore-web"}
+        if _NAMING_AVAILABLE:
+            payload["product_info"] = health_metadata("web")
+        return jsonify(payload), 200
 
     @app.route("/api/project/<project>/sessions")
     def api_sessions(project: str):
@@ -301,7 +318,8 @@ def run_web(args: argparse.Namespace) -> None:
 # ---------------------------
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="FlowCore loop CLI")
+    desc = cli_description("loop") if _NAMING_AVAILABLE else "FlowCore loop CLI"
+    parser = argparse.ArgumentParser(description=desc)
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     init_parser = subparsers.add_parser("project-init", help="Initialize a project")
