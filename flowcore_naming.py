@@ -22,6 +22,25 @@ from __future__ import annotations
 
 from typing import Dict
 
+try:
+    from typing import TypedDict
+
+    class _ProductInfo(TypedDict):
+        vendor: str
+        product: str
+        line: str
+        component: Dict[str, str]
+        full_name: str
+        slug: str
+        namespace: str
+        version: str
+        origin_signature: str
+        description_en: str
+        description_zh: str
+
+except ImportError:
+    _ProductInfo = None  # type: ignore[assignment,misc]
+
 # ---------------------------------------------------------------------------
 # Component registry — typed separately so callers get precise dict typing
 # ---------------------------------------------------------------------------
@@ -41,7 +60,7 @@ COMPONENTS: Dict[str, str] = {
 # Core product identity constants
 # ---------------------------------------------------------------------------
 
-PRODUCT: Dict[str, object] = {
+PRODUCT: "_ProductInfo" = {  # type: ignore[assignment]
     # Brand / vendor
     "vendor": "MrLiou",
     "product": "FlowCore",
@@ -115,6 +134,13 @@ def server_version_header(component: str = "runtime") -> str:
 
 def server_banner(component: str = "runtime", version: str | None = None) -> str:
     """Return a one-line startup banner string for console output.
+
+    Args:
+        component: A key from :data:`COMPONENTS` (e.g. ``"runtime"``, ``"ai"``).
+        version: An optional override for the version segment.  Only use this
+            for pre-release or build-specific labels (e.g. ``"1.1.0-beta"``).
+            Leave as ``None`` in production to ensure consistent version
+            reporting from the :data:`PRODUCT` constant.
 
     Example::
 

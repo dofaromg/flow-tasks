@@ -89,9 +89,14 @@ class Tracer:
         with self._lock:
             self._state["tick"] += 1
             # Produce a product-namespaced event label for machine-readable outputs.
-            # Convention: "component_action" (e.g. "judge_health") → component="judge",
-            # action="health".  For event names that don't follow this pattern the
-            # whole name becomes the action under the "flowcore" component.
+            # Convention: event names follow the pattern "component_action" where
+            # component and action are separated by the FIRST underscore only.
+            # Examples:
+            #   "judge_health"        -> component="judge",   action="health"
+            #   "judge_ai_precomplete"-> component="judge",   action="ai_precomplete"
+            #   "fusion_pre"          -> component="fusion",  action="pre"
+            # For event names without an underscore the whole name becomes the
+            # action under the "flowcore" component.
             # The original short 'event' value is always preserved unchanged so
             # existing consumers are unaffected.
             if "_" in event:
