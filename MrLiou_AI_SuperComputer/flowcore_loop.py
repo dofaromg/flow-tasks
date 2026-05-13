@@ -17,7 +17,7 @@ except ImportError:
     _NAMING_AVAILABLE = False
 
     def _event_name(component: str, action: str) -> str:  # type: ignore[misc]
-        return f"{component}.{action}"
+        return f"mrliou.flowcore.{component}.{action}"
 
     def _health_metadata(component: str = "runtime"):  # type: ignore[misc]
         return {}
@@ -88,11 +88,17 @@ class Tracer:
         # Thread-safe emission with lock to prevent race conditions
         with self._lock:
             self._state["tick"] += 1
-            # Derive the dot-separated namespaced event label for machine-readable outputs.
-            # The original short 'event' name is preserved for backward compatibility;
-            # 'ns_event' carries the product-namespaced form.
-            parts = event.split("_", 1)
-            ns_event = _event_name(parts[0], parts[1]) if len(parts) == 2 else _event_name("flowcore", event)
+            # Produce a product-namespaced event label for machine-readable outputs.
+            # Convention: "component_action" (e.g. "judge_health") → component="judge",
+            # action="health".  For event names that don't follow this pattern the
+            # whole name becomes the action under the "flowcore" component.
+            # The original short 'event' value is always preserved unchanged so
+            # existing consumers are unaffected.
+            if "_" in event:
+                component, action = event.split("_", 1)
+            else:
+                component, action = "flowcore", event
+            ns_event = _event_name(component, action)
             rec = {
                 "rid": self._state["rid"],
                 "tick": self._state["tick"],

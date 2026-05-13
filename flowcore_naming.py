@@ -23,6 +23,21 @@ from __future__ import annotations
 from typing import Dict
 
 # ---------------------------------------------------------------------------
+# Component registry — typed separately so callers get precise dict typing
+# ---------------------------------------------------------------------------
+
+#: Canonical component names used in HTTP headers, banners, and trace labels.
+COMPONENTS: Dict[str, str] = {
+    "runtime": "FlowCore.Runtime",
+    "vault": "FlowCore.Vault",
+    "trace": "FlowCore.Trace",
+    "index": "FlowCore.Index",
+    "loop": "FlowCore.Loop",
+    "ai": "FlowCore.AI",
+    "web": "FlowCore.Web",
+}
+
+# ---------------------------------------------------------------------------
 # Core product identity constants
 # ---------------------------------------------------------------------------
 
@@ -32,16 +47,8 @@ PRODUCT: Dict[str, object] = {
     "product": "FlowCore",
     "line": "ParticleRuntime",
 
-    # Component registry (canonical names used in headers / trace / labels)
-    "component": {
-        "runtime": "FlowCore.Runtime",
-        "vault": "FlowCore.Vault",
-        "trace": "FlowCore.Trace",
-        "index": "FlowCore.Index",
-        "loop": "FlowCore.Loop",
-        "ai": "FlowCore.AI",
-        "web": "FlowCore.Web",
-    },
+    # Component registry reference (canonical names used in headers / trace / labels)
+    "component": COMPONENTS,
 
     # Full display name
     "full_name": "MrLiou FlowCore ParticleRuntime",
@@ -101,8 +108,7 @@ def server_version_header(component: str = "runtime") -> str:
         server_version_header("runtime")  -> "FlowCore.Runtime/1.0.0"
         server_version_header("ai")       -> "FlowCore.AI/1.0.0"
     """
-    components: dict = PRODUCT["component"]  # type: ignore[assignment]
-    comp = components.get(component, component)
+    comp = COMPONENTS.get(component, component)
     version = str(PRODUCT["version"])
     return f"{comp}/{version}"
 
@@ -115,8 +121,7 @@ def server_banner(component: str = "runtime", version: str | None = None) -> str
         server_banner("runtime") ->
             "MrLiou FlowCore ParticleRuntime [FlowCore.Runtime] v1.0.0 — MrLiouWord"
     """
-    components: dict = PRODUCT["component"]  # type: ignore[assignment]
-    comp = components.get(component, component)
+    comp = COMPONENTS.get(component, component)
     v = version or str(PRODUCT["version"])
     full = str(PRODUCT["full_name"])
     sig = str(PRODUCT["origin_signature"])
@@ -149,10 +154,9 @@ def health_metadata(component: str = "runtime") -> Dict[str, str]:
     This allows clients to confirm they are talking to the expected
     product component and version.
     """
-    components: dict = PRODUCT["component"]  # type: ignore[assignment]
     return {
         "product": str(PRODUCT["full_name"]),
-        "component": str(components.get(component, component)),
+        "component": COMPONENTS.get(component, component),
         "version": str(PRODUCT["version"]),
         "origin_signature": str(PRODUCT["origin_signature"]),
     }
@@ -160,8 +164,7 @@ def health_metadata(component: str = "runtime") -> Dict[str, str]:
 
 def cli_description(component: str = "runtime") -> str:
     """Return a formatted CLI description string for argparse help text."""
-    components: dict = PRODUCT["component"]  # type: ignore[assignment]
-    comp = components.get(component, component)
+    comp = COMPONENTS.get(component, component)
     full = str(PRODUCT["full_name"])
     desc_en = str(PRODUCT["description_en"])
     desc_zh = str(PRODUCT["description_zh"])

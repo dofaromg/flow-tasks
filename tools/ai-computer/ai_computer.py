@@ -31,7 +31,7 @@ except ImportError:
     _NAMING_AVAILABLE = False
 
     def _event_name(component: str, action: str) -> str:  # type: ignore[misc]
-        return f"{component}.{action}"
+        return f"mrliou.flowcore.{component}.{action}"
 
     def _health_metadata(component: str = "runtime") -> Dict[str, str]:  # type: ignore[misc]
         return {}
