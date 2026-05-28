@@ -35,7 +35,7 @@ export class FlowOS {
     this.storage = new MemoryStorage();
     
     // Initialize core subsystems
-    const particleStore = new ParticleStore();
+    const particleStore = new ParticleStore(this.storage);
     this.particles = new ParticleEngine(particleStore);
     this.personas = new PersonaRegistry();
     this.seeds = new SeedRegistry();
