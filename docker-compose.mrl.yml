@@ -1,0 +1,102 @@
+version: '3.8'
+
+# MRL Product Motherbody Container Stack
+# Canonical Runtime: DL580
+# Layer A: ACTIVE_CPP_V1
+
+services:
+  # ── MRL Official Website Platform ──────────────────────────────
+  mrl-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.mrl-frontend
+    container_name: mrl-frontend
+    ports:
+      - "${MRL_FRONTEND_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - MRL_LAYER_A=ACTIVE_CPP_V1
+      - MRL_CANONICAL_RUNTIME=DL580
+      - MRL_DB_URI=mongodb://admin:${MRL_DB_PASSWORD:-mrl_secure_2026}@mrl-db:27017/mrl?authSource=admin
+      - NEXT_PUBLIC_GROWTHBOOK_API_HOST=${NEXT_PUBLIC_GROWTHBOOK_API_HOST:-}
+      - NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY=${NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY:-}
+    depends_on:
+      mrl-db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mrl-network
+    labels:
+      mrl.component: "frontend"
+      mrl.product: "MRL_Product_Motherbody_Engineering_v1"
+
+  # ── MRL Model Core (Particle + Fusion + Convergence) ───────────
+  mrl-model:
+    build:
+      context: .
+      dockerfile: Dockerfile.mrl
+    container_name: mrl-model
+    ports:
+      - "${MRL_MODEL_PORT:-8787}:8787"
+    environment:
+      - MRL_LAYER_A=ACTIVE_CPP_V1
+      - MRL_CANONICAL_RUNTIME=DL580
+      - MRL_DB_URI=mongodb://admin:${MRL_DB_PASSWORD:-mrl_secure_2026}@mrl-db:27017/mrl?authSource=admin
+      - MRL_PERSISTENT_LOOP=ORCHESTRATION_COLLECTOR
+      - MRL_BASEWORLD_DB=runtime_state_ledger
+      - MRL_ENTRY_GATEWAY=external_read_interface
+    volumes:
+      - mrl-data:/mrl/data
+      - mrl-runtime:/mrl/runtime
+      - mrl-memory:/mrl/memory
+    depends_on:
+      mrl-db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mrl-network
+    labels:
+      mrl.component: "model"
+      mrl.product: "MRL_Product_Motherbody_Engineering_v1"
+      mrl.layer_a: "ACTIVE_CPP_V1"
+
+  # ── MRL Database Source (BaseWorld State Ledger) ────────────────
+  mrl-db:
+    image: mongo:6.0
+    container_name: mrl-db
+    ports:
+      - "${MRL_DB_PORT:-27017}:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=${MRL_DB_PASSWORD:-mrl_secure_2026}
+      - MONGO_INITDB_DATABASE=mrl
+    volumes:
+      - mrl-db-data:/data/db
+      - ./MRL_Website/MRL_Deploy/mongo-init.js:/docker-entrypoint-initdb.d/init.js:ro
+    restart: unless-stopped
+    networks:
+      - mrl-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    labels:
+      mrl.component: "database"
+      mrl.role: "BaseWorld_runtime_state_ledger"
+
+volumes:
+  mrl-db-data:
+    driver: local
+  mrl-data:
+    driver: local
+  mrl-runtime:
+    driver: local
+  mrl-memory:
+    driver: local
+
+networks:
+  mrl-network:
+    driver: bridge
+    name: mrl-product-network
