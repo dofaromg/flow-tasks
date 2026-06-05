@@ -1,0 +1,60 @@
+FROM python:3.11-slim AS mrl-base
+
+LABEL maintainer="Mr.liou"
+LABEL description="MRL Product Motherbody Container - Official Platform + Model + DB Source"
+LABEL version="1.0"
+LABEL mrl.layer_a="ACTIVE_CPP_V1"
+LABEL mrl.canonical_runtime="DL580"
+LABEL mrl.product="MRL_Product_Motherbody_Engineering_v1"
+
+WORKDIR /mrl
+
+RUN apt-get update && apt-get install -y \
+    git curl && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt ./
+COPY particle_core/requirements.txt ./particle_requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir -r particle_requirements.txt
+
+# ── MRL Model Core ──────────────────────────────────────────────
+COPY particle_core/ ./particle_core/
+COPY MrLiou_AI_SuperComputer/ ./MrLiou_AI_SuperComputer/
+COPY core/ ./core/
+COPY connectors/ ./connectors/
+COPY adapters/ ./adapters/
+COPY flowcore_loop.py ./
+COPY flowcore_naming.py ./
+COPY world.py ./
+COPY config.sample.yaml ./config.sample.yaml
+
+# ── MRL Website Module ──────────────────────────────────────────
+COPY MRL_Website/ ./MRL_Website/
+
+# ── FlowAgent Persona ──────────────────────────────────────────
+COPY FlowAgent.TotalCore.StructureIndex.json ./
+COPY FlowAgent_Persona_Registry.json ./
+COPY SeedPersona_Founder_MrLiou.json ./
+
+# ── Runtime config ──────────────────────────────────────────────
+ENV PYTHONPATH=/mrl
+ENV MRL_HOME=/mrl
+ENV MRL_LAYER_A=ACTIVE_CPP_V1
+ENV MRL_CANONICAL_RUNTIME=DL580
+ENV MRL_PERSISTENT_LOOP=ORCHESTRATION_COLLECTOR
+ENV MRL_BASEWORLD_DB=runtime_state_ledger
+ENV MRL_ENTRY_GATEWAY=external_read_interface
+ENV PYTHONIOENCODING=utf-8
+
+RUN mkdir -p /mrl/data /mrl/runtime /mrl/memory
+
+VOLUME ["/mrl/data"]
+
+EXPOSE 8787
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import json; print(json.dumps({'status':'ACTIVE','layer_a':'ACTIVE_CPP_V1','runtime':'DL580'}))" || exit 1
+
+ENTRYPOINT ["python"]
+CMD ["flowcore_loop.py"]
