@@ -1,0 +1,236 @@
+{
+  "generated_at": "2026-06-05T09:07:07.442023+00:00",
+  "source": "mrl_runtime_snapshot.py",
+  "canonical_runtime": "DL580",
+  "layer_a": "ACTIVE_CPP_V1",
+  "particle_registry": {
+    "stats": {
+      "total_particles": 5,
+      "providers": {
+        "openai": 2,
+        "claude": 2,
+        "gemini": 1
+      },
+      "tags": {
+        "core": 3,
+        "reasoning": 1,
+        "layer_a": 2,
+        "analysis": 1,
+        "creative": 1,
+        "distillation": 1,
+        "knowledge_transfer": 1,
+        "fusion": 1,
+        "lora_composition": 1
+      },
+      "creation_order_length": 5
+    },
+    "particles": [
+      "mrl-reasoning-v1",
+      "mrl-analysis-v1",
+      "mrl-creative-v1",
+      "mrl-distillation-v1",
+      "mrl-fusion-v1"
+    ]
+  },
+  "fusion_engine": {
+    "fusion_history": [
+      {
+        "fusion_id": "fusion_20260605090707",
+        "mode": "sequential",
+        "particle_ids": [
+          "mrl-reasoning-v1",
+          "mrl-analysis-v1"
+        ],
+        "timestamp": "2026-06-05T09:07:07.442221Z",
+        "metadata": {}
+      },
+      {
+        "fusion_id": "fusion_20260605090707",
+        "mode": "parallel",
+        "particle_ids": [
+          "mrl-reasoning-v1",
+          "mrl-analysis-v1",
+          "mrl-creative-v1"
+        ],
+        "timestamp": "2026-06-05T09:07:07.442245Z",
+        "metadata": {}
+      },
+      {
+        "fusion_id": "fusion_20260605090707",
+        "mode": "weighted",
+        "particle_ids": [
+          "mrl-analysis-v1",
+          "mrl-creative-v1"
+        ],
+        "timestamp": "2026-06-05T09:07:07.442272Z",
+        "metadata": {
+          "weights": [
+            0.5,
+            0.5
+          ]
+        }
+      }
+    ]
+  },
+  "ai_stack_runtime": {
+    "metrics": {
+      "total_particles": 3,
+      "active_stacks": 0,
+      "total_executions": 0
+    }
+  },
+  "convergence": {
+    "fusion_result": {
+      "fusion_id": "ecd3c0e2",
+      "mode": "sequential",
+      "prompt": "MRL convergence runtime check",
+      "outputs": [
+        {
+          "timestamp": "2026-06-05T09:07:07.442891+00:00",
+          "input": "MRL convergence runtime check",
+          "output": "[openai/gpt-4] Response to: MRL convergence runtime check...",
+          "provider": "openai",
+          "model": "gpt-4",
+          "role": "reasoning"
+        },
+        {
+          "timestamp": "2026-06-05T09:07:07.442904+00:00",
+          "input": "[openai/gpt-4] Response to: MRL convergence runtime check...",
+          "output": "[claude/claude-3-opus] Response to: [openai/gpt-4] Response to: MRL convergence runtim...",
+          "provider": "claude",
+          "model": "claude-3-opus",
+          "role": "analysis"
+        },
+        {
+          "timestamp": "2026-06-05T09:07:07.442907+00:00",
+          "input": "[claude/claude-3-opus] Response to: [openai/gpt-4] Response to: MRL convergence runtim...",
+          "output": "[gemini/gemini-pro] Response to: [claude/claude-3-opus] Response to: [openai/gpt-4]...",
+          "provider": "gemini",
+          "model": "gemini-pro",
+          "role": "creative"
+        }
+      ],
+      "final_result": "[gemini/gemini-pro] Response to: [claude/claude-3-opus] Response to: [openai/gpt-4]...",
+      "particle_count": 3
+    },
+    "mobius_loop": {
+      "loop_id": "bd39aed8",
+      "initial_prompt": "MRL MobiusLoop convergence verification",
+      "converged": true,
+      "total_cycles": 2,
+      "convergence_threshold": 0.9,
+      "final_output": "[gemini/gemini-pro] Response to: [claude/claude-3-opus] Response to: [openai/gpt-4]...",
+      "cycle_history": [
+        {
+          "cycle": 0,
+          "input": "MRL MobiusLoop convergence verification",
+          "output": "[gemini/gemini-pro] Response to: [claude/claude-3-opus] Response to: [openai/gpt-4]...",
+          "similarity": 0.0,
+          "outputs": [
+            {
+              "timestamp": "2026-06-05T09:07:07.442920+00:00",
+              "input": "MRL MobiusLoop convergence verification",
+              "output": "[openai/gpt-4] Response to: MRL MobiusLoop convergence verification...",
+              "provider": "openai",
+              "model": "gpt-4",
+              "role": "reasoning"
+            },
+            {
+              "timestamp": "2026-06-05T09:07:07.442923+00:00",
+              "input": "[openai/gpt-4] Response to: MRL MobiusLoop convergence verification...",
+              "output": "[claude/claude-3-opus] Response to: [openai/gpt-4] Response to: MRL MobiusLoop converg...",
+              "provider": "claude",
+              "model": "claude-3-opus",
+              "role": "analysis"
+            },
+            {
+              "timestamp": "2026-06-05T09:07:07.442926+00:00",
+              "input": "[claude/claude-3-opus] Response to: [openai/gpt-4] Response to: MRL MobiusLoop converg...",
+              "output": "[gemini/gemini-pro] Response to: [claude/claude-3-opus] Response to: [openai/gpt-4]...",
+              "provider": "gemini",
+              "model": "gemini-pro",
+              "role": "creative"
+            }
+          ],
+          "timestamp": "2026-06-05T09:07:07.442931+00:00"
+        },
+        {
+          "cycle": 1,
+          "input": "Improve and expand: [gemini/gemini-pro] Response to: [claude/claude-3-opus] Response to: [openai/gpt-4]...",
+          "output": "[gemini/gemini-pro] Response to: [claude/claude-3-opus] Response to: [openai/gpt-4]...",
+          "similarity": 1.0,
+          "outputs": [
+            {
+              "timestamp": "2026-06-05T09:07:07.442938+00:00",
+              "input": "Improve and expand: [gemini/gemini-pro] Response to: [claude/claude-3-opus] Response to: [openai/gpt-4]...",
+              "output": "[openai/gpt-4] Response to: Improve and expand: [gemini/gemini-pro] Response t...",
+              "provider": "openai",
+              "model": "gpt-4",
+              "role": "reasoning"
+            },
+            {
+              "timestamp": "2026-06-05T09:07:07.442942+00:00",
+              "input": "[openai/gpt-4] Response to: Improve and expand: [gemini/gemini-pro] Response t...",
+              "output": "[claude/claude-3-opus] Response to: [openai/gpt-4] Response to: Improve and expand: [g...",
+              "provider": "claude",
+              "model": "claude-3-opus",
+              "role": "analysis"
+            },
+            {
+              "timestamp": "2026-06-05T09:07:07.442950+00:00",
+              "input": "[claude/claude-3-opus] Response to: [openai/gpt-4] Response to: Improve and expand: [g...",
+              "output": "[gemini/gemini-pro] Response to: [claude/claude-3-opus] Response to: [openai/gpt-4]...",
+              "provider": "gemini",
+              "model": "gemini-pro",
+              "role": "creative"
+            }
+          ],
+          "timestamp": "2026-06-05T09:07:07.443063+00:00"
+        }
+      ]
+    },
+    "particles": [
+      {
+        "provider": "openai",
+        "model": "gpt-4",
+        "weight": 1.0,
+        "role": "reasoning",
+        "state": {
+          "last_input": "Improve and expand: [gemini/gemini-pro] Response to: [claude/claude-3-opus] Response to: [openai/gpt-4]...",
+          "last_output": "[openai/gpt-4] Response to: Improve and expand: [gemini/gemini-pro] Response t...",
+          "last_timestamp": "2026-06-05T09:07:07.442938+00:00"
+        }
+      },
+      {
+        "provider": "claude",
+        "model": "claude-3-opus",
+        "weight": 1.2,
+        "role": "analysis",
+        "state": {
+          "last_input": "[openai/gpt-4] Response to: Improve and expand: [gemini/gemini-pro] Response t...",
+          "last_output": "[claude/claude-3-opus] Response to: [openai/gpt-4] Response to: Improve and expand: [g...",
+          "last_timestamp": "2026-06-05T09:07:07.442942+00:00"
+        }
+      },
+      {
+        "provider": "gemini",
+        "model": "gemini-pro",
+        "weight": 0.8,
+        "role": "creative",
+        "state": {
+          "last_input": "[claude/claude-3-opus] Response to: [openai/gpt-4] Response to: Improve and expand: [g...",
+          "last_output": "[gemini/gemini-pro] Response to: [claude/claude-3-opus] Response to: [openai/gpt-4]...",
+          "last_timestamp": "2026-06-05T09:07:07.442950+00:00"
+        }
+      }
+    ]
+  },
+  "memory": {
+    "memory_status": {
+      "long_term_memory_size": 5,
+      "short_term_memory_size": 0,
+      "working_memory_size": 0,
+      "total_entries": 5
+    }
+  }
+}
