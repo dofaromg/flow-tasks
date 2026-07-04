@@ -1,0 +1,17 @@
+task_id: hello-world-api-c
+language: c
+description: 用 C 語言寫一個 Hello World API，輸出 "你好，世界"
+target_file: flow_code/hello_api.c
+based_on: flow_code/hello_api.py
+features:
+  - posix_socket_http_server   # 用 POSIX socket 建立 HTTP 伺服器（無第三方依賴）
+  - utf8_chinese_output        # 輸出 UTF-8 中文字串 "你好，世界"
+  - multi_route_dispatch       # 路由分派（/、/health、/info）
+  - graceful_shutdown          # SIGINT 訊號處理，優雅關閉
+build:
+  compile: gcc -o flow_code/hello_api flow_code/hello_api.c
+  run: ./flow_code/hello_api [port]
+endpoints:
+  /:       Returns {"message": "你好，世界"}
+  /health: Returns {"status": "healthy", "service": "hello-world-api-c"}
+  /info:   Returns task metadata and endpoint list
