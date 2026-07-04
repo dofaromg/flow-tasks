@@ -1,6 +1,30 @@
-import os, json, time, uuid, hashlib, datetime as _dt, re, threading
+import os, json, time, uuid, hashlib, datetime as _dt, re, threading, sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
+
+# ── Product naming ──────────────────────────────────────────────────────────
+try:
+    _repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if _repo_root not in sys.path:
+        sys.path.insert(0, _repo_root)
+    from flowcore_naming import (  # type: ignore[import]
+        event_name as _event_name,
+        health_metadata as _health_metadata,
+        server_banner as _server_banner,
+    )
+    _NAMING_AVAILABLE = True
+except ImportError:
+    _NAMING_AVAILABLE = False
+
+    def _event_name(component: str, action: str) -> str:  # type: ignore[misc]
+        return f"mrliou.flowcore.{component}.{action}"
+
+    def _health_metadata(component: str = "runtime"):  # type: ignore[misc]
+        return {}
+
+    def _server_banner(component: str = "runtime", version=None) -> str:  # type: ignore[misc]
+        return "AI SuperComputer running"
+# ────────────────────────────────────────────────────────────────────────────
 
 # Import fusion system
 try:
@@ -64,10 +88,27 @@ class Tracer:
         # Thread-safe emission with lock to prevent race conditions
         with self._lock:
             self._state["tick"] += 1
+            # Produce a product-namespaced event label for machine-readable outputs.
+            # Convention: event names follow the pattern "component_action" where
+            # component and action are separated by the FIRST underscore only.
+            # Examples:
+            #   "judge_health"        -> component="judge",   action="health"
+            #   "judge_ai_precomplete"-> component="judge",   action="ai_precomplete"
+            #   "fusion_pre"          -> component="fusion",  action="pre"
+            # For event names without an underscore the whole name becomes the
+            # action under the "flowcore" component.
+            # The original short 'event' value is always preserved unchanged so
+            # existing consumers are unaffected.
+            if "_" in event:
+                component, action = event.split("_", 1)
+            else:
+                component, action = "flowcore", event
+            ns_event = _event_name(component, action)
             rec = {
                 "rid": self._state["rid"],
                 "tick": self._state["tick"],
                 "event": event,
+                "ns_event": ns_event,
                 "ts": now_iso(),
                 "payload": payload
             }
@@ -377,7 +418,9 @@ class Handler(BaseHTTPRequestHandler):
         qs = parse_qs(u.query)
         if u.path == "/judge/health":
             rec = tracer.emit("judge_health", {})
-            return self._send(200, {"ok": True, "anchor": rec["merkle_root"]})
+            resp = {"ok": True, "anchor": rec["merkle_root"]}
+            resp.update(_health_metadata("ai"))
+            return self._send(200, resp)
         if u.path == "/l1/search":
             q = qs.get("q", [""])[0]
             hits = []
@@ -669,7 +712,8 @@ if __name__ == "__main__":
         else:
             print(f"⚠ AI config not found: {config_path}")
     
-    print("AI SuperComputer running on http://127.0.0.1:8787")
+    print(_server_banner("ai"))
+    print(f"Listening on http://127.0.0.1:8787")
     _ensure_dir("memory/ingest/fusion")
     _ensure_dir("memory/ingest/mobius")
     _ensure_dir("memory/derived/l1")
@@ -677,7 +721,6 @@ if __name__ == "__main__":
     _ensure_dir("memory/domain/mobius_cycles")
     
     fusion_status = "enabled" if FUSION_AVAILABLE else "disabled"
-    print(f"AI SuperComputer running on http://127.0.0.1:8787")
     print(f"Fusion System: {fusion_status}")
     
     ThreadingHTTPServer(("127.0.0.1", 8787), Handler).serve_forever()

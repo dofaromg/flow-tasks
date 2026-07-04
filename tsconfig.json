@@ -18,5 +18,5 @@
     "downlevelIteration": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "flowos", "particle-edge-v4", "particle-chat-v42"]
 }

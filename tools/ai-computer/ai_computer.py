@@ -10,6 +10,45 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import parse_qs, urlparse
 
+# ── Product naming ──────────────────────────────────────────────────────────
+# Try to import the centralized naming model from the repository root.
+# If the script is run from a different working directory, fall back to
+# inline defaults so the runtime always stays self-contained.
+try:
+    _repo_root = Path(__file__).resolve().parents[2]
+    if str(_repo_root) not in sys.path:
+        sys.path.insert(0, str(_repo_root))
+    from flowcore_naming import (  # type: ignore[import]
+        event_name as _event_name,
+        health_metadata as _health_metadata,
+        index_metadata as _index_metadata,
+        server_banner as _server_banner,
+        server_version_header as _server_version_header,
+        cli_description as _cli_description,
+    )
+    _NAMING_AVAILABLE = True
+except ImportError:
+    _NAMING_AVAILABLE = False
+
+    def _event_name(component: str, action: str) -> str:  # type: ignore[misc]
+        return f"mrliou.flowcore.{component}.{action}"
+
+    def _health_metadata(component: str = "runtime") -> Dict[str, str]:  # type: ignore[misc]
+        return {}
+
+    def _index_metadata() -> Dict[str, str]:  # type: ignore[misc]
+        return {}
+
+    def _server_banner(component: str = "runtime", version: str | None = None) -> str:  # type: ignore[misc]
+        return "AI Computer Runtime"
+
+    def _server_version_header(component: str = "runtime") -> str:  # type: ignore[misc]
+        return "AIComputerRuntime/0.1"
+
+    def _cli_description(component: str = "runtime") -> str:  # type: ignore[misc]
+        return "AI Computer Runtime"
+# ────────────────────────────────────────────────────────────────────────────
+
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8765
 TRACE_FILE = Path("artifacts/trace/trace.jsonl")
@@ -77,10 +116,11 @@ def append_trace(operation: str, path: Optional[str], status: str, detail: Dict[
         "detail": detail,
     }
     merkle_root = compute_merkle_root(last_root, payload)
-    record = {
+    record: Dict[str, Any] = {
         "tick": tick,
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "operation": operation,
+        "event": _event_name("trace", operation),
         "path": path,
         "status": status,
         "detail": detail,
@@ -167,12 +207,13 @@ def compute_index() -> Dict[str, Any]:
         hasher.update(item["path"].encode("utf-8"))
         hasher.update(item["sha256"].encode("utf-8"))
     merkle_root = hasher.hexdigest()
-    manifest = {
+    manifest: Dict[str, Any] = {
         "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "root": str(root),
         "file_count": len(records),
         "files": records,
         "merkle_root": merkle_root,
+        "product": _index_metadata(),
     }
     ensure_directories()
     INDEX_FILE.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -187,7 +228,9 @@ def info_path(relative_path: str) -> Dict[str, Any]:
 
 
 def health_status() -> Dict[str, Any]:
-    return {"status": "ok", "root": str(get_vault_root())}
+    result: Dict[str, Any] = {"status": "ok", "root": str(get_vault_root())}
+    result.update(_health_metadata("runtime"))
+    return result
 
 
 def run_operation(operation: str, path: Optional[str], func, *args, **kwargs):
@@ -201,7 +244,7 @@ def run_operation(operation: str, path: Optional[str], func, *args, **kwargs):
 
 
 class RuntimeHandler(http.server.BaseHTTPRequestHandler):
-    server_version = "AIComputerRuntime/0.1"
+    server_version = _server_version_header("runtime")
 
     def _send_json(self, status: int, payload: Dict[str, Any]) -> None:
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
@@ -279,7 +322,8 @@ class RuntimeHandler(http.server.BaseHTTPRequestHandler):
 def serve(host: str, port: int) -> None:
     ensure_directories()
     server = http.server.ThreadingHTTPServer((host, port), RuntimeHandler)
-    print(f"AI Computer Runtime listening on http://{host}:{port}")
+    print(_server_banner("runtime"))
+    print(f"Listening on http://{host}:{port}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
@@ -287,7 +331,7 @@ def serve(host: str, port: int) -> None:
 
 
 def cli() -> None:
-    parser = argparse.ArgumentParser(description="AI Computer Runtime")
+    parser = argparse.ArgumentParser(description=_cli_description("runtime"))
     sub = parser.add_subparsers(dest="command", required=True)
 
     serve_parser = sub.add_parser("serve", help="Run HTTP server")
