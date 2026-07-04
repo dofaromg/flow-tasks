@@ -264,7 +264,7 @@ class LocalGGUFTeacher(TeacherInterface):
             if self._llm is not None:
                 return
             try:
-                from llama_cpp import Llama  # type: ignore
+                from llama_cpp import Llama  # type: ignore[import-untyped]  # llama_cpp 無官方 stub
                 self._llm = Llama(
                     model_path=self.model_path,
                     n_ctx=self.n_ctx,

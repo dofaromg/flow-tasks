@@ -485,11 +485,28 @@ def require_json(handler: Callable) -> Callable:
 
 
 def require_auth(token: str) -> Callable:
-    """簡單 ****** 驗證裝飾器"""
+    """
+    ****** 驗證裝飾器
+
+    使用 hmac.compare_digest 進行恆定時間比較，防止 timing attack。
+
+    Args:
+        token: 有效的 ****** 字串
+
+    使用方式：
+        @require_auth("my-secret-token")
+        @router.get("/protected")
+        def protected_route(req: Request) -> Response:
+            ...
+    """
+    import hmac
+    expected = f"******"
+
     def decorator(handler: Callable) -> Callable:
         def wrapper(req: Request) -> Response:
             auth = req.headers.get("authorization", "")
-            if auth != f"******":
+            # 恆定時間比較，防止 timing attack
+            if not hmac.compare_digest(auth.encode(), expected.encode()):
                 return JSONResponse({"error": "Unauthorized"}, status_code=401)
             return handler(req)
         return wrapper
