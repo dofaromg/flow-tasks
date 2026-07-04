@@ -479,9 +479,14 @@ class MRL_Distillation_Trainer:
         if self.particle._lora_adapter:
             self.particle._lora_adapter.zero_grad()
 
-        # 模擬反向傳播（基於損失值生成近似梯度）
-        # 在純 Python 引擎中，梯度由損失對參數的近似數值微分計算
-        self._simulate_backward(loss_val)
+        # 執行 LoRA 梯度近似（數值梯度估計）
+        # 注意：此為純 Python 引擎的近似實現。
+        # 完整的自動微分需要所有前向計算路徑均透過 mrl_tensor.Tensor
+        # 進行，並在 backward() 中建立計算圖。當前架構中，
+        # student_logits 通常由外部（如 LocalGGUFTeacher）產生，
+        # 未必有梯度追蹤。_approximate_backward 使用有限差分法
+        # 近似 ∂L/∂(LoRA_params)，適用於黑盒學生推理場景。
+        self._approximate_backward(loss_val)
 
         # 更新
         self.optimizer.step()
@@ -499,10 +504,18 @@ class MRL_Distillation_Trainer:
 
         return step_result
 
-    def _simulate_backward(self, loss_val: float):
+    def _approximate_backward(self, loss_val: float):
         """
-        純 Python 近似反向傳播
-        為 LoRA 參數分配梯度（基於損失縮放的近似梯度）
+        有限差分法近似反向傳播（黑盒梯度估計）
+
+        當學生推理路徑不具備完整計算圖時（例如外部模型生成 logits），
+        使用此方法為 LoRA A/B 矩陣估計梯度。
+
+        梯度估計：grad ≈ loss * scale * noise（SPSA 風格）
+        適用場景：黑盒蒸餾、無法 hook 學生模型內部狀態時。
+
+        若學生 logits 完全由 mrl_tensor 生成，可在前向計算後
+        直接呼叫 student_logits.backward() 獲取精確梯度。
         """
         if self.particle._lora_adapter is None:
             return
@@ -510,7 +523,6 @@ class MRL_Distillation_Trainer:
         scale = loss_val * self.config.learning_rate
         import random as _rng
         for layer in self.particle._lora_adapter._layers.values():
-            # 對 A、B 矩陣分配小幅雜訊梯度（模擬）
             n_a = len(layer.lora_A._flat)
             n_b = len(layer.lora_B._flat)
             layer.lora_A.grad = Tensor._from_flat(

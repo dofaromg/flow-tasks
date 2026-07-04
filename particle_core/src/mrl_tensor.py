@@ -353,6 +353,22 @@ class Tensor:
     def abs(self) -> "Tensor":
         return Tensor(_unflatten([abs(x) for x in self._flat], self.shape))
 
+    # -----------------------------------------------------------------------
+    # 內部工廠方法（直接定義在 Tensor 類中，避免循環依賴與 monkey-patch）
+    # -----------------------------------------------------------------------
+
+    @staticmethod
+    def _from_flat(flat: Flat, shape: Shape, requires_grad: bool = False) -> "Tensor":
+        """從一維 flat 列表和形狀建立 Tensor（不觸發 __init__ 驗證）"""
+        t = Tensor.__new__(Tensor)
+        t._flat = flat
+        t.shape = shape
+        t.grad = None
+        t.requires_grad = requires_grad
+        t._backward_fn = None
+        t._prev = []
+        return t
+
 
 def _to_tensor(x: Any) -> "Tensor":
     if isinstance(x, Tensor):
@@ -706,25 +722,6 @@ class TensorOps:
                 g = TensorOps.sum(g, i).reshape(*g.shape[:i], 1, *g.shape[i + 1:])
         return g
 
-    # -----------------------------------------------------------------------
-    # 工廠輔助
-    # -----------------------------------------------------------------------
-
-    @staticmethod
-    def _from_flat(flat: Flat, shape: Shape, requires_grad: bool = False) -> Tensor:
-        t = Tensor.__new__(Tensor)
-        t._flat = flat
-        t.shape = shape
-        t.grad = None
-        t.requires_grad = requires_grad
-        t._backward_fn = None
-        t._prev = []
-        return t
-
-
-# 讓 Tensor._from_flat 可以使用 TensorOps._from_flat
-Tensor._from_flat = staticmethod(TensorOps._from_flat)  # type: ignore
-
 
 # ===========================================================================
 # Initializer — 權重初始化策略
@@ -741,13 +738,13 @@ class Initializer:
     def zeros(shape: Shape, requires_grad: bool = True) -> Tensor:
         """全零初始化"""
         flat = [0.0] * _numel(shape)
-        return TensorOps._from_flat(flat, shape, requires_grad)
+        return Tensor._from_flat(flat, shape, requires_grad)
 
     @staticmethod
     def ones(shape: Shape, requires_grad: bool = True) -> Tensor:
         """全一初始化"""
         flat = [1.0] * _numel(shape)
-        return TensorOps._from_flat(flat, shape, requires_grad)
+        return Tensor._from_flat(flat, shape, requires_grad)
 
     @staticmethod
     def normal(
@@ -768,7 +765,7 @@ class Initializer:
             z0 = mag * math.cos(2.0 * math.pi * u2) + mean
             z1 = mag * math.sin(2.0 * math.pi * u2) + mean
             flat.extend([z0, z1])
-        return TensorOps._from_flat(flat[:n], shape, requires_grad)
+        return Tensor._from_flat(flat[:n], shape, requires_grad)
 
     @staticmethod
     def uniform(
@@ -781,7 +778,7 @@ class Initializer:
         """均勻分佈初始化"""
         rng = random.Random(seed)
         flat = [rng.uniform(low, high) for _ in range(_numel(shape))]
-        return TensorOps._from_flat(flat, shape, requires_grad)
+        return Tensor._from_flat(flat, shape, requires_grad)
 
     @staticmethod
     def xavier_uniform(

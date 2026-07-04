@@ -27,7 +27,7 @@ import math
 import json
 import os
 import sys
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 from dataclasses import dataclass, field, asdict
 from datetime import datetime
 
@@ -515,7 +515,7 @@ class LoRATrainer:
         self.adapter = adapter
         params = adapter.parameters
         if optimizer == "adam":
-            self.opt: Adam | SGD = Adam(params, lr=lr)
+            self.opt: Union[Adam, SGD] = Adam(params, lr=lr)
         else:
             self.opt = SGD(params, lr=lr)
 
