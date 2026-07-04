@@ -1,4 +1,6 @@
 {
+<<<<<<< 記憶
+=======
   "name": "FlowAgent Development Environment",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
   "features": {
@@ -44,4 +46,7 @@
   "mounts": [
     "source=flow-tasks-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
   ]
+>>>>>>> main
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {}
 }
