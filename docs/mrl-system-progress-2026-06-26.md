@@ -1,6 +1,6 @@
 # MRL System Progress Snapshot (2026-06-26)
 
-This snapshot aligns the current MRL system state into three evidence levels: **confirmed**, **inferred**, and **pending**. It records the project direction as of 2026-06-26 so future recovery and integration work can compare against a stable baseline.
+This snapshot captures the current MRL system state based on **confirmed** findings. It records the project direction as of 2026-06-26 so future recovery and integration work can compare against a stable baseline.
 
 ## Confirmed Architecture
 
