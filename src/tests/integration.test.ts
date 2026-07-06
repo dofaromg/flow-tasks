@@ -20,7 +20,6 @@ describe('Integration Tests', () => {
   });
 
   test('should initialize all components independently', async () => {
-    const neuronCore = new NeuronComputeCore();
     const attentionLayer = new AttentionRoutingLayer({
       numHeads: 4,
       headDim: 64
@@ -185,9 +184,11 @@ describe('Integration Tests', () => {
     expect(stats.totalRoutings).toBe(numComputations);
     expect(avgTime).toBeGreaterThan(0);
 
-    console.log(`Average computation time: ${avgTime.toFixed(2)}ms`);
-    console.log(`Total routings: ${stats.totalRoutings}`);
-    console.log(`Average confidence: ${stats.averageConfidence.toFixed(3)}`);
+    if (process.env.SHOW_PERF_LOGS === 'true') {
+      console.log(`Average computation time: ${avgTime.toFixed(2)}ms`);
+      console.log(`Total routings: ${stats.totalRoutings}`);
+      console.log(`Average confidence: ${stats.averageConfidence.toFixed(3)}`);
+    }
 
     await engine.destroy();
   });

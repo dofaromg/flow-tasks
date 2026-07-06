@@ -119,12 +119,14 @@ export class AttentionRoutingLayer {
         }
       };
     } catch (error) {
-      const computeError: ComputeError = {
-        code: 'ATTENTION_ERROR',
-        message: `Attention computation failed: ${error}`,
-        timestamp: new Date()
-      };
-      throw computeError;
+      const baseMessage =
+        error instanceof Error ? error.message : String(error);
+      const wrappedError = new Error(
+        `Attention computation failed: ${baseMessage}`
+      ) as Error & ComputeError;
+      wrappedError.code = 'ATTENTION_ERROR';
+      wrappedError.timestamp = new Date();
+      throw wrappedError;
     }
   }
 
@@ -176,10 +178,39 @@ export class AttentionRoutingLayer {
    * 對數組應用 softmax 函數
    */
   private softmax(values: Float32Array): Float32Array {
-    const max = Math.max(...values);
-    const exps = values.map(v => Math.exp(v - max));
-    const sum = exps.reduce((a, b) => a + b, 0);
-    return new Float32Array(exps.map(e => e / sum));
+    const length = values.length;
+
+    // Handle empty input gracefully
+    if (length === 0) {
+      return new Float32Array(0);
+    }
+
+    // 1) Find max value without using spread (avoids argument limits)
+    let max = values[0];
+    for (let i = 1; i < length; i++) {
+      const v = values[i];
+      if (v > max) {
+        max = v;
+      }
+    }
+
+    // 2) Compute exponentials and their sum
+    const result = new Float32Array(length);
+    let sum = 0;
+    for (let i = 0; i < length; i++) {
+      const expValue = Math.exp(values[i] - max);
+      result[i] = expValue;
+      sum += expValue;
+    }
+
+    // 3) Normalize to get probabilities
+    if (sum !== 0) {
+      for (let i = 0; i < length; i++) {
+        result[i] /= sum;
+      }
+    }
+
+    return result;
   }
 
   /**

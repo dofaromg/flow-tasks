@@ -260,3 +260,4 @@ particle_core/cache/
 /data/snapshots/*.json
 /data_sandbox/
 /config.yaml
+*.tsbuildinfo

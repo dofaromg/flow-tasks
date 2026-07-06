@@ -6,7 +6,7 @@
  * and provides load balancing and failover capabilities.
  */
 
-import { ComputeEndpoint, Tensor, ComputeResult } from '../types';
+import { ComputeEndpoint } from '../types';
 
 export class ComputeEndpointManager {
   private endpoints: Map<string, ComputeEndpoint> = new Map();
@@ -42,7 +42,7 @@ export class ComputeEndpointManager {
    */
   private async detectEndpoints(): Promise<void> {
     // Check for WebGPU support
-    if (navigator.gpu) {
+    if (typeof navigator !== 'undefined' && (navigator as any).gpu) {
       const webgpuEndpoint: ComputeEndpoint = {
         id: 'webgpu-primary',
         name: 'WebGPU Primary',
