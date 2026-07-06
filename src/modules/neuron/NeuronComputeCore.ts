@@ -13,6 +13,7 @@ export class NeuronComputeCore {
   private adapter: GPUAdapter | null = null;
   private initialized = false;
   private config: WebGPUConfig;
+  private simulatedWeightsCache: Map<string, Float32Array> = new Map();
 
   constructor(config: WebGPUConfig = {}) {
     this.config = config;
@@ -29,8 +30,8 @@ export class NeuronComputeCore {
       }
 
       // Check WebGPU support
-      if (!navigator.gpu) {
-        throw new Error('WebGPU is not supported in this browser');
+      if (typeof navigator === 'undefined' || !navigator.gpu) {
+        throw new Error('WebGPU is not supported in this environment');
       }
 
       // Use provided adapter or request a new one
@@ -93,12 +94,13 @@ export class NeuronComputeCore {
         }
       };
     } catch (error) {
-      const computeError: ComputeError = {
-        code: 'COMPUTE_ERROR',
-        message: `Computation failed: ${error}`,
-        timestamp: new Date()
-      };
-      throw computeError;
+      const baseMessage = error instanceof Error ? error.message : String(error);
+      const wrappedError = new Error(
+        `Computation failed: ${baseMessage}`
+      ) as Error & ComputeError;
+      wrappedError.code = 'COMPUTE_ERROR';
+      wrappedError.timestamp = new Date();
+      throw wrappedError;
     }
   }
 
@@ -109,12 +111,23 @@ export class NeuronComputeCore {
   private simulateComputation(input: Tensor, config: LayerConfig): Float32Array {
     const { inputSize, outputSize, activationFunction = 'relu' } = config;
     
+    // Cache weights per config to ensure deterministic results for the same config
+    const cacheKey = `${inputSize}x${outputSize}`;
+    let weights = this.simulatedWeightsCache.get(cacheKey);
+    if (!weights) {
+      weights = new Float32Array(inputSize * outputSize);
+      for (let i = 0; i < weights.length; i++) {
+        weights[i] = Math.random() * 0.1; // Generated once per config
+      }
+      this.simulatedWeightsCache.set(cacheKey, weights);
+    }
+
     // Simple linear transformation simulation
     const output = new Float32Array(outputSize);
     for (let i = 0; i < outputSize; i++) {
       let sum = 0;
       for (let j = 0; j < Math.min(inputSize, input.data.length); j++) {
-        sum += input.data[j] * (Math.random() * 0.1); // Simulated weights
+        sum += input.data[j] * weights[i * inputSize + j];
       }
       
       // Apply activation function
@@ -149,10 +162,12 @@ export class NeuronComputeCore {
    * 獲取設備信息
    */
   getDeviceInfo(): { adapter: string; device: string; supported: boolean } {
+    const supported = typeof navigator !== 'undefined' && !!(navigator as any).gpu;
+
     return {
       adapter: this.adapter ? 'Available' : 'Not available',
       device: this.device ? 'Available' : 'Not available',
-      supported: !!navigator.gpu
+      supported
     };
   }
 
@@ -167,6 +182,7 @@ export class NeuronComputeCore {
     }
     this.adapter = null;
     this.initialized = false;
+    this.simulatedWeightsCache.clear();
     console.log('NeuronComputeCore destroyed');
   }
 }
