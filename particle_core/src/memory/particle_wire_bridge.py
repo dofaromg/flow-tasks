@@ -14,9 +14,8 @@ Features:
 - Support for all wire protocol message types
 """
 
-import struct
 import json
-from typing import Dict, Any, Optional, Tuple
+from typing import Dict, Any, Tuple
 from ctypes import Structure, c_uint8, c_uint32, sizeof
 from datetime import datetime
 

@@ -7,7 +7,6 @@ Test suite for Memory Cache Disk Mapping System
 
 import sys
 import json
-import time
 import tempfile
 from pathlib import Path
 

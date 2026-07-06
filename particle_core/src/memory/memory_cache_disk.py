@@ -15,10 +15,9 @@ Features:
 """
 
 import json
-import time
 import threading
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional
 from datetime import datetime
 from collections import OrderedDict
 
@@ -301,7 +300,7 @@ class LRUCache:
         try:
             if hasattr(self, 'auto_persist') and self.auto_persist:
                 self.shutdown()
-        except:
+        except Exception:  # noqa: BLE001 - intentionally broad in destructor to prevent crash during GC
             pass
 
 

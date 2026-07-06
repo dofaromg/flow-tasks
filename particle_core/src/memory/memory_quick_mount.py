@@ -196,7 +196,7 @@ class AdvancedParticleCompressor(ParticleCompressor):
                 if value_type == "dict" and isinstance(value, str):
                     try:
                         value = json.loads(value)
-                    except:
+                    except Exception:
                         pass
                 
                 result[key] = value
@@ -516,8 +516,8 @@ Examples:
     
     subparsers = parser.add_subparsers(dest='command', help='Command to execute')
     
-    # Mount command
-    mount_parser = subparsers.add_parser('mount', help='Mount memory seeds')
+    # Mount command (no additional arguments needed)
+    _ = subparsers.add_parser('mount', help='Mount memory seeds')
     
     # Snapshot command
     snapshot_parser = subparsers.add_parser('snapshot', help='Create state snapshot')
