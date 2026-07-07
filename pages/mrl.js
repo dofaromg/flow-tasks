@@ -70,11 +70,11 @@ export default function MRLOfficialWebsite() {
     async function fetchAll() {
       try {
         const [statusRes, convergenceRes, loopRes, gatewayRes, productRes] = await Promise.allSettled([
-          fetch(MRL_ENDPOINTS.status).then(r => r.json()),
-          fetch(MRL_ENDPOINTS.convergence).then(r => r.json()),
-          fetch(MRL_ENDPOINTS.persistentloop).then(r => r.json()),
-          fetch(MRL_ENDPOINTS.worldGateway).then(r => r.json()),
-          fetch(MRL_ENDPOINTS.product).then(r => r.json()),
+          fetch(MRL_ENDPOINTS.status).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }),
+          fetch(MRL_ENDPOINTS.convergence).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }),
+          fetch(MRL_ENDPOINTS.persistentloop).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }),
+          fetch(MRL_ENDPOINTS.worldGateway).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }),
+          fetch(MRL_ENDPOINTS.product).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }),
         ]);
         if (statusRes.status === 'fulfilled') setStatusData(statusRes.value);
         if (convergenceRes.status === 'fulfilled') setConvergenceData(convergenceRes.value);
