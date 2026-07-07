@@ -108,8 +108,10 @@ export class ParticleNeuralLink {
 
     if (this.env.GITHUB_TOKEN) {
       const rawToken = this.env.GITHUB_TOKEN.trim();
-      const hasBearerPrefix = /^Bearer\s+/i.test(rawToken);
-      headers.Authorization = hasBearerPrefix ? rawToken : `Bearer ${rawToken}`;
+      if (rawToken) {
+        const hasBearerPrefix = /^Bearer\s+/i.test(rawToken);
+        headers.Authorization = hasBearerPrefix ? rawToken : `Bearer ${rawToken}`;
+      }
     }
 
     try {
