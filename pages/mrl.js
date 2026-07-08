@@ -10,18 +10,29 @@ const MRL_ENDPOINTS = {
   product: '/api/mrl/product',
 };
 
+/**
+ * Fetch JSON data from a MRL endpoint and reject non-OK, non-JSON, or invalid JSON responses.
+ * @param {string} endpoint
+ * @returns {Promise<any>}
+ */
 async function fetchJson(endpoint) {
   const response = await fetch(endpoint);
   if (!response.ok) {
-    throw new Error(`Request failed for ${endpoint}: ${response.status}`);
+    throw new Error(`Request failed for ${endpoint}: ${response.status} ${response.statusText}`);
   }
 
   const contentType = response.headers.get('content-type') || '';
   if (!contentType.includes('application/json')) {
-    throw new Error(`Unexpected content type for ${endpoint}`);
+    throw new Error(
+      `Unexpected content type for ${endpoint}: expected application/json but got ${contentType || 'none'}`,
+    );
   }
 
-  return response.json();
+  try {
+    return await response.json();
+  } catch (error) {
+    throw new Error(`Invalid JSON response for ${endpoint}: ${error instanceof Error ? error.message : 'parse failed'}`);
+  }
 }
 
 function StatusBadge({ status }) {

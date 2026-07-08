@@ -16,7 +16,7 @@ export class FlowGate {
   }
 
   evaluate(payload: Record<string, unknown>, context?: FlowContext): GateDecision {
-    let firstAllow: GateDecision | null = null;
+    let firstAllowDecision: GateDecision | null = null;
 
     for (const check of this.checks) {
       const decision = check(payload, context);
@@ -28,12 +28,12 @@ export class FlowGate {
         return decision;
       }
 
-      if (!firstAllow) {
-        firstAllow = decision;
+      if (!firstAllowDecision) {
+        firstAllowDecision = decision;
       }
     }
 
-    return firstAllow ?? { allowed: true };
+    return firstAllowDecision ?? { allowed: true };
   }
 }
 
