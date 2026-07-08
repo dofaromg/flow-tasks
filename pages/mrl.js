@@ -10,6 +10,20 @@ const MRL_ENDPOINTS = {
   product: '/api/mrl/product',
 };
 
+async function fetchJson(endpoint) {
+  const response = await fetch(endpoint);
+  if (!response.ok) {
+    throw new Error(`Request failed for ${endpoint}: ${response.status}`);
+  }
+
+  const contentType = response.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    throw new Error(`Unexpected content type for ${endpoint}`);
+  }
+
+  return response.json();
+}
+
 function StatusBadge({ status }) {
   const colors = {
     ACTIVE: { bg: '#dcfce7', border: '#16a34a', text: '#15803d' },
@@ -70,11 +84,11 @@ export default function MRLOfficialWebsite() {
     async function fetchAll() {
       try {
         const [statusRes, convergenceRes, loopRes, gatewayRes, productRes] = await Promise.allSettled([
-          fetch(MRL_ENDPOINTS.status).then(r => r.json()),
-          fetch(MRL_ENDPOINTS.convergence).then(r => r.json()),
-          fetch(MRL_ENDPOINTS.persistentloop).then(r => r.json()),
-          fetch(MRL_ENDPOINTS.worldGateway).then(r => r.json()),
-          fetch(MRL_ENDPOINTS.product).then(r => r.json()),
+          fetchJson(MRL_ENDPOINTS.status),
+          fetchJson(MRL_ENDPOINTS.convergence),
+          fetchJson(MRL_ENDPOINTS.persistentloop),
+          fetchJson(MRL_ENDPOINTS.worldGateway),
+          fetchJson(MRL_ENDPOINTS.product),
         ]);
         if (statusRes.status === 'fulfilled') setStatusData(statusRes.value);
         if (convergenceRes.status === 'fulfilled') setConvergenceData(convergenceRes.value);
