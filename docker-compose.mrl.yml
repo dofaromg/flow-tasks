@@ -17,7 +17,7 @@ services:
       - NODE_ENV=production
       - MRL_LAYER_A=ACTIVE_CPP_V1
       - MRL_CANONICAL_RUNTIME=DL580
-      - MRL_DB_URI=mongodb://admin:${MRL_DB_PASSWORD:-mrl_secure_2026}@mrl-db:27017/mrl?authSource=admin
+      - MRL_DB_URI=mongodb://admin:${MRL_DB_PASSWORD}@mrl-db:27017/mrl?authSource=admin
       - NEXT_PUBLIC_GROWTHBOOK_API_HOST=${NEXT_PUBLIC_GROWTHBOOK_API_HOST:-}
       - NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY=${NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY:-}
     depends_on:
@@ -41,7 +41,7 @@ services:
     environment:
       - MRL_LAYER_A=ACTIVE_CPP_V1
       - MRL_CANONICAL_RUNTIME=DL580
-      - MRL_DB_URI=mongodb://admin:${MRL_DB_PASSWORD:-mrl_secure_2026}@mrl-db:27017/mrl?authSource=admin
+      - MRL_DB_URI=mongodb://admin:${MRL_DB_PASSWORD}@mrl-db:27017/mrl?authSource=admin
       - MRL_PERSISTENT_LOOP=ORCHESTRATION_COLLECTOR
       - MRL_BASEWORLD_DB=runtime_state_ledger
       - MRL_ENTRY_GATEWAY=external_read_interface
@@ -68,7 +68,7 @@ services:
       - "${MRL_DB_PORT:-27017}:27017"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=${MRL_DB_PASSWORD:-mrl_secure_2026}
+      - MONGO_INITDB_ROOT_PASSWORD=${MRL_DB_PASSWORD}
       - MONGO_INITDB_DATABASE=mrl
     volumes:
       - mrl-db-data:/data/db
