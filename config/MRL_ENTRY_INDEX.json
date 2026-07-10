@@ -1,7 +1,7 @@
 {
   "origin_signature": "MrLiouWord",
   "version": "1.0.0",
-  "snapshot_date": "2026-07-08",
+  "snapshot_date": "2026-07-10",
   "canonical_runtime": "DL580 G9 (Windows Server)",
   "service_manager": "NSSM 2.24 (D:\\nssm\\nssm-2.24\\win64\\nssm.exe)",
   "toolchain": {
@@ -16,7 +16,11 @@
       "port": 7810,
       "health_endpoint": "/",
       "health_status": "alive",
-      "dependencies": ["MRL_Memory_Engine", "MRL_Toolchain_Engine", "mrl_redis"],
+      "dependencies": [
+        "MRL_Memory_Engine",
+        "MRL_Toolchain_Engine",
+        "mrl_redis"
+      ],
       "layer": "core_engine"
     },
     {
@@ -26,7 +30,10 @@
       "port": 7950,
       "health_endpoint": null,
       "health_status": "running",
-      "dependencies": ["MRL_PostgreSQL", "mrl_redis"],
+      "dependencies": [
+        "MRL_PostgreSQL",
+        "mrl_redis"
+      ],
       "layer": "platform"
     },
     {
@@ -36,7 +43,9 @@
       "port": 3000,
       "health_endpoint": "/health",
       "health_status": "running",
-      "dependencies": ["MRL_PostgreSQL"],
+      "dependencies": [
+        "MRL_PostgreSQL"
+      ],
       "layer": "platform"
     },
     {
@@ -46,7 +55,11 @@
       "port": 7700,
       "health_endpoint": "/health",
       "health_status": "running",
-      "dependencies": ["MRL_PostgreSQL", "mrl_redis", "MRL_DB_Proxy"],
+      "dependencies": [
+        "MRL_PostgreSQL",
+        "mrl_redis",
+        "MRL_DB_Proxy"
+      ],
       "layer": "core_engine"
     },
     {
@@ -54,9 +67,12 @@
       "script": "D:\\mrl\\bridge\\server.js",
       "runtime": "node",
       "port": 7800,
-      "health_endpoint": null,
+      "health_endpoint": "/health",
       "health_status": "running",
-      "dependencies": ["MRL_ASI_Engine", "MRL_Tunnel"],
+      "dependencies": [
+        "MRL_ASI_Engine",
+        "MRL_Tunnel"
+      ],
       "layer": "network"
     },
     {
@@ -66,7 +82,10 @@
       "port": 7801,
       "health_endpoint": null,
       "health_status": "running",
-      "dependencies": ["MRL_PostgreSQL", "mrl_redis"],
+      "dependencies": [
+        "MRL_PostgreSQL",
+        "mrl_redis"
+      ],
       "layer": "infrastructure"
     },
     {
@@ -76,7 +95,10 @@
       "port": 7900,
       "health_endpoint": null,
       "health_status": "running",
-      "dependencies": ["MRL_Inference", "MRL_Memory_Engine"],
+      "dependencies": [
+        "MRL_Inference",
+        "MRL_Memory_Engine"
+      ],
       "layer": "ai_inference"
     },
     {
@@ -86,7 +108,9 @@
       "port": 8787,
       "health_endpoint": "/health",
       "health_status": "running",
-      "dependencies": ["MRL_Inference"],
+      "dependencies": [
+        "MRL_Inference"
+      ],
       "layer": "ai_inference"
     },
     {
@@ -124,7 +148,9 @@
         "episodic": 3,
         "working": 1
       },
-      "dependencies": ["mrl_redis"],
+      "dependencies": [
+        "mrl_redis"
+      ],
       "layer": "core_engine"
     },
     {
@@ -144,7 +170,9 @@
       "port": null,
       "health_endpoint": null,
       "health_status": "running",
-      "dependencies": ["MRL_PostgreSQL"],
+      "dependencies": [
+        "MRL_PostgreSQL"
+      ],
       "layer": "sync"
     },
     {
@@ -164,7 +192,9 @@
       "port": null,
       "health_endpoint": null,
       "health_status": "running",
-      "dependencies": ["mrl_redis"],
+      "dependencies": [
+        "mrl_redis"
+      ],
       "layer": "core_engine"
     },
     {
@@ -194,7 +224,9 @@
       "port": 8788,
       "health_endpoint": null,
       "health_status": "running",
-      "dependencies": ["MRL_PostgreSQL"],
+      "dependencies": [
+        "MRL_PostgreSQL"
+      ],
       "layer": "platform"
     },
     {
@@ -209,7 +241,9 @@
         "tools": 3,
         "engines": 0
       },
-      "dependencies": ["mrl_redis"],
+      "dependencies": [
+        "mrl_redis"
+      ],
       "layer": "core_engine"
     },
     {
@@ -231,6 +265,19 @@
       "health_status": "running",
       "dependencies": [],
       "layer": "core_engine"
+    },
+    {
+      "service_name": "MRL_Platform_Server",
+      "script": "D:\\mrl\\platform\\MRL_Platform_Server.py",
+      "runtime": "python",
+      "port": 8790,
+      "health_endpoint": "/health",
+      "health_status": "unknown",
+      "dependencies": [
+        "MRL_PostgreSQL",
+        "mrl_redis"
+      ],
+      "layer": "platform"
     }
   ],
   "additional_infrastructure": {
