@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mrliou-800ai"
+version = "1.1.0"
+description = "MRLiou 800 AI integrated engineering organization and physics audit runtime"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "MrLiouWord"}]
+dependencies = ["numpy>=1.24"]
+
+[project.scripts]
+mrliou-800ai = "mrliou_800ai.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
