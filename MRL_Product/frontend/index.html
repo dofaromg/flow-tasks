@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRL — 把你的產品想法整理成第一版可執行方案</title>
+  <meta name="description" content="不只是回答，而是幫你拆成能動手做的結果。把混亂變成結構，把想法變成步驟。">
+  <link rel="stylesheet" href="/assets/style.css">
+  <style>
+    /* ── Hero ── */
+    .hero {
+      padding: 100px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse at center, rgba(232,184,75,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+      padding: 6px 14px;
+      border: 1px solid rgba(232,184,75,0.25);
+      border-radius: 100px;
+      background: var(--accent-dim);
+    }
+    .hero__eyebrow-dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s ease infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.7); }
+    }
+    .hero__h1 {
+      font-size: clamp(36px, 7vw, 62px);
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      margin-bottom: 24px;
+      max-width: 700px;
+    }
+    .hero__h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero__sub {
+      font-size: clamp(16px, 2.5vw, 18px);
+      color: var(--text-2);
+      line-height: 1.7;
+      max-width: 520px;
+      margin-bottom: 40px;
+    }
+    .hero__actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .hero__scroll {
+      margin-top: 80px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+    .hero__scroll-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* ── Value Props ── */
+    .props-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+    .prop-item {
+      background: var(--surface);
+      padding: 32px 28px;
+      transition: background var(--transition);
+    }
+    .prop-item:hover { background: var(--surface-2); }
+    .prop-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
+    }
+    .prop-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+    .prop-desc {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+
+    /* ── Steps ── */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 28px 32px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      transition: background var(--transition);
+    }
+    .step:last-child { border-bottom: none; }
+    .step:hover { background: var(--surface-2); }
+    .step__num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      color: rgba(232,184,75,0.25);
+      line-height: 1;
+      min-width: 40px;
+      flex-shrink: 0;
+    }
+    .step__body {}
+    .step__title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .step__desc {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+
+    /* ── Examples ── */
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .example-item {
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.5;
+      transition: all var(--transition);
+      cursor: default;
+    }
+    .example-item:hover {
+      border-color: rgba(232,184,75,0.3);
+      color: var(--text);
+      background: var(--accent-dim);
+    }
+    .example-item::before {
+      content: '→';
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    /* ── CTA Section ── */
+    .cta-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 60px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(232,184,75,0.5), transparent);
+    }
+    .cta-section__title {
+      font-size: clamp(26px, 5vw, 38px);
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .cta-section__desc {
+      font-size: 16px;
+      color: var(--text-2);
+      max-width: 440px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+
+    /* ── 第七包：usecase cards ── */
+    .usecase-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 20px 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      text-decoration: none;
+      transition: all var(--transition);
+    }
+    .usecase-card:hover {
+      border-color: rgba(232,184,75,0.35);
+      background: var(--accent-dim);
+      transform: translateY(-2px);
+    }
+    .usecase-card__icon { font-size: 22px; }
+    .usecase-card__title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .usecase-card__desc {
+      font-size: 12px;
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+    .usecase-card--primary {
+      border-color: rgba(232,184,75,0.3);
+      background: linear-gradient(135deg, var(--surface) 0%, var(--accent-dim) 100%);
+    }
+    .usecase-card--secondary {
+      border-color: rgba(232,184,75,0.15);
+    }
+
+    /* ── 第七包：faq entry ── */
+    .faq-entry {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      text-decoration: none;
+      font-size: 14px;
+      color: var(--text-2);
+      transition: all var(--transition);
+      line-height: 1.5;
+    }
+    .faq-entry:hover {
+      border-color: rgba(232,184,75,0.3);
+      color: var(--text);
+      background: var(--accent-dim);
+    }
+    .faq-entry__arrow {
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      .props-grid { grid-template-columns: 1fr; }
+      .examples-grid { grid-template-columns: 1fr; }
+      .hero { padding: 64px 0 48px; }
+      .step { padding: 20px 20px; gap: 16px; }
+      .cta-section { padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo">MRL.</a>
+    <div class="nav__links">
+      <a href="/pricing.html" class="nav__link">方案</a>
+      <a href="/app.html" class="nav__cta">立即開始</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero__eyebrow">
+      <span class="hero__eyebrow-dot"></span>
+      產品 / 系統 / 決策 · 拆成能動手做的方案
+    </div>
+    <h1 class="hero__h1 anim-fade-up">
+      把你的產品想法<br>
+      <em>丟進來，</em><br>
+      我幫你整理成<br>第一版可執行方案
+    </h1>
+    <p class="hero__sub anim-fade-up anim-delay-1">
+      想做第一版網站或產品卻不知從哪開始？卡在幾個方向不知怎麼選？
+      丟進來，幫你拆成問題拆解、方案、步驟、優先順序，直接能動手做。
+    </p>
+    <div class="hero__actions anim-fade-up anim-delay-2">
+      <a href="/app.html?cat=product" class="btn btn--primary btn--lg">整理我的第一版方案</a>
+      <a href="#how" class="btn btn--outline">怎麼運作</a>
+    </div>
+
+    <div class="hero__scroll anim-fade-up anim-delay-3">
+      <div class="hero__scroll-label">你可以拿來做什麼</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span class="tag tag--accent">產品方向</span>
+        <span class="tag">系統架構</span>
+        <span class="tag">創業規劃</span>
+        <span class="tag">決策拆解</span>
+        <span class="tag">流程整理</span>
+        <span class="tag">想法收斂</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- VALUE PROPS -->
+<section class="section" id="value">
+  <div class="container">
+    <div class="section__label">核心價值</div>
+    <h2 class="section__title">你不是缺答案<br>你是缺一份能開始做的方案</h2>
+    <p class="section__sub" style="margin-bottom:48px;">
+      一般 AI 聊天給你回答。這裡給你的是拆解後、整理後、排好先後順序的可執行結果。
+    </p>
+    <div class="props-grid">
+      <div class="prop-item">
+        <div class="prop-num">01</div>
+        <div class="prop-title">問題拆解</div>
+        <div class="prop-desc">把你現在腦中混亂的內容整理成清楚結構，找出真正的核心阻塞點。</div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-num">02</div>
+        <div class="prop-title">方案生成</div>
+        <div class="prop-desc">不是只給你一句建議，而是給你完整的方向與方法，知道從哪裡切入。</div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-num">03</div>
+        <div class="prop-title">執行步驟</div>
+        <div class="prop-desc">幫你排出先做什麼、後做什麼，附上優先順序，避免一直卡在起點。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="container">
+    <div class="section__label">使用流程</div>
+    <h2 class="section__title">三步開始</h2>
+    <p class="section__sub" style="margin-bottom:48px;">不需要先想清楚，直接把現在最卡的地方丟進來。</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step__num">1</div>
+        <div class="step__body">
+          <div class="step__title">輸入你的問題</div>
+          <div class="step__desc">不用整理得很完整，直接描述你現在遇到的問題、想做的事，或腦中的混亂內容。</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">2</div>
+        <div class="step__body">
+          <div class="step__title">先看到部分分析結果</div>
+          <div class="step__desc">系統先幫你整理問題核心與方案方向，讓你確認這是你要的，再決定是否解鎖完整版。</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">3</div>
+        <div class="step__body">
+          <div class="step__title">解鎖完整方案，直接開始做</div>
+          <div class="step__desc">付款後立即解鎖完整執行步驟、優先順序與補充建議，拿到就能動手。NT$299 單次。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- EXAMPLES -->
+<section class="section">
+  <div class="container">
+    <div class="section__label">適用情境</div>
+    <h2 class="section__title">你可以拿來處理這些事情</h2>
+    <p class="section__sub" style="margin-bottom:40px;">只要是卡住、想不清楚、或想從混亂中整理出方向，都可以試。</p>
+    <div class="examples-grid">
+      <div class="example-item">我要做一個網站，但不知道怎麼開始</div>
+      <div class="example-item">我想做產品，但結構很亂，不知道第一版怎麼切</div>
+      <div class="example-item">我想建立自己的系統，不知道從哪裡下手</div>
+      <div class="example-item">我有很多想法，但不知道如何整理收斂</div>
+      <div class="example-item">我卡在決策，不知道怎麼選方向</div>
+      <div class="example-item">我想把一件事從想法變成真正可執行的方案</div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- 熱門情境入口（第七包）-->
+<section class="section">
+  <div class="container">
+    <div class="section__label">快速開始</div>
+    <h2 class="section__title">選一個情境，直接進去</h2>
+    <p class="section__sub" style="margin-bottom:40px;">
+      不知道怎麼輸入？先選一個最接近你狀況的情境，我幫你預填問題方向。
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">
+
+      <a href="/app.html?cat=product" class="usecase-card usecase-card--primary">
+        <span class="usecase-card__icon">🌐</span>
+        <div class="usecase-card__title">做網站 / 做產品 <span style="font-size:10px;color:var(--accent);font-weight:600;margin-left:6px;">主打</span></div>
+        <div class="usecase-card__desc">第一版怎麼切、頁面、付款流程怎麼排</div>
+      </a>
+
+      <a href="/app.html?cat=decision" class="usecase-card usecase-card--secondary">
+        <span class="usecase-card__icon">🔀</span>
+        <div class="usecase-card__title">決策排序</div>
+        <div class="usecase-card__desc">卡在幾個選項、幫你比較並給出先做什麼</div>
+      </a>
+
+      <a href="/app.html?cat=system" class="usecase-card">
+        <span class="usecase-card__icon">⚙️</span>
+        <div class="usecase-card__title">系統收斂</div>
+        <div class="usecase-card__desc">架構很亂、不知道從哪整理</div>
+      </a>
+
+      <a href="/app.html?cat=business" class="usecase-card">
+        <span class="usecase-card__icon">💡</span>
+        <div class="usecase-card__title">商業模式</div>
+        <div class="usecase-card__desc">能力變商品、怎麼定價收費</div>
+      </a>
+
+      <a href="/app.html?cat=content" class="usecase-card">
+        <span class="usecase-card__icon">📄</span>
+        <div class="usecase-card__title">內容整理</div>
+        <div class="usecase-card__desc">一堆想法、整理成清楚結構</div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- 常見問題入口（第七包）-->
+<section class="section">
+  <div class="container">
+    <div class="section__label">常見問題入口</div>
+    <h2 class="section__title">別人在問什麼</h2>
+    <p class="section__sub" style="margin-bottom:32px;">這些是常見的起點，點擊後直接帶入問題，改成你的版本就好。</p>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+
+      <a href="/app.html?cat=product&prompt=%E6%88%91%E6%83%B3%E5%81%9A%E4%B8%80%E5%80%8B%E5%8F%AF%E6%94%B6%E8%B2%BB%E7%B6%B2%E7%AB%99%EF%BC%8C%E8%AB%8B%E5%B9%AB%E6%88%91%E6%8B%86%E6%88%90%E7%AC%AC%E4%B8%80%E7%89%88%E7%94%A2%E5%93%81%E3%80%81%E9%A0%81%E9%9D%A2%E3%80%81%E4%BB%98%E6%AC%BE%E6%B5%81%E7%A8%8B%E8%88%87%E5%9F%B7%E8%A1%8C%E6%AD%A5%E9%A9%9F" class="faq-entry">
+        <span class="faq-entry__arrow">→</span>
+        <span>我想做一個可收費網站，第一版怎麼規劃？</span>
+      </a>
+
+      <a href="/app.html?cat=system&prompt=%E6%88%91%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E8%B6%8A%E4%BE%86%E8%B6%8A%E8%A4%87%E9%9B%9C%EF%BC%8C%E4%B8%8D%E7%9F%A5%E9%81%93%E5%BE%9E%E5%93%AA%E8%A3%A1%E6%94%B6%E6%96%82%EF%BC%8C%E8%AB%8B%E5%B9%AB%E6%88%91%E6%95%B4%E7%90%86%E5%87%BA%E6%B8%85%E6%A5%9A%E6%9E%B6%E6%A7%8B" class="faq-entry">
+        <span class="faq-entry__arrow">→</span>
+        <span>我的工作流程越來越複雜，不知道怎麼收斂？</span>
+      </a>
+
+      <a href="/app.html?cat=business&prompt=%E6%88%91%E6%83%B3%E6%8A%8A%E8%87%AA%E5%B7%B1%E7%9A%84%E8%83%BD%E5%8A%9B%E8%AE%8A%E6%88%90%E5%95%86%E5%93%81%EF%BC%8C%E4%B8%8D%E7%9F%A5%E9%81%93%E6%80%8E%E9%BA%BC%E5%AE%9A%E5%83%B7%E8%88%87%E6%89%BE%E5%AE%A2%E6%88%B6" class="faq-entry">
+        <span class="faq-entry__arrow">→</span>
+        <span>我想把自己的能力變成商品，不知道怎麼定價與找客戶？</span>
+      </a>
+
+      <a href="/app.html?cat=decision&prompt=%E6%88%91%E6%9C%89%E5%B9%BE%E5%80%8B%E6%96%B9%E5%90%91%E5%8D%A1%E4%BD%8F%E4%BA%86%EF%BC%8C%E8%AB%8B%E5%B9%AB%E6%88%91%E6%AF%94%E8%BC%83%E5%8F%96%E6%8D%A8%E3%80%81%E6%8E%92%E5%84%AA%E5%85%88%E9%A0%86%E5%BA%8F%E4%B8%A6%E7%B5%A6%E5%87%BA%E5%85%88%E5%81%9A%E4%BB%80%E9%BA%BC" class="faq-entry">
+        <span class="faq-entry__arrow">→</span>
+        <span>我有幾個方向卡住了，不知道怎麼選？</span>
+      </a>
+
+      <a href="/app.html?cat=content&prompt=%E6%88%91%E6%9C%89%E4%B8%80%E5%A0%86%E6%B7%B7%E4%BA%82%E7%9A%84%E7%AD%86%E8%A8%98%E8%88%87%E6%83%B3%E6%B3%95%EF%BC%8C%E8%AB%8B%E5%B9%AB%E6%88%91%E6%95%B4%E7%90%86%E6%88%90%E6%B8%85%E6%A5%9A%E6%9E%B6%E6%A7%8B%E8%88%87%E9%97%9C%E9%8D%B5%E9%87%8D%E9%BB%9E" class="faq-entry">
+        <span class="faq-entry__arrow">→</span>
+        <span>我有一堆混亂的筆記，不知道怎麼整理成可用架構？</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- CTA BOTTOM -->
+<section class="section--sm">
+  <div class="container">
+    <div class="cta-section">
+      <h2 class="cta-section__title">先把你的問題<br>丟進來看看</h2>
+      <p class="cta-section__desc">
+        想做產品或網站，不知道第一版怎麼切？
+        把現在最卡的問題丟進來，先幫你整理出可執行的第一步。
+      </p>
+      <a href="/app.html?cat=product" class="btn btn--primary btn--lg">整理我的第一版方案</a>
+      <div style="margin-top:16px;font-size:13px;color:var(--muted);">
+        免費先看部分分析結果 · NT$299 解鎖完整方案
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer container container--wide">
+  <span class="footer__logo">MRL.</span>
+  <span class="footer__copy">origin_signature: MrLiouWord</span>
+</footer>
+
+</body>
+</html>

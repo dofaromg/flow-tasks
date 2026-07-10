@@ -1,0 +1,169 @@
+# MRL 統一系統 — DL580 一鍵啟動
+# origin_signature: MrLiouWord
+# 怎麼過去就怎麼回來
+#
+# Services:
+#   mrl-engine  (7700) — 粒子引擎：7 核心 Workers (CF→Node.js 轉譯)
+#   mrl-product (3000) — 付費產品平台：Stripe + AI 分析 + 管理面板
+#   mrl-ai      (8787) — AI SuperComputer：fusion 引擎 + 多 provider
+#   mrl-db      (5432) — PostgreSQL (replaces CF D1)
+#   mrl-redis   (6379) — Redis (replaces CF KV)
+#   mrl-nginx   (80)   — 統一入口閘道
+#
+# Usage:
+#   docker compose -f docker-compose.unified.yml up -d
+
+services:
+  # ── MRL Particle Engine (7 core Workers on Node.js) ──
+  mrl-engine:
+    build:
+      context: ./MRLiou_Engine
+      dockerfile: Dockerfile
+    container_name: mrl-engine
+    ports:
+      - "${MRL_ENGINE_PORT:-7700}:7700"
+    environment:
+      - PORT=7700
+      - REDIS_URL=redis://mrl-redis:6379
+      - DATABASE_URL=postgresql://mrl:mrl@mrl-db:5432/mrliouword
+      - ORIGIN_SIGNATURE=MrLiouWord
+      - NODE_ENV=production
+    depends_on:
+      mrl-db:
+        condition: service_healthy
+      mrl-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mrl-net
+    labels:
+      mrl.component: "engine"
+      mrl.layer: "L0-L5"
+
+  # ── MRL Product Platform (paid AI products) ──
+  mrl-product:
+    build:
+      context: ./MRL_Product
+      dockerfile: deploy/Dockerfile
+    container_name: mrl-product
+    ports:
+      - "${MRL_PRODUCT_PORT:-3000}:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - DB_PATH=/app/storage/db.sqlite
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - ANTHROPIC_MODEL=${ANTHROPIC_MODEL:-claude-haiku-4-5-20251001}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET:-}
+      - STRIPE_PRICE_ONCE=${STRIPE_PRICE_ONCE:-}
+      - STRIPE_PRICE_SUB=${STRIPE_PRICE_SUB:-}
+      - JWT_SECRET=${JWT_SECRET:-mrl_jwt_local_dev}
+      - ADMIN_KEY=${ADMIN_KEY:-mrl_admin_local}
+    volumes:
+      - mrl-product-db:/app/storage
+    restart: unless-stopped
+    networks:
+      - mrl-net
+    labels:
+      mrl.component: "product"
+
+  # ── MRL AI SuperComputer (fusion engine) ──
+  mrl-ai:
+    build:
+      context: ./MrLiou_AI_SuperComputer
+      dockerfile: Dockerfile
+    container_name: mrl-ai
+    ports:
+      - "${MRL_AI_PORT:-8787}:8787"
+    environment:
+      - MRL_PORT=8787
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen2.5:32b}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+    restart: unless-stopped
+    networks:
+      - mrl-net
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    labels:
+      mrl.component: "ai-supercomputer"
+
+  # ── PostgreSQL (replaces Cloudflare D1) ──
+  mrl-db:
+    image: pgvector/pgvector:pg16
+    container_name: mrl-db
+    ports:
+      - "${MRL_DB_PORT:-5432}:5432"
+    environment:
+      - POSTGRES_USER=mrl
+      - POSTGRES_PASSWORD=mrl
+      - POSTGRES_DB=mrliouword
+    volumes:
+      - mrl-pgdata:/var/lib/postgresql/data
+      - ./MRLiou_Engine/config/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mrl -d mrliouword"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - mrl-net
+    labels:
+      mrl.component: "database"
+      mrl.role: "D1_replacement"
+
+  # ── Redis (replaces Cloudflare KV) ──
+  mrl-redis:
+    image: redis:7-alpine
+    container_name: mrl-redis
+    command: redis-server --appendonly yes --maxmemory 2gb --maxmemory-policy allkeys-lru
+    ports:
+      - "${MRL_REDIS_PORT:-6379}:6379"
+    volumes:
+      - mrl-redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - mrl-net
+    labels:
+      mrl.component: "kv-cache"
+      mrl.role: "KV_replacement"
+
+  # ── Nginx Unified Gateway ──
+  mrl-nginx:
+    image: nginx:alpine
+    container_name: mrl-nginx
+    ports:
+      - "${MRL_HTTP_PORT:-80}:80"
+    volumes:
+      - ./MRLiou_Engine/config/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - mrl-engine
+      - mrl-product
+      - mrl-ai
+    restart: unless-stopped
+    networks:
+      - mrl-net
+    labels:
+      mrl.component: "gateway"
+
+volumes:
+  mrl-pgdata:
+    driver: local
+  mrl-redisdata:
+    driver: local
+  mrl-product-db:
+    driver: local
+
+networks:
+  mrl-net:
+    driver: bridge
+    name: mrl-unified-network

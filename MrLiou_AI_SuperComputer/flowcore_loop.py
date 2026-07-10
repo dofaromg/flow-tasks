@@ -713,14 +713,16 @@ if __name__ == "__main__":
             print(f"⚠ AI config not found: {config_path}")
     
     print(_server_banner("ai"))
-    print(f"Listening on http://127.0.0.1:8787")
+    port = int(os.environ.get("MRL_PORT", "8787"))
+    bind = os.environ.get("MRL_BIND", "0.0.0.0")
+    print(f"Listening on http://{bind}:{port}")
     _ensure_dir("memory/ingest/fusion")
     _ensure_dir("memory/ingest/mobius")
     _ensure_dir("memory/derived/l1")
     _ensure_dir("memory/snapshot")
     _ensure_dir("memory/domain/mobius_cycles")
-    
+
     fusion_status = "enabled" if FUSION_AVAILABLE else "disabled"
     print(f"Fusion System: {fusion_status}")
-    
-    ThreadingHTTPServer(("127.0.0.1", 8787), Handler).serve_forever()
+
+    ThreadingHTTPServer((bind, port), Handler).serve_forever()
