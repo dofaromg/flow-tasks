@@ -1,0 +1,286 @@
+{
+  "mrl_ir_type": "MRL_MetaIR",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "source_identity": {
+    "filename": "job_acceptance.fpp",
+    "language": "MRL_FPlusPlus",
+    "detected": "fpp",
+    "source_hash": "913ae424689411e425100b89eb855c8f4a02df68d409453fba143b7e0eed28b0"
+  },
+  "syntax_tree": {
+    "language": "MRL_FPlusPlus",
+    "nodes": [
+      {
+        "kind": "particle",
+        "name": "CTX",
+        "properties": {
+          "layer": "L2",
+          "data": "整理文件"
+        }
+      },
+      {
+        "kind": "particle",
+        "name": "TOOL",
+        "properties": {
+          "layer": "L3",
+          "type": "parser"
+        }
+      },
+      {
+        "kind": "operator_or_token",
+        "value": "CTX"
+      },
+      {
+        "kind": "operator_or_token",
+        "value": "⊕"
+      },
+      {
+        "kind": "operator_or_token",
+        "value": "TOOL"
+      },
+      {
+        "kind": "operator_or_token",
+        "value": "|>"
+      },
+      {
+        "kind": "operator_or_token",
+        "value": "execute"
+      },
+      {
+        "kind": "operator_or_token",
+        "value": "("
+      },
+      {
+        "kind": "operator_or_token",
+        "value": ")"
+      }
+    ],
+    "tokens": [
+      "particle",
+      "CTX",
+      "{",
+      "@layer",
+      ":",
+      "L2",
+      "@data",
+      ":",
+      "\"整理文件\"",
+      "}",
+      "particle",
+      "TOOL",
+      "{",
+      "@layer",
+      ":",
+      "L3",
+      "@type",
+      ":",
+      "\"parser\"",
+      "}",
+      "CTX",
+      "⊕",
+      "TOOL",
+      "|>",
+      "execute",
+      "(",
+      ")"
+    ]
+  },
+  "semantic_intent": {
+    "intents": [
+      "MRL_INTENT_EXECUTE",
+      "MRL_INTENT_PARTICLE_RUNTIME",
+      "MRL_INTENT_FILE_ORGANIZE"
+    ],
+    "summary": "MRL_INTENT_EXECUTE,MRL_INTENT_PARTICLE_RUNTIME,MRL_INTENT_FILE_ORGANIZE",
+    "node_count": 9,
+    "language": "MRL_FPlusPlus"
+  },
+  "particle_atoms": [
+    {
+      "atom_id": "MRL_P_0001",
+      "atom_type": "MRL_FluinParticle",
+      "simhash_seed": "df40d5b017922bd5",
+      "semantic": "CTX"
+    },
+    {
+      "atom_id": "MRL_P_0002",
+      "atom_type": "MRL_FluinParticle",
+      "simhash_seed": "c3bc777cf3b9a852",
+      "semantic": "TOOL"
+    },
+    {
+      "atom_id": "MRL_P_0003",
+      "atom_type": "MRL_GenericParticle",
+      "simhash_seed": "cc9058e1d6ee991d",
+      "semantic": "CTX"
+    },
+    {
+      "atom_id": "MRL_P_0004",
+      "atom_type": "MRL_GenericParticle",
+      "simhash_seed": "637019523943a2a8",
+      "semantic": "⊕"
+    },
+    {
+      "atom_id": "MRL_P_0005",
+      "atom_type": "MRL_GenericParticle",
+      "simhash_seed": "0271521fff7c8e0a",
+      "semantic": "TOOL"
+    },
+    {
+      "atom_id": "MRL_P_0006",
+      "atom_type": "MRL_GenericParticle",
+      "simhash_seed": "5de7429ad1acc675",
+      "semantic": "|>"
+    },
+    {
+      "atom_id": "MRL_P_0007",
+      "atom_type": "MRL_GenericParticle",
+      "simhash_seed": "b686239e50105bff",
+      "semantic": "execute"
+    },
+    {
+      "atom_id": "MRL_P_0008",
+      "atom_type": "MRL_GenericParticle",
+      "simhash_seed": "81b08204d30bd857",
+      "semantic": "("
+    },
+    {
+      "atom_id": "MRL_P_0009",
+      "atom_type": "MRL_GenericParticle",
+      "simhash_seed": "ae7e7591431b5939",
+      "semantic": ")"
+    }
+  ],
+  "context_relations": [
+    {
+      "relation_id": "MRL_CTX_1",
+      "from": "CTX",
+      "to": "TOOL",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "relation_id": "MRL_CTX_2",
+      "from": "TOOL",
+      "to": "CTX",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "relation_id": "MRL_CTX_3",
+      "from": "CTX",
+      "to": "⊕",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "relation_id": "MRL_CTX_4",
+      "from": "⊕",
+      "to": "TOOL",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "relation_id": "MRL_CTX_5",
+      "from": "TOOL",
+      "to": "|>",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "relation_id": "MRL_CTX_6",
+      "from": "|>",
+      "to": "execute",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "relation_id": "MRL_CTX_7",
+      "from": "execute",
+      "to": "(",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "relation_id": "MRL_CTX_8",
+      "from": "(",
+      "to": ")",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    }
+  ],
+  "runtime_plan": [
+    {
+      "step": 1,
+      "action": "MRL_REGISTER_PARTICLE",
+      "target": "CTX",
+      "node_kind": "particle"
+    },
+    {
+      "step": 2,
+      "action": "MRL_REGISTER_PARTICLE",
+      "target": "TOOL",
+      "node_kind": "particle"
+    },
+    {
+      "step": 3,
+      "action": "MRL_ANALYZE_NODE",
+      "target": "CTX",
+      "node_kind": "operator_or_token"
+    },
+    {
+      "step": 4,
+      "action": "MRL_ANALYZE_NODE",
+      "target": "⊕",
+      "node_kind": "operator_or_token"
+    },
+    {
+      "step": 5,
+      "action": "MRL_ANALYZE_NODE",
+      "target": "TOOL",
+      "node_kind": "operator_or_token"
+    },
+    {
+      "step": 6,
+      "action": "MRL_ANALYZE_NODE",
+      "target": "|>",
+      "node_kind": "operator_or_token"
+    },
+    {
+      "step": 7,
+      "action": "MRL_ANALYZE_NODE",
+      "target": "execute",
+      "node_kind": "operator_or_token"
+    },
+    {
+      "step": 8,
+      "action": "MRL_ANALYZE_NODE",
+      "target": "(",
+      "node_kind": "operator_or_token"
+    },
+    {
+      "step": 9,
+      "action": "MRL_ANALYZE_NODE",
+      "target": ")",
+      "node_kind": "operator_or_token"
+    }
+  ],
+  "verification_plan": [
+    "MRL_ROUNDTRIP",
+    "MRL_HASH",
+    "MRL_PARTICLE_INTEGRITY",
+    "MRL_CONTEXT_GRAPH",
+    "MRL_RUNTIME_GRAPH"
+  ],
+  "output_artifact": {
+    "expected": [
+      "MRL_MetaIR_Record",
+      "MRL_ParticleIR_Record",
+      "MRL_RuntimeGraph_Record",
+      "MRL_Verification_Report"
+    ]
+  },
+  "created_at": "2026-05-10T19:02:34.184Z",
+  "mrl_hash": "a65c40cfcef9ea8605ccbb54d2c609a9b52bf3a5cc52a97d258a53a8aa4d809d"
+}

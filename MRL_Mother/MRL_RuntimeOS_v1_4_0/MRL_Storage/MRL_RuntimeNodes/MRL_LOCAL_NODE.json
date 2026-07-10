@@ -1,0 +1,23 @@
+{
+  "mrl_type": "MRL_RuntimeNode",
+  "origin_signature": "MrLiouWord",
+  "node_id": "MRL_LOCAL_NODE",
+  "runtime": "node",
+  "role": "MRL_Local_RuntimeNode",
+  "status": "registered",
+  "keep_alive": true,
+  "isolation": "local_process",
+  "capabilities": [
+    "parse",
+    "execute",
+    "verify",
+    "attention",
+    "context",
+    "runtimegraph"
+  ],
+  "endpoint": null,
+  "ssh_target": null,
+  "metadata": {},
+  "created_at": "2026-05-10T19:02:34.141Z",
+  "updated_at": "2026-05-10T19:02:34.141Z"
+}

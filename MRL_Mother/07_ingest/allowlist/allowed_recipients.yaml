@@ -1,0 +1,14 @@
+# Allowlist of recipients for outbound messaging (email, chat, etc.)
+# deny-by-default: only recipients listed here are eligible for non-human-reviewed messages.
+
+recipients:
+  # example:
+  # - id: "customer-ops-slack"
+  #   channel: "slack"
+  #   handle: "#customer-ops"
+  #   consent_proof: "policy/consent/2026-01-01"
+  #   notes: "Customer ops only"
+
+meta:
+  policy: "aws_aup"
+  updated_by: "system"

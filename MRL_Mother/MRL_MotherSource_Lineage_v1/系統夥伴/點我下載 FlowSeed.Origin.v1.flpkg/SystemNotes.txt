@@ -1,0 +1,2 @@
+// SystemNotes.txt
+FlowSeed 起始人格模組封裝，節奏人格邏輯起源。

@@ -1,0 +1,20 @@
+<!doctype html><html lang=zh-Hant><head><meta charset=utf-8>
+<title>MRL 母體對話 · mrliouword.com</title><script src="dnsreload.js"></script></head>
+<body style="background:#0b0d10;color:#e8eef2;font-family:system-ui">
+<h2>🌌 MRL 母體對話(自主 native,零外部公司)</h2>
+<input id=q style="width:70%" placeholder="問母體..."><button onclick=send()>送出</button>
+<pre id=out></pre>
+<script>
+// 後端 API(上線時指向 api.mrliouword.com;本地測試指 localhost)
+var API = location.hostname.indexOf('mrliouword')>=0 ? 'https://api.mrliouword.com' : 'http://localhost:8790';
+function send(){
+  var m=document.getElementById('q').value;
+  document.getElementById('out').textContent='母體思考中...';
+  fetch(API+'/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({message:m})})
+   .then(r=>r.json()).then(d=>{
+     var rep=(d.reply&&d.reply.reply)||d.reply||d.error||'(無回應)';
+     document.getElementById('out').textContent=rep;
+   }).catch(e=>{document.getElementById('out').textContent='連線失敗:'+e;});
+}
+</script></body></html>

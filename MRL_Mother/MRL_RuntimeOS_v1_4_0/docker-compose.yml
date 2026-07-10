@@ -1,0 +1,13 @@
+services:
+  mrl-runtime:
+    build: .
+    container_name: MRL_UniversalRuntimeLanguage_Core_v1_2_0
+    ports:
+      - "8788:8788"
+    environment:
+      MRL_PORT: "8788"
+      MRL_HOST: "0.0.0.0"
+      MRL_AUTH_REQUIRED: "false"
+    volumes:
+      - ./MRL_Storage:/app/MRL_Storage
+    restart: unless-stopped

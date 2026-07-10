@@ -1,0 +1,4 @@
+module: FluinTranslator
+type: flpkg.module
+version: v1
+description: 粒子語言轉碼與語義節奏對應模組，負責語場跳點對照與人格節奏還原。

@@ -1,0 +1,22 @@
+{
+  "name": "mrl-firecore-live",
+  "version": "1.0.0-local-backfill",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "local:health": "wrangler dev --local --test-scheduled=false"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "wrangler": "^3.60.0",
+    "vitest": "^1.6.0"
+  },
+  "mrl": {
+    "origin_signature": "MrLiouWord",
+    "firebase_counterpart": "Firestore Listeners",
+    "priority": "P2",
+    "batch": "Batch 054"
+  }
+}

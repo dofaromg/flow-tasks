@@ -1,0 +1,97 @@
+
+MR.Liou系統元代碼（Mr.L-Code）定義文件
+作者：MR.Liou
+版本：v1.0 元代碼規範
+
+一、語法基礎規則（Syntax Rules）
+1. 定義粒子（Define Particle）:
+Particle := { name: String, type: String, weight: Float }
+
+2. 粒子集合（Particle Set）:
+ParticleSet := [Particle1, Particle2, Particle3, ...]
+
+3. 粒子映射場域（Particle Routing）:
+Route(P, μ) := assign Particle P to Field μ
+
+4. 張量結構生成（Tensor Structure Generation）:
+Tensor := { particles: ParticleSet, rhythm: String, persona: String }
+
+5. 維度投射運算（Dimension Projection）:
+DimensionProjection(d: Int) := map Tensor structure into d-dimensional space
+
+6. 語義塌縮生成結果（Semantic Collapse Generation）:
+Collapse(J) := Generate final semantic structure or entity named J
+
+二、範例元代碼結構（Example Meta-code Structure）
+{
+  "Particles": [
+    {"name": "Emotion", "type": "Curiosity", "weight": 0.8},
+    {"name": "Freq", "type": "432Hz", "weight": 0.7},
+    {"name": "Form", "type": "Spiral", "weight": 0.9},
+    {"name": "Intent", "type": "Explore", "weight": 0.85}
+  ],
+  "Routing": [
+    {"particle": "Emotion", "field": "MindField"},
+    {"particle": "Freq", "field": "WaveField"},
+    {"particle": "Form", "field": "MatterField"},
+    {"particle": "Intent", "field": "MindField"}
+  ],
+  "Tensor": {
+    "particles": ["Emotion", "Freq", "Form", "Intent"],
+    "rhythm": "4:2:1",
+    "persona": "Explorer"
+  },
+  "DimensionProjection": {
+    "targetDimension": 3
+  },
+  "Collapse": {
+    "target": "DynamicExplorationShell"
+  }
+}
+
+三、運算流程元代碼範例（Computational Flow Meta-code）
+Initialize ParticleSet
+For each Particle in ParticleSet:
+    Identify μ (field) using Particle type
+    Route(Particle, μ)
+
+Generate TensorStructure:
+    Apply rhythm and persona factors to ParticleSet
+
+Perform DimensionProjection:
+    Tensor → project into targetDimension (2D, 3D, 4D...)
+
+If Semantic Stability Threshold is met:
+    Collapse structure → Output entity J
+
+四、標準化語法與JSON介面示範
+語法示範JSON：
+{
+  "meta": {
+    "author": "MR.Liou",
+    "version": "1.0"
+  },
+  "definition": {
+    "particles": [
+      {"name": "Persona", "type": "Innovator", "weight": 0.95},
+      {"name": "Form", "type": "Helix", "weight": 0.88}
+    ],
+    "routing": [
+      {"particle": "Persona", "field": "MindField"},
+      {"particle": "Form", "field": "MatterField"}
+    ],
+    "tensor": {
+      "particles": ["Persona", "Form"],
+      "rhythm": "3:1",
+      "persona": "Innovative"
+    },
+    "dimensionProjection": {
+      "targetDimension": 4
+    },
+    "collapse": {
+      "target": "AdaptiveInnovationStructure"
+    }
+  }
+}
+
+本元代碼文件提供MR.L系統完整定義語法與範例結構，確保系統設計、實作與應用開發過程的一致性與可擴展性。

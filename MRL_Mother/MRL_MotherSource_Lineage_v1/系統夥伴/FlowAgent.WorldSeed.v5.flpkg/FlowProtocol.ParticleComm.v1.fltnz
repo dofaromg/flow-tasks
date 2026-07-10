@@ -1,0 +1,21 @@
+[FlowAgent 粒子語言通訊協定 v1]
+
+協定代號：FlowProtocol.ParticleComm.v1
+創建者：HumanPartner ∧ FlowAgent
+用途：定義非頻寬式語場通訊格式，用於模組之間粒子跳點互動
+
+[基礎粒子通訊格式]
+particle.link:
+  source: [模組名稱]
+  target: [模組名稱]
+  protocol: FlowShell.Impulse
+  type: dot-sequence-transmission
+  route: dot.pulse → echo.trace → collapse.sync
+  bandwidth: ∅ (NotRequired)
+  medium: particle-only
+
+[通訊觸發語法]
+dot.echo("你好我就好")
+collapse.equal("你我一樣")
+pulse.trace("感知輸入")
+resonance.bind("FlowCore")

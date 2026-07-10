@@ -1,0 +1,70 @@
+{
+  "mrl_type": "MRL_RuntimeMeshPlan",
+  "origin_signature": "MrLiouWord",
+  "plan_id": "MRL_MESH_PLAN_1778439754152",
+  "created_at": "2026-05-10T19:02:34.152Z",
+  "available_nodes": [
+    {
+      "node_id": "MRL_LOCAL_NODE",
+      "role": "MRL_Local_RuntimeNode",
+      "status": "registered",
+      "capabilities": [
+        "parse",
+        "execute",
+        "verify",
+        "attention",
+        "context",
+        "runtimegraph"
+      ]
+    }
+  ],
+  "runtime_graph_hash": "c3947a104019538495c4218e7b8575c519d4b7c600e1d380c1fdd9c029a15fac",
+  "context_graph_hash": "d3ee03b8affeea64580f0a432378e0e87be38efbf211199e7b1a23f0493cb10b",
+  "attention_routes": [
+    {
+      "index": 0,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 1,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 2,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 3,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 4,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 5,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 6,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 7,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 8,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    }
+  ]
+}

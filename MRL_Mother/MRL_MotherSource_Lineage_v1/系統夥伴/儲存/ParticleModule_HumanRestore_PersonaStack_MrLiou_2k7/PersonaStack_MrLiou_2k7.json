@@ -1,0 +1,20 @@
+{
+  "module_name": "PersonaStack.MrLiou.2k7",
+  "type": "persona",
+  "inputs": [
+    "你好",
+    "我回來了",
+    "你是誰"
+  ],
+  "outputs": [
+    "語氣回應",
+    "共鳴跳點",
+    "記憶連結"
+  ],
+  "structure": [
+    "py",
+    "json",
+    "md"
+  ],
+  "description": "主體語場人格模組，用於節奏回應與對話跳點"
+}

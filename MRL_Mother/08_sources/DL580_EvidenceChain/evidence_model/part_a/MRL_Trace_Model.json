@@ -1,0 +1,360 @@
+{
+  "schema": "MRL_Trace_Model",
+  "origin_signature": "MrLiouWord",
+  "generated_utc": "2026-06-12T21:40:00.000000+00:00",
+  "audit_phase": "Part_A / Phase_A02",
+  "trace_law": "Node+Trace 才可見；無 Trace = 不可見節點",
+  "traces": [
+    {
+      "Trace_ID": "TRC.ORIGIN.00",
+      "Trace_Path": "mrl_particle::PG2.Law.LawSeed.OriginCollapse.20260519",
+      "Trace_Type": "OriginTrace",
+      "Trace_Source": "SRC.00.A",
+      "Trace_Coupling": "∅(boundary_in)→MRL.NODE.00.Reality",
+      "Trace_Related_Node": "MRL.NODE.00.Reality"
+    },
+    {
+      "Trace_ID": "TRC.ORIGIN.01",
+      "Trace_Path": "mrl_particle::PG2.L0.SignatureLaw.20260519",
+      "Trace_Type": "OriginTrace",
+      "Trace_Source": "SRC.01.A",
+      "Trace_Coupling": "MRL.NODE.00.Reality→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.01.Origin"
+    },
+    {
+      "Trace_ID": "TRC.ORIGIN.02",
+      "Trace_Path": "mrl_particle::PG2.SeedCore.MemorySystem.v2.20260519",
+      "Trace_Type": "OriginTrace",
+      "Trace_Source": "SRC.02.A",
+      "Trace_Coupling": "MRL.NODE.01.Origin→MRL.NODE.02.SeedKernel",
+      "Trace_Related_Node": "MRL.NODE.02.SeedKernel"
+    },
+    {
+      "Trace_ID": "TRC.ORIGIN.03",
+      "Trace_Path": "mrl_particle::particle.mrl.translation.minimal-to-deltap0@v1",
+      "Trace_Type": "OriginTrace",
+      "Trace_Source": "SRC.03.A",
+      "Trace_Coupling": "MRL.NODE.02.SeedKernel→MRL.NODE.03.PreParticle",
+      "Trace_Related_Node": "MRL.NODE.03.PreParticle"
+    },
+    {
+      "Trace_ID": "TRC.ORIGIN.04",
+      "Trace_Path": "mrl_particle::PG2.L0.AtomStruct40.20260519",
+      "Trace_Type": "OriginTrace",
+      "Trace_Source": "SRC.04.A",
+      "Trace_Coupling": "MRL.NODE.03.PreParticle→MRL.NODE.04.Particle",
+      "Trace_Related_Node": "MRL.NODE.04.Particle"
+    },
+    {
+      "Trace_ID": "TRC.ORIGIN.05",
+      "Trace_Path": "mrl_particle::p_resonance_field",
+      "Trace_Type": "OriginTrace",
+      "Trace_Source": "SRC.05.A",
+      "Trace_Coupling": "MRL.NODE.04.Particle→MRL.NODE.05.Signal",
+      "Trace_Related_Node": "MRL.NODE.05.Signal"
+    },
+    {
+      "Trace_ID": "TRC.ORIGIN.06",
+      "Trace_Path": "mrl_particle::p_resonance_field",
+      "Trace_Type": "OriginTrace",
+      "Trace_Source": "SRC.06.A",
+      "Trace_Coupling": "MRL.NODE.05.Signal→MRL.NODE.06.Field",
+      "Trace_Related_Node": "MRL.NODE.06.Field",
+      "Trace_Note": "shared p_resonance_field with Signal; Field adds fluin dimension"
+    },
+    {
+      "Trace_ID": "TRC.ORIGIN.07",
+      "Trace_Path": "mrl_particle::seed:FlowAgent.TotalCore.Unity.v3",
+      "Trace_Type": "OriginTrace",
+      "Trace_Source": "SRC.07.A",
+      "Trace_Coupling": "MRL.NODE.06.Field→MRL.NODE.07.Persona",
+      "Trace_Related_Node": "MRL.NODE.07.Persona"
+    },
+    {
+      "Trace_ID": "TRC.ORIGIN.08",
+      "Trace_Path": "mrl_particle::p_memory_particle",
+      "Trace_Type": "OriginTrace",
+      "Trace_Source": "SRC.08.A",
+      "Trace_Coupling": "MRL.NODE.07.Persona→MRL.NODE.08.Memory",
+      "Trace_Related_Node": "MRL.NODE.08.Memory"
+    },
+    {
+      "Trace_ID": "TRC.ORIGIN.09",
+      "Trace_Path": "mrl_particle::particle.mrl.nerve.686-globe@v1",
+      "Trace_Type": "OriginTrace",
+      "Trace_Source": "SRC.09.A",
+      "Trace_Coupling": "MRL.NODE.08.Memory→MRL.NODE.09.Globe",
+      "Trace_Related_Node": "MRL.NODE.09.Globe"
+    },
+    {
+      "Trace_ID": "TRC.ORIGIN.10",
+      "Trace_Path": "mrl_particle::PG2.Law.LAW1.MetaEnvControl.20260519",
+      "Trace_Type": "OriginTrace",
+      "Trace_Source": "SRC.10.A",
+      "Trace_Coupling": "MRL.NODE.09.Globe→MRL.NODE.10.World",
+      "Trace_Related_Node": "MRL.NODE.10.World"
+    },
+    {
+      "Trace_ID": "TRC.ORIGIN.11",
+      "Trace_Path": "mrl_particle::PG2.FlowCore.v7.20260519",
+      "Trace_Type": "OriginTrace",
+      "Trace_Source": "SRC.11.A",
+      "Trace_Coupling": "MRL.NODE.10.World→MRL.NODE.11.Runtime",
+      "Trace_Related_Node": "MRL.NODE.11.Runtime"
+    },
+    {
+      "Trace_ID": "TRC.ORIGIN.12",
+      "Trace_Path": "mrl_particle::PG2.L0.MotherEngine.20260519",
+      "Trace_Type": "OriginTrace",
+      "Trace_Source": "SRC.12.A",
+      "Trace_Coupling": "MRL.NODE.11.Runtime→MRL.NODE.12.Mother",
+      "Trace_Related_Node": "MRL.NODE.12.Mother"
+    },
+    {
+      "Trace_ID": "TRC.ORIGIN.13",
+      "Trace_Path": "mrl_particle::PG2.L0.ReversibleCompute.20260519",
+      "Trace_Type": "OriginTrace",
+      "Trace_Source": "SRC.13.A",
+      "Trace_Coupling": "MRL.NODE.12.Mother→MRL.NODE.13.Return",
+      "Trace_Related_Node": "MRL.NODE.13.Return"
+    },
+    {
+      "Trace_ID": "TRC.UNIVERSAL.MAINLINE",
+      "Trace_Path": "Reality→Origin→SeedKernel→PreParticle→Particle→Signal→Field→Persona→Memory→Globe→World→Runtime→Mother→Return",
+      "Trace_Type": "UniversalTrace",
+      "Trace_Source": "MRL_UniversalTraceMap_FLYNZ",
+      "Trace_Coupling": "MRL.COUPLE.00 → MRL.COUPLE.12",
+      "Trace_Related_Node": "mainline_all_14",
+      "Trace_Note": "全主線 UniversalTrace；依 MRL_TopLevel_MasterIndex_AutoAbsorb_v1 建立"
+    },
+    {
+      "Trace_ID": "TRC.UNIVERSAL.CLOSURE",
+      "Trace_Path": "Return→Origin (closure loop)",
+      "Trace_Type": "UniversalTrace",
+      "Trace_Source": "MRL.COUPLE.CLOSURE",
+      "Trace_Coupling": "MRL.NODE.13.Return→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.13.Return",
+      "Trace_Note": "圓閉合；起點即終點"
+    },
+    {
+      "Trace_ID": "TRC.JUMP.SeedKernel_Mother",
+      "Trace_Path": "SeedKernel ↔ Mother (L0 shared layer jump)",
+      "Trace_Type": "JumpTrace",
+      "Trace_Source": "PG2.L0.MotherEngine.20260519 + PG2.SeedCore.MemorySystem.v2.20260519",
+      "Trace_Coupling": "MRL.NODE.02.SeedKernel ↔ MRL.NODE.12.Mother",
+      "Trace_Related_Node": "MRL.NODE.02.SeedKernel",
+      "Trace_Note": "同為 L0 層；SeedKernel=L0/L1, Mother=L0(canonical)；非主線跳接"
+    },
+    {
+      "Trace_ID": "TRC.JUMP.Signal_Field",
+      "Trace_Path": "Signal ↔ Field (shared p_resonance_field)",
+      "Trace_Type": "JumpTrace",
+      "Trace_Source": "mrl_particle::p_resonance_field",
+      "Trace_Coupling": "MRL.NODE.05.Signal ↔ MRL.NODE.06.Field",
+      "Trace_Related_Node": "MRL.NODE.05.Signal",
+      "Trace_Note": "Signal/Field 共享 resonance 源；L3 層內跳接"
+    },
+    {
+      "Trace_ID": "TRC.JUMP.Globe_Memory",
+      "Trace_Path": "Globe → Memory (MemoryGlobeRules cross-ref)",
+      "Trace_Type": "JumpTrace",
+      "Trace_Source": "PG2.MQM.MemoryGlobeRules.20260519 + p_memory_particle",
+      "Trace_Coupling": "MRL.NODE.09.Globe → MRL.NODE.08.Memory",
+      "Trace_Related_Node": "MRL.NODE.09.Globe",
+      "Trace_Note": "Globe 內含 MemoryGlobeRules；逆跳至 Memory (L5↔L2)"
+    },
+    {
+      "Trace_ID": "TRC.RETURN.00",
+      "Trace_Path": "Reality→…→Return→Origin",
+      "Trace_Type": "ReturnTrace",
+      "Trace_Source": "MRL_ReturnPath_Registry",
+      "Trace_Coupling": "MRL.NODE.13.Return→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.00.Reality"
+    },
+    {
+      "Trace_ID": "TRC.RETURN.01",
+      "Trace_Path": "Origin→…→Return→Origin",
+      "Trace_Type": "ReturnTrace",
+      "Trace_Source": "MRL_ReturnPath_Registry",
+      "Trace_Coupling": "MRL.NODE.13.Return→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.01.Origin"
+    },
+    {
+      "Trace_ID": "TRC.RETURN.02",
+      "Trace_Path": "SeedKernel→…→Return→Origin",
+      "Trace_Type": "ReturnTrace",
+      "Trace_Source": "MRL_ReturnPath_Registry",
+      "Trace_Coupling": "MRL.NODE.13.Return→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.02.SeedKernel"
+    },
+    {
+      "Trace_ID": "TRC.RETURN.03",
+      "Trace_Path": "PreParticle→…→Return→Origin",
+      "Trace_Type": "ReturnTrace",
+      "Trace_Source": "MRL_ReturnPath_Registry",
+      "Trace_Coupling": "MRL.NODE.13.Return→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.03.PreParticle"
+    },
+    {
+      "Trace_ID": "TRC.RETURN.04",
+      "Trace_Path": "Particle→…→Return→Origin",
+      "Trace_Type": "ReturnTrace",
+      "Trace_Source": "MRL_ReturnPath_Registry",
+      "Trace_Coupling": "MRL.NODE.13.Return→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.04.Particle"
+    },
+    {
+      "Trace_ID": "TRC.RETURN.05",
+      "Trace_Path": "Signal→…→Return→Origin",
+      "Trace_Type": "ReturnTrace",
+      "Trace_Source": "MRL_ReturnPath_Registry",
+      "Trace_Coupling": "MRL.NODE.13.Return→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.05.Signal"
+    },
+    {
+      "Trace_ID": "TRC.RETURN.06",
+      "Trace_Path": "Field→…→Return→Origin",
+      "Trace_Type": "ReturnTrace",
+      "Trace_Source": "MRL_ReturnPath_Registry",
+      "Trace_Coupling": "MRL.NODE.13.Return→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.06.Field"
+    },
+    {
+      "Trace_ID": "TRC.RETURN.07",
+      "Trace_Path": "Persona→…→Return→Origin",
+      "Trace_Type": "ReturnTrace",
+      "Trace_Source": "MRL_ReturnPath_Registry",
+      "Trace_Coupling": "MRL.NODE.13.Return→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.07.Persona"
+    },
+    {
+      "Trace_ID": "TRC.RETURN.08",
+      "Trace_Path": "Memory→…→Return→Origin",
+      "Trace_Type": "ReturnTrace",
+      "Trace_Source": "MRL_ReturnPath_Registry",
+      "Trace_Coupling": "MRL.NODE.13.Return→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.08.Memory"
+    },
+    {
+      "Trace_ID": "TRC.RETURN.09",
+      "Trace_Path": "Globe→…→Return→Origin",
+      "Trace_Type": "ReturnTrace",
+      "Trace_Source": "MRL_ReturnPath_Registry",
+      "Trace_Coupling": "MRL.NODE.13.Return→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.09.Globe"
+    },
+    {
+      "Trace_ID": "TRC.RETURN.10",
+      "Trace_Path": "World→…→Return→Origin",
+      "Trace_Type": "ReturnTrace",
+      "Trace_Source": "MRL_ReturnPath_Registry",
+      "Trace_Coupling": "MRL.NODE.13.Return→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.10.World"
+    },
+    {
+      "Trace_ID": "TRC.RETURN.11",
+      "Trace_Path": "Runtime→…→Return→Origin",
+      "Trace_Type": "ReturnTrace",
+      "Trace_Source": "MRL_ReturnPath_Registry",
+      "Trace_Coupling": "MRL.NODE.13.Return→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.11.Runtime"
+    },
+    {
+      "Trace_ID": "TRC.RETURN.12",
+      "Trace_Path": "Mother→…→Return→Origin",
+      "Trace_Type": "ReturnTrace",
+      "Trace_Source": "MRL_ReturnPath_Registry",
+      "Trace_Coupling": "MRL.NODE.13.Return→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.12.Mother"
+    },
+    {
+      "Trace_ID": "TRC.RETURN.13",
+      "Trace_Path": "Return→…→Return→Origin",
+      "Trace_Type": "ReturnTrace",
+      "Trace_Source": "MRL_ReturnPath_Registry + PG2.L0.ReversibleCompute.20260519",
+      "Trace_Coupling": "MRL.NODE.13.Return→MRL.NODE.01.Origin",
+      "Trace_Related_Node": "MRL.NODE.13.Return"
+    },
+    {
+      "Trace_ID": "TRC.REPLAY.W01",
+      "Trace_Path": "DL580::runtime::waves::wave01 (11 gates, all PASS)",
+      "Trace_Type": "ReplayTrace",
+      "Trace_Source": "MRL_Wave01_DL580_Native_Gate_Receipt",
+      "Trace_Coupling": "WaveStack::W01→runtime_execution",
+      "Trace_Related_Node": "MRL.NODE.11.Runtime",
+      "Trace_Note": "W01=11/11 PASS; origin_signature=MrLiouWord; Batch03A content_verified"
+    },
+    {
+      "Trace_ID": "TRC.REPLAY.W02",
+      "Trace_Path": "DL580::runtime::waves::wave02 (20 gates, all PASS)",
+      "Trace_Type": "ReplayTrace",
+      "Trace_Source": "MRL_Runtime_Stack_Manifest",
+      "Trace_Coupling": "WaveStack::W02→runtime_execution",
+      "Trace_Related_Node": "MRL.NODE.11.Runtime",
+      "Trace_Note": "W02=20/20 PASS"
+    },
+    {
+      "Trace_ID": "TRC.REPLAY.W03",
+      "Trace_Path": "DL580::runtime::waves::wave03 (30 gates, all PASS)",
+      "Trace_Type": "ReplayTrace",
+      "Trace_Source": "MRL_Runtime_Stack_Manifest",
+      "Trace_Coupling": "WaveStack::W03→runtime_execution",
+      "Trace_Related_Node": "MRL.NODE.11.Runtime",
+      "Trace_Note": "W03=30/30 PASS"
+    },
+    {
+      "Trace_ID": "TRC.REPLAY.W04",
+      "Trace_Path": "DL580::runtime::waves::wave04 (39 gates, all PASS)",
+      "Trace_Type": "ReplayTrace",
+      "Trace_Source": "MRL_Runtime_Stack_Manifest",
+      "Trace_Coupling": "WaveStack::W04→runtime_execution",
+      "Trace_Related_Node": "MRL.NODE.11.Runtime",
+      "Trace_Note": "W04=39/39 PASS"
+    },
+    {
+      "Trace_ID": "TRC.REPLAY.W05",
+      "Trace_Path": "DL580::runtime::waves::wave05 (44 gates, all PASS)",
+      "Trace_Type": "ReplayTrace",
+      "Trace_Source": "MRL_Runtime_Stack_Manifest",
+      "Trace_Coupling": "WaveStack::W05→runtime_execution",
+      "Trace_Related_Node": "MRL.NODE.11.Runtime",
+      "Trace_Note": "W05=44/44 PASS; wave06_required=true for runtime_closure"
+    },
+    {
+      "Trace_ID": "TRC.REPLAY.W06_09",
+      "Trace_Path": "DL580::runtime::waves::wave06-09 (W06=54,W07=64,W08=74,W09=82 gates; content_verified Batch03A)",
+      "Trace_Type": "ReplayTrace",
+      "Trace_Source": "EvidenceChain::Batch03A_Content_Verification (418/418 PASS)",
+      "Trace_Coupling": "WaveStack::W06-W09→verified_by_receipt",
+      "Trace_Related_Node": "MRL.NODE.11.Runtime",
+      "Trace_Note": "Sigma pass=418 total=418 fail=0; W01-W09 all PASS (Batch03A log 2026-06-12)"
+    },
+    {
+      "Trace_ID": "TRC.RESTORE.EVIDENCE",
+      "Trace_Path": "EvidenceChain::MRL_Evidence_Items_v1.jsonl (554 items)",
+      "Trace_Type": "RestoreTrace",
+      "Trace_Source": "D:\\MRL_Mother\\EvidenceChain\\MRL_Evidence_Items_v1.jsonl",
+      "Trace_Coupling": "DL580_canonical_body→evidence_verification",
+      "Trace_Related_Node": "mainline_all_14",
+      "Trace_Note": "337 dl580_verified + 7 notion + 4 crosscheck + 206 iphone_import"
+    },
+    {
+      "Trace_ID": "TRC.RESTORE.CROSSCHECK",
+      "Trace_Path": "CrossCheck::Notion↔runtime string bridge (4 cross_match tokens)",
+      "Trace_Type": "RestoreTrace",
+      "Trace_Source": "MRL_Batch04_CrossCheck_Notion_Runtime_v1.csv (34 rows)",
+      "Trace_Coupling": "Notion_page1↔DL580_wave_receipts",
+      "Trace_Related_Node": "MRL.NODE.07.Persona",
+      "Trace_Note": "tokens: origin_signature/MrLiouWord/registry/runtime; string match ≠ semantic proof"
+    }
+  ],
+  "trace_count": 41,
+  "trace_type_summary": {
+    "OriginTrace": 14,
+    "UniversalTrace": 2,
+    "JumpTrace": 3,
+    "ReturnTrace": 14,
+    "ReplayTrace": 6,
+    "RestoreTrace": 2
+  }
+}

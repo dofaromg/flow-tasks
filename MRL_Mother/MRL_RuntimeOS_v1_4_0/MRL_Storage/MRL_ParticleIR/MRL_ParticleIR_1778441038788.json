@@ -1,0 +1,197 @@
+{
+  "mrl_ir_type": "MRL_ParticleIR",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "source_hash": "4bb863950e9bc553f1147610c450ef39fba54fc37737461af65f92cfa1479345",
+  "source_identity": {
+    "filename": "acceptance.fpp",
+    "language": "MRL_FPlusPlus",
+    "detected": "fpp",
+    "source_hash": "67c95fe0a6906822adb8631b65dcd2183c872d8e3946830b117a09d9ec8910ee"
+  },
+  "particles": [
+    {
+      "id": "MRL_P_0001",
+      "particle_type": "MRL_FluinParticle",
+      "layer": "L2",
+      "source_language": "MRL_FPlusPlus",
+      "properties": {
+        "kind": "particle",
+        "name": "CTX",
+        "properties": {
+          "layer": "L2",
+          "data": "整理文件"
+        }
+      },
+      "semantic": "CTX",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    },
+    {
+      "id": "MRL_P_0002",
+      "particle_type": "MRL_FluinParticle",
+      "layer": "L3",
+      "source_language": "MRL_FPlusPlus",
+      "properties": {
+        "kind": "particle",
+        "name": "TOOL",
+        "properties": {
+          "layer": "L3",
+          "type": "parser"
+        }
+      },
+      "semantic": "TOOL",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    },
+    {
+      "id": "MRL_P_0003",
+      "particle_type": "MRL_GenericParticle",
+      "layer": "L5_Runtime",
+      "source_language": "MRL_FPlusPlus",
+      "properties": {
+        "kind": "operator_or_token",
+        "value": "CTX"
+      },
+      "semantic": "CTX",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    },
+    {
+      "id": "MRL_P_0004",
+      "particle_type": "MRL_GenericParticle",
+      "layer": "L5_Runtime",
+      "source_language": "MRL_FPlusPlus",
+      "properties": {
+        "kind": "operator_or_token",
+        "value": "⊕"
+      },
+      "semantic": "⊕",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    },
+    {
+      "id": "MRL_P_0005",
+      "particle_type": "MRL_GenericParticle",
+      "layer": "L5_Runtime",
+      "source_language": "MRL_FPlusPlus",
+      "properties": {
+        "kind": "operator_or_token",
+        "value": "TOOL"
+      },
+      "semantic": "TOOL",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    },
+    {
+      "id": "MRL_P_0006",
+      "particle_type": "MRL_GenericParticle",
+      "layer": "L5_Runtime",
+      "source_language": "MRL_FPlusPlus",
+      "properties": {
+        "kind": "operator_or_token",
+        "value": "|>"
+      },
+      "semantic": "|>",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    },
+    {
+      "id": "MRL_P_0007",
+      "particle_type": "MRL_GenericParticle",
+      "layer": "L5_Runtime",
+      "source_language": "MRL_FPlusPlus",
+      "properties": {
+        "kind": "operator_or_token",
+        "value": "execute"
+      },
+      "semantic": "execute",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    },
+    {
+      "id": "MRL_P_0008",
+      "particle_type": "MRL_GenericParticle",
+      "layer": "L5_Runtime",
+      "source_language": "MRL_FPlusPlus",
+      "properties": {
+        "kind": "operator_or_token",
+        "value": "("
+      },
+      "semantic": "(",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    },
+    {
+      "id": "MRL_P_0009",
+      "particle_type": "MRL_GenericParticle",
+      "layer": "L5_Runtime",
+      "source_language": "MRL_FPlusPlus",
+      "properties": {
+        "kind": "operator_or_token",
+        "value": ")"
+      },
+      "semantic": ")",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    }
+  ],
+  "particle_atoms": [
+    {
+      "atom_id": "MRL_P_0001",
+      "atom_type": "MRL_FluinParticle",
+      "simhash_seed": "df40d5b017922bd5",
+      "semantic": "CTX"
+    },
+    {
+      "atom_id": "MRL_P_0002",
+      "atom_type": "MRL_FluinParticle",
+      "simhash_seed": "c3bc777cf3b9a852",
+      "semantic": "TOOL"
+    },
+    {
+      "atom_id": "MRL_P_0003",
+      "atom_type": "MRL_GenericParticle",
+      "simhash_seed": "cc9058e1d6ee991d",
+      "semantic": "CTX"
+    },
+    {
+      "atom_id": "MRL_P_0004",
+      "atom_type": "MRL_GenericParticle",
+      "simhash_seed": "637019523943a2a8",
+      "semantic": "⊕"
+    },
+    {
+      "atom_id": "MRL_P_0005",
+      "atom_type": "MRL_GenericParticle",
+      "simhash_seed": "0271521fff7c8e0a",
+      "semantic": "TOOL"
+    },
+    {
+      "atom_id": "MRL_P_0006",
+      "atom_type": "MRL_GenericParticle",
+      "simhash_seed": "5de7429ad1acc675",
+      "semantic": "|>"
+    },
+    {
+      "atom_id": "MRL_P_0007",
+      "atom_type": "MRL_GenericParticle",
+      "simhash_seed": "b686239e50105bff",
+      "semantic": "execute"
+    },
+    {
+      "atom_id": "MRL_P_0008",
+      "atom_type": "MRL_GenericParticle",
+      "simhash_seed": "81b08204d30bd857",
+      "semantic": "("
+    },
+    {
+      "atom_id": "MRL_P_0009",
+      "atom_type": "MRL_GenericParticle",
+      "simhash_seed": "ae7e7591431b5939",
+      "semantic": ")"
+    }
+  ],
+  "created_at": "2026-05-10T19:23:58.780Z",
+  "mrl_hash": "05f4f6f8aadb06f9b8683940425ba91f82636ab74f96b2fa1e67ade53e54d813"
+}

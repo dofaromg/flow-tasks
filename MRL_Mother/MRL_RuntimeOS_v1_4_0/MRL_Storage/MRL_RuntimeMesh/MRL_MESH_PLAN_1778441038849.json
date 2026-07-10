@@ -1,0 +1,94 @@
+{
+  "mrl_type": "MRL_RuntimeMeshPlan",
+  "origin_signature": "MrLiouWord",
+  "plan_id": "MRL_MESH_PLAN_1778441038849",
+  "created_at": "2026-05-10T19:23:58.849Z",
+  "available_nodes": [
+    {
+      "node_id": "MRL_LOCAL_NODE",
+      "role": "MRL_Local_RuntimeNode",
+      "status": "registered",
+      "capabilities": [
+        "parse",
+        "execute",
+        "verify",
+        "attention",
+        "context",
+        "runtimegraph"
+      ]
+    },
+    {
+      "node_id": "MRL_NODE_30e1baf23d97af43",
+      "role": "MRL_External_Box_RuntimeNode",
+      "status": "alive",
+      "capabilities": [
+        "shell",
+        "filesystem",
+        "git",
+        "execute",
+        "agent_run"
+      ]
+    },
+    {
+      "node_id": "MRL_NODE_d34673c73a33c4ea",
+      "role": "MRL_External_Box_RuntimeNode",
+      "status": "alive",
+      "capabilities": [
+        "shell",
+        "filesystem",
+        "git",
+        "execute",
+        "agent_run"
+      ]
+    }
+  ],
+  "runtime_graph_hash": "52d952c4dcfe2cb81f16f61af46b267d682690e9b0ba0d9c1d1094d776810637",
+  "context_graph_hash": "4cea1c11a79657a468913ed9c3d16970db1e4fda059ce87519012a7b29ed862b",
+  "attention_routes": [
+    {
+      "index": 0,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 1,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 2,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 3,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 4,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 5,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 6,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 7,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 8,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    }
+  ]
+}
