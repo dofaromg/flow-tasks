@@ -8,6 +8,7 @@
 #   mrl-ai      (8787) — AI SuperComputer：fusion 引擎 + 多 provider
 #   mrl-db      (5432) — PostgreSQL (replaces CF D1)
 #   mrl-redis   (6379) — Redis (replaces CF KV)
+#   mrl-800ai   (8800) — 800 AI 編排器：Agent registry + 物理守恆 + Merkle trace
 #   mrl-nginx   (80)   — 統一入口閘道
 #
 # Usage:
@@ -137,6 +138,26 @@ services:
       mrl.component: "kv-cache"
       mrl.role: "KV_replacement"
 
+  # ── MRL 800AI Orchestrator (agent dispatch + physics audit) ──
+  mrl-800ai:
+    build:
+      context: ./MRLiou_800AI
+      dockerfile: Dockerfile
+    container_name: mrl-800ai
+    ports:
+      - "${MRL_800AI_PORT:-8800}:8787"
+    environment:
+      - MRL_API_TOKEN=${MRL_API_TOKEN:-}
+    volumes:
+      - mrl-800ai-data:/app/data
+      - mrl-800ai-logs:/app/logs
+      - mrl-800ai-runs:/app/runs
+    restart: unless-stopped
+    networks:
+      - mrl-net
+    labels:
+      mrl.component: "800ai-orchestrator"
+
   # ── Nginx Unified Gateway ──
   mrl-nginx:
     image: nginx:alpine
@@ -161,6 +182,12 @@ volumes:
   mrl-redisdata:
     driver: local
   mrl-product-db:
+    driver: local
+  mrl-800ai-data:
+    driver: local
+  mrl-800ai-logs:
+    driver: local
+  mrl-800ai-runs:
     driver: local
 
 networks:
