@@ -90,22 +90,27 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host ""
 Write-Host "[4/4] 健康檢查..." -ForegroundColor Yellow
 
-Start-Sleep -Seconds 8
+Start-Sleep -Seconds 10
 
-$services = @(
-    @{ Name = "Engine";  Port = 7700; Path = "/health" },
-    @{ Name = "Product"; Port = 3000; Path = "/health" },
-    @{ Name = "AI";      Port = 8787; Path = "/health" },
-    @{ Name = "Gateway"; Port = 80;   Path = "/health" }
-)
-
-foreach ($svc in $services) {
-    try {
-        $url = "http://localhost:$($svc.Port)$($svc.Path)"
-        $resp = Invoke-WebRequest -Uri $url -TimeoutSec 5 -UseBasicParsing -ErrorAction Stop
-        Write-Host "  $($svc.Name) (:$($svc.Port)): OK" -ForegroundColor Green
-    } catch {
-        Write-Host "  $($svc.Name) (:$($svc.Port)): 啟動中... (稍後重試)" -ForegroundColor DarkYellow
+$healthScript = Join-Path $ScriptDir "MRL_HealthCheck.ps1"
+if (Test-Path $healthScript) {
+    & $healthScript
+} else {
+    $services = @(
+        @{ Name = "Engine";  Port = 7700; Path = "/health" },
+        @{ Name = "Product"; Port = 3000; Path = "/health" },
+        @{ Name = "AI";      Port = 8787; Path = "/health" },
+        @{ Name = "800AI";   Port = 8800; Path = "/health" },
+        @{ Name = "Gateway"; Port = 80;   Path = "/health" }
+    )
+    foreach ($svc in $services) {
+        try {
+            $url = "http://localhost:$($svc.Port)$($svc.Path)"
+            $resp = Invoke-WebRequest -Uri $url -TimeoutSec 5 -UseBasicParsing -ErrorAction Stop
+            Write-Host "  $($svc.Name) (:$($svc.Port)): OK" -ForegroundColor Green
+        } catch {
+            Write-Host "  $($svc.Name) (:$($svc.Port)): 啟動中... (稍後重試)" -ForegroundColor DarkYellow
+        }
     }
 }
 
@@ -118,9 +123,11 @@ Write-Host " 統一入口:   http://localhost" -ForegroundColor White
 Write-Host " 粒子引擎:   http://localhost:7700" -ForegroundColor White
 Write-Host " 產品平台:   http://localhost:3000" -ForegroundColor White
 Write-Host " AI 引擎:    http://localhost:8787" -ForegroundColor White
+Write-Host " 800AI:      http://localhost:8800" -ForegroundColor White
 Write-Host " PostgreSQL:  localhost:5432" -ForegroundColor DarkGray
 Write-Host " Redis:       localhost:6379" -ForegroundColor DarkGray
 Write-Host ""
+Write-Host " 健康檢查: .\deploy\MRL_HealthCheck.ps1" -ForegroundColor DarkGray
 Write-Host " 停止: docker compose -f docker-compose.unified.yml down" -ForegroundColor DarkGray
 Write-Host " 日誌: docker compose -f docker-compose.unified.yml logs -f" -ForegroundColor DarkGray
 Write-Host "============================================" -ForegroundColor Cyan
