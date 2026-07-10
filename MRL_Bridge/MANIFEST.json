@@ -1,0 +1,151 @@
+{
+  "package_name": "MRL_Bridge_v3.1.0_DL580_Pkg",
+  "package_version": "1.0.0",
+  "module_id": "MRL_Bridge_API",
+  "module_version": "3.1.0",
+  "origin_signature": "MrLiouWord",
+  "packaged_at": "2026-05-08",
+  "packaged_by": "Claude (Opus 4.7)",
+  "owner": "MR.liou",
+  "source_host": "WIN-PBVUI7VK2A6",
+  "source_path": "D:\\mrl\\bridge\\",
+  "tunnel": "bridge.mrliouword.com",
+  "tunnel_id": "632dfad4",
+  "deployment_target": "DL580",
+  "service_name": "MRL_Bridge",
+  "port": 7800,
+  "purpose": "DL580 母體對外 API 入口 (Claude → Cloudflare Tunnel → DL580)",
+  "laws": {
+    "LAW-0": "origin_signature locked to MrLiouWord (寫死於 server.js)",
+    "LAW-1": "MRL_ prefix on all endpoints (MRL_pg/MRL_cat/MRL_run/...)",
+    "LAW-2": "4 個歷史版本保留 (server_v1.0.0.js / v3.0_backup / v3.0_pre_rename / bak_platform)"
+  },
+  "runtime_dependencies": {
+    "node": ">= v20.11.1",
+    "npm": ">= 10.2.4",
+    "postgresql": ">= 16",
+    "redis": ">= 5",
+    "nssm": ">= 2.24",
+    "cloudflare_tunnel": "required for external access"
+  },
+  "npm_dependencies": {
+    "express": "^5.2.1",
+    "ioredis": "^5.10.1",
+    "pg": "^8.20.0"
+  },
+  "endpoints": {
+    "public_get": ["/health", "/version", "/MRL_platform"],
+    "auth_get": ["/MRL_pg", "/MRL_tables", "/MRL_ls", "/MRL_cat", "/MRL_run", "/MRL_redis_cmd", "/MRL_sysinfo", "/MRL_write", "/MRL_audit"],
+    "auth_post": ["/MRL_file/write", "/MRL_file/read", "/MRL_file/list", "/MRL_exec", "/MRL_pg/query", "/MRL_redis"]
+  },
+  "auth": {
+    "method": "API Key SHA-256",
+    "key_value": "REDACTED_USE_ENV_MRL_BRIDGE_API_KEY",
+    "key_hash": "SHA-256(REDACTED_USE_ENV)",
+    "get_param": "?key=REDACTED_USE_ENV",
+    "post_header": "x-api-key: REDACTED_USE_ENV"
+  },
+  "files": [
+    {
+      "path": "bridge/server.js",
+      "size": 30914,
+      "sha256": "5f7aa93bdf7851982e2ea92193a2afd845d03e87b84e2b126914c4e351448998",
+      "role": "main_v3.1.0",
+      "lines": 718,
+      "encoding": "UTF-8 with BOM"
+    },
+    {
+      "path": "bridge/package.json",
+      "size": 316,
+      "sha256": "bc6d531cfc305a0193b0dca6cce8d9c38554ddc52fef9a5d70f70a4f80f0d27a",
+      "role": "npm_manifest"
+    },
+    {
+      "path": "bridge/package-lock.json",
+      "size": 35735,
+      "sha256": "7258785833e4febe...",
+      "role": "npm_lock"
+    },
+    {
+      "path": "bridge/add_platform_route.cjs",
+      "size": 1391,
+      "sha256": "1d50d6243f0f32bd...",
+      "role": "platform_route_helper"
+    },
+    {
+      "path": "bridge/MRL_bridge_route_patch.cjs",
+      "size": 1756,
+      "sha256": "61ae671577339c13...",
+      "role": "route_patch_tool"
+    },
+    {
+      "path": "bridge/patch_v31.js",
+      "size": 2839,
+      "sha256": "8f76bd329de146f8...",
+      "role": "v3.0_to_v3.1_upgrade_js"
+    },
+    {
+      "path": "bridge/patch_v31.ps1",
+      "size": 2806,
+      "sha256": "3a5f30fe767326a5...",
+      "role": "v3.0_to_v3.1_upgrade_powershell"
+    },
+    {
+      "path": "bridge/server.js.bak_platform",
+      "size": 30322,
+      "sha256": "6c2f281dfa3577d0...",
+      "role": "law2_backup_pre_platform"
+    },
+    {
+      "path": "bridge/server_v1.0.0.js",
+      "size": 30222,
+      "sha256": "7b8226ecd8a4cf61...",
+      "role": "law2_history_v1.0.0"
+    },
+    {
+      "path": "bridge/server_v3.0_backup.js",
+      "size": 30222,
+      "sha256": "7b8226ecd8a4cf61...",
+      "role": "law2_history_v3.0"
+    },
+    {
+      "path": "bridge/server_v3.0_pre_rename.js",
+      "size": 30222,
+      "sha256": "7b8226ecd8a4cf61...",
+      "role": "law2_history_v3.0_pre_rename"
+    }
+  ],
+  "total_files": 11,
+  "total_size_bytes": 196745,
+  "service_config": {
+    "nssm_servicename": "MRL_Bridge",
+    "Application": "D:\\MrlToolchain\\node\\node.exe",
+    "AppDirectory": "D:\\mrl\\bridge",
+    "AppParameters": "D:\\mrl\\bridge\\server.js",
+    "Start": "SERVICE_AUTO_START",
+    "current_status": "RUNNING"
+  },
+  "config_constants": {
+    "VERSION": "3.1.0",
+    "PORT": 7800,
+    "ORIGIN": "MrLiouWord",
+    "API_KEY_PLAINTEXT": "REDACTED_USE_ENV_MRL_BRIDGE_API_KEY",
+    "LOG_DIR": "D:\\mrl\\bridge\\logs",
+    "MAX_FILE_READ_BYTES": 5242880
+  },
+  "verification": {
+    "sha256_dual_verified": true,
+    "source_sha": "5F7AA93BDF7851982E2EA92193A2AFD845D03E87B84E2B126914C4E351448998",
+    "fetched_sha": "5f7aa93bdf7851982e2ea92193a2afd845d03e87b84e2b126914c4e351448998",
+    "match": true
+  },
+  "handoff_notes": [
+    "下個 Claude 視窗看到此封包,可直接用於 DL580 重灌或 clone 部署",
+    "API_KEY 寫死在 server.js (line ~26),如需改要同步改 nssm 服務的環境變數",
+    "Bridge 自身的 Tunnel ID (632dfad4) 是另外設定的 cloudflared service,本封包不含",
+    "若要改 port,改 server.js 的 PORT 常數 + nssm restart MRL_Bridge"
+  ],
+  "complementary_packages": {
+    "MRL_FlowEditBridge_v0.2": "出境到 Notion/Dropbox/GDrive 的 Python 工具,跟本封包互補,不替代"
+  }
+}

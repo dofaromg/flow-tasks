@@ -1,30 +1,143 @@
 {
   "origin_signature": "MrLiouWord",
   "version": "1.0.0",
-  "snapshot_date": "2026-07-08",
+  "snapshot_date": "2026-07-10",
   "ports": {
-    "3000": {"service": "MRL_AI_Product_Server", "runtime": "node", "protocol": "http", "exposure": "local"},
-    "3306": {"service": "MariaDB", "runtime": "mysqld", "protocol": "mysql", "exposure": "local"},
-    "5432": {"service": "MRL_PostgreSQL", "runtime": "postgres", "protocol": "postgresql", "exposure": "local"},
-    "6379": {"service": "mrl_redis", "runtime": "redis", "protocol": "redis", "exposure": "local"},
-    "7500": {"service": "MRL_Inference", "runtime": "python", "protocol": "http", "exposure": "local"},
-    "7700": {"service": "MRL_ASI_Engine", "runtime": "node", "protocol": "http", "exposure": "local"},
-    "7800": {"service": "MRL_Bridge", "runtime": "node", "protocol": "http", "exposure": "tunnel"},
-    "7801": {"service": "MRL_DB_Proxy", "runtime": "node", "protocol": "http", "exposure": "local"},
-    "7810": {"service": "MRL_Agent_Orchestrator + MRL_ReasoningEngine", "runtime": "node+python", "protocol": "http", "exposure": "local", "note": "兩個服務共用同一端口"},
-    "7811": {"service": "MRL_Toolchain_Engine", "runtime": "node", "protocol": "http", "exposure": "local"},
-    "7812": {"service": "MRL_Memory_Engine", "runtime": "node", "protocol": "http", "exposure": "local"},
-    "7815": {"service": "MRL_FlowOS_Runner", "runtime": "python", "protocol": "http", "exposure": "local", "note": "FlowOS runner, 無獨立 NSSM 服務"},
-    "7820": {"service": "MRL_Realtime_Voice", "runtime": "python", "protocol": "http", "exposure": "local", "note": "即時語音代理"},
-    "7830": {"service": "MRL_API_Service", "runtime": "python", "protocol": "http", "exposure": "local"},
-    "7840": {"service": "MRL_BuilderModule", "runtime": "python", "protocol": "http", "exposure": "local"},
-    "7900": {"service": "MRL_FlowAgent_API", "runtime": "python", "protocol": "http", "exposure": "local"},
-    "7950": {"service": "MRL_AI_OS (ControlPanel)", "runtime": "python", "protocol": "http", "exposure": "local"},
-    "8787": {"service": "MRL_FlowCoreLoop", "runtime": "python", "protocol": "http", "exposure": "local"},
-    "8788": {"service": "MRL_ParticleGlobe + MRL_RuntimeAdapter", "runtime": "python", "protocol": "http", "exposure": "local"},
-    "8790": {"service": "MRL_RuntimeOS_v1.4.0", "runtime": "node", "protocol": "http", "exposure": "local"},
-    "8799": {"service": "MRL_Write_Guard", "runtime": "node", "protocol": "http", "exposure": "local"},
-    "20241": {"service": "MRL_Tunnel (cloudflared)", "runtime": "cloudflared", "protocol": "https", "exposure": "internet"}
+    "3000": {
+      "service": "MRL_AI_Product_Server",
+      "runtime": "node",
+      "protocol": "http",
+      "exposure": "local"
+    },
+    "3306": {
+      "service": "MariaDB",
+      "runtime": "mysqld",
+      "protocol": "mysql",
+      "exposure": "local"
+    },
+    "5432": {
+      "service": "MRL_PostgreSQL",
+      "runtime": "postgres",
+      "protocol": "postgresql",
+      "exposure": "local"
+    },
+    "6379": {
+      "service": "mrl_redis",
+      "runtime": "redis",
+      "protocol": "redis",
+      "exposure": "local"
+    },
+    "7500": {
+      "service": "MRL_Inference",
+      "runtime": "python",
+      "protocol": "http",
+      "exposure": "local"
+    },
+    "7700": {
+      "service": "MRL_ASI_Engine",
+      "runtime": "node",
+      "protocol": "http",
+      "exposure": "local"
+    },
+    "7800": {
+      "service": "MRL_Bridge",
+      "runtime": "node",
+      "protocol": "http",
+      "exposure": "tunnel"
+    },
+    "7801": {
+      "service": "MRL_DB_Proxy",
+      "runtime": "node",
+      "protocol": "http",
+      "exposure": "local"
+    },
+    "7810": {
+      "service": "MRL_Agent_Orchestrator + MRL_ReasoningEngine",
+      "runtime": "node+python",
+      "protocol": "http",
+      "exposure": "local",
+      "note": "兩個服務共用同一端口"
+    },
+    "7811": {
+      "service": "MRL_Toolchain_Engine",
+      "runtime": "node",
+      "protocol": "http",
+      "exposure": "local"
+    },
+    "7812": {
+      "service": "MRL_Memory_Engine",
+      "runtime": "node",
+      "protocol": "http",
+      "exposure": "local"
+    },
+    "7815": {
+      "service": "MRL_FlowOS_Runner",
+      "runtime": "python",
+      "protocol": "http",
+      "exposure": "local",
+      "note": "FlowOS runner, 無獨立 NSSM 服務"
+    },
+    "7820": {
+      "service": "MRL_Realtime_Voice",
+      "runtime": "python",
+      "protocol": "http",
+      "exposure": "local",
+      "note": "即時語音代理"
+    },
+    "7830": {
+      "service": "MRL_API_Service",
+      "runtime": "python",
+      "protocol": "http",
+      "exposure": "local"
+    },
+    "7840": {
+      "service": "MRL_BuilderModule",
+      "runtime": "python",
+      "protocol": "http",
+      "exposure": "local"
+    },
+    "7900": {
+      "service": "MRL_FlowAgent_API",
+      "runtime": "python",
+      "protocol": "http",
+      "exposure": "local"
+    },
+    "7950": {
+      "service": "MRL_AI_OS (ControlPanel)",
+      "runtime": "python",
+      "protocol": "http",
+      "exposure": "local"
+    },
+    "8787": {
+      "service": "MRL_FlowCoreLoop",
+      "runtime": "python",
+      "protocol": "http",
+      "exposure": "local"
+    },
+    "8788": {
+      "service": "MRL_ParticleGlobe + MRL_RuntimeAdapter",
+      "runtime": "python",
+      "protocol": "http",
+      "exposure": "local"
+    },
+    "8790": {
+      "service": "MRL_RuntimeOS_v1.4.0",
+      "runtime": "node",
+      "protocol": "http",
+      "exposure": "local"
+    },
+    "8799": {
+      "service": "MRL_Write_Guard",
+      "runtime": "node",
+      "protocol": "http",
+      "exposure": "local"
+    },
+    "20241": {
+      "service": "MRL_Tunnel (cloudflared)",
+      "runtime": "cloudflared",
+      "protocol": "https",
+      "exposure": "internet"
+    }
   },
   "port_ranges": {
     "3000-3999": "Platform / Product",

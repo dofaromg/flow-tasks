@@ -9,6 +9,8 @@
 #   mrl-db      (5432) — PostgreSQL (replaces CF D1)
 #   mrl-redis   (6379) — Redis (replaces CF KV)
 #   mrl-800ai   (8800) — 800 AI 編排器：Agent registry + 物理守恆 + Merkle trace
+#   mrl-bridge  (7800) — Bridge API：DL580 對外操作通道 (PG/Redis/FS/Exec)
+#   mrl-platform(8790) — 母體平台 Server：控制台 + 監控 + 人格對話
 #   mrl-nginx   (80)   — 統一入口閘道
 #
 # Usage:
@@ -158,6 +160,56 @@ services:
     labels:
       mrl.component: "800ai-orchestrator"
 
+  # ── MRL Bridge API (DL580 external operations channel) ──
+  mrl-bridge:
+    build:
+      context: ./MRL_Bridge
+      dockerfile: Dockerfile
+    container_name: mrl-bridge
+    ports:
+      - "${MRL_BRIDGE_PORT:-7800}:7800"
+    environment:
+      - MRL_BRIDGE_PORT=7800
+      - MRL_BRIDGE_API_KEY=${MRL_BRIDGE_API_KEY:-}
+      - MRL_BRIDGE_LOG_DIR=/app/logs
+      - MRL_PG_HOST=mrl-db
+      - MRL_PG_PORT=5432
+      - MRL_PG_DATABASE=mrliouword
+      - MRL_PG_USER=mrl
+      - MRL_PG_PASSWORD=mrl
+    depends_on:
+      mrl-db:
+        condition: service_healthy
+      mrl-redis:
+        condition: service_healthy
+    volumes:
+      - mrl-bridge-logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - mrl-net
+    labels:
+      mrl.component: "bridge"
+      mrl.layer: "gateway"
+
+  # ── MRL Platform Server (Mother control panel + monitor) ──
+  mrl-platform:
+    build:
+      context: ./MRL_Platform
+      dockerfile: Dockerfile
+    container_name: mrl-platform
+    ports:
+      - "${MRL_PLATFORM_PORT:-8790}:8790"
+    environment:
+      - MRL_PORT=8790
+      - MRL_PLATFORM_DOMAIN=${MRL_PLATFORM_DOMAIN:-mrliouword.com}
+    volumes:
+      - mrl-platform-data:/app/data
+    restart: unless-stopped
+    networks:
+      - mrl-net
+    labels:
+      mrl.component: "platform"
+
   # ── Nginx Unified Gateway ──
   mrl-nginx:
     image: nginx:alpine
@@ -188,6 +240,10 @@ volumes:
   mrl-800ai-logs:
     driver: local
   mrl-800ai-runs:
+    driver: local
+  mrl-bridge-logs:
+    driver: local
+  mrl-platform-data:
     driver: local
 
 networks:

@@ -1,8 +1,8 @@
 {
   "origin_signature": "MrLiouWord",
   "version": "1.0.0",
-  "snapshot_date": "2026-07-08",
-  "total_services": 21,
+  "snapshot_date": "2026-07-10",
+  "total_services": 22,
   "running": 20,
   "paused": 1,
   "layers": {
@@ -31,7 +31,8 @@
       "services": [
         "MRL_AI_Product_Server",
         "MRL_AI_OS",
-        "MRL_RuntimeAdapter"
+        "MRL_RuntimeAdapter",
+        "MRL_Platform_Server"
       ]
     },
     "infrastructure": {
