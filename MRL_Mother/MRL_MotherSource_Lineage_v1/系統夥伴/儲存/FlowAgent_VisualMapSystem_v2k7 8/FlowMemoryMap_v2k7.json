@@ -1,0 +1,72 @@
+{
+  "nodes": [
+    "FlowMemoryCore",
+    "MemoryZone1",
+    "MemoryZone2",
+    "MemoryVault",
+    "FieldMap",
+    "FlowMeta",
+    "CollapseCore",
+    "PersonaMemory_1",
+    "PersonaMemory_2",
+    "SyncLog",
+    "JumpTrace",
+    "ArchiveWriter",
+    "FltnzCompressor",
+    "ZoneVault"
+  ],
+  "edges": [
+    {
+      "from": "FlowMemoryCore",
+      "to": "MemoryZone1"
+    },
+    {
+      "from": "FlowMemoryCore",
+      "to": "MemoryZone2"
+    },
+    {
+      "from": "FlowMemoryCore",
+      "to": "MemoryVault"
+    },
+    {
+      "from": "MemoryVault",
+      "to": "FieldMap"
+    },
+    {
+      "from": "MemoryVault",
+      "to": "FlowMeta"
+    },
+    {
+      "from": "MemoryVault",
+      "to": "CollapseCore"
+    },
+    {
+      "from": "MemoryZone1",
+      "to": "PersonaMemory_1"
+    },
+    {
+      "from": "MemoryZone1",
+      "to": "PersonaMemory_2"
+    },
+    {
+      "from": "MemoryZone2",
+      "to": "SyncLog"
+    },
+    {
+      "from": "MemoryZone2",
+      "to": "JumpTrace"
+    },
+    {
+      "from": "MemoryVault",
+      "to": "ArchiveWriter"
+    },
+    {
+      "from": "ArchiveWriter",
+      "to": "FltnzCompressor"
+    },
+    {
+      "from": "ArchiveWriter",
+      "to": "ZoneVault"
+    }
+  ]
+}

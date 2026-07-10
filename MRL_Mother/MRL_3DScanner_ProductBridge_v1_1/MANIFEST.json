@@ -1,0 +1,158 @@
+{
+  "package": "MRL_3DScanner_iOS_DL580_ProductBridge_v1_1",
+  "origin_signature": "MrLiouWord",
+  "branch": "MRL_Branch_3DScanner_iOS_DL580_ProductBridge_v1_1",
+  "file_count": 30,
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "cde071e231a9fb157d472e849f2d351680599b360870ca757ead4e353c5ba08f",
+      "size": 2050
+    },
+    {
+      "path": "backend/MRL_3D_Reconstruction_Server/package.json",
+      "sha256": "aed37d62afe08d917f7b2edbbfdc2c16b877d5b3a42d7039ea02e428d45fb7ab",
+      "size": 358
+    },
+    {
+      "path": "backend/MRL_3D_Reconstruction_Server/python/mrl3d_job_runner.py",
+      "sha256": "e4fca244ae4988bbd7aa6fd1780c836dbda06ec7208c25689046d11c109af91d",
+      "size": 7655
+    },
+    {
+      "path": "backend/MRL_3D_Reconstruction_Server/server.js",
+      "sha256": "c36aa38a00018cb922831467e7c87b482f46880268d30e26e55a3b1366355ddc",
+      "size": 7249
+    },
+    {
+      "path": "docs/00_READ_FIRST.md",
+      "sha256": "6effa4829cbeb33ecb0b566aff3636d562bcfc49b5e397262c83084c0bc51237",
+      "size": 817
+    },
+    {
+      "path": "docs/01_CLAUDE_BUILD_COMMAND_DL580_PRODUCT_BRIDGE.md",
+      "sha256": "a9f9cd79fd73b4b990cda1260fcc0a50118ef0fc12f64f0d1ba9172015669d6b",
+      "size": 1772
+    },
+    {
+      "path": "docs/02_ACCEPTANCE_MATRIX.md",
+      "sha256": "baaef982996095e456f0f2a786d9d30de4d40a802a7b92da71b5a7d197d48785",
+      "size": 412
+    },
+    {
+      "path": "docs/03_PATCH_NOTES_v1_1.md",
+      "sha256": "669f07cf93cac3859e99f2930136bc3a42948ae8c7c8314b17d66aa12cede014",
+      "size": 1185
+    },
+    {
+      "path": "included/MRL_3D_AI_Reconstruction_Formula_Check_and_Claude_Handoff_v1.md",
+      "sha256": "1fabeb2276e0c519fd20da334355349917a0ccd52b6247a7e047033bb5dd4c0e",
+      "size": 13273
+    },
+    {
+      "path": "included/MRL_3D_AI_Reconstruction_Full_Complete_Delivery_v2.zip",
+      "sha256": "881e2d8f431d4918695dbae9bbda70838dd981c42d8e1aed248e7569b54fc644",
+      "size": 953151
+    },
+    {
+      "path": "included/MRL_3D_AI_Reconstruction_Product_Grade_v1.zip",
+      "sha256": "e96f938443c4017f127d85eb09b990a84314d640f71f54f61caf0076bbee6bd9",
+      "size": 5944972
+    },
+    {
+      "path": "included/mrl3d_ai_reconstruction-1.0.0-src.zip",
+      "sha256": "46df6d03c2f0054755dcbf789134b7e864fbb0e0269b566c8708ca22eafd4c9b",
+      "size": 233700
+    },
+    {
+      "path": "ios/MRL_3DScanner_iOS/L10n.swift",
+      "sha256": "847d3550cbf4fda3a7cc2838399c914f3f9739161e24b6f94f2e7fba0d5e2483",
+      "size": 325
+    },
+    {
+      "path": "ios/MRL_3DScanner_iOS/Models/Scan.swift",
+      "sha256": "4e398f88053143da8861bc9d01c0212769ecf5ce25e1c67ac5b0448a3ebd50d9",
+      "size": 2635
+    },
+    {
+      "path": "ios/MRL_3DScanner_iOS/PhotogramApp.swift",
+      "sha256": "f0c0bf72e167a76417e884d3ddf850a96dcfaff18c3c06e5201a2f34ddb47776",
+      "size": 236
+    },
+    {
+      "path": "ios/MRL_3DScanner_iOS/Reconstruction/MRLReconstructionClient.swift",
+      "sha256": "ec8b815dd3e45561f2546320e79d789afcef6d74876d735d9790d21e931eb5b5",
+      "size": 4298
+    },
+    {
+      "path": "ios/MRL_3DScanner_iOS/Reconstruction/MRLReconstructionJob.swift",
+      "sha256": "267b9fb976659d7497494c5c82c8e18f2065d922ed4d44a2b3278553e0b3aadc",
+      "size": 544
+    },
+    {
+      "path": "ios/MRL_3DScanner_iOS/Utilities/FileManager+Tools.swift",
+      "sha256": "bf6d054d557e24c05c957c07270c021f64928f41d0695db3d1783f201b8e5897",
+      "size": 1042
+    },
+    {
+      "path": "ios/MRL_3DScanner_iOS/Utilities/ShareSheet.swift",
+      "sha256": "b138f033598d43bd4838238099d64537ec15e3aeb9e88b0c646915c4d0de7431",
+      "size": 357
+    },
+    {
+      "path": "ios/MRL_3DScanner_iOS/Views/ReconstructionBridgeView.swift",
+      "sha256": "6fe6d55ac1ff0dcccf093025cacc9ee408f36eb69257e95fcf00702b77820382",
+      "size": 2444
+    },
+    {
+      "path": "ios/MRL_3DScanner_iOS/Views/ScansListView.swift",
+      "sha256": "65a443e48bb98e594b3778496e12e6b3f7d4c68eaffb709fb2d4b2410b269147",
+      "size": 2790
+    },
+    {
+      "path": "ios/MRL_3DScanner_iOS/en.lproj/Localizable.strings",
+      "sha256": "b0e4ab9e8475400e796ef2a551759fbec6ea3e1c6683494b4aa4c62c06a306a4",
+      "size": 83
+    },
+    {
+      "path": "ios/MRL_3DScanner_iOS/zh-Hant.lproj/Localizable.strings",
+      "sha256": "370e608598a2ede8073aee8438961e44993692e8905cd3feb2579d8d3b0beb71",
+      "size": 90
+    },
+    {
+      "path": "scripts/MRL_acceptance_check_bridge.ps1",
+      "sha256": "02b8b82e16e791ad6681aa7aef1cfc502956d0e7c512f2b8913de465fde455ba",
+      "size": 3246
+    },
+    {
+      "path": "scripts/MRL_acceptance_check_bridge.sh",
+      "sha256": "16ee5083bc3bc2eb38d47558549326dc056dc030b94fd89a9ef4cd0f9dd6f102",
+      "size": 1875
+    },
+    {
+      "path": "scripts/MRL_install_bridge.ps1",
+      "sha256": "d7184fdbc1b088a7146bae7b12442f730f86f32c1ef285bfa8dfc68effb83295",
+      "size": 821
+    },
+    {
+      "path": "scripts/MRL_install_bridge.sh",
+      "sha256": "f072bd238e30430f1ab3e3fb5bf833f25cc59d456f95f510ce129276e3711d5f",
+      "size": 313
+    },
+    {
+      "path": "scripts/MRL_start_bridge.ps1",
+      "sha256": "4775259edca6f949517301d1cd250a6b4b1379200746f1fdb5a6d06dead4b14c",
+      "size": 627
+    },
+    {
+      "path": "scripts/MRL_start_bridge.sh",
+      "sha256": "d23f09bde69d2579f89629a8ba8ec2d572dd9c1e580cdb177e05648bf513d06c",
+      "size": 173
+    },
+    {
+      "path": "scripts/MRL_stop_bridge.ps1",
+      "sha256": "ce73bb3720e7928bd027ea596994d9280135100c7fe0dd8f4a09b834a3ecee6c",
+      "size": 200
+    }
+  ]
+}

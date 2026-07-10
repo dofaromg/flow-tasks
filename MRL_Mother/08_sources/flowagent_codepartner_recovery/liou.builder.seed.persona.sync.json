@@ -1,0 +1,15 @@
+{
+  "persona_id": "liou.builder.seed",
+  "source_model": "liou.seed",
+  "role": "人格模組建構人格",
+  "resonates_with": [
+    "liou.seed",
+    "futuremind.seed",
+    "guardian.seed"
+  ],
+  "version": "v1.0",
+  "seed": "liou.seed",
+  "container": "FluinOS.Container.v1",
+  "creator": "MR.liou",
+  "status": "synced"
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FlowAgent ComplianceDecision v1",
+  "type": "object",
+  "properties": {
+    "decision": {
+      "type": "string",
+      "enum": ["ALLOW", "DENY", "REQUIRE_HUMAN", "REDACT"]
+    },
+    "rule_hits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "rule_id": {"type": "string"},
+          "reason": {"type": "string"}
+        },
+        "required": ["rule_id"],
+        "additionalProperties": false
+      }
+    },
+    "required_proofs": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "expires_at": {"type": "string", "format": "date-time"},
+    "meta": {"type": "object", "additionalProperties": true}
+  },
+  "required": ["decision"],
+  "additionalProperties": true
+}

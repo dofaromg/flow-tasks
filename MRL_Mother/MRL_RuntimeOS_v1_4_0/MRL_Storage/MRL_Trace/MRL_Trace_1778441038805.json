@@ -1,0 +1,40 @@
+{
+  "mrl_type": "MRL_RuntimeTrace",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "started_at": "2026-05-10T19:23:58.805Z",
+  "runtime_graph_hash": "3141a3ddec70cd76b2e581e7824baf0b1b44befdb18472d6a08eed672aeab4f6",
+  "attention_hash": "56140c9e3804db35df6ed2e26455afc0550a21be1190b471d6dfba06f5d0ec5e",
+  "steps": [
+    {
+      "step": 1,
+      "node_id": "MRL_P_0002",
+      "action": "MRL_ANALYZE_TEXT",
+      "priority": 1,
+      "status": "implemented_pass",
+      "message": "MRL document analyzed and deduplicated",
+      "output_hash": "98bd3a2530f0ab37"
+    },
+    {
+      "step": 2,
+      "node_id": "MRL_P_0003",
+      "action": "MRL_ANALYZE_TEXT",
+      "priority": 1,
+      "status": "implemented_pass",
+      "message": "MRL document analyzed and deduplicated",
+      "output_hash": "98bd3a2530f0ab37"
+    },
+    {
+      "step": 3,
+      "node_id": "MRL_P_0001",
+      "action": "MRL_ANALYZE_TEXT",
+      "priority": 0.88,
+      "status": "implemented_pass",
+      "message": "MRL document analyzed and deduplicated",
+      "output_hash": "98bd3a2530f0ab37"
+    }
+  ],
+  "final_data_preview": "# MRL Document\n\n整理文件\n整理文件",
+  "completed_at": "2026-05-10T19:23:58.805Z",
+  "mrl_hash": "17597ab0c84397df49c31f48810d90602fb4d3bf59f44e8db0cde9eddee144a0"
+}

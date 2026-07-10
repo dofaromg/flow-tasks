@@ -1,0 +1,96 @@
+{
+  "mrl_ir_type": "MRL_MetaIR",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "source_identity": {
+    "filename": "acceptance.yaml",
+    "language": "YAML",
+    "detected": "yaml",
+    "source_hash": "e2bd32d59d884ed362b36a6472ad6e646a6ead51e37b6bd15605ccaeb188286e"
+  },
+  "syntax_tree": {
+    "language": "YAML",
+    "nodes": [
+      {
+        "kind": "yaml_field",
+        "name": "MRL_name",
+        "value_type": "scalar",
+        "line": 1
+      },
+      {
+        "kind": "yaml_field",
+        "name": "MRL_layer",
+        "value_type": "scalar",
+        "line": 2
+      }
+    ],
+    "tokens": [
+      "MRL_name:",
+      "demo",
+      "MRL_layer:",
+      "L2"
+    ]
+  },
+  "semantic_intent": {
+    "intents": [
+      "MRL_INTENT_GENERAL_PARSE"
+    ],
+    "summary": "MRL_INTENT_GENERAL_PARSE",
+    "node_count": 2,
+    "language": "YAML"
+  },
+  "particle_atoms": [
+    {
+      "atom_id": "MRL_P_0001",
+      "atom_type": "MRL_DataFieldParticle",
+      "simhash_seed": "5ca4fa6466bd9ff5",
+      "semantic": "MRL_name"
+    },
+    {
+      "atom_id": "MRL_P_0002",
+      "atom_type": "MRL_DataFieldParticle",
+      "simhash_seed": "d652efbfed9e4f5d",
+      "semantic": "MRL_layer"
+    }
+  ],
+  "context_relations": [
+    {
+      "relation_id": "MRL_CTX_1",
+      "from": "MRL_name",
+      "to": "MRL_layer",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    }
+  ],
+  "runtime_plan": [
+    {
+      "step": 1,
+      "action": "MRL_REGISTER_SCHEMA_FIELD",
+      "target": "MRL_name",
+      "node_kind": "yaml_field"
+    },
+    {
+      "step": 2,
+      "action": "MRL_REGISTER_SCHEMA_FIELD",
+      "target": "MRL_layer",
+      "node_kind": "yaml_field"
+    }
+  ],
+  "verification_plan": [
+    "MRL_ROUNDTRIP",
+    "MRL_HASH",
+    "MRL_PARTICLE_INTEGRITY",
+    "MRL_CONTEXT_GRAPH",
+    "MRL_RUNTIME_GRAPH"
+  ],
+  "output_artifact": {
+    "expected": [
+      "MRL_MetaIR_Record",
+      "MRL_ParticleIR_Record",
+      "MRL_RuntimeGraph_Record",
+      "MRL_Verification_Report"
+    ]
+  },
+  "created_at": "2026-05-10T19:02:34.179Z",
+  "mrl_hash": "04606ad1b0bd725efa73af64ddddcd7e2936f8ceea10b8c0d6e317edf8453faf"
+}

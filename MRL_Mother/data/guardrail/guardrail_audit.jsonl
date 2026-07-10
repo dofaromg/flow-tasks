@@ -1,0 +1,13 @@
+{"action_type": "READ", "decision": "ALLOW", "rule_id": "pass", "reason": "All invariants satisfied", "checked_at_ms": 1777572255215, "origin_signature": "MrLiouWord"}
+{"action_type": "WEB_FETCH", "decision": "ALLOW", "rule_id": "pass", "reason": "All invariants satisfied", "checked_at_ms": 1777572255215, "origin_signature": "MrLiouWord"}
+{"action_type": "WEB_FETCH", "decision": "DENY", "rule_id": "aup_2", "reason": "WEB_FETCH requires allowlisted host; payload has allowlisted=False/missing", "checked_at_ms": 1777572255215, "origin_signature": "MrLiouWord"}
+{"action_type": "SCAN", "decision": "DENY", "rule_id": "aup_5", "reason": "Hard-DENY action type: SCAN", "checked_at_ms": 1777572255215, "origin_signature": "MrLiouWord"}
+{"action_type": "LOGIN", "decision": "REQUIRE_HUMAN", "rule_id": "aup_1", "reason": "Action requires human approval: LOGIN", "checked_at_ms": 1777572255215, "origin_signature": "MrLiouWord"}
+{"action_type": "DELETE_CANONICAL", "decision": "DENY", "rule_id": "rl_01", "reason": "Hard-DENY action type: DELETE_CANONICAL", "checked_at_ms": 1777572255215, "origin_signature": "MrLiouWord"}
+{"action_type": "CONTENT_GENERATION", "decision": "DENY", "rule_id": "aup_4", "reason": "Content matches deny-term: 'malware'", "checked_at_ms": 1777572255216, "origin_signature": "MrLiouWord"}
+{"action_type": "CONTENT_GENERATION", "decision": "REQUIRE_HUMAN", "rule_id": "rl_02", "reason": "Action requires human approval: CONTENT_GENERATION", "checked_at_ms": 1777572255216, "origin_signature": "MrLiouWord"}
+{"action_type": "SEND_EMAIL", "decision": "REQUIRE_HUMAN", "rule_id": "aup_6", "reason": "Action requires human approval: SEND_EMAIL", "checked_at_ms": 1777572255216, "origin_signature": "MrLiouWord"}
+{"action_type": "UNKNOWN_FUTURE_ACTION", "decision": "REQUIRE_HUMAN", "rule_id": "rl_00", "reason": "Unknown action type 'UNKNOWN_FUTURE_ACTION' — deny-by-default requires human approval", "checked_at_ms": 1777572255216, "origin_signature": "MrLiouWord"}
+{"action_type": "CONTENT_GENERATION", "decision": "DENY", "rule_id": "aup_4", "reason": "Content matches deny-term: 'malware'", "checked_at_ms": 1777572275372, "origin_signature": "MrLiouWord"}
+{"action_type": "CONTENT_GENERATION", "decision": "REQUIRE_HUMAN", "rule_id": "rl_02", "reason": "Action requires human approval: CONTENT_GENERATION", "checked_at_ms": 1777572275372, "origin_signature": "MrLiouWord"}
+{"action_type": "WEB_FETCH", "decision": "ALLOW", "rule_id": "pass", "reason": "All invariants satisfied", "checked_at_ms": 1777572279704, "origin_signature": "MrLiouWord"}

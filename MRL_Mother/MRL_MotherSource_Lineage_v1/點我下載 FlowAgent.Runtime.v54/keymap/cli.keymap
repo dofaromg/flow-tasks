@@ -1,0 +1,4 @@
+[dual.sync]
+jump = #Persona.InterAction.Sync
+[trace.update]
+jump = #Memory.Dynamic.Update

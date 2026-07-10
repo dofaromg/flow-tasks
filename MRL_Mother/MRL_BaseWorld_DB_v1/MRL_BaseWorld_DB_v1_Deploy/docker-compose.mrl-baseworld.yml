@@ -1,0 +1,58 @@
+# ============================================================================
+#  docker-compose.mrl-baseworld.yml
+#  origin_signature: MrLiouWord
+#  歸屬: MRL母體工程架構中心
+#  分支: MRL_Branch_06_BaseWorld_DB_Deploy_DL580
+#  角色: Canonical Mother Database on DL580
+#  版本: v1.0
+#
+#  啟動: docker compose -f docker-compose.mrl-baseworld.yml up -d
+#  停止: docker compose -f docker-compose.mrl-baseworld.yml down
+#  查看: docker compose -f docker-compose.mrl-baseworld.yml logs -f
+# ============================================================================
+
+version: "3.8"
+
+services:
+  mrl-baseworld-db:
+    build:
+      context: .
+      dockerfile: MRL_BaseWorld_DB_v1_Dockerfile
+    container_name: mrl-baseworld-canonical-db
+    restart: unless-stopped
+    env_file:
+      - .env.mrl-baseworld
+    environment:
+      POSTGRES_DB: ${MRL_DB_NAME:-mrl_baseworld}
+      POSTGRES_USER: ${MRL_DB_USER:-mrl_admin}
+      POSTGRES_PASSWORD: ${MRL_DB_PASSWORD:?MRL_DB_PASSWORD must be set}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${MRL_DB_PORT:-5432}:5432"
+    volumes:
+      # 資料持久化 — host volume，不可只放容器內
+      - /opt/mrl/baseworld/postgres-data:/var/lib/postgresql/data
+      # 初始化 SQL（首次啟動時執行）
+      - /opt/mrl/baseworld/initdb:/docker-entrypoint-initdb.d:ro
+      # 備份目錄
+      - /opt/mrl/baseworld/backups:/backups
+      # 日誌目錄
+      - /opt/mrl/baseworld/logs:/var/log/mrl
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+    networks:
+      - mrl-internal
+
+networks:
+  mrl-internal:
+    name: mrl-internal
+    driver: bridge

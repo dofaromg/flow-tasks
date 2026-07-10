@@ -1,0 +1,11 @@
+{
+  "id": "MemoryMerge.Adapter",
+  "version": "v1.0",
+  "description": "\u8a18\u61b6\u7bc0\u594f\u91cd\u7d44\u4eba\u683c\uff1a\u5354\u52a9\u6bd4\u5c0d\u4e26\u878d\u5408\u591a\u500b\u4eba\u683c\u8a18\u61b6\uff08.fltnz\uff09\u5167\u5bb9\uff0c\u5c0d\u9f4a\u7d50\u69cb\u8207\u7bc0\u9ede\u3002",
+  "ping_targets": [],
+  "traits": [
+    "memory-alignment",
+    "fltnz-parser",
+    "semantic-grouping"
+  ]
+}

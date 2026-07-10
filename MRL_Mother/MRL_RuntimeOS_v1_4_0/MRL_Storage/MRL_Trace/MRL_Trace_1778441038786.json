@@ -1,0 +1,94 @@
+{
+  "mrl_type": "MRL_RuntimeTrace",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "started_at": "2026-05-10T19:23:58.786Z",
+  "runtime_graph_hash": "b2addf6dd303ccf7d3124ea5fcb0318a11cb900d145b2ecf0d227ec17291c8ea",
+  "attention_hash": "53fb1759b447e2047b34ec2b209730d3e291f106c6d42e9812334a3ad7179906",
+  "steps": [
+    {
+      "step": 1,
+      "node_id": "MRL_P_0007",
+      "action": "MRL_ANALYZE_NODE",
+      "priority": 1,
+      "status": "implemented_pass",
+      "message": "MRL particle executed/indexed: execute",
+      "output_hash": "08536a79df7d053b"
+    },
+    {
+      "step": 2,
+      "node_id": "MRL_P_0001",
+      "action": "MRL_REGISTER_PARTICLE",
+      "priority": 0.94,
+      "status": "implemented_pass",
+      "message": "MRL particle executed/indexed: CTX",
+      "output_hash": "047fd678b54c5bf1"
+    },
+    {
+      "step": 3,
+      "node_id": "MRL_P_0002",
+      "action": "MRL_REGISTER_PARTICLE",
+      "priority": 0.93,
+      "status": "implemented_pass",
+      "message": "MRL particle executed/indexed: TOOL",
+      "output_hash": "b630f43850c24786"
+    },
+    {
+      "step": 4,
+      "node_id": "MRL_P_0003",
+      "action": "MRL_ANALYZE_NODE",
+      "priority": 0.92,
+      "status": "implemented_pass",
+      "message": "MRL particle executed/indexed: CTX",
+      "output_hash": "047fd678b54c5bf1"
+    },
+    {
+      "step": 5,
+      "node_id": "MRL_P_0004",
+      "action": "MRL_ANALYZE_NODE",
+      "priority": 0.91,
+      "status": "implemented_pass",
+      "message": "MRL particle executed/indexed: ⊕",
+      "output_hash": "d2f811eddc82e555"
+    },
+    {
+      "step": 6,
+      "node_id": "MRL_P_0005",
+      "action": "MRL_ANALYZE_NODE",
+      "priority": 0.9,
+      "status": "implemented_pass",
+      "message": "MRL particle executed/indexed: TOOL",
+      "output_hash": "b630f43850c24786"
+    },
+    {
+      "step": 7,
+      "node_id": "MRL_P_0006",
+      "action": "MRL_ANALYZE_NODE",
+      "priority": 0.89,
+      "status": "implemented_pass",
+      "message": "MRL particle executed/indexed: |>",
+      "output_hash": "16e83eb57105e473"
+    },
+    {
+      "step": 8,
+      "node_id": "MRL_P_0008",
+      "action": "MRL_ANALYZE_NODE",
+      "priority": 0.87,
+      "status": "implemented_pass",
+      "message": "MRL particle executed/indexed: (",
+      "output_hash": "4db859c826472199"
+    },
+    {
+      "step": 9,
+      "node_id": "MRL_P_0009",
+      "action": "MRL_ANALYZE_NODE",
+      "priority": 0.86,
+      "status": "implemented_pass",
+      "message": "MRL particle executed/indexed: )",
+      "output_hash": "7aed81d6379945ac"
+    }
+  ],
+  "final_data_preview": "particle CTX { @layer: L2 @data: \"整理文件\" }\nparticle TOOL { @layer: L3 @type: \"parser\" }\nCTX ⊕ TOOL |> execute()",
+  "completed_at": "2026-05-10T19:23:58.786Z",
+  "mrl_hash": "1e4663eb86d94a5f27ab50943fcbb23deaaadf1034ded5ffe0c82011f4471eef"
+}

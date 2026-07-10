@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FlowAgent TraceRecord v1",
+  "type": "object",
+  "properties": {
+    "trace_id": {
+      "type": "string",
+      "description": "Unique identifier for the trace record."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC timestamp when the trace record was created."
+    },
+    "action_request": {
+      "$ref": "./action_request.schema.json",
+      "description": "Original request from the agent or system to perform an external action."
+    },
+    "decision": {
+      "$ref": "./decision.schema.json",
+      "description": "Compliance decision rendered for the action request."
+    },
+    "merkle": {
+      "type": "object",
+      "description": "Canonical chain linkage. Useful for rollback and verification.",
+      "properties": {
+        "root": {
+          "type": "string",
+          "description": "Merkle root for this trace entry."
+        },
+        "prev": {
+          "type": "string",
+          "description": "Previous Merkle root in the chain (NULL/empty for head)."
+        },
+        "index": {
+          "type": "integer",
+          "description": "Optional chain index number for operational convenience."
+        }
+      },
+      "required": ["root", "prev"],
+      "additionalProperties": false
+    },
+    "approval_proof": {
+      "type": "object",
+      "description": "Proof of human approval (if REQUIRED_HUMAN).",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["CLI", "NOTION", "MOBILE"],
+          "description": "Channel used for approval."
+        },
+        "token": {
+          "type": "string",
+          "description": "Opaque token or signature for proof."
+        },
+        "approved_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC timestamp when approval was given."
+        }
+      },
+      "required": ["type", "token"],
+      "additionalProperties": true
+    },
+    "execution_result": {
+      "type": "object",
+      "description": "Result after executing the action (if executed).",
+      "properties": {
+        "executed": {
+          "type": "boolean",
+          "description": "Whether the action was executed."
+        },
+        "success": {
+          "type": "boolean",
+          "description": "Whether the execution succeeded."
+        },
+        "error": {
+          "type": ["string", "null"],
+          "description": "Error message if execution failed."
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Implementation-specific metadata (status codes, request IDs, etc.).",
+          "additionalProperties": true
+        }
+      },
+      "required": ["executed"],
+      "additionalProperties": true
+    },
+    "meta": {
+      "type": "object",
+      "description": "Extra fields useful for lookup without polluting canonical structures.",
+      "additionalProperties": true
+    }
+  },
+  "required": ["trace_id", "created_at", "action_request", "decision", "merkle"],
+  "additionalProperties": false
+}

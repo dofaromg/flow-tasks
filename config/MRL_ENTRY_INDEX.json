@@ -1,7 +1,31 @@
 {
   "origin_signature": "MrLiouWord",
   "version": "1.0.0",
-  "snapshot_date": "2026-07-10",
+  "snapshot_date": "2026-07-10T19:45:00Z",
+  "mrl_ai_system_absorbed": true,
+  "absorbed_source_modules": {
+    "total_files": 3916,
+    "location": "MRL_Mother/",
+    "layers": [
+      "00_rootlaw", "01_schema", "02_principles", "03_memory",
+      "04_runtime", "05_persona", "06_trace", "07_ingest", "08_sources"
+    ],
+    "workflow_modules": 78,
+    "subsystems": [
+      "MRL_UniversalRuntimeLanguage_Core_v1",
+      "MRL_RuntimeOS_v1_4_0",
+      "MRL_Runtime (PIDScope + Terminal)",
+      "MRL_MotherModel",
+      "MRL_FireCore_v1_0",
+      "MRL_BaseWorld_DB_v1",
+      "MRL_3DScanner_ProductBridge_v1_1",
+      "MRL_MotherSystem_ControlPanel",
+      "MRL_Symbolic",
+      "MRL_Adapters"
+    ],
+    "lineage_archive": "MRL_MotherSource_Lineage_v1 (FlowAgent v1-v56, 3030 files)",
+    "test_suite": "tests_mrl_ai_system (52 files)"
+  },
   "canonical_runtime": "DL580 G9 (Windows Server)",
   "service_manager": "NSSM 2.24 (D:\\nssm\\nssm-2.24\\win64\\nssm.exe)",
   "toolchain": {

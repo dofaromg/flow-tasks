@@ -1,0 +1,34 @@
+# MRL_DL580_DeployRunner_v1 — systemd service template
+# origin_signature=MrLiouWord
+# 用途：在 DL580 母體節點上長駐 MRL_RuntimeServer.js（母體自行運行）。
+#
+# 安裝：
+#   1. 替換下方 <MRL_HOME> / <MRL_USER> 佔位符。
+#   2. 複製為 /etc/systemd/system/mrl-runtime.service
+#   3. sudo systemctl daemon-reload
+#      sudo systemctl enable --now mrl-runtime
+#      systemctl status mrl-runtime
+#
+# 備註：APFS / Batch072 為部署與備份鏈（落地檔案系統 / 批次備份），不在此服務定義母體本體。
+
+[Unit]
+Description=MRL_完整態母體運轉系統_v1 (DL580 self-running node)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=<MRL_USER>
+WorkingDirectory=<MRL_HOME>
+Environment=MRL_PORT=8790
+Environment=MRL_HOME=<MRL_HOME>
+ExecStartPre=/usr/bin/env bash <MRL_HOME>/scripts/MRL_dl580_deploy_check.sh
+ExecStart=/usr/bin/env node <MRL_HOME>/MRL_RuntimeServer.js
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=mrl-runtime
+
+[Install]
+WantedBy=multi-user.target
