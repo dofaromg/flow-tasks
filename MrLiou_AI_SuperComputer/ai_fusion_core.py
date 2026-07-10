@@ -6,31 +6,122 @@ Based on the MRLiou particle system architecture:
 - Particles can stack and superpose
 - Each particle maintains state
 - Fusion follows the logic chain pattern: STRUCTURE → MARK → FLOW → RECURSE → STORE
+
+origin_signature: MrLiouWord
+怎麼過去就怎麼回來
 """
 
 import json
 import hashlib
 import uuid
+import os
 from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional
 from difflib import SequenceMatcher
 
+from ai_providers import (
+    OpenAIProvider, ClaudeProvider, GeminiProvider,
+    OllamaProvider, AzureOpenAIProvider,
+    AIProviderManager
+)
+
+
+# Provider priority: local first, then external APIs
+_PROVIDER_DEFAULTS = {
+    "ollama": {
+        "enabled": True,
+        "base_url": os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434"),
+        "model": os.environ.get("OLLAMA_MODEL", "qwen2.5:32b"),
+    },
+    "claude": {
+        "enabled": bool(os.environ.get("ANTHROPIC_API_KEY")),
+        "api_key": os.environ.get("ANTHROPIC_API_KEY", ""),
+        "base_url": "https://api.anthropic.com/v1",
+        "model": os.environ.get("CLAUDE_MODEL", "claude-haiku-4-5-20251001"),
+    },
+    "openai": {
+        "enabled": bool(os.environ.get("OPENAI_API_KEY")),
+        "api_key": os.environ.get("OPENAI_API_KEY", ""),
+        "base_url": "https://api.openai.com/v1",
+        "model": os.environ.get("OPENAI_MODEL", "gpt-4o-mini"),
+    },
+    "gemini": {
+        "enabled": bool(os.environ.get("GEMINI_API_KEY")),
+        "api_key": os.environ.get("GEMINI_API_KEY", ""),
+        "base_url": "https://generativelanguage.googleapis.com/v1beta",
+        "model": os.environ.get("GEMINI_MODEL", "gemini-2.0-flash"),
+    },
+}
+
+_PROVIDER_CLASSES = {
+    "ollama": OllamaProvider,
+    "claude": ClaudeProvider,
+    "openai": OpenAIProvider,
+    "gemini": GeminiProvider,
+    "azure": AzureOpenAIProvider,
+}
+
+
+def _resolve_provider(provider_name: str, model: str):
+    """Resolve a real provider instance from name+model, fall back gracefully."""
+    cfg = _PROVIDER_DEFAULTS.get(provider_name, {}).copy()
+    if model and model != "default":
+        cfg["model"] = model
+    cfg["enabled"] = True
+
+    cls = _PROVIDER_CLASSES.get(provider_name)
+    if cls:
+        try:
+            inst = cls(cfg)
+            if inst.is_available():
+                return inst
+        except Exception:
+            pass
+    return None
+
+
+def _find_any_available_provider():
+    """Try each provider in priority order, return first available."""
+    for name in ["ollama", "claude", "openai", "gemini"]:
+        cfg = _PROVIDER_DEFAULTS.get(name, {}).copy()
+        if not cfg.get("enabled"):
+            continue
+        cls = _PROVIDER_CLASSES.get(name)
+        if not cls:
+            continue
+        try:
+            inst = cls(cfg)
+            if inst.is_available():
+                return name, inst
+        except Exception:
+            continue
+    return None, None
+
 
 class BaseAIProvider:
-    """Base class for AI provider implementations"""
-    
+    """Bridge: wraps ai_providers.py real HTTP clients into the fusion generate() interface."""
+
     def __init__(self, provider_name: str, model: str):
         self.provider_name = provider_name
         self.model = model
-    
+        self._real = _resolve_provider(provider_name, model)
+        if self._real is None:
+            fallback_name, fallback_inst = _find_any_available_provider()
+            if fallback_inst:
+                self._real = fallback_inst
+                self.provider_name = fallback_name
+                self.model = fallback_inst.model
+
     def generate(self, prompt: str, context: Optional[Dict] = None) -> str:
-        """
-        Generate response from AI provider
-        In production, this would call actual API (OpenAI, Claude, Gemini)
-        For now, returns simulated response
-        """
-        # Simulated response for zero external dependencies
-        return f"[{self.provider_name}/{self.model}] Response to: {prompt[:50]}..."
+        """Call real AI provider; only return mock if absolutely nothing is available."""
+        if self._real is None:
+            return f"[offline/{self.provider_name}] No AI provider available. Prompt: {prompt[:80]}..."
+
+        try:
+            result = self._real.complete(prompt)
+            return result.get("content", "")
+        except Exception as e:
+            return f"[error/{self.provider_name}] {e}"
 
 
 class AIParticle:
@@ -356,12 +447,11 @@ def create_stack_from_manifest(manifest: Dict[str, Any]) -> FusionStack:
     stack.set_mode(manifest.get("fusion_mode", "sequential"))
     
     for particle_config in manifest.get("particles", []):
-        provider_name = particle_config.get("provider", "mock")
+        provider_name = particle_config.get("provider", "ollama")
         model = particle_config.get("model", "default")
         weight = particle_config.get("weight", 1.0)
         role = particle_config.get("role", "")
-        
-        # Create provider (in production, this would create actual API clients)
+
         provider = BaseAIProvider(provider_name, model)
         
         # Create particle
@@ -372,46 +462,42 @@ def create_stack_from_manifest(manifest: Dict[str, Any]) -> FusionStack:
 
 
 if __name__ == "__main__":
-    # Demo usage
-    print("=== AI Fusion Core Demo ===\n")
-    
-    # Create particles
-    openai_provider = BaseAIProvider("openai", "gpt-4")
-    claude_provider = BaseAIProvider("claude", "claude-3-opus")
-    gemini_provider = BaseAIProvider("gemini", "gemini-pro")
-    
-    # Sequential fusion demo
-    print("1. Sequential Fusion Demo:")
+    print("=== AI Fusion Core — Real Provider Demo ===\n")
+
+    # Auto-detect available providers (Ollama first, then API keys)
+    primary = BaseAIProvider("ollama", "qwen2.5:32b")
+    secondary = BaseAIProvider("claude", "claude-haiku-4-5-20251001")
+    tertiary = BaseAIProvider("openai", "gpt-4o-mini")
+
+    print(f"Primary:   {primary.provider_name}/{primary.model}")
+    print(f"Secondary: {secondary.provider_name}/{secondary.model}")
+    print(f"Tertiary:  {tertiary.provider_name}/{tertiary.model}\n")
+
+    print("1. Sequential Fusion (draft → critique → polish):")
     stack_seq = FusionStack()
-    stack_seq.add_particle(AIParticle(openai_provider, role="initial_draft"))
-    stack_seq.add_particle(AIParticle(claude_provider, role="critic_refine"))
-    stack_seq.add_particle(AIParticle(gemini_provider, role="final_polish"))
+    stack_seq.add_particle(AIParticle(primary, role="initial_draft"))
+    stack_seq.add_particle(AIParticle(secondary, role="critic_refine"))
+    stack_seq.add_particle(AIParticle(tertiary, role="final_polish"))
     stack_seq.set_mode("sequential")
-    
     result_seq = stack_seq.execute("Explain quantum entanglement")
-    print(f"Final result: {result_seq['final_result'][:100]}...\n")
-    
-    # Parallel fusion demo
-    print("2. Parallel Fusion Demo:")
+    print(f"  Result: {result_seq['final_result'][:200]}...\n")
+
+    print("2. Parallel Fusion (consensus):")
     stack_par = FusionStack()
-    stack_par.add_particle(AIParticle(openai_provider, weight=0.4))
-    stack_par.add_particle(AIParticle(claude_provider, weight=0.4))
-    stack_par.add_particle(AIParticle(gemini_provider, weight=0.2))
+    stack_par.add_particle(AIParticle(primary, weight=0.5))
+    stack_par.add_particle(AIParticle(secondary, weight=0.3))
+    stack_par.add_particle(AIParticle(tertiary, weight=0.2))
     stack_par.set_mode("parallel")
-    
     result_par = stack_par.execute("Should AI be regulated?")
-    print(f"Merged result: {result_par['final_result'][:100]}...\n")
-    
-    # Möbius loop demo
-    print("3. Möbius Loop Demo:")
-    stack_mobius = FusionStack()
-    stack_mobius.add_particle(AIParticle(openai_provider, role="expander"))
-    stack_mobius.add_particle(AIParticle(claude_provider, role="critic"))
-    
-    mobius = MobiusLoop(stack_mobius)
-    result_mobius = mobius.run("Design a sustainable city", max_cycles=3)
-    print(f"Converged: {result_mobius['converged']}")
-    print(f"Total cycles: {result_mobius['total_cycles']}")
-    print(f"Final output: {result_mobius['final_output'][:100]}...\n")
-    
+    print(f"  Result: {result_par['final_result'][:200]}...\n")
+
+    print("3. Mobius Loop (recursive convergence):")
+    stack_mob = FusionStack()
+    stack_mob.add_particle(AIParticle(primary, role="expander"))
+    stack_mob.add_particle(AIParticle(secondary, role="critic"))
+    mobius = MobiusLoop(stack_mob)
+    result_mob = mobius.run("Design a sustainable city", max_cycles=3)
+    print(f"  Converged: {result_mob['converged']}, Cycles: {result_mob['total_cycles']}")
+    print(f"  Final: {result_mob['final_output'][:200]}...\n")
+
     print("=== Demo Complete ===")
