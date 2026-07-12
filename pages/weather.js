@@ -267,7 +267,7 @@ export default function WeatherDashboard() {
               margin: '0 auto 2rem',
             }}
           >
-            <label htmlFor="city-input" className="sr-only" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
+            <label htmlFor="city-input" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
               City or location
             </label>
             <input
@@ -281,7 +281,6 @@ export default function WeatherDashboard() {
               autoComplete="off"
               spellCheck={false}
               disabled={loading}
-              aria-label="City or location"
               style={{
                 flex: 1,
                 padding: '0.85rem 1rem',
