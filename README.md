@@ -1,5 +1,46 @@
 # FlowAgent GKE Starter (GitOps + CI/CD)
 
+---
+
+## 🌤️ Weather Dashboard
+
+A production-ready weather dashboard is available at **`/weather`** in the Next.js app.
+
+### Features
+- **Search** any city by name (e.g. Tokyo, London, Taipei)
+- **Current conditions**: temperature (°C / °F), feels-like, condition, humidity, wind speed & direction, visibility, UV index, cloud cover
+- **3-day forecast**: daily high/low, condition, humidity, sunrise/sunset
+- **Loading, empty, and error states** with clear user feedback
+- **Responsive layout** — works on desktop and mobile
+- **Accessible**: semantic HTML, ARIA roles/labels, colour-contrast-safe defaults
+
+### Data source
+Uses [wttr.in](https://wttr.in) — a keyless, free weather API. **No API key is required.**
+
+### Run locally
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+# Open http://localhost:3000/weather
+```
+
+### API route
+`GET /api/weather?city=<city>` — server-side proxy to wttr.in.  
+Returns JSON with `location`, `current`, and `forecast` fields.  
+Responses are cached for 5 minutes via `Cache-Control` headers.
+
+### Verification checklist
+- [ ] Open `http://localhost:3000/weather`
+- [ ] Empty state shown on first load ✓
+- [ ] Search "Tokyo" → current weather card + 3-day forecast appears ✓
+- [ ] Search an invalid city (e.g. "xyzxyzxyz123") → error message shown ✓
+- [ ] Dashboard is usable on a narrow mobile viewport ✓
+
+---
+
 這個壓縮包是「一次搞定」的部署骨架。你把整包丟到 GitHub（或上傳到你的空間）即可：
 
 ## 部署空間位置（你會用到的介面）
