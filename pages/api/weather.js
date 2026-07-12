@@ -124,7 +124,9 @@ export default async function handler(req, res) {
       minTempC: Number(day.mintempC),
       maxTempF: Number(day.maxtempF),
       minTempF: Number(day.mintempF),
-      avgHumidity: Math.round(hourly.reduce((s, h) => s + Number(h.humidity), 0) / (hourly.length || 1)),
+      avgHumidity: hourly.length > 0
+        ? Math.round(hourly.reduce((s, h) => s + Number(h.humidity), 0) / hourly.length)
+        : 0,
       weatherCode: noonHour.weatherCode || day.hourly?.[0]?.weatherCode,
       description: describeWeatherCode(noonHour.weatherCode || day.hourly?.[0]?.weatherCode),
       emoji: weatherEmoji(noonHour.weatherCode || day.hourly?.[0]?.weatherCode),
