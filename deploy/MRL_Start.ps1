@@ -103,6 +103,7 @@ if (Test-Path $healthScript) {
         @{ Name = "800AI";   Port = 8800; Path = "/health" },
         @{ Name = "Bridge";  Port = 7800; Path = "/health" },
         @{ Name = "Platform";Port = 8790; Path = "/health" },
+        @{ Name = "RuntimeOS";Port = 8788; Path = "/api/mrl/health" },
         @{ Name = "Gateway"; Port = 80;   Path = "/health" }
     )
     foreach ($svc in $services) {
@@ -128,6 +129,7 @@ Write-Host " AI 引擎:    http://localhost:8787" -ForegroundColor White
 Write-Host " 800AI:      http://localhost:8800" -ForegroundColor White
 Write-Host " Bridge:     http://localhost:7800" -ForegroundColor White
 Write-Host " Platform:   http://localhost:8790" -ForegroundColor White
+Write-Host " RuntimeOS:  http://localhost:8788" -ForegroundColor White
 Write-Host " PostgreSQL:  localhost:5432" -ForegroundColor DarkGray
 Write-Host " Redis:       localhost:6379" -ForegroundColor DarkGray
 Write-Host ""

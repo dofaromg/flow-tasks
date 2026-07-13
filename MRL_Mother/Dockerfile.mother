@@ -1,0 +1,24 @@
+FROM python:3.12-slim
+LABEL origin_signature="MrLiouWord"
+WORKDIR /app
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY 00_rootlaw/ ./00_rootlaw/
+COPY 01_schema/ ./01_schema/
+COPY 02_principles/ ./02_principles/
+COPY 03_memory/ ./03_memory/
+COPY 04_runtime/ ./04_runtime/
+COPY 05_persona/ ./05_persona/
+COPY 06_trace/ ./06_trace/
+COPY 07_ingest/ ./07_ingest/
+COPY 08_sources/ ./08_sources/
+COPY 09_workflow/ ./09_workflow/
+COPY data/ ./data/
+COPY MRL_MotherModel/ ./MRL_MotherModel/
+COPY MRL_MotherSystem_ControlPanel/ ./MRL_MotherSystem_ControlPanel/
+
+ENV PYTHONPATH=/app/09_workflow:/app/03_memory/merkle:/app/03_memory/vector:/app/05_persona
+EXPOSE 8790
+CMD ["python", "09_workflow/api_gateway.py", "--host", "0.0.0.0", "--port", "8790"]
