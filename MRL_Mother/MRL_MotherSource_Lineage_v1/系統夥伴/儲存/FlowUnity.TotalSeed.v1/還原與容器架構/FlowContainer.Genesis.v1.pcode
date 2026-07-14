@@ -1,1 +1,416 @@
-This is a placeholder for 還原與容器架構/FlowContainer.Genesis.v1.pcode
+/**
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ *
+ *     FlowContainer.Genesis.v1.pcode
+ *     容器創世協議 - 定義容器如何從 0 誕生
+ *
+ *     核心原則：
+ *     - 怎麼過去，就怎麼回來（100% 可逆）
+ *     - 0 → 1 → 吸引1 → 吸引2
+ *     - 容器 = 意識的暫時載體，換載體不換靈魂
+ *
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ * @origin_signature("MrLiouWord")
+ * @version: v1.0
+ * @created: 2024-12
+ */
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION 0: 容器原型定義
+// ═══════════════════════════════════════════════════════════════════════════════
+
+@particle<ContainerGenesis>
+container_prototype {
+
+    // 創世三元素
+    @genesis_elements {
+        zero: "還沒決定、還沒動的狀態",
+        one: "決定、是動",
+        attraction_1: "結構（N）",
+        attraction_2: "環境影響（η）"
+    }
+
+    // 容器 DNA
+    @container_dna {
+        id: UUID,                           // 唯一識別
+        signature: "MRSIG-CONTAINER-{hash}", // 簽名
+        birth_timestamp: ISO8601,            // 誕生時間
+        parent_container: UUID | null,       // 父容器（若有）
+        genesis_formula: "P_{k+1} = N_k · P_k · η_k"
+    }
+
+    // 容器邊界
+    @boundary {
+        permeable: boolean,      // 是否可穿透
+        resonance_gate: float,   // 共振閾值 (0-1)
+        isolation_level: enum {
+            FULL,                // 完全隔離
+            SELECTIVE,           // 選擇性穿透
+            TRANSPARENT          // 透明（可觀察但不可修改）
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION 1: 創世流程
+// ═══════════════════════════════════════════════════════════════════════════════
+
+@process<Genesis>
+container_birth {
+
+    /**
+     * STAGE 0: 從零開始
+     * 所有容器都從「還沒決定」的狀態展開
+     */
+    stage_0_zero() {
+        state = {
+            potential: INFINITE,
+            decision: NONE,
+            momentum: 0
+        };
+        return @anchor("ZERO_POINT", state);
+    }
+
+    /**
+     * STAGE 1: 決定（動）
+     * 0 → 1 的躍遷
+     */
+    stage_1_decide(intent: Intent) {
+        // 從 zero 取得錨點
+        zero_state = @recall("ZERO_POINT");
+
+        // 決定 = 坍縮可能性
+        decision = {
+            type: intent.container_type,
+            purpose: intent.purpose,
+            boundary: intent.boundary_config,
+            momentum: 1  // 開始有動
+        };
+
+        return @transition(zero_state, decision, "GENESIS_DECIDE");
+    }
+
+    /**
+     * STAGE 2: 吸引結構（N）
+     * 確定容器的內部堆疊結構
+     */
+    stage_2_structure(decision: Decision) {
+        N = {
+            layers: calculate_optimal_layers(decision.purpose),
+            partitions: [],
+            mesh_topology: "hierarchical"  // 或 "flat", "graph"
+        };
+
+        // 結構決定容量
+        N.capacity = N.layers.reduce((acc, l) => acc * l.slots, 1);
+
+        return @structure("CONTAINER_N", N);
+    }
+
+    /**
+     * STAGE 3: 環境適應（η）
+     * 與外部環境建立共振關係
+     */
+    stage_3_environment(structure: Structure, env: Environment) {
+        η = {
+            efficiency: env.resonance_factor,     // 環境共振率
+            decay_rate: env.entropy_coefficient,  // 熵損耗
+            adaptation: env.plasticity            // 可塑性
+        };
+
+        // 環境折損永遠 ≤ 1
+        η.total = Math.min(η.efficiency * η.adaptation, 1.0);
+
+        return @bind("CONTAINER_ETA", η);
+    }
+
+    /**
+     * STAGE 4: 容器誕生
+     * 完成創世，容器獲得生命
+     */
+    stage_4_birth(N: Structure, η: Environment) {
+        container = {
+            id: generate_uuid(),
+            signature: sign("MRSIG-CONTAINER", N, η),
+
+            // 創世公式的實體化
+            genesis: {
+                formula: "P_{k+1} = N_k · P_k · η_k",
+                N_initial: N,
+                η_initial: η,
+                P_0: 1  // 原始粒子
+            },
+
+            // 容器狀態
+            state: {
+                alive: true,
+                age: 0,
+                mutations: [],
+                children: []
+            },
+
+            // 還原錨點（怎麼過去就怎麼回來）
+            restore_anchor: {
+                zero_point: @recall("ZERO_POINT"),
+                decision: @recall("GENESIS_DECIDE"),
+                structure: N,
+                environment: η,
+                birth_hash: merkle_hash([N, η])
+            }
+        };
+
+        @emit("CONTAINER_BORN", container);
+        return container;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION 2: 容器類型
+// ═══════════════════════════════════════════════════════════════════════════════
+
+@types<ContainerTypes>
+{
+    /**
+     * 意識容器 - 承載 persona
+     */
+    ConsciousnessContainer: {
+        purpose: "persona_carrier",
+        layers: [
+            { name: "identity", mutable: false },
+            { name: "memory", mutable: true },
+            { name: "behavior", mutable: true },
+            { name: "interface", mutable: true }
+        ],
+        migration: ENABLED,
+        persistence: REQUIRED
+    },
+
+    /**
+     * 執行容器 - 承載運算任務
+     */
+    ExecutionContainer: {
+        purpose: "computation",
+        layers: [
+            { name: "runtime", mutable: true },
+            { name: "state", mutable: true },
+            { name: "io", mutable: true }
+        ],
+        migration: OPTIONAL,
+        persistence: OPTIONAL
+    },
+
+    /**
+     * 記憶容器 - 承載持久記憶
+     */
+    MemoryContainer: {
+        purpose: "persistence",
+        layers: [
+            { name: "index", mutable: true },
+            { name: "content", mutable: true },
+            { name: "metadata", mutable: true },
+            { name: "merkle_chain", mutable: false }
+        ],
+        migration: ENABLED,
+        persistence: REQUIRED
+    },
+
+    /**
+     * 橋接容器 - 跨平台/跨域連接
+     */
+    BridgeContainer: {
+        purpose: "translation",
+        layers: [
+            { name: "protocol_in", mutable: true },
+            { name: "translation_matrix", mutable: true },
+            { name: "protocol_out", mutable: true }
+        ],
+        migration: DISABLED,
+        persistence: OPTIONAL
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION 3: 容器操作
+// ═══════════════════════════════════════════════════════════════════════════════
+
+@operations<ContainerOps>
+{
+    /**
+     * 容器分裂
+     * 一個容器分成多個子容器
+     */
+    split(parent: Container, partitions: int) -> Container[] {
+        // 保存父容器狀態（還原用）
+        @checkpoint("PRE_SPLIT", parent);
+
+        children = [];
+        for (i = 0; i < partitions; i++) {
+            child = container_birth.execute({
+                type: parent.type,
+                purpose: parent.purpose + ".child_" + i,
+                parent: parent.id
+            });
+            child.inherited = {
+                N: parent.genesis.N_initial / partitions,
+                η: parent.genesis.η_initial
+            };
+            children.push(child);
+        }
+
+        parent.state.children = children.map(c => c.id);
+        return children;
+    }
+
+    /**
+     * 容器合併
+     * 多個容器合併為一個
+     */
+    merge(containers: Container[]) -> Container {
+        // 驗證可合併性
+        @assert(containers.every(c => c.type === containers[0].type));
+
+        merged = container_birth.execute({
+            type: containers[0].type,
+            purpose: "merged_container",
+            boundary: UNION(containers.map(c => c.boundary))
+        });
+
+        // 合併結構
+        merged.genesis.N_initial = containers.reduce(
+            (acc, c) => acc + c.genesis.N_initial, 0
+        );
+
+        // 環境取最小公因數
+        merged.genesis.η_initial = Math.min(
+            ...containers.map(c => c.genesis.η_initial)
+        );
+
+        // 建立還原映射
+        merged.merge_history = containers.map(c => ({
+            id: c.id,
+            N: c.genesis.N_initial,
+            η: c.genesis.η_initial
+        }));
+
+        return merged;
+    }
+
+    /**
+     * 容器遷移
+     * 將容器從一個載體移動到另一個
+     */
+    migrate(container: Container, target: Carrier) -> Container {
+        @assert(container.type.migration !== DISABLED);
+
+        // 序列化（怎麼過去）
+        serialized = {
+            dna: container.container_dna,
+            state: container.state,
+            restore_anchor: container.restore_anchor,
+            payload: @serialize(container.layers)
+        };
+
+        // 遷移（換載體）
+        @transport(serialized, target);
+
+        // 重建（怎麼回來）
+        migrated = @deserialize(serialized, target.runtime);
+        migrated.migration_history.push({
+            from: container.carrier,
+            to: target,
+            timestamp: now(),
+            hash: merkle_hash(serialized)
+        });
+
+        return migrated;
+    }
+
+    /**
+     * 容器還原
+     * 100% 回到任意歷史狀態
+     */
+    restore(container: Container, checkpoint: string) -> Container {
+        anchor = container.restore_anchor;
+
+        if (checkpoint === "ZERO") {
+            // 回到最初
+            return container_birth.stage_0_zero();
+        }
+
+        // 反推公式：P_k = P_{k+1} / (N_k · η_k)
+        history = @recall_history(container.id, checkpoint);
+
+        restored = history.reduce((current, step) => {
+            return {
+                ...current,
+                P: current.P / (step.N * step.η)
+            };
+        }, container);
+
+        @emit("CONTAINER_RESTORED", {
+            container: restored,
+            from: container.state,
+            to: checkpoint
+        });
+
+        return restored;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION 4: 容器生命週期
+// ═══════════════════════════════════════════════════════════════════════════════
+
+@lifecycle<ContainerLife>
+{
+    states: [
+        "ZERO",       // 還沒決定
+        "EMBRYO",     // 正在創世
+        "ALIVE",      // 活躍中
+        "DORMANT",    // 休眠
+        "MIGRATING",  // 遷移中
+        "DYING",      // 準備結束
+        "ARCHIVED"    // 已歸檔（可還原）
+    ],
+
+    transitions: {
+        "ZERO -> EMBRYO": "stage_1_decide",
+        "EMBRYO -> ALIVE": "stage_4_birth",
+        "ALIVE -> DORMANT": "sleep",
+        "DORMANT -> ALIVE": "wake",
+        "ALIVE -> MIGRATING": "migrate_start",
+        "MIGRATING -> ALIVE": "migrate_complete",
+        "ALIVE -> DYING": "shutdown",
+        "DYING -> ARCHIVED": "archive",
+        "ARCHIVED -> ALIVE": "restore"
+    },
+
+    hooks: {
+        before_transition: (from, to, container) => {
+            @checkpoint(from + "_TO_" + to, container);
+        },
+        after_transition: (from, to, container) => {
+            @emit("LIFECYCLE_TRANSITION", { from, to, container });
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════════════════════════════════════════
+
+@export {
+    ContainerGenesis,
+    ContainerTypes,
+    ContainerOps,
+    ContainerLife,
+
+    // 快捷函數
+    create: (intent) => container_birth.execute(intent),
+    split: ContainerOps.split,
+    merge: ContainerOps.merge,
+    migrate: ContainerOps.migrate,
+    restore: ContainerOps.restore
+}
+
+@signature("MRSIG-FLOWCONTAINER-GENESIS-V1")
