@@ -231,6 +231,9 @@ test_output/
 memory_seeds/test_*.mseed.json
 dict_seeds/
 
+# Memory Quick Mount (MQM) runtime directories
+context/
+snapshots/
 # Memory Quick Mount - Dynamic files
 particle_core/context/
 particle_core/snapshots/
