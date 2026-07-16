@@ -1,0 +1,11 @@
+{
+  "stack_name": "vault_system_stack",
+  "mode": "parallel",
+  "particle_count": 4,
+  "particle_ids": [
+    "fn_read_text",
+    "fn_write_text",
+    "fn_snapshot",
+    "fn_restore"
+  ]
+}

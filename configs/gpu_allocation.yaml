@@ -1,0 +1,103 @@
+# GPU Allocation Strategy for 6x NVIDIA V100 (32GB each)
+# 針對6塊V100顯卡的智能分配策略
+
+gpu_config:
+  total_gpus: 6
+  gpu_memory_per_card: 32  # GB
+  total_memory: 192  # GB
+
+# GPU分配策略 - 按引擎類型分配
+allocation_strategy:
+  # GPU 0-1: 數字人生成 (需要大量VRAM)
+  digital_human:
+    gpu_ids: [0, 1]
+    memory_limit: 28  # GB per GPU
+    batch_size: 2
+    fp16: true
+    
+  # GPU 2: 聲音克隆
+  voice_clone:
+    gpu_ids: [2]
+    memory_limit: 24  # GB
+    batch_size: 4
+    fp16: true
+    
+  # GPU 3: 照片轉視頻 + 動作遷移
+  photo_video:
+    gpu_ids: [3]
+    memory_limit: 28  # GB
+    batch_size: 1
+    fp16: true
+    
+  # GPU 4: 視頻增強 + 換臉
+  video_enhance:
+    gpu_ids: [4]
+    memory_limit: 28  # GB
+    batch_size: 2
+    fp16: true
+    
+  # GPU 5: 3D虛擬人 + 音樂生成 + 特效
+  auxiliary:
+    gpu_ids: [5]
+    memory_limit: 24  # GB
+    batch_size: 1
+    fp16: true
+
+# 動態負載均衡
+load_balancing:
+  enabled: true
+  check_interval: 5  # seconds
+  rebalance_threshold: 0.8  # 80% utilization
+  
+  # 允許GPU在輕載時共享
+  allow_sharing: true
+  max_concurrent_tasks_per_gpu: 3
+
+# 家庭成員優先級 (5人)
+user_priority:
+  admin: 10  # 最高優先級
+  parent1: 8
+  parent2: 8
+  child1: 5
+  child2: 5
+  
+  # 兒童模式使用較低GPU優先級但更快響應
+  child_mode_priority_boost: 2
+
+# 性能模式
+performance_modes:
+  # 極速模式 - 降低質量換取速度
+  fast:
+    resolution_scale: 0.5  # 720p
+    fps: 30
+    quality: "medium"
+    gpu_utilization: 0.6
+    
+  # 平衡模式 - 推薦日常使用
+  balanced:
+    resolution_scale: 0.75  # 1080p
+    fps: 60
+    quality: "high"
+    gpu_utilization: 0.8
+    
+  # 極致模式 - 最高質量
+  ultimate:
+    resolution_scale: 1.0  # 4K
+    fps: 60
+    quality: "ultra"
+    gpu_utilization: 0.95
+
+# GPU健康監控
+health_monitoring:
+  enabled: true
+  temperature_warning: 80  # Celsius
+  temperature_critical: 85  # Celsius
+  memory_warning: 0.9  # 90% usage
+  auto_throttle: true
+  
+# 錯誤恢復
+error_recovery:
+  auto_restart_on_oom: true
+  max_retries: 3
+  retry_delay: 5  # seconds
+  fallback_to_cpu: false  # 不降級到CPU

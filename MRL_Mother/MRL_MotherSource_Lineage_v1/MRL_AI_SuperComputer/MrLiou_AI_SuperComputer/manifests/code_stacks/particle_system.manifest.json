@@ -1,0 +1,96 @@
+{
+  "manifest_version": "2.0",
+  "stack_type": "code_generator",
+  "stack_name": "particle_system_stack",
+  "description": "Core particle system operations - AI particles managing AI particles (meta-level)",
+  "composition": {
+    "mode": "recursive_synthesis",
+    "particles": [
+      {
+        "particle_type": "class",
+        "class_name": "ParticleExecutor",
+        "ai_providers": ["openai", "claude", "gemini"],
+        "fusion_strategy": "three_way_consensus",
+        "synthesis_prompt": "Generate particle execution engine with scheduling, parallelization, and fault tolerance",
+        "methods": [
+          {
+            "name": "execute_single",
+            "description": "Execute single AI particle with error handling"
+          },
+          {
+            "name": "execute_stack",
+            "description": "Execute stack of particles in specified mode"
+          },
+          {
+            "name": "execute_parallel",
+            "description": "Execute multiple particles in parallel with result merging"
+          }
+        ],
+        "features": [
+          "async_execution",
+          "error_recovery",
+          "performance_tracking",
+          "result_caching"
+        ]
+      },
+      {
+        "particle_type": "function",
+        "function": "synthesize_particle",
+        "ai_providers": ["openai", "claude"],
+        "synthesis_prompt": "Generate meta-function that uses AI to synthesize new AI particles from specifications",
+        "parameters": {
+          "specification": "particle spec dict",
+          "ai_provider": "which AI to use"
+        },
+        "meta_capability": true,
+        "description": "AI generating AI - meta-level synthesis"
+      },
+      {
+        "particle_type": "function",
+        "function": "evolve_particle",
+        "ai_providers": ["gemini", "claude"],
+        "synthesis_prompt": "Generate evolution function that improves particle performance through AI analysis and regeneration",
+        "parameters": {
+          "particle": "particle to evolve",
+          "optimization_goal": "what to optimize"
+        },
+        "meta_capability": true,
+        "description": "Self-evolution capability"
+      },
+      {
+        "particle_type": "function",
+        "function": "fuse_particles",
+        "ai_providers": ["openai", "gemini"],
+        "synthesis_prompt": "Generate intelligent fusion function that combines particles optimally based on their characteristics",
+        "parameters": {
+          "particles": "list of particles",
+          "fusion_mode": "how to combine"
+        },
+        "features": [
+          "automatic_mode_selection",
+          "compatibility_checking",
+          "performance_prediction"
+        ]
+      }
+    ]
+  },
+  "self_optimization": {
+    "enabled": true,
+    "triggers": [
+      "execution_inefficiency",
+      "fusion_failure_rate",
+      "evolution_convergence_slow"
+    ],
+    "regeneration_strategy": "mobius_loop",
+    "meta_optimization": {
+      "enabled": true,
+      "description": "System optimizes its own optimization capabilities"
+    }
+  },
+  "architecture": {
+    "recursive_depth": 3,
+    "description": "Particles managing particles managing particles",
+    "self_reference": true,
+    "bootstrap_mode": "self_hosting"
+  }
+}

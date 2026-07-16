@@ -1,8 +1,9 @@
 import { FlowParticleHistory, FlowParticleSnapshot, FlowParticleState, FlowContext } from '../../types';
 import { randomId, now } from '../../utils';
+import { MemoryStorage } from '../../storage';
 
 export class ParticleStore {
-  private snapshots = new Map<string, FlowParticleSnapshot>();
+  constructor(private readonly storage: MemoryStorage) {}
 
   create(content: string, context: FlowContext, summary?: string): FlowParticleSnapshot {
     const state: FlowParticleState = {
@@ -21,12 +22,11 @@ export class ParticleStore {
       latest: state,
     };
 
-    this.snapshots.set(snapshot.id, snapshot);
-    return snapshot;
+    return this.storage.upsertParticle(snapshot);
   }
 
   collapse(id: string, by: string, note?: string): FlowParticleSnapshot {
-    const current = this.snapshots.get(id);
+    const current = this.storage.getParticle(id);
     if (!current) {
       throw new Error(`Particle ${id} not found`);
     }
@@ -44,12 +44,11 @@ export class ParticleStore {
       history: [...current.history, historyEntry],
     };
 
-    this.snapshots.set(id, updated);
-    return updated;
+    return this.storage.upsertParticle(updated);
   }
 
   archive(id: string, by: string, note?: string): FlowParticleSnapshot {
-    const current = this.snapshots.get(id);
+    const current = this.storage.getParticle(id);
     if (!current) {
       throw new Error(`Particle ${id} not found`);
     }
@@ -67,15 +66,14 @@ export class ParticleStore {
       history: [...current.history, historyEntry],
     };
 
-    this.snapshots.set(id, updated);
-    return updated;
+    return this.storage.upsertParticle(updated);
   }
 
   get(id: string): FlowParticleSnapshot | undefined {
-    return this.snapshots.get(id);
+    return this.storage.getParticle(id);
   }
 
   list(): FlowParticleSnapshot[] {
-    return [...this.snapshots.values()];
+    return this.storage.listParticles();
   }
 }

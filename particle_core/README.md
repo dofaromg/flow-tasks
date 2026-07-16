@@ -13,6 +13,9 @@ MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行框架
 - **AI 人格套件**: 人格連結器與通用 ZIP 壓縮/解壓縮（無檔案名稱限制）
 - **字典種子記憶**: Fluin Dict Agent 字典種子記憶快照系統 (DictSeed.0003)
 - **對話知識提取器**: 對話分析、打包與知識圖譜生成系統 (v1.0) 🆕
+- 🆕 **並行執行與快取**: 多執行緒處理、結果快取、批次處理優化
+- 🆕 **計算原語模組**: 矩陣運算、統計分析、圖算法、張量操作
+- 🆕 **效能監控**: 即時追蹤快取命中率、執行統計、吞吐量指標
 
 ## 快速開始
 
@@ -20,8 +23,11 @@ MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行框架
 # 執行 CLI 模擬器
 python src/cli_runner.py
 
-# 邏輯管線處理
+# 邏輯管線處理（增強版）
 python src/logic_pipeline.py
+
+# 計算原語測試（新增）
+python test_enhanced_computation.py
 
 # 壓縮還原測試
 python src/rebuild_fn.py
@@ -38,6 +44,48 @@ python src/fluin_dict_agent.py
 # 對話知識提取器
 python demo_conversation_extractor.py
 ```
+
+## 🚀 增強演算能力 (新功能)
+
+### 並行邏輯鏈執行
+```python
+from logic_pipeline import LogicPipeline
+
+# 啟用快取與並行處理
+pipeline = LogicPipeline(enable_cache=True, max_workers=4)
+
+# 批次處理
+batch_data = [f"input_{i}" for i in range(100)]
+results = pipeline.run_logic_chain_parallel(batch_data)
+
+# 查看效能指標
+metrics = pipeline.get_metrics()
+print(f"快取命中率: {metrics['cache_hit_rate']:.2%}")
+```
+
+### 計算原語
+```python
+from computational_primitives import (
+    MatrixOperations, 
+    StatisticalOperations, 
+    GraphAlgorithms,
+    compute_statistics
+)
+
+# 矩陣運算
+mat_ops = MatrixOperations()
+result = mat_ops.multiply([[1,2],[3,4]], [[2,0],[1,2]])
+
+# 統計分析
+stats = compute_statistics([1, 2, 3, 4, 5])
+print(f"平均值: {stats['mean']}, 標準差: {stats['std_dev']}")
+
+# 圖算法
+graph_algo = GraphAlgorithms()
+path = graph_algo.shortest_path(graph, 'A', 'E')
+```
+
+詳細說明請參閱：[增強演算能力指南](../ENHANCED_COMPUTATION_GUIDE.md)
 
 ## Fluin Dict Agent - 字典種子記憶快照 (新功能)
 
@@ -261,6 +309,8 @@ restored = archive.restore_seed("my_memory_seed")
 
 詳細說明請參閱 [記憶封存種子說明](docs/記憶封存種子說明.md)
 
+```
+
 ## 需求
 
 - Python 3.10+
@@ -277,3 +327,18 @@ restored = archive.restore_seed("my_memory_seed")
 ## 授權
 
 FlowAgent 專用任務系統內部模組
+## 語言規格
+
+粒子語言的核心規格文件位於 [`language_spec/`](language_spec/) 目錄：
+- 語言結構定義（.fxmanifest, .fxintro）
+- 壓縮規則（.fxscale）
+- 粒子詞典（.fxjson）
+- 代碼範例（.pcode）
+- 封包種子與邏輯圖譜（.fltnz, .flynz.map）
+
+詳細說明請參考 [語言規格索引](language_spec/INDEX.md)。
+
+## 授權
+
+FlowAgent 專用任務系統內部模組
+粒子語言規格遵循 CPLL 授權條款（© MR.liou）

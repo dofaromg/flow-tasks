@@ -1,0 +1,111 @@
+# CodePartner 函式庫 — 資料分析計算欄位函式登錄表
+# Function library for the CodePartner persona — data-analytics calculated-field formulas.
+# 來源：創建者提供之 Looker Studio（Data Studio）函式清單（2026-07-05），
+# 重構為 CodePartner 可查詢的結構化函式登錄表。
+# 用途：CodePartner 於 data.analytics.field_formulas 能力範圍內，
+# 依此表比對函式名稱、類型與語法，產出計算欄位公式。
+
+library: looker_studio_calculated_fields
+absorbed: "2026-07-05"
+categories: [arithmetic, aggregation, conditional, text, date, geo, other]
+
+functions:
+
+  # ── 算術 / arithmetic ──────────────────────────────
+  - { name: ABS,        category: arithmetic, syntax: "ABS(X)",           desc: 傳回數字的絕對值 }
+  - { name: ACOS,       category: arithmetic, syntax: "ACOS(X)",          desc: 傳回 X 的反餘弦函數 }
+  - { name: ASIN,       category: arithmetic, syntax: "ASIN(X)",          desc: 傳回 X 的反正弦函數 }
+  - { name: ATAN,       category: arithmetic, syntax: "ATAN(X)",          desc: 傳回 X 的反正切函數 }
+  - { name: CEIL,       category: arithmetic, syntax: "CEIL(X)",          desc: 傳回大於或等於 X 的最小整數 }
+  - { name: COS,        category: arithmetic, syntax: "COS(X)",           desc: 傳回 X 的餘弦函數 }
+  - { name: FLOOR,      category: arithmetic, syntax: "FLOOR(X)",         desc: 傳回小於或等於 X 的最接近整數 }
+  - { name: LOG,        category: arithmetic, syntax: "LOG(X)",           desc: 依基底 2 傳回 X 的對數 }
+  - { name: LOG10,      category: arithmetic, syntax: "LOG10(X)",         desc: 依基底 10 傳回 X 的對數 }
+  - { name: NARY_MAX,   category: arithmetic, syntax: "NARY_MAX(X,Y [,Z]*)", desc: 傳回多個數字引數的最大值；至少一個引數須為欄位或含欄位運算式 }
+  - { name: NARY_MIN,   category: arithmetic, syntax: "NARY_MIN(X,Y [,Z]*)", desc: 傳回多個數字引數的最小值；至少一個引數須為欄位或含欄位運算式 }
+  - { name: POWER,      category: arithmetic, syntax: "POWER(X,Y)",       desc: 傳回 X 的 Y 次方 }
+  - { name: ROUND,      category: arithmetic, syntax: "ROUND(X,Y)",       desc: 傳回 X 四捨五入到 Y 位數的結果 }
+  - { name: SIN,        category: arithmetic, syntax: "SIN(X)",           desc: 傳回 X 的正弦函數 }
+  - { name: SQRT,       category: arithmetic, syntax: "SQRT(X)",          desc: 傳回 X 的平方根（X 不得為負數） }
+  - { name: TAN,        category: arithmetic, syntax: "TAN(X)",           desc: 傳回 X 的正切函數 }
+
+  # ── 匯總 / aggregation ─────────────────────────────
+  - { name: APPROX_COUNT_DISTINCT, category: aggregation, syntax: "APPROX_COUNT_DISTINCT(X)", desc: 傳回 X 的不重複值概略數量 }
+  - { name: AVG,            category: aggregation, syntax: "AVG(X)",            desc: 傳回所有 X 值的平均值 }
+  - { name: COUNT,          category: aggregation, syntax: "COUNT(X)",          desc: 傳回 X 的值數量 }
+  - { name: COUNT_DISTINCT, category: aggregation, syntax: "COUNT_DISTINCT(X)", desc: 傳回 X 的不重複值數量 }
+  - { name: MAX,            category: aggregation, syntax: "MAX(X)",            desc: 傳回 X 的最大值 }
+  - { name: MEDIAN,         category: aggregation, syntax: "MEDIAN(X)",         desc: 傳回所有 X 值的中位數 }
+  - { name: MIN,            category: aggregation, syntax: "MIN(X)",            desc: 傳回 X 的最小值 }
+  - { name: PERCENTILE,     category: aggregation, syntax: "PERCENTILE(X,N)",   desc: 傳回欄位 X 的百分位數等級 N }
+  - { name: STDDEV,         category: aggregation, syntax: "STDDEV(X)",         desc: 傳回 X 的標準差 }
+  - { name: SUM,            category: aggregation, syntax: "SUM(X)",            desc: 傳回所有 X 值的總和 }
+  - { name: VARIANCE,       category: aggregation, syntax: "VARIANCE(X)",       desc: 傳回 X 的變異數 }
+
+  # ── 條件式 / conditional ───────────────────────────
+  - { name: CASE,          category: conditional, syntax: "CASE WHEN condition THEN result [...] ELSE else_result END", desc: 逐一評估 WHEN 條件，傳回第一個為 true 的 result；全為 false 或 NULL 時傳回 else_result 或 NULL }
+  - { name: CASE_SIMPLE,   category: conditional, syntax: "CASE input_expression WHEN expression_to_match THEN result [...] END", desc: 將 input_expression 與各 WHEN 子句比較，傳回第一個相符的 result }
+  - { name: COALESCE,      category: conditional, syntax: "COALESCE(field_expression[,field_expression,...])", desc: 傳回欄位清單中找到的第一個非遺漏值 }
+  - { name: IF,            category: conditional, syntax: "IF(condition,true_result,false_result)", desc: condition 為 true 傳回 true_result，否則傳回 false_result；未選中的分支不評估 }
+  - { name: IFNULL,        category: conditional, syntax: "IFNULL(input_expression,null_result)", desc: 輸入為空值時傳回 null_result，否則傳回輸入值 }
+  - { name: NULLIF,        category: conditional, syntax: "NULLIF(input_expression,expression_to_match)", desc: 輸入符合運算式時傳回 null，否則傳回輸入內容 }
+
+  # ── 文字 / text ────────────────────────────────────
+  - { name: CONCAT,          category: text, syntax: "CONCAT(X,Y)",                desc: 傳回 X 和 Y 串連值的文字 }
+  - { name: CONTAINS_TEXT,   category: text, syntax: "CONTAINS_TEXT(X,text)",      desc: X 包含文字時傳回 true（區分大小寫） }
+  - { name: ENDS_WITH,       category: text, syntax: "ENDS_WITH(X,text)",          desc: X 以文字結尾時傳回 true（區分大小寫） }
+  - { name: LEFT_TEXT,       category: text, syntax: "LEFT_TEXT(X,length)",        desc: 傳回 X 開頭指定長度的字元 }
+  - { name: LENGTH,          category: text, syntax: "LENGTH(X)",                  desc: 傳回 X 中的字元數 }
+  - { name: LOWER,           category: text, syntax: "LOWER(X)",                   desc: 將 X 轉換為小寫 }
+  - { name: REGEXP_CONTAINS, category: text, syntax: "REGEXP_CONTAINS(X,regular_expression)", desc: X 包含規則運算式模式時傳回 true }
+  - { name: REGEXP_EXTRACT,  category: text, syntax: "REGEXP_EXTRACT(X,regular_expression)",  desc: 傳回 X 中與規則運算式相符的第一個子字串 }
+  - { name: REGEXP_MATCH,    category: text, syntax: "REGEXP_MATCH(X,regular_expression)",    desc: X 符合規則運算式模式時傳回 true }
+  - { name: REGEXP_REPLACE,  category: text, syntax: "REGEXP_REPLACE(X,regular_expression,replacement)", desc: 將 X 中所有符合規則運算式的文字替換為 replacement }
+  - { name: REPLACE,         category: text, syntax: "REPLACE(X,Y,Z)",             desc: 傳回 X 的副本，將所有出現的 Y 換成 Z }
+  - { name: RIGHT_TEXT,      category: text, syntax: "RIGHT_TEXT(X,length)",       desc: 傳回 X 結尾指定長度的字元 }
+  - { name: STARTS_WITH,     category: text, syntax: "STARTS_WITH(X,text)",        desc: X 以文字開頭時傳回 true（區分大小寫） }
+  - { name: SUBSTR,          category: text, syntax: "SUBSTR(X,start index,length)", desc: 傳回 X 自起始索引開始、指定長度的子字串 }
+  - { name: TRIM,            category: text, syntax: "TRIM(X)",                    desc: 傳回移除開頭和結尾空格的 X }
+  - { name: UPPER,           category: text, syntax: "UPPER(X)",                   desc: 將 X 轉換為大寫 }
+
+  # ── 日期 / date ────────────────────────────────────
+  - { name: CURRENT_DATE,      category: date, syntax: "CURRENT_DATE([time_zone])",     desc: 傳回指定或預設時區的目前日期 }
+  - { name: CURRENT_DATETIME,  category: date, syntax: "CURRENT_DATETIME([time_zone])", desc: 傳回指定或預設時區的目前日期和時間 }
+  - { name: DATE,              category: date, syntax: "DATE(year,month,day)",          desc: 根據數字或日期時間欄位建立日期 }
+  - { name: DATE_DIFF,         category: date, syntax: "DATE_DIFF(X,Y)",                desc: 傳回 X 和 Y 之間的天數差（X - Y） }
+  - { name: DATE_FROM_UNIX_DATE, category: date, syntax: "DATE_FROM_UNIX_DATE(integer)", desc: 將整數解讀為自 1970-01-01 起的天數 }
+  - { name: DATETIME,          category: date, syntax: "DATETIME(year,month,day,hour,minute,second)", desc: 根據數字建立日期和時間 }
+  - { name: DATETIME_ADD,      category: date, syntax: "DATETIME_ADD(datetime_expression,INTERVAL integer part)", desc: 在日期中加上指定時間間隔 }
+  - { name: DATETIME_DIFF,     category: date, syntax: "DATETIME_DIFF(date_expression,date_expression,part)", desc: 傳回兩個日期之間的部分邊界數 }
+  - { name: DATETIME_SUB,      category: date, syntax: "DATETIME_SUB(datetime_expression,INTERVAL integer part)", desc: 從日期中減去指定時間間隔 }
+  - { name: DATETIME_TRUNC,    category: date, syntax: "DATETIME_TRUNC(date_expression,part)", desc: 將日期截斷至指定精細程度 }
+  - { name: DAY,               category: date, syntax: "DAY(date_expression)",           desc: 傳回日期或日期和時間的日 }
+  - { name: EXTRACT,           category: date, syntax: "EXTRACT(part FROM date_expression)", desc: 傳回日期或日期和時間的一部分 }
+  - { name: FORMAT_DATETIME,   category: date, syntax: "FORMAT_DATETIME(format_string,datetime_expression)", desc: 傳回格式化的日期字串 }
+  - { name: HOUR,              category: date, syntax: "HOUR(datetime_expression)",      desc: 傳回日期和時間的小時 }
+  - { name: MINUTE,            category: date, syntax: "MINUTE(datetime_expression)",    desc: 傳回日期和時間的分鐘部分 }
+  - { name: MONTH,             category: date, syntax: "MONTH(date_expression)",         desc: 從日期和時間值傳回月份 }
+  - { name: PARSE_DATE,        category: date, syntax: "PARSE_DATE(format_string,text)", desc: 將文字轉換為日期 }
+  - { name: PARSE_DATETIME,    category: date, syntax: "PARSE_DATETIME(format_string,text)", desc: 將文字轉換為含時間的日期 }
+  - { name: QUARTER,           category: date, syntax: "QUARTER(date_expression)",       desc: 傳回特定日期在當年的季度 }
+  - { name: SECOND,            category: date, syntax: "SECOND(datetime_expression)",    desc: 傳回日期和時間的秒鐘部分 }
+  - { name: TODATE,            category: date, syntax: "TODATE(X,Input Format,Output Format)", desc: 傳回經過格式化的相容性模式日期 }
+  - { name: TODAY,             category: date, syntax: "TODAY([time_zone])",             desc: 傳回指定或預設時區的目前日期 }
+  - { name: UNIX_DATE,         category: date, syntax: "UNIX_DATE(date_expression)",     desc: 傳回自 1970-01-01 起的天數 }
+  - { name: WEEK,              category: date, syntax: "WEEK(Date)",                     desc: 傳回指定日期的週數 }
+  - { name: WEEKDAY,           category: date, syntax: "WEEKDAY(Date)",                  desc: 以數字形式傳回特定日期是星期幾 }
+  - { name: YEAR,              category: date, syntax: "YEAR(Date)",                     desc: 傳回特定日期的年份 }
+  - { name: YEARWEEK,          category: date, syntax: "YEARWEEK(Date)",                 desc: 傳回指定日期的年份和週數 }
+
+  # ── 地理區域 / geo ─────────────────────────────────
+  - { name: TOCITY,         category: geo, syntax: "TOCITY(X [,Input Format])",         desc: 傳回 X 的城市名稱 }
+  - { name: TOCONTINENT,    category: geo, syntax: "TOCONTINENT(X [,Input Format])",    desc: 傳回 X 的洲名 }
+  - { name: TOCOUNTRY,      category: geo, syntax: "TOCOUNTRY(X [,Input Format])",      desc: 傳回 X 的國家/地區名稱 }
+  - { name: TOREGION,       category: geo, syntax: "TOREGION(X [,Input Format])",       desc: 傳回 X 的區域名稱 }
+  - { name: TOSUBCONTINENT, category: geo, syntax: "TOSUBCONTINENT(X [,Input Format])", desc: 傳回 X 的次大陸名稱 }
+
+  # ── 其他 / other ───────────────────────────────────
+  - { name: CAST,             category: other, syntax: "CAST(field_expression AS TYPE)", desc: 將欄位或運算式轉換為 NUMBER/TEXT/DATETIME；CAST 內不得有匯總欄位 }
+  - { name: HYPERLINK,        category: other, syntax: "HYPERLINK(URL,link label)",      desc: 傳回網址的超連結並標示連結標籤 }
+  - { name: IMAGE,            category: other, syntax: "IMAGE(Image URL,[Alternative Text])", desc: 在資料來源中建立圖片欄位 }
+  - { name: NATIVE_DIMENSION, category: other, syntax: "NATIVE_DIMENSION(sql_expression,type)", desc: 傳回由基礎資料集評估的 SQL 運算式結果；運算式不得包含匯總 }

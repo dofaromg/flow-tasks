@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from .storage import Storage
 
@@ -23,7 +23,7 @@ class Entry:
         entry_hash = hashlib.sha256(payload).hexdigest()
         return cls(index=index, prev_hash=prev_hash, content=content, timestamp=timestamp, hash=entry_hash)
 
-    def to_dict(self) -> Dict[str, str]:
+    def to_dict(self) -> Dict[str, Any]:
         return {
             "index": self.index,
             "prev_hash": self.prev_hash,
@@ -33,7 +33,7 @@ class Entry:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, str]) -> "Entry":
+    def from_dict(cls, data: Dict[str, Any]) -> "Entry":
         return cls(
             index=int(data["index"]),
             prev_hash=data.get("prev_hash") or None,
@@ -88,7 +88,7 @@ class Ledger:
 
         return True, f"Verified {len(entries)} entries"
 
-    def snapshot(self, name: str) -> Dict[str, str]:
+    def snapshot(self, name: str) -> Dict[str, Any]:
         refs = self.storage.load_refs()
         snapshot_data = {
             "name": name,
@@ -100,14 +100,48 @@ class Ledger:
         snapshot_data["path"] = str(path)
         return snapshot_data
 
-    def log(self, n: int) -> List[Dict[str, str]]:
+    def log(self, n: int) -> List[Dict[str, Any]]:
         entries = self.storage.tail_chain(n)
         return [Entry.from_dict(e).to_dict() for e in entries]
 
-    def export_state(self) -> Dict[str, str]:
+    def export_state(self) -> Dict[str, Any]:
         refs = self.storage.load_refs()
         entries = self.storage.load_chain_entries()
         return {
             "refs": refs,
             "entries": entries,
         }
+
+    def compare_with_storage(self, other_storage: Storage) -> Tuple[bool, str]:
+        """Compare current ledger against another storage (sandbox) for divergence.
+
+        This enables lifecycle sandbox validation by checking that a sandbox copy
+        is in lock-step with the primary ledger state.
+        """
+
+        primary_entries = self.storage.load_chain_entries()
+        sandbox_entries = other_storage.load_chain_entries()
+
+        min_len = min(len(primary_entries), len(sandbox_entries))
+        for idx in range(min_len):
+            if primary_entries[idx]["hash"] != sandbox_entries[idx]["hash"]:
+                return False, (
+                    f"Mismatch at entry {idx + 1}: "
+                    f"primary {primary_entries[idx]['hash']} != sandbox {sandbox_entries[idx]['hash']}"
+                )
+
+        if len(primary_entries) != len(sandbox_entries):
+            diff = len(primary_entries) - len(sandbox_entries)
+            direction = "behind" if diff > 0 else "ahead"
+            return (
+                False,
+                f"Sandbox ledger is {abs(diff)} entries {direction} "
+                f"(primary length {len(primary_entries)}, sandbox length {len(sandbox_entries)})",
+            )
+
+        primary_refs = self.storage.load_refs()
+        sandbox_refs = other_storage.load_refs()
+        if primary_refs.get("head") != sandbox_refs.get("head"):
+            return False, "Head references differ between primary and sandbox ledgers"
+
+        return True, "Sandbox ledger matches primary state"

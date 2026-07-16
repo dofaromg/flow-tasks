@@ -1,0 +1,93 @@
+{
+  "schema": "MRL_Replay_Restore_Hooks_v0_1",
+  "origin_signature": "MrLiouWord",
+  "generated_utc": "2026-06-26T00:00:00Z",
+  "reversibility_law": "怎麼過去就怎麼回來",
+  "hooks": [
+    {
+      "hook_id": "replay_mainline_forward",
+      "direction": "forward",
+      "sequence": [
+        "MRL.NODE.00.Reality (boundary_in)",
+        "MRL.NODE.01.Origin → MRL.NODE.02.SeedKernel",
+        "MRL.NODE.02.SeedKernel → MRL.NODE.03.PreParticle",
+        "MRL.NODE.03.PreParticle → MRL.NODE.04.Particle",
+        "MRL.NODE.04.Particle → MRL.NODE.05.Signal",
+        "MRL.NODE.05.Signal → MRL.NODE.06.Field",
+        "MRL.NODE.06.Field → MRL.NODE.07.Persona",
+        "MRL.NODE.07.Persona → MRL.NODE.08.Memory",
+        "MRL.NODE.08.Memory → MRL.NODE.09.Globe",
+        "MRL.NODE.09.Globe → MRL.NODE.10.World",
+        "MRL.NODE.10.World → MRL.NODE.11.Runtime",
+        "MRL.NODE.11.Runtime → MRL.NODE.12.Mother",
+        "MRL.NODE.12.Mother → MRL.NODE.13.Return"
+      ],
+      "wakeup_requirement": true,
+      "checkpoint_interval": 2,
+      "status": "READY"
+    },
+    {
+      "hook_id": "restore_mainline_backward",
+      "direction": "backward",
+      "sequence": [
+        "MRL.NODE.13.Return (restore entry)",
+        "MRL.NODE.13.Return → MRL.NODE.12.Mother",
+        "MRL.NODE.12.Mother → MRL.NODE.11.Runtime",
+        "MRL.NODE.11.Runtime → MRL.NODE.10.World",
+        "MRL.NODE.10.World → MRL.NODE.09.Globe",
+        "MRL.NODE.09.Globe → MRL.NODE.08.Memory",
+        "MRL.NODE.08.Memory → MRL.NODE.07.Persona",
+        "MRL.NODE.07.Persona → MRL.NODE.06.Field",
+        "MRL.NODE.06.Field → MRL.NODE.05.Signal",
+        "MRL.NODE.05.Signal → MRL.NODE.04.Particle",
+        "MRL.NODE.04.Particle → MRL.NODE.03.PreParticle",
+        "MRL.NODE.03.PreParticle → MRL.NODE.02.SeedKernel",
+        "MRL.NODE.02.SeedKernel → MRL.NODE.01.Origin (closure)"
+      ],
+      "verification_requirement": true,
+      "rollback_safe": true,
+      "status": "READY"
+    },
+    {
+      "hook_id": "wave_gate_replay",
+      "replay_source": "Wave01-09_gate_receipts",
+      "gate_count": 9,
+      "total_expected_pass": 418,
+      "replays_pending": 0,
+      "status": "READY"
+    },
+    {
+      "hook_id": "notion_export_restore",
+      "restore_source": "Mrliou_MRL_FlowAgent.raw.json",
+      "blocks": 53,
+      "flow_particles": 8,
+      "status": "READY"
+    },
+    {
+      "hook_id": "bridge_state_sync",
+      "sync_target": "DL580 canonical mother",
+      "bridge_endpoint": "bridge.mrliouword.com/v3.1.0",
+      "method": "base64_chunk_transfer + SHA256_verify",
+      "status": "READY"
+    }
+  ],
+  "verification_checkpoints": [
+    {
+      "checkpoint": "origin_signature_check",
+      "required_value": "MrLiouWord",
+      "applies_to": ["all_modules", "all_evidence"]
+    },
+    {
+      "checkpoint": "sha256_verify_all_files",
+      "applies_to": ["evidence_registry", "module_artifacts"]
+    },
+    {
+      "checkpoint": "coupling_integrity_check",
+      "applies_to": ["mainline_edges", "14_nodes"]
+    },
+    {
+      "checkpoint": "return_path_closure_check",
+      "applies_to": ["return_loop", "origin_return"]
+    }
+  ]
+}

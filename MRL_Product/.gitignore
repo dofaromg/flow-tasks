@@ -1,0 +1,22 @@
+# MRL_Product_v1 .gitignore
+# origin_signature: MrLiouWord
+
+# 環境變數（絕對不進 git）
+.env
+
+# Node
+node_modules/
+
+# SQLite（資料不進 git）
+storage/db.sqlite
+storage/*.sqlite
+
+# Logs
+logs/
+
+# Build
+*.log
+.DS_Store
+
+# 備份
+backups/

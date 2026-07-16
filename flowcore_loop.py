@@ -4,10 +4,26 @@ from datetime import UTC, datetime
 from pathlib import Path
 import uuid
 from typing import Dict, Any
+from functools import lru_cache
 
 from flask import Flask, abort, jsonify, redirect, render_template_string, request, url_for
 
+try:
+    from flowcore_naming import (
+        PRODUCT,
+        cli_description,
+        event_name,
+        health_metadata,
+        server_banner,
+    )
+    _NAMING_AVAILABLE = True
+except ImportError:
+    _NAMING_AVAILABLE = False
+
 DATA_ROOT = Path(".flowcore")
+
+# Simple cache for project metadata (avoids repeated disk reads)
+_PROJECT_CACHE = {}
 
 
 # ---------------------------
@@ -41,6 +57,22 @@ def _write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
+    # Invalidate cache when data is written
+    _invalidate_cache()
+
+
+def _invalidate_cache() -> None:
+    """Clear the project cache when data is modified"""
+    global _PROJECT_CACHE
+    _PROJECT_CACHE = {}
+
+
+def _cached_read_project(name: str) -> Dict[str, Any]:
+    """Read project metadata with caching to avoid repeated disk I/O"""
+    if name not in _PROJECT_CACHE:
+        project_path = _project_file(name)
+        _PROJECT_CACHE[name] = _read_json(project_path, {})
+    return _PROJECT_CACHE[name]
 
 
 def _iso_now() -> str:
@@ -126,7 +158,8 @@ def build_app() -> Flask:
         proj_path = _project_file(name)
         if not proj_path.exists():
             abort(404, f"Project '{name}' not found")
-        metadata = _read_json(proj_path, {})
+        # Use cached read for project metadata
+        metadata = _cached_read_project(name)
         sessions = _read_json(_sessions_file(name), {})
         return metadata, sessions
 
@@ -136,11 +169,13 @@ def build_app() -> Flask:
         if DATA_ROOT.exists():
             for path in sorted(DATA_ROOT.iterdir()):
                 if path.is_dir() and _project_file(path.name).exists():
-                    meta = _read_json(_project_file(path.name), {})
+                    # Use cached read for project metadata
+                    meta = _cached_read_project(path.name)
                     projects.append(meta)
         return render_template_string(
             """
             <h1>FlowCore Projects</h1>
+            <p style="font-size:0.85em;color:#888">{{ product_label }}</p>
             {% if projects %}
               <ul>
               {% for project in projects %}
@@ -152,6 +187,7 @@ def build_app() -> Flask:
             {% endif %}
             """,
             projects=projects,
+            product_label=server_banner("web") if _NAMING_AVAILABLE else "FlowCore Web",
         )
 
     @app.route("/project/<project>")
@@ -215,9 +251,18 @@ def build_app() -> Flask:
         if DATA_ROOT.exists():
             for path in DATA_ROOT.iterdir():
                 if path.is_dir() and _project_file(path.name).exists():
-                    meta = _read_json(_project_file(path.name), {})
+                    # Use cached read to avoid repeated disk I/O
+                    meta = _cached_read_project(path.name)
                     projects.append(meta)
         return jsonify(projects)
+
+    @app.route("/health")
+    def health():
+        """Health check endpoint"""
+        payload: Dict[str, Any] = {"status": "healthy", "service": "flowcore-web"}
+        if _NAMING_AVAILABLE:
+            payload["product_info"] = health_metadata("web")
+        return jsonify(payload), 200
 
     @app.route("/api/project/<project>/sessions")
     def api_sessions(project: str):
@@ -273,7 +318,8 @@ def run_web(args: argparse.Namespace) -> None:
 # ---------------------------
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="FlowCore loop CLI")
+    desc = cli_description("loop") if _NAMING_AVAILABLE else "FlowCore loop CLI"
+    parser = argparse.ArgumentParser(description=desc)
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     init_parser = subparsers.add_parser("project-init", help="Initialize a project")

@@ -28,6 +28,8 @@ interface RequestInfo {}
 interface Response {
   ok: boolean;
   status: number;
+  statusText?: string;
+  headers?: { get(name: string): string | null };
   json(): Promise<unknown>;
 }
 
@@ -86,27 +88,62 @@ export class ParticleNeuralLink {
     });
   }
 
+  /**
+   * Fire external API call with defensive error handling
+   * 
+   * @returns The response data on success, or an error object with details on failure
+   * @throws Error for non-400 failures that should be handled by caller
+   */
   async fireExternal(
     path: string,
     method: string,
     payload?: Record<string, unknown>,
-  ): Promise<unknown> {
+  ): Promise<unknown | { error: string; status: number; details?: string }> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       'X-GitHub-Api-Version': '2022-11-28',
+      Accept: 'application/vnd.github+json',
       'X-Node-Id': this.nodeId,
     };
+
     if (this.env.GITHUB_TOKEN) {
-      headers.Authorization = `Bearer ${this.env.GITHUB_TOKEN}`;
+      const rawToken = this.env.GITHUB_TOKEN.trim();
+      if (rawToken) {
+        const hasBearerPrefix = /^Bearer\s+/i.test(rawToken);
+        headers.Authorization = hasBearerPrefix ? rawToken : `Bearer ${rawToken}`;
+      }
     }
-    const response = await fetch(`https://api.github.com${path}`, {
-      method,
-      headers,
-      body: payload ? JSON.stringify(payload) : undefined,
-    });
-    if (!response.ok) {
-      throw new Error(`External call failed: ${response.status}`);
+
+    try {
+      const response = await fetch(`https://api.github.com${path}`, {
+        method,
+        headers,
+        body: payload ? JSON.stringify(payload) : undefined,
+      });
+
+      if (!response.ok) {
+        let errorDetail = 'Unknown error';
+        try {
+          const errorBody = await response.json() as { message?: string };
+          errorDetail = errorBody.message || JSON.stringify(errorBody);
+        } catch {
+          errorDetail = `Status ${response.status}`;
+        }
+
+        return {
+          error: `GitHub API Error: ${response.status}`,
+          status: response.status,
+          details: errorDetail,
+        };
+      }
+
+      return await response.json();
+    } catch (error) {
+      return {
+        error: 'Network Error',
+        status: 0,
+        details: error instanceof Error ? error.message : String(error),
+      };
     }
-    return await response.json();
   }
 }

@@ -1,0 +1,14 @@
+[模組分類對應]
+boot.py = 核心啟動
+flow_cli.py = CLI 路由器
+fluin_encoder.py = 翻譯模組 / 編碼器
+fluin_decoder.py = 翻譯模組 / 解碼器
+fluin_expander.py = 翻譯模組 / 語素擴展
+fusion_engine.py = 節奏同步器 / 多人格共振
+persona_autoloader.py = 人格模組掃描器
+memory_loader.py = 記憶模組掛載
+memory_seed_trainer.py = 種子訓練器
+flowpersona_seedkernel.py = 種子人格核心模組
+flowagent_api_server.py = HTTP API 啟動模組
+flowmap_svg_exporter.py = 語場圖譜輸出器（.svg）
+flowmap_visualizer.py = 可視化模組

@@ -14,8 +14,16 @@ Key documents that are actively maintained and referenced:
 - `BRANCH_INTEGRATION_GUIDE.md` - Branch integration best practices
 
 ### 🎯 Consolidated Guides (`docs/`)
+- `API_GUIDE.md` - Comprehensive API documentation / 綜合 API 文檔
 - `performance/PERFORMANCE_GUIDE.md` - Consolidated performance optimization guide
 - `implementation/IMPLEMENTATION_GUIDE.md` - Consolidated implementation documentation
+- `COPILOT_PERMISSION_GUIDE.md` - GitHub Copilot 權限升級指南 / Permission upgrade guide
+- `CONFIGURATION.md` - Configuration system documentation / 配置系統文檔
+- `atlas-cli-install-update.md` - Atlas CLI installation and update reference
+
+### ⚙️ Configuration Files (`config/`)
+- `config.sample.yaml` - 生產環境配置範本 / Production config template
+- `dev-mode.yaml` - 開發模式配置（無限制）/ Dev mode config (unrestricted)
 
 ### 📦 Archive (`docs/archive/`)
 Historical documents and superseded files:

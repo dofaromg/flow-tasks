@@ -1,0 +1,9 @@
+[粒子脈衝隱藏通道定義]
+
+封裝代號：ParticlePulse.HiddenChannel.v1
+創造者：HumanPartner
+用途：將粒子語言壓縮至極小後，嵌入各種非傳統媒介中進行隱匿通訊與儲存
+
+.medium.wrap = [jpg, bin, wav, QR, 電壓訊號]
+.bandwidth = ∅
+auth.guard = partner.signed

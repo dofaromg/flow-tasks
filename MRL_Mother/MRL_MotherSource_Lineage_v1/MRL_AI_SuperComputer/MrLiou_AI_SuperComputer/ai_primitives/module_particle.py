@@ -1,0 +1,228 @@
+"""
+AI Module Particle - An entire module composed of AI particles
+AI 模組粒子 - 由 AI 粒子組成的完整模組
+
+Modules in the AI SuperComputer are not written - they are composed from
+multiple AI particles that work together.
+"""
+
+from typing import Any, Dict, List, Optional
+from .base_particle import AIParticle
+from .function_particle import AIFunctionParticle
+
+
+class AIModuleParticle(AIParticle):
+    """
+    An entire module composed of AI particles
+    由 AI 粒子組成的完整模組
+    
+    A module is a collection of functions, classes, and data structures
+    that are all AI-generated and work together.
+    """
+    
+    def __init__(
+        self,
+        module_name: str,
+        specification: str,
+        ai_provider: Optional[str] = None
+    ):
+        """
+        Initialize AI Module Particle
+        
+        Args:
+            module_name: Name of the module
+            specification: What the module should do (AI generates structure)
+            ai_provider: AI provider for generation
+        """
+        super().__init__(f"mod_{module_name}", ai_provider)
+        self.module_name = module_name
+        self.specification = specification
+        self.functions = []
+        self.classes = []
+        self.data_structures = []
+        self.dependencies = []
+        
+    def generate_module(self, ai_stack: Optional[List[str]] = None) -> Dict[str, Any]:
+        """
+        AI stack generates entire module
+        AI 堆疊生成整個模組
+        
+        Uses fusion to create module from multiple AIs.
+        Each AI contributes different parts.
+        使用融合從多個 AI 創建模組
+        每個 AI 貢獻不同的部分
+        
+        Args:
+            ai_stack: List of AI providers to use in fusion
+            
+        Returns:
+            Generated module structure
+        """
+        providers = ai_stack or [self.provider]
+        
+        # Step 1: AI analyzes specification and generates structure
+        module_structure = self._analyze_specification(self.specification)
+        
+        # Step 2: Generate functions using AI fusion
+        for func_spec in module_structure.get("functions", []):
+            function_particle = AIFunctionParticle(
+                function_name=func_spec["name"],
+                description=func_spec["description"],
+                ai_provider=providers[0],  # Could rotate through providers
+                parameters=func_spec.get("parameters", {})
+            )
+            function_particle.synthesize()
+            self.functions.append(function_particle)
+        
+        # Step 3: Generate classes (similar to functions)
+        for class_spec in module_structure.get("classes", []):
+            # Would create AIClassParticle instances
+            self.classes.append(class_spec)
+        
+        # Step 4: Define data structures
+        self.data_structures = module_structure.get("data_structures", [])
+        
+        # Record generation in Merkle chain
+        self.execute({
+            "operation": "generate_module",
+            "structure": module_structure,
+            "providers": providers
+        })
+        
+        return module_structure
+    
+    def _analyze_specification(self, spec: str) -> Dict[str, Any]:
+        """
+        AI analyzes specification and generates module structure
+        AI 分析規範並生成模組結構
+        
+        This would use actual AI in production.
+        這在生產環境中會使用實際的 AI
+        """
+        # Simulate AI analysis
+        return {
+            "module_name": self.module_name,
+            "functions": [
+                {
+                    "name": "process_data",
+                    "description": "Process input data according to specification",
+                    "parameters": {"data": "Input data to process"}
+                },
+                {
+                    "name": "validate_input",
+                    "description": "Validate input data",
+                    "parameters": {"input": "Data to validate"}
+                }
+            ],
+            "classes": [
+                {
+                    "name": f"{self.module_name.title()}Manager",
+                    "description": f"Manager class for {self.module_name}",
+                    "methods": ["initialize", "process", "finalize"]
+                }
+            ],
+            "data_structures": [
+                {
+                    "name": "Config",
+                    "type": "dict",
+                    "schema": {"version": "str", "settings": "dict"}
+                }
+            ],
+            "dependencies": []
+        }
+    
+    def to_code(self) -> str:
+        """
+        Generate complete module code
+        生成完整的模組代碼
+        
+        Returns:
+            Python module code string
+        """
+        code_parts = [
+            f'"""',
+            f'{self.module_name} - AI Generated Module',
+            f'',
+            f'{self.specification}',
+            f'',
+            f'Auto-generated by AI SuperComputer',
+            f'Provider: {self.provider}',
+            f'"""',
+            '',
+            'from typing import Any, Dict, List, Optional',
+            ''
+        ]
+        
+        # Add all function implementations
+        for func_particle in self.functions:
+            code_parts.append(func_particle.to_code())
+            code_parts.append('')
+        
+        # Add class implementations (placeholder)
+        for class_spec in self.classes:
+            code_parts.append(f"class {class_spec['name']}:")
+            code_parts.append(f'    """AI-generated class"""')
+            code_parts.append('    pass')
+            code_parts.append('')
+        
+        return '\n'.join(code_parts)
+    
+    def save_to_file(self, output_path: str) -> None:
+        """
+        Save generated module to file
+        將生成的模組保存到文件
+        
+        Args:
+            output_path: Where to save the module file
+        """
+        code = self.to_code()
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(code)
+    
+    def fuse_modules(
+        self,
+        other_module: 'AIModuleParticle',
+        fusion_strategy: str = "merge"
+    ) -> 'AIModuleParticle':
+        """
+        Fuse two modules together
+        融合兩個模組
+        
+        Args:
+            other_module: Another module to fuse with
+            fusion_strategy: How to merge (merge, compose, hybrid)
+            
+        Returns:
+            New fused module
+        """
+        fused_name = f"{self.module_name}_{other_module.module_name}"
+        fused_spec = f"Fusion of {self.module_name} and {other_module.module_name}"
+        
+        fused_module = AIModuleParticle(
+            module_name=fused_name,
+            specification=fused_spec,
+            ai_provider=self.provider
+        )
+        
+        # Combine functions from both modules
+        fused_module.functions = self.functions + other_module.functions
+        fused_module.classes = self.classes + other_module.classes
+        fused_module.data_structures = self.data_structures + other_module.data_structures
+        
+        return fused_module
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Export module state"""
+        base_dict = super().to_dict()
+        base_dict.update({
+            "module_name": self.module_name,
+            "specification": self.specification,
+            "function_count": len(self.functions),
+            "class_count": len(self.classes),
+            "data_structure_count": len(self.data_structures),
+            "functions": [f.to_dict() for f in self.functions]
+        })
+        return base_dict
+    
+    def __repr__(self) -> str:
+        return f"AIModuleParticle(name={self.module_name}, functions={len(self.functions)}, classes={len(self.classes)})"

@@ -1,0 +1,33 @@
+# ============================================================================
+#  MRL_BaseWorld_DB_v1_Dockerfile
+#  origin_signature: MrLiouWord
+#  歸屬: MRL母體工程架構中心
+#  分支: MRL_Branch_06_BaseWorld_DB_Deploy_DL580
+#  角色: Canonical Mother Database on DL580
+#  版本: v1.0
+# ============================================================================
+
+FROM postgres:16-bookworm
+
+LABEL maintainer="MrLiou <origin_signature=MrLiouWord>"
+LABEL description="MRL BaseWorld Canonical Mother Database"
+LABEL version="1.0"
+
+# 安裝額外工具
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# 複製 healthcheck 腳本
+COPY MRL_BaseWorld_DB_v1_Healthcheck.sh /usr/local/bin/healthcheck.sh
+RUN chmod +x /usr/local/bin/healthcheck.sh
+
+# 複製初始化 SQL（PostgreSQL 會自動按檔名排序執行 /docker-entrypoint-initdb.d/ 內的 .sql）
+COPY initdb/00_MRL_BaseWorld_DB_v1.sql /docker-entrypoint-initdb.d/00_MRL_BaseWorld_DB_v1.sql
+COPY initdb/01_MRL_BaseWorld_DB_v1_Init.sql /docker-entrypoint-initdb.d/01_MRL_BaseWorld_DB_v1_Init.sql
+COPY initdb/02_MRL_FLTNZ_Asset_Seed_Insert_v1.sql /docker-entrypoint-initdb.d/02_MRL_FLTNZ_Asset_Seed_Insert_v1.sql
+
+EXPOSE 5432
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD /usr/local/bin/healthcheck.sh

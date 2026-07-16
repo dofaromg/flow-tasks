@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List
 
 
 class GitHubAdapter:
@@ -14,7 +14,7 @@ class GitHubAdapter:
     def __init__(self, data_dir: Path) -> None:
         self.data_dir = data_dir
 
-    def export(self, entries: List[Dict[str, str]]) -> Path:
+    def export(self, entries: List[Dict[str, Any]]) -> Path:
         target = self.data_dir / "github_export.json"
         import json
 

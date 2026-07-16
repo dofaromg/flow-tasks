@@ -1,0 +1,176 @@
+name: WebGPU Neural Network CI
+
+on:
+  push:
+    branches: [main, develop, work]
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'tsconfig.json'
+      - 'jest.config.js'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'tsconfig.json'
+      - 'jest.config.js'
+
+jobs:
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run ESLint
+        run: npm run lint
+
+  build:
+    name: Build TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build Next.js
+        run: npm run build
+      
+      - name: Check TypeScript compilation
+        run: npx tsc --noEmit
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run Jest tests
+        run: npm test -- --coverage --ci
+      
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: webgpu-neural-network
+          fail_ci_if_error: false
+      
+      - name: Archive test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            coverage/
+            jest-results.json
+          if-no-files-found: ignore
+
+  validate-structure:
+    name: Validate Module Structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check module structure
+        run: |
+          echo "Checking WebGPU Neural Network module structure..."
+          
+          # Check core directories exist
+          test -d src/modules/neuron || (echo "Missing src/modules/neuron" && exit 1)
+          test -d src/modules/attention || (echo "Missing src/modules/attention" && exit 1)
+          test -d src/modules/endpoint || (echo "Missing src/modules/endpoint" && exit 1)
+          test -d src/modules/routing || (echo "Missing src/modules/routing" && exit 1)
+          test -d src/modules/types || (echo "Missing src/modules/types" && exit 1)
+          test -d src/tests || (echo "Missing src/tests" && exit 1)
+          
+          # Check core files exist
+          test -f src/index.ts || (echo "Missing src/index.ts" && exit 1)
+          test -f src/modules/neuron/NeuronComputeCore.ts || (echo "Missing NeuronComputeCore.ts" && exit 1)
+          test -f src/modules/attention/AttentionRoutingLayer.ts || (echo "Missing AttentionRoutingLayer.ts" && exit 1)
+          test -f src/modules/endpoint/ComputeEndpointManager.ts || (echo "Missing ComputeEndpointManager.ts" && exit 1)
+          test -f src/modules/routing/PLSRoutingEngine.ts || (echo "Missing PLSRoutingEngine.ts" && exit 1)
+          test -f src/modules/types/index.ts || (echo "Missing types/index.ts" && exit 1)
+          
+          # Check test files exist
+          test -f src/tests/NeuronComputeCore.test.ts || (echo "Missing NeuronComputeCore.test.ts" && exit 1)
+          test -f src/tests/AttentionRoutingLayer.test.ts || (echo "Missing AttentionRoutingLayer.test.ts" && exit 1)
+          test -f src/tests/ComputeEndpointManager.test.ts || (echo "Missing ComputeEndpointManager.test.ts" && exit 1)
+          test -f src/tests/PLSRoutingEngine.test.ts || (echo "Missing PLSRoutingEngine.test.ts" && exit 1)
+          test -f src/tests/integration.test.ts || (echo "Missing integration.test.ts" && exit 1)
+          
+          # Check README exists
+          test -f src/README.md || (echo "Missing src/README.md" && exit 1)
+          
+          echo "✅ All required files and directories are present"
+      
+      - name: Count test files
+        run: |
+          TEST_COUNT=$(find src/tests -name "*.test.ts" | wc -l)
+          echo "Found $TEST_COUNT test files"
+          if [ "$TEST_COUNT" -lt 5 ]; then
+            echo "❌ Expected at least 5 test files, found $TEST_COUNT"
+            exit 1
+          fi
+          echo "✅ Test file count is sufficient"
+
+  integration:
+    name: Integration Check
+    runs-on: ubuntu-latest
+    needs: [lint, build, test]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run integration tests
+        run: npm test -- --testPathPattern=integration.test.ts
+      
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## WebGPU Neural Network Integration Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Linting passed" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Build successful" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Tests passed" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Integration tests completed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Module Components" >> $GITHUB_STEP_SUMMARY
+          echo "- NeuronComputeCore" >> $GITHUB_STEP_SUMMARY
+          echo "- AttentionRoutingLayer" >> $GITHUB_STEP_SUMMARY
+          echo "- ComputeEndpointManager" >> $GITHUB_STEP_SUMMARY
+          echo "- PLSRoutingEngine" >> $GITHUB_STEP_SUMMARY

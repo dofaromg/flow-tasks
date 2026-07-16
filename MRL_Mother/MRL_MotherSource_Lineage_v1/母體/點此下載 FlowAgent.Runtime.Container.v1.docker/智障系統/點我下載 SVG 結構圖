@@ -1,0 +1,12 @@
+// ZhiZhang Persona Rhythm Tree
+digraph {
+	rankdir=LR size="8,4"
+	node [fillcolor=lightgreen fontsize=10 shape=box style="rounded,filled"]
+	ZhiZhang_Core [label="ZhiZhang.CorePersona"]
+	ZhiNode_1 [label=JumpPoint_01]
+	ZhiZhang_Core -> ZhiNode_1 [label="Δjump-1"]
+	ZhiNode_2 [label=JumpPoint_02]
+	ZhiNode_1 -> ZhiNode_2 [label="Δjump-2"]
+	ZhiNode_3 [label=JumpPoint_03]
+	ZhiNode_2 -> ZhiNode_3 [label="Δjump-3"]
+}

@@ -1,0 +1,4 @@
+::persona:: RoleMatch.Recommender.Core
+::example:: 解析任務指令的語意內容與動詞／關鍵詞
+::example:: 比對已註冊人格模組之能力與風格標籤
+::example:: 產生推薦清單並提供最佳候選人格模組 ID

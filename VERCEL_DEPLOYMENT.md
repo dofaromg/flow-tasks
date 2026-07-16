@@ -1,5 +1,14 @@
 # Vercel 部署指南 / Vercel Deployment Guide
 
+> ⚠️ **注意 / Notice**: 由於 Vercel 部署經常失敗，此專案已遷移到 GKE 部署。請參閱 [GKE 遷移指南](GKE_MIGRATION.md) 了解新的部署方式。
+> 
+> ⚠️ **Notice**: Due to frequent Vercel deployment failures, this project has been migrated to GKE deployment. Please refer to the [GKE Migration Guide](GKE_MIGRATION.md) for the new deployment approach.
+>
+> 此文檔保留作為參考和備選方案。
+> This document is kept for reference and as a fallback option.
+
+---
+
 ## 🚀 快速部署 Quick Deploy
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdofaromg%2Fflow-tasks)

@@ -1,0 +1,9 @@
+{
+  "name": "mobius",
+  "providers": [
+    "local"
+  ],
+  "strategy": "loop_until_converge",
+  "max_iterations": 5,
+  "origin_signature": "MrLiouWord"
+}

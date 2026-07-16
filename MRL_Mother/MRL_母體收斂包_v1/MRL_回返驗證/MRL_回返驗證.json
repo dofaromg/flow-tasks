@@ -1,0 +1,51 @@
+{
+  "origin_signature": "MrLiouWord",
+  "MRL_回返鏈定義": "MRL_粒子 → MRL_紋圖 → MRL_運轉場 → MRL_封裝體 → MRL_顯化 → MRL_痕跡錄 → MRL_源檔",
+  "MRL_判定規則": "任一階段無實體即不可記 PASS；半通記 PARTIAL；無法成鏈記 FAIL",
+  "MRL_掃描分支": "MRL_Branch_Runtime_Convergence_API_v1",
+  "MRL_物件": [
+    {
+      "MRL_物件": "fltnz 可逆鏈 (09_workflow/fltnz_parser.py)",
+      "鏈": { "粒子": true, "紋圖": "partial", "運轉場": false, "封裝體": true, "顯化": "n/a", "痕跡錄": true, "源檔": true },
+      "判定": "PARTIAL",
+      "理由": "txt↔fltnz↔flpkg↔trace 全鏈可逆且 checksum 驗證為真；但與運轉場(core)之掛接在本 checkout 缺源（#35/#37 未入）"
+    },
+    {
+      "MRL_物件": "MRL_RuntimeServer.js + /health + /mrl/state",
+      "鏈": { "粒子": "n/a", "紋圖": "n/a", "運轉場": true, "封裝體": false, "顯化": true, "痕跡錄": false, "源檔": true },
+      "判定": "PARTIAL",
+      "理由": "運轉場與界門為真且可運行；但無 snapshot/replay/restore，封裝體與痕跡錄未成鏈"
+    },
+    {
+      "MRL_物件": "/api/mrl/runtime/convergence (read-only governance view)",
+      "鏈": { "粒子": "n/a", "紋圖": "n/a", "運轉場": true, "封裝體": "n/a", "顯化": true, "痕跡錄": true, "源檔": true },
+      "判定": "PASS",
+      "理由": "唯讀視圖，回溯源檔 = MRL_RuntimeServer.js + docs/MRL_Runtime_Civilization_Stack_Convergence_v1.md；鏈封閉"
+    },
+    {
+      "MRL_物件": "canonical 運轉核心 (MrLiouIR→StructureField→Replay→Restore→Verify)",
+      "鏈": { "粒子": false, "紋圖": false, "運轉場": false, "封裝體": false, "顯化": false, "痕跡錄": false, "源檔": false },
+      "判定": "FAIL",
+      "理由": "源碼不在本 checkout（位於未 merge 的 PR #35+#37）。註：於 #37 分支曾實跑 6/6 PASS，但本包不得據此記 PASS"
+    },
+    {
+      "MRL_物件": "MRL_Mother/* 世界模組構件",
+      "鏈": { "粒子": false, "紋圖": false, "運轉場": false, "封裝體": false, "顯化": false, "痕跡錄": false, "源檔": "readme-only" },
+      "判定": "FAIL",
+      "理由": "僅 README 骨架，無可運行實體"
+    },
+    {
+      "MRL_物件": "06_trace/traces/runtime_trace.jsonl",
+      "鏈": { "粒子": "n/a", "紋圖": "n/a", "運轉場": "n/a", "封裝體": "n/a", "顯化": "n/a", "痕跡錄": true, "源檔": true },
+      "判定": "PARTIAL",
+      "理由": "痕跡層有實體骨架，但內容稀疏、未與運轉場閉環"
+    },
+    {
+      "MRL_物件": "BaseWorld DB (27 tables)",
+      "鏈": { "粒子": false, "紋圖": false, "運轉場": false, "封裝體": false, "顯化": false, "痕跡錄": false, "源檔": false },
+      "判定": "FAIL",
+      "理由": "repo 內無實體；27-table 為外部 mrliouword-db(Cloudflare D1)，未入此 repo"
+    }
+  ],
+  "MRL_統計": { "PASS": 1, "PARTIAL": 3, "FAIL": 3, "總計": 7 }
+}

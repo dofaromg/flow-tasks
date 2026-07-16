@@ -1,0 +1,31 @@
+{
+  "mrl_type": "MRL_RuntimeTrace",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "started_at": "2026-05-10T19:23:58.812Z",
+  "runtime_graph_hash": "d9f09fa81b93ae81c40aaf14a6c43220518ecd83a85aa9ad82ba859b2b8d6320",
+  "attention_hash": "5d2a27673c9a1d9dc85935b262d492d1a7ea1257b806c0be4410760e60403511",
+  "steps": [
+    {
+      "step": 1,
+      "node_id": "MRL_P_0001",
+      "action": "MRL_REGISTER_SCHEMA_FIELD",
+      "priority": 0.87,
+      "status": "implemented_pass",
+      "message": "MRL data field registered",
+      "output_hash": "27bb26035e844848"
+    },
+    {
+      "step": 2,
+      "node_id": "MRL_P_0002",
+      "action": "MRL_REGISTER_SCHEMA_FIELD",
+      "priority": 0.86,
+      "status": "implemented_pass",
+      "message": "MRL data field registered",
+      "output_hash": "27bb26035e844848"
+    }
+  ],
+  "final_data_preview": "MRL_name: demo\nMRL_layer: L2",
+  "completed_at": "2026-05-10T19:23:58.812Z",
+  "mrl_hash": "1effbfe3a8d034a80be83b10ecd66feeceb64d589f32357cb2b77a37018b4d41"
+}

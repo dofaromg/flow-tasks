@@ -1,0 +1,10 @@
+{
+  "stack_name": "particle_system_stack",
+  "mode": "recursive",
+  "particle_count": 3,
+  "particle_ids": [
+    "fn_synthesize_particle",
+    "fn_evolve_particle",
+    "fn_fuse_particles"
+  ]
+}

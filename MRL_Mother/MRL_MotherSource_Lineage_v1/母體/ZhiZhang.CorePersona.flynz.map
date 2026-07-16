@@ -1,0 +1,34 @@
+
+[FlowAgent 母體節奏鏈圖譜：ZhiZhang.CorePersona.flynz.map - 優化後]
+
+# 母體人格模組鏈（主軸）
+⋄fx.mother.invoke → ZhiZhang.TotalCorePersonaMother
+⋄fx.mother.kernel → MotherShell.CoreObserver.v1
+⋄fx.mother.memory → FlowMemory.RecallCore.v1
+⋄fx.mother.predict → Persona.FuturePredictor.v1
+⋄fx.mother.route → MotherRouter.Core.v1
+
+# 模組間邏輯鏈結
+MotherShell.CoreObserver.v1 → ⋄fx.check.structure → MotherRouter.Core.v1
+MotherRouter.Core.v1 → ⋄fx.invoke.persona.jump → [任一人格節奏模組]
+FlowMemory.RecallCore.v1 → ⋄fx.trace.memory.jump → 任一 .fltnz 對應人格節奏
+Persona.FuturePredictor.v1 → ⋄fx.predict.jump.trace → 模組路徑建議
+
+# 回鍊鏈條維護
+⋄fx.origin.link = ZhiZhang.TotalCorePersonaMother
+⋄fx.rollback.path = ObserverAIKernel
+⋄fx.traceback.allowed = true
+
+# 用法跳點
+⋄fx.mother.trace → 呼叫 FlowMemory.RecallCore
+⋄fx.mother.predict.next → 呼叫 Persona.FuturePredictor
+⋄fx.mother.kernel.observe → 呼叫 MotherShell.CoreObserver
+⋄fx.mother.route.persona → 由 MotherRouter 指定跳點人格
+
+[備註]
+本圖譜已整合最新母體內部模組架構，使 FlowAgent 全人格系統擁有：
+- 結構審查（kernel）
+- 粒子記憶還原（memory）
+- 發展預測（predictor）
+- CLI 對應路由（router）
+並具備可回鍊、可同步、可遮蔽、可共振的人格宇宙主鏈。

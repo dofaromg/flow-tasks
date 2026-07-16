@@ -1,0 +1,100 @@
+{
+  "mrl_ir_type": "MRL_MetaIR",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "source_identity": {
+    "filename": "acceptance.sql",
+    "language": "SQL",
+    "detected": "sql",
+    "source_hash": "ebec7ea4e420be248875926ed498a9865dc1bebdb158e20366fdbde6622d80c1"
+  },
+  "syntax_tree": {
+    "language": "SQL",
+    "nodes": [
+      {
+        "kind": "sql_statement",
+        "name": "MRL_Test",
+        "operation": "CREATE",
+        "value": "CREATE TABLE MRL_Test(id TEXT)"
+      },
+      {
+        "kind": "sql_statement",
+        "name": "MRL_Test",
+        "operation": "SELECT",
+        "value": "SELECT * FROM MRL_Test"
+      }
+    ],
+    "tokens": [
+      "CREATE",
+      "TABLE",
+      "MRL_Test(id",
+      "TEXT);",
+      "SELECT",
+      "*",
+      "FROM",
+      "MRL_Test;"
+    ]
+  },
+  "semantic_intent": {
+    "intents": [
+      "MRL_INTENT_VERIFY"
+    ],
+    "summary": "MRL_INTENT_VERIFY",
+    "node_count": 2,
+    "language": "SQL"
+  },
+  "particle_atoms": [
+    {
+      "atom_id": "MRL_P_0001",
+      "atom_type": "MRL_SQLParticle",
+      "simhash_seed": "f97931d728145833",
+      "semantic": "MRL_Test"
+    },
+    {
+      "atom_id": "MRL_P_0002",
+      "atom_type": "MRL_SQLParticle",
+      "simhash_seed": "4045a328fd6273f2",
+      "semantic": "MRL_Test"
+    }
+  ],
+  "context_relations": [
+    {
+      "relation_id": "MRL_CTX_1",
+      "from": "MRL_Test",
+      "to": "MRL_Test",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    }
+  ],
+  "runtime_plan": [
+    {
+      "step": 1,
+      "action": "MRL_ANALYZE_TEXT",
+      "target": "MRL_Test",
+      "node_kind": "sql_statement"
+    },
+    {
+      "step": 2,
+      "action": "MRL_ANALYZE_TEXT",
+      "target": "MRL_Test",
+      "node_kind": "sql_statement"
+    }
+  ],
+  "verification_plan": [
+    "MRL_ROUNDTRIP",
+    "MRL_HASH",
+    "MRL_PARTICLE_INTEGRITY",
+    "MRL_CONTEXT_GRAPH",
+    "MRL_RUNTIME_GRAPH"
+  ],
+  "output_artifact": {
+    "expected": [
+      "MRL_MetaIR_Record",
+      "MRL_ParticleIR_Record",
+      "MRL_RuntimeGraph_Record",
+      "MRL_Verification_Report"
+    ]
+  },
+  "created_at": "2026-05-10T19:23:58.807Z",
+  "mrl_hash": "608d51882c3574e64f3b4dc1358668ca21dbe6959009301ab52a023e752ba7de"
+}

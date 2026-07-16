@@ -1,0 +1,45 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mrl-official-platform-ingress
+  namespace: flowagent
+  labels:
+    app: mrl-official-platform
+    component: ingress
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.global-static-ip-name: "mrl-official-ip"
+    networking.gke.io/managed-certificates: "mrl-official-cert"
+spec:
+  defaultBackend:
+    service:
+      name: nextjs-frontend
+      port:
+        number: 80
+  rules:
+  - host: "mrl.mrliou.com"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nextjs-frontend
+            port:
+              number: 80
+      - path: /api/mrl
+        pathType: Prefix
+        backend:
+          service:
+            name: nextjs-frontend
+            port:
+              number: 80
+---
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: mrl-official-cert
+  namespace: flowagent
+spec:
+  domains:
+  - mrl.mrliou.com

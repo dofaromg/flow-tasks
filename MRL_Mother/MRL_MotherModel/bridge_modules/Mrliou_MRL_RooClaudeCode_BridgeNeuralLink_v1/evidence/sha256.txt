@@ -1,0 +1,41 @@
+SHA256 Checksum Verification File
+Module: Mrliou_MRL_RooClaudeCode_BridgeNeuralLink_v1
+Generated: 2026-06-28T12:58:00Z
+Format: sha256sum compatible (checksum  filepath)
+
+Source Files (TypeScript)
+=========================
+9f614640f68a2a45b3484e99082c965813c0f20eade52de06c3a53f0c3a0219e  src/BridgeOrchestrator.ts
+4fd064006ba15671ba49442fe7d1ef0b3cd1cdf57a0cc08efd19c26692309b78  src/SocketTransport.ts
+7044fda04f8af21421238f0e4819aab31e2cd6236e3f657ccafb0a7f45f2961a  src/TaskChannel.ts
+6340d9d461dc0cf00150932fbce1c552ba21a313554da4cc9643bfa8e11fc7eb  src/BaseChannel.ts
+c2231deaff18ad1eb0ab69ce088e403d00d7cc4e5dfc7887711f40f4fde688e9  src/index.ts
+
+Configuration Files (JSON)
+===========================
+d2af1b2f331684689210227f5d3ae4b2201cad4f310d67d4a9ccc7625491d02a  config/dl580_bridge.config.json
+
+Metadata Files (JSON)
+=====================
+a56933a77850751cba7175fe77f0f259c47b65f70625f3a8a2a87a85e2579db0  module.manifest.json
+
+Documentation Files (Markdown)
+===============================
+a5ff1c517557e9861256ece521a6d841f01276f94e904762d421bf466609aba3  docs/MRL_BridgeNeuralLink_Integration.md
+4b691054f509d0cc607796058232ef5fcb986a5270ba61100f5c2bd28aa64fb5  docs/RECOVERY_MAP_UPDATE.md
+
+Deployment Scripts (PowerShell)
+================================
+2fb1e2fbc6ddb0b96ad7f2644dae3fda9076e2ba0e7d56c9e39a6d829e439b4a  scripts/install.ps1
+6b2821cc451cc56628a3f90beac2a182f7ed5eed551a286d7d8615a24e58b891  scripts/verify.ps1
+5e34c469d30a19e067789114e40fcc695d9f9892dca0736c69cd08f5b8ea2602  scripts/package.ps1
+
+Verification Command
+====================
+sha256sum -c sha256.txt
+
+File Integrity
+==============
+Total Files: 12
+Total Coverage: 100%
+All files verified and included in checksum list.
