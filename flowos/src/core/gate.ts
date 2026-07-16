@@ -16,13 +16,24 @@ export class FlowGate {
   }
 
   evaluate(payload: Record<string, unknown>, context?: FlowContext): GateDecision {
+    let firstAllowDecision: GateDecision | null = null;
+
     for (const check of this.checks) {
       const decision = check(payload, context);
-      if (decision) {
+      if (!decision) {
+        continue;
+      }
+
+      if (!decision.allowed) {
         return decision;
       }
+
+      if (!firstAllowDecision) {
+        firstAllowDecision = decision;
+      }
     }
-    return { allowed: true };
+
+    return firstAllowDecision ?? { allowed: true };
   }
 }
 
