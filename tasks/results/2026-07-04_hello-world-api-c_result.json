@@ -1,0 +1,25 @@
+{
+  "task_id": "hello-world-api-c",
+  "task_name": "Unknown Task",
+  "validation_time": "2026-07-16T16:28:43.374774",
+  "status": "passed",
+  "checks": [
+    {
+      "check": "file_exists",
+      "status": "passed",
+      "message": "Target file exists: flow_code/hello_api.c"
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "metrics": {
+    "execution_time_ms": 0.14,
+    "files_checked": 1,
+    "lines_of_code": 168
+  },
+  "metadata": {
+    "description": "用 C 語言寫一個 Hello World API，輸出 \"你好，世界\"",
+    "priority": "medium",
+    "tags": []
+  }
+}
