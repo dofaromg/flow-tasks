@@ -9,6 +9,7 @@ __pycache__/
 # C build artifacts (wire protocol)
 particle_core/src/wire/wire_test
 particle_core/src/wire/*.o
+flow_code/hello_api
 
 # Distribution / packaging
 .Python
