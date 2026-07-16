@@ -6,6 +6,7 @@ Enhanced with professional reporting capabilities for software engineers
 """
 
 import os
+import re
 import sys
 import yaml
 import json
@@ -25,6 +26,11 @@ class TaskProcessor:
         self.tasks_dir = Path(tasks_dir)
         self.results_dir = self.tasks_dir / "results"
         self.results_dir.mkdir(exist_ok=True)
+
+    @staticmethod
+    def _is_task_definition(task_file: Path) -> bool:
+        """Return True when the file matches the repository task naming pattern."""
+        return bool(re.fullmatch(r"\d{4}-\d{2}-\d{2}_.+\.yaml", task_file.name))
         
     def load_task(self, task_file: str) -> Dict[str, Any]:
         """Load task definition from YAML file"""
@@ -59,11 +65,11 @@ class TaskProcessor:
             }
         }
         
-        target_file = task.get("target_file")
+        target_file = task.get("target_file") or task.get("target_directory")
         if not target_file:
             result["errors"].append({
                 "type": "configuration",
-                "message": "No target_file specified in task",
+                "message": "No target_file or target_directory specified in task",
                 "severity": "error"
             })
             result["status"] = "failed"
@@ -162,7 +168,11 @@ class TaskProcessor:
         processing_start = time.time()
         
         # Use more specific glob pattern to avoid filtering
-        task_files = sorted(self.tasks_dir.glob("2025-*.yaml"))
+        task_files = sorted(
+            task_file
+            for task_file in self.tasks_dir.glob("*.yaml")
+            if self._is_task_definition(task_file)
+        )
         
         summary = {
             "processing_time": datetime.now().isoformat(),
