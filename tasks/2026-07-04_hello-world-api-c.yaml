@@ -12,6 +12,6 @@ build:
   compile: gcc -o flow_code/hello_api flow_code/hello_api.c
   run: ./flow_code/hello_api [port]
 endpoints:
-  /:       Returns {"message": "你好，世界"}
-  /health: Returns {"status": "healthy", "service": "hello-world-api-c"}
-  /info:   Returns task metadata and endpoint list
+  /: 'Returns {"message": "你好，世界"}'
+  /health: 'Returns {"status": "healthy", "service": "hello-world-api-c"}'
+  /info: 'Returns task metadata and endpoint list'
