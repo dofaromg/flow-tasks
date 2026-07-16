@@ -1,14 +1,14 @@
 {
-  "processing_time": "2026-07-16T16:28:13.046911",
+  "processing_time": "2026-07-16T16:28:43.163146",
   "total_tasks": 4,
-  "passed": 3,
-  "failed": 1,
+  "passed": 4,
+  "failed": 0,
   "warnings": 0,
   "tasks": [
     {
       "task_id": "hello-world-api",
       "task_name": "Unknown Task",
-      "validation_time": "2026-07-16T16:28:13.048081",
+      "validation_time": "2026-07-16T16:28:43.166279",
       "status": "passed",
       "checks": [
         {
@@ -25,7 +25,7 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 283.49,
+        "execution_time_ms": 193.12,
         "files_checked": 1,
         "lines_of_code": 36
       },
@@ -38,7 +38,7 @@
     {
       "task_id": "particle-language-core",
       "task_name": "Unknown Task",
-      "validation_time": "2026-07-16T16:28:13.336176",
+      "validation_time": "2026-07-16T16:28:43.362628",
       "status": "passed",
       "checks": [
         {
@@ -50,8 +50,8 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 2.03,
-        "files_checked": 129,
+        "execution_time_ms": 1.77,
+        "files_checked": 139,
         "lines_of_code": 0
       },
       "metadata": {
@@ -63,7 +63,7 @@
     {
       "task_id": "flowos-neural-link",
       "task_name": "Unknown Task",
-      "validation_time": "2026-07-16T16:28:13.345513",
+      "validation_time": "2026-07-16T16:28:43.371362",
       "status": "passed",
       "checks": [
         {
@@ -75,7 +75,7 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 1.01,
+        "execution_time_ms": 0.85,
         "files_checked": 41,
         "lines_of_code": 0
       },
@@ -86,34 +86,41 @@
       }
     },
     {
-      "task_id": "2026-07-04_hello-world-api-c",
-      "task_name": "2026-07-04_hello-world-api-c",
-      "status": "error",
-      "errors": [
+      "task_id": "hello-world-api-c",
+      "task_name": "Unknown Task",
+      "validation_time": "2026-07-16T16:28:43.374774",
+      "status": "passed",
+      "checks": [
         {
-          "type": "processing",
-          "message": "Failed to process task: mapping values are not allowed here\n  in \"tasks/2026-07-04_hello-world-api-c.yaml\", line 15, column 30",
-          "severity": "error",
-          "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/flow-tasks/flow-tasks/process_tasks.py\", line 202, in process_all_tasks\n    task = self.load_task(task_file.name)\n  File \"/home/runner/work/flow-tasks/flow-tasks/process_tasks.py\", line 42, in load_task\n    return yaml.safe_load(task_file)\n  File \"/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/yaml/__init__.py\", line 125, in safe_load\n    return load(stream, SafeLoader)\n  File \"/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/yaml/__init__.py\", line 81, in load\n    return loader.get_single_data()\n  File \"/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/yaml/constructor.py\", line 49, in get_single_data\n    node = self.get_single_node()\n  File \"/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/yaml/composer.py\", line 36, in get_single_node\n    document = self.compose_document()\n  File \"/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/yaml/composer.py\", line 55, in compose_document\n    node = self.compose_node(None, None)\n  File \"/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/yaml/composer.py\", line 84, in compose_node\n    node = self.compose_mapping_node(anchor)\n  File \"/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/yaml/composer.py\", line 133, in compose_mapping_node\n    item_value = self.compose_node(node, item_key)\n  File \"/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/yaml/composer.py\", line 84, in compose_node\n    node = self.compose_mapping_node(anchor)\n  File \"/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/yaml/composer.py\", line 127, in compose_mapping_node\n    while not self.check_event(MappingEndEvent):\n  File \"/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/yaml/parser.py\", line 98, in check_event\n    self.current_event = self.state()\n  File \"/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/yaml/parser.py\", line 428, in parse_block_mapping_key\n    if self.check_token(KeyToken):\n  File \"/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/yaml/scanner.py\", line 116, in check_token\n    self.fetch_more_tokens()\n  File \"/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/yaml/scanner.py\", line 223, in fetch_more_tokens\n    return self.fetch_value()\n  File \"/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/yaml/scanner.py\", line 577, in fetch_value\n    raise ScannerError(None, None,\nyaml.scanner.ScannerError: mapping values are not allowed here\n  in \"tasks/2026-07-04_hello-world-api-c.yaml\", line 15, column 30\n"
+          "check": "file_exists",
+          "status": "passed",
+          "message": "Target file exists: flow_code/hello_api.c"
         }
       ],
+      "errors": [],
+      "warnings": [],
       "metrics": {
-        "execution_time_ms": 0,
-        "files_checked": 0,
-        "lines_of_code": 0
+        "execution_time_ms": 0.14,
+        "files_checked": 1,
+        "lines_of_code": 168
+      },
+      "metadata": {
+        "description": "用 C 語言寫一個 Hello World API，輸出 \"你好，世界\"",
+        "priority": "medium",
+        "tags": []
       }
     }
   ],
   "overall_metrics": {
-    "total_execution_time_ms": 305.93,
-    "total_files_checked": 171,
-    "total_lines_of_code": 36,
-    "average_task_time_ms": 76.48
+    "total_execution_time_ms": 212.21,
+    "total_files_checked": 182,
+    "total_lines_of_code": 204,
+    "average_task_time_ms": 53.05
   },
   "summary": {
-    "pass_rate": 75.0,
+    "pass_rate": 100.0,
     "recommendations": [
-      "⚠️  1 task(s) failed validation. Review errors and fix issues."
+      "✅ All tasks passed validation. Great job!"
     ]
   }
 }
