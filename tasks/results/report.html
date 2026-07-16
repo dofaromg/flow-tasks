@@ -189,7 +189,7 @@
 <body>
     <div class="container">
         <h1>📊 FlowAgent Task Processing Report</h1>
-        <div class="timestamp">Generated: 2026-02-11T18:02:48.995849</div>
+        <div class="timestamp">Generated: 2026-07-16T16:26:07.347394</div>
         
         <div class="summary-grid">
             <div class="metric-card">
@@ -198,11 +198,11 @@
             </div>
             <div class="metric-card success">
                 <div class="metric-label">✅ Passed</div>
-                <div class="metric-value">2</div>
+                <div class="metric-value">1</div>
             </div>
             <div class="metric-card danger">
                 <div class="metric-label">❌ Failed</div>
-                <div class="metric-value">0</div>
+                <div class="metric-value">1</div>
             </div>
             <div class="metric-card warning">
                 <div class="metric-label">⚠️ Warnings</div>
@@ -211,8 +211,8 @@
         </div>
         
         <div class="progress-bar">
-            <div class="progress-fill" style="width: 100.0%">
-                100.0% Pass Rate
+            <div class="progress-fill" style="width: 50.0%">
+                50.0% Pass Rate
             </div>
         </div>
         
@@ -220,13 +220,13 @@
             <h2>⏱️ Performance Metrics</h2>
             <div class="task-metrics">
                 <div class="task-metric">
-                    <strong>Total Execution Time:</strong> 99.08ms
+                    <strong>Total Execution Time:</strong> 16.96ms
                 </div>
                 <div class="task-metric">
-                    <strong>Average Task Time:</strong> 49.54ms
+                    <strong>Average Task Time:</strong> 8.48ms
                 </div>
                 <div class="task-metric">
-                    <strong>Files Checked:</strong> 106
+                    <strong>Files Checked:</strong> 127
                 </div>
                 <div class="task-metric">
                     <strong>Lines of Code:</strong> 36
@@ -238,7 +238,7 @@
             <h2>💡 Recommendations</h2>
             <div class="recommendations">
                 <ul>
-                    <li>✅ All tasks passed validation. Great job!</li>
+                    <li>⚠️  1 task(s) failed validation. Review errors and fix issues.</li>
                 </ul>
             </div>
         </div>
@@ -246,21 +246,23 @@
         <div class="section">
             <h2>📋 Task Details</h2>
 
-            <div class="task-card passed">
+            <div class="task-card failed">
                 <div class="task-header">
-                    <div class="task-status passed">✓</div>
+                    <div class="task-status failed">✗</div>
                     <div class="task-title">hello-world-api</div>
                 </div>
                 <p><strong>Description:</strong> 寫一個 Flask 的 hello world API，輸出 &quot;你好，世界&quot;</p>
 
                 <div class="task-metrics">
-                    <div class="task-metric">⏱️ 95.63ms</div>
+                    <div class="task-metric">⏱️ 6.86ms</div>
                     <div class="task-metric">📁 1 files</div>
                     <div class="task-metric">📝 36 LOC</div>
                 </div>
                 <div class='checks'>
                     <div class='check-item'>✓ Target file exists: flow_code/hello_api.py</div>
-                    <div class='check-item'>✓ Python module imports successfully</div>
+                </div>
+                <div class='errors'>
+                    <div class='error-item'>✗ [python_import] Python import failed: No module named &#x27;flask&#x27;</div>
                 </div>
             </div>
 
@@ -272,8 +274,8 @@
                 <p><strong>Description:</strong> MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統</p>
 
                 <div class="task-metrics">
-                    <div class="task-metric">⏱️ 0.76ms</div>
-                    <div class="task-metric">📁 105 files</div>
+                    <div class="task-metric">⏱️ 3.80ms</div>
+                    <div class="task-metric">📁 126 files</div>
                     <div class="task-metric">📝 0 LOC</div>
                 </div>
                 <div class='checks'>
