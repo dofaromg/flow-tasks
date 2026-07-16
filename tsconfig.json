@@ -17,6 +17,20 @@
     "incremental": true,
     "downlevelIteration": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "flowos", "particle-edge-v4", "particle-chat-v42"]
+  "include": [
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "pages/**/*.ts",
+    "pages/**/*.tsx",
+    "lib/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "flowos",
+    "particle-edge-v4",
+    "particle-chat-v42",
+    "MRL_Mother",
+    "MRL_Website"
+  ]
 }
