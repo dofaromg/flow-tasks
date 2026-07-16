@@ -1,0 +1,196 @@
+{
+  "schema": "MRL_Module_Registry_v0_1",
+  "origin_signature": "MrLiouWord",
+  "generated_utc": "2026-06-26T00:00:00Z",
+  "total_modules": 24,
+  "mainline_nodes": [
+    {
+      "node_id": "MRL.NODE.00.Reality",
+      "layer": "L-Root/Pre",
+      "status": "reconstructed",
+      "source_count": 12,
+      "dependencies": []
+    },
+    {
+      "node_id": "MRL.NODE.01.Origin",
+      "layer": "L0",
+      "status": "reconstructed",
+      "source_count": 13,
+      "dependencies": ["MRL.NODE.00.Reality"]
+    },
+    {
+      "node_id": "MRL.NODE.02.SeedKernel",
+      "layer": "L0/L1",
+      "status": "reconstructed",
+      "source_count": 20,
+      "dependencies": ["MRL.NODE.01.Origin"]
+    },
+    {
+      "node_id": "MRL.NODE.03.PreParticle",
+      "layer": "L1",
+      "status": "reconstructed",
+      "source_count": 24,
+      "dependencies": ["MRL.NODE.02.SeedKernel"]
+    },
+    {
+      "node_id": "MRL.NODE.04.Particle",
+      "layer": "L2",
+      "status": "reconstructed",
+      "source_count": 220,
+      "dependencies": ["MRL.NODE.03.PreParticle"]
+    },
+    {
+      "node_id": "MRL.NODE.05.Signal",
+      "layer": "L3",
+      "status": "reconstructed",
+      "source_count": 17,
+      "dependencies": ["MRL.NODE.04.Particle"]
+    },
+    {
+      "node_id": "MRL.NODE.06.Field",
+      "layer": "L3",
+      "status": "reconstructed",
+      "source_count": 18,
+      "dependencies": ["MRL.NODE.05.Signal"]
+    },
+    {
+      "node_id": "MRL.NODE.07.Persona",
+      "layer": "L4",
+      "status": "reconstructed",
+      "source_count": 79,
+      "dependencies": ["MRL.NODE.06.Field"]
+    },
+    {
+      "node_id": "MRL.NODE.08.Memory",
+      "layer": "L2/L5",
+      "status": "reconstructed",
+      "source_count": 9,
+      "dependencies": ["MRL.NODE.07.Persona"]
+    },
+    {
+      "node_id": "MRL.NODE.09.Globe",
+      "layer": "L5/L∞",
+      "status": "reconstructed",
+      "source_count": 8,
+      "dependencies": ["MRL.NODE.08.Memory"]
+    },
+    {
+      "node_id": "MRL.NODE.10.World",
+      "layer": "L4/L7",
+      "status": "reconstructed",
+      "source_count": 14,
+      "dependencies": ["MRL.NODE.09.Globe"]
+    },
+    {
+      "node_id": "MRL.NODE.11.Runtime",
+      "layer": "L6",
+      "status": "reconstructed",
+      "source_count": 8,
+      "dependencies": ["MRL.NODE.10.World"]
+    },
+    {
+      "node_id": "MRL.NODE.12.Mother",
+      "layer": "L0(canonical)",
+      "status": "reconstructed",
+      "source_count": 7,
+      "dependencies": ["MRL.NODE.11.Runtime"]
+    },
+    {
+      "node_id": "MRL.NODE.13.Return",
+      "layer": "L7/Loop",
+      "status": "reconstructed",
+      "source_count": 5,
+      "dependencies": ["MRL.NODE.12.Mother"],
+      "closure": "MRL.NODE.01.Origin"
+    }
+  ],
+  "infrastructure_modules": [
+    {
+      "module_id": "MRL_TopLevel_MasterIndex_v2",
+      "type": "registry",
+      "status": "verified",
+      "size": 10894,
+      "sha256": "canonical_hash_pending"
+    },
+    {
+      "module_id": "MRL_Global_Map_System_v2",
+      "type": "map",
+      "status": "verified",
+      "size": 2404,
+      "sha256": "canonical_hash_pending"
+    },
+    {
+      "module_id": "MRL_Global_Coupling_Map_v2",
+      "type": "coupling",
+      "status": "verified",
+      "size": 4679,
+      "sha256": "canonical_hash_pending"
+    },
+    {
+      "module_id": "MRL_Wakeup_System_v2",
+      "type": "system",
+      "status": "verified",
+      "size": 1021,
+      "sha256": "canonical_hash_pending"
+    },
+    {
+      "module_id": "MRL_AutoAbsorb_System_v1",
+      "type": "system",
+      "status": "verified",
+      "size": 534,
+      "sha256": "canonical_hash_pending"
+    },
+    {
+      "module_id": "MRL_CouplingPoint_Registry",
+      "type": "registry",
+      "status": "verified",
+      "size": 2614,
+      "sha256": "canonical_hash_pending"
+    },
+    {
+      "module_id": "MRL_ReturnPath_Registry",
+      "type": "registry",
+      "status": "verified",
+      "size": 2688,
+      "sha256": "canonical_hash_pending"
+    },
+    {
+      "module_id": "MRL_Engineering_Manifest",
+      "type": "manifest",
+      "status": "verified",
+      "size": 10781,
+      "sha256": "canonical_hash_pending"
+    },
+    {
+      "module_id": "particle-mcp-server",
+      "type": "mcp_server",
+      "status": "verified",
+      "size": 16803,
+      "sha256": "76E8F1BC047E99C14E9467031477C7C441408623CED704CDA7FE5D8C811928AA"
+    },
+    {
+      "module_id": "particle-team-mcp",
+      "type": "mcp_server",
+      "status": "verified",
+      "size": 16990,
+      "sha256": "995A2A92B3C42F3B0174521AA4BDD869F9A76B64AEE891461A51D2728A2273D4"
+    },
+    {
+      "module_id": "MRL_RuntimeDaemon_v2_1",
+      "type": "runtime_daemon",
+      "status": "FOUND_EVIDENCE_PENDING_DL580_LIVE_VERIFY",
+      "executable": "C++",
+      "http_api": true,
+      "port": 8099
+    },
+    {
+      "module_id": "flowcore_loop",
+      "type": "runtime_candidate",
+      "status": "FOUND_EVIDENCE_CANONICALITY_PENDING",
+      "language": "Python",
+      "size": 696628,
+      "sha256": "A26C71A3C00CC0584DB4B205DAFF9C8B2946594BC4737E32FB2E52BA921D5DF9",
+      "variants": 3
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+```mermaid
+graph TD
+  %% 神經網絡分支圖譜 - origin_signature: MrLiouWord
+
+  %% 節點定義
+  main["● main<br/>L7"]:::trunk
+  copilot_create_branch_neural_map["● copilot/create-branch-neural-map<br/>L6"]:::cognitive
+
+  %% 連結定義
+  main -.->|active| copilot_create_branch_neural_map
+
+  %% 樣式定義
+  classDef trunk fill:#ff6b6b,stroke:#333,stroke-width:4px,color:#fff
+  classDef cognitive fill:#4ecdc4,stroke:#333,stroke-width:3px,color:#000
+  classDef feature fill:#95e1d3,stroke:#333,stroke-width:2px,color:#000
+  classDef hotfix fill:#f9ca24,stroke:#333,stroke-width:2px,color:#000
+  classDef experimental fill:#6c5ce7,stroke:#333,stroke-width:2px,color:#fff
+```

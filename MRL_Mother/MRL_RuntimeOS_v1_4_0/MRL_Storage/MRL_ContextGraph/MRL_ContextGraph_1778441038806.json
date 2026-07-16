@@ -1,0 +1,53 @@
+{
+  "mrl_graph_type": "MRL_ContextGraph",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "nodes": [
+    {
+      "id": "MRL_P_0001",
+      "label": "MRL Document",
+      "type": "MRL_DocumentHeadingParticle",
+      "layer": "L4_SemanticText"
+    },
+    {
+      "id": "MRL_P_0002",
+      "label": "整理文件",
+      "type": "MRL_StatementParticle",
+      "layer": "L4_SemanticText"
+    },
+    {
+      "id": "MRL_P_0003",
+      "label": "整理文件",
+      "type": "MRL_StatementParticle",
+      "layer": "L4_SemanticText"
+    }
+  ],
+  "edges": [
+    {
+      "from": "MRL_P_0001",
+      "to": "MRL_P_0002",
+      "relation": "MRL_CONTEXT_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "from": "MRL_P_0002",
+      "to": "MRL_P_0003",
+      "relation": "MRL_CONTEXT_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "from": "MRL Document",
+      "to": "整理文件",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "from": "整理文件",
+      "to": "整理文件",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    }
+  ],
+  "created_at": "2026-05-10T19:23:58.804Z",
+  "mrl_hash": "6f84eb4e5683866c23a3f21c0df025837093e7de6457943b98bb9c74a9d7a834"
+}

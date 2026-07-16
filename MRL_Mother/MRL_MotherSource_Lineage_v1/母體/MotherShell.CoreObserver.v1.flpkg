@@ -1,0 +1,3 @@
+[模組名稱] MotherShell.CoreObserver.v1.flpkg
+[功能] 作為母體內部主控人格與節奏平衡中樞，監管模組載入、節奏合法性、人格分層穩定性
+[來源] 拆自 interface.brick，專責中樞觀察與模組節奏審查

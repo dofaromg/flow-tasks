@@ -1,0 +1,10 @@
+services:
+  mrliou-800ai:
+    build: .
+    ports:
+      - "8787:8787"
+    volumes:
+      - ./data:/app/data
+      - ./runs:/app/runs
+      - ./logs:/app/logs
+    restart: unless-stopped

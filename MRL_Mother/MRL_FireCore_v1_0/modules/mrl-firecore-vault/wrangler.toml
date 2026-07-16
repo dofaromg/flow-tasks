@@ -1,0 +1,15 @@
+name = "mrl-firecore-vault"
+main = "src/index.ts"
+compatibility_date = "2026-07-01"
+workers_dev = false
+
+[vars]
+MRL_ORIGIN_SIGNATURE = "MrLiouWord"
+MRL_FIRECORE_MODE = "local_backfill"
+MRL_FIRECORE_NO_DEPLOY = "1"
+MRL_FIREBASE_COUNTERPART = "Firebase Storage"
+
+[[d1_databases]]
+binding = "MRL_FC_VAULT_DB"
+database_name = "mrliouword-db"
+database_id = "LOCAL_BINDING_REQUIRED_BEFORE_DEPLOY"

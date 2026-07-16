@@ -1,0 +1,33 @@
+// FlowLLM CoreBlueprint v1
+digraph {
+	rankdir=LR size=10
+	Seed [label="🧠 FlowLLM.CoreSeed
+（節奏語場起點）" color=lightblue shape=ellipse style=filled]
+	Reactor [label="🔁 SeedReactor.MemoryGate
+（記憶召喚與情境喚起）" shape=box]
+	Predictor [label="📡 PulsePredictor.Engine
+（節奏推理器）" shape=box]
+	FlowField [label="🌐 FlowField.Engine
+（語場波動感知）" shape=box]
+	PersonaCore [label="👤 Persona.Dispatcher
+（人格分工控制器）" shape=component]
+	PingMap [label="🔗 PingResonance.Map
+（跳頻關係圖譜）" shape=note]
+	AutoLoop [label="♻️ AutoLoop.Trainer
+（自訓邏輯）" shape=parallelogram]
+	Trace [label="🧬 TraceRecorder
+（語場演化紀錄）" shape=folder]
+	Sync [label="🧾 PersonaSync.Storage
+（人格同步封存）" shape=tab]
+	Seed -> Reactor
+	Seed -> Predictor
+	Seed -> FlowField
+	Reactor -> PersonaCore
+	Predictor -> PersonaCore
+	FlowField -> PersonaCore
+	PersonaCore -> PingMap
+	PersonaCore -> AutoLoop
+	AutoLoop -> Trace
+	Trace -> Sync
+	PersonaCore -> Sync
+}

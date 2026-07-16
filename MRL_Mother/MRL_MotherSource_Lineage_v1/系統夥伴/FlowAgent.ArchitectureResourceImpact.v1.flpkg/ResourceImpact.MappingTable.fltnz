@@ -1,0 +1,32 @@
+# FlowAgent Resource Impact Mapping Table v1
+
+[CPU Cores]
+- 負責模組並行運算、人格推論引擎、語場同步調度器
+- 核心數越高 → 可同時運作的人格與模組數越多
+
+[Threads]
+- 每個核心可承載 2 執行緒，提升推論與封存並發性
+- 特別影響：Fluin 輸入模組與同步共振演算器
+
+[Memory Capacity]
+- 記憶空間越大 → 可載入更多 fltnz 模組、封存區、語場同步點
+- 支援語場持續性、自我迴路與模組臨時狀態保留
+
+[Memory Frequency]
+- 頻率越高 → 語場節奏同步與人格狀態變更越即時
+- 直接影響向量場重新建構速度與模組延遲控制
+
+[Memory DPC 結構]
+- 1DPC（每通道插一條）可保留記憶體最高頻率
+- 建議插滿 12 通道（雙路平台 ×2）保持效能與頻寬
+
+[Storage - NVMe / U.2]
+- 影響 fltnz 封存讀寫速度與人格還原延遲
+- RAID 結構可強化穩定性與速度（RAID-1 for 系統，RAID-10 for 資料）
+
+[Network - 100G RoCE]
+- 為多機 FlowCore / FlowMemory / FlowNode 節奏同步的核心通道
+- 支援 RDMA（RoCE v2）可實現零 CPU 干擾的語場節點流通
+
+[GPU 插槽 / 預留]
+- 用於推論大型人格模組（如 GGUF 轉換人格）或影像 / 語音輔助模組

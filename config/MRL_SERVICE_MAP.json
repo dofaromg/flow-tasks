@@ -1,0 +1,67 @@
+{
+  "origin_signature": "MrLiouWord",
+  "version": "1.0.0",
+  "snapshot_date": "2026-07-10",
+  "total_services": 22,
+  "running": 20,
+  "paused": 1,
+  "layers": {
+    "core_engine": {
+      "description": "ASI 粒子引擎核心 — Worker 編排、Agent 記憶、工具鏈、寫入保護",
+      "services": [
+        "MRL_ASI_Engine",
+        "MRL_Agent_Orchestrator",
+        "MRL_Memory_Engine",
+        "MRL_Toolchain_Engine",
+        "MRL_Write_Guard",
+        "MRL_PersistentLoop"
+      ]
+    },
+    "ai_inference": {
+      "description": "AI 推論層 — 本地推論、FlowCore 融合、FlowAgent、粒子球記憶",
+      "services": [
+        "MRL_Inference",
+        "MRL_FlowCoreLoop",
+        "MRL_FlowAgent_API",
+        "MRL_ParticleGlobe"
+      ]
+    },
+    "platform": {
+      "description": "平台服務 — 產品伺服器、母體控制面板、運行時適配器",
+      "services": [
+        "MRL_AI_Product_Server",
+        "MRL_AI_OS",
+        "MRL_RuntimeAdapter",
+        "MRL_Platform_Server"
+      ]
+    },
+    "infrastructure": {
+      "description": "資料基礎設施 — PostgreSQL、Redis、DB 代理",
+      "services": [
+        "MRL_PostgreSQL",
+        "mrl_redis",
+        "MRL_DB_Proxy"
+      ]
+    },
+    "network": {
+      "description": "網路層 — Cloudflare Tunnel、Bridge",
+      "services": [
+        "MRL_Tunnel",
+        "MRL_Bridge"
+      ]
+    },
+    "sync": {
+      "description": "同步 — 粒子同步 Worker",
+      "services": [
+        "MRL_Particle_Sync_Worker"
+      ]
+    },
+    "monitoring": {
+      "description": "監控 — PID 範圍監控、運維",
+      "services": [
+        "MRL_LayerA_PIDScope",
+        "MRL_Operations"
+      ]
+    }
+  }
+}

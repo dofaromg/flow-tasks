@@ -1,0 +1,9 @@
+{
+  "stack_name": "test_stack",
+  "mode": "sequential",
+  "particle_count": 2,
+  "particle_ids": [
+    "fn_func1",
+    "fn_func2"
+  ]
+}

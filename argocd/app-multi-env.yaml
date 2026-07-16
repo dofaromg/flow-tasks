@@ -1,0 +1,73 @@
+# ArgoCD 多環境分支追蹤配置
+# Multi-environment Branch Tracking Configuration for ArgoCD
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: flowagent-staging
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  
+  source:
+    repoURL: https://github.com/dofaromg/flow-tasks.git
+    # 追蹤 develop 分支用於 staging 環境
+    # Track develop branch for staging environment
+    targetRevision: develop
+    path: cluster/overlays/prod
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: flowagent-staging
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: flowagent-production
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  
+  source:
+    repoURL: https://github.com/dofaromg/flow-tasks.git
+    # 追蹤 main 分支用於生產環境
+    # Track main branch for production environment
+    targetRevision: main
+    path: cluster/overlays/prod
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: flowagent
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

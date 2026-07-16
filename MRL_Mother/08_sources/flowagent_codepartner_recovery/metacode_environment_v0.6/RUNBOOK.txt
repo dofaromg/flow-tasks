@@ -1,0 +1,14 @@
+# Runbook — MetaCode Environment v0.6 (Filled)
+Built: 2025-08-08T220348Z UTC
+
+Files:
+- runtime/MetaCode_Environment_v0.6.json
+- runtime/demo_trace.jsonl
+- tests/unit_tests.json
+- modules_index.json
+
+Quick start:
+1) Load runtime JSON; feed E0/trigger/state.
+2) Execute process steps in order; compare your intermediate states with demo_trace.jsonl.
+3) Run tests to verify core guards and structure.
+4) Use modules_index.json to locate full assets you uploaded; mount as needed.

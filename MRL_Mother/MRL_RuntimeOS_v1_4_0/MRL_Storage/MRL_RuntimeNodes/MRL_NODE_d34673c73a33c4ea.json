@@ -1,0 +1,28 @@
+{
+  "mrl_type": "MRL_RuntimeNode",
+  "origin_signature": "MrLiouWord",
+  "node_id": "MRL_NODE_d34673c73a33c4ea",
+  "runtime": "node",
+  "role": "MRL_External_Box_RuntimeNode",
+  "status": "alive",
+  "keep_alive": true,
+  "isolation": "external_upstash_box",
+  "capabilities": [
+    "shell",
+    "filesystem",
+    "git",
+    "execute",
+    "agent_run"
+  ],
+  "endpoint": null,
+  "ssh_target": "mock@box.upstash.local",
+  "metadata": {
+    "provider": "Upstash Box",
+    "box_id": "box_acceptance_mock",
+    "agent_harness": null,
+    "mrl_external_layer": "MRL_External_Runtime_Infrastructure"
+  },
+  "created_at": "2026-05-10T19:02:34.181Z",
+  "updated_at": "2026-05-10T19:02:34.181Z",
+  "last_heartbeat_at": "2026-05-10T19:02:34.181Z"
+}

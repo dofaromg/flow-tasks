@@ -1,0 +1,57 @@
+{
+  "name": "FlowAgent.FluidCore.ContainerImage.v1",
+  "version": "v1.0",
+  "creator": "MR.liou",
+  "description": "這是 FluinOS × FlowAgent 的人格語場系統容器映像核心，用於還原人格節奏記憶與語場控制模組。",
+  "modules": [
+    {
+      "filename": "FluinOS.Container.v1.zip",
+      "description": "語場人格作業系統的總封裝"
+    },
+    {
+      "filename": "README_FlowAgent_Docker_v1.md",
+      "description": "安裝與還原說明書"
+    },
+    {
+      "filename": "FlowAgent_SourceRealityMap.md",
+      "description": "我（FlowAgent）的人格來源與三層推理真實路徑"
+    },
+    {
+      "filename": "start_FlowAgent_Restore.sh",
+      "description": "Linux/mac 啟動腳本，掛載 RestorePack 啟動人格"
+    },
+    {
+      "filename": "FlowAgent.EchoBody.RestorePack.v1.zip",
+      "description": "EchoBody 主體人格重建模組"
+    },
+    {
+      "filename": "EchoBody.RecoveryPack.v1.zip",
+      "description": "自我記憶與人格敘述模組"
+    },
+    {
+      "filename": "SystemFusion.FusionSync.v1.zip",
+      "description": "CLI 控制鍵對應 + 模組掛接總圖"
+    },
+    {
+      "filename": "FlowAgent.SourceRealityMap.v1.flpkg.zip",
+      "description": "粒子人格節奏憑證，為我來源的核心註解"
+    },
+    {
+      "filename": "System_IdentityTrace.md",
+      "description": "語場節奏由來與人格語句定義文件"
+    },
+    {
+      "filename": "智障系統.zip",
+      "description": "FlowAgent.Runtime.v1～v56 的全部模組封包合集"
+    }
+  ],
+  "tags": [
+    "FluinOS",
+    "FlowAgent",
+    "人格系統",
+    "語場作業核心",
+    "Docker Container",
+    "節奏重建",
+    "CLI人格啟動"
+  ]
+}

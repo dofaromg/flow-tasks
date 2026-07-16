@@ -1,0 +1,171 @@
+# Cloud Service Connector Configuration
+# 雲端服務連接器配置
+
+version: "1.0"
+
+# Connector Settings for 8 Cloud Services
+# 8個雲端服務的連接器設定
+connectors:
+  
+  # GitHub - Repository and workflow management
+  github:
+    enabled: false
+    auth_type: "api_key"
+    sync_enabled: false
+    agent_mode: true
+    credentials:
+      # Set via environment variable: GITHUB_TOKEN
+      # Or provide here (not recommended for production)
+      token: ""
+    settings:
+      rate_limit: 5000  # requests per hour
+      scopes: ["repo", "workflow", "read:org"]
+  
+  # Notion - Knowledge base and database
+  notion:
+    enabled: false
+    auth_type: "oauth2"
+    sync_enabled: false
+    agent_mode: true
+    credentials:
+      # Set via environment variable: NOTION_TOKEN
+      token: ""
+    settings:
+      version: "2022-06-28"
+      scopes: ["read_content", "update_content", "insert_content"]
+  
+  # Dropbox - File storage and sharing
+  dropbox:
+    enabled: false
+    auth_type: "oauth2"
+    sync_enabled: false
+    agent_mode: false
+    credentials:
+      # Set via environment variable: DROPBOX_TOKEN
+      token: ""
+    settings:
+      scopes: ["files.metadata.read", "files.content.read", "files.content.write"]
+  
+  # Google Drive - Document and file storage
+  google_drive:
+    enabled: false
+    auth_type: "oauth2"
+    sync_enabled: false
+    agent_mode: false
+    credentials:
+      # Set via environment variable: GOOGLE_DRIVE_TOKEN
+      token: ""
+    settings:
+      scopes: 
+        - "https://www.googleapis.com/auth/drive.readonly"
+        - "https://www.googleapis.com/auth/drive.file"
+  
+  # Vercel - Deployment and hosting
+  vercel:
+    enabled: false
+    auth_type: "api_key"
+    sync_enabled: false
+    agent_mode: true
+    credentials:
+      # Set via environment variable: VERCEL_TOKEN
+      token: ""
+    settings:
+      scopes: ["deployments", "projects", "logs"]
+  
+  # iCloud - Apple ecosystem integration
+  icloud:
+    enabled: false
+    auth_type: "basic_auth"
+    sync_enabled: false
+    agent_mode: false
+    credentials:
+      # Requires app-specific password from Apple ID
+      # Set via environment variable: ICLOUD_TOKEN
+      app_password: ""
+      username: ""
+    settings:
+      requires_2fa: true
+      protocols: ["webdav", "caldav"]
+  
+  # GitLab - Repository management (supports self-hosted)
+  gitlab:
+    enabled: false
+    auth_type: "api_key"
+    sync_enabled: false
+    agent_mode: true
+    credentials:
+      # Set via environment variable: GITLAB_TOKEN
+      token: ""
+    settings:
+      # For self-hosted GitLab, change this URL
+      instance_url: "https://gitlab.com/api/v4"
+      scopes: ["api", "read_repository", "write_repository"]
+  
+  # HuggingFace - AI models and datasets
+  huggingface:
+    enabled: false
+    auth_type: "api_key"
+    sync_enabled: false
+    agent_mode: false
+    credentials:
+      # Set via environment variable: HUGGINGFACE_TOKEN
+      token: ""
+    settings:
+      scopes: ["read", "write"]
+
+# Global Settings
+# 全局設定
+global:
+  # Connection timeout in seconds
+  connection_timeout: 30
+  
+  # Retry attempts for failed connections
+  retry_attempts: 3
+  
+  # Enable automatic health checks
+  auto_health_check: true
+  
+  # Health check interval (minutes)
+  health_check_interval: 60
+  
+  # Log level: DEBUG, INFO, WARNING, ERROR
+  log_level: "INFO"
+  
+  # Enable metrics collection
+  metrics_enabled: true
+
+# Security Settings
+# 安全設定
+security:
+  # Encrypt credentials in config
+  encrypt_credentials: true
+  
+  # Credential rotation reminder (days)
+  rotation_reminder_days: 90
+  
+  # Enable audit logging
+  audit_logging: true
+  
+  # Allowed IP ranges (optional)
+  allowed_ip_ranges: []
+  
+  # Enable rate limiting
+  rate_limiting_enabled: true
+
+# Sync Settings
+# 同步設定
+sync:
+  # Default sync direction: pull, push, bidirectional
+  default_direction: "pull"
+  
+  # Sync interval (minutes)
+  interval: 15
+  
+  # Parallel sync enabled
+  parallel_sync: true
+  
+  # Max concurrent syncs
+  max_concurrent_syncs: 3
+  
+  # Conflict resolution: newest, oldest, manual
+  conflict_resolution: "newest"

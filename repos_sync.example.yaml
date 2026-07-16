@@ -1,0 +1,71 @@
+# Repository Synchronization Configuration - Example
+# 倉庫同步配置檔案 - 範例
+#
+# 這是一個實際的配置範例，展示如何同步外部倉庫的檔案
+# This is a practical example showing how to sync files from external repositories
+
+version: "1.0"
+
+# 倉庫列表 / Repository List
+repositories:
+  # 範例: 從 GitHub 的 Hello World 範例倉庫拉取 README
+  # Example: Pull README from GitHub's Hello World sample repository
+  - name: "github-hello-world"
+    url: "https://github.com/octocat/Hello-World.git"
+    branch: "master"
+    enabled: false  # 設為 true 以啟用此同步 / Set to true to enable this sync
+    files:
+      - src: "README"
+        dest: "examples/synced_files/hello_world_readme.txt"
+
+  # 範例: 同步 Python 專案的 .gitignore 模板
+  # Example: Sync Python project .gitignore template
+  - name: "python-gitignore"
+    url: "https://github.com/github/gitignore.git"
+    branch: "main"
+    enabled: false  # 設為 true 以啟用此同步 / Set to true to enable this sync
+    files:
+      - src: "Python.gitignore"
+        dest: "examples/synced_files/python.gitignore.template"
+
+  # 範例: 同步特定目錄的配置檔案
+  # Example: Sync configuration files from a specific directory
+  # - name: "config-templates"
+  #   url: "https://github.com/your-org/config-templates.git"
+  #   branch: "main"
+  #   enabled: true
+  #   directories:
+  #     - src: "kubernetes"
+  #       dest: "cluster/imported-configs"
+  #       exclude:
+  #         - "*.example"
+  #         - "secrets.yaml"
+
+# 同步設定 / Sync Settings
+settings:
+  # 自動建立備份 / Auto backup before sync
+  backup_before_sync: true
+  
+  # 備份目錄 / Backup directory
+  backup_dir: ".sync_backups"
+  
+  # 衝突處理策略 / Conflict resolution strategy
+  # Options: "overwrite" (覆寫), "skip" (跳過), "prompt" (詢問)
+  conflict_strategy: "skip"
+  
+  # 驗證檔案完整性 / Verify file integrity
+  verify_integrity: true
+  
+  # 同步後執行的命令 / Commands to run after sync
+  post_sync_commands: []
+    # - "echo 'Sync completed!'"
+
+# 排除模式 / Exclude Patterns (全域)
+exclude_patterns:
+  - "*.pyc"
+  - "__pycache__"
+  - ".git"
+  - ".github"
+  - "node_modules"
+  - ".DS_Store"
+  - "*.log"

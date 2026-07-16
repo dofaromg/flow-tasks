@@ -1,0 +1,103 @@
+name: CD - Deploy to GKE
+
+on:
+  workflow_run:
+    workflows: ["CI - Build and Push Container Images"]
+    types:
+      - completed
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: flowmemorysync
+  REGION: asia-east1
+  ZONE: asia-east1-a
+  CLUSTER_NAME: modular-cluster
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    # Only run if CI workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    
+    permissions:
+      contents: read
+      id-token: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Authenticate to Google Cloud
+      id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+        service_account: ${{ secrets.GCP_DEPLOYER_SA }}
+    
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+    
+    - name: Install gke-gcloud-auth-plugin
+      run: |
+        gcloud components install gke-gcloud-auth-plugin
+    
+    - name: Get GKE credentials
+      run: |
+        gcloud container clusters get-credentials ${{ env.CLUSTER_NAME }} \
+          --zone ${{ env.ZONE }} \
+          --project ${{ env.PROJECT_ID }}
+    
+    - name: Install Kustomize
+      run: |
+        curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+        sudo mv kustomize /usr/local/bin/
+    
+    - name: Set deployment image tags
+      run: |
+        # Use the head SHA from the triggering CI workflow (workflow_run event),
+        # or fall back to current SHA for manual dispatch (workflow_dispatch).
+        # For workflow_dispatch, ensure the image was already built for this commit.
+        IMAGE_TAG="${{ github.event.workflow_run.head_sha }}"
+        if [ -z "$IMAGE_TAG" ]; then
+          IMAGE_TAG="${{ github.sha }}"
+        fi
+        if [ -z "$IMAGE_TAG" ]; then
+          echo "ERROR: Could not determine image tag (IMAGE_TAG is empty)" >&2
+          exit 1
+        fi
+        echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
+        echo "Deploying image tag: ${IMAGE_TAG}"
+        cd cluster/overlays/prod
+        kustomize edit set image \
+          asia-east1-docker.pkg.dev/flowmemorysync/flowagent/module-a:${IMAGE_TAG} \
+          asia-east1-docker.pkg.dev/flowmemorysync/flowagent/orchestrator:${IMAGE_TAG} \
+          asia-east1-docker.pkg.dev/flowmemorysync/flowagent/nextjs-frontend:${IMAGE_TAG}
+    
+    - name: Build Kustomize manifests
+      run: |
+        kustomize build cluster/overlays/prod > /tmp/manifests.yaml
+    
+    - name: Deploy to GKE
+      run: |
+        kubectl apply -f /tmp/manifests.yaml
+    
+    - name: Verify deployment
+      run: |
+        kubectl rollout status deployment/module-a -n flowagent --timeout=5m
+        kubectl rollout status deployment/orchestrator -n flowagent --timeout=5m
+        kubectl rollout status deployment/mongodb -n flowagent --timeout=5m
+        kubectl rollout status deployment/nextjs-frontend -n flowagent --timeout=5m
+    
+    - name: Get service endpoints
+      run: |
+        echo "### 🎉 Deployment Complete" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Image Tag:** \`${{ env.IMAGE_TAG }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Services:**" >> $GITHUB_STEP_SUMMARY
+        kubectl get svc -n flowagent >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Pods:**" >> $GITHUB_STEP_SUMMARY
+        kubectl get pods -n flowagent >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,13 @@
+{
+  "origin_signature": "MrLiouWord",
+  "skill": "MRL_Skill_FileAnalyze_v1",
+  "duration_ms": 0,
+  "result": {
+    "filename": "a.txt",
+    "ext": "txt",
+    "bytes": 11,
+    "lines": 2,
+    "sha256": "683376e290829b482c2655745caffa7a1dccfa10afaa62dac2b42dd6c68d0f83",
+    "preview": "line1\nline2"
+  }
+}
