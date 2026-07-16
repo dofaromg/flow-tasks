@@ -1,33 +1,33 @@
 {
-  "processing_time": "2025-09-14T05:05:20.473375",
-  "processing_time": "2026-02-11T18:02:48.995849",
+  "processing_time": "2026-07-16T16:26:07.347394",
   "total_tasks": 2,
-  "passed": 2,
-  "failed": 0,
+  "passed": 1,
+  "failed": 1,
   "warnings": 0,
   "tasks": [
     {
       "task_id": "hello-world-api",
-      "validation_time": "2025-09-14T05:05:20.474667",
       "task_name": "Unknown Task",
-      "validation_time": "2026-02-11T18:02:48.996540",
-      "status": "passed",
+      "validation_time": "2026-07-16T16:26:07.348526",
+      "status": "failed",
       "checks": [
         {
           "check": "file_exists",
           "status": "passed",
           "message": "Target file exists: flow_code/hello_api.py"
-        },
-        {
-          "check": "python_import",
-          "status": "passed",
-          "message": "Python module imports successfully"
         }
       ],
-      "errors": [],
+      "errors": [
+        {
+          "type": "python_import",
+          "message": "Python import failed: No module named 'flask'",
+          "severity": "error",
+          "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/flow-tasks/flow-tasks/process_tasks.py\", line 132, in validate_task_implementation\n    module_spec.loader.exec_module(task_module)\n  File \"<frozen importlib._bootstrap_external>\", line 883, in exec_module\n  File \"<frozen importlib._bootstrap>\", line 241, in _call_with_frames_removed\n  File \"/home/runner/work/flow-tasks/flow-tasks/flow_code/hello_api.py\", line 8, in <module>\n    from flask import Flask, jsonify\nModuleNotFoundError: No module named 'flask'\n"
+        }
+      ],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 95.63,
+        "execution_time_ms": 6.86,
         "files_checked": 1,
         "lines_of_code": 36
       },
@@ -39,12 +39,8 @@
     },
     {
       "task_id": "particle-language-core",
-<<<<<<< 記憶
-      "validation_time": "2025-09-14T05:05:20.701032",
-=======
       "task_name": "Unknown Task",
-      "validation_time": "2026-02-11T18:02:49.093994",
->>>>>>> main
+      "validation_time": "2026-07-16T16:26:07.360264",
       "status": "passed",
       "checks": [
         {
@@ -56,8 +52,8 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 0.76,
-        "files_checked": 105,
+        "execution_time_ms": 3.8,
+        "files_checked": 126,
         "lines_of_code": 0
       },
       "metadata": {
@@ -66,18 +62,17 @@
         "tags": []
       }
     }
-  ]
   ],
   "overall_metrics": {
-    "total_execution_time_ms": 99.08,
-    "total_files_checked": 106,
+    "total_execution_time_ms": 16.96,
+    "total_files_checked": 127,
     "total_lines_of_code": 36,
-    "average_task_time_ms": 49.54
+    "average_task_time_ms": 8.48
   },
   "summary": {
-    "pass_rate": 100.0,
+    "pass_rate": 50.0,
     "recommendations": [
-      "✅ All tasks passed validation. Great job!"
+      "⚠️  1 task(s) failed validation. Review errors and fix issues."
     ]
   }
 }

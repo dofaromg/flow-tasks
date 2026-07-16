@@ -1,42 +1,44 @@
 # FlowAgent Task Processing Report
 
-**Report Generated:** 2026-02-11T18:02:48.995849
+**Report Generated:** 2026-07-16T16:26:07.347394
 
 ## Executive Summary
 
 - **Total Tasks:** 2
-- **Passed:** 2 ✅
-- **Failed:** 0 ❌
+- **Passed:** 1 ✅
+- **Failed:** 1 ❌
 - **Warnings:** 0 ⚠️
-- **Pass Rate:** 100.0%
-- **Total Execution Time:** 99.08ms
-- **Average Task Time:** 49.54ms
+- **Pass Rate:** 50.0%
+- **Total Execution Time:** 16.96ms
+- **Average Task Time:** 8.48ms
 
 ## Overall Metrics
 
-- **Total Files Checked:** 106
+- **Total Files Checked:** 127
 - **Total Lines of Code:** 36
 
 ## Recommendations
 
-- ✅ All tasks passed validation. Great job!
+- ⚠️  1 task(s) failed validation. Review errors and fix issues.
 
 ## Task Details
 
-### ✅ hello-world-api
+### ❌ hello-world-api
 
 **Name:** Unknown Task
 
 **Description:** 寫一個 Flask 的 hello world API，輸出 "你好，世界"
 
 **Metrics:**
-- Execution Time: 95.63ms
+- Execution Time: 6.86ms
 - Files Checked: 1
 - Lines of Code: 36
 
 **Checks:**
 - ✅ Target file exists: flow_code/hello_api.py
-- ✅ Python module imports successfully
+
+**Errors:**
+- ❌ **[python_import]** Python import failed: No module named 'flask'
 
 ---
 
@@ -47,8 +49,8 @@
 **Description:** MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統
 
 **Metrics:**
-- Execution Time: 0.76ms
-- Files Checked: 105
+- Execution Time: 3.80ms
+- Files Checked: 126
 - Lines of Code: 0
 
 **Checks:**
