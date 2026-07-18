@@ -1,13 +1,28 @@
 {
   "task_id": "hello-world-api",
   "task_name": "Unknown Task",
-  "validation_time": "2026-07-18T06:13:41.974179",
+  "validation_time": "2026-07-18T06:16:47.030374",
   "status": "passed",
   "checks": [
+    {
+      "check": "schema",
+      "status": "passed",
+      "message": "Required task fields are present"
+    },
+    {
+      "check": "schema_target",
+      "status": "passed",
+      "message": "Task target is declared"
+    },
     {
       "check": "file_exists",
       "status": "passed",
       "message": "Target file exists: flow_code/hello_api.py"
+    },
+    {
+      "check": "python_syntax",
+      "status": "passed",
+      "message": "Python syntax check passed: flow_code/hello_api.py"
     },
     {
       "check": "python_import",
@@ -18,7 +33,7 @@
   "errors": [],
   "warnings": [],
   "metrics": {
-    "execution_time_ms": 324.64,
+    "execution_time_ms": 116.93,
     "files_checked": 1,
     "lines_of_code": 36
   },
