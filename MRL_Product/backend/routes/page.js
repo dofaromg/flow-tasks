@@ -9,6 +9,7 @@ const { track } = require('../modules/events');
 const { verifyToken } = require('../modules/identity');
 
 const frontendDir = path.join(__dirname, '../../frontend');
+const serveInterfacePage = (req, res) => res.sendFile('interface.html', { root: frontendDir });
 
 // ── 追蹤 helper ───────────────────────────────────────────────────
 function trackPage(eventName) {
@@ -36,8 +37,8 @@ router.get('/',           trackPage('page_view_home'),    (req, res) => res.send
 router.get('/index.html', trackPage('page_view_home'),    (req, res) => res.sendFile('index.html',   { root: frontendDir }));
 router.get('/app.html',   trackPage('page_view_app'),     (req, res) => res.sendFile('app.html',     { root: frontendDir }));
 router.get('/app',        trackPage('page_view_app'),     (req, res) => res.sendFile('app.html',     { root: frontendDir }));
-router.get('/interface',  trackPage('page_view_interface'), (req, res) => res.sendFile('interface.html', { root: frontendDir }));
-router.get('/interface.html', trackPage('page_view_interface'), (req, res) => res.sendFile('interface.html', { root: frontendDir }));
+router.get('/interface',  trackPage('page_view_interface'), serveInterfacePage);
+router.get('/interface.html', trackPage('page_view_interface'), serveInterfacePage);
 router.get('/pricing.html', trackPage('page_view_pricing'), (req, res) => res.sendFile('pricing.html', { root: frontendDir }));
 router.get('/pricing',    trackPage('page_view_pricing'), (req, res) => res.sendFile('pricing.html', { root: frontendDir }));
 router.get('/success.html', (req, res) => res.sendFile('success.html', { root: frontendDir }));

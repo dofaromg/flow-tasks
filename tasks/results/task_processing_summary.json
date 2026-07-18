@@ -1,5 +1,5 @@
 {
-  "processing_time": "2026-07-18T06:18:24.145198",
+  "processing_time": "2026-07-18T06:22:53.482647",
   "total_tasks": 4,
   "passed": 4,
   "failed": 0,
@@ -8,7 +8,7 @@
     {
       "task_id": "hello-world-api",
       "task_name": "Unknown Task",
-      "validation_time": "2026-07-18T06:18:24.145926",
+      "validation_time": "2026-07-18T06:22:53.485469",
       "status": "passed",
       "checks": [
         {
@@ -40,7 +40,7 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 85.99,
+        "execution_time_ms": 287.3,
         "files_checked": 1,
         "lines_of_code": 36
       },
@@ -53,7 +53,7 @@
     {
       "task_id": "particle-language-core",
       "task_name": "Unknown Task",
-      "validation_time": "2026-07-18T06:18:24.233393",
+      "validation_time": "2026-07-18T06:22:53.778270",
       "status": "passed",
       "checks": [
         {
@@ -80,7 +80,7 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 94.32,
+        "execution_time_ms": 309.17,
         "files_checked": 153,
         "lines_of_code": 24940
       },
@@ -93,7 +93,7 @@
     {
       "task_id": "flowos-neural-link",
       "task_name": "Unknown Task",
-      "validation_time": "2026-07-18T06:18:24.331128",
+      "validation_time": "2026-07-18T06:22:54.099409",
       "status": "passed",
       "checks": [
         {
@@ -115,7 +115,7 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 1.28,
+        "execution_time_ms": 3.54,
         "files_checked": 25,
         "lines_of_code": 1569
       },
@@ -128,7 +128,7 @@
     {
       "task_id": "hello-world-api-c",
       "task_name": "Unknown Task",
-      "validation_time": "2026-07-18T06:18:24.333590",
+      "validation_time": "2026-07-18T06:22:54.107779",
       "status": "passed",
       "checks": [
         {
@@ -149,13 +149,13 @@
         {
           "check": "c_compile",
           "status": "passed",
-          "message": "C compile check passed in 63.25ms"
+          "message": "C compile check passed in 127.70ms"
         }
       ],
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 63.85,
+        "execution_time_ms": 128.58,
         "files_checked": 1,
         "lines_of_code": 168
       },
@@ -172,17 +172,17 @@
       {
         "check": "npm_lint",
         "status": "passed",
-        "message": "npm run lint passed in 1784.26ms"
+        "message": "npm run lint passed in 4265.88ms"
       },
       {
         "check": "npm_build",
         "status": "passed",
-        "message": "npm run build passed in 23124.05ms"
+        "message": "npm run build passed in 38506.42ms"
       },
       {
         "check": "kubernetes_render",
         "status": "passed",
-        "message": "kubectl kustomize cluster/overlays/prod/ passed in 95.35ms"
+        "message": "kubectl kustomize cluster/overlays/prod/ passed in 100.42ms"
       }
     ],
     "warnings": [
@@ -222,6 +222,14 @@
           {
             "path": "專業部署分析報告.md",
             "type": "generic_secret_assignment"
+          },
+          {
+            "path": "particle-auth-gateway.zip",
+            "type": "sensitive_filename"
+          },
+          {
+            "path": "🔐 MRLiouWord 分層認證授權框架 (Layered Auth Framework) da88e33388b0485eb61041438cec8c27.md",
+            "type": "sensitive_filename"
           },
           {
             "path": "🔐 MRLiouWord 分層認證授權框架 (Layered Auth Framework) da88e33388b0485eb61041438cec8c27.md",
@@ -342,14 +350,6 @@
           {
             "path": "MRLiou_800AI/src/mrliou_800ai/security.py",
             "type": "generic_secret_assignment"
-          },
-          {
-            "path": "MRL_ParticleArchive/PR19/09_workflow__MRL_runtime_config.py",
-            "type": "generic_secret_assignment"
-          },
-          {
-            "path": "particle-chat-v42/src/index.js",
-            "type": "generic_secret_assignment"
           }
         ],
         "truncated": true
@@ -358,10 +358,10 @@
     "errors": []
   },
   "overall_metrics": {
-    "total_execution_time_ms": 25748.71,
+    "total_execution_time_ms": 44229.98,
     "total_files_checked": 180,
     "total_lines_of_code": 26713,
-    "average_task_time_ms": 6437.18
+    "average_task_time_ms": 11057.5
   },
   "summary": {
     "pass_rate": 100.0,
