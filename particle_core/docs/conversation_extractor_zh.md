@@ -91,7 +91,7 @@
 
 - **統一外部匯入**：`ingest_external()` 支援 file、folder、repo、api/package、web_text/text。
 - **Canonical Schema**：`canonicalize_package()` 將每筆資料正規化為 `source`、`role`、`content`、`timestamp`、`metadata`、`hash`、`language`、`provenance`。
-- **Exact / Near Dedup**：`deduplicate_package()` 使用 normalized hash 與 Jaccard token similarity，合併重複來源但保留 provenance。
+- **Exact / Near Dedup**：`deduplicate_package()` 使用 normalized hash 與 Jaccard token similarity，合併重複來源但保留 provenance。normalized 內容會轉小寫以穩定比對，但原始 `content` 仍完整保留。
 - **結構拆解**：`decompose_package()` 產出 chunks、claims、entities、relationships、evidence、action items、decisions、contradictions。
 - **蒸餾洞察**：`distill_insights()` 將重複與長內容壓縮成 canonical insights，保留 source refs、confidence、conflicts。
 - **重組視圖**：`recompose_views()` 產出 summary、technical_analysis、action_plan、knowledge_graph、memory_seed。
@@ -396,6 +396,8 @@ python test_conversation_extractor.py
 #### `deduplicate_package(package: Dict, near_threshold: float = 0.72) -> Dict`
 
 使用 exact hash 與 near Jaccard similarity 去重；重複資料會合併到 `provenance` 與 `aliases`，避免遺失來源脈絡。
+
+預設 `near_threshold=0.72` 偏保守，用於降低不同短句被誤合併的風險；如需高召回清理大量重複資料，可依情境調低。
 
 #### `decompose_package(package: Dict, max_chunk_chars: int = 500) -> Dict`
 

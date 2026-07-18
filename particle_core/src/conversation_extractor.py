@@ -1276,7 +1276,11 @@ class ConversationExtractor:
         return role_map.get(value, "user" if "user" in value else "assistant" if "assistant" in value else "external")
 
     def _normalize_content(self, content: str) -> str:
-        """清理空白、格式雜訊與大小寫，形成穩定 hash 基礎。"""
+        """
+        清理空白、格式雜訊與大小寫，形成穩定 hash 基礎。
+
+        注意：此 normalized 版本只用於 hash / dedup；原始大小寫仍保留在 content。
+        """
         text = content.replace("\ufeff", "").replace("\r\n", "\n").replace("\r", "\n")
         text = re.sub(r'^[\s>*#\-\_=]{3,}$', ' ', text, flags=re.MULTILINE)
         text = re.sub(r'\s+', ' ', text).strip().lower()
@@ -1299,7 +1303,12 @@ class ConversationExtractor:
         return "unknown"
 
     def deduplicate_package(self, package: Dict, near_threshold: float = 0.72) -> Dict:
-        """進行 exact 與 near dedup，保留 provenance，不直接丟失來源。"""
+        """
+        進行 exact 與 near dedup，保留 provenance，不直接丟失來源。
+
+        near_threshold=0.72 偏保守，目標是避免不同但同主題的短句被誤合併；
+        可在高召回資料清理場景調低，例如測試或大量重複匯入時使用 0.5。
+        """
         canonical = package.get("canonical_messages")
         if canonical is None:
             package = self.canonicalize_package(package)
@@ -1446,7 +1455,7 @@ class ConversationExtractor:
                 if current:
                     chunks.append(current.strip())
                     current = ""
-                chunks.extend(sentence[i:i + max_chunk_chars] for i in range(0, len(sentence), max_chunk_chars))
+                chunks.extend(self._split_long_sentence(sentence, max_chunk_chars))
                 continue
             if current and len(current) + len(sentence) + 1 > max_chunk_chars:
                 chunks.append(current.strip())
@@ -1456,6 +1465,31 @@ class ConversationExtractor:
         if current:
             chunks.append(current.strip())
         return chunks
+
+    def _split_long_sentence(self, sentence: str, max_chunk_chars: int) -> List[str]:
+        """優先在空白或標點邊界切分過長句子，最後才機械切分。"""
+        pieces = []
+        remaining = sentence.strip()
+
+        while len(remaining) > max_chunk_chars:
+            window = remaining[:max_chunk_chars + 1]
+            split_at = max(
+                window.rfind(" "),
+                window.rfind("，"),
+                window.rfind("、"),
+                window.rfind(","),
+                window.rfind(";"),
+                window.rfind("；"),
+            )
+            if split_at <= 0:
+                split_at = max_chunk_chars
+            pieces.append(remaining[:split_at].strip())
+            remaining = remaining[split_at:].strip()
+
+        if remaining:
+            pieces.append(remaining)
+
+        return pieces
 
     def _record_unit(self, unit_type: str, text: str, chunk: Dict, confidence: float = 0.6) -> Dict:
         """建立拆解單元。"""
