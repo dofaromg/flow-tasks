@@ -1,5 +1,5 @@
 {
-  "processing_time": "2026-07-18T06:16:47.029597",
+  "processing_time": "2026-07-18T06:18:24.145198",
   "total_tasks": 4,
   "passed": 4,
   "failed": 0,
@@ -8,7 +8,7 @@
     {
       "task_id": "hello-world-api",
       "task_name": "Unknown Task",
-      "validation_time": "2026-07-18T06:16:47.030374",
+      "validation_time": "2026-07-18T06:18:24.145926",
       "status": "passed",
       "checks": [
         {
@@ -40,7 +40,7 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 116.93,
+        "execution_time_ms": 85.99,
         "files_checked": 1,
         "lines_of_code": 36
       },
@@ -53,7 +53,7 @@
     {
       "task_id": "particle-language-core",
       "task_name": "Unknown Task",
-      "validation_time": "2026-07-18T06:16:47.149575",
+      "validation_time": "2026-07-18T06:18:24.233393",
       "status": "passed",
       "checks": [
         {
@@ -80,7 +80,7 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 151.09,
+        "execution_time_ms": 94.32,
         "files_checked": 153,
         "lines_of_code": 24940
       },
@@ -93,7 +93,7 @@
     {
       "task_id": "flowos-neural-link",
       "task_name": "Unknown Task",
-      "validation_time": "2026-07-18T06:16:47.306497",
+      "validation_time": "2026-07-18T06:18:24.331128",
       "status": "passed",
       "checks": [
         {
@@ -115,7 +115,7 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 1.95,
+        "execution_time_ms": 1.28,
         "files_checked": 25,
         "lines_of_code": 1569
       },
@@ -128,7 +128,7 @@
     {
       "task_id": "hello-world-api-c",
       "task_name": "Unknown Task",
-      "validation_time": "2026-07-18T06:16:47.311179",
+      "validation_time": "2026-07-18T06:18:24.333590",
       "status": "passed",
       "checks": [
         {
@@ -149,13 +149,13 @@
         {
           "check": "c_compile",
           "status": "passed",
-          "message": "C compile check passed in 89.15ms"
+          "message": "C compile check passed in 63.25ms"
         }
       ],
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 89.93,
+        "execution_time_ms": 63.85,
         "files_checked": 1,
         "lines_of_code": 168
       },
@@ -172,17 +172,17 @@
       {
         "check": "npm_lint",
         "status": "passed",
-        "message": "npm run lint passed in 2304.90ms"
+        "message": "npm run lint passed in 1784.26ms"
       },
       {
         "check": "npm_build",
         "status": "passed",
-        "message": "npm run build passed in 23063.14ms"
+        "message": "npm run build passed in 23124.05ms"
       },
       {
         "check": "kubernetes_render",
         "status": "passed",
-        "message": "kubectl kustomize cluster/overlays/prod/ passed in 92.71ms"
+        "message": "kubectl kustomize cluster/overlays/prod/ passed in 95.35ms"
       }
     ],
     "warnings": [
@@ -358,10 +358,10 @@
     "errors": []
   },
   "overall_metrics": {
-    "total_execution_time_ms": 26329.75,
+    "total_execution_time_ms": 25748.71,
     "total_files_checked": 180,
     "total_lines_of_code": 26713,
-    "average_task_time_ms": 6582.44
+    "average_task_time_ms": 6437.18
   },
   "summary": {
     "pass_rate": 100.0,
