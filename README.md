@@ -2,6 +2,43 @@
 
 > 引用 / Reference: [https://github.com/Mrliou](https://github.com/Mrliou)
 
+FlowAgent GKE Starter is a bilingual GitOps + CI/CD foundation for deploying FlowAgent services on Kubernetes while preserving the MRLiou Particle Language Core and FlowOS runtime experiments.
+
+## 專案主軸 / Project Focus
+
+- **Cloud-native deployment**: GKE, Kustomize, Argo CD, and GitHub Actions deployment paths.
+- **FlowAgent runtime services**: Kubernetes app manifests for orchestrator, module services, MongoDB, monitoring, and frontend apps.
+- **Particle Language Core**: Logic seed computation, function-chain execution, compression/restoration, and memory archival.
+- **FlowOS runtime**: TypeScript edge/runtime components for neural links, gates, storage, and adapter interfaces.
+- **Task validation system**: YAML task definitions processed by `process_tasks.py` with generated JSON, Markdown, and HTML reports.
+
+## 模組索引 / Module Map
+
+| Module | Purpose | Start Here | Validation |
+| --- | --- | --- | --- |
+| `particle_core/` | Particle Language Core and memory seed tooling | [`particle_core/README.md`](./particle_core/README.md) | `cd particle_core && python demo.py demo` |
+| `flowos/` | TypeScript runtime and edge worker skeleton | [`flowos/README.md`](./flowos/README.md) | `npm run lint && npm run build` |
+| `apps/` | Kubernetes application manifests and app service code | [`apps/README.md`](./apps/README.md) | `kubectl kustomize cluster/overlays/prod/` |
+| `cluster/` | Base and overlay cluster composition | [`cluster/README.md`](./cluster/README.md) | `kubectl kustomize cluster/overlays/prod/` |
+| `tasks/` | FlowAgent task definitions and generated validation reports | [`tasks/README.md`](./tasks/README.md) | `python process_tasks.py` |
+| `docs/` | Curated documentation index and archive structure | [`docs/index.md`](./docs/index.md) | Documentation review |
+
+## 快速驗證 / Quick Validation
+
+```bash
+# Validate task implementations, frontend build/lint, Kubernetes render, and secret-like candidates
+python process_tasks.py
+
+# Optional focused checks
+python -m py_compile process_tasks.py
+gcc -o /tmp/hello_api flow_code/hello_api.c
+npm run lint
+npm run build
+kubectl kustomize cluster/overlays/prod/ >/tmp/flowagent-prod.yaml
+```
+
+> Security note: production secrets should stay out of Git. Use GitHub Secrets, GCP Secret Manager, Sealed Secrets, or External Secrets for production credentials.
+
 ---
 
 ## 🌤️ Weather Dashboard
