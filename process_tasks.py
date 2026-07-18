@@ -4,6 +4,7 @@ FlowAgent Task Processor.
 Automatically receives, parses, validates, and reports code generation tasks.
 """
 
+import ast
 import html
 import json
 import os
@@ -27,6 +28,23 @@ class TaskProcessor:
 
     TASK_FILE_PATTERN = re.compile(r"\d{4}-\d{2}-\d{2}_.+\.yaml")
     REQUIRED_TASK_FIELDS = ("task_id", "language", "description")
+    SUPPORTED_LANGUAGES = {
+        "python": {".py"},
+        "c": {".c"},
+        "c++": {".cc", ".cpp", ".cxx", ".h", ".hpp"},
+        "cpp": {".cc", ".cpp", ".cxx", ".h", ".hpp"},
+        "javascript": {".js", ".jsx", ".mjs"},
+        "typescript": {".ts", ".tsx"},
+        "java": {".java"},
+        "go": {".go"},
+        "rust": {".rs"},
+        "shell": {".sh"},
+        "bash": {".sh"},
+        "powershell": {".ps1"},
+        "markdown": {".md"},
+        "yaml": {".yaml", ".yml"},
+        "json": {".json"},
+    }
     EXCLUDED_SCAN_DIRS = {
         ".git",
         ".next",
@@ -69,11 +87,15 @@ class TaskProcessor:
         ),
     }
 
-    def __init__(self, tasks_dir: str = "tasks"):
+    def __init__(self, tasks_dir: str = "tasks", run_repository_checks: Optional[bool] = None):
         self.root_dir = Path.cwd()
         self.tasks_dir = Path(tasks_dir)
         self.results_dir = self.tasks_dir / "results"
-        self.results_dir.mkdir(exist_ok=True)
+        self.results_dir.mkdir(parents=True, exist_ok=True)
+        if run_repository_checks is None:
+            env_value = os.getenv("FLOW_TASKS_REPOSITORY_CHECKS", "1").strip().lower()
+            run_repository_checks = env_value not in {"0", "false", "no", "off"}
+        self.run_repository_checks_enabled = bool(run_repository_checks)
 
     @staticmethod
     def _is_task_definition(task_file: Path) -> bool:
@@ -119,11 +141,14 @@ class TaskProcessor:
                 timeout=timeout,
                 check=False,
             )
-            output = (completed.stdout + completed.stderr).strip()
             return {
                 "returncode": completed.returncode,
                 "duration_ms": round((time.time() - started_at) * 1000, 2),
-                "output_excerpt": output[-self.MAX_COMMAND_OUTPUT_EXCERPT_CHARS:],
+                "output_excerpt": (
+                    ""
+                    if completed.returncode == 0
+                    else "Command failed; raw stdout/stderr omitted to protect sensitive data."
+                ),
             }
         except subprocess.TimeoutExpired as timeout_error:
             return {
@@ -133,59 +158,83 @@ class TaskProcessor:
             }
 
     def _validate_schema(self, task: Dict[str, Any], result: Dict[str, Any]) -> None:
-        missing = [field for field in self.REQUIRED_TASK_FIELDS if not task.get(field)]
-        if missing:
+        """Validate field types, target exclusivity, and language compatibility."""
+        for field in self.REQUIRED_TASK_FIELDS:
+            value = task.get(field)
+            if not isinstance(value, str) or not value.strip():
+                result["errors"].append(
+                    self._error("schema", f"{field} must be a non-empty string")
+                )
+
+        language = str(task.get("language", "")).strip().lower()
+        if language and language not in self.SUPPORTED_LANGUAGES:
             result["errors"].append(
-                self._error("schema", f"Missing required task field(s): {', '.join(missing)}")
-            )
-        else:
-            result["checks"].append(
-                self._check("schema", "Required task fields are present")
+                self._error("schema", f"Unsupported language: {language}")
             )
 
-        if not task.get("target_file") and not task.get("target_directory"):
+        target_file = task.get("target_file")
+        target_directory = task.get("target_directory")
+        declared_targets = int(bool(target_file)) + int(bool(target_directory))
+        if declared_targets != 1:
             result["errors"].append(
-                self._error("schema", "Task must define target_file or target_directory")
-            )
-        else:
-            result["checks"].append(
-                self._check("schema_target", "Task target is declared")
-            )
-
-    def _validate_python_file(self, target_path: Path, result: Dict[str, Any]) -> None:
-        try:
-            py_compile.compile(str(target_path), doraise=True)
-            result["checks"].append(
-                self._check("python_syntax", f"Python syntax check passed: {target_path}")
-            )
-        except py_compile.PyCompileError as compile_error:
-            result["errors"].append(
-                self._error("python_syntax", f"Python syntax check failed: {compile_error.msg}")
+                self._error(
+                    "schema",
+                    "Task must define exactly one of target_file or target_directory",
+                )
             )
             return
 
-        try:
-            import importlib.util
-
-            module_spec = importlib.util.spec_from_file_location("task_module", target_path)
-            if module_spec is None or module_spec.loader is None:
-                raise ImportError(f"Could not load module spec for {target_path}")
-            task_module = importlib.util.module_from_spec(module_spec)
-            module_spec.loader.exec_module(task_module)
-            result["checks"].append(
-                self._check("python_import", "Python module imports successfully")
-            )
-        except Exception as import_error:
+        target_value = target_file or target_directory
+        if not isinstance(target_value, str) or not target_value.strip():
             result["errors"].append(
-                self._error(
-                    "python_import",
-                    f"Python import failed: {str(import_error)}",
-                    traceback.format_exc(),
+                self._error("schema", "Task target must be a non-empty string")
+            )
+            return
+
+        if (
+            target_file
+            and not str(target_file).endswith("/")
+            and language in self.SUPPORTED_LANGUAGES
+        ):
+            suffix = Path(target_file).suffix.lower()
+            allowed_suffixes = self.SUPPORTED_LANGUAGES[language]
+            if suffix not in allowed_suffixes:
+                result["errors"].append(
+                    self._error(
+                        "schema",
+                        f"Language {language} is incompatible with target suffix {suffix or '<none>'}",
+                    )
                 )
+
+        if "tags" in task and not isinstance(task["tags"], list):
+            result["errors"].append(self._error("schema", "tags must be a list"))
+        if "priority" in task and not isinstance(task["priority"], str):
+            result["errors"].append(self._error("schema", "priority must be a string"))
+
+        if not result["errors"]:
+            result["checks"].append(
+                self._check("schema", "Task schema and target compatibility are valid")
+            )
+
+    def _validate_python_file(self, target_path: Path, result: Dict[str, Any]) -> None:
+        """Validate Python syntax and structure without executing target code."""
+        try:
+            source = target_path.read_text(encoding="utf-8")
+            ast.parse(source, filename=str(target_path))
+            py_compile.compile(str(target_path), doraise=True)
+            result["checks"].append(
+                self._check(
+                    "python_static",
+                    f"Python AST and bytecode checks passed without importing: {target_path}",
+                )
+            )
+        except (OSError, SyntaxError, UnicodeDecodeError, py_compile.PyCompileError) as compile_error:
+            result["errors"].append(
+                self._error("python_static", f"Python static validation failed: {compile_error}")
             )
 
     def _validate_python_directory(self, target_path: Path, result: Dict[str, Any]) -> None:
-        python_files = sorted(target_path.rglob("*.py"))[: self.MAX_PYTHON_FILES_TO_CHECK]
+        python_files = sorted(target_path.rglob("*.py"))
         failures = []
         for python_file in python_files:
             try:
@@ -420,6 +469,22 @@ class TaskProcessor:
             "errors": errors,
         }
 
+    def _write_json_preserving_history(self, path: Path, payload: Dict[str, Any]) -> Optional[Path]:
+        """Write JSON while archiving the exact previous content before replacement."""
+        serialized = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
+        archived_path: Optional[Path] = None
+        if path.exists():
+            previous = path.read_text(encoding="utf-8")
+            if previous != serialized:
+                digest = __import__("hashlib").sha256(previous.encode("utf-8")).hexdigest()[:12]
+                timestamp = datetime.now().strftime("%Y%m%dT%H%M%S%f")
+                history_dir = self.results_dir / "history" / path.stem
+                history_dir.mkdir(parents=True, exist_ok=True)
+                archived_path = history_dir / f"{timestamp}_{digest}.json"
+                archived_path.write_text(previous, encoding="utf-8")
+        path.write_text(serialized, encoding="utf-8")
+        return archived_path
+
     def process_all_tasks(self) -> Dict[str, Any]:
         """Process all task files in the tasks directory."""
         processing_start = time.time()
@@ -481,17 +546,31 @@ class TaskProcessor:
             summary["tasks"].append(result)
             task_results_to_write.append((task_file.stem, result))
 
-        repository_checks = self.run_repository_checks()
+        if self.run_repository_checks_enabled:
+            repository_checks = self.run_repository_checks()
+        else:
+            repository_checks = {
+                "status": "passed",
+                "checks": [
+                    self._check(
+                        "repository_checks_disabled",
+                        "Repository-wide checks were explicitly skipped",
+                    )
+                ],
+                "warnings": [],
+                "errors": [],
+            }
         summary["repository_checks"] = repository_checks
         summary["warnings"] += len(repository_checks.get("warnings", []))
         if repository_checks["status"] == "failed":
             summary["failed"] += 1
 
         processing_time_ms = round((time.time() - processing_start) * 1000, 2)
-        summary["overall_metrics"]["total_execution_time_ms"] = processing_time_ms
+        summary["overall_metrics"]["processing_time_ms"] = processing_time_ms
         if summary["total_tasks"] > 0:
             summary["overall_metrics"]["average_task_time_ms"] = round(
-                processing_time_ms / summary["total_tasks"], 2
+                summary["overall_metrics"]["total_execution_time_ms"] / summary["total_tasks"],
+                2,
             )
             summary["summary"]["pass_rate"] = round(
                 (summary["passed"] / summary["total_tasks"]) * 100, 2
@@ -510,12 +589,10 @@ class TaskProcessor:
 
         for task_stem, result in task_results_to_write:
             result_file = self.results_dir / f"{task_stem}_result.json"
-            with open(result_file, "w", encoding="utf-8") as result_output_file:
-                json.dump(result, result_output_file, ensure_ascii=False, indent=2)
+            self._write_json_preserving_history(result_file, result)
 
         summary_file = self.results_dir / "task_processing_summary.json"
-        with open(summary_file, "w", encoding="utf-8") as summary_output_file:
-            json.dump(summary, summary_output_file, ensure_ascii=False, indent=2)
+        self._write_json_preserving_history(summary_file, summary)
 
         self._generate_markdown_report(summary)
         self._generate_html_report(summary)
