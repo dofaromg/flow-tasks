@@ -605,6 +605,8 @@ def test_ingest_external_folder_reads_multiple_formats():
     with tempfile.TemporaryDirectory() as tmpdir:
         txt_path = os.path.join(tmpdir, "conversation.txt")
         json_path = os.path.join(tmpdir, "conversation.json")
+        bad_json_path = os.path.join(tmpdir, "bad.json")
+        ignored_path = os.path.join(tmpdir, "ignored.bin")
 
         with open(txt_path, "w", encoding="utf-8") as f:
             f.write("[USER]\n需要分析外部資料\n[ASSISTANT]\n可以先 canonicalize")
@@ -615,6 +617,12 @@ def test_ingest_external_folder_reads_multiple_formats():
                 f,
                 ensure_ascii=False,
             )
+
+        with open(bad_json_path, "w", encoding="utf-8") as f:
+            f.write("{not valid json")
+
+        with open(ignored_path, "w", encoding="utf-8") as f:
+            f.write("unsupported extension should be ignored")
 
         package = extractor.ingest_external(tmpdir, source_type="folder")
 
