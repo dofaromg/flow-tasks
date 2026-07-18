@@ -1,5 +1,7 @@
 # FlowAgent GKE Starter (GitOps + CI/CD)
 
+> 引用 / Reference: [https://github.com/Mrliou](https://github.com/Mrliou)
+
 ---
 
 ## 🌤️ Weather Dashboard
