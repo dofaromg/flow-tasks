@@ -13,8 +13,10 @@
 
 import json
 import re
+import hashlib
+import os
 from datetime import datetime
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Tuple, Optional, Any
 from collections import Counter, defaultdict
 import csv
 import xml.etree.ElementTree as ET
@@ -1097,6 +1099,553 @@ class ConversationExtractor:
             return self.package_conversation(data)
         
         raise ValueError("YAML 格式不正確：需要包含 'messages' 欄位或為訊息列表")
+
+    # ==================== 外部分析管道：匯入、正規化、去重、拆解、蒸餾、重組 ====================
+
+    def ingest_external(
+        self,
+        source: Any,
+        source_type: str = "auto",
+        metadata: Dict = None,
+        trust_level: str = "medium",
+    ) -> Dict:
+        """
+        統一外部資料匯入介面。
+
+        支援 file、folder、repo、api/package、web_text/text，並轉為 canonical schema。
+        """
+        metadata = metadata or {}
+        source_type = (source_type or "auto").lower()
+
+        if source_type == "auto":
+            if isinstance(source, str) and os.path.isfile(source):
+                source_type = "file"
+            elif isinstance(source, str) and os.path.isdir(source):
+                source_type = "folder"
+            elif isinstance(source, dict):
+                source_type = "package" if "messages" in source else "api"
+            elif isinstance(source, list):
+                source_type = "api"
+            else:
+                source_type = "text"
+
+        if source_type == "file":
+            package = self.import_from_file(str(source))
+            package.setdefault("metadata", {}).update(metadata)
+            package["metadata"].setdefault("source", str(source))
+            return self.canonicalize_package(package, source=str(source), trust_level=trust_level)
+
+        if source_type in ["folder", "repo"]:
+            messages = []
+            source_files = []
+            supported = {".json", ".md", ".markdown", ".txt", ".csv", ".xml", ".yaml", ".yml"}
+            for root, _, files in os.walk(str(source)):
+                for filename in sorted(files):
+                    ext = os.path.splitext(filename)[1].lower()
+                    if ext not in supported:
+                        continue
+                    path = os.path.join(root, filename)
+                    try:
+                        imported = self.import_from_file(path)
+                        for msg in imported.get("messages", []):
+                            copied = dict(msg)
+                            copied["metadata"] = dict(copied.get("metadata", {}))
+                            copied["metadata"]["source_file"] = path
+                            messages.append(copied)
+                        source_files.append(path)
+                    except Exception:
+                        continue
+
+            package = self.package_conversation(
+                messages,
+                {
+                    **metadata,
+                    "source": str(source),
+                    "source_type": source_type,
+                    "source_files": source_files,
+                },
+            )
+            return self.canonicalize_package(package, source=str(source), trust_level=trust_level)
+
+        if source_type in ["api", "package"]:
+            if isinstance(source, dict) and "messages" in source:
+                package = dict(source)
+                package.setdefault("metadata", {}).update(metadata)
+            elif isinstance(source, list):
+                package = self.package_conversation(source, metadata)
+            elif isinstance(source, dict):
+                content = json.dumps(source, ensure_ascii=False, sort_keys=True)
+                package = self.package_conversation(
+                    [{"role": "external", "content": content}],
+                    {**metadata, "source_type": source_type},
+                )
+            else:
+                package = self.package_conversation(
+                    [{"role": "external", "content": str(source)}],
+                    {**metadata, "source_type": source_type},
+                )
+            return self.canonicalize_package(package, source=metadata.get("source", source_type), trust_level=trust_level)
+
+        if source_type in ["web_text", "text"]:
+            package = self.package_conversation(
+                [{"role": "external", "content": str(source)}],
+                {**metadata, "source_type": source_type},
+            )
+            return self.canonicalize_package(package, source=metadata.get("source", source_type), trust_level=trust_level)
+
+        raise ValueError(f"不支援的外部來源類型: {source_type}")
+
+    def canonicalize_package(
+        self,
+        package: Dict,
+        source: str = "conversation",
+        trust_level: str = "medium",
+    ) -> Dict:
+        """將對話包轉為可追溯 canonical schema，保留原 messages 相容性。"""
+        canonical_messages = []
+        normalized_messages = []
+
+        for index, msg in enumerate(package.get("messages", [])):
+            canonical = self._canonicalize_message(msg, source, trust_level, index)
+            canonical_messages.append(canonical)
+            normalized_messages.append({
+                "role": canonical["role"],
+                "content": canonical["content"],
+            })
+
+        metadata = dict(package.get("metadata", {}))
+        metadata.setdefault("source", source)
+        metadata.setdefault("trust_level", trust_level)
+
+        return {
+            **package,
+            "metadata": metadata,
+            "messages": normalized_messages,
+            "statistics": self._calculate_statistics(normalized_messages),
+            "canonical_schema": "conversation.external-analysis.v1",
+            "canonical_messages": canonical_messages,
+        }
+
+    def _canonicalize_message(self, msg: Dict, source: str, trust_level: str, index: int) -> Dict:
+        """建立單筆 canonical message。"""
+        role = self._normalize_role(str(msg.get("role", "external")))
+        content = str(msg.get("content", ""))
+        normalized_content = self._normalize_content(content)
+        timestamp = msg.get("timestamp") or msg.get("created_at") or datetime.now().isoformat()
+        msg_metadata = dict(msg.get("metadata", {}))
+        msg_source = msg_metadata.get("source_file") or msg.get("source") or source
+        content_hash = self._content_hash(normalized_content)
+
+        return {
+            "id": hashlib.sha256(f"{msg_source}:{index}:{normalized_content}".encode("utf-8")).hexdigest()[:16],
+            "source": msg_source,
+            "role": role,
+            "content": content.strip(),
+            "timestamp": timestamp,
+            "metadata": msg_metadata,
+            "hash": content_hash,
+            "normalized_content": normalized_content,
+            "language": self._detect_language(content),
+            "trust_level": trust_level,
+            "provenance": [{
+                "source": msg_source,
+                "index": index,
+                "hash": content_hash,
+                "trust_level": trust_level,
+            }],
+        }
+
+    def _normalize_role(self, role: str) -> str:
+        """正規化角色名稱。"""
+        value = role.strip().lower()
+        role_map = {
+            "human": "user",
+            "person": "user",
+            "client": "user",
+            "用戶": "user",
+            "使用者": "user",
+            "bot": "assistant",
+            "ai": "assistant",
+            "agent": "assistant",
+            "assistant": "assistant",
+            "助手": "assistant",
+            "system": "system",
+            "external": "external",
+            "source": "external",
+        }
+        return role_map.get(value, "user" if "user" in value else "assistant" if "assistant" in value else "external")
+
+    def _normalize_content(self, content: str) -> str:
+        """清理空白、格式雜訊與大小寫，形成穩定 hash 基礎。"""
+        text = content.replace("\ufeff", "").replace("\r\n", "\n").replace("\r", "\n")
+        text = re.sub(r'^[\s>*#\-\_=]{3,}$', ' ', text, flags=re.MULTILINE)
+        text = re.sub(r'\s+', ' ', text).strip().lower()
+        return text
+
+    def _content_hash(self, normalized_content: str) -> str:
+        """產生 normalized content hash。"""
+        return hashlib.sha256(normalized_content.encode("utf-8")).hexdigest()
+
+    def _detect_language(self, content: str) -> str:
+        """簡易語言偵測：中文、英文或混合。"""
+        has_cjk = bool(re.search(r'[\u4e00-\u9fff]', content))
+        has_latin = bool(re.search(r'[A-Za-z]', content))
+        if has_cjk and has_latin:
+            return "mixed"
+        if has_cjk:
+            return "zh"
+        if has_latin:
+            return "en"
+        return "unknown"
+
+    def deduplicate_package(self, package: Dict, near_threshold: float = 0.72) -> Dict:
+        """進行 exact 與 near dedup，保留 provenance，不直接丟失來源。"""
+        canonical = package.get("canonical_messages")
+        if canonical is None:
+            package = self.canonicalize_package(package)
+            canonical = package["canonical_messages"]
+
+        unique = []
+        duplicates = []
+        exact_index = {}
+
+        for msg in canonical:
+            if msg["hash"] in exact_index:
+                target = unique[exact_index[msg["hash"]]]
+                target["provenance"].extend(msg["provenance"])
+                duplicates.append({
+                    "type": "exact",
+                    "source_id": msg["id"],
+                    "target_id": target["id"],
+                    "similarity": 1.0,
+                })
+                continue
+
+            near_match = None
+            for candidate in unique:
+                similarity = self._jaccard_similarity(
+                    self._semantic_tokens(msg["normalized_content"]),
+                    self._semantic_tokens(candidate["normalized_content"]),
+                )
+                if similarity >= near_threshold:
+                    near_match = (candidate, similarity)
+                    break
+
+            if near_match:
+                target, similarity = near_match
+                target["provenance"].extend(msg["provenance"])
+                target.setdefault("aliases", []).append({
+                    "content": msg["content"],
+                    "hash": msg["hash"],
+                    "source": msg["source"],
+                })
+                duplicates.append({
+                    "type": "near",
+                    "source_id": msg["id"],
+                    "target_id": target["id"],
+                    "similarity": round(similarity, 3),
+                })
+                continue
+
+            exact_index[msg["hash"]] = len(unique)
+            unique.append(dict(msg))
+
+        messages = [{"role": msg["role"], "content": msg["content"]} for msg in unique]
+        metadata = dict(package.get("metadata", {}))
+        metadata["dedup"] = {
+            "original_count": len(canonical),
+            "unique_count": len(unique),
+            "duplicate_count": len(duplicates),
+            "near_threshold": near_threshold,
+        }
+
+        return {
+            **package,
+            "metadata": metadata,
+            "messages": messages,
+            "statistics": self._calculate_statistics(messages),
+            "canonical_messages": unique,
+            "duplicates": duplicates,
+        }
+
+    def _semantic_tokens(self, normalized_content: str) -> set:
+        """建立 near-dedup token set，支援中英文混合。"""
+        tokens = set(re.findall(r'[a-z0-9_]{3,}', normalized_content))
+        cjk = re.findall(r'[\u4e00-\u9fff]{2,}', normalized_content)
+        for chunk in cjk:
+            if len(chunk) <= 4:
+                tokens.add(chunk)
+            else:
+                tokens.update(chunk[i:i + 2] for i in range(len(chunk) - 1))
+        if not tokens and normalized_content:
+            tokens.add(normalized_content)
+        return tokens
+
+    def _jaccard_similarity(self, left: set, right: set) -> float:
+        """計算 Jaccard 相似度。"""
+        if not left and not right:
+            return 1.0
+        if not left or not right:
+            return 0.0
+        return len(left & right) / len(left | right)
+
+    def decompose_package(self, package: Dict, max_chunk_chars: int = 500) -> Dict:
+        """拆解為 chunks、claims、entities、relationships、action items、decisions。"""
+        canonical = package.get("canonical_messages")
+        if canonical is None:
+            package = self.canonicalize_package(package)
+            canonical = package["canonical_messages"]
+
+        chunks = []
+        claims = []
+        evidence = []
+        action_items = []
+        decisions = []
+        contradictions = []
+
+        for msg in canonical:
+            for chunk_index, chunk in enumerate(self._chunk_text(msg["content"], max_chunk_chars)):
+                chunk_record = {
+                    "id": f"{msg['id']}-{chunk_index}",
+                    "message_id": msg["id"],
+                    "source": msg["source"],
+                    "role": msg["role"],
+                    "content": chunk,
+                    "keywords": self._extract_keywords(chunk, top_n=8),
+                    "provenance": msg["provenance"],
+                }
+                chunks.append(chunk_record)
+                claims.extend(self._extract_claims(chunk, chunk_record))
+                evidence.extend(self._extract_evidence(chunk, chunk_record))
+                action_items.extend(self._extract_action_items(chunk, chunk_record))
+                decisions.extend(self._extract_decisions(chunk, chunk_record))
+                contradictions.extend(self._extract_contradictions(chunk, chunk_record))
+
+        all_text = " ".join(msg["content"] for msg in canonical)
+        return {
+            "chunks": chunks,
+            "claims": claims,
+            "entities": self._extract_concepts(all_text),
+            "relationships": self.extract_logical_structure(package.get("messages", [])).get("relationships", []),
+            "evidence": evidence,
+            "action_items": action_items,
+            "decisions": decisions,
+            "contradictions": contradictions,
+        }
+
+    def _chunk_text(self, text: str, max_chunk_chars: int) -> List[str]:
+        """依句子切分長文本，避免破壞語意單位。"""
+        sentences = [s.strip() for s in re.split(r'(?<=[。！？.!?])\s+|[\n]+', text) if s.strip()]
+        if not sentences:
+            return [text.strip()] if text.strip() else []
+
+        chunks = []
+        current = ""
+        for sentence in sentences:
+            if len(sentence) > max_chunk_chars:
+                if current:
+                    chunks.append(current.strip())
+                    current = ""
+                chunks.extend(sentence[i:i + max_chunk_chars] for i in range(0, len(sentence), max_chunk_chars))
+                continue
+            if current and len(current) + len(sentence) + 1 > max_chunk_chars:
+                chunks.append(current.strip())
+                current = sentence
+            else:
+                current = f"{current} {sentence}".strip()
+        if current:
+            chunks.append(current.strip())
+        return chunks
+
+    def _record_unit(self, unit_type: str, text: str, chunk: Dict, confidence: float = 0.6) -> Dict:
+        """建立拆解單元。"""
+        return {
+            "type": unit_type,
+            "text": text.strip(),
+            "chunk_id": chunk["id"],
+            "source": chunk["source"],
+            "confidence": confidence,
+            "provenance": chunk["provenance"],
+        }
+
+    def _extract_claims(self, text: str, chunk: Dict) -> List[Dict]:
+        """提取主張。"""
+        markers = ['應該', '需要', '必須', '可以', '建議', '認為', 'is ', 'are ', 'should', 'must', 'need']
+        sentences = [s.strip() for s in re.split(r'[。！？.!?\n]', text) if s.strip()]
+        return [
+            self._record_unit("claim", sent, chunk, 0.65)
+            for sent in sentences
+            if any(marker in sent for marker in markers)
+        ][:8]
+
+    def _extract_evidence(self, text: str, chunk: Dict) -> List[Dict]:
+        """提取證據或原因。"""
+        markers = ['因為', '由於', '根據', '證據', '例如', 'because', 'according to', 'evidence', 'for example']
+        sentences = [s.strip() for s in re.split(r'[。！？.!?\n]', text) if s.strip()]
+        return [
+            self._record_unit("evidence", sent, chunk, 0.7)
+            for sent in sentences
+            if any(marker.lower() in sent.lower() for marker in markers)
+        ][:8]
+
+    def _extract_action_items(self, text: str, chunk: Dict) -> List[Dict]:
+        """提取行動項。"""
+        markers = ['todo', '待辦', '下一步', '執行', '實作', '補上', '加強', '修正', '應該', '需要', 'must', 'should']
+        sentences = [s.strip() for s in re.split(r'[。！？.!?\n]', text) if s.strip()]
+        return [
+            self._record_unit("action_item", sent, chunk, 0.68)
+            for sent in sentences
+            if any(marker.lower() in sent.lower() for marker in markers)
+        ][:8]
+
+    def _extract_decisions(self, text: str, chunk: Dict) -> List[Dict]:
+        """提取決策與結論。"""
+        markers = ['決定', '結論', '採用', '選擇', '確認', 'decision', 'decide', 'chosen', 'conclusion']
+        sentences = [s.strip() for s in re.split(r'[。！？.!?\n]', text) if s.strip()]
+        return [
+            self._record_unit("decision", sent, chunk, 0.7)
+            for sent in sentences
+            if any(marker.lower() in sent.lower() for marker in markers)
+        ][:8]
+
+    def _extract_contradictions(self, text: str, chunk: Dict) -> List[Dict]:
+        """提取矛盾或轉折訊號。"""
+        markers = ['但是', '然而', '矛盾', '相反', '不一致', 'but', 'however', 'contradict', 'inconsistent']
+        sentences = [s.strip() for s in re.split(r'[。！？.!?\n]', text) if s.strip()]
+        return [
+            self._record_unit("contradiction", sent, chunk, 0.55)
+            for sent in sentences
+            if any(marker.lower() in sent.lower() for marker in markers)
+        ][:8]
+
+    def distill_insights(self, package: Dict, max_insights: int = 10) -> Dict:
+        """將去重後內容蒸餾為 canonical insights，保留來源與信心分數。"""
+        deduped = self.deduplicate_package(package)
+        decomposition = self.decompose_package(deduped)
+        logical = self.extract_logical_structure(deduped.get("messages", []))
+
+        candidates = decomposition["claims"] + decomposition["decisions"] + [
+            self._record_unit("conclusion", conclusion, {"id": "logical", "source": "logical", "provenance": []}, 0.72)
+            for conclusion in logical.get("conclusions", [])
+        ]
+
+        seen = set()
+        insights = []
+        for candidate in candidates:
+            normalized = self._normalize_content(candidate["text"])
+            digest = self._content_hash(normalized)
+            if digest in seen:
+                continue
+            seen.add(digest)
+            provenance = candidate.get("provenance", [])
+            insights.append({
+                "id": digest[:16],
+                "insight": candidate["text"],
+                "type": candidate["type"],
+                "confidence": min(0.95, round(candidate.get("confidence", 0.6) + 0.05 * len(provenance), 2)),
+                "source_refs": provenance,
+                "conflicts": [
+                    item for item in decomposition["contradictions"]
+                    if self._jaccard_similarity(
+                        self._semantic_tokens(normalized),
+                        self._semantic_tokens(self._normalize_content(item["text"]))
+                    ) > 0.25
+                ],
+            })
+            if len(insights) >= max_insights:
+                break
+
+        return {
+            "insights": insights,
+            "dedup": deduped.get("metadata", {}).get("dedup", {}),
+            "decomposition": decomposition,
+            "distilled_at": datetime.now().isoformat(),
+        }
+
+    def recompose_views(self, package: Dict) -> Dict:
+        """重組為摘要、技術分析、行動清單、知識圖譜與記憶種子視圖。"""
+        distilled = self.distill_insights(package)
+        decomposition = distilled["decomposition"]
+        insights = distilled["insights"]
+        concepts = decomposition.get("entities", [])
+        relationships = decomposition.get("relationships", [])
+
+        return {
+            "summary": "\n".join(f"- {item['insight']}" for item in insights[:5]),
+            "technical_analysis": {
+                "concepts": concepts,
+                "relationships": relationships,
+                "claims": decomposition.get("claims", []),
+                "evidence": decomposition.get("evidence", []),
+                "conflicts": decomposition.get("contradictions", []),
+            },
+            "action_plan": [
+                {
+                    "task": item["text"],
+                    "source": item["source"],
+                    "confidence": item["confidence"],
+                    "provenance": item["provenance"],
+                }
+                for item in decomposition.get("action_items", [])
+            ],
+            "knowledge_graph": {
+                "nodes": [{"id": concept, "label": concept, "type": "concept"} for concept in concepts],
+                "edges": [
+                    {
+                        "source": rel.get("cause", ""),
+                        "target": rel.get("effect", ""),
+                        "type": rel.get("type", "related"),
+                    }
+                    for rel in relationships
+                ],
+            },
+            "memory_seed": {
+                "seed_type": "distilled_external_analysis",
+                "created_at": datetime.now().isoformat(),
+                "insights": insights,
+                "source_count": len(package.get("canonical_messages", package.get("messages", []))),
+                "dedup": distilled.get("dedup", {}),
+            },
+        }
+
+    def process_external_analysis_pipeline(
+        self,
+        source: Any,
+        source_type: str = "auto",
+        operations: List[str] = None,
+        metadata: Dict = None,
+        trust_level: str = "medium",
+    ) -> Dict:
+        """執行外部分析拆解去重蒸餾重組管道。"""
+        operations = operations or ["ingest", "deduplicate", "decompose", "distill", "recompose"]
+        result = {}
+        package = source if isinstance(source, dict) and "messages" in source else None
+
+        if "ingest" in operations or package is None:
+            package = self.ingest_external(source, source_type=source_type, metadata=metadata, trust_level=trust_level)
+        else:
+            package = self.canonicalize_package(
+                package,
+                source=(metadata or {}).get("source", "conversation"),
+                trust_level=trust_level,
+            )
+
+        result["package"] = package
+
+        if "deduplicate" in operations:
+            package = self.deduplicate_package(package)
+            result["deduplicated_package"] = package
+
+        if "decompose" in operations:
+            result["decomposition"] = self.decompose_package(package)
+
+        if "distill" in operations:
+            result["distillation"] = self.distill_insights(package)
+
+        if "recompose" in operations:
+            result["views"] = self.recompose_views(package)
+
+        return result
     
     # ==================== 第二部分：注意力機制分析 ====================
     

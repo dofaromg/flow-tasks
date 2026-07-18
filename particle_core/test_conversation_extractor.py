@@ -521,6 +521,108 @@ def test_custom_palette():
     assert "<!DOCTYPE html>" in html_content
 
 
+def test_canonicalize_package_adds_schema_hash_and_provenance():
+    """測試 canonical schema、hash、語言與來源追蹤"""
+    extractor = ConversationExtractor()
+    package = extractor.package_conversation([
+        {"role": "human", "content": "  FlowAgent 需要外部分析能力。  "}
+    ])
+
+    canonical = extractor.canonicalize_package(package, source="unit-test", trust_level="high")
+
+    assert canonical["canonical_schema"] == "conversation.external-analysis.v1"
+    assert canonical["messages"][0]["role"] == "user"
+    assert canonical["canonical_messages"][0]["hash"]
+    assert canonical["canonical_messages"][0]["language"] == "mixed"
+    assert canonical["canonical_messages"][0]["provenance"][0]["source"] == "unit-test"
+
+
+def test_deduplicate_package_preserves_exact_and_near_provenance():
+    """測試 exact/near 去重會合併來源而非刪除脈絡"""
+    extractor = ConversationExtractor()
+    package = extractor.package_conversation([
+        {"role": "user", "content": "Add external ingest dedup distill pipeline.", "source": "a"},
+        {"role": "user", "content": "  add external ingest dedup distill pipeline.  ", "source": "b"},
+        {"role": "assistant", "content": "External ingest dedup distill pipeline should be added.", "source": "c"},
+    ])
+    canonical = extractor.canonicalize_package(package, source="unit-test")
+
+    deduped = extractor.deduplicate_package(canonical, near_threshold=0.5)
+
+    assert deduped["metadata"]["dedup"]["original_count"] == 3
+    assert deduped["metadata"]["dedup"]["unique_count"] == 1
+    assert deduped["metadata"]["dedup"]["duplicate_count"] == 2
+    assert {item["type"] for item in deduped["duplicates"]} == {"exact", "near"}
+    assert len(deduped["canonical_messages"][0]["provenance"]) == 3
+
+
+def test_decompose_package_extracts_chunks_and_structured_units():
+    """測試長文本拆 chunk 並提取主張、證據、行動項、決策、矛盾"""
+    extractor = ConversationExtractor()
+    package = extractor.package_conversation([
+        {
+            "role": "assistant",
+            "content": (
+                "需要補上外部分析能力。因為資料來源很多，所以要保留 provenance。\n"
+                "決定採用 canonical schema。但是目前缺少 near dedup。"
+            ),
+        }
+    ])
+
+    decomposition = extractor.decompose_package(package, max_chunk_chars=25)
+
+    assert len(decomposition["chunks"]) > 1
+    assert decomposition["claims"]
+    assert decomposition["evidence"]
+    assert decomposition["action_items"]
+    assert decomposition["decisions"]
+    assert decomposition["contradictions"]
+
+
+def test_distill_and_recompose_views_include_memory_seed():
+    """測試蒸餾與重組視圖"""
+    extractor = ConversationExtractor()
+    package = extractor.package_conversation([
+        {"role": "user", "content": "我們需要加強外部分析。"},
+        {"role": "assistant", "content": "建議加入 canonical schema，因為它可以保留來源。總之，應該先做去重。"},
+    ])
+
+    distilled = extractor.distill_insights(package)
+    views = extractor.recompose_views(package)
+
+    assert distilled["insights"]
+    assert "summary" in views
+    assert "technical_analysis" in views
+    assert "action_plan" in views
+    assert "knowledge_graph" in views
+    assert views["memory_seed"]["seed_type"] == "distilled_external_analysis"
+
+
+def test_ingest_external_folder_reads_multiple_formats():
+    """測試外部資料夾可匯入多格式來源並保留 source_files"""
+    extractor = ConversationExtractor()
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        txt_path = os.path.join(tmpdir, "conversation.txt")
+        json_path = os.path.join(tmpdir, "conversation.json")
+
+        with open(txt_path, "w", encoding="utf-8") as f:
+            f.write("[USER]\n需要分析外部資料\n[ASSISTANT]\n可以先 canonicalize")
+
+        with open(json_path, "w", encoding="utf-8") as f:
+            json.dump(
+                [{"role": "user", "content": "需要去重蒸餾"}],
+                f,
+                ensure_ascii=False,
+            )
+
+        package = extractor.ingest_external(tmpdir, source_type="folder")
+
+    assert package["canonical_schema"] == "conversation.external-analysis.v1"
+    assert len(package["messages"]) == 3
+    assert len(package["metadata"]["source_files"]) == 2
+
+
 # 執行測試
 if __name__ == "__main__":
     print("🧪 執行對話知識提取器測試...")
@@ -553,6 +655,11 @@ if __name__ == "__main__":
         test_batch_export,
         test_website_bundle,
         test_custom_palette,
+        test_canonicalize_package_adds_schema_hash_and_provenance,
+        test_deduplicate_package_preserves_exact_and_near_provenance,
+        test_decompose_package_extracts_chunks_and_structured_units,
+        test_distill_and_recompose_views_include_memory_seed,
+        test_ingest_external_folder_reads_multiple_formats,
     ]
     
     passed = 0
