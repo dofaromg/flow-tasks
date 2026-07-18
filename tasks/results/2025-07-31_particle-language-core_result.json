@@ -1,7 +1,7 @@
 {
   "task_id": "particle-language-core",
   "task_name": "Unknown Task",
-  "validation_time": "2026-07-18T06:02:18.876384",
+  "validation_time": "2026-07-18T06:13:42.301368",
   "status": "passed",
   "checks": [
     {
@@ -13,7 +13,7 @@
   "errors": [],
   "warnings": [],
   "metrics": {
-    "execution_time_ms": 0.96,
+    "execution_time_ms": 1.22,
     "files_checked": 113,
     "lines_of_code": 0
   },
