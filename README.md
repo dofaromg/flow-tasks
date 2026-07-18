@@ -306,18 +306,6 @@ kubectl create namespace monitoring || true
 kubectl apply -n monitoring -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/main/bundle.yaml
 kubectl apply -f https://github.com/kedacore/keda/releases/latest/download/keda-2.13.1.yaml
 ```
-<<<<<<< 記憶
-
----
-
-## 目錄說明
-- `apps/*`：Mongo、模組、監控、KEDA 等 YAML
-- `cluster/overlays/prod/kustomization.yaml`：列出所有資源
-- `argocd/app.yaml`：ArgoCD Application（指向你的 GitHub repo）
-- `.github/workflows/*`：CI（build/push 映像）與 CD（套用 K8s）
-- `scripts/oneclick_gke_init.sh`：Cloud Shell 一鍵初始化腳本
-
-=======
 flow-tasks/
 ├── 📂 apps/                    # Kubernetes 應用部署清單
 │   ├── nextjs-frontend/       # Next.js 前端應用
@@ -565,4 +553,11 @@ python cli.py sandbox-compare --sandbox-dir /tmp/amp_sandbox
 該指令會先驗證雙方鏈條，再逐 entry 比對 hash/head，便於在沙盒中試驗優化後再推進正式生命週期。
 
 相關 CI 工作流程：`.github/workflows/ci.yml` 會自動跑一次 smoke test 並上傳 `data/` 產物。
->>>>>>> main
+
+---
+
+## 引用 / Reference
+
+本專案由 [@Mrliou](https://github.com/Mrliou) 創建與維護。
+
+> This project is created and maintained by [@Mrliou](https://github.com/Mrliou).
