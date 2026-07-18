@@ -54,8 +54,11 @@ class TaskProcessor:
         ".yaml",
         ".yml",
     }
+    MAX_COMMAND_OUTPUT_EXCERPT_CHARS = 2000
+    MAX_PYTHON_FILES_TO_CHECK = 200
+    MAX_SCAN_FILE_SIZE_BYTES = 500_000
     SECRET_FILENAME_PATTERN = re.compile(
-        r"(?i)(secret|credential|password|private[-_ ]?key|token|apikey|api[-_ ]?key|personal[-_ ]?access[-_ ]?token)"
+        r"(?i)(secret|credential|password|auth|oauth|private[-_ ]?key|token|apikey|api[-_ ]?key|personal[-_ ]?access[-_ ]?token)"
     )
     SECRET_CONTENT_PATTERNS = {
         "private_key_block": re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----"),
@@ -120,7 +123,7 @@ class TaskProcessor:
             return {
                 "returncode": completed.returncode,
                 "duration_ms": round((time.time() - started_at) * 1000, 2),
-                "output_excerpt": output[-2000:],
+                "output_excerpt": output[-self.MAX_COMMAND_OUTPUT_EXCERPT_CHARS:],
             }
         except subprocess.TimeoutExpired as timeout_error:
             return {
@@ -182,7 +185,7 @@ class TaskProcessor:
             )
 
     def _validate_python_directory(self, target_path: Path, result: Dict[str, Any]) -> None:
-        python_files = sorted(target_path.rglob("*.py"))[:200]
+        python_files = sorted(target_path.rglob("*.py"))[: self.MAX_PYTHON_FILES_TO_CHECK]
         failures = []
         for python_file in python_files:
             try:
@@ -337,7 +340,7 @@ class TaskProcessor:
                 continue
 
             try:
-                if path.stat().st_size > 500_000:
+                if path.stat().st_size > self.MAX_SCAN_FILE_SIZE_BYTES:
                     continue
                 content = path.read_text(encoding="utf-8", errors="ignore")
                 scanned_files += 1
