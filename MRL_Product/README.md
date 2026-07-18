@@ -11,6 +11,34 @@
 
 ---
 
+## MRL_Interface_v1：產品入口收斂
+
+目前主線不是重做底層，而是把已存在的 engine / particle / memory / telemetry / evaluator / deploy / UI / apps 收斂成一個每天可打開、可操作、可部署、可收費的入口。
+
+第一版入口：
+
+```text
+http://localhost:3000/interface
+```
+
+入口只做 5 個區塊：
+
+1. **Home** — 母體狀態 / 今日任務 / 系統入口
+2. **Task** — 輸入需求 → 產出方案 / 網站 / 客服 / 遊戲 / 系統
+3. **Memory** — trace / seed / replay / canonical timeline 的產品入口落點
+4. **Product** — 網站生成 / AI客服 / 助手 / KidWorld
+5. **Admin** — runtime / deploy / telemetry / evaluator / logs
+
+現有入口判定：
+
+- `package.json` → `npm run dev` / `npm start`
+- `main` → `backend/server.js`
+- 前端入口 → `frontend/interface.html`、`frontend/app.html`、`frontend/admin.html`
+- 核心 API → `/api/analyze`、`/api/result/:analysisId`
+- 管理 API → `/admin/metrics`、`/admin/events`、`/admin/health`
+
+---
+
 ## 系統架構
 
 ```
