@@ -13,6 +13,7 @@ MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行框架
 - **AI 人格套件**: 人格連結器與通用 ZIP 壓縮/解壓縮（無檔案名稱限制）
 - **字典種子記憶**: Fluin Dict Agent 字典種子記憶快照系統 (DictSeed.0003)
 - **對話知識提取器**: 對話分析、打包與知識圖譜生成系統 (v1.0) 🆕
+- **母體吸收成長閉環**: 蒸餾 Seed 版本化、驗證、回滾、MQM export 與下一任務記憶注入
 - 🆕 **並行執行與快取**: 多執行緒處理、結果快取、批次處理優化
 - 🆕 **計算原語模組**: 矩陣運算、統計分析、圖算法、張量操作
 - 🆕 **效能監控**: 即時追蹤快取命中率、執行統計、吞吐量指標
@@ -43,6 +44,9 @@ python src/fluin_dict_agent.py
 
 # 對話知識提取器
 python demo_conversation_extractor.py
+
+# 母體吸收成長閉環（Windows / DL580）
+.\\run_mother_growth_loop.ps1 -Source "D:\\input\\conversation.json" -SeedId "mrl-core"
 ```
 
 ## 🚀 增強演算能力 (新功能)
