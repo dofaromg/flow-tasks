@@ -1,6 +1,6 @@
 # FlowAgent Task Processing Report
 
-**Report Generated:** 2026-07-16T16:28:43.163146
+**Report Generated:** 2026-07-18T06:02:18.496593
 
 ## Executive Summary
 
@@ -9,12 +9,12 @@
 - **Failed:** 0 ❌
 - **Warnings:** 0 ⚠️
 - **Pass Rate:** 100.0%
-- **Total Execution Time:** 212.21ms
-- **Average Task Time:** 53.05ms
+- **Total Execution Time:** 388.12ms
+- **Average Task Time:** 97.03ms
 
 ## Overall Metrics
 
-- **Total Files Checked:** 182
+- **Total Files Checked:** 156
 - **Total Lines of Code:** 204
 
 ## Recommendations
@@ -30,7 +30,7 @@
 **Description:** 寫一個 Flask 的 hello world API，輸出 "你好，世界"
 
 **Metrics:**
-- Execution Time: 193.12ms
+- Execution Time: 376.98ms
 - Files Checked: 1
 - Lines of Code: 36
 
@@ -47,8 +47,8 @@
 **Description:** MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統
 
 **Metrics:**
-- Execution Time: 1.77ms
-- Files Checked: 139
+- Execution Time: 0.96ms
+- Files Checked: 113
 - Lines of Code: 0
 
 **Checks:**
@@ -63,7 +63,7 @@
 **Description:** FlowOS Edge Worker - Neural Link & Gate System Implementation
 
 **Metrics:**
-- Execution Time: 0.85ms
+- Execution Time: 0.66ms
 - Files Checked: 41
 - Lines of Code: 0
 
@@ -79,7 +79,7 @@
 **Description:** 用 C 語言寫一個 Hello World API，輸出 "你好，世界"
 
 **Metrics:**
-- Execution Time: 0.14ms
+- Execution Time: 0.10ms
 - Files Checked: 1
 - Lines of Code: 168
 
