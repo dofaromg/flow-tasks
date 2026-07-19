@@ -47,6 +47,12 @@ python demo_conversation_extractor.py
 
 # 母體吸收成長閉環（Windows / DL580）
 .\\run_mother_growth_loop.ps1 -Source "D:\\input\\conversation.json" -SeedId "mrl-core"
+
+# 只驗證既有母體記憶與 journal
+.\\run_mother_growth_loop.ps1 -Action Verify -SeedId "mrl-core"
+
+# 回滾並同步更新 MQM export
+.\\run_mother_growth_loop.ps1 -Action Rollback -SeedId "mrl-core" -TargetVersion 1
 ```
 
 ## 🚀 增強演算能力 (新功能)
