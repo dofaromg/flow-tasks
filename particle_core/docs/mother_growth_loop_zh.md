@@ -1,6 +1,9 @@
-# Mrliou 母體吸收成長閉環
+# MRL_MotherGrowthLoop_v1｜母體吸收成長閉環
 
 位置：`particle_core/src/mother_growth_loop.py`
+
+正式系統名稱固定為 `MRL_MotherGrowthLoop_v1`。`MotherGrowthLoop` 與
+`mother_growth_loop.py` 僅保留為 DL580 舊排程的相容入口，不再作為產品名稱。
 
 ## 閉環
 
@@ -46,9 +49,9 @@
 
 ```python
 from conversation_extractor import ConversationExtractor
-from mother_growth_loop import MotherGrowthLoop
+from mother_growth_loop import MRL_MotherGrowthLoop_v1
 
-loop = MotherGrowthLoop("D:/MRL_Mother/memory")
+loop = MRL_MotherGrowthLoop_v1("D:/MRL_Mother/memory")
 result = loop.process_and_absorb(
     ConversationExtractor(),
     "D:/input/conversation.json",

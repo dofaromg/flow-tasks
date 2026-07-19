@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""MRLiou mother growth loop: absorb, version, verify, activate, rollback, reuse."""
+"""MRL MotherGrowthLoop v1: absorb, version, verify, activate, rollback, reuse."""
 
 from __future__ import annotations
 
@@ -18,9 +18,11 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
 
-class MotherGrowthLoop:
+class MRL_MotherGrowthLoop_v1:
     """Persist distilled memory seeds as an append-only, verifiable version chain."""
 
+    CANONICAL_SYSTEM_NAME = "MRL_MotherGrowthLoop_v1"
+    LEGACY_SYSTEM_NAMES = ("MotherGrowthLoop", "mother_growth_loop")
     SCHEMA_VERSION = "mrliou.mother-growth.v1"
     ORIGIN_SIGNATURE = "MrLiouWord"
     VOLATILE_FIELDS = {"created_at", "distilled_at", "exported_at", "updated_at"}
@@ -271,6 +273,7 @@ class MotherGrowthLoop:
 
     def _append_event(self, event: Dict[str, Any]) -> Dict[str, Any]:
         record = {
+            "system_name": self.CANONICAL_SYSTEM_NAME,
             "schema_version": self.SCHEMA_VERSION,
             "timestamp": self._now(),
             "origin_signature": self.ORIGIN_SIGNATURE,
@@ -318,6 +321,9 @@ class MotherGrowthLoop:
         return records, errors
 
     def _validate_envelope(self, envelope: Dict[str, Any], seed_id: str, version: int) -> None:
+        system_name = envelope.get("system_name")
+        if system_name not in (None, self.CANONICAL_SYSTEM_NAME):
+            raise ValueError(f"Seed system name mismatch: {seed_id} v{version}")
         if envelope.get("schema_version") != self.SCHEMA_VERSION:
             raise ValueError(f"Seed schema mismatch: {seed_id} v{version}")
         if envelope.get("origin_signature") != self.ORIGIN_SIGNATURE:
@@ -335,6 +341,9 @@ class MotherGrowthLoop:
         if not pointer_path.exists():
             raise FileNotFoundError(f"No active seed: {seed_id}")
         pointer = self._read_json(pointer_path)
+        system_name = pointer.get("system_name")
+        if system_name not in (None, self.CANONICAL_SYSTEM_NAME):
+            raise ValueError(f"Active pointer system name mismatch: {safe_id}")
         if pointer.get("schema_version") != self.SCHEMA_VERSION:
             raise ValueError(f"Active pointer schema mismatch: {safe_id}")
         if pointer.get("origin_signature") != self.ORIGIN_SIGNATURE:
@@ -398,6 +407,7 @@ class MotherGrowthLoop:
                         }
                     )
                     return {
+                        "system_name": self.CANONICAL_SYSTEM_NAME,
                         "status": "unchanged",
                         "seed_id": safe_id,
                         "version": active["version"],
@@ -410,6 +420,7 @@ class MotherGrowthLoop:
             parent_version = active.get("version") if active else None
             change = self._diff(active.get("seed") if active else None, semantic_seed)
             envelope = {
+                "system_name": self.CANONICAL_SYSTEM_NAME,
                 "schema_version": self.SCHEMA_VERSION,
                 "origin_signature": self.ORIGIN_SIGNATURE,
                 "seed_id": safe_id,
@@ -443,6 +454,7 @@ class MotherGrowthLoop:
                 }
             )
             pointer = {
+                "system_name": self.CANONICAL_SYSTEM_NAME,
                 "schema_version": self.SCHEMA_VERSION,
                 "origin_signature": self.ORIGIN_SIGNATURE,
                 "seed_id": safe_id,
@@ -455,6 +467,7 @@ class MotherGrowthLoop:
             }
             self._atomic_write_json(pointer_path, pointer)
             return {
+                "system_name": self.CANONICAL_SYSTEM_NAME,
                 "status": "created" if active is None else "upgraded",
                 "seed_id": safe_id,
                 "version": version,
@@ -510,6 +523,7 @@ class MotherGrowthLoop:
                 "mother_source_count": active["seed"].get("source_count", 0),
             },
             "metadata": {
+                "system_name": self.CANONICAL_SYSTEM_NAME,
                 "schema_version": self.SCHEMA_VERSION,
                 "origin_signature": self.ORIGIN_SIGNATURE,
                 "exported_at": self._now(),
@@ -522,6 +536,7 @@ class MotherGrowthLoop:
         }
         self._atomic_write_json(target, payload)
         return {
+            "system_name": self.CANONICAL_SYSTEM_NAME,
             "path": str(target),
             "seed_id": active["seed_id"],
             "version": active["version"],
@@ -535,6 +550,7 @@ class MotherGrowthLoop:
         active = self.load_active(seed_id)
         insights = active["seed"].get("insights", [])[:max_insights]
         return {
+            "system_name": self.CANONICAL_SYSTEM_NAME,
             "seed_id": active["seed_id"],
             "version": active["version"],
             "content_hash": active["content_hash"],
@@ -584,6 +600,7 @@ class MotherGrowthLoop:
             self._atomic_write_json(
                 self._active_file(safe_id),
                 {
+                    "system_name": self.CANONICAL_SYSTEM_NAME,
                     "schema_version": self.SCHEMA_VERSION,
                     "origin_signature": self.ORIGIN_SIGNATURE,
                     "seed_id": safe_id,
@@ -596,6 +613,7 @@ class MotherGrowthLoop:
                 },
             )
             result = {
+                "system_name": self.CANONICAL_SYSTEM_NAME,
                 "status": "rolled_back",
                 "seed_id": safe_id,
                 "version": target_version,
@@ -666,14 +684,22 @@ class MotherGrowthLoop:
                     errors.append(str(error))
 
         return {
+            "system_name": self.CANONICAL_SYSTEM_NAME,
             "status": "PASS" if not errors else "FAIL",
             "checked_versions": checked_versions,
             "errors": errors,
         }
 
 
+# Backward-compatible import for existing DL580 scripts. New code must use the
+# canonical MRL name; the persisted schema stays stable so existing stores remain readable.
+MotherGrowthLoop = MRL_MotherGrowthLoop_v1
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Absorb external data into versioned MRLiou mother memory")
+    parser = argparse.ArgumentParser(
+        description="Absorb external data into MRL_MotherGrowthLoop_v1 memory"
+    )
     parser.add_argument("source", nargs="?", help="File, folder, repository path, or literal text")
     parser.add_argument("--seed-id", required=True)
     parser.add_argument("--source-type", default="auto")
@@ -684,7 +710,7 @@ def main() -> None:
     action.add_argument("--rollback-version", type=int)
     args = parser.parse_args()
 
-    loop = MotherGrowthLoop(args.storage)
+    loop = MRL_MotherGrowthLoop_v1(args.storage)
     result: Dict[str, Any]
     mqm_export: Optional[Dict[str, Any]] = None
     if args.verify_only:
@@ -710,6 +736,7 @@ def main() -> None:
     print(
         json.dumps(
             {
+                "system_name": loop.CANONICAL_SYSTEM_NAME,
                 "result": result,
                 "mqm_export": mqm_export,
                 "verification": verification,

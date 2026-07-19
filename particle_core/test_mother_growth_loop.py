@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
-from mother_growth_loop import MotherGrowthLoop
+from mother_growth_loop import MRL_MotherGrowthLoop_v1, MotherGrowthLoop
 
 
 def pipeline(*texts):
@@ -32,13 +32,21 @@ class StubExtractor:
         return pipeline(str(source))
 
 
-class MotherGrowthLoopTests(unittest.TestCase):
+class MRL_MotherGrowthLoop_v1_Tests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
-        self.loop = MotherGrowthLoop(self.temp.name)
+        self.loop = MRL_MotherGrowthLoop_v1(self.temp.name)
 
     def tearDown(self):
         self.temp.cleanup()
+
+    def test_canonical_name_and_legacy_import_resolve_to_same_runtime(self):
+        self.assertIs(MotherGrowthLoop, MRL_MotherGrowthLoop_v1)
+        self.assertEqual(self.loop.CANONICAL_SYSTEM_NAME, "MRL_MotherGrowthLoop_v1")
+        created = self.loop.absorb_pipeline_result(pipeline("named"), "core")
+        self.assertEqual(created["system_name"], "MRL_MotherGrowthLoop_v1")
+        active = self.loop.load_active("core")
+        self.assertEqual(active["system_name"], "MRL_MotherGrowthLoop_v1")
 
     def test_create_upgrade_no_change_and_next_task_context(self):
         first = self.loop.absorb_pipeline_result(pipeline("alpha"), "core")

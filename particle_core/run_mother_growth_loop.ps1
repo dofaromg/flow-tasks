@@ -70,7 +70,8 @@ $Output | ForEach-Object { Write-Host $_ }
 
 New-Item -ItemType Directory -Force -Path $EvidenceDirectory | Out-Null
 $Evidence = [ordered]@{
-    schema_version = "mrliou.mother-growth.dl580-evidence.v1"
+    system_name = "MRL_MotherGrowthLoop_v1"
+    schema_version = "mrl.mother-growth-loop.dl580-evidence.v1"
     origin_signature = "MrLiouWord"
     hostname = $env:COMPUTERNAME
     action = $Action
@@ -86,11 +87,11 @@ $Evidence = [ordered]@{
 }
 $SafeSeedId = ($SeedId -replace '[^A-Za-z0-9._-]', '_').Trim('.', '_')
 if ([string]::IsNullOrWhiteSpace($SafeSeedId)) { $SafeSeedId = "seed" }
-$EvidenceName = "mother_growth_{0}_{1}_{2}.json" -f $Action.ToLowerInvariant(), $SafeSeedId, ([DateTime]::UtcNow.ToString("yyyyMMddTHHmmssfffZ"))
+$EvidenceName = "MRL_MotherGrowthLoop_v1_{0}_{1}_{2}.json" -f $Action.ToLowerInvariant(), $SafeSeedId, ([DateTime]::UtcNow.ToString("yyyyMMddTHHmmssfffZ"))
 $EvidencePath = Join-Path $EvidenceDirectory $EvidenceName
 $Evidence | ConvertTo-Json -Depth 20 | Set-Content -LiteralPath $EvidencePath -Encoding UTF8
 Write-Host "Evidence: $EvidencePath"
 
 if ($ExitCode -ne 0) {
-    throw "Mother growth loop $Action failed with exit code $ExitCode. Evidence: $EvidencePath"
+    throw "MRL_MotherGrowthLoop_v1 $Action failed with exit code $ExitCode. Evidence: $EvidencePath"
 }
