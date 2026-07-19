@@ -66,6 +66,59 @@ class TaskProcessorSafetyTests(unittest.TestCase):
             )
             self.assertFalse(result["errors"])
 
+    def test_schema_rejects_ambiguous_or_incompatible_targets(self):
+        with tempfile.TemporaryDirectory() as temp:
+            processor = TaskProcessor(str(Path(temp) / "tasks"), run_repository_checks=False)
+            cases = [
+                {
+                    "task_id": "both-targets",
+                    "language": "python",
+                    "description": "ambiguous",
+                    "target_file": "a.py",
+                    "target_directory": "src",
+                },
+                {
+                    "task_id": "wrong-suffix",
+                    "language": "python",
+                    "description": "wrong suffix",
+                    "target_file": "a.js",
+                },
+                {
+                    "task_id": "unknown-language",
+                    "language": "braincode",
+                    "description": "unknown",
+                    "target_file": "a.bc",
+                },
+            ]
+            for task in cases:
+                with self.subTest(task=task["task_id"]):
+                    result = {"checks": [], "errors": [], "warnings": []}
+                    processor._validate_schema(task, result)
+                    self.assertTrue(result["errors"])
+
+    def test_python_directory_validation_checks_nested_files(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            nested = root / "src" / "nested"
+            nested.mkdir(parents=True)
+            (root / "src" / "valid.py").write_text("VALUE = 1\n", encoding="utf-8")
+            (nested / "invalid.py").write_text("def broken(:\n", encoding="utf-8")
+            processor = TaskProcessor(str(root / "tasks"), run_repository_checks=False)
+            result = {"checks": [], "errors": [], "warnings": []}
+            processor._validate_python_directory(root / "src", result)
+            self.assertTrue(result["errors"])
+            self.assertIn("invalid.py", result["errors"][0]["message"])
+
+    def test_failed_command_output_is_redacted(self):
+        with tempfile.TemporaryDirectory() as temp:
+            processor = TaskProcessor(str(Path(temp) / "tasks"), run_repository_checks=False)
+            result = processor._run_command(
+                [sys.executable, "-c", "import sys; print('secret-token'); sys.exit(2)"]
+            )
+            self.assertEqual(result["returncode"], 2)
+            self.assertNotIn("secret-token", result["output_excerpt"])
+            self.assertIn("omitted", result["output_excerpt"])
+
 
 if __name__ == "__main__":
     unittest.main()
