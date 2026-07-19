@@ -1,8 +1,8 @@
 """
 flowcore_naming.py
 ==================
-MrLiou FlowCore — Centralized Product Naming Model
-粒子語言核心系統 — 統一產品命名模組
+MrliouaAI mrl_ai_os — Centralized Product Naming Model
+粒子語言核心系統（正式生產命名）— 統一產品命名模組
 
 This module is the single source of truth for all product identity values
 used across the FlowCore runtime, API, CLI, trace metadata, and index outputs.
@@ -47,13 +47,13 @@ except ImportError:
 
 #: Canonical component names used in HTTP headers, banners, and trace labels.
 COMPONENTS: Dict[str, str] = {
-    "runtime": "FlowCore.Runtime",
-    "vault": "FlowCore.Vault",
-    "trace": "FlowCore.Trace",
-    "index": "FlowCore.Index",
-    "loop": "FlowCore.Loop",
-    "ai": "FlowCore.AI",
-    "web": "FlowCore.Web",
+    "runtime": "mrl_ai_os.Runtime",
+    "vault": "mrl_ai_os.Vault",
+    "trace": "mrl_ai_os.Trace",
+    "index": "mrl_ai_os.Index",
+    "loop": "mrl_ai_os.Loop",
+    "ai": "mrl_ai_os.AI",
+    "web": "mrl_ai_os.Web",
 }
 
 # ---------------------------------------------------------------------------
@@ -62,21 +62,21 @@ COMPONENTS: Dict[str, str] = {
 
 PRODUCT: "_ProductInfo" = {  # type: ignore[assignment]
     # Brand / vendor
-    "vendor": "MrLiou",
-    "product": "FlowCore",
-    "line": "ParticleRuntime",
+    "vendor": "MrliouaAI",
+    "product": "mrl_ai_os",
+    "line": "Production",
 
     # Component registry reference (canonical names used in headers / trace / labels)
     "component": COMPONENTS,
 
     # Full display name
-    "full_name": "MrLiou FlowCore ParticleRuntime",
+    "full_name": "MrliouaAI mrl_ai_os Production",
 
     # URL / identifier slug  (e.g. for HTTP User-Agent / X-Product headers)
-    "slug": "mrliou-flowcore",
+    "slug": "mrliouaai-mrl-ai-os",
 
     # Dot-separated namespace used in event names and schema keys
-    "namespace": "mrliou.flowcore",
+    "namespace": "mrliouaai.mrl_ai_os",
 
     # Semantic version (update on releases)
     "version": "1.0.0",
@@ -85,8 +85,8 @@ PRODUCT: "_ProductInfo" = {  # type: ignore[assignment]
     "origin_signature": "MrLiouWord",
 
     # Human-readable descriptions
-    "description_en": "Particle Language Core Runtime",
-    "description_zh": "粒子語言核心系統",
+    "description_en": "mrl_ai_os Production Runtime",
+    "description_zh": "mrl_ai_os 正式生產服務執行核心",
 }
 
 
@@ -101,9 +101,9 @@ def event_name(component: str, action: str) -> str:
 
     Examples::
 
-        event_name("vault", "write")   -> "mrliou.flowcore.vault.write"
-        event_name("trace", "emit")    -> "mrliou.flowcore.trace.emit"
-        event_name("index", "compute") -> "mrliou.flowcore.index.compute"
+        event_name("vault", "write")   -> "mrliouaai.mrl_ai_os.vault.write"
+        event_name("trace", "emit")    -> "mrliouaai.mrl_ai_os.trace.emit"
+        event_name("index", "compute") -> "mrliouaai.mrl_ai_os.index.compute"
 
     The short plain-text name is still accepted everywhere for backward
     compatibility; this namespaced form appears in emitted metadata and
@@ -145,7 +145,7 @@ def server_banner(component: str = "runtime", version: str | None = None) -> str
     Example::
 
         server_banner("runtime") ->
-            "MrLiou FlowCore ParticleRuntime [FlowCore.Runtime] v1.0.0 — MrLiouWord"
+            "MrliouaAI mrl_ai_os Production [mrl_ai_os.Runtime] v1.0.0 — MrLiouWord"
     """
     comp = COMPONENTS.get(component, component)
     v = version or str(PRODUCT["version"])

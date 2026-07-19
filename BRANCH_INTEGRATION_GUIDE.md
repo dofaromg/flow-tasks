@@ -25,11 +25,11 @@ This document outlines the branch integration best practices and optimization re
 ### 功能分支 (Feature Branches)
 
 命名規範 (Naming Convention):
-- `feature/feature-name`: 新功能開發
-- `bugfix/bug-description`: 錯誤修復
-- `hotfix/critical-fix`: 緊急修復
-- `refactor/refactor-description`: 重構
-- `copilot/task-description`: Copilot 自動化任務
+- `mrl_ai_os/feature/feature-name`: 新功能開發（正式生產命名）
+- `mrl_ai_os/bugfix/bug-description`: 錯誤修復
+- `mrl_ai_os/hotfix/critical-fix`: 緊急修復
+- `mrl_ai_os/refactor/refactor-description`: 重構
+- `mrl_ai_os/copilot/task-description`: Copilot 自動化任務
 
 ## 整合檢查流程 (Integration Check Process)
 
