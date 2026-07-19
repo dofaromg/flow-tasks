@@ -1,7 +1,7 @@
 {
   "task_id": "hello-world-api-c",
   "task_name": "Unknown Task",
-  "validation_time": "2026-07-18T06:22:54.107779",
+  "validation_time": "2026-07-19T06:41:30.982321",
   "status": "passed",
   "checks": [
     {
@@ -22,13 +22,13 @@
     {
       "check": "c_compile",
       "status": "passed",
-      "message": "C compile check passed in 127.70ms"
+      "message": "C compile check passed in 313.75ms"
     }
   ],
   "errors": [],
   "warnings": [],
   "metrics": {
-    "execution_time_ms": 128.58,
+    "execution_time_ms": 314.61,
     "files_checked": 1,
     "lines_of_code": 168
   },

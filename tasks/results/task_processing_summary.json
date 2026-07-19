@@ -1,5 +1,5 @@
 {
-  "processing_time": "2026-07-18T06:22:53.482647",
+  "processing_time": "2026-07-19T06:41:30.598933",
   "total_tasks": 4,
   "passed": 4,
   "failed": 0,
@@ -8,7 +8,7 @@
     {
       "task_id": "hello-world-api",
       "task_name": "Unknown Task",
-      "validation_time": "2026-07-18T06:22:53.485469",
+      "validation_time": "2026-07-19T06:41:30.599698",
       "status": "passed",
       "checks": [
         {
@@ -40,7 +40,7 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 287.3,
+        "execution_time_ms": 229.64,
         "files_checked": 1,
         "lines_of_code": 36
       },
@@ -53,7 +53,7 @@
     {
       "task_id": "particle-language-core",
       "task_name": "Unknown Task",
-      "validation_time": "2026-07-18T06:22:53.778270",
+      "validation_time": "2026-07-19T06:41:30.831443",
       "status": "passed",
       "checks": [
         {
@@ -74,15 +74,15 @@
         {
           "check": "python_syntax",
           "status": "passed",
-          "message": "Python syntax check passed for 48 file(s)"
+          "message": "Python syntax check passed for 50 file(s)"
         }
       ],
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 309.17,
-        "files_checked": 153,
-        "lines_of_code": 24940
+        "execution_time_ms": 142.44,
+        "files_checked": 113,
+        "lines_of_code": 27500
       },
       "metadata": {
         "description": "MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統",
@@ -93,7 +93,7 @@
     {
       "task_id": "flowos-neural-link",
       "task_name": "Unknown Task",
-      "validation_time": "2026-07-18T06:22:54.099409",
+      "validation_time": "2026-07-19T06:41:30.978769",
       "status": "passed",
       "checks": [
         {
@@ -115,7 +115,7 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 3.54,
+        "execution_time_ms": 1.76,
         "files_checked": 25,
         "lines_of_code": 1569
       },
@@ -128,7 +128,7 @@
     {
       "task_id": "hello-world-api-c",
       "task_name": "Unknown Task",
-      "validation_time": "2026-07-18T06:22:54.107779",
+      "validation_time": "2026-07-19T06:41:30.982321",
       "status": "passed",
       "checks": [
         {
@@ -149,13 +149,13 @@
         {
           "check": "c_compile",
           "status": "passed",
-          "message": "C compile check passed in 127.70ms"
+          "message": "C compile check passed in 313.75ms"
         }
       ],
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 128.58,
+        "execution_time_ms": 314.61,
         "files_checked": 1,
         "lines_of_code": 168
       },
@@ -172,17 +172,17 @@
       {
         "check": "npm_lint",
         "status": "passed",
-        "message": "npm run lint passed in 4265.88ms"
+        "message": "npm run lint passed in 2335.46ms"
       },
       {
         "check": "npm_build",
         "status": "passed",
-        "message": "npm run build passed in 38506.42ms"
+        "message": "npm run build passed in 33197.34ms"
       },
       {
         "check": "kubernetes_render",
         "status": "passed",
-        "message": "kubectl kustomize cluster/overlays/prod/ passed in 100.42ms"
+        "message": "kubectl kustomize cluster/overlays/prod/ passed in 3078.99ms"
       }
     ],
     "warnings": [
@@ -358,10 +358,10 @@
     "errors": []
   },
   "overall_metrics": {
-    "total_execution_time_ms": 44229.98,
-    "total_files_checked": 180,
-    "total_lines_of_code": 26713,
-    "average_task_time_ms": 11057.5
+    "total_execution_time_ms": 39893.79,
+    "total_files_checked": 140,
+    "total_lines_of_code": 29273,
+    "average_task_time_ms": 9973.45
   },
   "summary": {
     "pass_rate": 100.0,
