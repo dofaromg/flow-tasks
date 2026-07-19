@@ -10,7 +10,21 @@ process_external_analysis_pipeline 既有能力。
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Protocol
+
+
+class ExternalAnalysisExtractor(Protocol):
+    """Minimal protocol required by run_with_template()."""
+
+    def process_external_analysis_pipeline(
+        self,
+        source: Any,
+        source_type: str = "auto",
+        operations: Optional[List[str]] = None,
+        metadata: Optional[Dict[str, Any]] = None,
+        trust_level: str = "medium",
+    ) -> Dict[str, Any]:
+        ...
 
 
 @dataclass(frozen=True)
@@ -44,7 +58,7 @@ def build_production_template() -> PipelineTemplate:
 
 
 def run_with_template(
-    extractor: Any,
+    extractor: ExternalAnalysisExtractor,
     source: Any,
     *,
     branch: str = "main",
@@ -66,4 +80,3 @@ def run_with_template(
         metadata=template.to_metadata(branch=branch, extra_metadata=extra_metadata),
         trust_level=trust_level or template.trust_level,
     )
-

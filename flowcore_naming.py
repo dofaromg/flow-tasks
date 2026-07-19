@@ -64,13 +64,13 @@ PRODUCT: "_ProductInfo" = {  # type: ignore[assignment]
     # Brand / vendor
     "vendor": "MrliouaAI",
     "product": "mrl_ai_os",
-    "line": "Production",
+    "line": "ProductionRuntime",
 
     # Component registry reference (canonical names used in headers / trace / labels)
     "component": COMPONENTS,
 
     # Full display name
-    "full_name": "MrliouaAI mrl_ai_os Production",
+    "full_name": "MrliouaAI mrl_ai_os ProductionRuntime",
 
     # URL / identifier slug  (e.g. for HTTP User-Agent / X-Product headers)
     "slug": "mrliouaai-mrl-ai-os",
@@ -145,7 +145,7 @@ def server_banner(component: str = "runtime", version: str | None = None) -> str
     Example::
 
         server_banner("runtime") ->
-            "MrliouaAI mrl_ai_os Production [mrl_ai_os.Runtime] v1.0.0 — MrLiouWord"
+            "MrliouaAI mrl_ai_os ProductionRuntime [mrl_ai_os.Runtime] v1.0.0 — MrLiouWord"
     """
     comp = COMPONENTS.get(component, component)
     v = version or str(PRODUCT["version"])
