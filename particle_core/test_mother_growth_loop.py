@@ -110,6 +110,8 @@ class MotherGrowthLoopTests(unittest.TestCase):
         self.assertNotEqual(slash["seed_id"], underscore["seed_id"])
         self.assertEqual(self.loop.build_context("a/b")["insights"][0]["insight"], "slash")
         self.assertEqual(self.loop.build_context("a_b")["insights"][0]["insight"], "underscore")
+        self.assertEqual(self.loop._safe_seed_id("CORE"), self.loop._safe_seed_id("core"))
+        self.assertLessEqual(len(self.loop._safe_seed_id("x" * 300)), 96)
 
     def test_active_pointer_path_and_journal_binding_are_enforced(self):
         self.loop.absorb_pipeline_result(pipeline("trusted"), "core")
@@ -132,6 +134,15 @@ class MotherGrowthLoopTests(unittest.TestCase):
         verification = self.loop.verify_store("core")
         self.assertEqual(verification["status"], "FAIL")
         self.assertTrue(any("Journal coverage missing" in error for error in verification["errors"]))
+
+    def test_corrupt_journal_is_never_extended(self):
+        self.loop.absorb_pipeline_result(pipeline("trusted"), "core")
+        journal_path = Path(self.temp.name) / "journal.jsonl"
+        journal_path.write_text(journal_path.read_text(encoding="utf-8") + "not-json\n", encoding="utf-8")
+        before = journal_path.read_bytes()
+        with self.assertRaisesRegex(ValueError, "Journal parse|invalid journal"):
+            self.loop.absorb_pipeline_result(pipeline("trusted", "next"), "core")
+        self.assertEqual(journal_path.read_bytes(), before)
 
     def test_changed_insight_metadata_is_reported(self):
         first = pipeline("alpha")

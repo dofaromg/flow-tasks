@@ -26,7 +26,7 @@
 - 下一次任務只讀取通過 hash 驗證的 active Seed。
 - 每次吸收後自動輸出 `exports/<seed>.mqm.json`，可直接加入 MQM 的 `seeds` 配置。
 - 異常終止留下的 dead-PID lock 會安全回收；仍在執行的程序不會被強制解鎖。
-- 非安全字元 Seed ID 使用原始 ID 的 hash 後綴隔離，避免路徑正規化碰撞。
+- Seed ID 採大小寫不敏感 canonical 規則；非安全字元與超長 ID 使用 hash 後綴隔離，避免 Windows 路徑碰撞。
 
 ## PowerShell（DL580）
 
