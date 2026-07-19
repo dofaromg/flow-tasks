@@ -65,12 +65,16 @@ class MotherGrowthLoop:
         if not isinstance(seed_id, str):
             raise TypeError("seed_id must be a string")
         original = seed_id.strip()
-        safe = re.sub(r"[^A-Za-z0-9._-]+", "_", original).strip("._")
+        canonical = original.lower()
+        safe = re.sub(r"[^a-z0-9._-]+", "_", canonical).strip("._")
         if not safe:
             raise ValueError("seed_id must contain at least one safe character")
-        if safe != original:
-            suffix = hashlib.sha256(original.encode("utf-8")).hexdigest()[:12]
+        if safe != canonical:
+            suffix = hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:12]
             safe = f"{safe}-{suffix}"
+        if len(safe) > 96:
+            suffix = hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:16]
+            safe = f"{safe[:79]}-{suffix}"
         return safe
 
     @staticmethod
@@ -260,12 +264,10 @@ class MotherGrowthLoop:
         }
 
     def _last_event_hash(self) -> Optional[str]:
-        if not self.journal_path.exists():
-            return None
-        lines = [line for line in self.journal_path.read_text(encoding="utf-8").splitlines() if line.strip()]
-        if not lines:
-            return None
-        return json.loads(lines[-1]).get("event_hash")
+        records, errors = self._read_and_verify_journal()
+        if errors:
+            raise ValueError("Refusing to extend an invalid journal: " + "; ".join(errors))
+        return records[-1].get("event_hash") if records else None
 
     def _append_event(self, event: Dict[str, Any]) -> Dict[str, Any]:
         record = {
