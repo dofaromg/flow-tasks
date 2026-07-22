@@ -1,201 +1,197 @@
 # AGENTS.md
 
+> Instructions for AI coding agents (GitHub Copilot Coding Agent, Claude, etc.) working in this repository.
+
 ## Project Overview
 
-The Awesome GitHub Copilot repository is a community-driven collection of custom agents, prompts, and instructions designed to enhance GitHub Copilot experiences across various domains, languages, and use cases. The project includes:
+**FlowAgent GKE Starter** is a bilingual (English / Traditional Chinese) GitOps + CI/CD foundation for deploying FlowAgent services on Google Kubernetes Engine (GKE). It also hosts the **MRLiou Particle Language Core System** (粒子語言核心系統) — a logic-seed computation and function-chain execution framework.
 
-- **Agents** - Specialized GitHub Copilot agents that integrate with MCP servers
-- **Prompts** - Task-specific prompts for code generation and problem-solving
-- **Instructions** - Coding standards and best practices applied to specific file patterns
-- **Skills** - Self-contained folders with instructions and bundled resources for specialized tasks
-- **Collections** - Curated collections organized around specific themes and workflows
+### Key Subsystems
 
-## Repository Structure
+| Subsystem | Location | Purpose |
+|---|---|---|
+| Particle Language Core | `particle_core/` | Logic seed computation, function-chain execution, compression/restoration, memory archival |
+| Next.js Frontend | `pages/`, `src/` | React/Next.js 15 web application (weather dashboard, FlowAgent UI) |
+| Kubernetes Apps | `apps/` | Orchestrator, module-a, MongoDB, monitoring, frontend manifests |
+| Cluster Config | `cluster/` | Kustomize base + overlays for GKE prod |
+| GitOps | `argocd/` | Argo CD application definitions |
+| CI/CD | `.github/workflows/` | GitHub Actions: build, deploy, lint, CodeQL, structure-index |
+| Task System | `tasks/` | YAML task definitions processed by `process_tasks.py` |
+| FlowOS Runtime | `flowos/` | TypeScript edge/runtime skeleton (neural links, gates, adapters) |
+
+---
+
+## Repository Layout
 
 ```
-.
-├── agents/           # Custom GitHub Copilot agent definitions (.agent.md files)
-├── prompts/          # Task-specific prompts (.prompt.md files)
-├── instructions/     # Coding standards and guidelines (.instructions.md files)
-├── skills/           # Agent Skills folders (each with SKILL.md and optional bundled assets)
-├── collections/      # Curated collections of resources (.md files)
-├── docs/             # Documentation for different resource types
-├── eng/              # Build and automation scripts
-└── scripts/          # Utility scripts
+flow-tasks/
+├── particle_core/          # Particle Language Core
+│   ├── src/                # Core Python modules
+│   ├── config/             # JSON configuration
+│   ├── docs/               # Bilingual documentation
+│   └── examples/           # Usage examples
+├── apps/                   # Kubernetes app manifests
+│   ├── orchestrator/
+│   ├── module-a/
+│   ├── mongodb/
+│   ├── monitoring/
+│   └── nextjs-frontend/
+├── cluster/
+│   ├── base/               # Kustomize base manifests
+│   └── overlays/prod/      # Production overlay
+├── argocd/                 # Argo CD app definitions
+├── tasks/                  # Task YAML definitions + results/
+├── flowos/                 # TypeScript runtime
+├── pages/                  # Next.js pages
+├── src/                    # Next.js app source
+├── scripts/                # Utility scripts
+├── docs/                   # Documentation index
+├── flow_code/              # Generated code output
+└── .github/
+    ├── workflows/          # CI/CD workflow definitions
+    └── copilot-instructions.md
 ```
 
-## Setup Commands
+---
+
+## Environment Setup
 
 ```bash
-# Install dependencies
-npm ci
+# Python dependencies (main project)
+pip install -r requirements.txt
 
-# Build the project (generates README.md)
-npm run build
+# Python dependencies (particle core)
+pip install -r particle_core/requirements.txt
 
-# Validate collection manifests
-npm run collection:validate
-
-# Create a new collection
-npm run collection:create -- --id <collection-id> --tags <tags>
-
-# Validate agent skills
-npm run skill:validate
-
-# Create a new skill
-npm run skill:create -- --name <skill-name>
+# Node.js / Next.js dependencies
+npm install
 ```
 
-## Development Workflow
+---
 
-### Working with Agents, Prompts, Instructions, and Skills
+## Build & Validation Commands
 
-All agent files (`*.agent.md`), prompt files (`*.prompt.md`), and instruction files (`*.instructions.md`) must include proper markdown front matter. Agent Skills are folders containing a `SKILL.md` file with frontmatter and optional bundled assets:
-
-#### Agent Files (*.agent.md)
-- Must have `description` field (wrapped in single quotes)
-- File names should be lower case with words separated by hyphens
-- Recommended to include `tools` field
-- Strongly recommended to specify `model` field
-
-#### Prompt Files (*.prompt.md)
-- Must have `agent` field (value should be `'agent'` wrapped in single quotes)
-- Must have `description` field (wrapped in single quotes, not empty)
-- File names should be lower case with words separated by hyphens
-- Recommended to specify `tools` if applicable
-- Strongly recommended to specify `model` field
-
-#### Instruction Files (*.instructions.md)
-- Must have `description` field (wrapped in single quotes, not empty)
-- Must have `applyTo` field specifying file patterns (e.g., `'**.js, **.ts'`)
-- File names should be lower case with words separated by hyphens
-
-#### Agent Skills (skills/*/SKILL.md)
-- Each skill is a folder containing a `SKILL.md` file
-- SKILL.md must have `name` field (lowercase with hyphens, matching folder name, max 64 characters)
-- SKILL.md must have `description` field (wrapped in single quotes, 10-1024 characters)
-- Folder names should be lower case with words separated by hyphens
-- Skills can include bundled assets (scripts, templates, data files)
-- Bundled assets should be referenced in the SKILL.md instructions
-- Asset files should be reasonably sized (under 5MB per file)
-- Skills follow the [Agent Skills specification](https://agentskills.io/specification)
-
-### Adding New Resources
-
-When adding a new agent, prompt, instruction, or skill:
-
-**For Agents, Prompts, and Instructions:**
-1. Create the file with proper front matter
-2. Add the file to the appropriate directory
-3. Update the README.md by running: `npm run build`
-4. Verify the resource appears in the generated README
-
-**For Skills:**
-1. Run `npm run skill:create` to scaffold a new skill folder
-2. Edit the generated SKILL.md file with your instructions
-3. Add any bundled assets (scripts, templates, data) to the skill folder
-4. Run `npm run skill:validate` to validate the skill structure
-5. Update the README.md by running: `npm run build`
-6. Verify the skill appears in the generated README
-
-### Testing Instructions
+### Next.js / TypeScript
 
 ```bash
-# Run all validation checks
-npm run collection:validate
-npm run skill:validate
-
-# Build and verify README generation
-npm run build
-
-# Fix line endings (required before committing)
-bash scripts/fix-line-endings.sh
+npm run lint       # ESLint — run after any JS/TS/TSX change
+npm run build      # Production build — must pass before merging
+npm run dev        # Local dev server at http://localhost:3000
+npm test           # Jest unit tests
+npm run test:coverage  # Jest with coverage report
 ```
 
-Before committing:
-- Ensure all markdown front matter is correctly formatted
-- Verify file names follow the lower-case-with-hyphens convention
-- Run `npm run build` to update the README
-- **Always run `bash scripts/fix-line-endings.sh`** to normalize line endings (CRLF → LF)
-- Check that your new resource appears correctly in the README
+### Python
 
-## Code Style Guidelines
+```bash
+# Syntax check individual files
+python -m py_compile <file.py>
 
-### Markdown Files
-- Use proper front matter with required fields
-- Keep descriptions concise and informative
-- Wrap description field values in single quotes
-- Use lower-case file names with hyphens as separators
+# Run all Python tests
+pytest
 
-### JavaScript/Node.js Scripts
-- Located in `eng/` and `scripts/` directories
-- Follow Node.js ES module conventions (`.mjs` extension)
-- Use clear, descriptive function and variable names
+# Run integration tests
+python test_integration.py
+python test_comprehensive.py
 
-## Pull Request Guidelines
+# Process task definitions
+python process_tasks.py
+```
 
-When creating a pull request:
+### Particle Core
 
-1. **README updates**: New files should automatically be added to the README when you run `npm run build`
-2. **Front matter validation**: Ensure all markdown files have the required front matter fields
-3. **File naming**: Verify all new files follow the lower-case-with-hyphens naming convention
-4. **Build check**: Run `npm run build` before committing to verify README generation
-5. **Line endings**: **Always run `bash scripts/fix-line-endings.sh`** to normalize line endings to LF (Unix-style)
-6. **Description**: Provide a clear description of what your agent/prompt/instruction does
-7. **Testing**: If adding a collection, run `npm run collection:validate` to ensure validity
+```bash
+cd particle_core
 
-### Pre-commit Checklist
+# Demo / smoke test
+python demo.py demo
 
-Before submitting your PR, ensure you have:
-- [ ] Run `npm install` (or `npm ci`) to install dependencies
-- [ ] Run `npm run build` to generate the updated README.md
-- [ ] Run `bash scripts/fix-line-endings.sh` to normalize line endings
-- [ ] Verified that all new files have proper front matter
-- [ ] Tested that your contribution works with GitHub Copilot
-- [ ] Checked that file names follow the naming convention
+# Interactive memory archive system
+python src/memory_archive_seed.py interactive
 
-### Code Review Checklist
+# Start the particle core CLI
+python src/cli_runner.py
+```
 
-For prompt files (*.prompt.md):
-- [ ] Has markdown front matter
-- [ ] Has `agent` field (value should be `'agent'` wrapped in single quotes)
-- [ ] Has non-empty `description` field wrapped in single quotes
-- [ ] File name is lower case with hyphens
-- [ ] Includes `model` field (strongly recommended)
+### Kubernetes Manifests
 
-For instruction files (*.instructions.md):
-- [ ] Has markdown front matter
-- [ ] Has non-empty `description` field wrapped in single quotes
-- [ ] Has `applyTo` field with file patterns
-- [ ] File name is lower case with hyphens
+```bash
+# Render and validate production overlay (dry-run)
+kubectl kustomize cluster/overlays/prod/
 
-For agent files (*.agent.md):
-- [ ] Has markdown front matter
-- [ ] Has non-empty `description` field wrapped in single quotes
-- [ ] File name is lower case with hyphens
-- [ ] Includes `model` field (strongly recommended)
-- [ ] Considers using `tools` field
+# Apply dry-run (requires a cluster context)
+kubectl apply --dry-run=client -k cluster/overlays/prod/
+```
 
-For skills (skills/*/):
-- [ ] Folder contains a SKILL.md file
-- [ ] SKILL.md has markdown front matter
-- [ ] Has `name` field matching folder name (lowercase with hyphens, max 64 characters)
-- [ ] Has non-empty `description` field wrapped in single quotes (10-1024 characters)
-- [ ] Folder name is lower case with hyphens
-- [ ] Any bundled assets are referenced in SKILL.md
-- [ ] Bundled assets are under 5MB per file
+---
 
-## Contributing
+## Testing Guidelines
 
-This is a community-driven project. Contributions are welcome! Please see:
-- [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines
-- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community standards
-- [SECURITY.md](SECURITY.md) for security policies
+- **Always** run `npm run lint` and `npm run build` after any JavaScript/TypeScript change.
+- **Always** run `pytest` (or the relevant test file) after any Python change.
+- **Always** run `kubectl kustomize cluster/overlays/prod/` after modifying Kubernetes manifests.
+- Run `python process_tasks.py` when modifying task YAML files under `tasks/`.
+- Run `cd particle_core && python demo.py demo` after changes to `particle_core/src/`.
 
-## MCP Server
+---
 
-The repository includes an MCP (Model Context Protocol) Server that provides prompts for searching and installing resources directly from this repository. Docker is required to run the server.
+## Code Style & Conventions
 
-## License
+### Python
+- Python 3.10+, PEP 8, type hints where appropriate.
+- Docstrings for public classes and functions (English or Traditional Chinese both acceptable).
+- Use `rich` for CLI output formatting.
+- File encoding: always `utf-8`.
+- Use `os.path.join()` or `pathlib.Path` for cross-platform paths.
 
-MIT License - see [LICENSE](LICENSE) for details
+### JavaScript / TypeScript
+- Next.js 15, React 18, TypeScript strict mode.
+- ESLint configuration in `.eslintrc.json` — do not disable rules without justification.
+- Use `async/await` over raw Promises.
+
+### Naming Conventions
+- **Python files**: `snake_case.py`
+- **MRLiou modules**: `Mr.liou.{Component}.{Subcomponent}.{version}.{extension}` (e.g., `Mr.liou.MetaEnv.Core.pcode`)
+- **Kubernetes manifests**: lowercase with hyphens.
+- **Documentation**: Markdown; bilingual (English + 繁體中文) encouraged.
+
+### Commit Messages
+- English, concise, imperative mood (e.g., `fix: null check in auth middleware`).
+- Keep commits atomic and focused.
+
+---
+
+## Security
+
+- **Never commit secrets, credentials, API keys, or tokens.**
+- Production secrets belong in GitHub Secrets, GCP Secret Manager, Sealed Secrets, or External Secrets Operator — not in Git.
+- `apps/mongodb/secret.yaml` contains example credentials — replace before any production deployment.
+- Use GCP Workload Identity Federation for service-account authentication.
+
+---
+
+## GCP / GKE Configuration
+
+| Setting | Default |
+|---|---|
+| Project | `flowmemorysync` |
+| Region | `asia-east1` |
+| Zone | `asia-east1-a` |
+| Cluster | `modular-cluster` |
+| Container registry | `asia-east1-docker.pkg.dev/flowmemorysync/flowagent/` |
+
+Update these values in manifests and `argocd/app.yaml` when forking or deploying to a different environment.
+
+---
+
+## Important Files for AI Agents
+
+| File | Notes |
+|---|---|
+| `.github/copilot-instructions.md` | Extended Copilot-specific guidelines |
+| `README.md` | Project entry point and quick validation steps |
+| `particle_core/README.md` | Particle Language Core documentation |
+| `tasks/README.md` | Task definition format and processing |
+| `cluster/README.md` | Kubernetes cluster layout |
+| `apps/README.md` | Application manifest overview |
+| `CHANGELOG.md` | Version history — update for significant changes |
