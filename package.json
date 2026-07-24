@@ -23,6 +23,8 @@
   },
   "devDependencies": {
     "@types/node": "^25.0.3",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "15.5.21",
     "typescript": "^5.9.3"
   }
 }
