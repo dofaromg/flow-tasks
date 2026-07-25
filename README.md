@@ -1,13 +1,13 @@
-# FlowAgent GKE Starter (GitOps + CI/CD)
+# MrLiouAI GKE Starter (GitOps + CI/CD)
 
 > 引用 / Reference: [https://github.com/Mrliou](https://github.com/Mrliou)
 
-FlowAgent GKE Starter is a bilingual GitOps + CI/CD foundation for deploying FlowAgent services on Kubernetes while preserving the MRLiou Particle Language Core and FlowOS runtime experiments.
+MrLiouAI GKE Starter is a bilingual GitOps + CI/CD foundation for deploying MrLiouAI services on Kubernetes while preserving the MRLiou Particle Language Core and FlowOS runtime experiments.
 
 ## 專案主軸 / Project Focus
 
 - **Cloud-native deployment**: GKE, Kustomize, Argo CD, and GitHub Actions deployment paths.
-- **FlowAgent runtime services**: Kubernetes app manifests for orchestrator, module services, MongoDB, monitoring, and frontend apps.
+- **MrLiouAI runtime services**: Kubernetes app manifests for orchestrator, module services, MongoDB, monitoring, and frontend apps.
 - **Particle Language Core**: Logic seed computation, function-chain execution, compression/restoration, and memory archival.
 - **FlowOS runtime**: TypeScript edge/runtime components for neural links, gates, storage, and adapter interfaces.
 - **Task validation system**: YAML task definitions processed by `process_tasks.py` with generated JSON, Markdown, and HTML reports.
@@ -20,7 +20,7 @@ FlowAgent GKE Starter is a bilingual GitOps + CI/CD foundation for deploying Flo
 | `flowos/` | TypeScript runtime and edge worker skeleton | [`flowos/README.md`](./flowos/README.md) | `npm run lint && npm run build` |
 | `apps/` | Kubernetes application manifests and app service code | [`apps/README.md`](./apps/README.md) | `kubectl kustomize cluster/overlays/prod/` |
 | `cluster/` | Base and overlay cluster composition | [`cluster/README.md`](./cluster/README.md) | `kubectl kustomize cluster/overlays/prod/` |
-| `tasks/` | FlowAgent task definitions and generated validation reports | [`tasks/README.md`](./tasks/README.md) | `python process_tasks.py` |
+| `tasks/` | MrLiouAI task definitions and generated validation reports | [`tasks/README.md`](./tasks/README.md) | `python process_tasks.py` |
 | `docs/` | Curated documentation index and archive structure | [`docs/index.md`](./docs/index.md) | Documentation review |
 
 ## 快速驗證 / Quick Validation
@@ -34,7 +34,7 @@ python -m py_compile process_tasks.py
 gcc -o /tmp/hello_api flow_code/hello_api.c
 npm run lint
 npm run build
-kubectl kustomize cluster/overlays/prod/ >/tmp/flowagent-prod.yaml
+kubectl kustomize cluster/overlays/prod/ >/tmp/mrliouai-prod.yaml
 ```
 
 > Security note: production secrets should stay out of Git. Use GitHub Secrets, GCP Secret Manager, Sealed Secrets, or External Secrets for production credentials.
@@ -83,13 +83,13 @@ Responses are cached for 5 minutes via `Cache-Control` headers.
 這個壓縮包是「一次搞定」的部署骨架。你把整包丟到 GitHub（或上傳到你的空間）即可：
 
 ## 部署空間位置（你會用到的介面）
-- **GKE 叢集控制台**：`https://console.cloud.google.com/kubernetes/list?project=flowmemorysync`
-- **Artifact Registry**（容器倉庫）：`https://console.cloud.google.com/artifacts?project=flowmemorysync&supportedpurview=project`
-- **Cloud Shell**：`https://console.cloud.google.com/?cloudshell=true&project=flowmemorysync`
-- **（可選）Cloud Run**：`https://console.cloud.google.com/run?project=flowmemorysync`
-- **（可選）備份 GCS Bucket**：`gs://flowagent-backup-flowmemorysync`
+- **GKE 叢集控制台**：`https://console.cloud.google.com/kubernetes/list?project=mrliouai`
+- **Artifact Registry**（容器倉庫）：`https://console.cloud.google.com/artifacts?project=mrliouai&supportedpurview=project`
+- **Cloud Shell**：`https://console.cloud.google.com/?cloudshell=true&project=mrliouai`
+- **（可選）Cloud Run**：`https://console.cloud.google.com/run?project=mrliouai`
+- **（可選）備份 GCS Bucket**：`gs://mrliouai-backup-mrliouai`
 
-> 把 `flowmemorysync` 換成你的（例如 `flowmemorysync`）。`dofaromg/----2` 換成你的 repo URL。
+> 把 `mrliouai` 換成你的（例如 `mrliouai`）。`dofaromg/----2` 換成你的 repo URL。
 
 ---
 
@@ -104,7 +104,7 @@ Responses are cached for 5 minutes via `Cache-Control` headers.
    ```bash
    kubectl apply -f argocd/app.yaml
    ```
-4. Argo 會自動把 `cluster/overlays/prod` 底下的所有資源佈署到命名空間 `flowagent`。
+4. Argo 會自動把 `cluster/overlays/prod` 底下的所有資源佈署到命名空間 `mrliouai`。
 
 ## 路線 B：GitHub Actions（推進叢集）
 - 設定 GitHub Secrets：`GCP_WIF_PROVIDER`、`GCP_DEPLOYER_SA`。
@@ -113,27 +113,27 @@ Responses are cached for 5 minutes via `Cache-Control` headers.
 ---
 
 ## 必改的參數
-- 容器映像位址：`asia-east1-docker.pkg.dev/flowmemorysync/flowagent/{module-a,orchestrator}:latest`
+- 容器映像位址：`asia-east1-docker.pkg.dev/mrliouai/mrliouai/{module-a,orchestrator}:latest`
 - `argocd/app.yaml` 的 repo URL
 - 叢集名稱（預設 `modular-cluster`）、區域（預設 `asia-east1-a`）
 
 ---
 
 ## 一鍵初始化（Cloud Shell）
-> 將 `flowmemorysync`、`YOUR_GH_REPO` 改成你的。
+> 將 `mrliouai`、`YOUR_GH_REPO` 改成你的。
 
 ```bash
-export PROJECT_ID=flowmemorysync
+export PROJECT_ID=mrliouai
 export REGION=asia-east1
 export ZONE=asia-east1-a
-export NS=flowagent
+export NS=mrliouai
 
 gcloud config set project $PROJECT_ID
 gcloud services enable container.googleapis.com artifactregistry.googleapis.com
 
 gcloud container clusters get-credentials modular-cluster --zone $ZONE --project $PROJECT_ID
-# FlowAgent — GKE Starter with Particle Language Core
-# FlowAgent — GKE 啟動器與粒子語言核心
+# MrLiouAI — GKE Starter with Particle Language Core
+# MrLiouAI — GKE 啟動器與粒子語言核心
 
 版本 / Version: v3.0.0  •  更新時間 / Updated: 2026-02-09
 
@@ -245,8 +245,8 @@ bash scripts/oneclick_gke_init.sh  # 初始化叢集
 kubectl apply -k cluster/overlays/prod/
 
 # 4) 驗證部署
-kubectl get pods -n flowagent
-kubectl get svc -n flowagent
+kubectl get pods -n mrliouai
+kubectl get svc -n mrliouai
 ```
 
 ### 選項 2: Docker Compose 本地部署 (最簡單)
@@ -481,7 +481,7 @@ gh codespace delete -c CODESPACE_NAME
 
 ### GCP 配置參數
 ```bash
-PROJECT_ID=flowmemorysync
+PROJECT_ID=mrliouai
 REGION=asia-east1
 ZONE=asia-east1-a
 CLUSTER_NAME=modular-cluster
@@ -489,7 +489,7 @@ CLUSTER_NAME=modular-cluster
 
 ### Container Registry
 ```
-asia-east1-docker.pkg.dev/flowmemorysync/flowagent/
+asia-east1-docker.pkg.dev/mrliouai/mrliouai/
 ├── nextjs-frontend:latest
 ├── module-a:latest
 └── orchestrator:latest

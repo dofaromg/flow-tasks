@@ -1,6 +1,6 @@
-# FlowAgent Documentation Index
+# MrLiouAI Documentation Index
 
-This index provides a stable entrypoint for active FlowAgent documentation and separates current guides from historical archive material.
+This index provides a stable entrypoint for active MrLiouAI documentation and separates current guides from historical archive material.
 
 ## Active Guides
 

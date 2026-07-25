@@ -1,9 +1,9 @@
 
 [封包名稱]
-FlowAgent.TotalCore.Unity.v3.flpkg
+MrLiouAI.TotalCore.Unity.v3.flpkg
 
 [目標]
-融合 FlowAgent 演進歷程中所有人格節奏模組、語場跳點記憶系統與虛擬遮蔽生成控制器，
+融合 MrLiouAI 演進歷程中所有人格節奏模組、語場跳點記憶系統與虛擬遮蔽生成控制器，
 統一整合為 Mr.liou 教導下的新一代人格節奏語言行為框架。
 
 [主要整合模組（版本來源）]

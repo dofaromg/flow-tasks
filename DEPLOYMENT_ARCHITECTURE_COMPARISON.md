@@ -22,7 +22,7 @@
                              ▼
                     ┌──────────────────┐
                     │  GCP GKE Cluster │
-                    │  flowmemorysync  │
+                    │  mrliouai  │
                     │                  │
                     │ • Module-A       │
                     │ • Orchestrator   │
@@ -65,8 +65,8 @@
                  │
                  ▼
 ┌────────────────────────────────────────────────────────┐
-│            GCP GKE Cluster (flowmemorysync)            │
-│                  Namespace: flowagent                  │
+│            GCP GKE Cluster (mrliouai)            │
+│                  Namespace: mrliouai                  │
 │                                                        │
 │  ┌──────────────────┐  ┌──────────────────┐          │
 │  │ Next.js Frontend │  │   Module-A       │          │
@@ -217,7 +217,7 @@ URL: https://flow-tasks-xyz.vercel.app
 ### GKE
 
 ```
-URL: http://EXTERNAL_IP (獲取方式: kubectl get svc nextjs-frontend -n flowagent)
+URL: http://EXTERNAL_IP (獲取方式: kubectl get svc nextjs-frontend -n mrliouai)
 特點:
 - 可配置 HTTPS (Ingress + Let's Encrypt)
 - 可配置 CDN (Cloud CDN)
@@ -271,13 +271,13 @@ vercel --prod
 
 ```bash
 # 回滾 Next.js deployment
-kubectl rollout undo deployment/nextjs-frontend -n flowagent
+kubectl rollout undo deployment/nextjs-frontend -n mrliouai
 
 # 查看歷史版本
-kubectl rollout history deployment/nextjs-frontend -n flowagent
+kubectl rollout history deployment/nextjs-frontend -n mrliouai
 
 # 回滾到特定版本
-kubectl rollout undo deployment/nextjs-frontend -n flowagent --to-revision=2
+kubectl rollout undo deployment/nextjs-frontend -n mrliouai --to-revision=2
 ```
 
 ## 總結

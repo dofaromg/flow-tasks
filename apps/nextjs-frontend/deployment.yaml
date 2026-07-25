@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nextjs-frontend
-  namespace: flowagent
+  namespace: mrliouai
   labels:
     app: nextjs-frontend
     component: frontend
@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: nextjs
-        image: asia-east1-docker.pkg.dev/flowmemorysync/flowagent/nextjs-frontend:latest
+        image: asia-east1-docker.pkg.dev/mrliouai/mrliouai/nextjs-frontend:latest
         ports:
         - containerPort: 3000
           name: http
@@ -68,7 +68,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nextjs-frontend
-  namespace: flowagent
+  namespace: mrliouai
   labels:
     app: nextjs-frontend
     component: frontend

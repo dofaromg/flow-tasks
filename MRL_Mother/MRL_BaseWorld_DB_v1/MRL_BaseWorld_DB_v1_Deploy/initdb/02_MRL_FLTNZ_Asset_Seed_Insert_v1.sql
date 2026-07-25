@@ -39,7 +39,7 @@ INSERT INTO mrl_fltnz_asset (asset_key, asset_name, category, format, version, l
  '.fltnz',
  'v0.1',
  6,
- '{"description": "六大核心組定位 — 母體核心組/粒子可逆原理/FlowAgent運行/世界模組/檔案索引/人格共振", "source_file": "MRLiou_系統進度對齊與母體整理_20260315.docx", "priorities": ["P0: mrl-librarian Worker", "P1: 可逆橋", "P2: 世界模組入口", "P3: FlowAgent Runtime"]}'::jsonb
+ '{"description": "六大核心組定位 — 母體核心組/粒子可逆原理/MrLiouAI運行/世界模組/檔案索引/人格共振", "source_file": "MRLiou_系統進度對齊與母體整理_20260315.docx", "priorities": ["P0: mrl-librarian Worker", "P1: 可逆橋", "P2: 世界模組入口", "P3: MrLiouAI Runtime"]}'::jsonb
 );
 
 -- Asset 4: 主控中心母法
@@ -94,7 +94,7 @@ INSERT INTO mrl_fltnz_asset (asset_key, asset_name, category, format, version, l
  '.fltnz',
  'v1.0',
  5,
- '{"description": "Claude 神經表示 ↔ FlowAgent 粒子表示雙向轉換", "functions": ["translateClaudeToParticles", "translateParticlesToClaude", "translate"], "encoder": "QuantumTopologyEncoder", "principle": "SOURCE_DUAL"}'::jsonb
+ '{"description": "Claude 神經表示 ↔ MrLiouAI 粒子表示雙向轉換", "functions": ["translateClaudeToParticles", "translateParticlesToClaude", "translate"], "encoder": "QuantumTopologyEncoder", "principle": "SOURCE_DUAL"}'::jsonb
 );
 
 -- Asset 9: BaseWorld DB 自身

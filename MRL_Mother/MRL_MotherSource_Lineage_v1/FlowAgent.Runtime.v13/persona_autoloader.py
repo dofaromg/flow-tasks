@@ -1,5 +1,5 @@
 
-# persona_autoloader.py - FlowAgent 自動人格模組裝載器（含記憶封存）
+# persona_autoloader.py - MrLiouAI 自動人格模組裝載器（含記憶封存）
 
 import os
 import json
@@ -54,6 +54,6 @@ def load_persona(code):
         print("⚠️ 記憶封存不存在")
 
 if __name__ == "__main__":
-    print("🔍 FlowAgent 自動人格模組與記憶掛載器")
+    print("🔍 MrLiouAI 自動人格模組與記憶掛載器")
     code = input("輸入人格代碼：")
     load_persona(code)

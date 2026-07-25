@@ -19,8 +19,8 @@ def pe(tmp_path):
 
 class TestNamingReclaim:
     def test_engine_name_reclaimed(self, pe):
-        assert pe.canonical.startswith("MRL_") and "FlowAgent" in pe.canonical
-        assert pe.ancestor == "FlowAgent.ParallelPersonaEngine.v1"
+        assert pe.canonical.startswith("MRL_") and "MrLiouAI" in pe.canonical
+        assert pe.ancestor == "MrLiouAI.ParallelPersonaEngine.v1"
 
     def test_seed_persona_reclaimed(self, pe):
         assert pe.seed_persona.startswith("MRL_")

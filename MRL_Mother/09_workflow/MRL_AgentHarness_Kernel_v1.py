@@ -4,7 +4,7 @@
 MRL_AgentHarness_Kernel_v1.py — Agent 執行骨架:會話核心（生命週期 + 對話迴圈）
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 FlowAgentRuntime
+group: Y=3 MrLiouAIRuntime
 
 吸收來源（母體吸收記錄）
 ----------------------

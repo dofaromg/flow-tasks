@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-FlowAgent Memory Chain (Merkle)
+MrLiouAI Memory Chain (Merkle)
 - Immutable append-only log
 - Each entry links to previous merkle (prev)
 - Supports verify() + rollback()

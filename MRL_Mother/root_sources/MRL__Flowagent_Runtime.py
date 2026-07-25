@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-FlowAgent Runtime (整合運行時) — 連接所有模組的核心
+MrLiouAI Runtime (整合運行時) — 連接所有模組的核心
 Version: 1.0.0
 
 This is the integration layer that connects:
@@ -13,7 +13,7 @@ This is the integration layer that connects:
 
 Architecture:
 ┌─────────────────────────────────────────────────────────────────┐
-│                     FlowAgent Runtime                           │
+│                     MrLiouAI Runtime                           │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │   User Input ──▶ FluinBridge ──▶ ParticleChain                  │
@@ -133,12 +133,12 @@ class ProcessingResult:
 
 
 # ============================================================
-# FlowAgent Runtime
+# MrLiouAI Runtime
 # ============================================================
 
-class FlowAgentRuntime:
+class MrLiouAIRuntime:
     """
-    FlowAgent Runtime — 整合運行時
+    MrLiouAI Runtime — 整合運行時
     
     連接所有模組，提供統一的處理接口。
     """
@@ -440,13 +440,13 @@ class FlowAgentRuntime:
 # Quick Access Functions
 # ============================================================
 
-_runtime: Optional[FlowAgentRuntime] = None
+_runtime: Optional[MrLiouAIRuntime] = None
 
-def get_runtime() -> FlowAgentRuntime:
+def get_runtime() -> MrLiouAIRuntime:
     """獲取全局運行時實例"""
     global _runtime
     if _runtime is None:
-        _runtime = FlowAgentRuntime()
+        _runtime = MrLiouAIRuntime()
     return _runtime
 
 def process(text: str) -> ProcessingResult:
@@ -468,11 +468,11 @@ def recall(query: str) -> List[MemoryEntry]:
 
 def main():
     print("=" * 60)
-    print("FlowAgent Runtime v1.0.0")
+    print("MrLiouAI Runtime v1.0.0")
     print("=" * 60)
 
     # Initialize
-    runtime = FlowAgentRuntime()
+    runtime = MrLiouAIRuntime()
 
     # Health check
     print("\n🏥 Health Check:")
@@ -536,7 +536,7 @@ def main():
     if status.get('memory'):
         print(f"   Memory Chain: {status['memory']['chain_height']} entries")
 
-    print("\n✅ FlowAgent Runtime Demo Complete!")
+    print("\n✅ MrLiouAI Runtime Demo Complete!")
 
 
 if __name__ == "__main__":

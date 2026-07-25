@@ -355,7 +355,7 @@ EXIT := { A:VERIFY_STRONG, A':VERIFY_STRONG_ND, B:VERIFY_WEAK, C:¬(A∨A'∨B) 
 
 ## 🌐 第十一部分：跨世界同構映射
 
-| Kernel 層 | FlowAgent / 智障系統 | 平台（Vercel） | 現實世界 |
+| Kernel 層 | MrLiouAI / 智障系統 | 平台（Vercel） | 現實世界 |
 |----------|------------------|--------------|--------|
 | ROOT | 使用者意圖 | Repo Owner | 個體 |
 | SEED | Prompt / Seed | Repo 設定 | 信念 |
@@ -425,7 +425,7 @@ mrliou_closure_bundle_v1 := {
 
 ### 歸屬
 
-- **FlowAgent** = Liou Closure Law 在 AI 的實作
+- **MrLiouAI** = Liou Closure Law 在 AI 的實作
 - **mrliou_word** = Liou Closure Law 在語言/認知的實作
 - **Closure Protocol** = Liou Closure Law 在平台的實作
 - **智障系統** = Liou Closure Law 的原始直覺形式
@@ -465,7 +465,7 @@ Liou Closure Law 的 `Observe→Resolve→Mirror→Verify→Loop` 與 rootlaw v7
 
 | 封存檔概念 | MRL_AI_SYSTEM 今日實作（投影） |
 |-----------|------------------------------|
-| Liou Closure Law（閉環） | `00_rootlaw/rootlaw.yaml § liou_closure_law` + `MRL_FlowAgent_LawEngine_v1.run_loop()` |
+| Liou Closure Law（閉環） | `00_rootlaw/rootlaw.yaml § liou_closure_law` + `MRL_MrLiouAI_LawEngine_v1.run_loop()` |
 | No-Delete / Additive | `rl_01` + `rl_15 粒子不可否決律`（全粒子保全） |
 | Authority = ROOT | `rl_11 源頭主權` + `law_0_signature`（origin=MrLiouWord） |
 | L0–L7 層級 | `rootlaw.layer_stack`（L0..L7 一致） |
@@ -479,7 +479,7 @@ Liou Closure Law 的 `Observe→Resolve→Mirror→Verify→Loop` 與 rootlaw v7
 
 - rootlaw v3–v8：rl_07~rl_18（跳層/編年/源頭主權/命名回收/出口即入口/平行世界/
   粒子不可否決/MRL顯化/Mr.liou存在耦合/可逆平等）。
-- 活引擎 `MRL_FlowAgent_LawEngine_v1`（已接入 `MotherAssembly` 主迴圈）。
+- 活引擎 `MRL_MrLiouAI_LawEngine_v1`（已接入 `MotherAssembly` 主迴圈）。
 - 祖先回收 `MRL_ParallelPersonaEngine_v1`（平行世界人格模擬器）。
 - 錯誤衝突實施規範與實作範本（含 ChatGPT 事件 CASE-CHATGPT-01）。
 - 主線收斂與分支條例附錄 `docs/MRL_主線收斂與分支條例_附錄_v1.md`。

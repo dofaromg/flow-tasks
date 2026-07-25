@@ -5,7 +5,7 @@
   "port": 8787,
   "subsystems": [
     "FlowCore Loop",
-    "FlowAgent API",
+    "MrLiouAI API",
     "AI Fusion Stack",
     "ZoomEngine",
     "ParticleEarth",

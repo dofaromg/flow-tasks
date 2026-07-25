@@ -4,7 +4,7 @@
 scheduler.py — Async Task Scheduler / Priority Queue
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 FlowAgentRuntime
+group: Y=3 MrLiouAIRuntime
 
 Industry capability: background task queue for long-running agent operations —
                      the same pattern used in production AI pipelines to handle

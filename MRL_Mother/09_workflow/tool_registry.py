@@ -4,7 +4,7 @@
 tool_registry.py — Tool / Function-Calling Registry and Executor
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 FlowAgentRuntime
+group: Y=3 MrLiouAIRuntime
 
 Industry capability: structured tool / function calling (OpenAI-style).
 MRL extension: every tool invocation is stamped with origin_signature and

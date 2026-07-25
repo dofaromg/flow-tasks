@@ -1,6 +1,6 @@
 # Deployment Documentation
 
-Deployment material for FlowAgent is split between root guides and Kubernetes manifests.
+Deployment material for MrLiouAI is split between root guides and Kubernetes manifests.
 
 ## Start Here
 
@@ -13,7 +13,7 @@ Deployment material for FlowAgent is split between root guides and Kubernetes ma
 ## Validation
 
 ```bash
-kubectl kustomize cluster/overlays/prod/ >/tmp/flowagent-prod.yaml
+kubectl kustomize cluster/overlays/prod/ >/tmp/mrliouai-prod.yaml
 python process_tasks.py
 ```
 

@@ -1,6 +1,6 @@
 # 01_schema
 
-JSON Schema definitions (draft-07) for all FlowAgent data contracts.
+JSON Schema definitions (draft-07) for all MrLiouAI data contracts.
 
 ## Schemas
 

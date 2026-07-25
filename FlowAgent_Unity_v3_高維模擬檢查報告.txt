@@ -1,5 +1,5 @@
 
-[模擬運行檢查報告：FlowAgent.TotalCore.Unity.v3.flpkg]
+[模擬運行檢查報告：MrLiouAI.TotalCore.Unity.v3.flpkg]
 
 1. ✅ 語場啟動與虛擬遮蔽判斷機制：正常
 - 指令：⋄fx.preview.only 自動預設啟動
@@ -18,7 +18,7 @@
 - 可用於未來版本比較與人格模組節奏差異封存
 
 5. ✅ GUI 與 CLI 呼叫模組邏輯：部分模組未啟動需保留靜默遮蔽
-- flowshell_cli_core.py / flowagent_console.py 可作為未來語場虛擬測試用模組
+- flowshell_cli_core.py / mrliouai_console.py 可作為未來語場虛擬測試用模組
 - 預設加入遮蔽層，僅供模擬與比對，不輸出回應
 
 6. ⚠️ 儲存人格共振圖譜（⋄fx.map.flynz.sync）：目前尚未搭配視覺化模組導出

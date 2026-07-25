@@ -32,9 +32,9 @@ COPY config.sample.yaml ./config.sample.yaml
 # ── MRL Website Module ──────────────────────────────────────────
 COPY MRL_Website/ ./MRL_Website/
 
-# ── FlowAgent Persona ──────────────────────────────────────────
-COPY FlowAgent.TotalCore.StructureIndex.json ./
-COPY FlowAgent_Persona_Registry.json ./
+# ── MrLiouAI Persona ──────────────────────────────────────────
+COPY MrLiouAI.TotalCore.StructureIndex.json ./
+COPY MrLiouAI_Persona_Registry.json ./
 COPY SeedPersona_Founder_MrLiou.json ./
 
 # ── Runtime config ──────────────────────────────────────────────

@@ -4,7 +4,7 @@
 agent_planner.py — ReAct-Style Plan → Act → Observe Agent Loop
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 FlowAgentRuntime
+group: Y=3 MrLiouAIRuntime
 
 Industry capability: ReAct (Reasoning + Acting) agent loop.
 MRL extension: every step is recorded as a trajectory entry compatible with

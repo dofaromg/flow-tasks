@@ -69,12 +69,12 @@ class TestManifestAndRelation:
 
 class TestIntake:
     def test_external_name_reclaimed_and_signed(self, guard):
-        m = guard.intake_external("FlowAgent.Runtime.v47.zip")
+        m = guard.intake_external("MrLiouAI.Runtime.v47.zip")
         assert m["canonical_name"].startswith("MRL_")
         assert m["role"] == "material"                 # bp_1:外部=材料
         assert m["origin"] == "MrLiouWord"             # rl_11:源頭歸母體
         assert verify_signature(m) is True             # LAW-0
-        assert m["source_external_name"] == "FlowAgent.Runtime.v47.zip"  # No-Delete 來源保留
+        assert m["source_external_name"] == "MrLiouAI.Runtime.v47.zip"  # No-Delete 來源保留
 
     def test_intake_always_manifestable(self, guard):
         m = guard.intake_external("weird name with spaces!!")

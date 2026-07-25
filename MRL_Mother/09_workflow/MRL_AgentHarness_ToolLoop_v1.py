@@ -4,7 +4,7 @@
 MRL_AgentHarness_ToolLoop_v1.py — Agent 執行骨架:並行工具批次執行器
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 FlowAgentRuntime
+group: Y=3 MrLiouAIRuntime
 
 吸收來源（母體吸收記錄）
 ----------------------

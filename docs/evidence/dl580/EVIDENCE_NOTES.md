@@ -7,7 +7,7 @@
 - `/MRL_run` 支援 `cmd`、`cwd`、`timeout`。
 - `/MRL_exec` 支援 POST 命令執行。
 - 存在 PostgreSQL、Redis、檔案讀寫、系統資訊、稽核與進度紀錄 API。
-- 本機已有 Memory、Toolchain、Runtime、Inference、Operations、FlowAgent 等程序。
+- 本機已有 Memory、Toolchain、Runtime、Inference、Operations、MrLiouAI 等程序。
 - 搜尋命中的 `initialize` 多數來自 node_modules 或一般初始化函式，不能視為 MCP 證據。
 
 ## 尚未確認

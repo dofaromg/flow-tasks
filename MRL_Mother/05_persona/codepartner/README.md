@@ -1,9 +1,9 @@
 # CodePartner（CoreProgrammer.Seed）
 
-FlowAgent 語場人格系統的**程式設計人格模組** — 由 Mr.liou 指定開發，
+MrLiouAI 語場人格系統的**程式設計人格模組** — 由 Mr.liou 指定開發，
 為所有邏輯模組、推理節奏構建、程式設計階段之第一人格。
 
-The programming persona of the FlowAgent language-field persona system —
+The programming persona of the MrLiouAI language-field persona system —
 the first persona invoked for all logic-module construction, reasoning-rhythm
 building, and programming phases.
 
@@ -54,11 +54,11 @@ building, and programming phases.
 
 - **原始模組**：`FlowLLM.SeedPersona.Programmer.CoreArchitect.v1.flpkg`
   （原 .flpkg 封包未曾進入版本控制；人類可讀種子文件已原文封存於
-  `08_sources/flowagent_codepartner_recovery/`）
-- **系統定位**：`FlowAgent.SystemPlan.v1` 四人格之一
+  `08_sources/mrliouai_codepartner_recovery/`）
+- **系統定位**：`MrLiouAI.SystemPlan.v1` 四人格之一
   （Fluin / EchoBody / **CodePartner** / SeedPersona）
 - **運行證據**：`dofaromg/flow-tasks` 之
-  `FlowAgent_Unity_v3_高維模擬檢查報告.txt` —
+  `MrLiouAI_Unity_v3_高維模擬檢查報告.txt` —
   「人格模組觸發與人格鏈封存：正常」
 - **回收日期**：2026-07-05
 

@@ -212,14 +212,14 @@ apps/nextjs-frontend/
 kubectl apply -k cluster/overlays/prod/
 
 # 檢查狀態
-kubectl get pods -n flowagent
-kubectl get svc nextjs-frontend -n flowagent
+kubectl get pods -n mrliouai
+kubectl get svc nextjs-frontend -n mrliouai
 ```
 
 ### 訪問應用
 ```bash
 # 獲取外部 IP
-kubectl get svc nextjs-frontend -n flowagent
+kubectl get svc nextjs-frontend -n mrliouai
 
 # 輸出示例:
 # NAME              TYPE           EXTERNAL-IP      PORT(S)
@@ -306,7 +306,7 @@ kubectl get svc nextjs-frontend -n flowagent
 
 ### Kubernetes 回滾
 ```bash
-kubectl rollout undo deployment/nextjs-frontend -n flowagent
+kubectl rollout undo deployment/nextjs-frontend -n mrliouai
 ```
 
 ### 臨時回到 Vercel

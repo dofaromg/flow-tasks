@@ -71,9 +71,9 @@ jobs:
         echo "Deploying image tag: ${IMAGE_TAG}"
         cd cluster/overlays/prod
         kustomize edit set image \
-          asia-east1-docker.pkg.dev/mrliouai/flowagent/module-a:${IMAGE_TAG} \
-          asia-east1-docker.pkg.dev/mrliouai/flowagent/orchestrator:${IMAGE_TAG} \
-          asia-east1-docker.pkg.dev/mrliouai/flowagent/nextjs-frontend:${IMAGE_TAG}
+          asia-east1-docker.pkg.dev/mrliouai/mrliouai/module-a:${IMAGE_TAG} \
+          asia-east1-docker.pkg.dev/mrliouai/mrliouai/orchestrator:${IMAGE_TAG} \
+          asia-east1-docker.pkg.dev/mrliouai/mrliouai/nextjs-frontend:${IMAGE_TAG}
     
     - name: Build Kustomize manifests
       run: |
@@ -85,10 +85,10 @@ jobs:
     
     - name: Verify deployment
       run: |
-        kubectl rollout status deployment/module-a -n flowagent --timeout=5m
-        kubectl rollout status deployment/orchestrator -n flowagent --timeout=5m
-        kubectl rollout status deployment/mongodb -n flowagent --timeout=5m
-        kubectl rollout status deployment/nextjs-frontend -n flowagent --timeout=5m
+        kubectl rollout status deployment/module-a -n mrliouai --timeout=5m
+        kubectl rollout status deployment/orchestrator -n mrliouai --timeout=5m
+        kubectl rollout status deployment/mongodb -n mrliouai --timeout=5m
+        kubectl rollout status deployment/nextjs-frontend -n mrliouai --timeout=5m
     
     - name: Get service endpoints
       run: |
@@ -97,7 +97,7 @@ jobs:
         echo "**Image Tag:** \`${{ env.IMAGE_TAG }}\`" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "**Services:**" >> $GITHUB_STEP_SUMMARY
-        kubectl get svc -n flowagent >> $GITHUB_STEP_SUMMARY
+        kubectl get svc -n mrliouai >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "**Pods:**" >> $GITHUB_STEP_SUMMARY
-        kubectl get pods -n flowagent >> $GITHUB_STEP_SUMMARY
+        kubectl get pods -n mrliouai >> $GITHUB_STEP_SUMMARY

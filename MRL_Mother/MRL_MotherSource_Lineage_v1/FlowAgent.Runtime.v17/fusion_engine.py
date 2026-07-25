@@ -1,5 +1,5 @@
 
-# fusion_engine.py - FlowAgent 人格融合模擬器
+# fusion_engine.py - MrLiouAI 人格融合模擬器
 
 import os
 import json
@@ -58,7 +58,7 @@ def simulate_conflicts(data):
         print("✅ 無明顯語場衝突，節奏融合穩定")
 
 if __name__ == "__main__":
-    print("🔬 FlowAgent 人格記憶融合模擬器")
+    print("🔬 MrLiouAI 人格記憶融合模擬器")
     files = input("請輸入要融合的記憶檔案名稱（以逗號分隔）:
 > ").split(",")
     memory_data = load_memories([f.strip() for f in files])

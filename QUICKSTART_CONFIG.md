@@ -1,9 +1,9 @@
 # Quick Start: Configuration System
 # 快速開始：配置系統
 
-Get started with the FlowAgent configuration system in 5 minutes!
+Get started with the MrLiouAI configuration system in 5 minutes!
 
-5 分鐘開始使用 FlowAgent 配置系統！
+5 分鐘開始使用 MrLiouAI 配置系統！
 
 ---
 

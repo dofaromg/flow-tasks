@@ -1,4 +1,4 @@
-# FlowAgent 叢集部署流程圖
+# MrLiouAI 叢集部署流程圖
 
 ## 部署流程
 
@@ -33,7 +33,7 @@
           │         GKE Cluster                 │
           │    (modular-cluster)                │
           │                                     │
-          │  Namespace: flowagent               │
+          │  Namespace: mrliouai               │
           │  ├─ MongoDB (1 replica)             │
           │  ├─ Module-A (2 replicas + HPA)     │
           │  └─ Orchestrator (1 replica)        │
@@ -315,4 +315,4 @@ T + 17m        │ 部署完成 ✓
 
 ---
 
-以上流程圖展示了 FlowAgent 系統的完整部署和運行架構。
+以上流程圖展示了 MrLiouAI 系統的完整部署和運行架構。

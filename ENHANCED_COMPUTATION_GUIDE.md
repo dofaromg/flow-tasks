@@ -2,9 +2,9 @@
 
 ## 概述 / Overview
 
-本次更新大幅增強了 FlowAgent 系統的演算能力，包括並行處理、快取機制、數學計算原語和進階 AI 融合策略。
+本次更新大幅增強了 MrLiouAI 系統的演算能力，包括並行處理、快取機制、數學計算原語和進階 AI 融合策略。
 
-This update significantly enhances the FlowAgent system's computational capabilities, including parallel processing, caching mechanisms, mathematical computational primitives, and advanced AI fusion strategies.
+This update significantly enhances the MrLiouAI system's computational capabilities, including parallel processing, caching mechanisms, mathematical computational primitives, and advanced AI fusion strategies.
 
 ## 🚀 新增功能 / New Features
 

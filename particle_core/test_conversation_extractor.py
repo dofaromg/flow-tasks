@@ -215,7 +215,7 @@ def test_extract_concepts():
     """測試概念提取"""
     extractor = ConversationExtractor()
     
-    text = "FlowAgent 系統使用了粒子語言機制和記憶封存系統。Kubernetes 架構提供了容器編排能力。"
+    text = "MrLiouAI 系統使用了粒子語言機制和記憶封存系統。Kubernetes 架構提供了容器編排能力。"
     concepts = extractor._extract_concepts(text)
     
     assert isinstance(concepts, list)
@@ -525,7 +525,7 @@ def test_canonicalize_package_adds_schema_hash_and_provenance():
     """測試 canonical schema、hash、語言與來源追蹤"""
     extractor = ConversationExtractor()
     package = extractor.package_conversation([
-        {"role": "human", "content": "  FlowAgent 需要外部分析能力。  "}
+        {"role": "human", "content": "  MrLiouAI 需要外部分析能力。  "}
     ])
 
     canonical = extractor.canonicalize_package(package, source="unit-test", trust_level="high")

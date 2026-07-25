@@ -372,4 +372,4 @@ See LICENSE file for details.
 
 **Last Updated**: 2026-01-26  
 **Version**: 1.0.0  
-**Maintainer**: FlowAgent Team
+**Maintainer**: MrLiouAI Team

@@ -135,7 +135,7 @@ cloud_spaces:
     cluster_name: "modular-cluster"
     region: "asia-east1"
     zone: "asia-east1-a"
-    namespace: "flowagent"
+    namespace: "mrliouai"
     sync_paths:
       - src: "cluster/overlays/prod"
         dest: "deployed/prod"

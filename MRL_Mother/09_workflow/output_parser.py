@@ -4,7 +4,7 @@
 output_parser.py — Structured Output Parsers
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 FlowAgentRuntime
+group: Y=3 MrLiouAIRuntime
 
 Goal: extract structured data from free-form LLM text — zero external
       dependencies, pure Python stdlib (json, re) only.
@@ -365,7 +365,7 @@ def _cmd_demo(_args: argparse.Namespace) -> None:
         ("JSONParser",      JSONParser(),      '{"name":"MRL","version":"1.0"}'),
         ("JSONParser fence",JSONParser(),      '```json\n{"ok":true}\n```'),
         ("ListParser",      ListParser(),      "- Alpha\n- Beta\n1. Gamma"),
-        ("KeyValueParser",  KeyValueParser(),  "Name: FlowAgent\nLayer: L7\nVersion: 2"),
+        ("KeyValueParser",  KeyValueParser(),  "Name: MrLiouAI\nLayer: L7\nVersion: 2"),
         ("CodeBlockParser", CodeBlockParser(), "```python\nprint('hello')\n```"),
         ("TableParser",     TableParser(),
          "| A | B |\n|---|---|\n| 1 | 2 |\n| 3 | 4 |"),

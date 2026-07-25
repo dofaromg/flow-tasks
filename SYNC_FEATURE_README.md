@@ -307,4 +307,4 @@ This feature follows the main project's license.
 
 **版本 / Version:** 1.0.0
 
-**作者 / Author:** FlowAgent Team
+**作者 / Author:** MrLiouAI Team

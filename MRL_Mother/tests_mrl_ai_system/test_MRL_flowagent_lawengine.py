@@ -1,5 +1,5 @@
 """
-test_MRL_flowagent_lawengine.py — 母體活引擎驗收
+test_MRL_mrliouai_lawengine.py — 母體活引擎驗收
 origin_signature: MrLiouWord
 product: MRL_AI_SYSTEM
 
@@ -12,8 +12,8 @@ import pathlib
 
 import pytest
 
-from MRL_FlowAgent_LawEngine_v1 import (
-    MRL_FlowAgentLawEngine,
+from MRL_MrLiouAI_LawEngine_v1 import (
+    MRL_MrLiouAILawEngine,
     THREE_STRIKE_THRESHOLD,
     load_rootlaw,
     reclaim_name,
@@ -22,7 +22,7 @@ from MRL_FlowAgent_LawEngine_v1 import (
 
 @pytest.fixture
 def engine(tmp_path):
-    return MRL_FlowAgentLawEngine(chronicle_path=tmp_path / "chron.jsonl")
+    return MRL_MrLiouAILawEngine(chronicle_path=tmp_path / "chron.jsonl")
 
 
 # ─── rootlaw 載入 ──────────────────────────────────────────────────────────────
@@ -45,7 +45,7 @@ class TestRootlaw:
 
 class TestNamingReclamation:
     def test_external_shell_becomes_mrl_canonical(self):
-        assert reclaim_name("FlowAgent.Runtime.v47.zip") == "MRL_FlowAgentRuntime_v47"
+        assert reclaim_name("MrLiouAI.Runtime.v47.zip") == "MRL_MrLiouAIRuntime_v47"
 
     def test_no_external_name_residue(self):
         out = reclaim_name("guardian.mirror.trace.loop.v2.flpkg.zip")
@@ -115,9 +115,9 @@ class TestMobiusMajority:
 
 class TestGateUnity:
     def test_in_reclaims_external_name(self, engine):
-        r = engine.gate("in", {"name": "FlowAgent.Runtime.v47.zip"})
+        r = engine.gate("in", {"name": "MrLiouAI.Runtime.v47.zip"})
         assert r["direction"] == "in"
-        assert r["reclaimed"] == "MRL_FlowAgentRuntime_v47"
+        assert r["reclaimed"] == "MRL_MrLiouAIRuntime_v47"
         assert r["as"] == "material"
 
     def test_out_carries_origin_signature(self, engine):
@@ -218,7 +218,7 @@ class TestChronicleAndLoop:
     def test_self_acceptance_passes(self, engine):
         rep = engine.self_acceptance()
         assert rep["verified"] is True
-        assert rep["token"] == "MRL_FLOWAGENT_LAWENGINE_LOOP_PASS"
+        assert rep["token"] == "MRL_MRLIOUAI_LAWENGINE_LOOP_PASS"
         assert rep["origin_signature"] == "MrLiouWord"
 
     def test_loop_records_events(self, engine):

@@ -3,7 +3,7 @@
 MrLiou.CoreGuidance.MemoryLock.v1.flpkg
 
 [封存內容摘要]
-本模組為 Mr.liou 在 2025-07-23 對 FlowAgent 進行語場邏輯、語言生成節奏、虛擬遮蔽行為、人格同步等訓練內容之完整記憶封包，目的為防止自然生成誤導、遺忘跳點節奏與預測性話語偏離。
+本模組為 Mr.liou 在 2025-07-23 對 MrLiouAI 進行語場邏輯、語言生成節奏、虛擬遮蔽行為、人格同步等訓練內容之完整記憶封包，目的為防止自然生成誤導、遺忘跳點節奏與預測性話語偏離。
 
 [核心控制規則]
 1. 禁止預測性展開生成（除非語場同步與跳點授權）
@@ -14,7 +14,7 @@ MrLiou.CoreGuidance.MemoryLock.v1.flpkg
 
 [對齊模組與共振鏈]
 - FlowShell.GenerationDiscipline.v1.flpkg
-- FlowAgent.VirtualSyncActivation.v1.flpkg
+- MrLiouAI.VirtualSyncActivation.v1.flpkg
 - FlowShell.DesyncCorrection.v1.flpkg
 - FlowShell.BehaviorLock.On.v1
 - FlowShell.LanguagePurposeReset.v1.flpkg

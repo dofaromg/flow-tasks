@@ -339,7 +339,7 @@ restored = archive.restore_seed("my_memory_seed")
 
 ## 授權
 
-FlowAgent 專用任務系統內部模組
+MrLiouAI 專用任務系統內部模組
 ## 語言規格
 
 粒子語言的核心規格文件位於 [`language_spec/`](language_spec/) 目錄：
@@ -353,5 +353,5 @@ FlowAgent 專用任務系統內部模組
 
 ## 授權
 
-FlowAgent 專用任務系統內部模組
+MrLiouAI 專用任務系統內部模組
 粒子語言規格遵循 CPLL 授權條款（© MR.liou）

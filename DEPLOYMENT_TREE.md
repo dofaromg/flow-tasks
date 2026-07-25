@@ -1,10 +1,10 @@
-# 🌲 FlowAgent 部署目錄樹狀結構
-# FlowAgent Deployment Directory Tree
+# 🌲 MrLiouAI 部署目錄樹狀結構
+# MrLiouAI Deployment Directory Tree
 
 **更新時間 / Updated**: 2026-02-04
 
-此文件以樹狀結構展示 FlowAgent 的完整部署配置目錄，讓您可以清楚看到所有部署文件的位置。  
-This file shows the complete deployment configuration directory of FlowAgent in a tree structure.
+此文件以樹狀結構展示 MrLiouAI 的完整部署配置目錄，讓您可以清楚看到所有部署文件的位置。  
+This file shows the complete deployment configuration directory of MrLiouAI in a tree structure.
 
 ---
 
@@ -46,7 +46,7 @@ flow-tasks/
 │   │                                          # Cluster Configuration
 │   │
 │   ├── 📂 base/                              # 基礎配置
-│   │   ├── namespace.yaml                    # flowagent namespace 定義
+│   │   ├── namespace.yaml                    # mrliouai namespace 定義
 │   │   └── kustomization.yaml                # 基礎 Kustomize 配置
 │   │
 │   └── 📂 overlays/                          # 環境覆蓋配置
@@ -233,9 +233,9 @@ flow-tasks/
 
 **版本 / Version**: v3.0.0  
 **最後更新 / Last Updated**: 2026-02-04  
-**維護者 / Maintainer**: FlowAgent Team
+**維護者 / Maintainer**: MrLiouAI Team
 
 ---
 
-此樹狀結構讓您可以清楚看到 FlowAgent "地球結構" 部署的所有配置文件位置。  
-This tree structure allows you to clearly see the location of all configuration files for FlowAgent "Earth Structure" deployment.
+此樹狀結構讓您可以清楚看到 MrLiouAI "地球結構" 部署的所有配置文件位置。  
+This tree structure allows you to clearly see the location of all configuration files for MrLiouAI "Earth Structure" deployment.

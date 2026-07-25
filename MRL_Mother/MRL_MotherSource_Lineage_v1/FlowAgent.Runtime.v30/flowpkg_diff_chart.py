@@ -35,7 +35,7 @@ def plot_chart(stats, output_path="visual/flowpkg_diff_chart.png"):
     print(f"✅ 圖表已產生：{output_path}")
 
 if __name__ == "__main__":
-    print("📊 FlowAgent 節奏變化圖表生成器")
+    print("📊 MrLiouAI 節奏變化圖表生成器")
     p1 = input("請輸入第一份 fltnz 檔案路徑：").strip()
     p2 = input("請輸入第二份 fltnz 檔案路徑：").strip()
     if not os.path.exists(p1) or not os.path.exists(p2):

@@ -1,2 +1,2 @@
-# Entry point for FlowAgent
-print('[FlowAgent] Booting...')
+# Entry point for MrLiouAI
+print('[MrLiouAI] Booting...')

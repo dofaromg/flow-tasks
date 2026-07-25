@@ -191,7 +191,7 @@ for fmt in formats:
 
 **文檔版本**: 1.0  
 **最後更新**: 2026-01-05  
-**維護者**: FlowAgent Team
+**維護者**: MrLiouAI Team
 
 ---
 
@@ -243,7 +243,7 @@ particle_core/
 
 ## 🧪 Testing Results
 - ✅ All core modules pass functional tests
-- ✅ Integration with FlowAgent task system verified
+- ✅ Integration with MrLiouAI task system verified
 - ✅ CLI interface operational with rich formatting
 - ✅ File I/O operations working correctly
 - ✅ Performance benchmarks exceeded expectations
@@ -279,7 +279,7 @@ steps = restorer.decompress_fn(compressed)
 
 ## 🎉 Final Status
 
-The MRLiou Particle Language Core system is **fully operational** and seamlessly integrated into the FlowAgent task system. All requirements from the original issue have been met, providing a complete logic computation framework with compression, CLI interface, and comprehensive documentation.
+The MRLiou Particle Language Core system is **fully operational** and seamlessly integrated into the MrLiouAI task system. All requirements from the original issue have been met, providing a complete logic computation framework with compression, CLI interface, and comprehensive documentation.
 
 **Issue #13 (粒子) - RESOLVED** ✅
 ---

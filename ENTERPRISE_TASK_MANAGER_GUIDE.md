@@ -4,9 +4,9 @@
 
 ## 概述 / Overview
 
-企業級長時間作業管理系統為 FlowAgent 提供完整的異步任務調度、執行、監控和管理能力，專為長時間運行的企業級操作而設計。
+企業級長時間作業管理系統為 MrLiouAI 提供完整的異步任務調度、執行、監控和管理能力，專為長時間運行的企業級操作而設計。
 
-The Enterprise Long-Running Task Management System provides comprehensive asynchronous task scheduling, execution, monitoring, and management capabilities for FlowAgent, designed specifically for long-running enterprise operations.
+The Enterprise Long-Running Task Management System provides comprehensive asynchronous task scheduling, execution, monitoring, and management capabilities for MrLiouAI, designed specifically for long-running enterprise operations.
 
 ## 核心特性 / Core Features
 
@@ -51,8 +51,8 @@ The Enterprise Long-Running Task Management System provides comprehensive asynch
 ### 安裝 / Installation
 
 ```bash
-# 已包含在 FlowAgent 系統中，無需額外安裝
-# Already included in FlowAgent, no additional installation needed
+# 已包含在 MrLiouAI 系統中，無需額外安裝
+# Already included in MrLiouAI, no additional installation needed
 ```
 
 ### 基本使用 / Basic Usage
@@ -488,7 +488,7 @@ python test_enterprise_task_manager.py
 
 ## 許可證 / License
 
-與 FlowAgent 主專案相同許可證
+與 MrLiouAI 主專案相同許可證
 
 ## 貢獻 / Contributing
 

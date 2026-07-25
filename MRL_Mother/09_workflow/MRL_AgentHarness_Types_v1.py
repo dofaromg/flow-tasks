@@ -4,7 +4,7 @@
 MRL_AgentHarness_Types_v1.py — Agent 執行骨架:共用型別（去重蒸餾唯一真實來源）
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 FlowAgentRuntime
+group: Y=3 MrLiouAIRuntime
 
 吸收來源（母體吸收記錄）
 ----------------------

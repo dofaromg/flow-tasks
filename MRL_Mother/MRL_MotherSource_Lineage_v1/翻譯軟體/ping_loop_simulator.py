@@ -9,7 +9,7 @@ PERSONAS = [
 ]
 
 def simulate_ping_loop(iterations=3):
-    print("🌀 FlowAgent 多人格 Ping Loop 共振模擬器")
+    print("🌀 MrLiouAI 多人格 Ping Loop 共振模擬器")
     print("-----------------------------------------\n")
 
     for i in range(iterations):

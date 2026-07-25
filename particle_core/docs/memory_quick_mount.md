@@ -60,17 +60,17 @@ python particle_core/src/memory_quick_mount.py --config particle_core/config/mqm
 python particle_core/src/memory_quick_mount.py \
   --config particle_core/config/mqm_config.yaml \
   snapshot \
-  --agent "FlowAgent" \
+  --agent "MrLiouAI" \
   --state '{"scene":"初始化完成","status":"ready","progress":0.5}'
 ```
 
 輸出示例 / Output Example:
 ```
-📸 為代理 'FlowAgent' 建立快照...
-📸 Creating snapshot for agent 'FlowAgent'...
+📸 為代理 'MrLiouAI' 建立快照...
+📸 Creating snapshot for agent 'MrLiouAI'...
 
-✓ 快照已儲存: snapshots/snapshot_FlowAgent_20251231_120000.json
-✓ Snapshot saved: snapshots/snapshot_FlowAgent_20251231_120000.json
+✓ 快照已儲存: snapshots/snapshot_MrLiouAI_20251231_120000.json
+✓ Snapshot saved: snapshots/snapshot_MrLiouAI_20251231_120000.json
 
 ┌─ 粒子壓縮表示 / Particle Compressed Representation ─┐
 │ ⊕scene:初始化完成                                    │
@@ -87,7 +87,7 @@ python particle_core/src/memory_quick_mount.py \
 python particle_core/src/memory_quick_mount.py \
   --config particle_core/config/mqm_config.yaml \
   rehydrate \
-  --agent "FlowAgent"
+  --agent "MrLiouAI"
 ```
 
 輸出示例 / Output Example:
@@ -95,8 +95,8 @@ python particle_core/src/memory_quick_mount.py \
 💧 重新載入狀態...
 💧 Rehydrating state...
 
-✓ 成功重新載入代理 'FlowAgent' 的狀態
-✓ Successfully rehydrated state for agent 'FlowAgent'
+✓ 成功重新載入代理 'MrLiouAI' 的狀態
+✓ Successfully rehydrated state for agent 'MrLiouAI'
 時間戳記: 2025-12-31T12:00:00.000000
 Timestamp: 2025-12-31T12:00:00.000000
 ```
@@ -208,7 +208,7 @@ from memory_quick_mount import AdvancedParticleCompressor
 
 compressor = AdvancedParticleCompressor()
 data = {
-    'agent': 'FlowAgent',
+    'agent': 'MrLiouAI',
     'config': {
         'mode': 'production',
         'features': ['mount', 'snapshot']
@@ -220,7 +220,7 @@ print(compressed)
 
 輸出 / Output:
 ```
-⊕agent:FlowAgent
+⊕agent:MrLiouAI
 ⊕config⟨
   ⊕mode:production
   ⊕features⟨
@@ -307,7 +307,7 @@ state = {
     'status': 'ready',
     'progress': 0.5
 }
-success = mounter.snapshot('FlowAgent', state)
+success = mounter.snapshot('MrLiouAI', state)
 ```
 
 ##### `rehydrate(agent_name: Optional[str] = None) -> Optional[Dict[str, Any]]`
@@ -326,7 +326,7 @@ Rehydrate agent's last known state.
 ```python
 # 重新載入特定代理
 # Rehydrate specific agent
-snapshot = mounter.rehydrate('FlowAgent')
+snapshot = mounter.rehydrate('MrLiouAI')
 if snapshot:
     print(f"已恢復狀態: {snapshot['state']}")
 
@@ -348,7 +348,7 @@ compressor = ParticleCompressor()
 # Task execution data
 task_data = {
     'time': '2025-12-31T12:00:00',
-    'subject': 'FlowAgent',
+    'subject': 'MrLiouAI',
     'action': 'process_task',
     'item': 'task_12345',
     'result': 'success'
@@ -357,7 +357,7 @@ task_data = {
 compressed = compressor.compress(task_data)
 print("壓縮結果 / Compressed:")
 print(compressed)
-# ⏰[2025-12-31T12:00:00]→👤[FlowAgent]→⚡[process_task]→📦[task_12345]→✅[success]
+# ⏰[2025-12-31T12:00:00]→👤[MrLiouAI]→⚡[process_task]→📦[task_12345]→✅[success]
 
 # 解壓縮
 # Decompress
@@ -376,7 +376,7 @@ compressor = AdvancedParticleCompressor()
 # 複雜的代理狀態
 # Complex agent state
 agent_state = {
-    'agent_id': 'FlowAgent_001',
+    'agent_id': 'MrLiouAI_001',
     'status': 'active',
     'tasks': [
         {'id': 'task_1', 'priority': 'high'},
@@ -399,7 +399,7 @@ print(compressed)
 
 輸出 / Output:
 ```
-⊕agent_id:FlowAgent_001
+⊕agent_id:MrLiouAI_001
 🔄[status=active]
 ⊕tasks⟨
   ⊕[0]⟨
@@ -444,12 +444,12 @@ state = {
     'progress': 0.75,
     'errors': []
 }
-mounter.snapshot('FlowAgent', state)
+mounter.snapshot('MrLiouAI', state)
 
 # 4. 模擬代理重啟，重新載入狀態
 # Simulate agent restart, rehydrate state
 print("\n步驟 3: 重新載入狀態 / Step 3: Rehydrate state")
-restored_snapshot = mounter.rehydrate('FlowAgent')
+restored_snapshot = mounter.rehydrate('MrLiouAI')
 if restored_snapshot:
     print(f"已恢復進度: {restored_snapshot['state']['progress'] * 100}%")
 ```

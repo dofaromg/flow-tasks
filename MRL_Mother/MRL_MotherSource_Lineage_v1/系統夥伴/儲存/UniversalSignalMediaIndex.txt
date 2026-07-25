@@ -58,4 +58,4 @@
 
 == 封存策略 ==
 - 所有模組將壓縮進 `UniversalMedia.LanguageSet.v1.flpkg`
-- 並成為 `FlowAgent.TotalCore.Unity.v1.flpkg` 的子模組
+- 並成為 `MrLiouAI.TotalCore.Unity.v1.flpkg` 的子模組

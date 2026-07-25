@@ -1,5 +1,5 @@
-# 🚀 FlowAgent 部署快速參考
-# FlowAgent Deployment Quick Reference
+# 🚀 MrLiouAI 部署快速參考
+# MrLiouAI Deployment Quick Reference
 
 **快速索引 / Quick Index** - 用於快速查找部署結構位置
 
@@ -48,7 +48,7 @@
 ```
 📂 cluster/
 ├── 📂 base/                             # 基礎配置
-│   ├── namespace.yaml                   # flowagent namespace
+│   ├── namespace.yaml                   # mrliouai namespace
 │   └── kustomization.yaml               # ⭐ 基礎 Kustomize
 │
 └── 📂 overlays/                         # 環境配置
@@ -73,9 +73,9 @@
 
 | 服務 / Service | 類型 / Type | 內部端口 / Internal | 外部端口 / External | 命名空間 / Namespace |
 |---------------|------------|-------------------|-------------------|-------------------|
-| **Orchestrator** | LoadBalancer | 8081 | 80 | flowagent |
-| **Module-A** | ClusterIP | 8080 | - | flowagent |
-| **MongoDB** | ClusterIP | 27017 | - | flowagent |
+| **Orchestrator** | LoadBalancer | 8081 | 80 | mrliouai |
+| **Module-A** | ClusterIP | 8080 | - | mrliouai |
+| **MongoDB** | ClusterIP | 27017 | - | mrliouai |
 | **Prometheus** | ClusterIP | 9090 | - | monitoring |
 
 ---
@@ -91,7 +91,7 @@ bash scripts/oneclick_gke_init.sh
 ### 📦 手動部署
 ```bash
 # 1. 設定 GCP 專案
-export PROJECT_ID=flowmemorysync
+export PROJECT_ID=mrliouai
 export REGION=asia-east1
 export ZONE=asia-east1-a
 gcloud config set project $PROJECT_ID
@@ -106,37 +106,37 @@ kubectl apply -k cluster/overlays/prod/
 ### 🔍 驗證部署
 ```bash
 # 查看所有 Pods
-kubectl get pods -n flowagent
+kubectl get pods -n mrliouai
 
 # 查看所有 Services
-kubectl get svc -n flowagent
+kubectl get svc -n mrliouai
 
 # 查看所有資源
-kubectl get all -n flowagent
+kubectl get all -n mrliouai
 ```
 
 ### 📝 查看日誌
 ```bash
 # Module-A 日誌
-kubectl logs -f deployment/module-a -n flowagent
+kubectl logs -f deployment/module-a -n mrliouai
 
 # Orchestrator 日誌
-kubectl logs -f deployment/orchestrator -n flowagent
+kubectl logs -f deployment/orchestrator -n mrliouai
 
 # MongoDB 日誌
-kubectl logs -f deployment/mongodb -n flowagent
+kubectl logs -f deployment/mongodb -n mrliouai
 ```
 
 ### 🔄 更新部署
 ```bash
 # 重啟 Module-A
-kubectl rollout restart deployment/module-a -n flowagent
+kubectl rollout restart deployment/module-a -n mrliouai
 
 # 重啟 Orchestrator
-kubectl rollout restart deployment/orchestrator -n flowagent
+kubectl rollout restart deployment/orchestrator -n mrliouai
 
 # 查看部署狀態
-kubectl rollout status deployment/module-a -n flowagent
+kubectl rollout status deployment/module-a -n mrliouai
 ```
 
 ### 🗑️ 清理部署
@@ -156,16 +156,16 @@ kubectl delete -k apps/mongodb/
 
 ```bash
 # 主要參數
-PROJECT_ID="flowmemorysync"
+PROJECT_ID="mrliouai"
 REGION="asia-east1"
 ZONE="asia-east1-a"
 CLUSTER_NAME="modular-cluster"
 
 # Container Registry
-REGISTRY="asia-east1-docker.pkg.dev/flowmemorysync/flowagent"
+REGISTRY="asia-east1-docker.pkg.dev/mrliouai/mrliouai"
 
 # 命名空間
-NAMESPACE="flowagent"
+NAMESPACE="mrliouai"
 MONITORING_NS="monitoring"
 ```
 
@@ -198,7 +198,7 @@ MONITORING_NS="monitoring"
 ┌──────────────────────────────────────────────────┐
 │          GKE Cluster: modular-cluster            │
 │  ┌────────────────────────────────────────────┐ │
-│  │   Namespace: flowagent                     │ │
+│  │   Namespace: mrliouai                     │ │
 │  │                                            │ │
 │  │   ┌────────────┐                          │ │
 │  │   │Orchestrator│ (LoadBalancer)           │ │
@@ -273,14 +273,14 @@ Storage:  10Gi (PVC)
 
 ### Pod 無法啟動
 ```bash
-kubectl describe pod <pod-name> -n flowagent
-kubectl get events -n flowagent --sort-by='.lastTimestamp'
+kubectl describe pod <pod-name> -n mrliouai
+kubectl get events -n mrliouai --sort-by='.lastTimestamp'
 ```
 
 ### 服務無法連接
 ```bash
-kubectl get svc -n flowagent
-kubectl get endpoints -n flowagent
+kubectl get svc -n mrliouai
+kubectl get endpoints -n mrliouai
 ```
 
 ### 映像拉取失敗
@@ -294,7 +294,7 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 
 ### 查看資源使用
 ```bash
-kubectl top pods -n flowagent
+kubectl top pods -n mrliouai
 kubectl top nodes
 ```
 
@@ -317,24 +317,24 @@ kubectl top nodes
 
 ### 獲取外部 IP
 ```bash
-kubectl get svc orchestrator -n flowagent -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+kubectl get svc orchestrator -n mrliouai -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
 ```
 
 ### 測試服務健康
 ```bash
-EXTERNAL_IP=$(kubectl get svc orchestrator -n flowagent -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+EXTERNAL_IP=$(kubectl get svc orchestrator -n mrliouai -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 curl http://$EXTERNAL_IP/health
 ```
 
 ### 查看 HPA 狀態
 ```bash
-kubectl get hpa -n flowagent
-kubectl describe hpa module-a-hpa -n flowagent
+kubectl get hpa -n mrliouai
+kubectl describe hpa module-a-hpa -n mrliouai
 ```
 
 ### 連接到 MongoDB
 ```bash
-kubectl port-forward svc/mongodb 27017:27017 -n flowagent
+kubectl port-forward svc/mongodb 27017:27017 -n mrliouai
 # 然後使用: mongosh "mongodb://admin:<password>@localhost:27017"
 ```
 
@@ -347,7 +347,7 @@ kubectl port-forward svc/prometheus 9090:9090 -n monitoring
 ### 查看 ArgoCD 應用狀態
 ```bash
 kubectl get application -n argocd
-kubectl describe application flowagent -n argocd
+kubectl describe application mrliouai -n argocd
 ```
 
 ---
@@ -367,7 +367,7 @@ kubectl describe application flowagent -n argocd
 
 **版本 / Version**: v3.0.0  
 **最後更新 / Last Updated**: 2026-02-04  
-**維護者 / Maintainer**: FlowAgent Team
+**維護者 / Maintainer**: MrLiouAI Team
 
 ---
 

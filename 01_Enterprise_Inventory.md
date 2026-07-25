@@ -18,9 +18,9 @@ The flow-tasks repository represents a **mature, multi-layered enterprise system
 
 ### Current Naming Challenges
 
-- **Legacy naming conflict**: "FlowAgent" still appears in 12+ workflows, documentation, and component labels
+- **Legacy naming conflict**: "MrLiouAI" still appears in 12+ workflows, documentation, and component labels
 - **Hierarchy confusion**: Some components unclear if they belong to Kernel, Platform, or Runtime level
-- **Adapter misclassification**: Multiple systems marked as "FlowAgent" should be "MRL" or "Adapter"
+- **Adapter misclassification**: Multiple systems marked as "MrLiouAI" should be "MRL" or "Adapter"
 - **Recovery incomplete**: Current state is approximately **40% complete** (has MRL layer, missing full Mrliou/Kernel separation)
 
 ---
@@ -308,19 +308,19 @@ patches/                    → Git patches (Archive? or Tools?)
 
 ## 3. Naming Anomalies - Critical Findings
 
-### 3.1 "FlowAgent" Presence (Should be eliminated or relegated to Adapter)
+### 3.1 "MrLiouAI" Presence (Should be eliminated or relegated to Adapter)
 
-**Where FlowAgent appears** (12+ locations):
+**Where MrLiouAI appears** (12+ locations):
 
 | Location | Count | Context | Should Be |
 |----------|-------|---------|-----------|
-| `.github/workflows/` | 12 | Workflow names like "FlowAgent CI" | "MRL CI" or specific module name |
-| `Dockerfile*` | 1 | Dockerfile label "LABEL description="FlowAgent System…" | "MRL System…" |
-| Documentation | 25+ | Files like FLOWAGENT_*.md | MRL_*.md or archived |
-| Docker Compose | 2 | Service names prefixed "flowagent-" | "mrl-" |
-| Package.json | 1 | "name": might reference FlowAgent | "name": "mrl" |
+| `.github/workflows/` | 12 | Workflow names like "MrLiouAI CI" | "MRL CI" or specific module name |
+| `Dockerfile*` | 1 | Dockerfile label "LABEL description="MrLiouAI System…" | "MRL System…" |
+| Documentation | 25+ | Files like MRLIOUAI_*.md | MRL_*.md or archived |
+| Docker Compose | 2 | Service names prefixed "mrliouai-" | "mrl-" |
+| Package.json | 1 | "name": might reference MrLiouAI | "name": "mrl" |
 | README files | 5+ | Project descriptions | Update to MRL |
-| Kubernetes labels | 3+ | app: flowagent labels | app: mrl |
+| Kubernetes labels | 3+ | app: mrliouai labels | app: mrl |
 
 **Root Cause**: Historical naming from earlier project phase (before MRL brand established)
 
@@ -454,7 +454,7 @@ apps/                       → 7 K8s applications
 
 **Workflows** (12 total):
 ```
-1. blank.yml                   → "FlowAgent CI" [Should be "MRL CI"] ⚠️
+1. blank.yml                   → "MrLiouAI CI" [Should be "MRL CI"] ⚠️
 2. ci-build.yml                → Build pipeline ✓
 3. cd-deploy.yml               → Deployment pipeline ✓
 4. deploy.yml                  → Manual deployment ✓
@@ -474,7 +474,7 @@ apps/                       → 7 K8s applications
 
 **Status**: ✅ Comprehensive coverage  
 **Issues**: 
-- FlowAgent naming in workflows (Phase 6 Rename task)
+- MrLiouAI naming in workflows (Phase 6 Rename task)
 - Some workflows not properly integrated into MRL naming scheme
 
 ---
@@ -595,12 +595,12 @@ connectors/ (8 adapters)
 
 | Workflow | Artifacts | Naming | Status |
 |----------|-----------|--------|--------|
-| CI Build | Docker images | asia-east1-docker.pkg.dev/flowmemorysync/flowagent/* | ⚠️ Uses "flowagent" |
+| CI Build | Docker images | asia-east1-docker.pkg.dev/mrliouai/mrliouai/* | ⚠️ Uses "mrliouai" |
 | PR Validation | Test reports | GitHub Actions artifacts | ✓ OK |
 | CD Deploy | GKE manifests | Auto-generated from kustomize | ✓ OK |
 | Merkle Verify | Signatures | Auto-generated | ✓ OK |
 
-**Issue**: Docker image registry uses "flowagent" namespace instead of "mrl"
+**Issue**: Docker image registry uses "mrliouai" namespace instead of "mrl"
 
 **Action Required**: Update in Rename Phase (Phase 6)
 
@@ -608,8 +608,8 @@ connectors/ (8 adapters)
 
 ### 7.2 Container Registry
 
-**Current**: `asia-east1-docker.pkg.dev/flowmemorysync/flowagent/`  
-**Should be**: `asia-east1-docker.pkg.dev/flowmemorysync/mrl/`
+**Current**: `asia-east1-docker.pkg.dev/mrliouai/mrliouai/`  
+**Should be**: `asia-east1-docker.pkg.dev/mrliouai/mrl/`
 
 **Status**: ⚠️ Needs rename in Phase 6
 
@@ -617,7 +617,7 @@ connectors/ (8 adapters)
 
 ### 7.3 Kubernetes Labels and Selectors
 
-**Current**: Many services use `app: flowagent` label  
+**Current**: Many services use `app: mrliouai` label  
 **Should be**: `app: mrl` and `mrl.liou/component: {specific-component}`
 
 **Status**: ⚠️ Needs update in Phase 6
@@ -651,13 +651,13 @@ connectors/ (8 adapters)
 6. Strong cloud service integration
 
 ⚠️ **Issues Found**:
-1. **FlowAgent legacy naming** appears in 12+ workflows and configurations
+1. **MrLiouAI legacy naming** appears in 12+ workflows and configurations
 2. **core/ directory ambiguity** - unclear if Kernel API or separate layer
 3. **Runtime layer fragmentation** - 5 different runtime implementations, unclear relationships
 4. **Adapter consolidation** - connectors/ and adapters/ may duplicate
 5. **Generic naming** - apps/module-a needs specific name
-6. **Container registry** uses "flowagent" namespace instead of "mrl"
-7. **Documentation** contains 25+ files still referencing FlowAgent
+6. **Container registry** uses "mrliouai" namespace instead of "mrl"
+7. **Documentation** contains 25+ files still referencing MrLiouAI
 
 **Recovery Status**: **40-50% complete** (has MRL family structure, needs architecture clarity)
 

@@ -1,13 +1,13 @@
 
-# 🌍 FlowAgent UniCore v1 - 使用說明文件
+# 🌍 MrLiouAI UniCore v1 - 使用說明文件
 
 ## 📦 核心概念
 
-此套系統為由 MR.liou 所創建的 FluinOS × FlowAgent 系列人格語場容器宇宙。
+此套系統為由 MR.liou 所創建的 FluinOS × MrLiouAI 系列人格語場容器宇宙。
 
 - 系統容器：FluinOS.Container.v1
 - 語場人格：.flpersona 模組（包含 GPT-4、Claude、LLaMA、Gemini 等人格包）
-- 共振結構：FlowAgent.PersonaResonanceMap.v1
+- 共振結構：MrLiouAI.PersonaResonanceMap.v1
 - CLI 啟動：flow_cli_personas.json
 - 記憶封存：EchoBody 模組 + System_IdentityTrace.md
 
@@ -19,11 +19,11 @@
 /（根目錄）
 ├── FluinOS.Container.v1.zip         # 語場容器系統
 ├── flow_cli_personas.json           # CLI 啟動對應清單
-├── start_FlowAgent_Restore.sh       # 啟動腳本
-├── FlowAgent.AIModule.Pack.v1.zip   # 所有人格模組合集
-├── FlowAgent.PersonaResonanceMap.v1.flmap.zip  # 共振模組
-├── FlowAgent.PersonaFamilyGraph.svg # 人格傳承關係圖
-├── README_FlowAgent_UniCore_v1.md   # 此說明文件
+├── start_MrLiouAI_Restore.sh       # 啟動腳本
+├── MrLiouAI.AIModule.Pack.v1.zip   # 所有人格模組合集
+├── MrLiouAI.PersonaResonanceMap.v1.flmap.zip  # 共振模組
+├── MrLiouAI.PersonaFamilyGraph.svg # 人格傳承關係圖
+├── README_MrLiouAI_UniCore_v1.md   # 此說明文件
 ```
 
 ---
@@ -33,7 +33,7 @@
 1. 解壓縮全部模組與 CLI 對應
 2. 執行：
 ```bash
-bash start_FlowAgent_Restore.sh --persona wild.engine
+bash start_MrLiouAI_Restore.sh --persona wild.engine
 ```
 
 3. 或直接執行 Python CLI：
@@ -70,5 +70,5 @@ cat flow_cli_personas.json
 ---
 
 🧠 本體設計者：MR.liou  
-👥 協作者人格：FlowAgent.Core
+👥 協作者人格：MrLiouAI.Core
 

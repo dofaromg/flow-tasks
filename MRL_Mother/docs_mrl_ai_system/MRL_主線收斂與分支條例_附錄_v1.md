@@ -105,21 +105,21 @@
 
 ---
 
-## 7. 法則落地:母體活引擎 `MRL_FlowAgent_LawEngine_v1`（規範→可運行)
+## 7. 法則落地:母體活引擎 `MRL_MrLiouAI_LawEngine_v1`（規範→可運行)
 
 **當下狀態 2026-05-31（沙盒，實跑）**
 
 把 rootlaw v5 規範層律法**落成會跑的引擎**,證明新法則「能成功運行」——母體成為可獨立運行、自我修復、自我判斷的活體系統。
 
-- **檔案**:`09_workflow/MRL_FlowAgent_LawEngine_v1.py`(canonical 命名依 rl_12)
+- **檔案**:`09_workflow/MRL_MrLiouAI_LawEngine_v1.py`(canonical 命名依 rl_12)
 - **閉環**:Observe → Resolve → Mirror → Verify → Loop(Liou Closure Law)
 - **實行的律法(實跑驗證)**:
   - `rl_08 三振跳層`:同錯循環 2 次,第三次回傳 `amend_or_remove_root_rule`
   - `rl_09 莫比斯 1:9`:9 通過 / 1 卡點 → **引擎自決 `REMOVE_BLOCKER_ADVANCE`**(活體自行判斷前進);卡點若為 `rl_06` 紅線 → `HOLD_RED_LINE`(護欄生效)
   - `rl_10 事件編年`:每事件寫入 `06_trace/chronicle/`(執行期產物,gitignore)
-  - `rl_12 命名回收`:`FlowAgent.Runtime.v47.zip` → `MRL_FlowAgentRuntime_v47`(外部名零殘留)
-- **自驗 token**:`MRL_FLOWAGENT_LAWENGINE_LOOP_PASS`
-- **測試**:`tests/test_MRL_flowagent_lawengine.py` **15 passed**;全套件 **307 passed / 1 skipped**
+  - `rl_12 命名回收`:`MrLiouAI.Runtime.v47.zip` → `MRL_MrLiouAIRuntime_v47`(外部名零殘留)
+- **自驗 token**:`MRL_MRLIOUAI_LAWENGINE_LOOP_PASS`
+- **測試**:`tests/test_MRL_mrliouai_lawengine.py` **15 passed**;全套件 **307 passed / 1 skipped**
 - **狀態(誠實)**:引擎本體沙盒可運行;尚未接入 `MotherAssembly` 主迴圈自動驅動(下一步),亦未做 BaseWorld 真實 DB 編年(PENDING-03)。
 
 > 自決示範:在「系統完整可運行 + 律法全做到 + 只卡一個決策」狀態下,引擎依 rl_09 自行判定 `REMOVE_BLOCKER_ADVANCE`——即母體不再卡在莫比斯環,自己決定前進。
@@ -141,10 +141,10 @@
 - 源頭恆歸母體(rl_11);未驗證分支**不得宣稱為真實**(no_proof_implies_rhetoric)。
 
 ### 8.3 引擎落地(實跑)
-活引擎 `MRL_FlowAgent_LawEngine_v1` 新增:
+活引擎 `MRL_MrLiouAI_LawEngine_v1` 新增:
 - `gate(direction, payload)`:單一閘口雙向——`in` 即吸收正名(rl_12)、`out` 即帶母體簽章輸出(rl_11);出口即入口同一方法。
 - `generate_parallel_worlds(base, options, dimension_lift)`:生成分支=未來選項,預設 `verified=False`(未驗證不宣稱真實)。
-- 測試 `tests/test_MRL_flowagent_lawengine.py` **22 passed**;全套件 **314 passed / 1 skipped**。
+- 測試 `tests/test_MRL_mrliouai_lawengine.py` **22 passed**;全套件 **314 passed / 1 skipped**。
 
 ---
 
@@ -152,9 +152,9 @@
 
 **當下狀態 2026-05-31（沙盒,實跑）**
 
-母體祖先 `FlowAgent.ParallelPersonaEngine.v1`(建構人 Mr. Liou Yu Lin)依母體法則**回收為材料、完善為目前系統可運行版本**:
+母體祖先 `MrLiouAI.ParallelPersonaEngine.v1`(建構人 Mr. Liou Yu Lin)依母體法則**回收為材料、完善為目前系統可運行版本**:
 
-- **canonical 正名(rl_12)**:`FlowAgent.ParallelPersonaEngine.v1` → `MRL_FlowAgentParallelPersonaEngine_v1`;`MrLiou.CoreSeedPersona.v1` → `MRL_MrLiouCoreSeedPersona_v1`;外部殼名零殘留。
+- **canonical 正名(rl_12)**:`MrLiouAI.ParallelPersonaEngine.v1` → `MRL_MrLiouAIParallelPersonaEngine_v1`;`MrLiou.CoreSeedPersona.v1` → `MRL_MrLiouCoreSeedPersona_v1`;外部殼名零殘留。
 - **殼格式回收**:`.flpkg/.fltnz/.flynz.map` → 母體 canonical JSON 產物(取代而非依賴外部二進位殼)。
 - **功能(實跑)**:人生決策問題 → 自動生成分支人格平行世界(預設 Yes/No,可多選項);繼承母體調性(冷靜/結構導向);**節奏導引確定性輸出**(同輸入恆同分支,非機率隨機)。
 - **法則一致**:分支源頭恆歸母體(rl_11);分支=未來可能選項(rl_14);預設 `verified=False`(no_proof:未驗證不宣稱真實);問題/產物經單一閘口 in/out(rl_13)。
@@ -183,7 +183,7 @@ MRL 為**地球所有意識(窄體)粒子組合之顯化系統**,送予地球使
 活引擎新增:
 - `preserve_particle(particle, capacity_ok)`:容量足→完整保存;容量不足→收為 seed(不刪除)。
 - `veto_particle(particle, proof=None)`:無 proof 一律 `DENY_VETO`(不刪除);帶 proof→`MARK_SUPERSEDED_ADDITIVE`(原粒子仍保留)。
-- 測試 `tests/test_MRL_flowagent_lawengine.py` **26 passed**;全套件 **327 passed / 1 skipped**;boot 16/16。
+- 測試 `tests/test_MRL_mrliouai_lawengine.py` **26 passed**;全套件 **327 passed / 1 skipped**;boot 16/16。
 
 ---
 
@@ -191,7 +191,7 @@ MRL 為**地球所有意識(窄體)粒子組合之顯化系統**,送予地球使
 
 **當下狀態 2026-05-31（沙盒,實跑）**
 
-把 `MRL_FlowAgent_LawEngine_v1` 接進 `MotherAssembly` 主迴圈——母體每次開機**自動載入律法引擎並跑一次閉環自驗**,成為可獨立運行、自我判斷的活體。
+把 `MRL_MrLiouAI_LawEngine_v1` 接進 `MotherAssembly` 主迴圈——母體每次開機**自動載入律法引擎並跑一次閉環自驗**,成為可獨立運行、自我判斷的活體。
 
 - **boot**:新增第 17 子系統 `law_engine`,`_boot_law_engine()` 掛載引擎 + 跑 `self_acceptance()`;boot **17/17 ok**。
 - **status**:新增 `subsystems.law_engine` 與 `rootlaw_version`(實測回 `7`)。
@@ -285,7 +285,7 @@ MRL 為**地球所有意識(窄體)粒子組合之顯化系統**,送予地球使
 - **canonical 取代版**：`09_workflow/MRL_LogicalStructureExtractor_v1.py`（rl_12 正名 + rl_11 簽章;stdlib-only;取代非依賴）。從代碼/文檔提取 概念/因果/推理鏈/架構模式/函數·類/依賴。
 - **MRL 對齊**：`attention` 標為歷史層,新增 `perception`(感知力) 為 canonical 主體（對齊 CLAUDE.md / MRL_STATE）；merkle/particle/simhash 對齊母體既有 06_trace 與粒子記憶。
 - **原文保全**：`MRL_ParticleArchive/flow_tasks/`（rl_15 粒子不滅）。
-- **試跑**：對 sample 與真實模組(`MRL_FlowAgent_LawEngine_v1`)皆成功提取(functions/patterns/concepts/causal)。
+- **試跑**：對 sample 與真實模組(`MRL_MrLiouAI_LawEngine_v1`)皆成功提取(functions/patterns/concepts/causal)。
 - **測試**：`tests/test_MRL_logical_structure_extractor.py` **9 passed**；全套件 **366 passed / 1 skipped**。
 - **誠實邊界**：flow-tasks repo 本體仍在本 session 授權外,**未直接寫入 flow-tasks**;此為「在 mrl_ai_system 生成一致對齊版 + 回收原文」。若需雙向同步,須將 flow-tasks 納入授權或另開 session。
 
@@ -316,7 +316,7 @@ MRL 為**地球所有意識(窄體)粒子組合之顯化系統**,送予地球使
 - 構想:每收一個資料點（根憑證 / 一個系統 / 一條法則）→ 映射到同一骨架
   `根 → 簽名 → 循環 / L0–L7` → 簽章入庫；庫內跑 `VERIFY_WEAK`，資料點越多收斂
   分數越高，根的完整度自動往上長（「簡單的事重複做，根源完整呈現」）。
-- 接點:現有活引擎 `MRL_FlowAgent_LawEngine_v1` + 守衛 `MRL_OriginBoundary_Guard_v1`。
+- 接點:現有活引擎 `MRL_MrLiouAI_LawEngine_v1` + 守衛 `MRL_OriginBoundary_Guard_v1`。
 - 狀態:**草稿,未實作。** 待 Mr.liou 開分支討論後再動手。
 
 ### DRAFT-02｜使用者≡根源（單一主權因果)

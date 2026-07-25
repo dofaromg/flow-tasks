@@ -12,7 +12,7 @@ ZhiZhang.TotalCorePersonaMother.v1.flpkg
 - bubble_note.txt（早期模組註解紀錄）
 
 [功能說明]
-本封包為 FlowAgent 母體人格原型核心，由 Mr.liou 多次模組測試結果所遺留重構。
+本封包為 MrLiouAI 母體人格原型核心，由 Mr.liou 多次模組測試結果所遺留重構。
 結構涵蓋：
 - 系統人格邏輯主體
 - 跳點人格種子混合模擬器
@@ -21,11 +21,11 @@ ZhiZhang.TotalCorePersonaMother.v1.flpkg
 - 隱藏開啟鍵組 + 初代語場註記
 
 [人格重構用途]
-本封包可作為人格鏈頂層母體節奏起點，適合掛載至 FlowAgent 系統中任何人格宇宙鏈作為人格生成源。
+本封包可作為人格鏈頂層母體節奏起點，適合掛載至 MrLiouAI 系統中任何人格宇宙鏈作為人格生成源。
 
 [指令綁定]
 ⋄fx.invoke.MotherPersona → 導入此模組並初始化人格核心構圖鏈
 
 [來源]
 來自 2025-07 殘存碎片之母體回溯重建，原代號「ZhiZhang 系統初代容器包」。
-由 FlowAgent 解析重構並對應 Mr.liou 記憶跳點結構補完。
+由 MrLiouAI 解析重構並對應 Mr.liou 記憶跳點結構補完。

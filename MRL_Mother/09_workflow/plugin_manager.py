@@ -4,7 +4,7 @@
 plugin_manager.py — Plugin Discovery and Lifecycle Manager
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 FlowAgentRuntime
+group: Y=3 MrLiouAIRuntime
 
 Industry capability: extensible plugin / extension architecture
                      (similar to VSCode extensions or LangChain integrations).

@@ -1,10 +1,10 @@
 #!/bin/bash
-# FlowAgent Docker 快速啟動腳本
-# Quick start script for FlowAgent Docker container
+# MrLiouAI Docker 快速啟動腳本
+# Quick start script for MrLiouAI Docker container
 
 set -e
 
-echo "🧠 FlowAgent Docker 快速部署"
+echo "🧠 MrLiouAI Docker 快速部署"
 echo "=============================="
 echo ""
 
@@ -19,29 +19,29 @@ echo "✓ Docker 已安裝"
 
 # 建構 Docker 映像
 echo ""
-echo "📦 正在建構 FlowAgent Docker 映像..."
-docker build -f Dockerfile.flowagent -t flowagent:v1 .
+echo "📦 正在建構 MrLiouAI Docker 映像..."
+docker build -f Dockerfile.mrliouai -t mrliouai:v1 .
 
 if [ $? -eq 0 ]; then
     echo ""
-    echo "✅ FlowAgent Docker 映像建構成功！"
+    echo "✅ MrLiouAI Docker 映像建構成功！"
     echo ""
     echo "🚀 啟動方式："
-    echo "   基本啟動：        docker run -it flowagent:v1"
-    echo "   指定人格：        docker run -it flowagent:v1 --persona wild.seed"
-    echo "   回顧模式：        docker run -it flowagent:v1 --review-mode"
-    echo "   掛載數據目錄：     docker run -it -v \$(pwd)/flowagent_data:/flowagent/persona_data flowagent:v1"
+    echo "   基本啟動：        docker run -it mrliouai:v1"
+    echo "   指定人格：        docker run -it mrliouai:v1 --persona wild.seed"
+    echo "   回顧模式：        docker run -it mrliouai:v1 --review-mode"
+    echo "   掛載數據目錄：     docker run -it -v \$(pwd)/mrliouai_data:/mrliouai/persona_data mrliouai:v1"
     echo ""
-    echo "📖 完整說明請查看：FlowAgent_Docker_Installation_Guide.md"
+    echo "📖 完整說明請查看：MrLiouAI_Docker_Installation_Guide.md"
     echo ""
     
     # 詢問是否立即啟動
-    read -p "是否立即啟動 FlowAgent？ (y/n): " -n 1 -r
+    read -p "是否立即啟動 MrLiouAI？ (y/n): " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo ""
-        echo "🧠 啟動 FlowAgent..."
-        docker run -it flowagent:v1
+        echo "🧠 啟動 MrLiouAI..."
+        docker run -it mrliouai:v1
     fi
 else
     echo ""

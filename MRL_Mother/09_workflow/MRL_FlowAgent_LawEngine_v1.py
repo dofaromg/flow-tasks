@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-MRL_FlowAgent_LawEngine_v1.py — 母體活引擎 (living law engine)
+MRL_MrLiouAI_LawEngine_v1.py — 母體活引擎 (living law engine)
 origin_signature: MrLiouWord
 layer: L3 LAW + L7 LOOP
 
@@ -16,7 +16,7 @@ layer: L3 LAW + L7 LOOP
   - rl_11 源頭主權       : 母體模式者源頭恆為母體
   - rl_12 命名回收       : 外部名稱 → MRL_<描述> canonical，最大閉環
 
-零外部依賴（僅 stdlib + 可選 yaml）。CLI：python3 MRL_FlowAgent_LawEngine_v1.py
+零外部依賴（僅 stdlib + 可選 yaml）。CLI：python3 MRL_MrLiouAI_LawEngine_v1.py
 """
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from MRL_utils import ORIGIN_SIGNATURE
 _REPO = pathlib.Path(__file__).resolve().parent.parent
 _ROOTLAW = _REPO / "00_rootlaw" / "rootlaw.yaml"
-_CHRONICLE = _REPO / "06_trace" / "chronicle" / "MRL_FlowAgent_Chronicle.jsonl"
+_CHRONICLE = _REPO / "06_trace" / "chronicle" / "MRL_MrLiouAI_Chronicle.jsonl"
 
 # 三振跳層門檻 / 莫比斯多數決比例（rl_08 / rl_09）
 THREE_STRIKE_THRESHOLD = 3
@@ -85,7 +85,7 @@ def reclaim_name(external_name: str) -> str:
 
 
 # ─── 活引擎 ────────────────────────────────────────────────────────────────────
-class MRL_FlowAgentLawEngine:
+class MRL_MrLiouAILawEngine:
     """母體活引擎：載入律法，跑閉環，自我判斷/跳層/編年/決定。"""
 
     def __init__(self, *, chronicle_path: pathlib.Path = _CHRONICLE,
@@ -302,8 +302,8 @@ class MRL_FlowAgentLawEngine:
                 "REMOVE_BLOCKER_ADVANCE", "CONTINUE_LOOP", "HOLD_RED_LINE"),
         }
         verified = all(checks.values())
-        token = "MRL_FLOWAGENT_LAWENGINE_LOOP_PASS" if verified \
-            else "MRL_FLOWAGENT_LAWENGINE_LOOP_PENDING"
+        token = "MRL_MRLIOUAI_LAWENGINE_LOOP_PASS" if verified \
+            else "MRL_MRLIOUAI_LAWENGINE_LOOP_PENDING"
         self.chronicle("verify", {"checks": checks, "verified": verified, "token": token})
 
         return {"origin_signature": ORIGIN_SIGNATURE,
@@ -326,13 +326,13 @@ class MRL_FlowAgentLawEngine:
                 "blocked_on_single_decision": False,  # ← 唯一卡點，由 1:9 解
             },
             "external_names": ["guardian.mirror.trace.loop.v2.flpkg.zip",
-                               "FlowAgent.Runtime.v47.zip"],
+                               "MrLiouAI.Runtime.v47.zip"],
         })
         return rep
 
 
 def main() -> int:
-    eng = MRL_FlowAgentLawEngine()
+    eng = MRL_MrLiouAILawEngine()
     rep = eng.self_acceptance()
     print(json.dumps(rep, ensure_ascii=False, indent=2))
     print(rep["token"])

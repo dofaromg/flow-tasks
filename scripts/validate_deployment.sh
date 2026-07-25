@@ -1,11 +1,11 @@
 #!/bin/bash
-# FlowAgent 部署驗證腳本
+# MrLiouAI 部署驗證腳本
 # 用於驗證 Kubernetes 配置檔案的正確性
 
 set -e
 
 echo "========================================="
-echo "FlowAgent 部署配置驗證"
+echo "MrLiouAI 部署配置驗證"
 echo "========================================="
 echo ""
 
@@ -76,5 +76,5 @@ echo "下一步："
 echo "1. 如果還沒有 GKE 叢集，執行: bash scripts/oneclick_gke_init.sh"
 echo "2. 部署到叢集: kubectl apply -k cluster/overlays/prod"
 echo "3. 部署監控: kubectl apply -k cluster/overlays/monitoring"
-echo "4. 查看狀態: kubectl get all -n flowagent"
+echo "4. 查看狀態: kubectl get all -n mrliouai"
 echo ""

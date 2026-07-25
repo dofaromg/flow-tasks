@@ -1,6 +1,6 @@
 # Configuration System Implementation
 
-This document describes the implementation of the configuration system for the FlowAgent project.
+This document describes the implementation of the configuration system for the MrLiouAI project.
 
 ## What Was Implemented
 

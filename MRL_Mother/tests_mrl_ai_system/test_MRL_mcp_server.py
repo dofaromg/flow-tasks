@@ -62,7 +62,7 @@ class TestMCPToolCalls:
         r = _call(srv, "tools/call", {"name": "law_engine_loop", "arguments": {}})
         content = json.loads(r["result"]["content"][0]["text"])
         assert content["verified"] is True
-        assert content["token"] == "MRL_FLOWAGENT_LAWENGINE_LOOP_PASS"
+        assert content["token"] == "MRL_MRLIOUAI_LAWENGINE_LOOP_PASS"
 
     def test_chat_requires_message(self):
         srv = MRL_MCPServer()

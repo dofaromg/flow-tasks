@@ -1,5 +1,5 @@
 
-# flowagent_persona_emulator.py - Fluin Persona Emulator (Web 對話模擬器)
+# mrliouai_persona_emulator.py - Fluin Persona Emulator (Web 對話模擬器)
 
 from flask import Flask, render_template_string, request
 import json

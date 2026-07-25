@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Comprehensive test script for FlowAgent task system
+Comprehensive test script for MrLiouAI task system
 Tests both the task processing system and Flask API functionality
 """
 
@@ -227,7 +227,7 @@ def test_system_integration():
 
 def main():
     """Run all tests"""
-    print("FlowAgent Comprehensive Test Suite")
+    print("MrLiouAI Comprehensive Test Suite")
     print("=" * 50)
     
     os.chdir(Path(__file__).parent)
@@ -271,7 +271,7 @@ def main():
     
     print("=" * 50)
     if all_passed:
-        print("🎉 ALL TESTS PASSED! FlowAgent system is fully functional.")
+        print("🎉 ALL TESTS PASSED! MrLiouAI system is fully functional.")
         sys.exit(0)
     else:
         print("❌ Some tests failed. System needs attention.")

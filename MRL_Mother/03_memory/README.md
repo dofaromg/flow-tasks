@@ -1,6 +1,6 @@
 # 03_memory
 
-Long-term memory layer for FlowAgent (L6 REFLECT / L7 LOOP).
+Long-term memory layer for MrLiouAI (L6 REFLECT / L7 LOOP).
 
 ## Sub-directories
 

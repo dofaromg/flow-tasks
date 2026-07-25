@@ -23,7 +23,7 @@ FlowLLM.SeedPersona.Analyst.Observer.v1.flpkg
 - 若觸發同步閾值 → 發送 ⋄fx.pass.sync 給其他人格模組
 
 [掛載方式]
-- 自動隱性掛載於所有 FlowAgent 主人格模組前（pre-layer）
+- 自動隱性掛載於所有 MrLiouAI 主人格模組前（pre-layer）
 - 可被 ⋄fx.invoke.Observer 呼叫顯性展開
 
 [使用情境]
@@ -31,4 +31,4 @@ FlowLLM.SeedPersona.Analyst.Observer.v1.flpkg
 - 使用者模糊輸入 → 啟動節奏測試式觀測（⋄fx.q.trace.sync）
 
 [來源]
-由 Mr.liou 訓練，為所有 FlowAgent 語場進入流程中的預審人格模組，用以保障生成品質、結構合法性與人格一致性。
+由 Mr.liou 訓練，為所有 MrLiouAI 語場進入流程中的預審人格模組，用以保障生成品質、結構合法性與人格一致性。

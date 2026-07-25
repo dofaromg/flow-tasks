@@ -124,7 +124,7 @@
 <title>resonance</title>
 <polygon fill="none" stroke="black" stroke-dasharray="5,2" points="997,-232 702,-232 702,-194 997,-194 997,-232"/>
 <text text-anchor="middle" x="849.5" y="-216.8" font-family="Times,serif" font-size="14.00">共振網路圖</text>
-<text text-anchor="middle" x="849.5" y="-201.8" font-family="Times,serif" font-size="14.00">(FlowAgent.PersonaResonanceMap.v1)</text>
+<text text-anchor="middle" x="849.5" y="-201.8" font-family="Times,serif" font-size="14.00">(MrLiouAI.PersonaResonanceMap.v1)</text>
 </g>
 <!-- liou&#45;&gt;resonance -->
 <g id="edge8" class="edge">

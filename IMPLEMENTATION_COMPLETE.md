@@ -384,7 +384,7 @@ All objectives achieved:
 
 ## 🙏 Acknowledgments
 
-This implementation follows the project's bilingual approach (English/Chinese) and integrates seamlessly with the existing FlowAgent infrastructure, particularly the context management module.
+This implementation follows the project's bilingual approach (English/Chinese) and integrates seamlessly with the existing MrLiouAI infrastructure, particularly the context management module.
 
 ---
 

@@ -4,7 +4,7 @@
 multi_agent.py — Multi-Agent Coordination Framework
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 FlowAgentRuntime
+group: Y=3 MrLiouAIRuntime
 
 Industry capability: multi-agent task decomposition and coordination —
                      the pattern powering AutoGen, CrewAI, and similar

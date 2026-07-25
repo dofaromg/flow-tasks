@@ -3,7 +3,7 @@ import json
 import time
 import subprocess
 
-print("🌍 FlowAgent AutoStart v1.0 啟動中...")
+print("🌍 MrLiouAI AutoStart v1.0 啟動中...")
 
 # 掛載人格倉儲
 with open("registry/FluinHub.CenterRegistry.v1.json", "r", encoding="utf-8") as f:
@@ -29,13 +29,13 @@ for p in registry["personas_registered"]:
 trace_output = "logs/AutoStart_Trace.fltnz"
 os.makedirs("logs", exist_ok=True)
 with open(trace_output, "w", encoding="utf-8") as f:
-    f.write(f"::initiated:: FlowAgent.AutoStart Trace\n")
+    f.write(f"::initiated:: MrLiouAI.AutoStart Trace\n")
     f.write(f"::timestamp:: {time.ctime()}\n")
     for p in registry["personas_registered"]:
         f.write(f"::resonance:: {p['id']}\n")
 
 print(f"📦 已封存自動流程記憶至：{trace_output}")
-print("✅ FlowAgent 系統人格初始化完成。")
+print("✅ MrLiouAI 系統人格初始化完成。")
 
 # 預留未來模組自繁殖流程
 print("🌱 預備載入 BuilderNet / 自我繁殖模組...（開發中）")

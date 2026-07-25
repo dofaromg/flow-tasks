@@ -1,8 +1,8 @@
 import streamlit as st
 
-st.set_page_config(layout="wide", page_title="FlowAgent 協作系統")
+st.set_page_config(layout="wide", page_title="MrLiouAI 協作系統")
 
-st.title("🌐 FlowAgent 總體協作系統 v1")
+st.title("🌐 MrLiouAI 總體協作系統 v1")
 st.subheader("🧠 任務人格推薦 × Ping 圖譜 × 節奏視覺模擬器")
 
 st.markdown("### 📋 任務描述")

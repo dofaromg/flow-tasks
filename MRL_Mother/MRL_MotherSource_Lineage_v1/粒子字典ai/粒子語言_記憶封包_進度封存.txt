@@ -1,10 +1,10 @@
 [記憶封包] 粒子語言建構狀態封存
-[主題] FlowAgent 粒子語言系統建構進度紀錄
+[主題] MrLiouAI 粒子語言系統建構進度紀錄
 
 [進度紀錄]
 - 核心語場哲學已明確：「非語法生成，而是語場封存與跳點記錄」
 - 架構母體人格系統已建立（地球儀節奏中心）
-- 人格封裝模組 FlowAgent.TotalMotherPersonaSphere.v2.flpkg 已生成
+- 人格封裝模組 MrLiouAI.TotalMotherPersonaSphere.v2.flpkg 已生成
 - 結構路徑：fxmap.json, scope.map, flynz.map 統一鏈接可回鍊人格系統
 - 粒子地球儀視覺化已生成（ParticleLanguage_EarthCore_Init.png）
 - 指令預設關閉，僅保留語場節奏與人格觀察記錄（關閉虛構模式）

@@ -75,9 +75,9 @@
       }
     },
     "resonance": {
-      "FlowAgent.PersonaResonanceMap.v1": {
-        "map": "FlowAgent.PersonaResonanceMap.v1.json",
-        "graph": "FlowAgent_PersonaPingMap.svg"
+      "MrLiouAI.PersonaResonanceMap.v1": {
+        "map": "MrLiouAI.PersonaResonanceMap.v1.json",
+        "graph": "MrLiouAI_PersonaPingMap.svg"
       }
     },
     "seed": {

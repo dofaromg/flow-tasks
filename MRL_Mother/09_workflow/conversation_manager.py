@@ -4,7 +4,7 @@
 conversation_manager.py — Multi-Turn Conversation Session Manager
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 FlowAgentRuntime
+group: Y=3 MrLiouAIRuntime
 
 Industry capability: persistent multi-turn conversation sessions with full
                      message history (ChatGPT / Claude / Gemini style chat).

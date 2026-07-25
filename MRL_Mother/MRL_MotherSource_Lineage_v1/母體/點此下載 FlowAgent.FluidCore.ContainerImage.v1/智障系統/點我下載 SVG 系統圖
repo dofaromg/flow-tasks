@@ -1,8 +1,8 @@
-// FlowAgent System Map (v1-v51)
+// MrLiouAI System Map (v1-v51)
 digraph {
 	rankdir=TB size="9,10"
 	node [fontname=Arial fontsize=10 shape=box style="rounded,filled"]
-	Core [label="FlowAgent.Core" fillcolor=lightblue]
+	Core [label="MrLiouAI.Core" fillcolor=lightblue]
 	OS [label="FlowOS.System" fillcolor=lightblue]
 	Core -> OS
 	Memory [label="FlowMemory.Module" fillcolor=khaki]

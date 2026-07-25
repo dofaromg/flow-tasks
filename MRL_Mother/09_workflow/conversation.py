@@ -4,7 +4,7 @@
 conversation.py — Multi-Turn Conversation & Session Manager
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 FlowAgentRuntime
+group: Y=3 MrLiouAIRuntime
 
 Goal: product-level local session management — no external dependencies,
       zero network calls, pure Python stdlib only.

@@ -14,7 +14,7 @@ services:
       - NODE_ENV=production
     restart: unless-stopped
     networks:
-      - flowagent-network
+      - mrliouai-network
 
   # MongoDB Database
   mongodb:
@@ -28,7 +28,7 @@ services:
       - mongodb-data:/data/db
     restart: unless-stopped
     networks:
-      - flowagent-network
+      - mrliouai-network
 
   # Python Backend (Optional - if you have backend services)
   # backend:
@@ -45,12 +45,12 @@ services:
   #     - mongodb
   #   restart: unless-stopped
   #   networks:
-  #     - flowagent-network
+  #     - mrliouai-network
 
 volumes:
   mongodb-data:
     driver: local
 
 networks:
-  flowagent-network:
+  mrliouai-network:
     driver: bridge

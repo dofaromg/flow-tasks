@@ -80,7 +80,7 @@ echo "新密碼 / New password: $NEW_PASSWORD"
 # 創建 MongoDB Secret
 kubectl create secret generic mongodb-secret \
   --from-literal=password="$NEW_PASSWORD" \
-  --namespace=flowagent
+  --namespace=mrliouai
 ```
 
 或使用 dry-run 預覽：
@@ -89,7 +89,7 @@ kubectl create secret generic mongodb-secret \
 # 預覽 Secret 配置（不會實際創建）
 kubectl create secret generic mongodb-secret \
   --from-literal=password="$NEW_PASSWORD" \
-  --namespace=flowagent \
+  --namespace=mrliouai \
   --dry-run=client -o yaml
 ```
 
@@ -100,15 +100,15 @@ kubectl create secret generic mongodb-secret \
 kubectl apply -k cluster/overlays/prod/
 
 # 驗證部署 / Verify deployment
-kubectl get pods -n flowagent
-kubectl get secret mongodb-secret -n flowagent
+kubectl get pods -n mrliouai
+kubectl get secret mongodb-secret -n mrliouai
 ```
 
 #### 步驟 4: 驗證密碼 / Step 4: Verify Password
 
 ```bash
 # 查看 Secret 中的密碼 / View password in Secret
-kubectl get secret mongodb-secret -n flowagent -o jsonpath='{.data.password}' | base64 -d
+kubectl get secret mongodb-secret -n mrliouai -o jsonpath='{.data.password}' | base64 -d
 ```
 
 ### 場景 3: Google Secret Manager（生產環境推薦）/ Scenario 3: Google Secret Manager (Production Recommended)
@@ -120,7 +120,7 @@ kubectl get secret mongodb-secret -n flowagent -o jsonpath='{.data.password}' | 
 NEW_PASSWORD=$(openssl rand -base64 32)
 echo "$NEW_PASSWORD" | gcloud secrets create mongodb-password \
   --data-file=- \
-  --project=flowmemorysync \
+  --project=mrliouai \
   --replication-policy=automatic
 ```
 
@@ -129,7 +129,7 @@ echo "$NEW_PASSWORD" | gcloud secrets create mongodb-password \
 ```bash
 # 允許 GKE 服務帳號訪問 Secret
 gcloud secrets add-iam-policy-binding mongodb-password \
-  --member="serviceAccount:flowagent@flowmemorysync.iam.gserviceaccount.com" \
+  --member="serviceAccount:mrliouai@mrliouai.iam.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
 ```
 
@@ -156,7 +156,7 @@ apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
   name: mongodb-external-secret
-  namespace: flowagent
+  namespace: mrliouai
 spec:
   refreshInterval: 1h
   secretStoreRef:
@@ -289,7 +289,7 @@ bash scripts/generate_password.sh --apply
 4. **啟用審計日誌** / Enable audit logging
    ```bash
    # 查看 Secret 訪問日誌 / View Secret access logs
-   kubectl get events -n flowagent | grep mongodb-secret
+   kubectl get events -n mrliouai | grep mongodb-secret
    ```
 
 ### ⚠️ 禁止事項 / Prohibited Actions
@@ -313,16 +313,16 @@ NEW_PASSWORD=$(openssl rand -base64 32)
 # 2. 更新 Secret / Update Secret
 kubectl create secret generic mongodb-secret \
   --from-literal=password="$NEW_PASSWORD" \
-  --namespace=flowagent \
+  --namespace=mrliouai \
   --dry-run=client -o yaml | kubectl apply -f -
 
 # 3. 重啟相關 Pods（觸發密碼更新）/ Restart related Pods
-kubectl rollout restart deployment/mongodb -n flowagent
-kubectl rollout restart deployment/module-a -n flowagent
-kubectl rollout restart deployment/orchestrator -n flowagent
+kubectl rollout restart deployment/mongodb -n mrliouai
+kubectl rollout restart deployment/module-a -n mrliouai
+kubectl rollout restart deployment/orchestrator -n mrliouai
 
 # 4. 驗證部署 / Verify deployment
-kubectl get pods -n flowagent
+kubectl get pods -n mrliouai
 ```
 
 ### Docker Compose 環境 / Docker Compose Environment
@@ -354,16 +354,16 @@ Error: Authentication failed
 
 ```bash
 # 1. 檢查 Secret 是否存在 / Check if Secret exists
-kubectl get secret mongodb-secret -n flowagent
+kubectl get secret mongodb-secret -n mrliouai
 
 # 2. 驗證 Secret 內容 / Verify Secret content
-kubectl get secret mongodb-secret -n flowagent -o yaml
+kubectl get secret mongodb-secret -n mrliouai -o yaml
 
 # 3. 確認 Pod 環境變數 / Check Pod environment variables
-kubectl exec -it deployment/module-a -n flowagent -- env | grep MONGODB
+kubectl exec -it deployment/module-a -n mrliouai -- env | grep MONGODB
 
 # 4. 查看 Pod 日誌 / View Pod logs
-kubectl logs deployment/module-a -n flowagent
+kubectl logs deployment/module-a -n mrliouai
 ```
 
 ### 問題 2: Docker Compose 密碼無效 / Issue 2: Docker Compose password invalid
@@ -438,4 +438,4 @@ password: "your-password-with-special-chars"
 **最後更新 / Last Updated**: 2026-02-10  
 **作者 / Author**: GitHub Copilot - Security Specialist
 
-© 2026 FlowAgent Project. 保留所有權利 / All rights reserved.
+© 2026 MrLiouAI Project. 保留所有權利 / All rights reserved.

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "FlowAgent ComplianceDecision v1",
+  "title": "MrLiouAI ComplianceDecision v1",
   "type": "object",
   "properties": {
     "decision": {
