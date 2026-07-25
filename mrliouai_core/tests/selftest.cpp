@@ -264,23 +264,23 @@ static void test_auth_service(const std::string& dir) {
 
     AuthService auth(ad, "svc_secret_test");
 
-    auto s1 = auth.signup("mr@liou.tw", "s3cure_password");
+    auto s1 = auth.signup("selftest@example.invalid", "FIXTURE_PW_NOT_A_SECRET");
     CHECK(s1.ok && !s1.user_id.empty(), "signup ok");
 
-    auto dup = auth.signup("mr@liou.tw", "another_password");
+    auto dup = auth.signup("selftest@example.invalid", "FIXTURE_PW_ALT");
     CHECK(!dup.ok && dup.error == "email_already_registered", "duplicate email rejected");
 
-    auto bad_email = auth.signup("notanemail", "s3cure_password");
+    auto bad_email = auth.signup("notanemail", "FIXTURE_PW_NOT_A_SECRET");
     CHECK(!bad_email.ok && bad_email.error == "invalid_email", "invalid email rejected");
 
     auto short_pw = auth.signup("x@y.tw", "short");
     CHECK(!short_pw.ok && short_pw.error == "password_too_short_min_8", "short password rejected");
 
-    auto in = auth.signin("mr@liou.tw", "s3cure_password");
+    auto in = auth.signin("selftest@example.invalid", "FIXTURE_PW_NOT_A_SECRET");
     CHECK(in.ok && !in.access_token.empty() && !in.refresh_token.empty(), "signin issues tokens");
     CHECK_EQ(in.user_id, s1.user_id, "signin returns same user_id");
 
-    auto wrong = auth.signin("mr@liou.tw", "wrong_password");
+    auto wrong = auth.signin("selftest@example.invalid", "FIXTURE_PW_WRONG");
     CHECK(!wrong.ok && wrong.error == "invalid_credentials", "wrong password rejected");
 
     auto nouser = auth.signin("ghost@nowhere.tw", "whatever1");
@@ -304,7 +304,7 @@ static void test_auth_service(const std::string& dir) {
     // 持久化：重載後帳號還在
     AuthService reloaded(ad, "svc_secret_test");
     CHECK_EQ(reloaded.user_count(), 1u, "persisted across reload");
-    auto in2 = reloaded.signin("mr@liou.tw", "s3cure_password");
+    auto in2 = reloaded.signin("selftest@example.invalid", "FIXTURE_PW_NOT_A_SECRET");
     CHECK(in2.ok, "signin works after reload");
 }
 

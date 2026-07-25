@@ -101,13 +101,13 @@ export MRL_HUMAN_TOKEN=<你的寫入權杖>
 # 註冊
 curl -X POST localhost:8800/v1/auth/signup \
   -H 'content-type: application/json' \
-  -d '{"email":"mr@liou.tw","password":"my_real_password"}'
+  -d '{"email":"<YOUR_EMAIL>","password":"<YOUR_PASSWORD>"}'
 # → 201 {"ok":true,"user_id":"usr_...","password_algo":"pbkdf2_sha256","iterations":600000}
 
 # 登入 → 拿真 JWT
 curl -X POST localhost:8800/v1/auth/signin \
   -H 'content-type: application/json' \
-  -d '{"email":"mr@liou.tw","password":"my_real_password"}'
+  -d '{"email":"<YOUR_EMAIL>","password":"<YOUR_PASSWORD>"}'
 # → {"access_token":"eyJhbGci...","refresh_token":"rt_...","expires_in":3600,"alg":"HS256"}
 
 # 驗證
