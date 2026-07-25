@@ -1,0 +1,9 @@
+# 建構產物與執行期資料 — 不進版控
+mrliouai_core
+mrl_selftest
+*.o
+data/
+vault/
+run_clean/
+run2/
+.selftest_tmp/
