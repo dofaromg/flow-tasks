@@ -10,48 +10,20 @@ Tests the complete integration between:
 - Particle Wire Bridge
 """
 
-import sys
 import json
-import importlib.util
 import tempfile
 from pathlib import Path
 
+from test_helpers import load_from_file, register_modules
+
 # ---------------------------------------------------------------------------
-# Explicit module loading from src/memory/ to avoid sys.modules cache
-# collisions with the older memory_quick_mount in particle_core/src/.
-# Each module is loaded directly from its file; sys.modules is temporarily
-# populated so inter-module imports resolve to the correct versions.
+# Load new API modules from src/memory/, isolated from sys.modules collisions.
 # ---------------------------------------------------------------------------
-_MEM_DIR = Path(__file__).parent.parent / "src" / "memory"
-
-
-def _load_from_file(logical_name: str, filename: str):
-    """Load a module directly from a file path, bypassing sys.modules cache."""
-    spec = importlib.util.spec_from_file_location(logical_name, str(_MEM_DIR / filename))
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
-
-
-# 1. Load memory_cache_disk and register temporarily (memory_quick_mount imports it)
-_prev_mcd = sys.modules.get("memory_cache_disk")
-_mcd = _load_from_file("_mcd_v2", "memory_cache_disk.py")
-sys.modules["memory_cache_disk"] = _mcd
-
-# 2. Load memory_quick_mount (new version with get_stats, set_cached_state, etc.)
-_prev_mqm = sys.modules.get("memory_quick_mount")
-_mqm = _load_from_file("_mqm_v2", "memory_quick_mount.py")
-sys.modules["memory_quick_mount"] = _mqm
-
-# 3. Load particle_wire_bridge (imports memory_quick_mount → gets new version above)
-_pwb = _load_from_file("_pwb_v2", "particle_wire_bridge.py")
-
-# 4. Restore sys.modules so other test modules are not affected
-for _name, _prev in [("memory_cache_disk", _prev_mcd), ("memory_quick_mount", _prev_mqm)]:
-    if _prev is not None:
-        sys.modules[_name] = _prev
-    else:
-        sys.modules.pop(_name, None)
+_mcd = load_from_file("_mcd_v2", "memory_cache_disk.py")
+with register_modules(memory_cache_disk=_mcd):
+    _mqm = load_from_file("_mqm_v2", "memory_quick_mount.py")
+with register_modules(memory_cache_disk=_mcd, memory_quick_mount=_mqm):
+    _pwb = load_from_file("_pwb_v2", "particle_wire_bridge.py")
 
 MemoryQuickMounter = _mqm.MemoryQuickMounter
 AdvancedParticleCompressor = _mqm.AdvancedParticleCompressor

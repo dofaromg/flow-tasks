@@ -1,13 +1,13 @@
 {
   "seed_name": "merged_seed",
   "version": "1.0",
-  "created_at": "2026-07-25T23:43:18.214749",
+  "created_at": "2026-07-25T23:47:21.843703",
   "particle_data": {
     "merged_from": [
       "seed_a",
       "seed_b"
     ],
-    "merged_at": "2026-07-25T23:43:18.214625",
+    "merged_at": "2026-07-25T23:47:21.843580",
     "particles": [
       {
         "id": 1
@@ -28,9 +28,9 @@
     "recurse",
     "store"
   ],
-  "checksum": "e6aeedda9268c74f18ef96bb867c97ca5b05370679f76975dc16a3f244e1d68a",
+  "checksum": "455988b0d5bd1690a72d2536c142dfe3eda033bba565dcf55efb70eaf630be3e",
   "export_info": {
-    "exported_at": "2026-07-25T23:43:18.215024",
+    "exported_at": "2026-07-25T23:47:21.843966",
     "format_version": "1.0",
     "compatible_with": "MRLiou Particle Language Core v1.0+"
   }
