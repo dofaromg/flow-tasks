@@ -662,8 +662,6 @@ class ConversationExtractor:
     def _convert_to_xml(self, package: Dict) -> str:
         """轉換為 XML 格式"""
         root = ET.Element("conversation")
-        root.set("version", package.get("version", "1.0"))
-        root.set("exported_at", package.get("exported_at", ""))
         
         # Metadata
         metadata = package.get("metadata", {})
@@ -674,6 +672,13 @@ class ConversationExtractor:
         
         date_elem = ET.SubElement(meta_elem, "date")
         date_elem.text = metadata.get('date', 'N/A')
+        
+        # version and exported_at go into metadata, not as root attributes
+        version_elem = ET.SubElement(meta_elem, "version")
+        version_elem.text = package.get("version", "1.0")
+        
+        exported_at_elem = ET.SubElement(meta_elem, "exported_at")
+        exported_at_elem.text = package.get("exported_at", "")
         
         tags = metadata.get('tags', [])
         if tags:

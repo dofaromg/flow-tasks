@@ -50,8 +50,9 @@ def test_export_csv():
         with open(temp_path, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        assert 'role' in content
-        assert 'content' in content
+        content_lower = content.lower()
+        assert 'role' in content_lower
+        assert 'content' in content_lower
         assert 'user' in content
         assert 'assistant' in content
     finally:

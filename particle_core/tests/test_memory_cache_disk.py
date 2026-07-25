@@ -8,13 +8,47 @@ Test suite for Memory Cache Disk Mapping System
 import sys
 import json
 import time
+import importlib.util
 import tempfile
 from pathlib import Path
 
-# Add memory module to path
-sys.path.insert(0, str(Path(__file__).parent.parent / 'src' / 'memory'))
+# ---------------------------------------------------------------------------
+# Explicit module loading from src/memory/ to avoid sys.modules cache
+# collisions with the older memory_quick_mount in particle_core/src/.
+# Each module is loaded directly from its file; sys.modules is temporarily
+# populated so inter-module imports (e.g. memory_quick_mount → memory_cache_disk)
+# resolve to the correct versions, then restored when done.
+# ---------------------------------------------------------------------------
+_MEM_DIR = Path(__file__).parent.parent / "src" / "memory"
 
-from memory_cache_disk import LRUCache, MemoryCacheDiskMapper
+
+def _load_from_file(logical_name: str, filename: str):
+    """Load a module directly from a file path, bypassing sys.modules cache."""
+    spec = importlib.util.spec_from_file_location(logical_name, str(_MEM_DIR / filename))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+# Step 1: load memory_cache_disk and register under canonical name temporarily
+_prev_mcd = sys.modules.get("memory_cache_disk")
+_mcd = _load_from_file("_mcd_v2", "memory_cache_disk.py")
+sys.modules["memory_cache_disk"] = _mcd
+
+# Step 2: load memory_quick_mount (imports memory_cache_disk → finds canonical name above)
+_prev_mqm = sys.modules.get("memory_quick_mount")
+_mqm = _load_from_file("_mqm_v2", "memory_quick_mount.py")
+sys.modules["memory_quick_mount"] = _mqm
+
+# Step 3: restore sys.modules so other test modules are not affected
+for _name, _prev in [("memory_cache_disk", _prev_mcd), ("memory_quick_mount", _prev_mqm)]:
+    if _prev is not None:
+        sys.modules[_name] = _prev
+    else:
+        sys.modules.pop(_name, None)
+
+LRUCache = _mcd.LRUCache
+MemoryCacheDiskMapper = _mcd.MemoryCacheDiskMapper
 
 
 def test_lru_basic_operations():
@@ -236,8 +270,8 @@ def test_memory_quick_mount_cache_integration():
         with open(config_path, 'w') as f:
             json.dump(config, f)
         
-        # Import and test
-        from memory_quick_mount import MemoryQuickMounter
+        # Use the pre-loaded new module (has set_cached_state, get_cache_stats, etc.)
+        MemoryQuickMounter = _mqm.MemoryQuickMounter
         
         mqm = MemoryQuickMounter(str(config_path))
         
