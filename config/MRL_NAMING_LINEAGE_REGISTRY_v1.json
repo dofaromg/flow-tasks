@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0.0",
+  "origin_signature": "MrLiouWord",
+  "canonical_root": "MRL",
+  "hierarchy": {
+    "MRL": {
+      "role": "root_authority",
+      "children": ["MRL_Mother", "MrLiouAI", "FlowAgent", "flowmemorysync"]
+    },
+    "MRL_Mother": {
+      "role": "canonical_mother_implementation",
+      "parent": "MRL"
+    },
+    "MrLiouAI": {
+      "role": "product_runtime_identity",
+      "parent": "MRL",
+      "may_replace_root": false
+    },
+    "FlowAgent": {
+      "role": "historical_runtime_lineage",
+      "parent": "MRL",
+      "preserve_as_alias": true
+    },
+    "flowmemorysync": {
+      "role": "infrastructure_provider_lineage",
+      "parent": "MRL",
+      "preserve_as_alias": true
+    }
+  },
+  "protected_path_prefixes": [
+    "MRL_Mother/MRL_MotherSource_Lineage_v1/",
+    "MRL_Mother/08_sources/",
+    "MRL_Mother/root_sources/"
+  ],
+  "coordinated_migration_identifiers": [
+    "kubernetes_namespace",
+    "container_image",
+    "container_registry",
+    "cloud_project_id",
+    "dns_route",
+    "service_name",
+    "secret_name",
+    "database_key",
+    "persisted_schema_key",
+    "package_import"
+  ],
+  "rename_contract": {
+    "required_fields": [
+      "source_name",
+      "canonical_name",
+      "compatibility_alias",
+      "dependency_set",
+      "rollback"
+    ],
+    "global_string_replace_allowed": false,
+    "legacy_zero_match_required": false,
+    "lineage_preservation_required": true
+  }
+}
