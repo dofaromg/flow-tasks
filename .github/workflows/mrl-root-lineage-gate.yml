@@ -1,0 +1,42 @@
+name: MRL Root Lineage Gate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, MRL_root_recovery_v1]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-mrl-root:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate registry and authority
+        run: python scripts/validate_mrl_root_lineage.py
+
+      - name: Protect historical lineage on pull requests
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: python scripts/validate_mrl_root_lineage.py "$BASE_SHA" "$HEAD_SHA"
+
+      - name: Verify required files are real
+        shell: bash
+        run: |
+          test -s MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md
+          test -s config/MRL_NAMING_LINEAGE_REGISTRY_v1.json
+          test -s scripts/validate_mrl_root_lineage.py
+          grep -q 'origin_signature: MrLiouWord' MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md
