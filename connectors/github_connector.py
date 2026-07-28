@@ -1,6 +1,8 @@
 """
 GitHub Connector
 GitHub 連接器
+origin_signature: MrLiouWord
+layer: L4 WORLD / 雲上雲外部服務連接器
 
 Integration with GitHub API for repository and workflow management
 整合 GitHub API 用於倉庫和工作流程管理

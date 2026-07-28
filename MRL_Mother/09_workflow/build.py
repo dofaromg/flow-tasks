@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# origin_signature: MrLiouWord
+# layer: L5 STORE / 記憶封存建構入口腳本
 from modules.FluinMemoryVault import build_memory
 print("Fluin Memory Vault Builder")
 log_path = "logs/flmem.log"

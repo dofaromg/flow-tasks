@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# origin_signature: MrLiouWord
+# layer: L2 MARK / 粒子語言記錄器模組
 # FluinRecorder - 粒子語言記錄器模組
 
 from datetime import datetime

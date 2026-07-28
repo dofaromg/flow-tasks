@@ -1,6 +1,8 @@
 """
 Base Connector Class
 基礎連接器類別
+origin_signature: MrLiouWord
+layer: L4 WORLD / 雲端服務連接器基礎抽象層
 
 Abstract base class for all cloud service connectors
 所有雲端服務連接器的抽象基類

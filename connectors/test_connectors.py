@@ -1,6 +1,8 @@
 """
 Tests for refactored connectors
 連接器重構測試
+origin_signature: MrLiouWord
+layer: L3 LAW / 連接器驗收測試層
 """
 
 import pytest

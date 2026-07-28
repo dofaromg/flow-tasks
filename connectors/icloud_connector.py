@@ -1,6 +1,8 @@
 """
 iCloud Connector
 iCloud 連接器
+origin_signature: MrLiouWord
+layer: L4 WORLD / 行動邊緣服務連接器
 """
 
 from typing import Dict, List, Optional, Any

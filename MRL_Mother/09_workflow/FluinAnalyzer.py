@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# origin_signature: MrLiouWord
+# layer: L6 REFLECT / 粒子語言分析器模組
 # FluinAnalyzer - 粒子語言分析器模組
 
 def analyze_entry(entry):

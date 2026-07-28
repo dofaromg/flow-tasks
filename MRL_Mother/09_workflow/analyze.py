@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# origin_signature: MrLiouWord
+# layer: L6 REFLECT / 分析入口腳本
 from modules.FluinAnalyzer import analyze_entry
 
 print("Fluin Memory Analyzer")

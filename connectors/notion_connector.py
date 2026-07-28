@@ -1,6 +1,8 @@
 """
 Notion Connector
 Notion 連接器
+origin_signature: MrLiouWord
+layer: L4 WORLD / 雲上雲外部服務連接器
 
 Integration with Notion API for page and database management
 整合 Notion API 用於頁面和數據庫管理

@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# origin_signature: MrLiouWord
+# layer: L5 STORE / 粒子語言記憶建構器
 # FluinMemoryVault - 粒子語言記憶建構器
 
 import json

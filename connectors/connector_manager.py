@@ -1,6 +1,8 @@
 """
 Connector Manager
 連接器管理器
+origin_signature: MrLiouWord
+layer: L4 WORLD / 多雲端服務集中管理層
 
 Centralized management for all cloud service connectors
 所有雲端服務連接器的集中管理

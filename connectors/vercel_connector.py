@@ -1,6 +1,8 @@
 """
 Vercel Connector
 Vercel 連接器
+origin_signature: MrLiouWord
+layer: L4 WORLD / 雲上雲外部服務連接器
 """
 
 from typing import Dict, List, Optional, Any
