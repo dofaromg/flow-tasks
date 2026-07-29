@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-MRL_Billing_Layer_v1.py — 內部用量層:額度 / 計量(MRLIouAI 模型內部使用)
+MRL_Billing_Layer_v1.py — 金錢層:計費 / 額度(母體缺層補完 3/3)
 origin_signature: MrLiouWord
 layer: L3 LAW + L7 LOOP
 
-本層為 MRLIouAI 母體內部用量計量核心，非商業計費模組。
-所有方案均為內部使用層，不對外收費、不對接外部金流。
-純 stdlib、零外部套件。
+Session_Package 點名缺層:Money Layer(billing / quota)。
+母體要「可營運」必須有計費與額度。本層補上:用量計數、額度限制、計費記錄。
+純 stdlib、零外部金流公司(對接真實金流由 Mr.liou 在實機掛,本層為母體自有計量核心)。
 
 對齊:
-  - rl_03 audit:每筆用量/計量寫記錄
+  - rl_03 audit:每筆用量/計費寫記錄
   - deny-by-default:超額拒絕(quota_exceeded)
   - LAW-0:記錄帶 origin_signature
-  - 內部使用:全方案 price=0.0，僅作額度分層管理
 
 CLI:python3 09_workflow/MRL_Billing_Layer_v1.py
 """
@@ -28,11 +27,11 @@ from MRL_utils import ORIGIN_SIGNATURE
 _REPO = pathlib.Path(__file__).resolve().parent.parent
 _STORE = _REPO / "data" / "MRL_billing.json"
 
-# 內部使用額度層(MRLIouAI 模型內部用途，非商業，price 均為 0.0)
+# 方案定義(可營運:免費/基礎/專業)
 PLANS = {
-    "standard":  {"monthly_quota": 100,   "price": 0.0,  "unit": "chat"},
-    "extended":  {"monthly_quota": 5000,  "price": 0.0,  "unit": "chat"},
-    "unlimited": {"monthly_quota": 100000,"price": 0.0,  "unit": "chat"},
+    "free":  {"monthly_quota": 100,   "price": 0.0,   "unit": "chat"},
+    "basic": {"monthly_quota": 5000,  "price": 9.9,   "unit": "chat"},
+    "pro":   {"monthly_quota": 100000,"price": 99.0,  "unit": "chat"},
 }
 
 
@@ -60,7 +59,7 @@ class MRL_BillingLayer:
     def _month(self) -> str:
         return time.strftime("%Y-%m")
 
-    def register(self, user_id: str, plan: str = "standard") -> Dict[str, Any]:
+    def register(self, user_id: str, plan: str = "free") -> Dict[str, Any]:
         if plan not in PLANS:
             return {"error": f"unknown plan: {plan}", "plans": list(PLANS)}
         self._data["users"][user_id] = {
