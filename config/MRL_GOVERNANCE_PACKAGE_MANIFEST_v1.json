@@ -1,0 +1,255 @@
+{
+  "schema_version": "1.0.0",
+  "package": "MRL_Root_Authorization_Governance_v1",
+  "origin_signature": "MrLiouWord",
+  "audit_base_sha": "689491edd83317989779172ea5b9f72ab3e14f72",
+  "delivery_mode": "additive_branch_and_draft_pull_request",
+  "prohibitions": [
+    "no_direct_main_write",
+    "no_merge",
+    "no_delete",
+    "no_global_rename",
+    "no_implicit_authorization"
+  ],
+  "expected_file_count": 27,
+  "dependency_tree": {
+    "authority": [
+      "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+      "MRL_Mother/00_rootlaw/MRL_AUTHORIZATION_AND_OPERATING_RIGHTS_v1.md"
+    ],
+    "classification": [
+      "config/MRL_NAMING_LINEAGE_REGISTRY_v1.json",
+      "config/MRL_HISTORICAL_EXTENSION_MAP_v1.json"
+    ],
+    "authorization": [
+      "config/MRL_AUTHORIZATION_REGISTRY_v1.json",
+      "config/MRL_MIGRATION_CONTRACTS_v1.json"
+    ],
+    "enforcement": [
+      "scripts/validate_mrl_governance.py",
+      ".github/workflows/mrl-root-governance-gate.yml",
+      ".github/CODEOWNERS"
+    ],
+    "runtime": [
+      "MRL_Mother/09_workflow/MRL_FlowAgent_LawEngine_v1.py",
+      "MRL_Mother/09_workflow/MRL_OriginBoundary_Guard_v1.py"
+    ],
+    "evidence": [
+      "MRL_Mother/06_trace/MRL_GITHUB_CHANGE_INCIDENT_20260729_v1.md",
+      "MRL_Mother/06_trace/MRL_GOVERNANCE_PACKAGE_SHA256SUMS_v1.txt"
+    ]
+  },
+  "requested_vs_delivered": {
+    "requested": "find missing governance and add laws and explanations",
+    "delivered": "27 governed artifacts including 21 new files and 5 runtime/rule/test modifications plus one SHA256 evidence file",
+    "coverage_target": "100%"
+  },
+  "artifacts": [
+    {
+      "path": "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+      "dependencies": [],
+      "required": true
+    },
+    {
+      "path": "MRL_Mother/00_rootlaw/MRL_AUTHORIZATION_AND_OPERATING_RIGHTS_v1.md",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md"
+      ],
+      "required": true
+    },
+    {
+      "path": "MRL_Mother/00_rootlaw/MRL_EXTERNAL_MATERIAL_EXTENSION_MAP_v1.md",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+        "config/MRL_NAMING_LINEAGE_REGISTRY_v1.json",
+        "config/MRL_HISTORICAL_EXTENSION_MAP_v1.json"
+      ],
+      "required": true
+    },
+    {
+      "path": "MRL_Mother/00_rootlaw/MRL_LICENSE_SCOPE_BOUNDARY_v1.md",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+        "config/MRL_LICENSE_SCOPE_REGISTRY_v1.json"
+      ],
+      "required": true
+    },
+    {
+      "path": "MRL_Mother/00_rootlaw/MRL_GITHUB_PROTECTION_SETUP_v1.md",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+        ".github/CODEOWNERS"
+      ],
+      "required": true
+    },
+    {
+      "path": "MRL_Mother/00_rootlaw/rootlaw.yaml",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+        "config/MRL_AUTHORIZATION_REGISTRY_v1.json",
+        "config/MRL_HISTORICAL_EXTENSION_MAP_v1.json"
+      ],
+      "required": true
+    },
+    {
+      "path": "config/MRL_NAMING_LINEAGE_REGISTRY_v1.json",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md"
+      ],
+      "required": true
+    },
+    {
+      "path": "config/MRL_HISTORICAL_EXTENSION_MAP_v1.json",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md"
+      ],
+      "required": true
+    },
+    {
+      "path": "config/MRL_AUTHORIZATION_REGISTRY_v1.json",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md"
+      ],
+      "required": true
+    },
+    {
+      "path": "config/MRL_MIGRATION_CONTRACTS_v1.json",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md"
+      ],
+      "required": true
+    },
+    {
+      "path": "config/MRL_CRITICAL_ASSET_INVENTORY_v1.json",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+        "config/MRL_NAMING_LINEAGE_REGISTRY_v1.json"
+      ],
+      "required": true
+    },
+    {
+      "path": "config/MRL_LICENSE_SCOPE_REGISTRY_v1.json",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md"
+      ],
+      "required": true
+    },
+    {
+      "path": "MRL_Mother/MRL_Extensions/README.md",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+        "config/MRL_HISTORICAL_EXTENSION_MAP_v1.json"
+      ],
+      "required": true
+    },
+    {
+      "path": "MRL_Mother/09_workflow/MRL_FlowAgent_LawEngine_v1.py",
+      "dependencies": [
+        "config/MRL_HISTORICAL_EXTENSION_MAP_v1.json",
+        "MRL_Mother/00_rootlaw/rootlaw.yaml"
+      ],
+      "required": true
+    },
+    {
+      "path": "MRL_Mother/09_workflow/MRL_OriginBoundary_Guard_v1.py",
+      "dependencies": [
+        "config/MRL_HISTORICAL_EXTENSION_MAP_v1.json",
+        "MRL_Mother/09_workflow/MRL_FlowAgent_LawEngine_v1.py"
+      ],
+      "required": true
+    },
+    {
+      "path": "MRL_Mother/tests_mrl_ai_system/test_MRL_flowagent_lawengine.py",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+        "scripts/validate_mrl_governance.py"
+      ],
+      "required": true
+    },
+    {
+      "path": "MRL_Mother/tests_mrl_ai_system/test_MRL_origin_boundary_guard.py",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+        "scripts/validate_mrl_governance.py"
+      ],
+      "required": true
+    },
+    {
+      "path": "MRL_Mother/tests_mrl_ai_system/test_MRL_governance_contracts.py",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+        "scripts/validate_mrl_governance.py"
+      ],
+      "required": true
+    },
+    {
+      "path": "scripts/validate_mrl_governance.py",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+        "config/MRL_NAMING_LINEAGE_REGISTRY_v1.json",
+        "config/MRL_HISTORICAL_EXTENSION_MAP_v1.json",
+        "config/MRL_AUTHORIZATION_REGISTRY_v1.json",
+        "config/MRL_MIGRATION_CONTRACTS_v1.json"
+      ],
+      "required": true
+    },
+    {
+      "path": "scripts/Validate-MRLRootGovernance.ps1",
+      "dependencies": [
+        "scripts/validate_mrl_governance.py"
+      ],
+      "required": true
+    },
+    {
+      "path": ".github/CODEOWNERS",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md"
+      ],
+      "required": true
+    },
+    {
+      "path": ".github/pull_request_template.md",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+        "config/MRL_AUTHORIZATION_REGISTRY_v1.json",
+        "config/MRL_MIGRATION_CONTRACTS_v1.json"
+      ],
+      "required": true
+    },
+    {
+      "path": ".github/workflows/mrl-root-governance-gate.yml",
+      "dependencies": [
+        "scripts/validate_mrl_governance.py"
+      ],
+      "required": true
+    },
+    {
+      "path": ".github/workflows/mrl-governance-tests.yml",
+      "dependencies": [
+        "scripts/validate_mrl_governance.py",
+        "MRL_Mother/tests_mrl_ai_system/test_MRL_governance_contracts.py"
+      ],
+      "required": true
+    },
+    {
+      "path": "MRL_Mother/06_trace/MRL_GITHUB_CHANGE_INCIDENT_20260729_v1.md",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+        "config/MRL_CRITICAL_ASSET_INVENTORY_v1.json"
+      ],
+      "required": true
+    },
+    {
+      "path": "config/MRL_GOVERNANCE_PACKAGE_MANIFEST_v1.json",
+      "dependencies": [],
+      "required": true
+    },
+    {
+      "path": "MRL_Mother/06_trace/MRL_GOVERNANCE_PACKAGE_SHA256SUMS_v1.txt",
+      "dependencies": [
+        "config/MRL_GOVERNANCE_PACKAGE_MANIFEST_v1.json"
+      ],
+      "required": true
+    }
+  ]
+}

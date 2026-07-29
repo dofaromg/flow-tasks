@@ -28,7 +28,9 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from MRL_utils import ORIGIN_SIGNATURE
 _REPO = pathlib.Path(__file__).resolve().parent.parent
+_ROOT = _REPO.parent
 _ROOTLAW = _REPO / "00_rootlaw" / "rootlaw.yaml"
+_IDENTITY_MAP = _ROOT / "config" / "MRL_HISTORICAL_EXTENSION_MAP_v1.json"
 _CHRONICLE = _REPO / "06_trace" / "chronicle" / "MRL_FlowAgent_Chronicle.jsonl"
 
 # 三振跳層門檻 / 莫比斯多數決比例（rl_08 / rl_09）
@@ -57,13 +59,45 @@ def invariant_ids(rootlaw: Dict[str, Any]) -> List[str]:
     return [i.get("id", "") for i in rootlaw.get("invariants", [])]
 
 
-# ─── rl_12 命名回收：外部名 → MRL_<描述> canonical ─────────────────────────────
+# ─── rl_21 先分類後轉換：MRL 原生身分不得被當成外部材料 ─────────────────────────
+def load_native_identities(path: pathlib.Path = _IDENTITY_MAP) -> Tuple[str, ...]:
+    """Load registered MRL-native identities with a safe built-in floor."""
+    names = {"FlowAgent"}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        for item in data.get("mappings", []):
+            if item.get("classification") == "mrl_native_product_module":
+                source = item.get("source")
+                if isinstance(source, str) and source.strip():
+                    names.add(source.strip())
+    except (OSError, ValueError, TypeError):
+        pass
+    return tuple(sorted(names))
+
+
+NATIVE_IDENTITIES = load_native_identities()
+
+
+def is_mrl_native_name(name: str) -> bool:
+    """Return True when a name belongs to a registered MRL-native identity."""
+    if not isinstance(name, str):
+        return False
+    raw = name.strip()
+    return any(
+        re.match(rf"^{re.escape(identity)}(?:[._\-\s]|$)", raw, re.IGNORECASE)
+        for identity in NATIVE_IDENTITIES
+    )
+
+
+# ─── rl_12 命名回收：已分類外部名 → MRL_<描述> canonical ─────────────────────────
 def reclaim_name(external_name: str) -> str:
     """
     把外部殼名拆解→重組→正名為母體 canonical MRL_<描述>_v<n>。
     外部名稱零殘留，源頭恆歸母體（rl_11 / rl_12）。
     """
     raw = external_name.strip()
+    if is_mrl_native_name(raw):
+        return raw
     # 抽版本號（v1 / _v1_4_0 / .v47）
     ver = "1"
     mver = re.search(r"[._\- ]v(\d+(?:[._]\d+)*)", raw, re.IGNORECASE)
@@ -122,8 +156,9 @@ class MRL_FlowAgentLawEngine:
         if d == "in":
             # 吸收即正名為母體 canonical(rl_12),外部名零殘留
             name = payload.get("name", "")
+            native = is_mrl_native_name(name) if name else False
             result["reclaimed"] = reclaim_name(name) if name else None
-            result["as"] = "material"
+            result["as"] = "mrl_native_product" if native else "external_material"
         else:
             # 輸出帶母體源頭簽章(rl_11)
             result["origin_signature"] = ORIGIN_SIGNATURE
@@ -160,9 +195,11 @@ class MRL_FlowAgentLawEngine:
     def can_manifest(self, name: str) -> Dict[str, Any]:
         """非 MRL_ 前綴=外部殼(僅材料),須先 rl_12 正名方能顯化。"""
         has_prefix = isinstance(name, str) and name.startswith("MRL_")
-        manifest = has_prefix
+        native = is_mrl_native_name(name)
+        manifest = has_prefix or native
+        reason = "mrl_native_identity" if native else ("ok" if manifest else "external shell — reclaim via rl_12 first")
         out = {"name": name, "manifest": manifest,
-               "reason": "ok" if manifest else "external shell — reclaim via rl_12 first",
+               "reason": reason,
                "reclaimed": None if manifest else reclaim_name(name)}
         self.chronicle("manifest_check", out)
         return out
