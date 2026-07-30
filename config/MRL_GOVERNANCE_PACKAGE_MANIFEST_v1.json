@@ -11,7 +11,7 @@
     "no_global_rename",
     "no_implicit_authorization"
   ],
-  "expected_file_count": 27,
+  "expected_file_count": 28,
   "dependency_tree": {
     "authority": [
       "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
@@ -36,12 +36,13 @@
     ],
     "evidence": [
       "MRL_Mother/06_trace/MRL_GITHUB_CHANGE_INCIDENT_20260729_v1.md",
-      "MRL_Mother/06_trace/MRL_GOVERNANCE_PACKAGE_SHA256SUMS_v1.txt"
+      "MRL_Mother/06_trace/MRL_GOVERNANCE_PACKAGE_SHA256SUMS_v1.txt",
+      "docs/governance/MRL_THREE_WAY_AUDIT_SYSTEM_MAP_20260730.md"
     ]
   },
   "requested_vs_delivered": {
     "requested": "find missing governance and add laws and explanations",
-    "delivered": "27 governed artifacts including 21 new files and 5 runtime/rule/test modifications plus one SHA256 evidence file",
+    "delivered": "28 governed artifacts including 22 new files and 5 runtime/rule/test modifications plus one SHA256 evidence file; includes the three-way system, authorization, provenance, and causal audit",
     "coverage_target": "100%"
   },
   "artifacts": [
@@ -236,6 +237,15 @@
       "dependencies": [
         "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
         "config/MRL_CRITICAL_ASSET_INVENTORY_v1.json"
+      ],
+      "required": true
+    },
+    {
+      "path": "docs/governance/MRL_THREE_WAY_AUDIT_SYSTEM_MAP_20260730.md",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+        "config/MRL_AUTHORIZATION_REGISTRY_v1.json",
+        "MRL_Mother/06_trace/MRL_GITHUB_CHANGE_INCIDENT_20260729_v1.md"
       ],
       "required": true
     },
