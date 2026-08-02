@@ -1,5 +1,6 @@
 import hashlib
 import importlib.util
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,6 +9,7 @@ MODULE_PATH = Path(__file__).parents[1] / "runtime" / "relay_authority.py"
 SPEC = importlib.util.spec_from_file_location("relay_authority", MODULE_PATH)
 relay_authority = importlib.util.module_from_spec(SPEC)
 assert SPEC and SPEC.loader
+sys.modules["relay_authority"] = relay_authority
 SPEC.loader.exec_module(relay_authority)
 
 
