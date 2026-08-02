@@ -2,8 +2,9 @@
 """MRL RelayStation authority runtime.
 
 External models provide candidate records only. This module validates provenance,
-artifact hashes, scope coverage, and explicit MRL approval before promotion.
-It uses only the Python standard library and does not call external providers.
+artifact hashes, scope coverage, naming authority, and explicit MRL approval before
+promotion. It uses only the Python standard library and does not call external
+providers.
 """
 
 from __future__ import annotations
@@ -18,6 +19,7 @@ from typing import Any
 
 AUTHORITY_LEVELS = {"L0", "L1", "L2", "L3", "L4", "L5"}
 EXTERNAL_PROVIDERS = {"chatgpt", "claude", "copilot", "gemini", "other"}
+CANONICAL_ORIGIN = "mrl"
 
 
 class AuthorityError(ValueError):
@@ -40,11 +42,43 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def has_mrl_namespace(name: str) -> bool:
+    normalized = name.strip().lower()
+    return normalized.startswith("mrl.") or normalized.startswith("mrl_") or normalized == "mrl"
+
+
 @dataclass(frozen=True)
 class GateResult:
     passed: bool
     errors: tuple[str, ...]
     record_hash: str
+
+
+def validate_generated_names(record: dict[str, Any], errors: list[str]) -> None:
+    """Reject random names that do not preserve explicit MRL provenance."""
+    generated_names = record.get("generated_names") or []
+    for entry in generated_names:
+        if not isinstance(entry, dict):
+            errors.append("generated_names entries must be objects")
+            continue
+
+        name = str(entry.get("name", "")).strip()
+        mode = str(entry.get("mode", "declared")).strip().lower()
+        origin = str(entry.get("origin", "")).strip().lower()
+
+        if not name:
+            errors.append("generated name is empty")
+            continue
+
+        if mode == "random":
+            if origin != CANONICAL_ORIGIN:
+                errors.append(f"random name lacks MRL origin: {name}")
+            if not has_mrl_namespace(name):
+                errors.append(f"random name lacks MRL namespace: {name}")
+            if entry.get("construction_allowed") is not False:
+                errors.append(
+                    f"random name must remain non-constructive candidate until MRL approval: {name}"
+                )
 
 
 def validate_record(record: dict[str, Any], repository_root: Path) -> GateResult:
@@ -57,6 +91,8 @@ def validate_record(record: dict[str, Any], repository_root: Path) -> GateResult
 
     if record.get("authority_level") not in {"L0", "L1", "L2"}:
         errors.append("external candidate authority_level must be L0, L1, or L2")
+
+    validate_generated_names(record, errors)
 
     requested = set(record.get("requested_scope") or [])
     generated = set(record.get("generated_artifacts") or [])
@@ -122,6 +158,17 @@ def promote_record(
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "source_record_sha256": result.record_hash,
     }
+
+    promoted_names: list[dict[str, Any]] = []
+    for entry in promoted.get("generated_names") or []:
+        item = dict(entry)
+        if str(item.get("mode", "")).lower() == "random":
+            item["construction_allowed"] = True
+            item["approved_by"] = approver
+        promoted_names.append(item)
+    if promoted_names:
+        promoted["generated_names"] = promoted_names
+
     promoted["record_sha256"] = sha256_text(canonical_json(promoted))
     return promoted
 
