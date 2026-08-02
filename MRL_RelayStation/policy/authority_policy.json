@@ -1,0 +1,52 @@
+{
+  "policy_id": "MRL_AUTHORITY_POLICY_v1",
+  "owner": "MRL",
+  "default_external_authority_level": "L0",
+  "providers": {
+    "chatgpt": {
+      "role": "external_reasoner",
+      "may_propose": true,
+      "may_execute": false,
+      "may_promote": false
+    },
+    "claude": {
+      "role": "external_reasoner_and_code_generator",
+      "may_propose": true,
+      "may_execute": false,
+      "may_promote": false
+    },
+    "copilot": {
+      "role": "external_code_agent",
+      "may_propose": true,
+      "may_execute": false,
+      "may_promote": false
+    },
+    "github": {
+      "role": "version_ledger",
+      "may_propose": false,
+      "may_execute": true,
+      "may_promote": false
+    },
+    "ci": {
+      "role": "test_evidence_provider",
+      "may_propose": false,
+      "may_execute": true,
+      "may_promote": false
+    }
+  },
+  "promotion": {
+    "L0_to_L1": ["normalize", "record_provenance"],
+    "L1_to_L2": ["verify_hashes", "verify_scope", "verify_dependencies", "run_tests"],
+    "L2_to_L3": ["explicit_mrl_approval"],
+    "L3_to_L4": ["release_manifest", "release_signature"],
+    "L4_to_L5": ["root_law_change_process", "explicit_owner_approval"]
+  },
+  "prohibitions": [
+    "external_provider_self_promotion",
+    "model_claimed_completion_without_gate",
+    "github_commit_as_canonical_authority",
+    "ci_success_as_semantic_authority",
+    "source_branch_overwrite_by_relay",
+    "untracked_artifact_adoption"
+  ]
+}
