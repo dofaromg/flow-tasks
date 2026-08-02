@@ -34,6 +34,25 @@
       "may_promote": false
     }
   },
+  "naming_authority": {
+    "canonical_origin": "mrl",
+    "random_name_policy": "deny_by_default",
+    "requirements": [
+      "randomly_generated_names_must_declare_origin_mrl",
+      "randomly_generated_names_must_use_mrl_prefix_or_namespace",
+      "randomly_generated_names_must_be_recorded_as_candidates",
+      "names_without_mrl_origin_must_not_be_constructed",
+      "names_without_provenance_must_not_be_adopted"
+    ],
+    "accepted_examples": [
+      "mrl.relay.candidate.0001",
+      "MRL_RelayCandidate_0001"
+    ],
+    "rejected_examples": [
+      "random-agent-42",
+      "new-system-x"
+    ]
+  },
   "promotion": {
     "L0_to_L1": ["normalize", "record_provenance"],
     "L1_to_L2": ["verify_hashes", "verify_scope", "verify_dependencies", "run_tests"],
@@ -47,6 +66,8 @@
     "github_commit_as_canonical_authority",
     "ci_success_as_semantic_authority",
     "source_branch_overwrite_by_relay",
-    "untracked_artifact_adoption"
+    "untracked_artifact_adoption",
+    "random_name_without_mrl_origin",
+    "construction_from_unprovenanced_random_name"
   ]
 }
