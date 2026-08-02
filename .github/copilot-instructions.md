@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This is the **FlowAgent GKE Starter** repository, featuring a complete GitOps + CI/CD deployment framework with the **MRLiou Particle Language Core System** (粒子語言核心系統). The project combines Kubernetes orchestration with a unique particle-based logic execution framework.
+This is the **MrLiouAI GKE Starter** repository, featuring a complete GitOps + CI/CD deployment framework with the **MRLiou Particle Language Core System** (粒子語言核心系統). The project combines Kubernetes orchestration with a unique particle-based logic execution framework.
 
 ### Key Components
 
@@ -153,11 +153,11 @@ This repository includes MongoDB as the primary database:
 - **Location**: `apps/mongodb/`
 - **Deployment**: StatefulSet pattern with persistent storage
 - **Version**: MongoDB 6.0
-- **Namespace**: `flowagent`
+- **Namespace**: `mrliouai`
 - **Port**: 27017
 
 ### Database Configuration
-- **Connection string format**: `mongodb://admin:<password>@mongodb.flowagent.svc.cluster.local:27017`
+- **Connection string format**: `mongodb://admin:<password>@mongodb.mrliouai.svc.cluster.local:27017`
 - **Credentials**: Stored in `apps/mongodb/secret.yaml` (change for production!)
 - **Persistent storage**: 10Gi PVC at `/data/db`
 - **Resource limits**: 256Mi-512Mi memory, 100m-500m CPU
@@ -174,7 +174,7 @@ The database system is designed to:
 **Connecting to MongoDB**
 ```bash
 # Port forward to local machine
-kubectl port-forward svc/mongodb 27017:27017 -n flowagent
+kubectl port-forward svc/mongodb 27017:27017 -n mrliouai
 
 # Connect using mongosh
 mongosh "mongodb://admin:<password>@localhost:27017"
@@ -183,30 +183,30 @@ mongosh "mongodb://admin:<password>@localhost:27017"
 **Backup and Restore**
 ```bash
 # Backup
-kubectl exec -it deployment/mongodb -n flowagent -- mongodump --out /data/backup
+kubectl exec -it deployment/mongodb -n mrliouai -- mongodump --out /data/backup
 
 # Restore
-kubectl exec -it deployment/mongodb -n flowagent -- mongorestore /data/backup
+kubectl exec -it deployment/mongodb -n mrliouai -- mongorestore /data/backup
 ```
 
 **Scaling Storage**
 ```bash
 # Edit PVC to increase size
-kubectl edit pvc mongodb-pvc -n flowagent
+kubectl edit pvc mongodb-pvc -n mrliouai
 # Update storage size, then restart pod
-kubectl rollout restart deployment/mongodb -n flowagent
+kubectl rollout restart deployment/mongodb -n mrliouai
 ```
 
 **Monitoring Database Health**
 ```bash
 # Check database status
-kubectl exec -it deployment/mongodb -n flowagent -- mongosh --eval "db.adminCommand('ping')"
+kubectl exec -it deployment/mongodb -n mrliouai -- mongosh --eval "db.adminCommand('ping')"
 
 # Check pod logs
-kubectl logs -f deployment/mongodb -n flowagent
+kubectl logs -f deployment/mongodb -n mrliouai
 
 # Check resource usage
-kubectl top pod -n flowagent -l app=mongodb
+kubectl top pod -n mrliouai -l app=mongodb
 ```
 
 ### Database Schema and Migrations
@@ -231,10 +231,10 @@ kubectl top pod -n flowagent -l app=mongodb
 ## Kubernetes and Deployment
 
 ### GCP Project Configuration
-- Default project: `flowmemorysync`
+- Default project: `mrliouai`
 - Default region: `asia-east1`
 - Default zone: `asia-east1-a`
-- Container registry: `asia-east1-docker.pkg.dev/flowmemorysync/flowagent/`
+- Container registry: `asia-east1-docker.pkg.dev/mrliouai/mrliouai/`
 
 ### Deployment Approaches
 1. **GitOps (Argo CD)**: Pull-based deployment from repository
@@ -364,7 +364,7 @@ python src/memory_archive_seed.py interactive
 ### GKE Deployment
 ```bash
 # Set up environment
-export PROJECT_ID=flowmemorysync
+export PROJECT_ID=mrliouai
 export REGION=asia-east1
 export ZONE=asia-east1-a
 

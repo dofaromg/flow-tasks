@@ -16,7 +16,7 @@
 
 ```bash
 # 查看當前部署
-kubectl get svc -n flowagent
+kubectl get svc -n mrliouai
 
 # 重新部署
 kubectl apply -k cluster/overlays/prod/
@@ -66,10 +66,10 @@ kubectl apply -k cluster/overlays/prod/
 
 ```bash
 # 構建
-docker build -t flowagent -f apps/nextjs-frontend/Dockerfile .
+docker build -t mrliouai -f apps/nextjs-frontend/Dockerfile .
 
 # 運行
-docker run -p 3000:3000 flowagent
+docker run -p 3000:3000 mrliouai
 
 # 訪問
 open http://localhost:3000

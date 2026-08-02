@@ -2,7 +2,7 @@
 
 ## Overview
 
-The RootLaw Package v1.0 is a comprehensive governance framework for the FlowAgent GKE Starter repository with the MRLiou Particle Language Core System. It defines 47 laws (42 Root Laws + 5 Execution Laws) that govern system behavior, data integrity, execution control, integration, and documentation.
+The RootLaw Package v1.0 is a comprehensive governance framework for the MrLiouAI GKE Starter repository with the MRLiou Particle Language Core System. It defines 47 laws (42 Root Laws + 5 Execution Laws) that govern system behavior, data integrity, execution control, integration, and documentation.
 
 ## Package Structure
 

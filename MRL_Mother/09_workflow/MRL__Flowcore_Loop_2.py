@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-flowcore_loop.py - AI Computer Runtime (FlowAgent-compatible)
+flowcore_loop.py - AI Computer Runtime (MrLiouAI-compatible)
 origin_signature: MrLiouWord
 product: MRL_AI_SYSTEM
 module_name: FlowCoreLoop

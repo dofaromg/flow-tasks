@@ -36,7 +36,7 @@ if str(_HERE) not in sys.path:
     sys.path.insert(0, str(_HERE))
 
 # rl_12 命名回收實作（單一真實來源,避免重複實作 → No-Delete/Additive 一致）
-from MRL_FlowAgent_LawEngine_v1 import reclaim_name  # noqa: E402
+from MRL_MrLiouAI_LawEngine_v1 import reclaim_name  # noqa: E402
 
 # LAW-0 共用工具從 MRL_utils（L0 RootGate 唯一真實來源）匯入並重新匯出
 from MRL_utils import (  # noqa: E402

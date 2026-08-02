@@ -1,6 +1,6 @@
 # 02_principles
 
-Operational policy rules for FlowAgent (L3 LAW layer), aligned to the AWS Acceptable Use Policy.
+Operational policy rules for MrLiouAI (L3 LAW layer), aligned to the AWS Acceptable Use Policy.
 
 ## Files
 

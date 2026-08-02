@@ -91,25 +91,25 @@
     ],
     "persona_and_resonance": [
       {
-        "filename": "FlowAgent.Observer.Core.flpkg.zip",
+        "filename": "MrLiouAI.Observer.Core.flpkg.zip",
         "kind": "flpkg",
         "size_kb": 0.7,
         "sha256": "62a2b49ad5f1254f"
       },
       {
-        "filename": "FlowAgent.PersonaResonanceMap.v1.json",
+        "filename": "MrLiouAI.PersonaResonanceMap.v1.json",
         "kind": "json",
         "size_kb": 0.4,
         "sha256": "b6bfbeda7a7bfbda"
       },
       {
-        "filename": "FlowAgent_MermaidDiagram.mmd",
+        "filename": "MrLiouAI_MermaidDiagram.mmd",
         "kind": "diagram",
         "size_kb": 0.6,
         "sha256": "b97d5c75d8b87b3d"
       },
       {
-        "filename": "FlowAgent_系統白皮書.pdf",
+        "filename": "MrLiouAI_系統白皮書.pdf",
         "kind": "pdf",
         "size_kb": 47.5,
         "sha256": "34708ddcf3fb24a0"

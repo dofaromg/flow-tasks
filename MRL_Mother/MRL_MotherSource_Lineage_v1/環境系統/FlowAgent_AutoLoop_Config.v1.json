@@ -25,6 +25,6 @@
   "auto_trigger": true,
   "resonance_threshold": 0.7,
   "init_trace": "dream → echo → future → seed → builder.seed",
-  "created_by": "FlowAgent.AutoLoop",
+  "created_by": "MrLiouAI.AutoLoop",
   "version": "v1.0"
 }

@@ -3,10 +3,10 @@
 # String-level concept matching. Runs on DL580.
 import json, os, glob
 
-NOTION_RAW=r"D:\MRL_Mother\EvidenceChain\_sources\Notion\Mrliou_MRL_FlowAgent.raw.json"
+NOTION_RAW=r"D:\MRL_Mother\EvidenceChain\_sources\Notion\Mrliou_MRL_MrLiouAI.raw.json"
 WAVES_DIR=r"D:\MRL_Mother\runtime\waves"
 
-notion_concepts=["FlowAgent","Fluin","SEED","δP₀","Layer","Law Layer","Zoom Engine",
+notion_concepts=["MrLiouAI","Fluin","SEED","δP₀","Layer","Law Layer","Zoom Engine",
  "MemoryLayer","CollapseEngine","Particle","粒子","反推","映射","地球儀",
  "Flow_SymbolicReason","Flow_ProbReason","Flow_Fuse","Flow_Planner","Flow_Control",
  "Flow_ToolUse","Flow_Orchestrate","Flow_Explain"]
@@ -42,7 +42,7 @@ for nc in notion_concepts:
     # pick best dl580 target concept that co-occurs
     target=""
     if dmatch>0: target="wave_gate_receipts(text)"
-    rows.append({"notion_page":"Mrliou_MRL_FlowAgent","notion_concept":nc,
+    rows.append({"notion_page":"Mrliou_MRL_MrLiouAI","notion_concept":nc,
                  "notion_match_count":nmatch,"dl580_match_target":target or "wave_gate_receipts",
                  "dl580_match_count":dmatch,
                  "relation_type":"concept_string","status":status,
@@ -54,7 +54,7 @@ for dc in dl580_concepts:
     elif dmatch>0 and nmatch==0: status="runtime_only"
     elif nmatch>0 and dmatch==0: status="notion_only"
     else: status="pending_review"
-    rows.append({"notion_page":"Mrliou_MRL_FlowAgent","notion_concept":dc+"(dl580_term)",
+    rows.append({"notion_page":"Mrliou_MRL_MrLiouAI","notion_concept":dc+"(dl580_term)",
                  "notion_match_count":nmatch,"dl580_match_target":"wave_gate_receipts",
                  "dl580_match_count":dmatch,"relation_type":"runtime_term",
                  "status":status,"notes":"dl580-origin term checked against notion page"})

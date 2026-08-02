@@ -21,7 +21,7 @@
 
 ## 🎯 專案介紹 Project Introduction
 
-**FlowAgent GKE Starter** 是一個完整的 GitOps + CI/CD 部署框架，結合：
+**MrLiouAI GKE Starter** 是一個完整的 GitOps + CI/CD 部署框架，結合：
 
 - ✅ Next.js 14 前端應用
 - ✅ GrowthBook 功能旗標系統

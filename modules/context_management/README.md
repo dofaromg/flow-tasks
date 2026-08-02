@@ -623,7 +623,7 @@ pip install sentence-transformers
 
 - [Particle Language Core System](../../particle_core/README.md)
 - [Memory Archive Seed System](../../particle_core/src/memory_archive_seed.py)
-- [FlowAgent Architecture](../../ARCHITECTURE.md)
+- [MrLiouAI Architecture](../../ARCHITECTURE.md)
 
 ---
 
@@ -639,4 +639,4 @@ Built on the MRLiou Particle Language Core System (粒子語言核心系統).
 
 **Version**: 1.0.0  
 **Last Updated**: 2026-01-03  
-**Maintainer**: FlowAgent Team
+**Maintainer**: MrLiouAI Team

@@ -1,5 +1,5 @@
 #!/bin/bash
-# FlowAgent GKE 叢集一鍵初始化腳本
+# MrLiouAI GKE 叢集一鍵初始化腳本
 # 
 # 使用方法：
 # 1. 在 Google Cloud Shell 中執行此腳本
@@ -16,16 +16,16 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo -e "${GREEN}========================================${NC}"
-echo -e "${GREEN}FlowAgent GKE 叢集初始化${NC}"
+echo -e "${GREEN}MrLiouAI GKE 叢集初始化${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo ""
 
 # 配置參數（可修改）
-export PROJECT_ID=${PROJECT_ID:-flowmemorysync}
+export PROJECT_ID=${PROJECT_ID:-mrliouai}
 export REGION=${REGION:-asia-east1}
 export ZONE=${ZONE:-asia-east1-a}
 export CLUSTER_NAME=${CLUSTER_NAME:-modular-cluster}
-export NS=${NS:-flowagent}
+export NS=${NS:-mrliouai}
 
 echo -e "${YELLOW}配置參數：${NC}"
 echo "  PROJECT_ID: $PROJECT_ID"

@@ -531,4 +531,4 @@ python particle_core/src/memory/memory_cache_disk.py
 
 **版本 (Version)**: 1.0.0  
 **更新日期 (Last Updated)**: 2026-01-02  
-**作者 (Author)**: FlowAgent Team
+**作者 (Author)**: MrLiouAI Team

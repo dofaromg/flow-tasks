@@ -190,9 +190,9 @@
       "MRL_Node_ID": "MRL.NODE.07.Persona",
       "MRL_Layer": "L4",
       "MRL_Source": [
-        "seed:FlowAgent.TotalCore.Unity.v3"
+        "seed:MrLiouAI.TotalCore.Unity.v3"
       ],
-      "MRL_Trace": "mrl_particle::seed:FlowAgent.TotalCore.Unity.v3",
+      "MRL_Trace": "mrl_particle::seed:MrLiouAI.TotalCore.Unity.v3",
       "MRL_Map_Position": {
         "axis": "mainline",
         "index": 7,

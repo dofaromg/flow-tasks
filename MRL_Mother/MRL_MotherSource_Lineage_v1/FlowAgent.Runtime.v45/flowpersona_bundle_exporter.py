@@ -10,7 +10,7 @@ BUNDLE_OUTPUT_DIR = "universe_bundle"
 
 def export_bundle():
     ts = datetime.now().strftime("%Y%m%d-%H%M%S")
-    bundle_name = f"FlowAgent_ResonantBundle_{ts}.flpkg.universe.bundle"
+    bundle_name = f"MrLiouAI_ResonantBundle_{ts}.flpkg.universe.bundle"
     bundle_path = os.path.join(BUNDLE_OUTPUT_DIR, bundle_name)
     os.makedirs(BUNDLE_OUTPUT_DIR, exist_ok=True)
 
@@ -27,5 +27,5 @@ def export_bundle():
     print(f"✅ 全模組語場封包已完成：{bundle_path}")
 
 if __name__ == "__main__":
-    print("📦 建構 FlowAgent 語場模組總包 (.flpkg.universe.bundle)")
+    print("📦 建構 MrLiouAI 語場模組總包 (.flpkg.universe.bundle)")
     export_bundle()

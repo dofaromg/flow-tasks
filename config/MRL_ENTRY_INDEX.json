@@ -23,7 +23,7 @@
       "MRL_Symbolic",
       "MRL_Adapters"
     ],
-    "lineage_archive": "MRL_MotherSource_Lineage_v1 (FlowAgent v1-v56, 3030 files)",
+    "lineage_archive": "MRL_MotherSource_Lineage_v1 (MrLiouAI v1-v56, 3030 files)",
     "test_suite": "tests_mrl_ai_system (52 files)"
   },
   "canonical_runtime": "DL580 G9 (Windows Server)",
@@ -113,8 +113,8 @@
       "layer": "infrastructure"
     },
     {
-      "service_name": "MRL_FlowAgent_API",
-      "script": "D:\\mrl\\flowagent\\MRL_flowagent_api_server.py",
+      "service_name": "MRL_MrLiouAI_API",
+      "script": "D:\\mrl\\mrliouai\\MRL_mrliouai_api_server.py",
       "runtime": "python",
       "port": 7900,
       "health_endpoint": null,
@@ -322,7 +322,7 @@
   "topology": {
     "entry": "Internet → cloudflared(:20241) → MRL_Bridge(:7800)",
     "engine_cluster": "ASI_Engine(:7700) ↔ Agent_Orchestrator(:7810) ↔ Memory_Engine(:7812) ↔ Toolchain(:7811)",
-    "ai_cluster": "Inference(:7500) → FlowCoreLoop(:8787) / FlowAgent(:7900) / ParticleGlobe(:8788)",
+    "ai_cluster": "Inference(:7500) → FlowCoreLoop(:8787) / MrLiouAI(:7900) / ParticleGlobe(:8788)",
     "data_layer": "PostgreSQL(:5432) ↔ DB_Proxy(:7801) / Redis(:6379) / MariaDB(:3306)"
   }
 }

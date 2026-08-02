@@ -30,6 +30,6 @@ def simulate_trace_loop(trace_path):
     print("✅ Persona loop playback complete.")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="FlowAgent :: LoopTrace Playback Simulator")
+    parser = argparse.ArgumentParser(description="MrLiouAI :: LoopTrace Playback Simulator")
     parser.add_argument("--input", required=True, help="Path to .trace.loop.json")
     simulate_trace_loop(parser.parse_args().input)

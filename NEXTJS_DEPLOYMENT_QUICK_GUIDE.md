@@ -13,8 +13,8 @@ The Next.js frontend has been migrated from Vercel to GKE for unified deployment
 kubectl apply -k cluster/overlays/prod/
 
 # 檢查 Next.js 前端狀態
-kubectl get pods -l app=nextjs-frontend -n flowagent
-kubectl get svc nextjs-frontend -n flowagent
+kubectl get pods -l app=nextjs-frontend -n mrliouai
+kubectl get svc nextjs-frontend -n mrliouai
 ```
 
 ## 🔧 獨立部署 Next.js / Deploy Next.js Separately
@@ -24,14 +24,14 @@ kubectl get svc nextjs-frontend -n flowagent
 kubectl apply -k apps/nextjs-frontend/
 
 # 驗證部署
-kubectl rollout status deployment/nextjs-frontend -n flowagent
+kubectl rollout status deployment/nextjs-frontend -n mrliouai
 ```
 
 ## 🌐 獲取訪問地址 / Get Access URL
 
 ```bash
 # 獲取 LoadBalancer 外部 IP
-kubectl get svc nextjs-frontend -n flowagent
+kubectl get svc nextjs-frontend -n mrliouai
 
 # 輸出示例 / Example output:
 # NAME              TYPE           EXTERNAL-IP      PORT(S)
@@ -45,26 +45,26 @@ kubectl get svc nextjs-frontend -n flowagent
 
 ```bash
 # 查看實時日誌
-kubectl logs -f -l app=nextjs-frontend -n flowagent --tail=100
+kubectl logs -f -l app=nextjs-frontend -n mrliouai --tail=100
 
 # 查看 Pod 狀態
-kubectl get pods -l app=nextjs-frontend -n flowagent -w
+kubectl get pods -l app=nextjs-frontend -n mrliouai -w
 
 # 查看資源使用
-kubectl top pods -l app=nextjs-frontend -n flowagent
+kubectl top pods -l app=nextjs-frontend -n mrliouai
 ```
 
 ## 🔄 更新與回滾 / Update & Rollback
 
 ```bash
 # 重啟 deployment（應用環境變數變更）
-kubectl rollout restart deployment/nextjs-frontend -n flowagent
+kubectl rollout restart deployment/nextjs-frontend -n mrliouai
 
 # 查看部署歷史
-kubectl rollout history deployment/nextjs-frontend -n flowagent
+kubectl rollout history deployment/nextjs-frontend -n mrliouai
 
 # 回滾到上一版本
-kubectl rollout undo deployment/nextjs-frontend -n flowagent
+kubectl rollout undo deployment/nextjs-frontend -n mrliouai
 ```
 
 ## 🔐 配置 Secrets / Configure Secrets
@@ -81,17 +81,17 @@ nano apps/nextjs-frontend/secret.yaml
 kubectl apply -f apps/nextjs-frontend/secret.yaml
 
 # 重啟 pods 使其生效
-kubectl rollout restart deployment/nextjs-frontend -n flowagent
+kubectl rollout restart deployment/nextjs-frontend -n mrliouai
 ```
 
 ## 📈 擴展副本數 / Scale Replicas
 
 ```bash
 # 手動擴展到 3 個副本
-kubectl scale deployment nextjs-frontend -n flowagent --replicas=3
+kubectl scale deployment nextjs-frontend -n mrliouai --replicas=3
 
 # 自動擴展（需要先創建 HPA）
-kubectl autoscale deployment nextjs-frontend -n flowagent \
+kubectl autoscale deployment nextjs-frontend -n mrliouai \
   --min=2 --max=10 --cpu-percent=70
 ```
 
@@ -101,17 +101,17 @@ kubectl autoscale deployment nextjs-frontend -n flowagent \
 
 ```bash
 # 查看 Pod 詳情
-kubectl describe pod <pod-name> -n flowagent
+kubectl describe pod <pod-name> -n mrliouai
 
 # 查看事件
-kubectl get events -n flowagent --sort-by='.lastTimestamp' | grep nextjs
+kubectl get events -n mrliouai --sort-by='.lastTimestamp' | grep nextjs
 ```
 
 ### 映像拉取失敗
 
 ```bash
 # 檢查 Artifact Registry 權限
-gcloud projects add-iam-policy-binding flowmemorysync \
+gcloud projects add-iam-policy-binding mrliouai \
   --member="serviceAccount:$(gcloud container clusters describe modular-cluster \
     --zone=asia-east1-a --format='value(nodeConfig.serviceAccount)')" \
   --role="roles/artifactregistry.reader"
@@ -121,10 +121,10 @@ gcloud projects add-iam-policy-binding flowmemorysync \
 
 ```bash
 # 檢查 GCP 配額
-gcloud compute project-info describe --project=flowmemorysync
+gcloud compute project-info describe --project=mrliouai
 
 # 查看服務狀態
-kubectl describe svc nextjs-frontend -n flowagent
+kubectl describe svc nextjs-frontend -n mrliouai
 
 # 如果長時間未分配，考慮改用 ClusterIP + Ingress
 ```

@@ -1,6 +1,6 @@
 # Cluster Configuration
 
-`cluster/` defines the Kubernetes composition layer for FlowAgent deployments.
+`cluster/` defines the Kubernetes composition layer for MrLiouAI deployments.
 
 ## Purpose
 
@@ -18,7 +18,7 @@
 
 ```bash
 # Render manifests without requiring cluster credentials
-kubectl kustomize cluster/overlays/prod/ >/tmp/flowagent-prod.yaml
+kubectl kustomize cluster/overlays/prod/ >/tmp/mrliouai-prod.yaml
 
 # When connected to a cluster, run server/client validation before applying
 kubectl apply --dry-run=client -k cluster/overlays/prod/

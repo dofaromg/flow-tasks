@@ -1,13 +1,13 @@
 # 05_persona
 
-Persona definitions and world module for FlowAgent agents (L4 WORLD / L5 MIRROR layer).
+Persona definitions and world module for MrLiouAI agents (L4 WORLD / L5 MIRROR layer).
 
 ## Files
 
 | File | Purpose |
 |------|---------|
 | `world_module.py` | World Module entry point — nodes, state, trajectory, particle-globe coordinates |
-| `codepartner/persona.yaml` | CodePartner (CoreProgrammer.Seed) — recovered FlowAgent programming persona |
+| `codepartner/persona.yaml` | CodePartner (CoreProgrammer.Seed) — recovered MrLiouAI programming persona |
 
 ## world_module.py
 
@@ -49,7 +49,7 @@ world: AI | Platform | Real
 ```
 
 First implemented persona: `codepartner/persona.yaml` (CodePartner / CoreProgrammer.Seed,
-recovered from the FlowAgent lineage — sources in `08_sources/flowagent_codepartner_recovery/`).
+recovered from the MrLiouAI lineage — sources in `08_sources/mrliouai_codepartner_recovery/`).
 
 See `00_rootlaw/rootlaw.yaml` for invariants that apply to all personas.
 

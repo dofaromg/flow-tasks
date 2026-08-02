@@ -4,7 +4,7 @@
 
 系統已存在，正在做產品入口收斂；不是重新做底層。
 
-`flowagent_final` 在目前工作樹未直接找到。內容級確認後，現有最接近產品入口的主體是 `MRL_Product/`：
+`mrliouai_final` 在目前工作樹未直接找到。內容級確認後，現有最接近產品入口的主體是 `MRL_Product/`：
 
 - `package.json` declares `main: backend/server.js`
 - `npm run dev` starts the Node/Express product runtime

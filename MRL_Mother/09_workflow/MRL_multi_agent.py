@@ -4,7 +4,7 @@
 MRL_multi_agent.py — Multi-Agent Orchestrator & Coordination Framework
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 FlowAgentRuntime
+group: Y=3 MrLiouAIRuntime
 
 Goal: product-level local multi-agent orchestration — zero external
       dependencies, pure Python stdlib only.

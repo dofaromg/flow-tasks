@@ -1,11 +1,11 @@
 
-# flowagent_replay.py - FlowReplay 模組：從指定 snapshot 快照還原 CLI 執行環境
+# mrliouai_replay.py - FlowReplay 模組：從指定 snapshot 快照還原 CLI 執行環境
 
 import os
 import shutil
 
 SNAPSHOT_ROOT = "snapshot_log"
-RUNTIME_ROOT = "/mnt/data/FlowAgent.Runtime"
+RUNTIME_ROOT = "/mnt/data/MrLiouAI.Runtime"
 
 def list_snapshots():
     return sorted([
@@ -30,7 +30,7 @@ def restore_snapshot(snap_name):
         elif os.path.isfile(src):
             os.makedirs(os.path.dirname(dst), exist_ok=True)
             shutil.copy2(src, dst)
-    print(f"✅ 已還原 snapshot → FlowAgent.Runtime")
+    print(f"✅ 已還原 snapshot → MrLiouAI.Runtime")
 
 def main():
     snaps = list_snapshots()

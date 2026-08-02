@@ -55,5 +55,5 @@ def build_tree():
     print(f"✅ 已建立語場跳點族譜樹：{TREE_LOG}")
 
 if __name__ == "__main__":
-    print("🧬 FlowAgent 模組節奏版本族譜構建器")
+    print("🧬 MrLiouAI 模組節奏版本族譜構建器")
     build_tree()

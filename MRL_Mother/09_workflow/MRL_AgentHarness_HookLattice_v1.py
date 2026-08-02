@@ -4,7 +4,7 @@
 MRL_AgentHarness_HookLattice_v1.py — Agent 執行骨架:Hook 三型格與生命週期分發器
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 FlowAgentRuntime
+group: Y=3 MrLiouAIRuntime
 
 吸收來源（母體吸收記錄）
 ----------------------

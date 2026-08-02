@@ -1,9 +1,9 @@
 
 FROM python:3.10
 
-WORKDIR /flowagent
+WORKDIR /mrliouai
 
-COPY . /flowagent
+COPY . /mrliouai
 
 # 解壓封包
 RUN apt-get update && apt-get install -y unzip && \

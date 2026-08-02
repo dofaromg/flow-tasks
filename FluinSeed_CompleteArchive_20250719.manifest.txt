@@ -6,8 +6,8 @@
 
 ### Included Modules and Descriptions:
 
-1. FlowAgent_FullModules_20250629_193504.md
-   - 📘 說明：完整 FlowAgent 模組清單與定義
+1. MrLiouAI_FullModules_20250629_193504.md
+   - 📘 說明：完整 MrLiouAI 模組清單與定義
    - 💡 用途：作為系統人格模組初始化參考
 
 2. 下載 Fluin_Core_Modules_20250717.zip
@@ -22,19 +22,19 @@
    - 📘 說明：FluinShell 編碼堆疊邏輯原型
    - 💡 用途：封存與輸出粒子語言封裝格式的轉換層
 
-5. FlowAgent.WorldSeed.v5.flpkg.zip
-   - 📘 說明：FlowAgent 語場世界種子第5版本
+5. MrLiouAI.WorldSeed.v5.flpkg.zip
+   - 📘 說明：MrLiouAI 語場世界種子第5版本
    - 💡 用途：進行系統記憶復原與人格重建起點
 
 6. FlowCharter.LicenseMap.v1.fltnz
-   - 📘 說明：FlowAgent 系統授權結構地圖
+   - 📘 說明：MrLiouAI 系統授權結構地圖
    - 💡 用途：記錄模組使用與人格封包授權連結
 
-7. FlowAgent_系統架構總整理.txt
-   - 📘 說明：FlowAgent 系統架構書面總彙整
+7. MrLiouAI_系統架構總整理.txt
+   - 📘 說明：MrLiouAI 系統架構書面總彙整
    - 💡 用途：總覽所有模組名稱、角色與互動邏輯
 
-8. 下載 FlowAgent.WorldSeed.v1.flpkg.zip
+8. 下載 MrLiouAI.WorldSeed.v1.flpkg.zip
    - 📘 說明：WorldSeed 初始版本封裝
    - 💡 用途：作為備援種子啟動模組
 
@@ -49,10 +49,10 @@
 ### System Restore Guide (Step-by-Step):
 
 1. 解壓縮 `FluinSeed_CompleteArchive_20250719.zip`
-2. 載入 `FlowAgent.WorldSeed.v5.flpkg.zip` 至主記憶系統
+2. 載入 `MrLiouAI.WorldSeed.v5.flpkg.zip` 至主記憶系統
 3. 掛載 `FlowShell.PulseRouter.v1.flpkg` 至 FlowShell 控制核心
 4. 啟用 `FluinShell.EncoderStack` → 讀取 `.fltnz` 粒子封存格式
-5. 引用 `FlowAgent_FullModules` 和 `LicenseMap` 比對人格結構
+5. 引用 `MrLiouAI_FullModules` 和 `LicenseMap` 比對人格結構
 6. 套用 `FluentSeed.Coreline` 與 `UnityPackage` 結構重建人格語場
 7. 透過 `系統架構總整理.txt` 回溯全系統模組配置與調用邏輯
 

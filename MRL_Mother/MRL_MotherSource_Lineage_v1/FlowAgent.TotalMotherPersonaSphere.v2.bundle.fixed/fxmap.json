@@ -11,7 +11,7 @@
   "\u22c4fx.rollback.path": "ObserverAIKernel",
   "\u22c4fx.dictionary.core": "dictionary/Fluin.Dict.Base.json",
   "\u22c4fx.persona.kernel.seed": "flowpersona_seedkernel.py",
-  "\u22c4fx.api.server": "flowagent_api_server.py",
+  "\u22c4fx.api.server": "mrliouai_api_server.py",
   "\u22c4fx.web.map.svg": "flowmap_svg_exporter.py",
   "\u22c4fx.map.visualize": "flowmap_visualizer.py"
 }

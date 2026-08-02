@@ -290,7 +290,7 @@ Documentation:
 | Project | Description | Status |
 |---------|-------------|--------|
 | **FluinOS** | Operating system framework | Active |
-| **FlowAgent** | Agent runtime system | Active |
+| **MrLiouAI** | Agent runtime system | Active |
 | **F++ Language** | Domain-specific language | Active |
 | **LUX Engine** | 3D geometry engine | Active |
 | **ParticleGlobe** | Earth visualization | v3.0 |
@@ -413,7 +413,7 @@ Key Repos:
 ├── particle-globe-v3
 ├── lux-engine
 ├── fluinos-core
-├── flowagent-runtime
+├── mrliouai-runtime
 └── [150 more repos]
 ```
 

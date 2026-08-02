@@ -3,7 +3,7 @@
 This repo keeps the **mirror + manifest** representation. The sealed canonical specification stays in Dropbox (see `sources.manifest.yaml`).
 
 ## Three-world kernel mapping
-- **AI world**: FlowAgent / DL580 runtime (reasoning + execution).
+- **AI world**: MrLiouAI / DL580 runtime (reasoning + execution).
 - **Platform world**: Vercel + network world (deployment + computation).
 - **Real world**: human society, legal obligations, recordkeeping (proof + accountability).
 

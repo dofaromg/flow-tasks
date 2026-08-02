@@ -171,7 +171,7 @@ Input → Observe → Parse → MrLiouIR → ParticleIR → RuntimeStructureFiel
 | `09_workflow/MRL_MCP_Server_v1.py` | `python3 09_workflow/MRL_MCP_Server_v1.py` |
 | `09_workflow/MRL_LLM_NativeAdapter_v1.py` | `python3 09_workflow/MRL_LLM_NativeAdapter_v1.py` |
 | `09_workflow/MRL_Native_Reasoning_Core_v1.py` | `python3 ... "問題"` |
-| `09_workflow/MRL_FlowAgent_LawEngine_v1.py` | `python3 09_workflow/MRL_FlowAgent_LawEngine_v1.py` |
+| `09_workflow/MRL_MrLiouAI_LawEngine_v1.py` | `python3 09_workflow/MRL_MrLiouAI_LawEngine_v1.py` |
 | `09_workflow/MRL_PersistentLoop_Daemon_v1.py` | `python3 09_workflow/MRL_PersistentLoop_Daemon_v1.py [ticks]` |
 | `09_workflow/MRL_StructureField_Runtime_v1.py` | `python3 09_workflow/MRL_StructureField_Runtime_v1.py` |
 | `09_workflow/MRL_DurableReplay_Instrumentation_v1.py` | `python3 09_workflow/MRL_DurableReplay_Instrumentation_v1.py` |
@@ -275,7 +275,7 @@ Input → Observe → Parse → MrLiouIR → ParticleIR → RuntimeStructureFiel
 ### Tier 1 — 09_workflow stdlib tools (build order by dependency depth)
 
 ```
-3. MRL_FlowAgent_LawEngine_v1.py          — law engine; Observe→Resolve→Mirror→Verify→Loop
+3. MRL_MrLiouAI_LawEngine_v1.py          — law engine; Observe→Resolve→Mirror→Verify→Loop
 4. MRL_StructureField_Runtime_v1.py       — ReplayStructureField / RestoreStructureField / WorldStructureField
 5. MRL_PersistentLoop_Daemon_v1.py        — L7 LOOP daemon; depends on law engine cycle
 6. MRL_DurableReplay_Instrumentation_v1.py — durable event log connecting Tier 0 + Tier 1 replay

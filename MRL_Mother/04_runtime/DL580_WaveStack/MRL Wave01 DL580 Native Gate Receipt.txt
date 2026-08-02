@@ -19,7 +19,7 @@ timestamp:
 GATE collapse_imagine_deterministic PASS (deterministic state+trace, scope=skeleton_imagination, clamp, search=E_P1)
 GATE compiler_roundtrip PASS (5 atoms x 40B, compile<->decompile lossless, crc verified)
 GATE engine_genesis PASS (P_{k+1}=N*P*eta reproducible, delta tracked)
-GATE flowagent_decide_deterministic PASS (same-in same-out, route in mask, confidence 0..65536, no-route case)
+GATE mrliouai_decide_deterministic PASS (same-in same-out, route in mask, confidence 0..65536, no-route case)
 GATE fluin_reversibility PASS (1000/1000 unbind(bind(x))==x)
 GATE kernel_delta_chain PASS (5 steps, delta=5, origin=MrLiouWord, memio not_found semantics)
 GATE kernel_memio_roundtrip PASS (roundtrip, empty/null key, not_found, size+cap checks, overwrite)

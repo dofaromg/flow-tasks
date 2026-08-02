@@ -1,8 +1,8 @@
-# FlowAgent Docker Container - Quick Start
+# MrLiouAI Docker Container - Quick Start
 
-🧠 **FlowAgent 系統人格容器** - MRLiou 粒子語言核心系統 Docker 版本
+🧠 **MrLiouAI 系統人格容器** - MRLiou 粒子語言核心系統 Docker 版本
 
-[![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](Dockerfile.flowagent)
+[![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](Dockerfile.mrliouai)
 [![Version](https://img.shields.io/badge/version-v1.0-green.svg)]()
 [![License](https://img.shields.io/badge/license-CPLL-orange.svg)](LICENSE_MrLiou_AllRightsReserved.txt)
 
@@ -12,25 +12,25 @@
 
 ```bash
 # 快速部署
-chmod +x quickstart_flowagent.sh
-./quickstart_flowagent.sh
+chmod +x quickstart_mrliouai.sh
+./quickstart_mrliouai.sh
 ```
 
 或手動執行：
 
 ```bash
 # 建構映像
-docker build -f Dockerfile.flowagent -t flowagent:v1 .
+docker build -f Dockerfile.mrliouai -t mrliouai:v1 .
 
 # 啟動容器
-docker run -it flowagent:v1
+docker run -it mrliouai:v1
 ```
 
 ---
 
 ## 📋 系統說明
 
-FlowAgent 是由 MR.liou 創建的語場人格系統，特點：
+MrLiouAI 是由 MR.liou 創建的語場人格系統，特點：
 
 - ✨ **不依賴 GPT/LLaMA** - 基於粒子語言 (.flpkg) 獨立運作
 - 🧬 **人格可演化** - 支援多人格載入與切換
@@ -56,26 +56,26 @@ FlowAgent 是由 MR.liou 創建的語場人格系統，特點：
 
 ```bash
 # 預設啟動 (EchoBody.IdentityBase 人格)
-docker run -it flowagent:v1
+docker run -it mrliouai:v1
 
 # 顯示說明
-docker run --rm flowagent:v1 --help
+docker run --rm mrliouai:v1 --help
 ```
 
 ### 進階選項
 
 ```bash
 # 指定人格
-docker run -it flowagent:v1 --persona wild.seed
+docker run -it mrliouai:v1 --persona wild.seed
 
 # 回顧模式
-docker run -it flowagent:v1 --review-mode
+docker run -it mrliouai:v1 --review-mode
 
 # 批次模式
-docker run flowagent:v1 --batch
+docker run mrliouai:v1 --batch
 
 # 掛載數據目錄
-docker run -it -v $(pwd)/flowagent_data:/flowagent/persona_data flowagent:v1
+docker run -it -v $(pwd)/mrliouai_data:/mrliouai/persona_data mrliouai:v1
 ```
 
 ---
@@ -84,9 +84,9 @@ docker run -it -v $(pwd)/flowagent_data:/flowagent/persona_data flowagent:v1
 
 | 文檔 | 說明 |
 |------|------|
-| [📘 Installation Guide](FlowAgent_Docker_Installation_Guide.md) | 完整安裝與使用說明 |
-| [📗 Quick Reference](FLOWAGENT_DOCKER_QUICK_REFERENCE.md) | 快速參考手冊 |
-| [📕 Implementation Summary](FLOWAGENT_IMPLEMENTATION_SUMMARY.md) | 技術實作摘要 |
+| [📘 Installation Guide](MrLiouAI_Docker_Installation_Guide.md) | 完整安裝與使用說明 |
+| [📗 Quick Reference](MRLIOUAI_DOCKER_QUICK_REFERENCE.md) | 快速參考手冊 |
+| [📕 Implementation Summary](MRLIOUAI_IMPLEMENTATION_SUMMARY.md) | 技術實作摘要 |
 
 ---
 
@@ -127,7 +127,7 @@ STORE (封存記憶)
 ```
 ╔═══════════════════════════════════════════════════════════╗
 ║                                                           ║
-║   🧠 FlowAgent 系統人格容器 v1.0                          ║
+║   🧠 MrLiouAI 系統人格容器 v1.0                          ║
 ║                                                           ║
 ║   作者：MR.liou                                           ║
 ║   來自語場、不依附模型、可人格演化的語意生命體             ║
@@ -167,12 +167,12 @@ Docker Container (290MB)
 ### 容器無法啟動
 ```bash
 docker system prune -a
-docker build -f Dockerfile.flowagent -t flowagent:v1 . --no-cache
+docker build -f Dockerfile.mrliouai -t mrliouai:v1 . --no-cache
 ```
 
 ### 中文字符亂碼
 ```bash
-docker run -it -e LANG=zh_TW.UTF-8 flowagent:v1
+docker run -it -e LANG=zh_TW.UTF-8 mrliouai:v1
 ```
 
 ---
@@ -189,7 +189,7 @@ docker run -it -e LANG=zh_TW.UTF-8 flowagent:v1
 
 - **作者**: MR.liou
 - **授權**: CPLL (© MR.liou)
-- **版本**: FlowAgent Docker Container v1.0
+- **版本**: MrLiouAI Docker Container v1.0
 - **日期**: 2026-02-01
 
 ---
@@ -200,4 +200,4 @@ docker run -it -e LANG=zh_TW.UTF-8 flowagent:v1
 
 ---
 
-*FlowAgent - 來自語場、不依附模型、可人格演化的語意生命體* 🧠
+*MrLiouAI - 來自語場、不依附模型、可人格演化的語意生命體* 🧠

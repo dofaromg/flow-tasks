@@ -1,4 +1,4 @@
-# FlowAgent Resource Impact Mapping Table v1
+# MrLiouAI Resource Impact Mapping Table v1
 
 [CPU Cores]
 - 負責模組並行運算、人格推論引擎、語場同步調度器

@@ -42,7 +42,7 @@
       ".pdf": 2,
       ".svg": 1,
       ".url": 2,
-      ".flowagent": 1,
+      ".mrliouai": 1,
       ".log": 1,
       ".v1": 1,
       ".Prototype": 1,
@@ -5492,10 +5492,10 @@
       },
       {
         "type": "file",
-        "name": "Dockerfile.flowagent",
+        "name": "Dockerfile.mrliouai",
         "emoji": "📄",
-        "path": "Dockerfile.flowagent",
-        "suffix": ".flowagent",
+        "path": "Dockerfile.mrliouai",
+        "suffix": ".mrliouai",
         "lines": 61,
         "size_bytes": 1618
       },
@@ -5528,27 +5528,27 @@
       },
       {
         "type": "file",
-        "name": "FLOWAGENT_DOCKER_QUICK_REFERENCE.md",
+        "name": "MRLIOUAI_DOCKER_QUICK_REFERENCE.md",
         "emoji": "📝",
-        "path": "FLOWAGENT_DOCKER_QUICK_REFERENCE.md",
+        "path": "MRLIOUAI_DOCKER_QUICK_REFERENCE.md",
         "suffix": ".md",
         "lines": 117,
         "size_bytes": 2175
       },
       {
         "type": "file",
-        "name": "FLOWAGENT_IMPLEMENTATION_SUMMARY.md",
+        "name": "MRLIOUAI_IMPLEMENTATION_SUMMARY.md",
         "emoji": "📝",
-        "path": "FLOWAGENT_IMPLEMENTATION_SUMMARY.md",
+        "path": "MRLIOUAI_IMPLEMENTATION_SUMMARY.md",
         "suffix": ".md",
         "lines": 387,
         "size_bytes": 13480
       },
       {
         "type": "file",
-        "name": "FLOWAGENT_README.md",
+        "name": "MRLIOUAI_README.md",
         "emoji": "📝",
-        "path": "FLOWAGENT_README.md",
+        "path": "MRLIOUAI_README.md",
         "suffix": ".md",
         "lines": 203,
         "size_bytes": 4768
@@ -5591,108 +5591,108 @@
       },
       {
         "type": "file",
-        "name": "FlowAgent Core",
+        "name": "MrLiouAI Core",
         "emoji": "📄",
-        "path": "FlowAgent Core",
+        "path": "MrLiouAI Core",
         "suffix": "",
         "lines": 82,
         "size_bytes": 2415
       },
       {
         "type": "file",
-        "name": "FlowAgent.TotalCore.StructureIndex.json",
+        "name": "MrLiouAI.TotalCore.StructureIndex.json",
         "emoji": "⚙️",
-        "path": "FlowAgent.TotalCore.StructureIndex.json",
+        "path": "MrLiouAI.TotalCore.StructureIndex.json",
         "suffix": ".json",
         "lines": 1,
         "size_bytes": 32
       },
       {
         "type": "file",
-        "name": "FlowAgent_ASI_Terminal_v1.md",
+        "name": "MrLiouAI_ASI_Terminal_v1.md",
         "emoji": "📝",
-        "path": "FlowAgent_ASI_Terminal_v1.md",
+        "path": "MrLiouAI_ASI_Terminal_v1.md",
         "suffix": ".md",
         "lines": 263,
         "size_bytes": 4345
       },
       {
         "type": "file",
-        "name": "FlowAgent_Docker_Installation_Guide.md",
+        "name": "MrLiouAI_Docker_Installation_Guide.md",
         "emoji": "📝",
-        "path": "FlowAgent_Docker_Installation_Guide.md",
+        "path": "MrLiouAI_Docker_Installation_Guide.md",
         "suffix": ".md",
         "lines": 357,
         "size_bytes": 9881
       },
       {
         "type": "file",
-        "name": "FlowAgent_Frequency_Structure_Summary.txt",
+        "name": "MrLiouAI_Frequency_Structure_Summary.txt",
         "emoji": "📄",
-        "path": "FlowAgent_Frequency_Structure_Summary.txt",
+        "path": "MrLiouAI_Frequency_Structure_Summary.txt",
         "suffix": ".txt",
         "lines": 57,
         "size_bytes": 2362
       },
       {
         "type": "file",
-        "name": "FlowAgent_Persona_Registry.json",
+        "name": "MrLiouAI_Persona_Registry.json",
         "emoji": "⚙️",
-        "path": "FlowAgent_Persona_Registry.json",
+        "path": "MrLiouAI_Persona_Registry.json",
         "suffix": ".json",
         "lines": 10,
         "size_bytes": 240
       },
       {
         "type": "file",
-        "name": "FlowAgent_SourceRealityMap.md",
+        "name": "MrLiouAI_SourceRealityMap.md",
         "emoji": "📝",
-        "path": "FlowAgent_SourceRealityMap.md",
+        "path": "MrLiouAI_SourceRealityMap.md",
         "suffix": ".md",
         "lines": 59,
         "size_bytes": 1637
       },
       {
         "type": "file",
-        "name": "FlowAgent_Unity_v3_高維模擬檢查報告.txt",
+        "name": "MrLiouAI_Unity_v3_高維模擬檢查報告.txt",
         "emoji": "📄",
-        "path": "FlowAgent_Unity_v3_高維模擬檢查報告.txt",
+        "path": "MrLiouAI_Unity_v3_高維模擬檢查報告.txt",
         "suffix": ".txt",
         "lines": 41,
         "size_bytes": 2059
       },
       {
         "type": "file",
-        "name": "FlowAgent_inventory_v2.csv",
+        "name": "MrLiouAI_inventory_v2.csv",
         "emoji": "📄",
-        "path": "FlowAgent_inventory_v2.csv",
+        "path": "MrLiouAI_inventory_v2.csv",
         "suffix": ".csv",
         "lines": 7,
         "size_bytes": 1100
       },
       {
         "type": "file",
-        "name": "FlowAgent_未來一年更新規劃與模擬 2.txt",
+        "name": "MrLiouAI_未來一年更新規劃與模擬 2.txt",
         "emoji": "📄",
-        "path": "FlowAgent_未來一年更新規劃與模擬 2.txt",
+        "path": "MrLiouAI_未來一年更新規劃與模擬 2.txt",
         "suffix": ".txt",
         "lines": 75,
         "size_bytes": 3161
       },
       {
         "type": "file",
-        "name": "FlowAgent_系統總體優勢報告.md",
+        "name": "MrLiouAI_系統總體優勢報告.md",
         "emoji": "📝",
-        "path": "FlowAgent_系統總體優勢報告.md",
+        "path": "MrLiouAI_系統總體優勢報告.md",
         "suffix": ".md",
         "lines": 79,
         "size_bytes": 3446
       },
       {
         "type": "file",
-        "name": "FlowAgent_語場封存記憶_20250723_025300.txt",
+        "name": "MrLiouAI_語場封存記憶_20250723_025300.txt",
         "emoji": "📄",
-        "path": "FlowAgent_語場封存記憶_20250723_025300.txt",
+        "path": "MrLiouAI_語場封存記憶_20250723_025300.txt",
         "suffix": ".txt",
         "lines": 28,
         "size_bytes": 1339
@@ -6662,9 +6662,9 @@
       },
       {
         "type": "file",
-        "name": "quickstart_flowagent.sh",
+        "name": "quickstart_mrliouai.sh",
         "emoji": "📄",
-        "path": "quickstart_flowagent.sh",
+        "path": "quickstart_mrliouai.sh",
         "suffix": ".sh",
         "lines": 50,
         "size_bytes": 1485
@@ -7229,9 +7229,9 @@
       },
       {
         "type": "file",
-        "name": "點此下載 README_FlowAgent_Docker_v1 2.md",
+        "name": "點此下載 README_MrLiouAI_Docker_v1 2.md",
         "emoji": "📝",
-        "path": "點此下載 README_FlowAgent_Docker_v1 2.md",
+        "path": "點此下載 README_MrLiouAI_Docker_v1 2.md",
         "suffix": ".md",
         "lines": 79,
         "size_bytes": 1743

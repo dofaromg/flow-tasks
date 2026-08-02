@@ -125,7 +125,7 @@
 | 5 | 🌸 | 語素 | mrl-globe/flowers | 56朵花 |
 | 6 | 📡 | 系統 | system-hub | 144 Workers |
 | 7 | 🛡 | 通行 | auth-gateway | 通行證 |
-| 8 | 👤 | 人格 | FlowAgent DB | 6人格共振 |
+| 8 | 👤 | 人格 | MrLiouAI DB | 6人格共振 |
 | 9 | 📝 | F++ | mrl-kernel/fpp | 粒子語言 |
 | 10 | 👁 | 觀測 | mrl-observer | δP₀事件 |
 | 11 | 🏭 | 工廠 | particle-chat | 生產線 |
@@ -282,7 +282,7 @@ Dock 最右邊的「👤」不只是設定。
 │  └────┘  [安裝]              │
 │                              │
 │  ┌────┐  particle-flowshell  │
-│  │ 🐚 │  FlowAgent · L4     │
+│  │ 🐚 │  MrLiouAI · L4     │
 │  └────┘  [安裝]              │
 │                              │
 │  ┌────┐  particle-seedkernel │

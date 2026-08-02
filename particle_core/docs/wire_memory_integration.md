@@ -665,4 +665,4 @@ def validate_wire_header(header):
 
 **版本**: 1.0.0  
 **更新日期**: 2026-01-01  
-**作者**: MRLiou / FlowAgent Team
+**作者**: MRLiou / MrLiouAI Team

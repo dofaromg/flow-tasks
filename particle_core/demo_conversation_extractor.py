@@ -183,11 +183,11 @@ def demo_report_generation():
     conversation = [
         {
             "role": "user",
-            "content": "FlowAgent 系統的核心理念是什麼？"
+            "content": "MrLiouAI 系統的核心理念是什麼？"
         },
         {
             "role": "assistant",
-            "content": "FlowAgent 的核心理念是「共振式協同」。系統通過人格化的 AI 代理實現任務分解和執行。每個代理都有獨特的共振鍵，用於識別和連接。因此，多個代理可以協同工作，形成一個有機的計算生態系統。"
+            "content": "MrLiouAI 的核心理念是「共振式協同」。系統通過人格化的 AI 代理實現任務分解和執行。每個代理都有獨特的共振鍵，用於識別和連接。因此，多個代理可以協同工作，形成一個有機的計算生態系統。"
         },
         {
             "role": "user",

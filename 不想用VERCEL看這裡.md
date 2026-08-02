@@ -58,7 +58,7 @@
 
 ### 選項 A: 繼續用 GKE（推薦）
 ```bash
-kubectl get svc -n flowagent
+kubectl get svc -n mrliouai
 kubectl apply -k cluster/overlays/prod/
 # 完成！
 ```

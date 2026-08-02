@@ -21,7 +21,7 @@
 | **L2** | MRL.NODE.04.Particle | reconstructed | 220 particle sources (PG2.L0.AtomStruct40.20260519 + SQL atoms) |
 | **L3** | MRL.NODE.05.Signal | reconstructed | 17 particle sources (p_resonance_field + AWS/GCP nerves) |
 | **L3** | MRL.NODE.06.Field | reconstructed | 18 particle sources (p_resonance_field + Fluin adj/per) |
-| **L4** | MRL.NODE.07.Persona | reconstructed | 79 file hits + 415 content level (upgraded from weak→strong; includes Mrliou_MRL_FlowAgent verified local copy) |
+| **L4** | MRL.NODE.07.Persona | reconstructed | 79 file hits + 415 content level (upgraded from weak→strong; includes Mrliou_MRL_MrLiouAI verified local copy) |
 | **L2/L5** | MRL.NODE.08.Memory | reconstructed | 9 particle sources (p_memory_particle + PG2.L0.MemoryArchive.20260519) |
 | **L5/L∞** | MRL.NODE.09.Globe | reconstructed | 8 particle sources (particle.mrl.nerve.686-globe@v1 + PG2.GlobeParticles.json) |
 | **L4/L7** | MRL.NODE.10.World | reconstructed | 14 file hits (upgraded from weak→strong; includes BaseWorld DB particles) |
@@ -31,7 +31,7 @@
 
 **AI Classification Evidence**:
 - **Current Level**: AI Computer Runtime (observed: FlowCore v0.2 runtime; self-described fusion_state=ai_computer_runtime_v0.2 in flowcore_loop.py family)
-- **Target Level**: AGI (observed: 8 Flow particles in Mrliou_MRL_FlowAgent page1; δP₀ probability model references in Persona layer)
+- **Target Level**: AGI (observed: 8 Flow particles in Mrliou_MRL_MrLiouAI page1; δP₀ probability model references in Persona layer)
 - **Research Candidate**: ASI (observed: theoretical maximum in LAW2 formula stack; not yet implemented)
 
 ---
@@ -64,7 +64,7 @@ All 14 nodes form the mainline module set. Each module is defined by Node + Trac
 | Batch01 | Evidence Chain | MRL_Evidence_Items_v1.jsonl (27 items) | verified | Top-level files all Get-FileHash SHA256 confirmed |
 | Batch02 | Canonical Scan | 300 canonical subtree files | verified | 6 subtrees scanned; overflow 3023 pending_scan |
 | Batch03A | Content Verification | 9 Wave gate receipts (W01-W09) | content_verified | 418/418 PASS, all origin_signature=MrLiouWord |
-| Batch03B | Notion Export | Mrliou_MRL_FlowAgent page1 | verified_local_copy_raw_blocks | raw.json 69432B sha 2117ef1c..., 53 blocks, 8 Flow particles + δP₀ |
+| Batch03B | Notion Export | Mrliou_MRL_MrLiouAI page1 | verified_local_copy_raw_blocks | raw.json 69432B sha 2117ef1c..., 53 blocks, 8 Flow particles + δP₀ |
 | Batch04 | CrossCheck | String bridge (Notion ↔ runtime) | string_cross_match | 4 matched concepts: origin_signature, MrLiouWord, registry, runtime |
 | iPhone01 | Family Inventory | FlowCore runtime (3-file family) | candidate_located_NOT_canonical | flowcore_loop.py (696KB); MRL_Flowcore_Loop.py (37KB); parallel_variant analysis pending |
 
@@ -101,10 +101,10 @@ MRL.COUPLE.05: Signal → Field
 
 MRL.COUPLE.06: Field → Persona
   from_trace: mrl_particle::p_resonance_field
-  to_trace: mrl_particle::seed:FlowAgent.TotalCore.Unity.v3
+  to_trace: mrl_particle::seed:MrLiouAI.TotalCore.Unity.v3
 
 MRL.COUPLE.07: Persona → Memory
-  from_trace: mrl_particle::seed:FlowAgent.TotalCore.Unity.v3
+  from_trace: mrl_particle::seed:MrLiouAI.TotalCore.Unity.v3
   to_trace: mrl_particle::p_memory_particle
 
 MRL.COUPLE.08: Memory → Globe
@@ -136,7 +136,7 @@ MRL.COUPLE.CLOSURE: Return → Origin (loop)
 - PreParticle depends on SeedKernel translation (minimal-to-deltap0)
 - Particle depends on PreParticle completion (atom structure)
 - Signal/Field share p_resonance_field foundation
-- Persona depends on FlowAgent.TotalCore.Unity.v3 seed
+- Persona depends on MrLiouAI.TotalCore.Unity.v3 seed
 - Runtime depends on all priors (FlowCore v7 integrates all layers)
 
 ---
@@ -155,7 +155,7 @@ MRL.COUPLE.CLOSURE: Return → Origin (loop)
 | Signal | D:\MRL_Mother\storage\cf_return\... | AWS/GCP nerve particles referenced | partial (file list pending) |
 | Field | D:\MRL_Mother\storage\cf_return\workers\*.js | metaenv-ctrl.js (17917B), mrliou-metaenv.js (10232B) | verified |
 | Persona | D:\MRL_Mother\storage\cf_return\d1\personas.json | personas.json (3106B), persona_resonance.json (2726B) | verified |
-| Persona (alt) | D:\MRL_Mother\EvidenceChain\_sources\Notion\Mrliou_MRL_FlowAgent.raw.json | raw.json (69432B sha 2117ef1c.., 53 blocks) | verified_local_copy_raw_blocks |
+| Persona (alt) | D:\MRL_Mother\EvidenceChain\_sources\Notion\Mrliou_MRL_MrLiouAI.raw.json | raw.json (69432B sha 2117ef1c.., 53 blocks) | verified_local_copy_raw_blocks |
 | Memory | D:\MRL_Mother\storage\archives\...\MemoryArchive | PG2.L0.MemoryArchive.20260519 referenced | partial (content pending full scan) |
 | Globe | D:\MRL_Mother\storage\cf_return\kv\* | Multiple kv blob files (audit_collapse_persona_*.bin) | verified |
 | World | D:\MRL_Mother\storage\cf_return\kv\metaenv_*.bin | metaenv_environments.bin (2370B), metaenv_policies.bin (285B), snapshots | verified |
@@ -216,10 +216,10 @@ MRL.COUPLE.CLOSURE: Return → Origin (loop)
 **Notion Bridge** (pending completion):
 - 3 pages not yet shared to DL580 integration (404)
   - Fluin_Particle_Dictionary_v1.1 (35d8eeee...)
-  - FlowAgent_Mother_Memory_Sphere (75314b13...)
-  - MRL_ParticleBook_FlowAgent_Mapping_v2.0 (0c962b1f...)
+  - MrLiouAI_Mother_Memory_Sphere (75314b13...)
+  - MRL_ParticleBook_MrLiouAI_Mapping_v2.0 (0c962b1f...)
 - 1 page successfully fetched via API
-  - Mrliou_MRL_FlowAgent (37c8eeee...) → raw.json 69432B
+  - Mrliou_MRL_MrLiouAI (37c8eeee...) → raw.json 69432B
 
 ---
 
@@ -332,8 +332,8 @@ Verification checkpoints:
 | Module | Source | Type | Reason Pending | Evidence |
 |---|---|---|---|---|
 | Fluin_Particle_Dictionary_v1.1 | Notion (35d8eeee) | Knowledge DB | Not shared to DL580 integration (404) | permission_denied (Batch03B, Batch04 retry) |
-| FlowAgent_Mother_Memory_Sphere | Notion (75314b13) | Memory store | Not shared to DL580 integration (404) | permission_denied (Batch03B, Batch04 retry) |
-| MRL_ParticleBook_FlowAgent_Mapping_v2.0 | Notion (0c962b1f) | Reference map | Not shared to DL580 integration (404) | permission_denied (Batch03B, Batch04 retry) |
+| MrLiouAI_Mother_Memory_Sphere | Notion (75314b13) | Memory store | Not shared to DL580 integration (404) | permission_denied (Batch03B, Batch04 retry) |
+| MRL_ParticleBook_MrLiouAI_Mapping_v2.0 | Notion (0c962b1f) | Reference map | Not shared to DL580 integration (404) | permission_denied (Batch03B, Batch04 retry) |
 | TipSplit workspace export | Firebase | Workspace export | Not on DL580 (external SaaS) | pending_external |
 | Apex workspace export | Firebase | Workspace export | Not on DL580 (external SaaS) | pending_external |
 | MRL_RuntimeOS workspace export | Firebase | Workspace export | Not on DL580 (external SaaS) | pending_external |
@@ -352,7 +352,7 @@ Verification checkpoints:
 |---|---|---|---|---|
 | DL580 Bridge API (/MRL_*) | x-api-key | <env:MRL_BRIDGE_KEY> | verified_live | Health probe 2026-06-12 (pg196 + redis OK) |
 | Notion API (page export) | OAuth token | Stored on DL580 only | verified_secure | Token never transmitted/output/logged; 1 page fetch successful |
-| Notion page1 | Permission (shared to integration) | DL580 integration ID | verified_local_copy | Mrliou_MRL_FlowAgent accessible via API |
+| Notion page1 | Permission (shared to integration) | DL580 integration ID | verified_local_copy | Mrliou_MRL_MrLiouAI accessible via API |
 | Notion pages 2/3/4 | Permission (NOT shared) | DL580 integration ID | permission_denied | 404 on 3 pages (pending MrLiou action: share to integration) |
 | Firebase TipSplit/Apex/RuntimeOS | OAuth / project access | Not accessible from DL580 | pending_external | No cloud SaaS credential on DL580 |
 | CloudFlare KV store | CF API token | Stored on DL580 | partial | KV blobs accessible; full access scope unknown |
@@ -368,7 +368,7 @@ Verification checkpoints:
 |---|---|---|---|---|
 | gate_engine_genesis.exe (Wave01) | Compiled binary (Windows) | D:\MRL_Mother\runtime\waves\wave01\src_tree\bin\gates\gate_engine_genesis.exe | Windows runtime (DL580 environment) | Receipt: wave01_Native_Gate_Receipt.json (11/11 PASS, origin_signature=MrLiouWord) |
 | gate_mrliou_mrl_engine_genesis.exe (Wave02-09) | Compiled binary (Windows) | D:\MRL_Mother\runtime\waves\wave0[2-9]\src_tree\bin\gates\gate_mrliou_mrl_engine_genesis.exe | Windows runtime (DL580 environment) | Receipts: wave02-09_*.json (all PASS: 20+30+39+44+54+64+74+82 = 418 total) |
-| flowcore_loop.py | Python script (runtime candidate) | python D:\MRL_Mother\_INBOX\iphone_import\flowcore_loop.py [cli/serve/index/fsd] | Python 3.x + dependencies (origin_signature=MrLiouWord, fusion_state=ai_computer_runtime_v0.2) | Sampled content: 15441 lines, 843 def, 111 class; FlowAgent-compatible; Product Gateway 4 endpoints |
+| flowcore_loop.py | Python script (runtime candidate) | python D:\MRL_Mother\_INBOX\iphone_import\flowcore_loop.py [cli/serve/index/fsd] | Python 3.x + dependencies (origin_signature=MrLiouWord, fusion_state=ai_computer_runtime_v0.2) | Sampled content: 15441 lines, 843 def, 111 class; MrLiouAI-compatible; Product Gateway 4 endpoints |
 | MRL_Flowcore_Loop.py | Python script (runtime variant) | python D:\MRL_Mother\_INBOX\iphone_import\MRL_Flowcore_Loop.py [cli/serve/index] | Python 3.x + dependencies (same origin_signature & fusion_state) | Sampled content: simplified version (37KB vs 696KB); same header structure |
 | dl580_sync_schedule.ps1 | PowerShell script | powershell -ExecutionPolicy Bypass -File D:\MRL_Mother\dl580_sync_schedule.ps1 | Windows PowerShell + sync targets configured | MRL-EVD-0006 (9806B sha DF2307..) |
 | runtime_install.ps1 | PowerShell script | powershell -ExecutionPolicy Bypass -File D:\MRL_Mother\runtime_install.ps1 | Windows environment + admin privileges (assumed) | MRL-EVD-0018 (2049B sha 7AB2C8..) |
@@ -426,11 +426,11 @@ Verification checkpoints:
    - Files: storage/cf_return/workers/metaenv-ctrl.js, mrliou-metaenv.js
 
 **Phase 4: Agent Layer (L4)**
-8. Load Persona module (seed:FlowAgent.TotalCore.Unity.v3)
+8. Load Persona module (seed:MrLiouAI.TotalCore.Unity.v3)
    - Prerequisite: Field loaded
    - Sources: 79 file refs (upgraded from weak to strong)
    - Files: 
-     - Mrliou_MRL_FlowAgent.raw.json (69432B, verified local copy from Notion API)
+     - Mrliou_MRL_MrLiouAI.raw.json (69432B, verified local copy from Notion API)
      - storage/cf_return/d1/personas.json (3106B)
      - storage/cf_return/d1/persona_resonance.json (2726B)
      - storage/cf_return/kv/agi_persona_programmer.bin + 6 audit_collapse_persona_*.bin files
@@ -519,7 +519,7 @@ D:\MRL_Mother\ (Canonical Mother Engine, DL580)
 │   └── (AWS/GCP nerve references in particle DB)
 │
 ├── L4 Persona Layer
-│   ├── EvidenceChain\_sources\Notion\Mrliou_MRL_FlowAgent.raw.json (from Notion API)
+│   ├── EvidenceChain\_sources\Notion\Mrliou_MRL_MrLiouAI.raw.json (from Notion API)
 │   ├── storage\cf_return\d1\personas.json
 │   ├── storage\cf_return\d1\persona_resonance.json
 │   ├── storage\cf_return\kv\agi_persona_programmer.bin
@@ -633,7 +633,7 @@ Reconstruction Confidence: 14/14 nodes reconstructed; 0 pending hypothetical
 - **Particle MCP servers**: 2 active (particle-mcp-server, particle-team-mcp) + 1 archive (mcp-particle-ai.zip)
 - **Flow particles**: 8 documented in Persona layer (Flow_SymbolicReason, Flow_ProbReason, Flow_Fuse, Flow_Planner, Flow_Control, Flow_ToolUse, Flow_Orchestrate, Flow_Explain)
 - **Probability model**: 1 (δP₀ referenced in Persona layer)
-- **FlowAgent platforms**: 1 verified (Mrliou_MRL_FlowAgent, 53 blocks, 69432B raw.json)
+- **MrLiouAI platforms**: 1 verified (Mrliou_MRL_MrLiouAI, 53 blocks, 69432B raw.json)
 - **FlowCore runtimes**: 3 (flowcore_loop.py 696KB + MRL_Flowcore_Loop.py 37KB + 06-05 32KB variant, same origin_signature & fusion_state)
 
 ### Bridge Modules Found

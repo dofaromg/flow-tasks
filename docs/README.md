@@ -1,6 +1,6 @@
 # Documentation Organization
 
-This directory contains organized documentation for the FlowAgent project.
+This directory contains organized documentation for the MrLiouAI project.
 
 ## Structure
 

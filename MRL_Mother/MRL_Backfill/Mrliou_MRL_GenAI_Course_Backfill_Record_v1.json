@@ -14,7 +14,7 @@
     },
     {
       "external_keyword": "AI Agent",
-      "mrl_target": "Mrliou_FlowAgent",
+      "mrl_target": "Mrliou_MrLiouAI",
       "overlap_level": "STRUCTURAL"
     },
     {
@@ -45,7 +45,7 @@
   ],
   "absorbed_into": [
     "Mrliou_MRL_Runtime",
-    "Mrliou_FlowAgent",
+    "Mrliou_MrLiouAI",
     "Mrliou_FlowComputer",
     "Mrliou_MRL_LAW / AuditSupervisor",
     "Mrliou_MRL_RuntimeOS",

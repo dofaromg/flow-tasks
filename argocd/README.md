@@ -21,7 +21,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 kubectl port-forward svc/argocd-server -n argocd 8080:443
 ```
 
-## 部署 FlowAgent 應用
+## 部署 MrLiouAI 應用
 
 ```bash
 # 套用 ArgoCD Application
@@ -32,7 +32,7 @@ kubectl get application -n argocd
 
 # 或使用 ArgoCD CLI
 argocd app list
-argocd app sync flowagent
+argocd app sync mrliouai
 ```
 
 ## 配置說明

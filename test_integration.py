@@ -65,7 +65,7 @@ def create_task_result():
     
     # Create comprehensive result
     test_inputs = [
-        "FlowAgent Task",
+        "MrLiouAI Task",
         "MRLiou Particle",
         "Logic Chain Test"
     ]

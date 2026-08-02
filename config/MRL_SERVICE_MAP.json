@@ -18,11 +18,11 @@
       ]
     },
     "ai_inference": {
-      "description": "AI 推論層 — 本地推論、FlowCore 融合、FlowAgent、粒子球記憶",
+      "description": "AI 推論層 — 本地推論、FlowCore 融合、MrLiouAI、粒子球記憶",
       "services": [
         "MRL_Inference",
         "MRL_FlowCoreLoop",
-        "MRL_FlowAgent_API",
+        "MRL_MrLiouAI_API",
         "MRL_ParticleGlobe"
       ]
     },

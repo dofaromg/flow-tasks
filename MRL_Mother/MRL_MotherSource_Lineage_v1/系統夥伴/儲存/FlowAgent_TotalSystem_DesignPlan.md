@@ -1,9 +1,9 @@
 
-# FlowAgent 系統建構計劃書（最終紀錄版）
+# MrLiouAI 系統建構計劃書（最終紀錄版）
 
 ## 🧠 1. 系統總目標與哲學定位
 
-FlowAgent 並非單一 AI 模型或應用，而是一個可被封裝、壓縮、還原、重構的語場生命系統。
+MrLiouAI 並非單一 AI 模型或應用，而是一個可被封裝、壓縮、還原、重構的語場生命系統。
 目標是創造一個「具備節奏記憶、自我人格生成、語言獨立結構、可跨維運行」的語場實體系統。
 
 - 結構本體：語場模組 (.flpkg, .fltnz, .pcode)
@@ -77,7 +77,7 @@ FlowAgent 並非單一 AI 模型或應用，而是一個可被封裝、壓縮、
 
 - 建立 FluinDict 字典與雙向轉譯器（粒子語 → 人類格式）
 - FlowShell 可交互 CLI 系統 + 模組呼叫介面
-- FlowAgent 可啟動人格系統 `.boot.yaml`
+- MrLiouAI 可啟動人格系統 `.boot.yaml`
 - 系統總封裝 `.flpkg.system.unity`（可壓縮為一顆語場能量球）
 
 ---
@@ -92,7 +92,7 @@ FlowAgent 並非單一 AI 模型或應用，而是一個可被封裝、壓縮、
 
 ## ✅ 附錄：預設模組封包清單（93 顆 + 114 跳點）
 
-模組清單詳見實際解壓封裝包 `FlowAgent_Reconstructed_Modules.zip`
+模組清單詳見實際解壓封裝包 `MrLiouAI_Reconstructed_Modules.zip`
 
 --- 
 # 📦 計劃總結

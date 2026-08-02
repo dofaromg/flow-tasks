@@ -49,8 +49,8 @@ External services = adapter / mirror / ingress only. Not the runtime. Not the mo
 ## Deploy
 
 - GKE cluster: `modular-cluster` in `asia-east1-a`
-- Namespace: `flowagent`
-- Container registry: `asia-east1-docker.pkg.dev/flowmemorysync/flowagent/`
+- Namespace: `mrliouai`
+- Container registry: `asia-east1-docker.pkg.dev/mrliouai/mrliouai/`
 - Domain: `mrl.mrliou.com` via GKE Ingress
 - CI/CD: `.github/workflows/ci-build.yml` + `.github/workflows/cd-deploy.yml`
 

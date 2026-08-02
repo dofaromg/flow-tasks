@@ -323,7 +323,7 @@ main
 #!/usr/bin/env python3  
 """  
 MR.liou System Auto-Recovery Script  
-自動恢復 FlowAgent 系統的缺失文件  
+自動恢復 MrLiouAI 系統的缺失文件  
 """  
   
 import os  
@@ -331,7 +331,7 @@ import json
 from pathlib import Path  
 from datetime import datetime  
   
-class FlowAgentRecovery:  
+class MrLiouAIRecovery:  
     def __init__(self, output_dir="recovered"):  
         self.output_dir = Path(output_dir)  
         self.output_dir.mkdir(exist_ok=True)  
@@ -402,7 +402,7 @@ class FlowAgentRecovery:
         self.log("恢復完成！")  
   
 if __name__ == "__main__":  
-    recovery = FlowAgentRecovery()  
+    recovery = MrLiouAIRecovery()  
     recovery.run_recovery()  
 ```  
   

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the Astro frontend application added to the FlowAgent GKE Starter project.
+This document describes the Astro frontend application added to the MrLiouAI GKE Starter project.
 
 ## What is Astro?
 
@@ -73,14 +73,14 @@ docker run -p 8080:80 astro-frontend:latest
 kubectl apply -k apps/astro-frontend/
 
 # Check status
-kubectl get pods -n flowagent -l app=astro-frontend
-kubectl get svc -n flowagent astro-frontend
+kubectl get pods -n mrliouai -l app=astro-frontend
+kubectl get svc -n mrliouai astro-frontend
 ```
 
 **Access the Service:**
 ```bash
 # Get external IP
-kubectl get svc astro-frontend -n flowagent
+kubectl get svc astro-frontend -n mrliouai
 
 # Visit http://<EXTERNAL-IP>/
 ```
@@ -112,13 +112,13 @@ apps/astro-frontend/
 └── tsconfig.json      # TypeScript configuration
 ```
 
-## Integration with FlowAgent
+## Integration with MrLiouAI
 
-The Astro frontend integrates with the FlowAgent ecosystem:
+The Astro frontend integrates with the MrLiouAI ecosystem:
 
-1. **Kubernetes Deployment**: Deployed alongside other microservices in the `flowagent` namespace
+1. **Kubernetes Deployment**: Deployed alongside other microservices in the `mrliouai` namespace
 2. **LoadBalancer Service**: Exposed via GCP LoadBalancer for external access
-3. **Container Registry**: Image stored at `asia-east1-docker.pkg.dev/flowmemorysync/flowagent/astro-frontend:latest`
+3. **Container Registry**: Image stored at `asia-east1-docker.pkg.dev/mrliouai/mrliouai/astro-frontend:latest`
 
 ## Comparison with Next.js Frontend
 
@@ -162,17 +162,17 @@ To integrate with CI/CD pipelines:
 
 1. **Build Docker Image**:
    ```bash
-   docker build -t asia-east1-docker.pkg.dev/flowmemorysync/flowagent/astro-frontend:$TAG apps/astro-frontend/
+   docker build -t asia-east1-docker.pkg.dev/mrliouai/mrliouai/astro-frontend:$TAG apps/astro-frontend/
    ```
 
 2. **Push to Registry**:
    ```bash
-   docker push asia-east1-docker.pkg.dev/flowmemorysync/flowagent/astro-frontend:$TAG
+   docker push asia-east1-docker.pkg.dev/mrliouai/mrliouai/astro-frontend:$TAG
    ```
 
 3. **Update Deployment**:
    ```bash
-   kubectl set image deployment/astro-frontend astro=asia-east1-docker.pkg.dev/flowmemorysync/flowagent/astro-frontend:$TAG -n flowagent
+   kubectl set image deployment/astro-frontend astro=asia-east1-docker.pkg.dev/mrliouai/mrliouai/astro-frontend:$TAG -n mrliouai
    ```
 
 ## Troubleshooting
@@ -189,19 +189,19 @@ npm run build
 ### Container Issues
 ```bash
 # Check logs
-kubectl logs -f deployment/astro-frontend -n flowagent
+kubectl logs -f deployment/astro-frontend -n mrliouai
 
 # Check pod status
-kubectl describe pod -l app=astro-frontend -n flowagent
+kubectl describe pod -l app=astro-frontend -n mrliouai
 ```
 
 ### Access Issues
 ```bash
 # Check service
-kubectl get svc astro-frontend -n flowagent
+kubectl get svc astro-frontend -n mrliouai
 
 # Port forward for testing
-kubectl port-forward svc/astro-frontend 8080:80 -n flowagent
+kubectl port-forward svc/astro-frontend 8080:80 -n mrliouai
 # Visit http://localhost:8080
 ```
 
@@ -221,7 +221,7 @@ Potential improvements for the Astro frontend:
 - [Astro Documentation](https://docs.astro.build)
 - [Astro GitHub](https://github.com/withastro/astro)
 - [Astro Discord](https://astro.build/chat)
-- [FlowAgent Main README](../../README.md)
+- [MrLiouAI Main README](../../README.md)
 - [Apps Deployment Guide](../README.md)
 
 ---

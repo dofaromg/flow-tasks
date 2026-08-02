@@ -66,7 +66,7 @@ kubectl apply -k cluster/overlays/prod/
 部署完成後，使用以下命令獲取外部 IP：
 
 ```bash
-kubectl get svc nextjs-frontend -n flowagent
+kubectl get svc nextjs-frontend -n mrliouai
 ```
 
 等待 `EXTERNAL-IP` 分配完成後，通過瀏覽器訪問該 IP。
@@ -77,24 +77,24 @@ kubectl get svc nextjs-frontend -n flowagent
 
 ```bash
 # 查看所有副本的日誌
-kubectl logs -l app=nextjs-frontend -n flowagent --tail=100 -f
+kubectl logs -l app=nextjs-frontend -n mrliouai --tail=100 -f
 
 # 查看特定 pod 的日誌
-kubectl logs <pod-name> -n flowagent -f
+kubectl logs <pod-name> -n mrliouai -f
 ```
 
 ### 查看 Pod 狀態
 
 ```bash
-kubectl get pods -l app=nextjs-frontend -n flowagent
-kubectl describe pod <pod-name> -n flowagent
+kubectl get pods -l app=nextjs-frontend -n mrliouai
+kubectl describe pod <pod-name> -n mrliouai
 ```
 
 ### 查看服務狀態
 
 ```bash
-kubectl get svc nextjs-frontend -n flowagent
-kubectl describe svc nextjs-frontend -n flowagent
+kubectl get svc nextjs-frontend -n mrliouai
+kubectl describe svc nextjs-frontend -n mrliouai
 ```
 
 ## 🔄 更新部署
@@ -111,13 +111,13 @@ kubectl apply -k cluster/overlays/prod/
 
 ```bash
 # 查看部署歷史
-kubectl rollout history deployment/nextjs-frontend -n flowagent
+kubectl rollout history deployment/nextjs-frontend -n mrliouai
 
 # 回滾到上一個版本
-kubectl rollout undo deployment/nextjs-frontend -n flowagent
+kubectl rollout undo deployment/nextjs-frontend -n mrliouai
 
 # 回滾到特定版本
-kubectl rollout undo deployment/nextjs-frontend -n flowagent --to-revision=2
+kubectl rollout undo deployment/nextjs-frontend -n mrliouai --to-revision=2
 ```
 
 ## 🛡️ 安全考量

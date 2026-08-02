@@ -10,7 +10,7 @@ x_policy: Anti-Scaffold Law (single-file closure, stdlib only, full runnable)
 
 怎麼過去，就怎麼回來。
 
-血脈：智障系統 → FlowAgent.Runtime v1-v56 → flowcore_loop.py → FlowContainer
+血脈：智障系統 → MrLiouAI.Runtime v1-v56 → flowcore_loop.py → FlowContainer
 
 架構：
   boot → ServiceRegistry(yaml) → DependencyResolver(拓撲排序)

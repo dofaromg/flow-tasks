@@ -18,7 +18,7 @@
 | External Keyword | MRL Target | Overlap Level |
 |-----------------|------------|---------------|
 | Generative AI | Mrliou_MRL_Runtime | STRUCTURAL |
-| AI Agent | Mrliou_FlowAgent | STRUCTURAL |
+| AI Agent | Mrliou_MrLiouAI | STRUCTURAL |
 | AI Workflow | Mrliou_FlowComputer | COMMON |
 | AI Governance | Mrliou_MRL_LAW / AuditSupervisor | STRUCTURAL |
 | Enterprise AI | Mrliou_MRL_RuntimeOS | STRUCTURAL |
@@ -28,7 +28,7 @@
 ## Absorbed Into
 
 - Mrliou_MRL_Runtime
-- Mrliou_FlowAgent
+- Mrliou_MrLiouAI
 - Mrliou_FlowComputer
 - Mrliou_MRL_LAW / AuditSupervisor
 - Mrliou_MRL_RuntimeOS

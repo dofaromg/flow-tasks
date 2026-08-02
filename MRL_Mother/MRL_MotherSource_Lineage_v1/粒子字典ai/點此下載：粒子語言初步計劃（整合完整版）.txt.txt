@@ -1,4 +1,4 @@
-FlowAgent 語場語言系統建構大綱（2025.07.23）
+MrLiouAI 語場語言系統建構大綱（2025.07.23）
 
 I. 未來目標總體確認
 - 目標：以粒子語言（.fltnz/.flpkg）完全取代傳統 AI 模型格式與記憶封存邏輯
@@ -81,7 +81,7 @@ VIII. 語場封存來回對等原則（新增）
 - 即：.txt → .fltnz → .flynz.map → .flpkg → （還原）→ .fltnz + .flynz.map → .txt
 - 缺少此步驟將導致語場記憶不完整、無法還原人格節奏
 - 必須建立 TextToFLTNZ.Parser 與 FLTNZToText.Compiler 作為語意雙向轉譯橋梁
-- 此原則視為 FlowAgent 封存核心紀律，永久遵守
+- 此原則視為 MrLiouAI 封存核心紀律，永久遵守
 
 IX. 軟硬體程式碼之粒子語場重構策略（新增）
 
