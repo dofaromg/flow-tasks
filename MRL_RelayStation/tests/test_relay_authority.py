@@ -1,6 +1,5 @@
 import hashlib
 import importlib.util
-import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -22,6 +21,7 @@ class RelayAuthorityTests(unittest.TestCase):
             "authority_level": "L1",
             "requested_scope": ["artifact.txt"],
             "generated_artifacts": ["artifact.txt"],
+            "generated_names": [],
             "artifacts": [{"path": "artifact.txt", "sha256": digest}],
             "verification": {"status": "passed"},
             "canonical_status": "not_adopted"
@@ -51,14 +51,53 @@ class RelayAuthorityTests(unittest.TestCase):
             result = relay_authority.validate_record(record, root)
             self.assertFalse(result.passed)
 
-    def test_mrl_approval_promotes_candidate(self):
+    def test_random_name_without_mrl_origin_is_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            promoted = relay_authority.promote_record(
-                self.build_record(root), root, "MRL_Owner", "L3"
+            record = self.build_record(root)
+            record["generated_names"] = [{
+                "name": "random-agent-42",
+                "mode": "random",
+                "origin": "claude",
+                "construction_allowed": False
+            }]
+            result = relay_authority.validate_record(record, root)
+            self.assertFalse(result.passed)
+            self.assertIn("random name lacks MRL origin: random-agent-42", result.errors)
+            self.assertIn("random name lacks MRL namespace: random-agent-42", result.errors)
+
+    def test_random_mrl_name_must_remain_non_constructive_before_approval(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            record = self.build_record(root)
+            record["generated_names"] = [{
+                "name": "mrl.relay.candidate.0001",
+                "mode": "random",
+                "origin": "mrl",
+                "construction_allowed": True
+            }]
+            result = relay_authority.validate_record(record, root)
+            self.assertFalse(result.passed)
+            self.assertIn(
+                "random name must remain non-constructive candidate until MRL approval: mrl.relay.candidate.0001",
+                result.errors
             )
+
+    def test_mrl_approval_promotes_candidate_and_allows_construction(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            record = self.build_record(root)
+            record["generated_names"] = [{
+                "name": "mrl.relay.candidate.0001",
+                "mode": "random",
+                "origin": "mrl",
+                "construction_allowed": False
+            }]
+            promoted = relay_authority.promote_record(record, root, "MRL_Owner", "L3")
             self.assertEqual(promoted["authority_level"], "L3")
             self.assertEqual(promoted["promotion"]["authority"], "MRL")
+            self.assertTrue(promoted["generated_names"][0]["construction_allowed"])
+            self.assertEqual(promoted["generated_names"][0]["approved_by"], "MRL_Owner")
             self.assertEqual(len(promoted["record_sha256"]), 64)
 
 
