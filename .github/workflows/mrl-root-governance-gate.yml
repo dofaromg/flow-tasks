@@ -1,7 +1,7 @@
 name: MRL Root Governance Gate
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main]
@@ -17,16 +17,16 @@ jobs:
       - name: Checkout trusted base
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.base.sha || github.sha }}
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
           fetch-depth: 0
           persist-credentials: false
       - name: Fetch proposed Git object without executing it
-        if: github.event_name == 'pull_request_target'
+        if: github.event_name == 'pull_request'
         env:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: git fetch --no-tags origin "$HEAD_SHA"
       - name: Validate proposed change from trusted validator
-        if: github.event_name == 'pull_request_target'
+        if: github.event_name == 'pull_request'
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}

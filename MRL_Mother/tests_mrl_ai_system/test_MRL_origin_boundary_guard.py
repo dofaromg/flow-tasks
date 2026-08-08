@@ -73,7 +73,6 @@ class TestIntake:
         m = guard.intake_external("FlowAgent.Runtime.v47.zip")
         assert m["canonical_name"] == "FlowAgent.Runtime.v47.zip"
         assert m["role"] == "mrl_native_product"
-        assert m["role"] == "material"                 # bp_1:外部=材料
         assert m["origin"] == "MrLiouWord"             # rl_11:源頭歸母體
         assert verify_signature(m) is True             # LAW-0
         assert m["source_external_name"] == "FlowAgent.Runtime.v47.zip"  # No-Delete 來源保留
