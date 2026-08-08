@@ -44,6 +44,8 @@ def main() -> None:
     for key in required_true:
         if policy.get(key) is not True:
             fail(f"policy {key} must be true")
+    if policy.get("global_destructive_rename_allowed") is not False:
+        fail("policy global_destructive_rename_allowed must be false")
 
     mappings = {item.get("source"): item for item in data.get("mappings", [])}
     for source, extension in EXPECTED.items():
