@@ -33,6 +33,9 @@ MANIFEST
 
 # Node dependencies
 node_modules/
+.next/
+.vercel/
+npm-debug.log*
 
 # Next.js build output
 .next/
