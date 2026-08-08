@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-export default function Home() {
-  return (
-    <main style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', fontFamily: 'sans-serif' }}>
-      <h1>Flow Next.js App</h1>
-    </main>
-=======
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { getGrowthBook, isFeatureOn, getFeatureValue, FLAGS } from '../lib/growthbook';
@@ -267,6 +260,5 @@ export default function Home() {
         </section>
       </main>
     </>
->>>>>>> origin/main
   );
 }
