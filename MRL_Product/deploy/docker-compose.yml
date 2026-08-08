@@ -1,0 +1,68 @@
+# MRL_Product_v1 Docker Compose
+# origin_signature: MrLiouWord
+# target: DL580 G9 自有部署  v1.2
+#
+# HOST 目錄（需預先建立，見 deploy.md）：
+#   /opt/mrl_product_v1/storage/    ← SQLite
+#   /opt/mrl_product_v1/logs/app    ← App logs
+#   /opt/mrl_product_v1/logs/nginx  ← Nginx logs
+#   /opt/mrl_product_v1/ssl/        ← SSL 憑證（HTTPS 用）
+#
+# 啟動：  docker compose up -d --build
+# 停止：  docker compose down
+# 重啟：  docker compose restart
+# Log：   docker compose logs -f app
+
+services:
+
+  # ── App：Node.js MRL_Product_v1 ──────────────────────────────
+  app:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: mrl-product-v1:latest
+    container_name: mrl-app
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    environment:
+      - DB_PATH=/app/storage/db.sqlite
+      - LOG_DIR=/app/logs
+    volumes:
+      # SQLite — host bind，資料永久保存
+      - /opt/mrl_product_v1/storage:/app/storage
+      # App logs — host bind，可直接 tail
+      - /opt/mrl_product_v1/logs/app:/app/logs
+    networks:
+      - mrl-net
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  # ── Nginx：反向代理 ───────────────────────────────────────────
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: mrl-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - /opt/mrl_product_v1/logs/nginx:/var/log/nginx
+      # SSL 憑證（取得後取消註解）
+      # - /opt/mrl_product_v1/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - mrl-net
+
+networks:
+  mrl-net:
+    driver: bridge

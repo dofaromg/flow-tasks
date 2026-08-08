@@ -1,0 +1,5 @@
+# Allowlisted hosts for FlowAgent external calls.
+# Start empty: deny-by-default. Add hosts only after verifying TOS + legal rights.
+hosts:
+  - example.com
+  # - api.your-company.internal

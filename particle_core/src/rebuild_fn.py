@@ -5,35 +5,18 @@ import json
 import os
 from typing import List, Dict, Any, Optional
 from datetime import datetime
+from pipeline_constants import PIPELINE_STEPS, STEP_EXPLANATIONS, COMPRESSED_SEED
 
 class FunctionRestorer:
     """MRLiou 函數還原重建器"""
     
     def __init__(self):
         self.restore_map = {
-            "SEED(X) = STORE(RECURSE(FLOW(MARK(STRUCTURE(X)))))": [
-                "structure",
-                "mark", 
-                "flow",
-                "recurse",
-                "store"
-            ],
-            "COMPACT_SEED": [
-                "structure",
-                "mark",
-                "flow", 
-                "recurse",
-                "store"
-            ]
+            COMPRESSED_SEED: list(PIPELINE_STEPS),
+            "COMPACT_SEED": list(PIPELINE_STEPS)
         }
         
-        self.explanations = {
-            "structure": "定義輸入資料結構",
-            "mark": "建立邏輯跳點標記",
-            "flow": "轉換為流程結構節奏",
-            "recurse": "遞歸展開為細部結構",
-            "store": "封存至模組記憶結構"
-        }
+        self.explanations = dict(STEP_EXPLANATIONS)
     
     def decompress_fn(self, compressed_code: str) -> List[str]:
         """解壓縮 .flpkg 格式至函數步驟"""
@@ -41,22 +24,22 @@ class FunctionRestorer:
         normalized = compressed_code.strip()
         
         # 檢查已知的壓縮格式
-        for pattern, function_steps in self.restore_map.items():
+        for pattern, steps in self.restore_map.items():
             if pattern in normalized:
-                return function_steps
+                return steps
         
         # 嘗試解析其他格式
         if "SEED" in normalized:
-            return ["structure", "mark", "flow", "recurse", "store"]
+            return list(PIPELINE_STEPS)
         
         return ["UNKNOWN_LOGIC"]
     
     def compress_fn(self, function_steps: List[str]) -> str:
         """壓縮函數步驟為 .flpkg 格式"""
-        standard_steps = ["structure", "mark", "flow", "recurse", "store"]
+        standard_steps = list(PIPELINE_STEPS)
         
         if function_steps == standard_steps:
-            return "SEED(X) = STORE(RECURSE(FLOW(MARK(STRUCTURE(X)))))"
+            return COMPRESSED_SEED
         
         # 建構動態壓縮
         if len(function_steps) > 0:
@@ -73,10 +56,10 @@ class FunctionRestorer:
     
     def simulate_execution(self, function_steps: List[str], input_data: str = "X") -> str:
         """模擬執行函數鏈"""
-        output = input_data
+        current_output = input_data
         for step in function_steps:
-            output = f"[{step.upper()} → {output}]"
-        return output
+            current_output = f"[{step.upper()} → {current_output}]"
+        return current_output
     
     def create_flpkg_package(self, function_steps: List[str], metadata: Optional[Dict] = None) -> Dict[str, Any]:
         """建立 .flpkg 封包格式"""
@@ -98,17 +81,17 @@ class FunctionRestorer:
     
     def save_flpkg(self, package: Dict[str, Any], filename: str) -> str:
         """儲存 .flpkg 檔案"""
-        filepath = filename if filename.endswith('.flpkg.json') else f"{filename}.flpkg.json"
+        output_filepath = filename if filename.endswith('.flpkg.json') else f"{filename}.flpkg.json"
         
-        with open(filepath, 'w', encoding='utf-8') as f:
-            json.dump(package, f, ensure_ascii=False, indent=2)
+        with open(output_filepath, 'w', encoding='utf-8') as output_file:
+            json.dump(package, output_file, ensure_ascii=False, indent=2)
         
-        return filepath
+        return output_filepath
     
     def load_flpkg(self, filename: str) -> Dict[str, Any]:
         """載入 .flpkg 檔案"""
-        with open(filename, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        with open(filename, 'r', encoding='utf-8') as input_file:
+            return json.load(input_file)
     
     def validate_flpkg(self, package: Dict[str, Any]) -> bool:
         """驗證 .flpkg 封包完整性"""

@@ -1,0 +1,7 @@
+[Fluin Pulse Embed Spec v1]
+
+對應脈衝語法：
+dot = 10ms pulse
+collapse = silence
+echo = harmonic encoding
+用途：低層記憶通道 / 電位封裝 / 植入載波

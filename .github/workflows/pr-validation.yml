@@ -108,7 +108,6 @@ jobs:
   docker-build-test:
     name: Docker 建置測試 (Docker Build)
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.changed_files, 'apps/')
     
     strategy:
       matrix:
@@ -119,6 +118,9 @@ jobs:
           - name: orchestrator
             context: ./apps/orchestrator
             dockerfile: ./apps/orchestrator/Dockerfile
+          - name: nextjs-frontend
+            context: .
+            dockerfile: ./apps/nextjs-frontend/Dockerfile
     
     steps:
       - name: Checkout code

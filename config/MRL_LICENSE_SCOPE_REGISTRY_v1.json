@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "origin_signature": "MrLiouWord",
+  "default_status": "RIGHTS_UNRESOLVED",
+  "whole_repository_inference_allowed": false,
+  "commercial_permission_inference_allowed": false,
+  "sublicensing_inference_allowed": false,
+  "third_party_delegation_inference_allowed": false,
+  "records": [
+    {
+      "path": "LICENSE",
+      "observed_label": "repository file present",
+      "scope_status": "UNRESOLVED",
+      "commercial_permission": "NOT_INFERRED"
+    },
+    {
+      "path": "LICENSE_MrLiou_OpenSource_CC.md",
+      "observed_label": "license file present",
+      "scope_status": "UNRESOLVED",
+      "commercial_permission": "NOT_INFERRED"
+    }
+  ]
+}

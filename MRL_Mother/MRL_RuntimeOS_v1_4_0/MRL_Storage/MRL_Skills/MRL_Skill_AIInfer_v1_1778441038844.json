@@ -1,0 +1,17 @@
+{
+  "origin_signature": "MrLiouWord",
+  "skill": "MRL_Skill_AIInfer_v1",
+  "duration_ms": 2,
+  "result": {
+    "origin_signature": "MrLiouWord",
+    "service": "MRL_RuntimeOS_AIModelGateway_Service_v1",
+    "backend": "ollama",
+    "model": "mrl-test-model:latest",
+    "statusCode": 200,
+    "output": "MRL_TEST_AI_RESPONSE:skill prompt",
+    "raw": {
+      "model": "mrl-test-model:latest",
+      "response": "MRL_TEST_AI_RESPONSE:skill prompt"
+    }
+  }
+}

@@ -5,18 +5,19 @@ import json
 
 import pytest
 
+
 def test_task_integration():
     """Test integration with flow-tasks system"""
     print("=== Flow-Tasks Integration Test ===")
-
+    
     # Check if we're in the right location
     assert os.path.exists("tasks"), "Not in flow-tasks root directory"
-
+        
     # Check task definition
     task_file = "tasks/2025-07-31_particle-language-core.yaml"
     assert os.path.exists(task_file), f"Task definition missing: {task_file}"
     print(f"✓ Task definition exists: {task_file}")
-
+    
     # Check particle core directory
     assert os.path.exists("particle_core"), "Particle core directory missing"
     print("✓ Particle core directory exists")
@@ -38,10 +39,10 @@ def test_task_integration():
     try:
         from logic_pipeline import LogicPipeline
         pipeline = LogicPipeline()
-        result = pipeline.simulate("Integration Test")
-        print(f"✓ Logic pipeline test: {result['result'][:50]}...")
-    except Exception as e:
-        pytest.fail(f"Logic pipeline import failed: {e}")
+        simulation_result = pipeline.simulate("Integration Test")
+        print(f"✓ Logic pipeline test: {simulation_result['result'][:50]}...")
+    except Exception as pipeline_error:
+        pytest.fail(f"Logic pipeline import failed: {pipeline_error}")
 
     # Create task result
     create_task_result()

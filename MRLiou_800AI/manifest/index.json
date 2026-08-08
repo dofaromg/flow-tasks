@@ -1,0 +1,338 @@
+{
+  "package": "MRLiou_800AI_Integrated_WindowsServer_GitHub_Deploy_v1_1_0",
+  "version": "1.1.0",
+  "origin_signature": "MrLiouWord",
+  "canonical_platform": "Windows Server",
+  "file_count": 82,
+  "generated_at_utc": "2026-07-09T23:31:12.740927+00:00",
+  "files": [
+    {
+      "path": ".env.example",
+      "size": 128
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "size": 652
+    },
+    {
+      "path": ".gitignore",
+      "size": 281
+    },
+    {
+      "path": "Dockerfile",
+      "size": 181
+    },
+    {
+      "path": "LICENSE",
+      "size": 256
+    },
+    {
+      "path": "Makefile",
+      "size": 246
+    },
+    {
+      "path": "README.md",
+      "size": 4516
+    },
+    {
+      "path": "ROADMAP.md",
+      "size": 2351
+    },
+    {
+      "path": "VERSION",
+      "size": 6
+    },
+    {
+      "path": "config/agents.json",
+      "size": 1296
+    },
+    {
+      "path": "config/organization.json",
+      "size": 503
+    },
+    {
+      "path": "config/windows_server.runtime.example.json",
+      "size": 197
+    },
+    {
+      "path": "data/processed/.gitkeep",
+      "size": 0
+    },
+    {
+      "path": "data/raw/.gitkeep",
+      "size": 0
+    },
+    {
+      "path": "data/snapshots/.gitkeep",
+      "size": 0
+    },
+    {
+      "path": "docker-compose.yml",
+      "size": 186
+    },
+    {
+      "path": "docs/800_AI_INTEGRATION.md",
+      "size": 463
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "size": 908
+    },
+    {
+      "path": "docs/CONSERVATION_CHECKER.md",
+      "size": 499
+    },
+    {
+      "path": "docs/ENGINEERING_WAKE_PROTOCOL.md",
+      "size": 641
+    },
+    {
+      "path": "docs/GITHUB_DEPLOYMENT.md",
+      "size": 885
+    },
+    {
+      "path": "docs/SOURCE_ALIGNMENT.md",
+      "size": 505
+    },
+    {
+      "path": "docs/WINDOWS_SERVER_DEPLOYMENT.md",
+      "size": 2941
+    },
+    {
+      "path": "docs/WINDOWS_SERVER_OPERATIONS.md",
+      "size": 1336
+    },
+    {
+      "path": "evidence/source_materials/CareOS_σ¢¢σÅ░VMσ╛⌐τ¢ñσôüτ«íσá▒σæè_2026-03-11(1).md",
+      "size": 5954
+    },
+    {
+      "path": "evidence/source_materials/MRL_Claude_Engineering_Wake_Protocol_v1.0(3).docx",
+      "size": 12498
+    },
+    {
+      "path": "evidence/source_materials/MRLiou_800AI_Notion_Screenshot.png",
+      "size": 980830
+    },
+    {
+      "path": "evidence/source_materials/MrLµû░µ₧╢µºï (2)(2).txt",
+      "size": 136334
+    },
+    {
+      "path": "evidence/source_materials/sun_feb_01_2026_ai_Φ╢àτ┤ÜΘ¢╗Φàª_v_1_0(1)(1).json",
+      "size": 17806
+    },
+    {
+      "path": "evidence/source_materials/supercomputer_ready.txt(3).docx",
+      "size": 9162
+    },
+    {
+      "path": "evidence/source_materials/µûçσ¡ù(6).txt",
+      "size": 5674
+    },
+    {
+      "path": "evidence/source_materials/≡ƒîÉ MRLiou_ASI Φ╢àτ┤ÜΘ¢╗Φàª - σ«îµò┤τ│╗τ╡▒µ₧╢µºïτÖ╜τÜ«µ¢╕ v1 0 2.zip",
+      "size": 8643527
+    },
+    {
+      "path": "examples/make_cfd_mass_sample.py",
+      "size": 281
+    },
+    {
+      "path": "logs/.gitkeep",
+      "size": 0
+    },
+    {
+      "path": "manifest/AUDIT_REPORT.md",
+      "size": 1822
+    },
+    {
+      "path": "manifest/DEPENDENCY_TREE.md",
+      "size": 1033
+    },
+    {
+      "path": "manifest/EXPECTED_FILE_LIST.md",
+      "size": 936
+    },
+    {
+      "path": "manifest/PACKAGE_MAP.md",
+      "size": 818
+    },
+    {
+      "path": "manifest/VERIFY_OUTPUT.txt",
+      "size": 2998
+    },
+    {
+      "path": "manifest/checksums.txt",
+      "size": 7880
+    },
+    {
+      "path": "manifest/index.json",
+      "size": 6794
+    },
+    {
+      "path": "pyproject.toml",
+      "size": 457
+    },
+    {
+      "path": "requirements.txt",
+      "size": 12
+    },
+    {
+      "path": "runs/.gitkeep",
+      "size": 0
+    },
+    {
+      "path": "scripts/github_deploy.ps1",
+      "size": 345
+    },
+    {
+      "path": "scripts/install.ps1",
+      "size": 322
+    },
+    {
+      "path": "scripts/install.sh",
+      "size": 227
+    },
+    {
+      "path": "scripts/package.ps1",
+      "size": 484
+    },
+    {
+      "path": "scripts/package.sh",
+      "size": 246
+    },
+    {
+      "path": "scripts/verify.ps1",
+      "size": 142
+    },
+    {
+      "path": "scripts/verify.sh",
+      "size": 598
+    },
+    {
+      "path": "scripts/windows/Backup-Runtime.ps1",
+      "size": 1170
+    },
+    {
+      "path": "scripts/windows/Close-Firewall.ps1",
+      "size": 365
+    },
+    {
+      "path": "scripts/windows/Common.ps1",
+      "size": 2916
+    },
+    {
+      "path": "scripts/windows/Deploy-GitHub.ps1",
+      "size": 2110
+    },
+    {
+      "path": "scripts/windows/Get-RuntimeStatus.ps1",
+      "size": 1005
+    },
+    {
+      "path": "scripts/windows/Install-WindowsServer.ps1",
+      "size": 3332
+    },
+    {
+      "path": "scripts/windows/Open-Firewall.ps1",
+      "size": 602
+    },
+    {
+      "path": "scripts/windows/Register-StartupTask.ps1",
+      "size": 1183
+    },
+    {
+      "path": "scripts/windows/Start-Runtime.ps1",
+      "size": 826
+    },
+    {
+      "path": "scripts/windows/Stop-Runtime.ps1",
+      "size": 695
+    },
+    {
+      "path": "scripts/windows/Test-Prerequisites.ps1",
+      "size": 502
+    },
+    {
+      "path": "scripts/windows/Unregister-StartupTask.ps1",
+      "size": 536
+    },
+    {
+      "path": "scripts/windows/Verify-WindowsServer.ps1",
+      "size": 1858
+    },
+    {
+      "path": "secrets/.gitkeep",
+      "size": 0
+    },
+    {
+      "path": "src/mrliou_800ai/__init__.py",
+      "size": 111
+    },
+    {
+      "path": "src/mrliou_800ai/api.py",
+      "size": 4840
+    },
+    {
+      "path": "src/mrliou_800ai/audit.py",
+      "size": 1198
+    },
+    {
+      "path": "src/mrliou_800ai/cli.py",
+      "size": 1779
+    },
+    {
+      "path": "src/mrliou_800ai/config.py",
+      "size": 336
+    },
+    {
+      "path": "src/mrliou_800ai/datastore.py",
+      "size": 1362
+    },
+    {
+      "path": "src/mrliou_800ai/orchestrator.py",
+      "size": 1306
+    },
+    {
+      "path": "src/mrliou_800ai/physics/conservation.py",
+      "size": 1206
+    },
+    {
+      "path": "src/mrliou_800ai/physics/operators.py",
+      "size": 811
+    },
+    {
+      "path": "src/mrliou_800ai/physics/pipeline.py",
+      "size": 1087
+    },
+    {
+      "path": "src/mrliou_800ai/registry.py",
+      "size": 560
+    },
+    {
+      "path": "src/mrliou_800ai/security.py",
+      "size": 1228
+    },
+    {
+      "path": "src/mrliou_800ai/trace.py",
+      "size": 1495
+    },
+    {
+      "path": "systemd/mrliou-800ai.service",
+      "size": 344
+    },
+    {
+      "path": "tests/test_orchestrator.py",
+      "size": 713
+    },
+    {
+      "path": "tests/test_runtime.py",
+      "size": 860
+    },
+    {
+      "path": "tests/test_security.py",
+      "size": 1291
+    }
+  ]
+}

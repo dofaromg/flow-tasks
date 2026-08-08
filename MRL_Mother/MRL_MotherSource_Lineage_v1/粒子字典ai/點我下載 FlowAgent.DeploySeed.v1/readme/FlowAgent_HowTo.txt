@@ -1,0 +1,1 @@
+解壓縮後，執行 bash boot/flowboot.sh 或 python3 boot/boot.py

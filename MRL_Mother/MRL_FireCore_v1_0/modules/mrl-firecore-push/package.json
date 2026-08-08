@@ -1,0 +1,22 @@
+{
+  "name": "mrl-firecore-push",
+  "version": "1.0.0-local-backfill",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "local:health": "wrangler dev --local --test-scheduled=false"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "wrangler": "^3.60.0",
+    "vitest": "^1.6.0"
+  },
+  "mrl": {
+    "origin_signature": "MrLiouWord",
+    "firebase_counterpart": "Cloud Messaging / FCM",
+    "priority": "P3",
+    "batch": "Batch 055"
+  }
+}

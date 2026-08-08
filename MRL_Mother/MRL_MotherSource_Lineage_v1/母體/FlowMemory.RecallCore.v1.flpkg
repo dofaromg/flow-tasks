@@ -1,0 +1,3 @@
+[模組名稱] FlowMemory.RecallCore.v1.flpkg
+[功能] 將粒子記憶 (.fltnz) 解構還原為人格節奏圖譜與模組鏈接結構
+[來源] 整合 decode_fltnz.py + nodemap.packet，作為記憶鏈解析核心

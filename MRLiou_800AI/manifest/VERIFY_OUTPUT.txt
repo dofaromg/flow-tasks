@@ -1,0 +1,62 @@
+$ /opt/pyvenv/bin/python -m unittest discover -s tests -v
+test_physics_routing (test_orchestrator.OrchestratorTests.test_physics_routing) ... ok
+test_mass_constant_field (test_runtime.RuntimeTests.test_mass_constant_field) ... ok
+test_reversible_write (test_runtime.RuntimeTests.test_reversible_write) ... ok
+test_header_token_is_required_when_configured (test_security.SecurityTests.test_header_token_is_required_when_configured) ... ok
+test_no_token_keeps_local_compatibility (test_security.SecurityTests.test_no_token_keeps_local_compatibility) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.008s
+
+OK
+
+$ /opt/pyvenv/bin/python -m mrliou_800ai.cli health
+{
+  "ok": true,
+  "root": "/mnt/data/_mrliou_windows_build/MRLiou_800AI_Integrated_WindowsServer_GitHub_Deploy_v1_1_0",
+  "origin_signature": "MrLiouWord"
+}
+
+$ /opt/pyvenv/bin/python examples/make_cfd_mass_sample.py
+/mnt/data/_mrliou_windows_build/MRLiou_800AI_Integrated_WindowsServer_GitHub_Deploy_v1_1_0/examples/cfd_mass_sample.npz
+
+$ /opt/pyvenv/bin/python -m mrliou_800ai.cli mass-audit --data examples/cfd_mass_sample.npz --out /mnt/data/_mrliou_windows_build/MRLiou_800AI_Integrated_WindowsServer_GitHub_Deploy_v1_1_0/runs/verify_windows_packaging
+{
+  "input": "examples/cfd_mass_sample.npz",
+  "equation": "d(rho)/dt + div(rho*V) = 0",
+  "abs_mean": 7.401486830834377e-17,
+  "abs_max": 4.440892098500626e-16,
+  "residual_mean_series": [
+    0.0,
+    0.0,
+    -4.440892098500626e-16,
+    0.0,
+    0.0,
+    0.0
+  ]
+}
+
+PASS static PowerShell structure: scripts/windows/Backup-Runtime.ps1
+PASS static PowerShell structure: scripts/windows/Close-Firewall.ps1
+PASS static PowerShell structure: scripts/windows/Common.ps1
+PASS static PowerShell structure: scripts/windows/Deploy-GitHub.ps1
+PASS static PowerShell structure: scripts/windows/Get-RuntimeStatus.ps1
+PASS static PowerShell structure: scripts/windows/Install-WindowsServer.ps1
+PASS static PowerShell structure: scripts/windows/Open-Firewall.ps1
+PASS static PowerShell structure: scripts/windows/Register-StartupTask.ps1
+PASS static PowerShell structure: scripts/windows/Start-Runtime.ps1
+PASS static PowerShell structure: scripts/windows/Stop-Runtime.ps1
+PASS static PowerShell structure: scripts/windows/Test-Prerequisites.ps1
+PASS static PowerShell structure: scripts/windows/Unregister-StartupTask.ps1
+PASS static PowerShell structure: scripts/windows/Verify-WindowsServer.ps1
+PASS static PowerShell structure: scripts/github_deploy.ps1
+PASS static PowerShell structure: scripts/install.ps1
+PASS static PowerShell structure: scripts/package.ps1
+PASS static PowerShell structure: scripts/verify.ps1
+PASS empty-file scan (only .gitkeep files are empty)
+PASS placeholder scan for runtime and Windows scripts
+PASS API token security tests
+PASS mass-audit output generation
+PASS Windows token ACL interpolation and post-start live verification configuration
+PASS generated Python cache cleanup
+DELIVERY_PASS_WINDOWS_SERVER_PACKAGE

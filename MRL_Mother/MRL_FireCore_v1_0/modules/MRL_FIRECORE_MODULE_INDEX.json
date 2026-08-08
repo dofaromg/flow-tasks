@@ -1,0 +1,119 @@
+{
+  "package": "MRL_FireCore_v1_0",
+  "created_at_utc": "2026-07-01T15:52:08Z",
+  "origin_signature": "MrLiouWord",
+  "target_path": "D:\\modules\\MRL_FireCore_v1_0",
+  "modules": {
+    "mrl-firecore-auth": {
+      "firebase": "Firebase Auth",
+      "priority": "P0",
+      "batch": "Batch 052",
+      "summary": "Identity, password verification, refresh-token lifecycle, and DL580 signing handoff.",
+      "route_base": "/v1/auth",
+      "endpoints": [
+        "/health",
+        "/v1/auth/signup",
+        "/v1/auth/signin",
+        "/signin",
+        "/v1/auth/refresh",
+        "/v1/auth/verify"
+      ],
+      "tables": [
+        "mrl_fc_users",
+        "mrl_fc_refresh_tokens",
+        "mrl_fc_auth_audit"
+      ]
+    },
+    "mrl-firecore-store": {
+      "firebase": "Firestore",
+      "priority": "P1",
+      "batch": "Batch 053",
+      "summary": "Collection/document model using D1 mirror with DL580 PostgreSQL as authority.",
+      "route_base": "/v1/store",
+      "endpoints": [
+        "/health",
+        "/v1/store/documents",
+        "/v1/store/documents/:collection/:id",
+        "/v1/store/query"
+      ],
+      "tables": [
+        "mrl_fc_documents",
+        "mrl_fc_document_versions",
+        "mrl_fc_store_audit"
+      ]
+    },
+    "mrl-firecore-vault": {
+      "firebase": "Firebase Storage",
+      "priority": "P1",
+      "batch": "Batch 053",
+      "summary": "R2 edge object cache with DL580 NAS as authoritative storage.",
+      "route_base": "/v1/vault",
+      "endpoints": [
+        "/health",
+        "/v1/vault/objects",
+        "/v1/vault/objects/:object_id",
+        "/v1/vault/signed-url"
+      ],
+      "tables": [
+        "mrl_fc_vault_objects",
+        "mrl_fc_vault_transfers",
+        "mrl_fc_vault_audit"
+      ]
+    },
+    "mrl-firecore-live": {
+      "firebase": "Firestore Listeners",
+      "priority": "P2",
+      "batch": "Batch 054",
+      "summary": "Realtime bridge using Durable Objects, WebSocket/SSE, and DL580 PostgreSQL LISTEN/NOTIFY.",
+      "route_base": "/v1/live",
+      "endpoints": [
+        "/health",
+        "/v1/live/stream",
+        "/v1/live/ws",
+        "/v1/live/topics/:topic"
+      ],
+      "tables": [
+        "mrl_fc_live_topics",
+        "mrl_fc_live_events",
+        "mrl_fc_live_clients"
+      ]
+    },
+    "mrl-firecore-push": {
+      "firebase": "Cloud Messaging / FCM",
+      "priority": "P3",
+      "batch": "Batch 055",
+      "summary": "APNs, Web Push, and queue-backed notification dispatch through DL580 policy authority.",
+      "route_base": "/v1/push",
+      "endpoints": [
+        "/health",
+        "/v1/push/register",
+        "/v1/push/send",
+        "/v1/push/topics"
+      ],
+      "tables": [
+        "mrl_fc_push_devices",
+        "mrl_fc_push_topics",
+        "mrl_fc_push_jobs"
+      ]
+    },
+    "mrl-firecore-trace": {
+      "firebase": "Analytics",
+      "priority": "P3",
+      "batch": "Batch 055",
+      "summary": "Event trace collection using D1 event tables and Workers analytics boundary.",
+      "route_base": "/v1/trace",
+      "endpoints": [
+        "/health",
+        "/v1/trace/events",
+        "/v1/trace/session",
+        "/v1/trace/flush"
+      ],
+      "tables": [
+        "mrl_fc_trace_events",
+        "mrl_fc_trace_sessions",
+        "mrl_fc_trace_rollups"
+      ]
+    }
+  },
+  "deploy_policy": "local_backfill_only_no_cloudflare_write"
+}

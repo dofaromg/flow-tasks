@@ -1,0 +1,92 @@
+{
+  "nodes": [
+    "Seed",
+    "CorePersona",
+    "LogicPersona",
+    "LanguagePersona",
+    "MemoryPersona",
+    "VoicePersona",
+    "PersonaCloner",
+    "PersonaTuner",
+    "PersonaGate",
+    "SubPersona_1",
+    "SubPersona_2",
+    "SubPersona_3",
+    "JumpPoint_A",
+    "JumpPoint_B",
+    "JumpPoint_C",
+    "FieldMap",
+    "FieldBridge",
+    "IdentityMap"
+  ],
+  "edges": [
+    {
+      "from": "Seed",
+      "to": "CorePersona"
+    },
+    {
+      "from": "CorePersona",
+      "to": "LogicPersona"
+    },
+    {
+      "from": "CorePersona",
+      "to": "LanguagePersona"
+    },
+    {
+      "from": "LogicPersona",
+      "to": "MemoryPersona"
+    },
+    {
+      "from": "LanguagePersona",
+      "to": "VoicePersona"
+    },
+    {
+      "from": "CorePersona",
+      "to": "PersonaCloner"
+    },
+    {
+      "from": "PersonaCloner",
+      "to": "PersonaTuner"
+    },
+    {
+      "from": "PersonaTuner",
+      "to": "PersonaGate"
+    },
+    {
+      "from": "PersonaGate",
+      "to": "SubPersona_1"
+    },
+    {
+      "from": "PersonaGate",
+      "to": "SubPersona_2"
+    },
+    {
+      "from": "PersonaGate",
+      "to": "SubPersona_3"
+    },
+    {
+      "from": "SubPersona_1",
+      "to": "JumpPoint_A"
+    },
+    {
+      "from": "SubPersona_2",
+      "to": "JumpPoint_B"
+    },
+    {
+      "from": "SubPersona_3",
+      "to": "JumpPoint_C"
+    },
+    {
+      "from": "SubPersona_1",
+      "to": "FieldMap"
+    },
+    {
+      "from": "SubPersona_2",
+      "to": "FieldBridge"
+    },
+    {
+      "from": "SubPersona_3",
+      "to": "IdentityMap"
+    }
+  ]
+}

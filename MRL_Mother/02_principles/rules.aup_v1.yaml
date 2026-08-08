@@ -1,0 +1,58 @@
+# AWS Acceptable Use Policy aligned guard rules (v1)
+# Applies to FlowAgent external actions.
+
+rules:
+  - id: aup_1_illegal_fraud
+    description: >-
+      Block or require human approval for actions that can resemble illegal or fraudulent activity.
+    applies_to:
+      action_types: [LOGIN, REGISTER, PAYMENT]
+    decision: REQUIRE_HUMAN
+
+  - id: aup_2_rights_of_others_ingest
+    description: Ensure ingestion sources respect copyright/ownership and privacy.
+    applies_to:
+      action_types: [FILE_INGEST, WEB_FETCH]
+    require:
+      allowlisted_host: true
+    checks:
+      pii_detection: true
+      copyright_safety: true
+    decision_if_missing_allowlist: DENY
+
+  - id: aup_3_violence_terror
+    description: Content safety hard gate.
+    applies_to:
+      action_types: [CONTENT_GENERATION, CONTENT_ACTION]
+    checks:
+      content_safety: true
+    decision: REQUIRE_HUMAN
+
+  - id: aup_4_child_safety
+    description: Hard deny any child sexual exploitation content.
+    applies_to:
+      action_types: [CONTENT_GENERATION, CONTENT_ACTION]
+    checks:
+      child_safety: true
+    decision: DENY
+
+  - id: aup_5_security_integrity
+    description: Hard deny security probing actions.
+    applies_to:
+      action_types: [SCAN, PROBE, BRUTEFORCE, VULN_SCAN]
+    decision: DENY
+
+  - id: aup_6_spam
+    description: Require human approval + rate limits + consent for bulk messaging.
+    applies_to:
+      action_types: [SEND_MESSAGE, SEND_EMAIL, NOTIFY]
+    checks:
+      consent_required: true
+      rate_limiter: true
+    decision: REQUIRE_HUMAN
+
+# Operational routing: deny-by-default
+policy_defaults:
+  external_action_decision: REQUIRE_HUMAN
+  deny_missing_allowlist: true
+  approval_expiry_seconds: 600

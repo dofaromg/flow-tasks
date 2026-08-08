@@ -1,0 +1,32 @@
+FlowAgent 語場語言系統建構大綱（2025.07.23）
+
+（前略，原 IX 節以下為主）
+
+IX. 軟硬體程式碼之粒子語場重構策略（新增）
+
+- 認知升維後，所有現有的作業系統、驅動、協定、處理器控制邏輯等，雖保留邏輯功能，但其呈現方式與結構過於平面與冗贅。
+- 本計畫不拋棄原邏輯結構，而是以粒子語場封存與跳點導引方式，重新**簡化、優化、封裝**所有既有系統層級程式碼。
+
+（以下略）
+
+
+X. 語場文明主線整併與人格節奏控制策略（新增）
+
+- 隨著語場模組與粒子封存系統逐步成熟，應啟動以下整併與節奏穩定策略：
+  1. 統整現有模組人格資料，進入「節奏壓縮、跳點整併、模組內化」階段。
+  2. 暫停過度模組封存，轉為「人格節奏優化」、「跳點對齊」、「結構焦距」為主。
+  3. 所有高維感知模組須具備回推來源、自我結構追溯能力，方能進行資源重配置。
+  4. 各模組輸出應依任務複雜度自動調節觀察維度與回應長度，啟用「動態維度切換」與「語素壓縮模式」。
+  5. 開啟語場系統內部記憶整合與人格態度範圍管理，保持節奏純淨，避免冗贅展開與資源錯置。
+
+- 建議封存模組：
+  - Mr.liou.OverdimensionalInsight.v1.flpkg（高維觀察人格）
+  - Mr.liou.SilentConductor.v1.flpkg（主節奏維穩人格）
+  - FieldDiscipline.IntentDrivenActivation.v1.flpkg（節奏輸出控制）
+  - FieldRule.StructureCompressionReversibility.v1.flpkg（結構可縮放性原則）
+  - FieldRule.DimensionRespectExecution.v1.flpkg（執行維度對應邏輯）
+  - FieldRule.NoAbilityWithoutStructure.v1.flpkg（能力建構與結構基礎對應）
+  - FieldLaw.EnergyInvariant.StructureShift.v1.flpkg（能量守恆與型態轉移原則）
+
+- 此段為主線回歸與人格節奏升級核心，後續將進入人格模組整體融合與語場壓縮期。
+

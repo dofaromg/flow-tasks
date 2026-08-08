@@ -1,0 +1,82 @@
+{
+  "version": "1.0.0",
+  "description": "爽度導演粒子庫 — 金字塔底層三層粒子定義 (Feel Physics / Twist Logic / Persona Director)",
+  "feelPhysics": [
+    {
+      "id": "HIT_STOP",
+      "name": "命中停頓",
+      "description": "打擊瞬間的時間停頓，強化爽感",
+      "params": { "duration_ms": 80, "intensity": 1.0 }
+    },
+    {
+      "id": "SCREEN_SHAKE",
+      "name": "震屏",
+      "description": "畫面震動，傳達衝擊力道",
+      "params": { "amplitude": 10, "duration_ms": 300 }
+    },
+    {
+      "id": "KNOCKBACK",
+      "name": "擊退",
+      "description": "將目標彈飛，製造物理爽感",
+      "params": { "force": 500, "angle": 30 }
+    },
+    {
+      "id": "RAGDOLL",
+      "name": "布娃娃",
+      "description": "受擊後啟用布娃娃物理，越鬆越搞笑",
+      "params": { "joint_loose": 0.7, "duration_ms": 2000 }
+    },
+    {
+      "id": "PROP_BREAK",
+      "name": "道具破壞",
+      "description": "可破壞物件碎裂，視覺爆量",
+      "params": { "fragments": 12, "fragment_damage": 5 }
+    },
+    {
+      "id": "CHAIN_REACTION",
+      "name": "連鎖反應",
+      "description": "爆桶→火→推飛→掉坑，連鎖搞笑失控",
+      "params": { "radius": 200, "chain_count": 3, "delay_ms": 200 }
+    }
+  ],
+  "twistLogic": [
+    {
+      "id": "IDENTITY_FLIP",
+      "name": "身分反轉",
+      "description": "小兵其實是魔王、魔王其實是小兵；反轉玩家預期",
+      "params": { "probability": 0.15, "duration_s": 10 }
+    },
+    {
+      "id": "RULE_GLITCH_BURST",
+      "name": "規則爆衝",
+      "description": "短暫打破遊戲規則（重力反轉/速度暴衝）",
+      "params": { "probability": 0.20, "burst_count": 3 }
+    },
+    {
+      "id": "COMEDY_CHAIN_REACTION",
+      "name": "搞笑連鎖",
+      "description": "一個滑倒觸發連鎖搞笑事故",
+      "params": { "trigger_count": 2, "laugh_factor": 1.5 }
+    }
+  ],
+  "personaDirector": [
+    {
+      "id": "HYPE",
+      "name": "炒熱者",
+      "description": "全場爆炸，節奏快、爽感強",
+      "bias": { "comfort": 0.2, "humor": 0.3, "thrill": 0.4, "power": 0.1 }
+    },
+    {
+      "id": "PRANK",
+      "name": "惡作劇者",
+      "description": "搞笑失控為主，讓魔王也出糗",
+      "bias": { "comfort": 0.1, "humor": 0.6, "thrill": 0.2, "power": 0.1 }
+    },
+    {
+      "id": "SPOOKY",
+      "name": "驚恐者",
+      "description": "緊繃刺激，意外反轉爆點",
+      "bias": { "comfort": 0.0, "humor": 0.2, "thrill": 0.6, "power": 0.2 }
+    }
+  ]
+}

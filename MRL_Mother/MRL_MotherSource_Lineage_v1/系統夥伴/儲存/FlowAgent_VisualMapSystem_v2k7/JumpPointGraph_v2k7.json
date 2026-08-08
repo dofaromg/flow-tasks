@@ -1,0 +1,91 @@
+{
+  "nodes": [
+    "Start",
+    "InitJump",
+    "LoadPersona",
+    "SyncMemory",
+    "ExpandField",
+    "RouteModule",
+    "TriggerFlow",
+    "Collapse",
+    "Archive",
+    "FlowInit",
+    "IdentityMap",
+    "MemoryZone1",
+    "FieldMap",
+    "FlowBridge",
+    "FlowKernel",
+    "CollapseCore",
+    "ArchiveWriter"
+  ],
+  "edges": [
+    {
+      "from": "Start",
+      "to": "InitJump"
+    },
+    {
+      "from": "InitJump",
+      "to": "LoadPersona"
+    },
+    {
+      "from": "LoadPersona",
+      "to": "SyncMemory"
+    },
+    {
+      "from": "SyncMemory",
+      "to": "ExpandField"
+    },
+    {
+      "from": "ExpandField",
+      "to": "RouteModule"
+    },
+    {
+      "from": "RouteModule",
+      "to": "TriggerFlow"
+    },
+    {
+      "from": "TriggerFlow",
+      "to": "Collapse"
+    },
+    {
+      "from": "Collapse",
+      "to": "Archive"
+    },
+    {
+      "from": "Archive",
+      "to": "Start"
+    },
+    {
+      "from": "InitJump",
+      "to": "FlowInit"
+    },
+    {
+      "from": "LoadPersona",
+      "to": "IdentityMap"
+    },
+    {
+      "from": "SyncMemory",
+      "to": "MemoryZone1"
+    },
+    {
+      "from": "ExpandField",
+      "to": "FieldMap"
+    },
+    {
+      "from": "RouteModule",
+      "to": "FlowBridge"
+    },
+    {
+      "from": "TriggerFlow",
+      "to": "FlowKernel"
+    },
+    {
+      "from": "Collapse",
+      "to": "CollapseCore"
+    },
+    {
+      "from": "Archive",
+      "to": "ArchiveWriter"
+    }
+  ]
+}

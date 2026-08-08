@@ -1,0 +1,51 @@
+{
+  "mrl_type": "MRL_RuntimeMeshExecution",
+  "origin_signature": "MrLiouWord",
+  "execution_id": "MRL_MESH_EXEC_1778439754180",
+  "plan_id": "MRL_MESH_PLAN_1778439754179",
+  "status": "completed",
+  "executed_at": "2026-05-10T19:02:34.180Z",
+  "local_trace": {
+    "mrl_type": "MRL_RuntimeTrace",
+    "version": "v1.2.0",
+    "origin_signature": "MrLiouWord",
+    "started_at": "2026-05-10T19:02:34.180Z",
+    "runtime_graph_hash": "95b4a4ef3d8a76b07c5750585f0f7481c448ffe1a443241aee187ee6386c1291",
+    "attention_hash": "f342330be0c408e865c4c7a4366a3ab7fffeb49081965d1dbd07323aa2f7682c",
+    "steps": [
+      {
+        "step": 1,
+        "node_id": "MRL_P_0001",
+        "action": "MRL_REGISTER_SCHEMA_FIELD",
+        "priority": 0.87,
+        "status": "implemented_pass",
+        "message": "MRL data field registered",
+        "output_hash": "27bb26035e844848"
+      },
+      {
+        "step": 2,
+        "node_id": "MRL_P_0002",
+        "action": "MRL_REGISTER_SCHEMA_FIELD",
+        "priority": 0.86,
+        "status": "implemented_pass",
+        "message": "MRL data field registered",
+        "output_hash": "27bb26035e844848"
+      }
+    ],
+    "final_data_preview": "MRL_name: demo\nMRL_layer: L2",
+    "completed_at": "2026-05-10T19:02:34.180Z",
+    "mrl_hash": "e2f265e0a836e7b352618cdb215b4e9062586de0362ae2ee14148b9779561fe2"
+  },
+  "node_assignments": [
+    {
+      "index": 0,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 1,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+# export to static svg map

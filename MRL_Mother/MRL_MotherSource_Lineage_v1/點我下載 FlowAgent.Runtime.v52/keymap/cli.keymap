@@ -1,0 +1,8 @@
+[dummyseed]
+jump = #Persona.Main.001
+[futurefool]
+jump = #Persona.Future.001
+[timeshift]
+jump = #Persona.Time.001
+[ftkg]
+jump = #Persona.FTKG.001
