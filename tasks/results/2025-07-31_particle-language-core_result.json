@@ -1,13 +1,5 @@
 {
   "task_id": "particle-language-core",
-<<<<<<< HEAD
-  "validation_time": "2026-01-14T19:19:29.268994",
-  "status": "passed",
-  "checks": [
-    "✓ Target directory exists: particle_core/"
-  ],
-  "errors": []
-=======
   "task_name": "Unknown Task",
   "validation_time": "2026-07-18T06:22:53.778270",
   "status": "passed",
@@ -45,5 +37,4 @@
     "priority": "medium",
     "tags": []
   }
->>>>>>> origin/main
 }

@@ -1,25 +1,14 @@
 {
-<<<<<<< HEAD
-  "processing_time": "2026-01-14T19:19:29.266780",
-  "total_tasks": 2,
-  "passed": 2,
-=======
   "processing_time": "2026-07-18T06:22:53.482647",
   "total_tasks": 4,
   "passed": 4,
->>>>>>> origin/main
   "failed": 0,
   "warnings": 1,
   "tasks": [
     {
-<<<<<<< HEAD
-      "task_id": "particle-language-core",
-      "validation_time": "2026-01-14T19:19:29.268994",
-=======
       "task_id": "hello-world-api",
       "task_name": "Unknown Task",
       "validation_time": "2026-07-18T06:22:53.485469",
->>>>>>> origin/main
       "status": "passed",
       "checks": [
         {
@@ -62,14 +51,9 @@
       }
     },
     {
-<<<<<<< HEAD
-      "task_id": "hello-world-api",
-      "validation_time": "2026-01-14T19:19:29.269794",
-=======
       "task_id": "particle-language-core",
       "task_name": "Unknown Task",
       "validation_time": "2026-07-18T06:22:53.778270",
->>>>>>> origin/main
       "status": "passed",
       "checks": [
         {

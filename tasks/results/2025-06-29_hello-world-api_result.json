@@ -1,11 +1,7 @@
 {
   "task_id": "hello-world-api",
-<<<<<<< HEAD
-  "validation_time": "2026-01-14T19:19:29.269794",
-=======
   "task_name": "Unknown Task",
   "validation_time": "2026-07-18T06:22:53.485469",
->>>>>>> origin/main
   "status": "passed",
   "checks": [
     {
