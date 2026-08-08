@@ -1,0 +1,25 @@
+{
+  "particle_id": "MrLioū.Particle.EnvParameters.v1.0.0",
+  "version": "v1.0.0",
+  "timestamp": "2026-08-08T16:17:11.797902+00:00",
+  "MRL_創世公式": {
+    "P_k": 1.0,
+    "N_k": 1.0,
+    "eta_k": 0.618
+  },
+  "MRL_環境變化公式": {
+    "context_weight": 0.4,
+    "runtime_weight": 0.3,
+    "dependency_weight": 0.2,
+    "external_noise": 0.1,
+    "trust_score": 0.9
+  },
+  "MRL_其他核心公式": {
+    "alpha": 1.0,
+    "beta": 1.0,
+    "scale_mode": "linear",
+    "inverse_epsilon": 1e-09,
+    "stability_clip": 1000000.0,
+    "loss_bound": 0.001
+  }
+}

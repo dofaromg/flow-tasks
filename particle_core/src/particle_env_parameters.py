@@ -88,25 +88,30 @@ class ParticleEnvParameters:
                         f_name = record.get("formula_name")
                         p_name = record.get("parameter_name")
                         p_val = record.get("parameter_value")
+                        if p_val is None:
+                            continue
                         
-                        if f_name == "MRL_創世公式":
-                            if p_name == "P_k": self.p_k = float(p_val)
-                            elif p_name == "N_k": self.n_k = float(p_val)
-                            elif p_name == "eta_k": self.eta_k = float(p_val)
-                        elif f_name == "MRL_環境變化公式":
-                            if p_name == "context_weight": self.context_weight = float(p_val)
-                            elif p_name == "runtime_weight": self.runtime_weight = float(p_val)
-                            elif p_name == "dependency_weight": self.dependency_weight = float(p_val)
-                            elif p_name == "external_noise": self.external_noise = float(p_val)
-                            elif p_name == "trust_score": self.trust_score = float(p_val)
-                        elif f_name == "MRL_放大縮小公式":
-                            if p_name == "alpha": self.alpha = float(p_val)
-                            elif p_name == "beta": self.beta = float(p_val)
-                            elif p_name == "scale_mode": self.scale_mode = str(p_val)
-                        elif f_name == "MRL_反推公式":
-                            if p_name == "inverse_epsilon": self.inverse_epsilon = float(p_val)
-                            elif p_name == "stability_clip": self.stability_clip = float(p_val)
-                            elif p_name == "loss_bound": self.loss_bound = float(p_val)
+                        try:
+                            if f_name == "MRL_創世公式":
+                                if p_name == "P_k": self.p_k = float(p_val)
+                                elif p_name == "N_k": self.n_k = float(p_val)
+                                elif p_name == "eta_k": self.eta_k = float(p_val)
+                            elif f_name == "MRL_環境變化公式":
+                                if p_name == "context_weight": self.context_weight = float(p_val)
+                                elif p_name == "runtime_weight": self.runtime_weight = float(p_val)
+                                elif p_name == "dependency_weight": self.dependency_weight = float(p_val)
+                                elif p_name == "external_noise": self.external_noise = float(p_val)
+                                elif p_name == "trust_score": self.trust_score = float(p_val)
+                            elif f_name == "MRL_放大縮小公式":
+                                if p_name == "alpha": self.alpha = float(p_val)
+                                elif p_name == "beta": self.beta = float(p_val)
+                                elif p_name == "scale_mode": self.scale_mode = str(p_val)
+                            elif f_name == "MRL_反推公式":
+                                if p_name == "inverse_epsilon": self.inverse_epsilon = float(p_val)
+                                elif p_name == "stability_clip": self.stability_clip = float(p_val)
+                                elif p_name == "loss_bound": self.loss_bound = float(p_val)
+                        except (ValueError, TypeError) as e:
+                            self.console.print(f"[yellow]Warning: 解析參數值失敗 {p_name}={p_val}: {e}[/yellow]")
                     return True
                 except Exception as e:
                     # 載入失敗則採用預設值並列印警告

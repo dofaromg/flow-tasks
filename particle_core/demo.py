@@ -167,6 +167,12 @@ def demo_basic_functionality():
     print(f"   成長計算 (P_k=100.0, N_k=1.5): P_{{k+1}} = {p_forward:.4f}")
     print(f"   還原計算: P_k = {p_backward:.4f}")
     
+    # 匯出粒子環境參數
+    env_json_file = "examples/demo_env_parameters.json"
+    with open(env_json_file, 'w', encoding='utf-8') as env_output_file:
+        env_output_file.write(env_mgr.export_to_json())
+    print(f"   粒子環境參數 JSON 匯出已儲存: {env_json_file}")
+    
     print("\n=== Demo 完成 ===")
 
 def run_performance_test():
