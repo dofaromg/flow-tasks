@@ -32,3 +32,5 @@ External provider or platform
 ```
 
 The external adapter boundary and MRL-owned implementation boundary must remain distinguishable.
+
+An extension must preserve source evidence, use separate MRL-owned identifiers, declare dependencies, and return traces to MRL_Mother. Nothing in this folder grants authorization rights; root authority registries control authorization scope.

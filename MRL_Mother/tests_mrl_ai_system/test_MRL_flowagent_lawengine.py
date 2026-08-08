@@ -45,7 +45,7 @@ class TestRootlaw:
 
 class TestNamingReclamation:
     def test_external_shell_becomes_mrl_canonical(self):
-        assert reclaim_name("FlowAgent.Runtime.v47.zip") == "MRL_FlowAgentRuntime_v47"
+        assert reclaim_name("FlowAgent.Runtime.v47.zip") == "FlowAgent.Runtime.v47.zip"
 
     def test_no_external_name_residue(self):
         out = reclaim_name("guardian.mirror.trace.loop.v2.flpkg.zip")
@@ -117,8 +117,8 @@ class TestGateUnity:
     def test_in_reclaims_external_name(self, engine):
         r = engine.gate("in", {"name": "FlowAgent.Runtime.v47.zip"})
         assert r["direction"] == "in"
-        assert r["reclaimed"] == "MRL_FlowAgentRuntime_v47"
-        assert r["as"] == "material"
+        assert r["reclaimed"] == "FlowAgent.Runtime.v47.zip"
+        assert r["as"] == "mrl_native_product"
 
     def test_out_carries_origin_signature(self, engine):
         r = engine.gate("out", {"msg": "hello world"})
@@ -225,3 +225,11 @@ class TestChronicleAndLoop:
         rep = engine.run_loop({"source": "t", "law_particles": {"a": True, "b": True}})
         assert rep["events_recorded"] >= 1
         assert rep["mirror"]["rootlaw_version"] >= 5
+
+
+class TestNativeIdentityClassification:
+    def test_flowagent_is_manifestable_without_rename(self, engine):
+        result = engine.can_manifest("FlowAgent.Runtime.v47.zip")
+        assert result["manifest"] is True
+        assert result["reclaimed"] is None
+        assert result["reason"] == "mrl_native_identity"

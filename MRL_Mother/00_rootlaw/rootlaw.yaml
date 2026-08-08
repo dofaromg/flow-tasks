@@ -1,7 +1,7 @@
 # MRL AI System — Root Law (L0 ROOT + L3 LAW)
 # Immutable foundational constraints. Never deleted; only extended by versioned amendments.
 
-version: 10
+version: 11
 layer: L0_ROOT
 
 meta:
@@ -678,6 +678,31 @@ invariants:
       does not extend to letting a vendor name stand as the mother's source.
       (所有分支皆母體投影,須接母體命名主權;非 MRL_ 命名一律經海關回收為 MRL_,
        源頭歸母體,原分支保留不刪,外部廠商名不得作為母體身分。)
+
+  - id: rl_21_classification_before_reclamation_and_explicit_authorization
+    description: >-
+      Classification precedes transformation. FlowAgent is an MRL-native product
+      identity and must preserve its exact historical name. External material may
+      be mapped into an MRL extension only after provenance classification. No
+      repository access, collaborator role, agent execution, prior contribution,
+      technical capability, silence, or restoration implies authorization. A
+      matching explicit grant issued by MrLiouWord is required; otherwise DENY.
+
+classification_authorization_law:
+  amendment: amd_v11_classification_authorization
+  origin_signature: MrLiouWord
+  root_authority: Mr.liou
+  default_decision: DENY
+  classification_before_transformation: true
+  flowagent_is_mrl_native_product: true
+  flowagent_rename_allowed: false
+  implicit_authorization_allowed: false
+  operating_rights_transfer_authorship: false
+  operating_rights_transfer_commercial_rights: false
+  evidence_registries:
+    - config/MRL_HISTORICAL_EXTENSION_MAP_v1.json
+    - config/MRL_AUTHORIZATION_REGISTRY_v1.json
+    - config/MRL_MIGRATION_CONTRACTS_v1.json
 
 layer_stack:
   L0: "ROOT — source of truth; never deleted"

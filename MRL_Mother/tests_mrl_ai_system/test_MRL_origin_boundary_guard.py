@@ -16,6 +16,7 @@ from MRL_OriginBoundary_Guard_v1 import (
     extract_signature,
     verify_signature,
     is_mrl_canonical,
+    is_mrl_manifestable_identity,
     is_mrliou_related,
     scan_for_boundary_violations,
     ORIGIN_SIGNATURE,
@@ -70,7 +71,8 @@ class TestManifestAndRelation:
 class TestIntake:
     def test_external_name_reclaimed_and_signed(self, guard):
         m = guard.intake_external("FlowAgent.Runtime.v47.zip")
-        assert m["canonical_name"].startswith("MRL_")
+        assert m["canonical_name"] == "FlowAgent.Runtime.v47.zip"
+        assert m["role"] == "mrl_native_product"
         assert m["role"] == "material"                 # bp_1:外部=材料
         assert m["origin"] == "MrLiouWord"             # rl_11:源頭歸母體
         assert verify_signature(m) is True             # LAW-0
@@ -135,3 +137,11 @@ class TestBoundaryScan:
     def test_all_mrl_no_violation(self):
         rep = scan_for_boundary_violations(["MRL_A_v1", "MRL_B_v2"])
         assert rep["violation_count"] == 0
+
+
+class TestNativeProductBoundary:
+    def test_flowagent_is_manifestable_and_not_external(self, guard):
+        assert is_mrl_manifestable_identity("FlowAgent.Runtime.v47.zip") is True
+        record = guard.intake_external("FlowAgent.Runtime.v47.zip")
+        assert record["canonical_name"] == "FlowAgent.Runtime.v47.zip"
+        assert record["role"] == "mrl_native_product"

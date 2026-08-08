@@ -3,11 +3,13 @@
   "origin_signature": "MrLiouWord",
   "canonical_system_identity": "MrliouAI",
   "policy": {
+    "classification_before_transformation": true,
     "external_assets_remain_external": true,
     "mrl_assets_must_not_be_reduced": true,
     "historical_lineage_preserved": true,
     "flowagent_is_mrl_native_product_module": true,
-    "global_destructive_rename_allowed": false
+    "global_destructive_rename_allowed": false,
+    "implicit_authorization_allowed": false
   },
   "mappings": [
     {
@@ -45,7 +47,42 @@
       "classification": "mrl_native_product_module",
       "mrl_extension": "FlowAgent",
       "preserve_source_name": true,
-      "replace_with_mrliouai": false
+      "replace_with_mrliouai": false,
+      "canonical": "FlowAgent",
+      "rename_allowed": false,
+      "preserve_history": true
+    },
+    {
+      "source": "MRL_Mother",
+      "classification": "mother_system",
+      "canonical": "MRL_Mother",
+      "rename_allowed": false,
+      "preserve_history": true
+    },
+    {
+      "source": "MrliouAI",
+      "classification": "mrl_system_identity",
+      "canonical": "MrliouAI",
+      "rename_allowed": false,
+      "preserve_history": true
+    },
+    {
+      "source": "GitHub",
+      "classification": "external_provider",
+      "extension_boundary": "MRL_GitHub_Interface",
+      "claim_external_ownership": false
+    },
+    {
+      "source": "Cloudflare",
+      "classification": "external_provider",
+      "extension_boundary": "MRL_Cloudflare_Interface",
+      "claim_external_ownership": false
+    },
+    {
+      "source": "GCP",
+      "classification": "external_provider",
+      "extension_boundary": "MRL_GCP_Interface",
+      "claim_external_ownership": false
     }
   ],
   "round_trip_contract": [

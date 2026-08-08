@@ -36,7 +36,10 @@ if str(_HERE) not in sys.path:
     sys.path.insert(0, str(_HERE))
 
 # rl_12 命名回收實作（單一真實來源,避免重複實作 → No-Delete/Additive 一致）
-from MRL_FlowAgent_LawEngine_v1 import reclaim_name  # noqa: E402
+from MRL_FlowAgent_LawEngine_v1 import (  # noqa: E402
+    is_mrl_native_name,
+    reclaim_name,
+)
 
 # LAW-0 共用工具從 MRL_utils（L0 RootGate 唯一真實來源）匯入並重新匯出
 from MRL_utils import (  # noqa: E402
@@ -54,6 +57,11 @@ from MRL_utils import (  # noqa: E402
 def is_mrl_canonical(name: str) -> bool:
     """rl_16：名稱是否為 MRL_ canonical（可顯化）。"""
     return isinstance(name, str) and name.startswith("MRL_")
+
+
+def is_mrl_manifestable_identity(name: str) -> bool:
+    """rl_21：MRL_ canonical 或已登錄 MRL 原生歷史身分皆可顯化。"""
+    return is_mrl_canonical(name) or is_mrl_native_name(name)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -92,16 +100,18 @@ class MRL_OriginBoundaryGuard:
           3) LAW-0 嵌入母體簽章（origin 恆歸母體 = rl_11）
         回傳已簽章的邊界材料記錄。
         """
-        canonical = reclaim_name(external_name)            # rl_12
-        if not is_mrl_canonical(canonical):                # rl_16 (防呆)
+        native = is_mrl_native_name(external_name)         # rl_21：先分類
+        canonical = reclaim_name(external_name)            # rl_12 僅處理外部材料
+        if not is_mrl_manifestable_identity(canonical):    # rl_16 / rl_21 防呆
             canonical = f"MRL_{canonical}"
         material = {
             "canonical_name": canonical,
             "source_external_name": external_name,          # 誠實保留來源（No-Delete）
-            "role": "material",                             # bp_1：外部=材料,非權威
+            "role": "mrl_native_product" if native else "external_material",
             "origin": self.origin_signature,                # rl_11：源頭恆歸母體
             "payload": payload or {},
-            "manifestable": is_mrl_canonical(canonical),    # rl_16
+            "manifestable": is_mrl_manifestable_identity(canonical),
+            "classification_rule": "rl_21_classification_before_reclamation",
         }
         return embed_signature(material, self.origin_signature)  # LAW-0
 
@@ -168,7 +178,7 @@ def scan_for_boundary_violations(names: List[str]) -> Dict[str, Any]:
     violations: List[Dict[str, str]] = []
     ok: List[str] = []
     for n in names:
-        if is_mrl_canonical(n):
+        if is_mrl_manifestable_identity(n):
             ok.append(n)
         else:
             violations.append({"external": n, "reclaim_to": reclaim_name(n),

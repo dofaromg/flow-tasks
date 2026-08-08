@@ -30,6 +30,8 @@ export interface Env {
   // Secrets & Vars
   MASTER_KEY: string;
   GITHUB_TOKEN?: string;
+  ENABLE_GITHUB_SYNC?: boolean;
+  GITHUB_REPO?: string;
   VERSION: string;
   ORIGIN: string;
 }
