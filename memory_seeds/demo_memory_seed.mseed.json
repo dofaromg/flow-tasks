@@ -1,0 +1,22 @@
+{
+  "seed_name": "demo_memory_seed",
+  "version": "1.0",
+  "created_at": "2026-08-08T16:13:05.537925",
+  "particle_data": {
+    "logic_result": "[STORE → [RECURSE → [FLOW → [MARK → [STRUCTURE → Hello, MRLiou!]]]]]",
+    "compressed": "SEED(X) = STORE(RECURSE(FLOW(MARK(STRUCTURE(X)))))",
+    "timestamp": "demo_execution"
+  },
+  "metadata": {
+    "demo": true,
+    "type": "test"
+  },
+  "memory_layers": [
+    "structure",
+    "mark",
+    "flow",
+    "recurse",
+    "store"
+  ],
+  "checksum": "b513fe3f0df7b953de15063e1a45abadc8a6b51310a4271a82a4a97e27c814a3"
+}

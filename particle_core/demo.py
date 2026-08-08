@@ -15,6 +15,7 @@ try:
     from memory_archive_seed import MemoryArchiveSeed
     from particle_regressor import ParticleRegressor
     from fluin_dict_agent import FluinDictAgent
+    from particle_env_parameters import ParticleEnvParameters
 except ImportError as e:
     print(f"Import error: {e}")
     sys.exit(1)
@@ -156,12 +157,15 @@ def demo_basic_functionality():
     # 粒子符號輸出
     print(f"   狀態符號:\n{dict_agent.compress_to_particle_notation()}")
     
-    print("\n=== Demo 完成 ===")
-
-
-    with open(json_file, 'w', encoding='utf-8') as f:
-        json.dump(json_export, f, ensure_ascii=False, indent=2)
-    print(f"   JSON 匯出已儲存: {json_file}")
+    # 8. 粒子環境參數與創世公式
+    print("\n8. 粒子環境參數與創世公式 (MrLioū.Particle.EnvParameters.v1):")
+    env_mgr = ParticleEnvParameters()
+    eta_calc = env_mgr.calculate_eta(context_val=0.9, runtime_val=0.95, dependency_val=0.85)
+    p_forward, _ = env_mgr.genesis_forward(100.0, 1.5, eta_k=eta_calc)
+    p_backward, _ = env_mgr.genesis_backward(p_forward, 1.5, eta_k=eta_calc)
+    print(f"   環境影響 η_k (90% context, 95% runtime, 85% dependency): {eta_calc:.4f}")
+    print(f"   成長計算 (P_k=100.0, N_k=1.5): P_{{k+1}} = {p_forward:.4f}")
+    print(f"   還原計算: P_k = {p_backward:.4f}")
     
     print("\n=== Demo 完成 ===")
 

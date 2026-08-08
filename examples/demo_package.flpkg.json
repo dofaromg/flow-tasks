@@ -1,7 +1,7 @@
 {
   "package_type": "flpkg",
   "version": "1.0",
-  "created": "2025-10-05T10:58:17.106856",
+  "created": "2026-08-08T16:13:05.537519",
   "compressed": "SEED(X) = STORE(RECURSE(FLOW(MARK(STRUCTURE(X)))))",
   "functions": [
     "structure",
@@ -15,9 +15,9 @@
     "建立邏輯跳點標記",
     "轉換為流程結構節奏",
     "遞歸展開為細部結構",
-    "封存至模組記憶結構"
+    "封存至邏輯記憶模組"
   ],
-  "signature": "MRLSIG-3245",
+  "signature": "MRLSIG-5900",
   "metadata": {
     "demo": true,
     "version": "1.0"

@@ -1,13 +1,18 @@
 {
   "task_id": "hello-world-api-c",
   "task_name": "Unknown Task",
-  "validation_time": "2026-08-08T16:13:09.760643",
+  "validation_time": "2026-07-18T06:22:54.107779",
   "status": "passed",
   "checks": [
     {
       "check": "schema",
       "status": "passed",
-      "message": "Task schema and target compatibility are valid"
+      "message": "Required task fields are present"
+    },
+    {
+      "check": "schema_target",
+      "status": "passed",
+      "message": "Task target is declared"
     },
     {
       "check": "file_exists",
@@ -17,13 +22,13 @@
     {
       "check": "c_compile",
       "status": "passed",
-      "message": "C compile check passed in 2341.59ms"
+      "message": "C compile check passed in 127.70ms"
     }
   ],
   "errors": [],
   "warnings": [],
   "metrics": {
-    "execution_time_ms": 2342.34,
+    "execution_time_ms": 128.58,
     "files_checked": 1,
     "lines_of_code": 168
   },

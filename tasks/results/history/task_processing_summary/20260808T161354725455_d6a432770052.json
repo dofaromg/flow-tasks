@@ -1,5 +1,5 @@
 {
-  "processing_time": "2026-08-08T16:13:09.611356",
+  "processing_time": "2026-07-18T06:22:53.482647",
   "total_tasks": 4,
   "passed": 4,
   "failed": 0,
@@ -8,13 +8,18 @@
     {
       "task_id": "hello-world-api",
       "task_name": "Unknown Task",
-      "validation_time": "2026-08-08T16:13:09.612083",
+      "validation_time": "2026-07-18T06:22:53.485469",
       "status": "passed",
       "checks": [
         {
           "check": "schema",
           "status": "passed",
-          "message": "Task schema and target compatibility are valid"
+          "message": "Required task fields are present"
+        },
+        {
+          "check": "schema_target",
+          "status": "passed",
+          "message": "Task target is declared"
         },
         {
           "check": "file_exists",
@@ -22,15 +27,20 @@
           "message": "Target file exists: flow_code/hello_api.py"
         },
         {
-          "check": "python_static",
+          "check": "python_syntax",
           "status": "passed",
-          "message": "Python AST and bytecode checks passed without importing: flow_code/hello_api.py"
+          "message": "Python syntax check passed: flow_code/hello_api.py"
+        },
+        {
+          "check": "python_import",
+          "status": "passed",
+          "message": "Python module imports successfully"
         }
       ],
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 0.77,
+        "execution_time_ms": 287.3,
         "files_checked": 1,
         "lines_of_code": 36
       },
@@ -43,13 +53,18 @@
     {
       "task_id": "particle-language-core",
       "task_name": "Unknown Task",
-      "validation_time": "2026-08-08T16:13:09.614748",
+      "validation_time": "2026-07-18T06:22:53.778270",
       "status": "passed",
       "checks": [
         {
           "check": "schema",
           "status": "passed",
-          "message": "Task schema and target compatibility are valid"
+          "message": "Required task fields are present"
+        },
+        {
+          "check": "schema_target",
+          "status": "passed",
+          "message": "Task target is declared"
         },
         {
           "check": "directory_exists",
@@ -59,15 +74,15 @@
         {
           "check": "python_syntax",
           "status": "passed",
-          "message": "Python syntax check passed for 54 file(s)"
+          "message": "Python syntax check passed for 48 file(s)"
         }
       ],
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 137.98,
-        "files_checked": 127,
-        "lines_of_code": 29042
+        "execution_time_ms": 309.17,
+        "files_checked": 153,
+        "lines_of_code": 24940
       },
       "metadata": {
         "description": "MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統",
@@ -78,13 +93,18 @@
     {
       "task_id": "flowos-neural-link",
       "task_name": "Unknown Task",
-      "validation_time": "2026-08-08T16:13:09.757389",
+      "validation_time": "2026-07-18T06:22:54.099409",
       "status": "passed",
       "checks": [
         {
           "check": "schema",
           "status": "passed",
-          "message": "Task schema and target compatibility are valid"
+          "message": "Required task fields are present"
+        },
+        {
+          "check": "schema_target",
+          "status": "passed",
+          "message": "Task target is declared"
         },
         {
           "check": "directory_exists",
@@ -95,9 +115,9 @@
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 1.55,
+        "execution_time_ms": 3.54,
         "files_checked": 25,
-        "lines_of_code": 1692
+        "lines_of_code": 1569
       },
       "metadata": {
         "description": "FlowOS Edge Worker - Neural Link & Gate System Implementation",
@@ -108,13 +128,18 @@
     {
       "task_id": "hello-world-api-c",
       "task_name": "Unknown Task",
-      "validation_time": "2026-08-08T16:13:09.760643",
+      "validation_time": "2026-07-18T06:22:54.107779",
       "status": "passed",
       "checks": [
         {
           "check": "schema",
           "status": "passed",
-          "message": "Task schema and target compatibility are valid"
+          "message": "Required task fields are present"
+        },
+        {
+          "check": "schema_target",
+          "status": "passed",
+          "message": "Task target is declared"
         },
         {
           "check": "file_exists",
@@ -124,13 +149,13 @@
         {
           "check": "c_compile",
           "status": "passed",
-          "message": "C compile check passed in 2341.59ms"
+          "message": "C compile check passed in 127.70ms"
         }
       ],
       "errors": [],
       "warnings": [],
       "metrics": {
-        "execution_time_ms": 2342.34,
+        "execution_time_ms": 128.58,
         "files_checked": 1,
         "lines_of_code": 168
       },
@@ -147,17 +172,17 @@
       {
         "check": "npm_lint",
         "status": "passed",
-        "message": "npm run lint passed in 3381.50ms"
+        "message": "npm run lint passed in 4265.88ms"
       },
       {
         "check": "npm_build",
         "status": "passed",
-        "message": "npm run build passed in 33655.08ms"
+        "message": "npm run build passed in 38506.42ms"
       },
       {
         "check": "kubernetes_render",
         "status": "passed",
-        "message": "kubectl kustomize cluster/overlays/prod/ passed in 4541.28ms"
+        "message": "kubectl kustomize cluster/overlays/prod/ passed in 100.42ms"
       }
     ],
     "warnings": [
@@ -167,11 +192,7 @@
         "severity": "warning",
         "findings": [
           {
-            "path": "PASSWORD_MANAGEMENT.md",
-            "type": "sensitive_filename"
-          },
-          {
-            "path": "PASSWORD_MANAGEMENT.md",
+            "path": "DEPLOYMENT_PROFESSIONAL_OPINION.md",
             "type": "generic_secret_assignment"
           },
           {
@@ -179,18 +200,6 @@
             "type": "sensitive_filename"
           },
           {
-            "path": "實際部署指南.md",
-            "type": "generic_secret_assignment"
-          },
-          {
-            "path": "專業部署分析報告.md",
-            "type": "generic_secret_assignment"
-          },
-          {
-            "path": "DEPLOYMENT_PROFESSIONAL_OPINION.md",
-            "type": "generic_secret_assignment"
-          },
-          {
             "path": "clickhouse_credentials(1).txt",
             "type": "sensitive_filename"
           },
@@ -199,19 +208,11 @@
             "type": "generic_secret_assignment"
           },
           {
-            "path": "🔐 MRLiouWord 分層認證授權框架 (Layered Auth Framework) da88e33388b0485eb61041438cec8c27.md",
+            "path": "PASSWORD_MANAGEMENT.md",
             "type": "sensitive_filename"
           },
           {
-            "path": "🔐 MRLiouWord 分層認證授權框架 (Layered Auth Framework) da88e33388b0485eb61041438cec8c27.md",
-            "type": "generic_secret_assignment"
-          },
-          {
-            "path": "particle-auth-gateway.zip",
-            "type": "sensitive_filename"
-          },
-          {
-            "path": "部署執行摘要.md",
+            "path": "PASSWORD_MANAGEMENT.md",
             "type": "generic_secret_assignment"
           },
           {
@@ -219,43 +220,51 @@
             "type": "sensitive_filename"
           },
           {
-            "path": "flowos/src/vcs-gate-unified.ts",
+            "path": "專業部署分析報告.md",
             "type": "generic_secret_assignment"
           },
           {
-            "path": "MRL_ParticleArchive/PR19/09_workflow__MRL_runtime_config.py",
-            "type": "generic_secret_assignment"
-          },
-          {
-            "path": "apps/mongodb/secret.yaml",
+            "path": "particle-auth-gateway.zip",
             "type": "sensitive_filename"
           },
           {
-            "path": "apps/mongodb/secret.yaml",
-            "type": "generic_secret_assignment"
-          },
-          {
-            "path": "apps/nextjs-frontend/secret.yaml",
+            "path": "🔐 MRLiouWord 分層認證授權框架 (Layered Auth Framework) da88e33388b0485eb61041438cec8c27.md",
             "type": "sensitive_filename"
           },
           {
-            "path": "MRLiou_800AI/README.md",
+            "path": "🔐 MRLiouWord 分層認證授權框架 (Layered Auth Framework) da88e33388b0485eb61041438cec8c27.md",
             "type": "generic_secret_assignment"
           },
           {
-            "path": "MRLiou_800AI/src/mrliou_800ai/security.py",
+            "path": "部署執行摘要.md",
             "type": "generic_secret_assignment"
           },
           {
-            "path": "MRLiou_800AI/docs/WINDOWS_SERVER_OPERATIONS.md",
+            "path": "實際部署指南.md",
             "type": "generic_secret_assignment"
           },
           {
-            "path": "MRLiou_800AI/docs/WINDOWS_SERVER_DEPLOYMENT.md",
+            "path": "particle_core/docs/conversation_extractor_en.md",
             "type": "generic_secret_assignment"
           },
           {
-            "path": "particle-chat-v42/src/index.js",
+            "path": "particle_core/docs/conversation_extractor_zh.md",
+            "type": "generic_secret_assignment"
+          },
+          {
+            "path": "particle_core/src/ai_persona_toolkit.py",
+            "type": "generic_secret_assignment"
+          },
+          {
+            "path": "scripts/ping-sync.ts",
+            "type": "generic_secret_assignment"
+          },
+          {
+            "path": "scripts/generate_password.sh",
+            "type": "sensitive_filename"
+          },
+          {
+            "path": "scripts/generate_password.sh",
             "type": "generic_secret_assignment"
           },
           {
@@ -267,63 +276,79 @@
             "type": "generic_secret_assignment"
           },
           {
-            "path": "scripts/generate_password.sh",
-            "type": "sensitive_filename"
-          },
-          {
-            "path": "scripts/generate_password.sh",
+            "path": "flowos/src/vcs-gate-unified.ts",
             "type": "generic_secret_assignment"
           },
           {
-            "path": "scripts/ping-sync.ts",
+            "path": "adapters/notion_adapter.py",
             "type": "generic_secret_assignment"
           },
           {
-            "path": "MRL_Mother/MRL_RuntimeOS_v1_4_0/MRL_Security/MRL_AuthGate.js",
-            "type": "sensitive_filename"
-          },
-          {
-            "path": "MRL_Mother/MRL_FireCore_v1_0/modules/mrl-firecore-auth/migrations/0001_mrl_firecore_auth.sql",
-            "type": "sensitive_filename"
-          },
-          {
-            "path": "MRL_Mother/MRL_MotherSource_Lineage_v1/MRL_AI_SuperComputer/MrLiou_AI_SuperComputer/ai_providers.py",
+            "path": "MRL_Product/frontend/success.html",
             "type": "generic_secret_assignment"
           },
           {
-            "path": "MRL_Mother/00_rootlaw/MRL_AUTHORIZATION_AND_OPERATING_RIGHTS_v1.md",
-            "type": "sensitive_filename"
-          },
-          {
-            "path": "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
-            "type": "sensitive_filename"
-          },
-          {
-            "path": "MRL_Mother/MRL_MotherModel/bridge_modules/Mrliou_MRL_RooClaudeCode_BridgeNeuralLink_v1/src/BridgeOrchestrator.ts",
+            "path": "MRL_Product/frontend/pricing.html",
             "type": "generic_secret_assignment"
           },
           {
-            "path": "MRL_Mother/docs_mrl_ai_system/MRL_AI_ModuleModel_Recovery_Map_v1.md",
+            "path": "MRL_Product/frontend/assets/app.js",
             "type": "generic_secret_assignment"
           },
           {
-            "path": "MRL_Mother/09_workflow/MRL_LLM_NativeAdapter_v1.py",
+            "path": "MRL_Product/backend/core/scaffolds/scaffold-templates/index.js",
             "type": "generic_secret_assignment"
           },
           {
-            "path": "MRL_Mother/09_workflow/llm_adapter.py",
+            "path": "MRL_Product/backend/modules/ai.js",
             "type": "generic_secret_assignment"
           },
           {
-            "path": "MRL_Mother/09_workflow/MRL_mother_assembly.py",
+            "path": "MRL_Bridge/README.md",
             "type": "generic_secret_assignment"
           },
           {
-            "path": "MRL_Mother/09_workflow/MRL_DL580_Connector_v1.py",
+            "path": "MRL_Bridge/server_v3.0_pre_rename.js",
             "type": "generic_secret_assignment"
           },
           {
-            "path": "MRL_Mother/09_workflow/mother_assembly.py",
+            "path": "MRL_Bridge/server_v1.0.0.js",
+            "type": "generic_secret_assignment"
+          },
+          {
+            "path": "MRL_Bridge/server_v3.0_backup.js",
+            "type": "generic_secret_assignment"
+          },
+          {
+            "path": "MRL_Bridge/MANIFEST.json",
+            "type": "generic_secret_assignment"
+          },
+          {
+            "path": "MRL_Bridge/patch_v31.js",
+            "type": "generic_secret_assignment"
+          },
+          {
+            "path": "MRL_Bridge/server.js",
+            "type": "generic_secret_assignment"
+          },
+          {
+            "path": "MrLiou_AI_SuperComputer/ai_providers.py",
+            "type": "generic_secret_assignment"
+          },
+          {
+            "path": "MRLiou_800AI/README.md",
+            "type": "generic_secret_assignment"
+          },
+          {
+            "path": "MRLiou_800AI/docs/WINDOWS_SERVER_DEPLOYMENT.md",
+            "type": "generic_secret_assignment"
+          },
+          {
+            "path": "MRLiou_800AI/docs/WINDOWS_SERVER_OPERATIONS.md",
+            "type": "generic_secret_assignment"
+          },
+          {
+            "path": "MRLiou_800AI/src/mrliou_800ai/security.py",
             "type": "generic_secret_assignment"
           }
         ],
@@ -333,11 +358,10 @@
     "errors": []
   },
   "overall_metrics": {
-    "total_execution_time_ms": 2482.6400000000003,
-    "total_files_checked": 154,
-    "total_lines_of_code": 30938,
-    "average_task_time_ms": 620.66,
-    "processing_time_ms": 45109.42
+    "total_execution_time_ms": 44229.98,
+    "total_files_checked": 180,
+    "total_lines_of_code": 26713,
+    "average_task_time_ms": 11057.5
   },
   "summary": {
     "pass_rate": 100.0,
