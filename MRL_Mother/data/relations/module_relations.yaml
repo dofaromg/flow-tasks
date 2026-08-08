@@ -1,0 +1,370 @@
+# module_relations.yaml — MRL System Module Relation Chain
+# origin_signature: MrLiouWord
+# layer: L5 MIRROR + L6 REFLECT
+#
+# Purpose
+# -------
+# Documents the relation links between all core groups, modules, and layers
+# so the system can traverse its own structure without re-discovering it from
+# scratch each session.
+#
+# Relation types
+# --------------
+#   depends_on   : A cannot run without B already in place
+#   extends      : A adds capabilities on top of B
+#   implements   : A is a concrete realisation of concept B
+#   seals        : A writes the immutable record of B
+#   mirrors      : A translates or projects B into another world/layer
+#   entry_of     : A is the official entry point / gateway for B
+#   indexed_by   : A is catalogued and queryable via B
+
+meta:
+  version: "1.0"
+  origin_signature: MrLiouWord
+  updated: "2026-03-15"
+  description: >-
+    Canonical relation map for the Mother Core Assembly.
+    Every module is positioned by its core group (Y 1–6), layer (L0–L7 /
+    MetaEnv / Platform), and state (principle / spec / prototype / runnable /
+    entry), and linked to the modules it depends on, extends, or seals.
+
+# ─── Core group definitions ──────────────────────────────────────────────────
+core_groups:
+  "1":
+    name: MotherCore
+    description: >-
+      Closest to the Mother Core itself. Holds the canonical origin signature,
+      the particle-sphere persona, FluidCore, Universe Module Graph, and the
+      Fluin language overview. Answers: "what is the system as a whole?"
+  "2":
+    name: ParticleReversible
+    description: >-
+      Bottom-layer laws: particle conservation, equal-mass particles, unified
+      field, hierarchical evolution, and the txt↔fltnz↔map↔flpkg↔trace
+      reversible chain. Answers: "how does the system compress, expand, and
+      roll back?"
+  "3":
+    name: MrLiouAIRuntime
+    description: >-
+      The runtime that makes the system run: persona, memory, language-field,
+      archival, CLI, containers. Answers: "how does the system execute?"
+  "4":
+    name: WorldModule
+    description: >-
+      Memory particles, nodes, world state, trajectory, geo-coordinates, and
+      3-D globe view chained together. Answers: "how does the system become a
+      world?"
+  "5":
+    name: FileIndexGovernance
+    description: >-
+      T/X/Y/Z four-dimensional index + librarian entry, preventing the
+      find-recall-re-understand cycle. Answers: "how does the system govern
+      itself?"
+  "6":
+    name: PersonaHistory
+    description: >-
+      History of the system's evolution: archival, alignment, natural mounting,
+      mother-body belief stabilisation. Answers: "how did the system grow into
+      what it is today?"
+
+# ─── Layer stack ─────────────────────────────────────────────────────────────
+layer_stack:
+  L0:  "ROOT — source of truth; never deleted"
+  L1:  "SEED — initial constraints / contracts"
+  L2:  "PARTICLE — content units and state changes"
+  L3:  "LAW — explicit rules (Rootlaw + compliance + AUP gates)"
+  L4:  "WORLD — aligned models across worlds"
+  L5:  "MIRROR — translation of actions/state across worlds"
+  L6:  "REFLECT — facts, records, accountability"
+  L7:  "LOOP — validate, then roll forward; rollback with proofs"
+  MetaEnv:  "Variable environment layer: spawn / scale / snapshot / migrate"
+  Platform: "FluinHub / FlowCoreLoop / partner platforms / 3-D globe / AI chat"
+
+# ─── Module relation graph ────────────────────────────────────────────────────
+relations:
+  # ── 00_rootlaw ──
+  - from: "00_rootlaw/rootlaw.yaml"
+    layer: L0
+    group: 1
+    state: spec
+    links:
+      - { type: implements,  to: "MotherCore / LAW-0 Signature Law" }
+      - { type: seals,       to: "09_workflow/signature.js" }
+      - { type: depends_on,  to: "08_sources/sources.manifest.yaml" }
+
+  # ── 01_schema ──
+  - from: "01_schema/runtime_trace.schema.json"
+    layer: L1
+    group: 1
+    state: spec
+    links:
+      - { type: depends_on, to: "00_rootlaw/rootlaw.yaml" }
+      - { type: seals,      to: "06_trace/traces/runtime_trace.jsonl" }
+
+  - from: "01_schema/decision.schema.json"
+    layer: L1
+    group: 5
+    state: spec
+    links:
+      - { type: depends_on, to: "02_principles/rules.aup_v1.yaml" }
+
+  - from: "01_schema/action_request.schema.json"
+    layer: L1
+    group: 5
+    state: spec
+    links:
+      - { type: depends_on, to: "07_ingest/allowlist/allowed_sources.yaml" }
+
+  - from: "01_schema/trace_record.schema.json"
+    layer: L1
+    group: 5
+    state: spec
+    links:
+      - { type: implements, to: "03_memory/merkle/memory_chain.py ChainEntry" }
+
+  # ── 02_principles ──
+  - from: "02_principles/rules.aup_v1.yaml"
+    layer: L3
+    group: 1
+    state: spec
+    links:
+      - { type: depends_on, to: "00_rootlaw/rootlaw.yaml" }
+      - { type: extends,    to: "02_principles/defaults.yaml" }
+
+  - from: "02_principles/defaults.yaml"
+    layer: L3
+    group: 1
+    state: spec
+    links:
+      - { type: depends_on, to: "00_rootlaw/rootlaw.yaml" }
+
+  # ── 03_memory ──
+  - from: "03_memory/merkle/memory_chain.py"
+    layer: L6
+    group: 2
+    state: runnable
+    links:
+      - { type: implements,  to: "ParticleReversible / ReversibleChain" }
+      - { type: seals,       to: "06_trace/traces/runtime_trace.jsonl" }
+      - { type: depends_on,  to: "00_rootlaw/rootlaw.yaml" }
+
+  # ── 04_runtime ──
+  - from: "04_runtime/flowcore_loop.py"
+    layer: L7
+    group: 3
+    state: runnable
+    links:
+      - { type: depends_on,  to: "03_memory/merkle/memory_chain.py" }
+      - { type: seals,       to: "06_trace/traces/runtime_trace.jsonl" }
+      - { type: implements,  to: "MrLiouAIRuntime / Kernel" }
+
+  - from: "04_runtime/runtime_manifest.yaml"
+    layer: L7
+    group: 3
+    state: spec
+    links:
+      - { type: entry_of,    to: "04_runtime/flowcore_loop.py" }
+      - { type: depends_on,  to: "00_rootlaw/rootlaw.yaml" }
+
+  # ── 05_persona ──
+  - from: "05_persona/world_module.py"
+    layer: L4
+    group: 4
+    state: prototype
+    links:
+      - { type: implements,  to: "WorldModule / ParticleGlobe" }
+      - { type: depends_on,  to: "03_memory/merkle/memory_chain.py" }
+      - { type: mirrors,     to: "09_workflow/api.js L4 WORLD" }
+
+  # ── 07_ingest ──
+  - from: "07_ingest/allowlist/allowed_sources.yaml"
+    layer: L2
+    group: 5
+    state: spec
+    links:
+      - { type: depends_on,  to: "02_principles/rules.aup_v1.yaml" }
+
+  - from: "07_ingest/denylist/blocked_actions.yaml"
+    layer: L2
+    group: 5
+    state: spec
+    links:
+      - { type: depends_on,  to: "00_rootlaw/rootlaw.yaml" }
+
+  # ── 08_sources ──
+  - from: "08_sources/sources.manifest.yaml"
+    layer: L0
+    group: 1
+    state: spec
+    links:
+      - { type: depends_on,  to: "00_rootlaw/rootlaw.yaml" }
+
+  # ── 09_workflow ──
+  - from: "09_workflow/api.js"
+    layer: L7
+    group: 3
+    state: runnable
+    links:
+      - { type: implements,  to: "MrLiouAIRuntime / L0–L7 stack" }
+      - { type: depends_on,  to: "09_workflow/signature.js" }
+      - { type: depends_on,  to: "09_workflow/seed.js" }
+
+  - from: "09_workflow/signature.js"
+    layer: L0
+    group: 1
+    state: runnable
+    links:
+      - { type: implements,  to: "00_rootlaw/rootlaw.yaml law_0_signature" }
+
+  - from: "09_workflow/seed.js"
+    layer: L1
+    group: 2
+    state: runnable
+    links:
+      - { type: implements,  to: "ParticleReversible / SEED compression" }
+      - { type: depends_on,  to: "09_workflow/signature.js" }
+
+  - from: "09_workflow/fltnz_parser.py"
+    layer: L2
+    group: 2
+    state: runnable
+    links:
+      - { type: implements,  to: "ParticleReversible / txt↔fltnz↔map↔flpkg↔trace" }
+      - { type: extends,     to: "09_workflow/seed.js" }
+      - { type: seals,       to: "03_memory/merkle/memory_chain.py" }
+
+  - from: "09_workflow/mrl_librarian.py"
+    layer: L6
+    group: 5
+    state: entry
+    links:
+      - { type: entry_of,    to: "FileIndexGovernance" }
+      - { type: indexed_by,  to: "data/librarian_index.json" }
+      - { type: mirrors,     to: "data/relations/module_relations.yaml" }
+
+  - from: "09_workflow/MRL__Flowcore_Loop_2.py"
+    layer: L7
+    group: 3
+    state: runnable
+    links:
+      - { type: extends,     to: "04_runtime/flowcore_loop.py" }
+      - { type: implements,  to: "MrLiouAIRuntime / CLI + HTTP" }
+      - { type: depends_on,  to: "09_workflow/signature.js" }
+
+  - from: "09_workflow/FluinMemoryVault.py"
+    layer: L6
+    group: 3
+    state: runnable
+    links:
+      - { type: implements,  to: "MrLiouAIRuntime / MemoryVault .flpkg" }
+      - { type: depends_on,  to: "09_workflow/fltnz_parser.py" }
+
+  - from: "09_workflow/FluinAnalyzer.py"
+    layer: L2
+    group: 3
+    state: runnable
+    links:
+      - { type: extends,     to: "09_workflow/FluinMemoryVault.py" }
+
+  - from: "09_workflow/FluinRecorder.py"
+    layer: L2
+    group: 3
+    state: runnable
+    links:
+      - { type: extends,     to: "09_workflow/FluinMemoryVault.py" }
+
+  # ── data/master ──
+  - from: "data/master/master_summary_v1.3.md"
+    layer: MetaEnv
+    group: 1
+    state: spec
+    links:
+      - { type: depends_on,  to: "data/master/master_concise_v1.3.json" }
+      - { type: mirrors,     to: "data/relations/module_relations.yaml" }
+
+  - from: "data/relations/module_relations.yaml"
+    layer: L5
+    group: 5
+    state: spec
+    links:
+      - { type: entry_of,    to: "FileIndexGovernance" }
+      - { type: depends_on,  to: "00_rootlaw/rootlaw.yaml" }
+      - { type: indexed_by,  to: "09_workflow/mrl_librarian.py" }
+
+  # ── 03_memory/vector ──
+  - from: "03_memory/vector/vector_store.py"
+    layer: L6
+    group: 2
+    state: runnable
+    links:
+      - { type: implements,  to: "ParticleReversible / RAG VectorStore" }
+      - { type: depends_on,  to: "03_memory/merkle/memory_chain.py" }
+
+  # ── 09_workflow (industry + MRL combination modules) ──
+  - from: "09_workflow/tool_registry.py"
+    layer: L7
+    group: 3
+    state: runnable
+    links:
+      - { type: implements,  to: "MrLiouAIRuntime / ToolRegistry" }
+      - { type: depends_on,  to: "09_workflow/signature.js" }
+
+  - from: "09_workflow/prompt_template.py"
+    layer: L7
+    group: 3
+    state: runnable
+    links:
+      - { type: implements,  to: "MrLiouAIRuntime / PromptTemplate" }
+      - { type: depends_on,  to: "09_workflow/tool_registry.py" }
+
+  - from: "09_workflow/agent_planner.py"
+    layer: L7
+    group: 3
+    state: runnable
+    links:
+      - { type: implements,  to: "MrLiouAIRuntime / ReActAgentLoop" }
+      - { type: depends_on,  to: "09_workflow/tool_registry.py" }
+      - { type: depends_on,  to: "09_workflow/prompt_template.py" }
+
+  - from: "09_workflow/eval_engine.py"
+    layer: L6
+    group: 5
+    state: runnable
+    links:
+      - { type: implements,  to: "FileIndexGovernance / EvalPipeline" }
+      - { type: depends_on,  to: "02_principles/rules.aup_v1.yaml" }
+
+  - from: "09_workflow/plugin_manager.py"
+    layer: L7
+    group: 3
+    state: runnable
+    links:
+      - { type: implements,  to: "MrLiouAIRuntime / PluginManager" }
+      - { type: depends_on,  to: "09_workflow/tool_registry.py" }
+      - { type: indexed_by,  to: "09_workflow/mrl_librarian.py" }
+
+  - from: "09_workflow/mother_assembly.py"
+    layer: L7
+    group: 1
+    state: entry
+    links:
+      - { type: entry_of,    to: "MotherCore / MotherAssembly" }
+      - { type: depends_on,  to: "03_memory/merkle/memory_chain.py" }
+      - { type: depends_on,  to: "03_memory/vector/vector_store.py" }
+      - { type: depends_on,  to: "05_persona/world_module.py" }
+      - { type: depends_on,  to: "09_workflow/tool_registry.py" }
+      - { type: depends_on,  to: "09_workflow/prompt_template.py" }
+      - { type: depends_on,  to: "09_workflow/agent_planner.py" }
+      - { type: depends_on,  to: "09_workflow/eval_engine.py" }
+      - { type: depends_on,  to: "09_workflow/plugin_manager.py" }
+      - { type: depends_on,  to: "09_workflow/fltnz_parser.py" }
+      - { type: mirrors,     to: "data/relations/module_relations.yaml" }
+
+  # ── ui ──
+  - from: "ui/streamlit_app/app.py"
+    layer: Platform
+    group: 6
+    state: prototype
+    links:
+      - { type: entry_of,    to: "Platform / UI" }
+      - { type: depends_on,  to: "04_runtime/flowcore_loop.py" }

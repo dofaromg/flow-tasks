@@ -1,0 +1,255 @@
+{
+  "schema": "MRL_Map_Model",
+  "origin_signature": "MrLiouWord",
+  "generated_utc": "2026-06-12T21:40:00.000000+00:00",
+  "audit_phase": "Part_A / Phase_A03",
+  "map_law": "Node存在不等於可見；Node+Trace+Map+Coupling才可見",
+  "maps": [
+    {
+      "Map_ID": "MAP.POS.00",
+      "Map_Path": "mainline[0]",
+      "Map_Type": "Position",
+      "Map_Node": "MRL.NODE.00.Reality",
+      "Map_Position": {"axis": "mainline", "index": 0, "of": 14, "layer": "L-Root/Pre"},
+      "Map_Related_Trace": "TRC.ORIGIN.00"
+    },
+    {
+      "Map_ID": "MAP.POS.01",
+      "Map_Path": "mainline[1]",
+      "Map_Type": "Position",
+      "Map_Node": "MRL.NODE.01.Origin",
+      "Map_Position": {"axis": "mainline", "index": 1, "of": 14, "layer": "L0"},
+      "Map_Related_Trace": "TRC.ORIGIN.01"
+    },
+    {
+      "Map_ID": "MAP.POS.02",
+      "Map_Path": "mainline[2]",
+      "Map_Type": "Position",
+      "Map_Node": "MRL.NODE.02.SeedKernel",
+      "Map_Position": {"axis": "mainline", "index": 2, "of": 14, "layer": "L0/L1"},
+      "Map_Related_Trace": "TRC.ORIGIN.02"
+    },
+    {
+      "Map_ID": "MAP.POS.03",
+      "Map_Path": "mainline[3]",
+      "Map_Type": "Position",
+      "Map_Node": "MRL.NODE.03.PreParticle",
+      "Map_Position": {"axis": "mainline", "index": 3, "of": 14, "layer": "L1"},
+      "Map_Related_Trace": "TRC.ORIGIN.03"
+    },
+    {
+      "Map_ID": "MAP.POS.04",
+      "Map_Path": "mainline[4]",
+      "Map_Type": "Position",
+      "Map_Node": "MRL.NODE.04.Particle",
+      "Map_Position": {"axis": "mainline", "index": 4, "of": 14, "layer": "L2"},
+      "Map_Related_Trace": "TRC.ORIGIN.04"
+    },
+    {
+      "Map_ID": "MAP.POS.05",
+      "Map_Path": "mainline[5]",
+      "Map_Type": "Position",
+      "Map_Node": "MRL.NODE.05.Signal",
+      "Map_Position": {"axis": "mainline", "index": 5, "of": 14, "layer": "L3"},
+      "Map_Related_Trace": "TRC.ORIGIN.05"
+    },
+    {
+      "Map_ID": "MAP.POS.06",
+      "Map_Path": "mainline[6]",
+      "Map_Type": "Position",
+      "Map_Node": "MRL.NODE.06.Field",
+      "Map_Position": {"axis": "mainline", "index": 6, "of": 14, "layer": "L3"},
+      "Map_Related_Trace": "TRC.ORIGIN.06"
+    },
+    {
+      "Map_ID": "MAP.POS.07",
+      "Map_Path": "mainline[7]",
+      "Map_Type": "Position",
+      "Map_Node": "MRL.NODE.07.Persona",
+      "Map_Position": {"axis": "mainline", "index": 7, "of": 14, "layer": "L4"},
+      "Map_Related_Trace": "TRC.ORIGIN.07"
+    },
+    {
+      "Map_ID": "MAP.POS.08",
+      "Map_Path": "mainline[8]",
+      "Map_Type": "Position",
+      "Map_Node": "MRL.NODE.08.Memory",
+      "Map_Position": {"axis": "mainline", "index": 8, "of": 14, "layer": "L2/L5"},
+      "Map_Related_Trace": "TRC.ORIGIN.08"
+    },
+    {
+      "Map_ID": "MAP.POS.09",
+      "Map_Path": "mainline[9]",
+      "Map_Type": "Position",
+      "Map_Node": "MRL.NODE.09.Globe",
+      "Map_Position": {"axis": "mainline", "index": 9, "of": 14, "layer": "L5/L∞"},
+      "Map_Related_Trace": "TRC.ORIGIN.09"
+    },
+    {
+      "Map_ID": "MAP.POS.10",
+      "Map_Path": "mainline[10]",
+      "Map_Type": "Position",
+      "Map_Node": "MRL.NODE.10.World",
+      "Map_Position": {"axis": "mainline", "index": 10, "of": 14, "layer": "L4/L7"},
+      "Map_Related_Trace": "TRC.ORIGIN.10"
+    },
+    {
+      "Map_ID": "MAP.POS.11",
+      "Map_Path": "mainline[11]",
+      "Map_Type": "Position",
+      "Map_Node": "MRL.NODE.11.Runtime",
+      "Map_Position": {"axis": "mainline", "index": 11, "of": 14, "layer": "L6"},
+      "Map_Related_Trace": "TRC.ORIGIN.11"
+    },
+    {
+      "Map_ID": "MAP.POS.12",
+      "Map_Path": "mainline[12]",
+      "Map_Type": "Position",
+      "Map_Node": "MRL.NODE.12.Mother",
+      "Map_Position": {"axis": "mainline", "index": 12, "of": 14, "layer": "L0(canonical)"},
+      "Map_Related_Trace": "TRC.ORIGIN.12"
+    },
+    {
+      "Map_ID": "MAP.POS.13",
+      "Map_Path": "mainline[13]",
+      "Map_Type": "Position",
+      "Map_Node": "MRL.NODE.13.Return",
+      "Map_Position": {"axis": "mainline", "index": 13, "of": 14, "layer": "L7/Loop"},
+      "Map_Related_Trace": "TRC.ORIGIN.13"
+    },
+    {
+      "Map_ID": "MAP.ROUTE.MAINLINE",
+      "Map_Path": "Reality→Origin→SeedKernel→PreParticle→Particle→Signal→Field→Persona→Memory→Globe→World→Runtime→Mother→Return→(Origin)",
+      "Map_Type": "Route",
+      "Map_Node": "mainline_all_14",
+      "Map_Position": {"axis": "mainline", "span": "0→13", "closure": "Return→Origin"},
+      "Map_Related_Trace": "TRC.UNIVERSAL.MAINLINE",
+      "Map_Note": "14-node sequential route with closure loop"
+    },
+    {
+      "Map_ID": "MAP.ROUTE.RETURN_CLOSURE",
+      "Map_Path": "Return→Origin (closure)",
+      "Map_Type": "Route",
+      "Map_Node": "MRL.NODE.13.Return",
+      "Map_Position": {"axis": "closure", "from": 13, "to": 1},
+      "Map_Related_Trace": "TRC.UNIVERSAL.CLOSURE",
+      "Map_Note": "MRL.COUPLE.CLOSURE; return_closure type"
+    },
+    {
+      "Map_ID": "MAP.PROJ.REALITY",
+      "Map_Path": "PG2.Law.LawSeed.OriginCollapse → Reality",
+      "Map_Type": "Projection",
+      "Map_Node": "MRL.NODE.00.Reality",
+      "Map_Position": {"via_trace": "TRC.ORIGIN.00", "from_source": "SRC.00.A"},
+      "Map_Related_Trace": "TRC.ORIGIN.00"
+    },
+    {
+      "Map_ID": "MAP.PROJ.ORIGIN",
+      "Map_Path": "PG2.L0.SignatureLaw → Origin",
+      "Map_Type": "Projection",
+      "Map_Node": "MRL.NODE.01.Origin",
+      "Map_Position": {"via_trace": "TRC.ORIGIN.01", "from_source": "SRC.01.A"},
+      "Map_Related_Trace": "TRC.ORIGIN.01"
+    },
+    {
+      "Map_ID": "MAP.PROJ.PREPARTICLE_BACKFILL",
+      "Map_Path": "WeakSource_Backfill (19+6 items) → PreParticle",
+      "Map_Type": "Projection",
+      "Map_Node": "MRL.NODE.03.PreParticle",
+      "Map_Position": {"via_trace": "TRC.ORIGIN.03", "from_source": "SRC.03.BACKFILL"},
+      "Map_Related_Trace": "TRC.ORIGIN.03",
+      "Map_Note": "backfill upgrade: 1→24 hits; pg_id=6 fs=18"
+    },
+    {
+      "Map_ID": "MAP.PROJ.PERSONA_BACKFILL",
+      "Map_Path": "WeakSource_Backfill (30+9 items) → Persona",
+      "Map_Type": "Projection",
+      "Map_Node": "MRL.NODE.07.Persona",
+      "Map_Position": {"via_trace": "TRC.ORIGIN.07", "from_source": "SRC.07.BACKFILL"},
+      "Map_Related_Trace": "TRC.ORIGIN.07",
+      "Map_Note": "backfill upgrade: 1→79 hits; pg_id=9 fs=70 content=415 (Notion MrLiouAI)"
+    },
+    {
+      "Map_ID": "MAP.PROJ.WORLD_BACKFILL",
+      "Map_Path": "WeakSource_Backfill (14 items) → World",
+      "Map_Type": "Projection",
+      "Map_Node": "MRL.NODE.10.World",
+      "Map_Position": {"via_trace": "TRC.ORIGIN.10", "from_source": "SRC.10.BACKFILL"},
+      "Map_Related_Trace": "TRC.ORIGIN.10",
+      "Map_Note": "backfill upgrade: 1→14 hits; pg_id=5 fs=9"
+    },
+    {
+      "Map_ID": "MAP.INDEX.MASTER",
+      "Map_Path": "MRL_TopLevel_MasterIndex_v2 (14 nodes, 10 modules)",
+      "Map_Type": "Index",
+      "Map_Node": "mainline_all_14",
+      "Map_Position": {"schema": "MRL_TopLevel_MasterIndex_v2", "node_count": 14, "module_count": 10},
+      "Map_Related_Trace": "TRC.UNIVERSAL.MAINLINE",
+      "Map_Note": "generated_utc 2026-06-12T04:50:04; source_basis mrl_particle 21054 particles"
+    },
+    {
+      "Map_ID": "MAP.INDEX.AUTOABSORB",
+      "Map_Path": "MRL_TopLevel_MasterIndex_AutoAbsorb_v1 (3 mother lines + 5 meta layers)",
+      "Map_Type": "Index",
+      "Map_Node": "MRL.NODE.12.Mother",
+      "Map_Position": {"lines": ["Line_01_Origin_Generation","Line_02_Runtime_Civilization","Line_03_Product_WorldGateway","Source_Archive_Layer","Causal_Wave_Learning_Layer"]},
+      "Map_Related_Trace": "TRC.ORIGIN.12",
+      "Map_Note": "AutoAbsorb rules_count=11; READ_ONLY_CLASSIFY_ENGINE_READY"
+    },
+    {
+      "Map_ID": "MAP.REGISTRY.COUPLING",
+      "Map_Path": "MRL_CouplingPoint_Registry (14 nodes)",
+      "Map_Type": "Registry",
+      "Map_Node": "mainline_all_14",
+      "Map_Position": {"registry_count": 14, "all_status": "reconstructed"},
+      "Map_Related_Trace": "TRC.UNIVERSAL.MAINLINE",
+      "Map_Note": "upstream/downstream per node; boundary markers ∅(boundary_in) ∅(boundary_out)"
+    },
+    {
+      "Map_ID": "MAP.REGISTRY.RETURNPATH",
+      "Map_Path": "MRL_ReturnPath_Registry (14 nodes)",
+      "Map_Type": "Registry",
+      "Map_Node": "mainline_all_14",
+      "Map_Position": {"registry_count": 14, "law": "怎麼過去就怎麼回來"},
+      "Map_Related_Trace": "TRC.RETURN.13",
+      "Map_Note": "all 14 paths: <Node>→…→Return→Origin (closure)"
+    },
+    {
+      "Map_ID": "MAP.REGISTRY.WAKEUP",
+      "Map_Path": "MRL_Wakeup_System_v2",
+      "Map_Type": "Registry",
+      "Map_Node": "mainline_all_14",
+      "Map_Position": {"wakeable": 14, "blocked": 0, "law": "喚醒=點亮(Trace+Coupling)；pending 節點不可喚醒"},
+      "Map_Related_Trace": "TRC.UNIVERSAL.MAINLINE",
+      "Map_Note": "all 14 nodes wakeable; wakeup_sequence = mainline order"
+    },
+    {
+      "Map_ID": "MAP.GLOBE.PARTICLE",
+      "Map_Path": "PG2.GlobeParticles.json.20260519 + PG2.MQM.MemoryGlobeRules + particle.mrl.nerve.686-globe@v1",
+      "Map_Type": "Globe",
+      "Map_Node": "MRL.NODE.09.Globe",
+      "Map_Position": {"axis": "mainline", "index": 9, "layer": "L5/L∞"},
+      "Map_Related_Trace": "TRC.ORIGIN.09",
+      "Map_Note": "686-globe nerve + MemoryGlobeRules; Globe absorbs Memory output at L5"
+    },
+    {
+      "Map_ID": "MAP.WORLDMAP.METAENV",
+      "Map_Path": "PG2.Law.LAW1.MetaEnvControl + D:\\MRL_Mother\\storage\\cf_return\\workers\\metaenv-ctrl.js",
+      "Map_Type": "WorldMap",
+      "Map_Node": "MRL.NODE.10.World",
+      "Map_Position": {"axis": "mainline", "index": 10, "layer": "L4/L7"},
+      "Map_Related_Trace": "TRC.ORIGIN.10",
+      "Map_Note": "World = MetaEnvControl + 7-database BaseWorld + KV snapshots; cf_worker deployed"
+    }
+  ],
+  "map_count": 29,
+  "map_type_summary": {
+    "Position": 14,
+    "Route": 2,
+    "Projection": 5,
+    "Index": 2,
+    "Registry": 3,
+    "Globe": 1,
+    "WorldMap": 1
+  }
+}

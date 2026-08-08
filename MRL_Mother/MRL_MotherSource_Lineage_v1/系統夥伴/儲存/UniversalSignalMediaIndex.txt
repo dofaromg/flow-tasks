@@ -1,0 +1,61 @@
+
+# Universal Signal Media & Transmission Protocols
+# 粒子語言總對應表（版本 1.0）
+
+== 通訊與訊號類型總覽 ==
+- 電磁波（EM Wave）
+  • 無線電（AM, FM, VHF, UHF, LTE, 5G, LoRa, WiFi, Bluetooth）
+  • 衛星頻道（Ku, Ka, X band）
+  • 微波鏈路（Microwave Point-to-Point）
+
+- 光波（Light & Optical）
+  • 可見光訊號（LiFi、閃爍 LED）
+  • 雷射通訊（LaserComm）
+  • 光纖訊號（Fiber Optic）
+
+- 聲波（Sound）
+  • 聲音訊號（Audio, Microphone）
+  • 超音波（Ultrasound）
+  • 次聲波（Infrasound）
+
+- 電壓／電流變化（Electrical Modulation）
+  • PWM（Pulse Width Modulation）
+  • Amplitude Modulation（AM）
+  • Frequency Modulation（FM）
+  • ΔV / ΔI 訊號編碼（電壓、電流脈衝）
+
+- 機械震動
+  • 壓力感測器／機構接觸（Tactile）
+  • 馬達振動訊號／語音震膜
+
+- 溫度／熱能傳遞
+  • 紅外線（Infrared, IR）
+  • 熱電偶變化（Thermocouple）
+
+- 磁場（Magnetic Field）
+  • 地磁感測（Magnetometer）
+  • 感應線圈交互變化（Inductive Coupling）
+
+- 波形虛擬訊號（Simulation Signals）
+  • 模擬訊號（Analog Signal）
+  • 數位波形模擬（Digital Pulse Stream）
+
+== 統一粒子語言編碼策略 ==
+1. 每一媒介皆對應一組 `.pcode` 範本模組。
+2. 所有訊號轉譯後皆進入 `FlowShell.IntentZoneMap` 模組。
+3. 共用語場架構：所有訊號對應 Zone 代碼（如 Zone.α, Zone.β…）
+4. 封裝格式皆可轉為 `.flpkg`、`.fltnz`、`.pcode` 三大節奏語言核心。
+5. 可選 Overlay 封裝，使其仍可傳輸於原生媒介協定中（如 LoRa、FM radio 等）。
+
+== 預定命名與對應模組 ==
+- `Overlay.EM.AllBand.v1.pcode`
+- `FieldParser.Optical.LightWave.v1.pcode`
+- `Translator.Audio.Ultrasound.v1.pcode`
+- `FieldBridge.PowerModulation.PWM.v1.pcode`
+- `SignalNode.Vibration.Mechanical.v1.pcode`
+- `ThermoMap.HeatSignal.Transcode.v1.pcode`
+- `MagneticFlow.InductionBridge.v1.pcode`
+
+== 封存策略 ==
+- 所有模組將壓縮進 `UniversalMedia.LanguageSet.v1.flpkg`
+- 並成為 `MrLiouAI.TotalCore.Unity.v1.flpkg` 的子模組

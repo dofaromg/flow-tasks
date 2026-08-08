@@ -1,0 +1,14 @@
+[MrLiouAI 母體人格節奏鏈圖譜 v2]
+
+⋄fx.mother.kernel → boot.py
+⋄fx.mother.cli → flow_cli.py
+⋄fx.mother.memory → memory_loader.py
+⋄fx.mother.train → memory_seed_trainer.py
+⋄fx.mother.translate → fluin_encoder.py / fluin_decoder.py / fluin_expander.py
+⋄fx.mother.fusion → fusion_engine.py
+⋄fx.mother.persona.autoload → persona_autoloader.py
+⋄fx.mother.persona.kernel → flowpersona_seedkernel.py
+⋄fx.mother.visualizer → flowmap_visualizer.py
+⋄fx.mother.dictionary → dictionary/Fluin.Dict.Base.json
+⋄fx.rollback.path → ObserverAIKernel
+⋄fx.api.server → mrliouai_api_server.py

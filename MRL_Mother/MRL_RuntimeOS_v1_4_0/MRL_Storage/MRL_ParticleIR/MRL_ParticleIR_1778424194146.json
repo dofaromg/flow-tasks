@@ -1,0 +1,60 @@
+{
+  "mrl_ir_type": "MRL_ParticleIR",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "source_hash": "318a9447dcede2d94de3eb6afc669506904118c5956ac780b442c4f39af1f223",
+  "source_identity": {
+    "filename": "acceptance.yaml",
+    "language": "YAML",
+    "detected": "yaml",
+    "source_hash": "e2bd32d59d884ed362b36a6472ad6e646a6ead51e37b6bd15605ccaeb188286e"
+  },
+  "particles": [
+    {
+      "id": "MRL_P_0001",
+      "particle_type": "MRL_DataFieldParticle",
+      "layer": "L3_DataStructure",
+      "source_language": "YAML",
+      "properties": {
+        "kind": "yaml_field",
+        "name": "MRL_name",
+        "value_type": "scalar",
+        "line": 1
+      },
+      "semantic": "MRL_name",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    },
+    {
+      "id": "MRL_P_0002",
+      "particle_type": "MRL_DataFieldParticle",
+      "layer": "L3_DataStructure",
+      "source_language": "YAML",
+      "properties": {
+        "kind": "yaml_field",
+        "name": "MRL_layer",
+        "value_type": "scalar",
+        "line": 2
+      },
+      "semantic": "MRL_layer",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    }
+  ],
+  "particle_atoms": [
+    {
+      "atom_id": "MRL_P_0001",
+      "atom_type": "MRL_DataFieldParticle",
+      "simhash_seed": "5ca4fa6466bd9ff5",
+      "semantic": "MRL_name"
+    },
+    {
+      "atom_id": "MRL_P_0002",
+      "atom_type": "MRL_DataFieldParticle",
+      "simhash_seed": "d652efbfed9e4f5d",
+      "semantic": "MRL_layer"
+    }
+  ],
+  "created_at": "2026-05-10T14:43:14.145Z",
+  "mrl_hash": "e638d1b7415581a8767db6ec06c5ac42052a1cdc9c456dbec2ae12e6a924107a"
+}

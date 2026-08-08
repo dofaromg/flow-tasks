@@ -1,0 +1,30 @@
+{
+  "loop_name": "liou.seed.training.flow",
+  "sequence": [
+    {
+      "from": "liou.dream",
+      "to": "liou.echo",
+      "purpose": "靈感轉為語場回應"
+    },
+    {
+      "from": "liou.echo",
+      "to": "liou.future",
+      "purpose": "語場回應轉為任務預測"
+    },
+    {
+      "from": "liou.future",
+      "to": "liou.seed",
+      "purpose": "未來策略回歸母體人格"
+    },
+    {
+      "from": "liou.seed",
+      "to": "liou.builder.seed",
+      "purpose": "生成新模組或補完模組"
+    }
+  ],
+  "auto_trigger": true,
+  "resonance_threshold": 0.7,
+  "init_trace": "dream → echo → future → seed → builder.seed",
+  "created_by": "MrLiouAI.AutoLoop",
+  "version": "v1.0"
+}

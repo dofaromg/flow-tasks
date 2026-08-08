@@ -1,0 +1,9 @@
+# Shared Wrangler reference for FireCore modules.
+# Copy module-specific values from each module/wrangler.toml before deployment.
+compatibility_date = "2026-07-01"
+workers_dev = false
+
+[vars]
+MRL_ORIGIN_SIGNATURE = "MrLiouWord"
+MRL_FIRECORE_MODE = "local_backfill"
+MRL_FIRECORE_NO_DEPLOY = "1"

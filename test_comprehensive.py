@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Comprehensive test script for FlowAgent task system
+Comprehensive test script for MrLiouAI task system
 Tests both the task processing system and Flask API functionality
 """
 
@@ -13,12 +13,14 @@ import subprocess
 import threading
 from pathlib import Path
 
+import pytest
+
 def test_task_processor():
     """Test the task processing system"""
     print("=== Testing Task Processor ===")
     
     # Run task processor
-    result = subprocess.run([sys.executable, "process_tasks.py"], 
+    result = subprocess.run([sys.executable, "process_tasks.py"],
                           capture_output=True, text=True)
     
     print(f"Exit code: {result.returncode}")
@@ -31,19 +33,17 @@ def test_task_processor():
     
     # Check if results were created
     results_dir = Path("tasks/results")
-    if results_dir.exists():
-        print(f"✓ Results directory exists: {results_dir}")
-        
-        # List result files
-        result_files = list(results_dir.glob("*.json"))
-        print(f"✓ Found {len(result_files)} result files:")
-        for f in result_files:
-            print(f"  - {f.name}")
-    else:
-        print("✗ Results directory missing")
-        return False
-    
-    return result.returncode == 0
+    assert results_dir.exists(), "Results directory missing"
+    print(f"✓ Results directory exists: {results_dir}")
+
+    # List result files (sort for consistent ordering)
+    result_files = sorted(results_dir.glob("*.json"))
+    print(f"✓ Found {len(result_files)} result files:")
+    for result_file in result_files:
+        print(f"  - {result_file.name}")
+
+    assert result.returncode == 0, "Task processor exited with errors"
+    return True
 
 def test_flask_api():
     """Test the Flask API by starting it and making requests"""
@@ -62,6 +62,35 @@ def test_flask_api():
         # Test main endpoint
         print("Testing main endpoint (/)...")
         response = requests.get("http://localhost:5000/", timeout=10)
+        assert response.status_code == 200, f"Main endpoint failed: {response.status_code}"
+        data = response.json()
+        expected_message = "你好，世界"
+        assert data.get("message") == expected_message, \
+            f"Wrong message: expected '{expected_message}', got '{data.get('message')}'"
+        print(f"✓ Main endpoint working: {data['message']}")
+
+        # Test health endpoint
+        print("Testing health endpoint (/health)...")
+        response = requests.get("http://localhost:5000/health", timeout=10)
+        assert response.status_code == 200, f"Health endpoint failed: {response.status_code}"
+        data = response.json()
+        assert data.get("status") == "healthy", f"Health check failed: {data}"
+        print(f"✓ Health endpoint working: {data}")
+
+        # Test info endpoint
+        print("Testing info endpoint (/info)...")
+        response = requests.get("http://localhost:5000/info", timeout=10)
+        assert response.status_code == 200, f"Info endpoint failed: {response.status_code}"
+        data = response.json()
+        assert data.get("task_id") == "hello-world-api", f"Info endpoint incorrect: {data}"
+        print(f"✓ Info endpoint working: task_id = {data['task_id']}")
+
+        print("✓ All Flask API tests passed!")
+
+    except requests.exceptions.RequestException as request_error:
+        pytest.fail(f"Request failed: {request_error}")
+    except Exception as test_error:
+        pytest.fail(f"Test failed: {test_error}")
         if response.status_code == 200:
             data = response.json()
             expected_message = "你好，世界"
@@ -123,6 +152,20 @@ def test_particle_core():
     
     try:
         # Run the existing integration test
+        process_result = subprocess.run([sys.executable, "test_integration.py"],
+                              capture_output=True, text=True)
+
+        print(f"Exit code: {process_result.returncode}")
+        print("STDOUT:")
+        print(process_result.stdout)
+
+        if process_result.stderr:
+            print("STDERR:")
+            print(process_result.stderr)
+
+        assert process_result.returncode == 0, "Particle core integration test failed"
+    except Exception as test_error:
+        pytest.fail(f"Particle core test failed: {test_error}")
         result = subprocess.run([sys.executable, "test_integration.py"], 
                               capture_output=True, text=True)
         
@@ -156,6 +199,9 @@ def test_system_integration():
     for file_path in required_files:
         if not Path(file_path).exists():
             missing_files.append(file_path)
+
+    assert not missing_files, f"Missing required files: {missing_files}"
+    print("✓ All required files present")
     
     if missing_files:
         print(f"✗ Missing required files: {missing_files}")
@@ -168,20 +214,20 @@ def test_system_integration():
         "tasks/2025-06-29_hello-world-api.yaml",
         "tasks/2025-07-31_particle-language-core.yaml"
     ]
+
     
     for task_file in task_files:
         if Path(task_file).exists():
             print(f"✓ Task definition exists: {task_file}")
         else:
-            print(f"✗ Task definition missing: {task_file}")
-            return False
-    
+            pytest.fail(f"Task definition missing: {task_file}")
+
     print("✓ System integration checks passed!")
     return True
 
 def main():
     """Run all tests"""
-    print("FlowAgent Comprehensive Test Suite")
+    print("MrLiouAI Comprehensive Test Suite")
     print("=" * 50)
     
     os.chdir(Path(__file__).parent)
@@ -198,6 +244,13 @@ def main():
     for test_name, test_func in tests:
         print(f"\n{'='*20} {test_name} {'='*20}")
         try:
+            test_func()
+            results[test_name] = True
+        except AssertionError as assertion_error:
+            print(f"✗ {test_name} assertion failed: {assertion_error}")
+            results[test_name] = False
+        except Exception as test_error:
+            print(f"✗ {test_name} test crashed: {test_error}")
             results[test_name] = test_func()
         except Exception as e:
             print(f"✗ {test_name} test crashed: {e}")
@@ -218,11 +271,12 @@ def main():
     
     print("=" * 50)
     if all_passed:
-        print("🎉 ALL TESTS PASSED! FlowAgent system is fully functional.")
+        print("🎉 ALL TESTS PASSED! MrLiouAI system is fully functional.")
         sys.exit(0)
     else:
         print("❌ Some tests failed. System needs attention.")
         sys.exit(1)
 
 if __name__ == "__main__":
+    main()
     main()

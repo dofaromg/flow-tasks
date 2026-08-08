@@ -1,0 +1,71 @@
+{
+  "mrl_ir_type": "MRL_MetaIR",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "source_identity": {
+    "filename": "acceptance.py",
+    "language": "Python",
+    "detected": "py",
+    "source_hash": "67701a19aa902a0e22b23057929cb63436b24f61f617eb9343afb031ed3d79bd"
+  },
+  "syntax_tree": {
+    "language": "Python",
+    "nodes": [
+      {
+        "kind": "function",
+        "name": "MRL_run",
+        "params": [
+          "x"
+        ]
+      }
+    ],
+    "tokens": [
+      "def",
+      "MRL_run(x):",
+      "return",
+      "x"
+    ]
+  },
+  "semantic_intent": {
+    "intents": [
+      "MRL_INTENT_EXECUTE"
+    ],
+    "summary": "MRL_INTENT_EXECUTE",
+    "node_count": 1,
+    "language": "Python"
+  },
+  "particle_atoms": [
+    {
+      "atom_id": "MRL_P_0001",
+      "atom_type": "MRL_FunctionParticle",
+      "simhash_seed": "7637346f392ab5b5",
+      "semantic": "MRL_run"
+    }
+  ],
+  "context_relations": [],
+  "runtime_plan": [
+    {
+      "step": 1,
+      "action": "MRL_EXECUTE_CALLABLE",
+      "target": "MRL_run",
+      "node_kind": "function"
+    }
+  ],
+  "verification_plan": [
+    "MRL_ROUNDTRIP",
+    "MRL_HASH",
+    "MRL_PARTICLE_INTEGRITY",
+    "MRL_CONTEXT_GRAPH",
+    "MRL_RUNTIME_GRAPH"
+  ],
+  "output_artifact": {
+    "expected": [
+      "MRL_MetaIR_Record",
+      "MRL_ParticleIR_Record",
+      "MRL_RuntimeGraph_Record",
+      "MRL_Verification_Report"
+    ]
+  },
+  "created_at": "2026-05-10T19:23:58.797Z",
+  "mrl_hash": "cb5f0374f0ee3aae8d88cca75d03805f3a3da982a55ca6d8f0c4155e3f57f356"
+}

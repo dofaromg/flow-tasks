@@ -1,0 +1,18 @@
+{
+  "name": "mrl-ai-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MRL完整態母體運轉系統：世界模組、平行世界模組、MRL_AI、MRL_AGI、MRL_ASI、MRL_World、感知力核心、多世界同步、回放回復、DL580自運行部署鏈。",
+  "main": "MRL_RuntimeServer.js",
+  "scripts": {
+    "start": "node MRL_RuntimeServer.js",
+    "MRL_boot": "node scripts/MRL_runtime_bootstrap.js",
+    "MRL_acceptance": "node scripts/MRL_acceptance_check.js",
+    "MRL_pidscope_acceptance": "node acceptance/MRL_PIDScope_Acceptance/run.js",
+    "build:ui": "node scripts/MRL_build_ui.js",
+    "MRL_parameter_registry": "node scripts/MRL_formula_parameter_registry_check.js"
+  },
+  "dependencies": {
+    "express": "^4.18.3"
+  }
+}

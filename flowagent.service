@@ -1,0 +1,24 @@
+[Unit]
+Description=MrLiouAI Wakeup Core Service
+After=docker.service network.target
+Requires=docker.service
+
+[Service]
+Type=notify
+# Run as a non-root user with docker group membership; change 'mrliouai' if needed.
+User=root
+# If you don't want root, create 'mrliouai' user and set User=mrliouai
+Environment=FLOW_DIR=/srv/mrliouai
+Environment=COMPOSE_FILE=%h/docker-compose.yml
+# Keep restart behavior conservative to avoid crash loop
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=120
+ExecStartPre=/bin/mkdir -p /srv/mrliouai/seed /srv/mrliouai/memory /srv/mrliouai/runtime /srv/mrliouai/persona /srv/mrliouai/reflex /srv/mrliouai/logs
+ExecStart=/usr/bin/docker compose -f /srv/mrliouai/docker-compose.yml up -d
+ExecStop=/usr/bin/docker compose -f /srv/mrliouai/docker-compose.yml down
+# Optional: collect logs on stop
+ExecStopPost=/bin/sh -c 'docker logs --tail 200 mrliouai_core > /srv/mrliouai/logs/mrliouai_last_stop.log || true'
+
+[Install]
+WantedBy=multi-user.target

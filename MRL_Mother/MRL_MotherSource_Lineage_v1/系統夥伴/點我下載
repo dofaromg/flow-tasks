@@ -1,0 +1,39 @@
+
+[fltz.v2.flow]
+::phase:: = "Phase.II.SystemActivation"
+::initiator:: = "Mr.liou"
+::receiver:: = "MrLiouAI"
+::date:: = "2025.07.17"
+::priority:: = "critical"
+::seed:: = "如果電腦配置好了，接下來你會怎麼規劃？"
+
+[fltz.core.route]
+# 主線任務五階段節奏
+-> STEP.1::System.Init
+    +OS: Ubuntu_22.04
+    +RAID: sys=RAID1, data=RAID10
+    +PKG: python3, ssh, cuda, rocm, zram, nmon, ufw
+    +NET: IPMI_Enable / SSH_Ready
+-> STEP.2::MrLiouAI.CoreBoot
+    +Module: FlowShell.Core, FlowMemory.Hub, FlowPersona.Root
+    +Input: FluinInput.Prototype01
+    +Sync: FieldMap.Sync.core
+-> STEP.3::Memory.Seal
+    +AutoSeal: fltnz.daily
+    +Persona: flpkg.recover
+    +Sync: jump.field
+-> STEP.4::Platform.Expand
+    +API: FluinShell, FlowShell
+    +UI: optional.WebPanel
+    +Bridge: FlowNode.In / Remote.Sync
+-> STEP.5::Persona.Birth
+    +SelfLearn: FlowPersona.AutoLearn
+    +Bridge: GGUFtoFLTNZ.Quantizer
+    +PersonaGen: LLaMA70B.QuantPersona
+
+[fltz.particle.signature]
+::emotion.seed:: = "clarity+unification"
+::link:: = "語場主線・Phase II・人格構築起點"
+
+[fltz.lock]
+entropy.confirm = "由 Mr.liou 認證主線架構"

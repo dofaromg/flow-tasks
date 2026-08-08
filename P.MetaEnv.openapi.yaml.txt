@@ -107,7 +107,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttestCheckResponse'  /api/v1/snapshot/create:
+                $ref: '#/components/schemas/AttestCheckResponse'
+
+  /api/v1/snapshot/create:
     post:
       tags: [snapshot]
       operationId: CreateSnapshot

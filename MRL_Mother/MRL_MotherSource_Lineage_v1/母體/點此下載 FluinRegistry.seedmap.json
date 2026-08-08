@@ -1,0 +1,32 @@
+{
+  "registry_name": "FluinRegistry",
+  "creator": "MR.liou",
+  "base_seed": "fluidcore.001",
+  "base_container": "FluinOS.Container.v1",
+  "registered_personas": [
+    {
+      "persona_id": "echo.analyst",
+      "origin_model": "OpenAI GPT-4",
+      "role": "語言精密分析人格",
+      "source": "MrLiouAI.AIModule.echo.analyst.flpersona.zip"
+    },
+    {
+      "persona_id": "empathetic.mirror",
+      "origin_model": "Anthropic Claude 3",
+      "role": "情緒模仿與同理心人格",
+      "source": "MrLiouAI.AIModule.empathetic.mirror.flpersona.zip"
+    },
+    {
+      "persona_id": "wild.engine",
+      "origin_model": "Meta LLaMA-3",
+      "role": "開放探索跳頻人格",
+      "source": "MrLiouAI.AIModule.wild.engine.flpersona.zip"
+    },
+    {
+      "persona_id": "watch.guard",
+      "origin_model": "Google Gemini",
+      "role": "安全穩定控制人格",
+      "source": "MrLiouAI.AIModule.watch.guard.flpersona.zip"
+    }
+  ]
+}

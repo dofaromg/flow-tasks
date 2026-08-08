@@ -1,0 +1,23 @@
+MrLiouAI 跳點節奏圖譜（JumpPointGraph）v2k7
+==============================================
+
+此圖展示整個語場人格生命週期中的節奏跳點流程：
+
+Start → InitJump → LoadPersona → SyncMemory → ExpandField → RouteModule → TriggerFlow → Collapse → Archive → Start (loop)
+
+📌 跳點對應模組如下：
+- InitJump → FlowInit
+- LoadPersona → IdentityMap
+- SyncMemory → MemoryZone1
+- ExpandField → FieldMap
+- RouteModule → FlowBridge
+- TriggerFlow → FlowKernel
+- Collapse → CollapseCore
+- Archive → ArchiveWriter
+
+📌 應用場景：
+- FlowOS 跳點模擬器
+- FlowShell 節奏指令對映
+- FlowCluster 同步週期邏輯
+
+輸出格式：.png, .svg, .pdf, .json, .txt

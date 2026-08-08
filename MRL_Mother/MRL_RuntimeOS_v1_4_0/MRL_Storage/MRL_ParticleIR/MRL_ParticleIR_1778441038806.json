@@ -1,0 +1,79 @@
+{
+  "mrl_ir_type": "MRL_ParticleIR",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "source_hash": "e088e5b6a8363c04242430155f17259762fd7f3bfbe138a1beb6c46b41e21d74",
+  "source_identity": {
+    "filename": "acceptance.md",
+    "language": "Markdown",
+    "detected": "md",
+    "source_hash": "b3cd934858f10aec42d606abf375373ac27d12068be645e424ed4fa9e72ae128"
+  },
+  "particles": [
+    {
+      "id": "MRL_P_0001",
+      "particle_type": "MRL_DocumentHeadingParticle",
+      "layer": "L4_SemanticText",
+      "source_language": "Markdown",
+      "properties": {
+        "kind": "heading",
+        "level": 1,
+        "value": "MRL Document",
+        "line": 1
+      },
+      "semantic": "MRL Document",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    },
+    {
+      "id": "MRL_P_0002",
+      "particle_type": "MRL_StatementParticle",
+      "layer": "L4_SemanticText",
+      "source_language": "Markdown",
+      "properties": {
+        "kind": "statement",
+        "value": "整理文件",
+        "line": 3
+      },
+      "semantic": "整理文件",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    },
+    {
+      "id": "MRL_P_0003",
+      "particle_type": "MRL_StatementParticle",
+      "layer": "L4_SemanticText",
+      "source_language": "Markdown",
+      "properties": {
+        "kind": "statement",
+        "value": "整理文件",
+        "line": 4
+      },
+      "semantic": "整理文件",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    }
+  ],
+  "particle_atoms": [
+    {
+      "atom_id": "MRL_P_0001",
+      "atom_type": "MRL_DocumentHeadingParticle",
+      "simhash_seed": "ed599bd1cbe2beae",
+      "semantic": "MRL Document"
+    },
+    {
+      "atom_id": "MRL_P_0002",
+      "atom_type": "MRL_StatementParticle",
+      "simhash_seed": "1932ed7b0df28b5e",
+      "semantic": "整理文件"
+    },
+    {
+      "atom_id": "MRL_P_0003",
+      "atom_type": "MRL_StatementParticle",
+      "simhash_seed": "52f1e2ad218190b8",
+      "semantic": "整理文件"
+    }
+  ],
+  "created_at": "2026-05-10T19:23:58.804Z",
+  "mrl_hash": "daa2ae1b8a575d4f7234ed15fa2331b9d1576ad5e35065fc47979a540aa502c3"
+}

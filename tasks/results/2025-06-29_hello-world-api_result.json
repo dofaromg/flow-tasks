@@ -1,10 +1,45 @@
 {
   "task_id": "hello-world-api",
-  "validation_time": "2025-09-14T05:05:20.474667",
+  "task_name": "Unknown Task",
+  "validation_time": "2026-07-18T06:22:53.485469",
   "status": "passed",
   "checks": [
-    "✓ Target file exists: flow_code/hello_api.py",
-    "✓ Python module imports successfully"
+    {
+      "check": "schema",
+      "status": "passed",
+      "message": "Required task fields are present"
+    },
+    {
+      "check": "schema_target",
+      "status": "passed",
+      "message": "Task target is declared"
+    },
+    {
+      "check": "file_exists",
+      "status": "passed",
+      "message": "Target file exists: flow_code/hello_api.py"
+    },
+    {
+      "check": "python_syntax",
+      "status": "passed",
+      "message": "Python syntax check passed: flow_code/hello_api.py"
+    },
+    {
+      "check": "python_import",
+      "status": "passed",
+      "message": "Python module imports successfully"
+    }
   ],
-  "errors": []
+  "errors": [],
+  "warnings": [],
+  "metrics": {
+    "execution_time_ms": 287.3,
+    "files_checked": 1,
+    "lines_of_code": 36
+  },
+  "metadata": {
+    "description": "寫一個 Flask 的 hello world API，輸出 \"你好，世界\"",
+    "priority": "medium",
+    "tags": []
+  }
 }

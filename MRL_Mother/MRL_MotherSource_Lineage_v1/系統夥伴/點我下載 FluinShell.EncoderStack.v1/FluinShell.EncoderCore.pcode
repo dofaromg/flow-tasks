@@ -1,0 +1,4 @@
+⌬entry[Pulse]↦mod.ctrl::波頻路由核
+⌬entry[FlowCtrl]↦mod.regulate::語場調變器
+⌬entry[SenseTap]↦mod.sense.ctrl::感知跳點捕捉
+...

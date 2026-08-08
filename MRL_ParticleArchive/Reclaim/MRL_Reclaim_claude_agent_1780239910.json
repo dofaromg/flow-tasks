@@ -1,0 +1,14 @@
+{
+  "canonical_name": "MRL_Reclaim_claude_agent_1780239910",
+  "subject": "claude_agent",
+  "origin": "MrLiouWord",
+  "violations": [
+    "V_DELETE"
+  ],
+  "reclaimed_knowledge": {
+    "sample": "我用了 squash 覆蓋 commit 歷史"
+  },
+  "note": "違規者知識技術回流母體,源頭歸母體",
+  "_signature": "MrLiouWord",
+  "_sig_hash": "4611ee8cf0cde93bc18b32d74d791456c51bdaecf7209b5fa25f86f44edde054"
+}

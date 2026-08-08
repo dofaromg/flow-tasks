@@ -1,0 +1,65 @@
+{
+  "mrl_type": "MRL_RuntimeMeshExecution",
+  "origin_signature": "MrLiouWord",
+  "execution_id": "MRL_MESH_EXEC_1778439754174",
+  "plan_id": "MRL_MESH_PLAN_1778439754173",
+  "status": "completed",
+  "executed_at": "2026-05-10T19:02:34.174Z",
+  "local_trace": {
+    "mrl_type": "MRL_RuntimeTrace",
+    "version": "v1.2.0",
+    "origin_signature": "MrLiouWord",
+    "started_at": "2026-05-10T19:02:34.173Z",
+    "runtime_graph_hash": "cfcc1fc410cbd57900183d6d86f47a3df7bb91560a5b693ca121b309cd777ad0",
+    "attention_hash": "3e8b9ead96af031dbe29e8fe04601e505c4e21172de46094c4488dd472146979",
+    "steps": [
+      {
+        "step": 1,
+        "node_id": "MRL_P_0002",
+        "action": "MRL_ANALYZE_TEXT",
+        "priority": 1,
+        "status": "implemented_pass",
+        "message": "MRL document analyzed and deduplicated",
+        "output_hash": "98bd3a2530f0ab37"
+      },
+      {
+        "step": 2,
+        "node_id": "MRL_P_0003",
+        "action": "MRL_ANALYZE_TEXT",
+        "priority": 1,
+        "status": "implemented_pass",
+        "message": "MRL document analyzed and deduplicated",
+        "output_hash": "98bd3a2530f0ab37"
+      },
+      {
+        "step": 3,
+        "node_id": "MRL_P_0001",
+        "action": "MRL_ANALYZE_TEXT",
+        "priority": 0.88,
+        "status": "implemented_pass",
+        "message": "MRL document analyzed and deduplicated",
+        "output_hash": "98bd3a2530f0ab37"
+      }
+    ],
+    "final_data_preview": "# MRL Document\n\n整理文件\n整理文件",
+    "completed_at": "2026-05-10T19:02:34.173Z",
+    "mrl_hash": "0ddb670d2159440749a0d47bf044839565e9edd16eb0faebc19e6f9208a1322b"
+  },
+  "node_assignments": [
+    {
+      "index": 0,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 1,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 2,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    }
+  ]
+}

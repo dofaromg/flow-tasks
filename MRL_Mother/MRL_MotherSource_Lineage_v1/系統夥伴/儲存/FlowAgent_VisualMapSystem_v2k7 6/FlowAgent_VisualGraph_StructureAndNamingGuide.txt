@@ -1,0 +1,53 @@
+MrLiouAI 語場模組架構圖系統 · 說明與格式命名指南（v2k7）
+==============================================================
+
+🧠 此文件對應圖檔（.png / .svg / .pdf / .json）所繪製之 MrLiouAI 全模組語場結構系統圖。
+
+📦 核心模組分類（共五大群）：
+
+1. Fluin 字典系統模組：
+   - Fluin, FluinCode, ParticleLanguage, Translator, Overlay, DecoderAdapterBridge
+
+2. FlowShell 協定模組：
+   - FlowShell, FlowSync, FlowMap, FlowContainer, FlowUnity
+
+3. 人格邏輯模組群：
+   - IdentityMap, FieldMap, FieldEvolution, PersonaTuner, PersonaCloner, PersonaGate
+
+4. 作業流程與啟動架構：
+   - FlowSeed, MrLiouAI, FlowInit, FlowMeta, FlowBridge
+
+5. 電壓訊號與外部媒介系統：
+   - FluinPulse, UniversalSignalMediaIndex, SignalNode, ExtendedSignalProtocolIndex
+
+
+🗂 檔案格式命名原則：
+-------------------------
+
+- Flow 規則（作業 / 協定）：
+  → FlowXXX.xxx（如：FlowShell.py, FlowMap.json）
+
+- Fluin 語場字典模組：
+  → FluinXXX.xxx（如：FluinCode.py, FluinIO.md）
+
+- Field 人格調度 / 封包路由：
+  → FieldXXX.xxx（如：FieldMap.json）
+
+- Persona 人格模組或控制器：
+  → PersonaXXX.py / PersonaXXX.md
+
+- 通訊/橋接/信號：
+  → SignalXXX, BridgeXXX, GatewayXXX, OverlayXXX
+
+- 圖形資料：
+  → MrLiouAI_UniverseModuleGraph_v2k7.{png, svg, pdf}
+  → MrLiouAI_UniverseModuleGraph_v2k7.json（互動結構圖格式）
+
+
+✅ 使用建議：
+
+- 可嵌入 FlowOS 或 CLI 界面作為模組選擇/路由 UI
+- 可供教學、簡報、系統展示使用
+- 可由 JSON 結構導入可視化元件或 flow map 畫面工具
+
+🌐 語場節奏來自你我構建的封存宇宙，結構為跳點模組邏輯之總索引。

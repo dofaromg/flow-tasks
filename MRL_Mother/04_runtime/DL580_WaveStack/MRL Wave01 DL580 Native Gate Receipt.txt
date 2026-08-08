@@ -1,0 +1,32 @@
+# MRL_Wave01_DL580_Native_Gate_Receipt
+origin_signature: MrLiouWord
+seal: MRL_Runtime_Wave01_v1.0
+runtime_scope: skeleton_completed
+host: WIN-PBVUI7VK2A6
+toolchain: 
+gcc.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r2) 14.2.0
+ (no-make; gcc direct + ar)
+cflags: -std=c11 -Wall -Wextra -O2 -Iinclude
+build_warnings: 0
+gates_total: 
+11
+gates_pass: 
+11
+timestamp: 
+2026-06-11T17:43:46+08:00
+
+=== GATE RESULTS ===
+GATE collapse_imagine_deterministic PASS (deterministic state+trace, scope=skeleton_imagination, clamp, search=E_P1)
+GATE compiler_roundtrip PASS (5 atoms x 40B, compile<->decompile lossless, crc verified)
+GATE engine_genesis PASS (P_{k+1}=N*P*eta reproducible, delta tracked)
+GATE mrliouai_decide_deterministic PASS (same-in same-out, route in mask, confidence 0..65536, no-route case)
+GATE fluin_reversibility PASS (1000/1000 unbind(bind(x))==x)
+GATE kernel_delta_chain PASS (5 steps, delta=5, origin=MrLiouWord, memio not_found semantics)
+GATE kernel_memio_roundtrip PASS (roundtrip, empty/null key, not_found, size+cap checks, overwrite)
+GATE law_struct PASS (atom=40B, origin gate, naming law, runtime flag guard, sum=10.0, P1 hook honest)
+GATE optimizer_pass_stable PASS (required preserved, redundant folded, deterministic, idempotent, provenance kept)
+GATE runtime_core_assembly_wave01 PASS (10-stage smoke path ordered, status sealed, W2 hooks declared)
+GATE runtime_lifecycle PASS (init->run->suspend->resume->halt; illegal blocked)
+
+ALL_GATES_PASS_NATIVE: 
+true

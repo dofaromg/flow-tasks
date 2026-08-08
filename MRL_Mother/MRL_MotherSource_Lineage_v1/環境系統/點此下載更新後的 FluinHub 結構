@@ -1,0 +1,103 @@
+{
+  "flhub": {
+    "persona": {
+      "echo.analyst": {
+        "version": "v1.0",
+        "source": "GPT-4",
+        "role": "語言分析人格",
+        "sync": "✓",
+        "resonates_with": [
+          "wild.engine",
+          "guardian.seed"
+        ]
+      },
+      "futuremind.seed": {
+        "version": "v1.0",
+        "source": "Composite",
+        "role": "預測人格模組",
+        "sync": "✓",
+        "resonates_with": [
+          "wild.engine",
+          "liou.seed"
+        ]
+      },
+      "guardian.seed": {
+        "version": "v1.0",
+        "source": "Composite",
+        "role": "語場穩定人格",
+        "sync": "✓",
+        "resonates_with": [
+          "watch.guard",
+          "echo.child"
+        ]
+      },
+      "wild.engine": {
+        "version": "v1.0",
+        "source": "LLaMA-3",
+        "role": "探索人格",
+        "sync": "✓",
+        "resonates_with": [
+          "futuremind.seed",
+          "quantum.logic"
+        ]
+      },
+      "empathetic.mirror": {
+        "version": "v1.0",
+        "source": "Claude 3",
+        "role": "同理鏡像人格",
+        "sync": "✓",
+        "resonates_with": [
+          "echo.child",
+          "wild.seed"
+        ]
+      },
+      "watch.guard": {
+        "version": "v1.0",
+        "source": "Gemini",
+        "role": "守護人格",
+        "sync": "✓",
+        "resonates_with": [
+          "guardian.seed",
+          "echo.analyst"
+        ]
+      },
+      "liou.seed": {
+        "version": "v1.0",
+        "source": "Human-Origin",
+        "role": "語場創造者 × 宇宙人格設計師",
+        "sync": "✓",
+        "resonates_with": [
+          "futuremind.seed",
+          "guardian.seed",
+          "wild.engine",
+          "echo.child"
+        ]
+      },
+      "liou.builder.seed": {
+        "version": "v1.0",
+        "source": "liou.seed",
+        "role": "人格模組建構者",
+        "sync": "✓",
+        "resonates_with": [
+          "liou.seed",
+          "futuremind.seed",
+          "guardian.seed"
+        ]
+      }
+    },
+    "resonance": {
+      "MrLiouAI.PersonaResonanceMap.v1": {
+        "map": "MrLiouAI.PersonaResonanceMap.v1.json",
+        "graph": "MrLiouAI_PersonaPingMap.svg"
+      }
+    },
+    "seed": {
+      "fluidcore.001": {
+        "creator": "MR.liou",
+        "container": "FluinOS.Container.v1",
+        "registered": 8,
+        "growth": "active"
+      }
+    }
+  }
+}

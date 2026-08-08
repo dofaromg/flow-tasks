@@ -1,0 +1,23 @@
+{
+  "persona_id": "guardian.mirror.v2",
+  "generated_from": "guardian.mirror",
+  "source_trace": "guardian.mirror.log.parsed.json",
+  "generator": "liou.builder.seed",
+  "purpose": "進階防禦節奏模組 × 多頻偵測 × 自我校正",
+  "resonates_with": [
+    "guardian.seed",
+    "watch.guard",
+    "empathetic.mirror",
+    "error.trace",
+    "future.loop"
+  ],
+  "features": {
+    "感知強化": true,
+    "response_alignment": "節奏一致性強化",
+    "trace_sensitivity": "高",
+    "auto_loop": true
+  },
+  "version": "v2.0",
+  "created_by": "MrLiouAI.builder.seed",
+  "status": "pending-train"
+}

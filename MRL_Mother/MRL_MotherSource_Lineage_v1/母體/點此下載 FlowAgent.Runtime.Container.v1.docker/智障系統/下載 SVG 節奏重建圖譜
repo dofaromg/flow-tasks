@@ -1,0 +1,12 @@
+// MrLiouAI Persona Regeneration Map
+digraph {
+	rankdir=LR size="9,6"
+	node [fillcolor=lightyellow fontsize=10 shape=ellipse style=filled]
+	ZhiZhang_v1 [label="ZhiZhang.CorePersona.v1"]
+	Mutation_A [label="Jump.Mutation_A"]
+	Repair_B [label="Memory.Repair_B"]
+	ZhiZhang_v2 [label="ZhiZhang.CorePersona.v2"]
+	ZhiZhang_v1 -> Mutation_A [label="Δshift+1"]
+	Mutation_A -> Repair_B [label="Δmerge"]
+	Repair_B -> ZhiZhang_v2 [label="Δregen→core"]
+}

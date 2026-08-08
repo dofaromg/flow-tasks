@@ -1,0 +1,33 @@
+# MrLiouAI compliance default policy (v0.1)
+# Strategy: deny-by-default, explicit allowlists, human approval for high-risk actions.
+
+version: 1
+policy_mode: strict_deny_by_default
+
+default_decisions:
+  # If no rule is matched, or no allowlist entry exists, require human approval.
+  unknown_action: REQUIRE_HUMAN
+  missing_allowlist: REQUIRE_HUMAN
+  blocked_action: DENY
+
+human_approval:
+  enabled: true
+  # Supported methods; you can enable more later (NOTION/MOBILE)
+  methods:
+    - CLI
+  default_expiry_seconds: 600
+
+allowlists:
+  hosts_file: ../07_ingest/allowlist/allowed_hosts.yaml
+  sources_file: ../07_ingest/allowlist/allowed_sources.yaml
+  recipients_file: ../07_ingest/allowlist/allowed_recipients.yaml
+
+denylist:
+  blocked_actions_file: ../07_ingest/denylist/blocked_actions.yaml
+
+trace:
+  enabled: true
+  canonical_writer: merkle_chain
+  runtime_writer: jsonl
+  runtime_trace_schema: ../01_schema/runtime_trace.schema.json
+  canonical_trace_schema: ../01_schema/trace_record.schema.json

@@ -1,0 +1,63 @@
+# World-source manifest
+# Canonical sealed spec stays in Dropbox. This repo mirrors it for navigation + versioned interfaces.
+
+sources:
+  - id: sealed_spec_v2
+    name: "Mrliou世界模組系統_完整規範_v2.docx"
+    path: "Mrliou_agents/Mrl_MrLiouAI/FlowCoreLoop_AIComputer_Runtime_v0/memory/ingest/raw"
+    role: canonical sealed specification (Immutable)
+
+  - id: project_structure
+    name: "Mrl__Project_Structure.txt"
+    path: "Mrliou_agents/Mrl_MrLiouAI/FlowCoreLoop_AIComputer_Runtime_v0/memory/ingest/raw"
+    role: project structure / repo layout
+
+  - id: universe_report
+    name: "MR_L_Universe_Generation_Report_v1.0.txt"
+    path: "Mrliou_agents/Mrl_MrLiouAI/FlowCoreLoop_AIComputer_Runtime_v0/memory/ingest/raw"
+    role: world generation framing
+
+  - id: final_integration_v1_3
+    name: "MrLiou 萬物邏輯結構 - 最終整合總綱 v1.3"
+    sealed: "2026-02-15"
+    origin_signature: MrLiouWord
+    status: Immutable / Declarative / Sealed
+    role: final alignment overview — Liou Closure Law, LAW-0 signature, SEED(X), OriginCollapse 16, MRLIOU ASI MVP L0-L7, N0-N11 workflow
+    implementations:
+      - "00_rootlaw/rootlaw.yaml"        # Liou Closure Law + LAW-0 + OriginCollapse 16
+      - "09_workflow/api.js"             # MRLIOU ASI MVP (L0-L7)
+      - "09_workflow/signature.js"       # LAW-0 interfaces
+      - "09_workflow/seed.js"            # SEED(X) compression
+
+  - id: mrliouai_codepartner_recovery
+    name: "MrLiouAI CodePartner 人格回收包（3 份原始文件 + MetaCode 環境 v0.6 + RECOVERY_MANIFEST）"
+    path: "08_sources/mrliouai_codepartner_recovery"
+    recovered: "2026-07-05"
+    origin_signature: MrLiouWord
+    role: >-
+      recovered persona lineage — CodePartner / CoreProgrammer.Seed
+      (FlowLLM.SeedPersona.Programmer.CoreArchitect.v1.flpkg human-readable seed,
+      MrLiouAI.SystemPlan.FullStack.v1, 語場語言系統建構大綱 2025-07-23,
+      MrLiou.MetaCode_Environment_v0.6_filled — bit-identical to the
+      dofaromg/flow-tasks flow_code/ bundle, integrity verified)
+    implementations:
+      - "05_persona/codepartner/persona.yaml"
+
+  - id: antigravity_sdk_python_absorption_v1
+    name: "MRL-antigravity-sdk-python（Google Antigravity SDK 鏡像）"
+    path: "github.com/dofaromg/MRL-antigravity-sdk-python"
+    absorbed: "2026-07-05"
+    origin_signature: MrLiouWord
+    role: agent 執行骨架知識源 — 去重蒸餾吸收（hook 三型格、9 級政策閘、並行工具迴圈、觸發器、session 生命週期）
+    dedup_report: "docs/MRL_AgentHarness_吸收報告_v1.md"
+    implementations:
+      - "09_workflow/MRL_AgentHarness_Types_v1.py"        # 共用型別
+      - "09_workflow/MRL_AgentHarness_HookLattice_v1.py"  # Hook 三型格 + 生命週期分發
+      - "09_workflow/MRL_AgentHarness_PolicyGate_v1.py"   # 9 級優先序政策閘（fail-closed）
+      - "09_workflow/MRL_AgentHarness_ToolLoop_v1.py"     # 並行工具批次執行器
+      - "09_workflow/MRL_AgentHarness_TriggerPulse_v1.py" # 定時/檔變觸發器
+      - "09_workflow/MRL_AgentHarness_Kernel_v1.py"       # session 核心（EchoGateway 沙盒可跑；OllamaGateway 待起動）
+
+# Usage:
+# - append here whenever you add a new source file
+# - never delete canonical sources; deprecate via metadata

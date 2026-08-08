@@ -1,0 +1,53 @@
+{
+  "schema": "MRL_DL580_Bridge_Config_v1",
+  "origin_signature": "MrLiouWord",
+  "bridge_module": "Mrliou_MRL_RooClaudeCode_BridgeNeuralLink_v1",
+  "target_runtime": "DL580_Windows",
+  "transport": {
+    "protocol": "WebSocket",
+    "library": "Socket.IO",
+    "version": "4.x"
+  },
+  "endpoints": {
+    "dl580_bridge_api": "bridge.mrliouword.com/v3.1.0",
+    "local_ws_server": "localhost:8099",
+    "vscode_extension": "VSCode Extension Bridge"
+  },
+  "authentication": {
+    "method": "x-api-key",
+    "token_source": "environment_variable",
+    "token_env_var": "MRL_BRIDGE_TOKEN"
+  },
+  "reconnection": {
+    "enabled": true,
+    "max_attempts": "Infinity",
+    "initial_delay_ms": 1000,
+    "max_delay_ms": 30000,
+    "backoff_multiplier": 2
+  },
+  "channels": {
+    "extension_channel": {
+      "name": "ExtensionChannel",
+      "role": "VSCode Extension Communication",
+      "direction": "bidirectional"
+    },
+    "task_channel": {
+      "name": "TaskChannel",
+      "role": "Task-level Communication",
+      "direction": "bidirectional"
+    }
+  },
+  "deployment": {
+    "install_script": "scripts/install.ps1",
+    "verify_script": "scripts/verify.ps1",
+    "package_script": "scripts/package.ps1",
+    "working_directory": "D:\\MRL_Mother\\bridge_modules\\Mrliou_MRL_RooClaudeCode_BridgeNeuralLink_v1"
+  },
+  "requirements": {
+    "nodejs_version": ">=18.0.0",
+    "npm_packages": [
+      "socket.io-client",
+      "@roo-code/types"
+    ]
+  }
+}

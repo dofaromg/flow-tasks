@@ -1,0 +1,27 @@
+// MrLiouAI System Map (v1-v51)
+digraph {
+	rankdir=TB size="9,10"
+	node [fontname=Arial fontsize=10 shape=box style="rounded,filled"]
+	Core [label="MrLiouAI.Core" fillcolor=lightblue]
+	OS [label="FlowOS.System" fillcolor=lightblue]
+	Core -> OS
+	Memory [label="FlowMemory.Module" fillcolor=khaki]
+	Seed [label="FlowSeed.Origin" fillcolor=khaki]
+	OS -> Memory
+	OS -> Seed
+	Persona [label="FlowPersona.Core" fillcolor=lightgreen]
+	Fusion [label="FlowPersona.Fusion" fillcolor=lightgreen]
+	Memory -> Persona
+	Persona -> Fusion
+	Kernel [label=".flpkg.kernel" fillcolor=gray95]
+	SeedPack [label=".qflpkg.seed" fillcolor=gray95]
+	Hexflow [label=".qfltz.hexflow" fillcolor=gray95]
+	Persona -> Kernel
+	Kernel -> SeedPack
+	SeedPack -> Hexflow
+	Bundle [label=".flpkg.universe.bundle" fillcolor=lightcyan]
+	Map [label="SystemMap / RegenMap / AncestryMap" fillcolor=lightcyan]
+	Hexflow -> Bundle
+	Seed -> Map
+	Fusion -> Map
+}

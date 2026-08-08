@@ -1,0 +1,60 @@
+{
+  "backfill_id": "MRL-BF-Mrliou_MRL_GenAI_Course_Backfill_Record_v1",
+  "source_ref": {
+    "source_id": "MRL-EXT-GENAI-COURSE-001",
+    "source_type": "external_course_landing_page",
+    "source_title": "Applied Generative AI for Digital Transformation",
+    "status": "SOURCE_REF_ONLY"
+  },
+  "mapped_capabilities": [
+    {
+      "external_keyword": "Generative AI",
+      "mrl_target": "Mrliou_MRL_Runtime",
+      "overlap_level": "STRUCTURAL"
+    },
+    {
+      "external_keyword": "AI Agent",
+      "mrl_target": "Mrliou_MrLiouAI",
+      "overlap_level": "STRUCTURAL"
+    },
+    {
+      "external_keyword": "AI Workflow",
+      "mrl_target": "Mrliou_FlowComputer",
+      "overlap_level": "COMMON"
+    },
+    {
+      "external_keyword": "AI Governance",
+      "mrl_target": "Mrliou_MRL_LAW / AuditSupervisor",
+      "overlap_level": "STRUCTURAL"
+    },
+    {
+      "external_keyword": "Enterprise AI",
+      "mrl_target": "Mrliou_MRL_RuntimeOS",
+      "overlap_level": "STRUCTURAL"
+    },
+    {
+      "external_keyword": "Automation",
+      "mrl_target": "Mrliou_MRL_RuntimeBridge",
+      "overlap_level": "COMMON"
+    },
+    {
+      "external_keyword": "Digital Transformation",
+      "mrl_target": "Mrliou_MRL_System_Reconstruction",
+      "overlap_level": "UNIQUE_SIMILARITY"
+    }
+  ],
+  "absorbed_into": [
+    "Mrliou_MRL_Runtime",
+    "Mrliou_MrLiouAI",
+    "Mrliou_FlowComputer",
+    "Mrliou_MRL_LAW / AuditSupervisor",
+    "Mrliou_MRL_RuntimeOS",
+    "Mrliou_MRL_RuntimeBridge",
+    "Mrliou_MRL_System_Reconstruction"
+  ],
+  "not_absorbed": [],
+  "evidence_level": "HIGH",
+  "runtime_status": "BACKFILL_WRITTEN — 沙盒（當下狀態 2026-06-29）；待實機 MRL_Mother Runtime 驗收",
+  "created_at": "2026-06-29T00:00:00.000Z",
+  "sha256": "1ac8707b0cec2c0d2140ffad0e0376ddde32c4fd1308cc20e89525f3e0f8a0c9"
+}
