@@ -1,28 +1,18 @@
 {
   "name": "flow-next-app",
-<<<<<<< HEAD
-  "version": "1.0.0",
+  "version": "3.0.0",
   "private": true,
   "engines": {
     "node": ">=18.17.0"
-=======
-  "version": "3.0.0",
-  "private": true,
+  },
   "author": {
     "name": "MRLiou",
     "email": "z814241@gmail.com"
->>>>>>> origin/main
   },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-<<<<<<< HEAD
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "next": "14.2.5",
-=======
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -36,15 +26,10 @@
     "mongodb": "^7.2.0",
     "nanoid": "5.1.2",
     "next": "^15.5.14",
->>>>>>> origin/main
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-<<<<<<< HEAD
-    "eslint": "^8.57.1",
-    "eslint-config-next": "14.2.5"
-=======
     "@testing-library/jest-dom": "^6.9.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.8",
@@ -59,6 +44,5 @@
     "puppeteer": "^25.1.0",
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.3"
->>>>>>> origin/main
   }
 }
