@@ -1,0 +1,37 @@
+{
+  "mrl_type": "MRL_RuntimeMeshExecution",
+  "origin_signature": "MrLiouWord",
+  "execution_id": "MRL_MESH_EXEC_1778441038799",
+  "plan_id": "MRL_MESH_PLAN_1778441038798",
+  "status": "completed",
+  "executed_at": "2026-05-10T19:23:58.799Z",
+  "local_trace": {
+    "mrl_type": "MRL_RuntimeTrace",
+    "version": "v1.2.0",
+    "origin_signature": "MrLiouWord",
+    "started_at": "2026-05-10T19:23:58.799Z",
+    "runtime_graph_hash": "ed205fda1263457e57e6bb88837c95acbb56f96d31c8f3e1fba192e4629089b1",
+    "attention_hash": "cf75291fea79f57da35c96381f7e2e2a6195f75a11f4e92f9cbd7afb36e33594",
+    "steps": [
+      {
+        "step": 1,
+        "node_id": "MRL_P_0001",
+        "action": "MRL_EXECUTE_CALLABLE",
+        "priority": 0.86,
+        "status": "implemented_pass",
+        "message": "MRL code structure indexed: MRL_run",
+        "output_hash": "486b409780840754"
+      }
+    ],
+    "final_data_preview": "def MRL_run(x):\n    return x",
+    "completed_at": "2026-05-10T19:23:58.799Z",
+    "mrl_hash": "f79a636d0ff1525b7dadc039978d47a6889f84f4062161afb90a0a274d6333ce"
+  },
+  "node_assignments": [
+    {
+      "index": 0,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    }
+  ]
+}

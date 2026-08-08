@@ -1,0 +1,4 @@
+system: FlowCore, FlowMemory, FlowNode
+modular: identity-based
+task: reason, remember, sense
+...

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "HIT_STOP",
+    "category": "feelPhysics",
+    "cooldown_s": 0.5,
+    "duration_s": 0.08,
+    "weight": 10,
+    "note": "CP 最高，最先實作"
+  },
+  {
+    "id": "SCREEN_SHAKE",
+    "category": "feelPhysics",
+    "cooldown_s": 1.0,
+    "duration_s": 0.3,
+    "weight": 8,
+    "note": "搭配 HIT_STOP 使用效果最佳"
+  },
+  {
+    "id": "KNOCKBACK",
+    "category": "feelPhysics",
+    "cooldown_s": 0.8,
+    "duration_s": 0.2,
+    "weight": 9,
+    "note": "誇張擊退，搭配 RAGDOLL"
+  },
+  {
+    "id": "RAGDOLL",
+    "category": "feelPhysics",
+    "cooldown_s": 3.0,
+    "duration_s": 2.0,
+    "weight": 7,
+    "note": "越鬆越搞笑，joint_loose 可調"
+  },
+  {
+    "id": "PROP_BREAK",
+    "category": "feelPhysics",
+    "cooldown_s": 2.0,
+    "duration_s": 0.5,
+    "weight": 8,
+    "note": "碎片數影響視覺爆量"
+  },
+  {
+    "id": "CHAIN_REACTION",
+    "category": "feelPhysics",
+    "cooldown_s": 5.0,
+    "duration_s": 3.0,
+    "weight": 6,
+    "note": "冷卻長但爽度最高"
+  },
+  {
+    "id": "IDENTITY_FLIP",
+    "category": "twistLogic",
+    "cooldown_s": 8.0,
+    "duration_s": 10.0,
+    "weight": 5,
+    "note": "小兵才是魔王的核心邏輯"
+  },
+  {
+    "id": "RULE_GLITCH_BURST",
+    "category": "twistLogic",
+    "cooldown_s": 4.0,
+    "duration_s": 2.0,
+    "weight": 6,
+    "note": "短暫規則破壞，刺激感強"
+  },
+  {
+    "id": "COMEDY_CHAIN_REACTION",
+    "category": "twistLogic",
+    "cooldown_s": 6.0,
+    "duration_s": 4.0,
+    "weight": 7,
+    "note": "滑倒觸發連鎖搞笑"
+  }
+]

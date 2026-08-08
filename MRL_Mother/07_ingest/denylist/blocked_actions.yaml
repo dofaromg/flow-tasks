@@ -1,0 +1,8 @@
+# Actions that are hard blocked by policy.
+# These must never execute in production.
+blocked:
+  - SCAN
+  - PROBE
+  - BRUTEFORCE
+  - VULN_SCAN
+  - EXPLOIT

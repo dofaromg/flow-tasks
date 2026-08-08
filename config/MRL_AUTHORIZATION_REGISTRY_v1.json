@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "origin_signature": "MrLiouWord",
+  "root_authority": "Mr.liou",
+  "authorization_model": {
+    "default_decision": "DENY",
+    "explicit_grant_required": true,
+    "implicit_authorization_allowed": false,
+    "repository_access_is_authorization": false,
+    "collaborator_role_is_authorization": false,
+    "bot_or_agent_execution_is_authorization": false,
+    "prior_contribution_is_authorization": false,
+    "technical_capability_is_authorization": false,
+    "silence_is_authorization": false,
+    "restoration_is_authorization": false,
+    "operating_grant_transfers_authorship": false,
+    "operating_grant_transfers_founder_status": false,
+    "operating_grant_transfers_commercial_rights": false,
+    "delegation_requires_explicit_scope": true
+  },
+  "required_fields": [
+    "record_id",
+    "grantee",
+    "scope",
+    "actions",
+    "issued_by",
+    "issued_at",
+    "expires_at",
+    "evidence_reference",
+    "rollback"
+  ],
+  "active_grants": [],
+  "current_status": {
+    "decision": "DENY",
+    "reason": "NO_RECORDED_GRANT",
+    "checked_at": "2026-07-29"
+  }
+}

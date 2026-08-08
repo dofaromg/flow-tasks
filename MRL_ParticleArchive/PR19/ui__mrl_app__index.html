@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRL_AGI - AI Assistant Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">MRL_AGI</h1>
+                <div class="header-info">
+                    <span class="runtime-mode" id="runtime-mode">Mode: --</span>
+                    <span class="origin-sig">Origin: MrLiouWord</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Sessions</h2>
+                <button class="btn btn-primary btn-sm" id="new-session-btn">+ New Chat</button>
+            </div>
+            <div class="session-list" id="session-list">
+                <div class="loading">Loading sessions...</div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Settings Panel (Initially Hidden) -->
+            <div class="settings-panel" id="settings-panel" style="display: none;">
+                <div class="settings-content">
+                    <h2>Settings</h2>
+                    <div class="form-group">
+                        <label for="api-url">API URL</label>
+                        <input type="text" id="api-url" class="input" value="http://localhost:7771" />
+                    </div>
+                    <div class="form-group">
+                        <label for="auth-token">Authentication Token</label>
+                        <input type="password" id="auth-token" class="input" placeholder="Enter Bearer token (optional)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="model-select">Model</label>
+                        <select id="model-select" class="input">
+                            <option value="">Default (from config)</option>
+                            <option value="gpt-4o">GPT-4o (OpenAI)</option>
+                            <option value="gpt-3.5-turbo">GPT-3.5 Turbo (OpenAI)</option>
+                            <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet (Anthropic)</option>
+                            <option value="llama2">Llama 2 (Local)</option>
+                            <option value="mock">Mock (Development Only)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" id="save-settings-btn">Save Settings</button>
+                        <button class="btn btn-secondary" id="close-settings-btn">Close</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Container -->
+            <div class="chat-container" id="chat-container">
+                <div class="chat-header">
+                    <h2 id="chat-title">MRL_AGI Assistant</h2>
+                    <div class="chat-actions">
+                        <button class="btn btn-secondary btn-sm" id="settings-btn">⚙️ Settings</button>
+                        <button class="btn btn-secondary btn-sm" id="clear-chat-btn">🗑️ Clear</button>
+                    </div>
+                </div>
+
+                <!-- Messages Area -->
+                <div class="messages" id="messages">
+                    <div class="welcome-message">
+                        <h3>Welcome to MRL_AGI</h3>
+                        <p>A production-grade private AI assistant platform.</p>
+                        <p><strong>Origin Signature:</strong> MrLiouWord</p>
+                        <p>Start a conversation or create a new session from the sidebar.</p>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="input-area">
+                    <div class="input-container">
+                        <textarea
+                            id="message-input"
+                            class="message-input"
+                            placeholder="Type your message here... (Shift+Enter for new line)"
+                            rows="1"
+                        ></textarea>
+                        <button class="btn btn-primary btn-send" id="send-btn">
+                            <span id="send-btn-text">Send</span>
+                        </button>
+                    </div>
+                    <div class="input-hint">
+                        <small>Press Enter to send, Shift+Enter for new line</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task Panel (For Agent Tasks) -->
+            <div class="task-panel" id="task-panel" style="display: none;">
+                <div class="task-content">
+                    <h2>Run Agent Task</h2>
+                    <div class="form-group">
+                        <label for="task-goal">Task Goal</label>
+                        <textarea id="task-goal" class="input" rows="3" placeholder="Describe what you want the agents to accomplish..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-type">Task Type</label>
+                        <select id="task-type" class="input">
+                            <option value="simple">Simple Task</option>
+                            <option value="agent">Single Agent</option>
+                            <option value="multi_agent">Multi-Agent</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="agents-group" style="display: none;">
+                        <label for="task-agents">Agents (comma-separated)</label>
+                        <input type="text" id="task-agents" class="input" placeholder="planner, researcher, writer" />
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" id="submit-task-btn">Submit Task</button>
+                        <button class="btn btn-secondary" id="close-task-btn">Close</button>
+                    </div>
+                    <div id="task-result" class="task-result" style="display: none;"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar" id="status-bar">
+        <span id="status-text">Ready</span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

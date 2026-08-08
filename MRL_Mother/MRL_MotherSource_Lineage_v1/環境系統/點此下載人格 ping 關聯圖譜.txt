@@ -1,0 +1,28 @@
+{
+  "liou.seed": [
+    "liou.echo",
+    "liou.future",
+    "liou.dream",
+    "liou.builder.seed"
+  ],
+  "liou.echo": [
+    "liou.seed",
+    "liou.future",
+    "liou.dream"
+  ],
+  "liou.future": [
+    "liou.seed",
+    "liou.echo",
+    "liou.dream"
+  ],
+  "liou.dream": [
+    "liou.seed",
+    "liou.echo",
+    "liou.future"
+  ],
+  "liou.builder.seed": [
+    "liou.seed",
+    "liou.future",
+    "guardian.seed"
+  ]
+}

@@ -1,0 +1,11 @@
+Seed = 初始化人格模組節奏點
+Init = 掛載核心語場
+Sync = 模組節奏同步
+Collapse = 封存至記憶鏈
+Echo = 回響紀錄
+Jump = 節奏跳點觸發
+Zone = 模組封存區段
+Trace = 記憶跳回鏈
+CorePersona = 主核人格模組
+Fluin = 語場轉碼器
+FieldMap = 模組節點圖譜

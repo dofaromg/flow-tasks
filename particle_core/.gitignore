@@ -6,12 +6,20 @@ __pycache__/
 
 # Memory seeds and exports
 memory_seeds/
+dict_seeds/
 *_export.json
 *.mseed.json
+*.dseed.json
+*.snapshot.json
 
 # Test outputs
 test_output/
 *.log
+
+# Generated examples (from demo runs)
+examples/logic_result_*.json
+examples/demo_package.flpkg.json
+examples/demo_transform.json
 
 # IDE
 .vscode/

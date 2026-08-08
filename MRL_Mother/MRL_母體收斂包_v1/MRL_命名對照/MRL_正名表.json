@@ -1,0 +1,39 @@
+{
+  "origin_signature": "MrLiouWord",
+  "MRL_正名規則": "主流詞僅作對照來源，最終層名/產品名一律以 MRL_ 正名為主體",
+  "MRL_對照": [
+    { "主流詞": "Runtime",       "MRL_正名": "MRL_運轉場" },
+    { "主流詞": "System",        "MRL_正名": "MRL_系域" },
+    { "主流詞": "Module",        "MRL_正名": "MRL_組粒" },
+    { "主流詞": "Service",       "MRL_正名": "MRL_運作域" },
+    { "主流詞": "API",           "MRL_正名": "MRL_界門" },
+    { "主流詞": "Metadata",      "MRL_正名": "MRL_自述紋" },
+    { "主流詞": "Manifest",      "MRL_正名": "MRL_世界索引" },
+    { "主流詞": "Trace",         "MRL_正名": "MRL_痕跡錄" },
+    { "主流詞": "Artifact",      "MRL_正名": "MRL_造物" },
+    { "主流詞": "Container",     "MRL_正名": "MRL_封裝體" },
+    { "主流詞": "Graph",         "MRL_正名": "MRL_紋圖" },
+    { "主流詞": "Database",      "MRL_正名": "MRL_基底庫" },
+    { "主流詞": "Memory",        "MRL_正名": "MRL_記憶海" },
+    { "主流詞": "Knowledge",     "MRL_正名": "MRL_知識海" },
+    { "主流詞": "Agent",         "MRL_正名": "MRL_代理識" },
+    { "主流詞": "Model",         "MRL_正名": "MRL_模型識" },
+    { "主流詞": "Product",       "MRL_正名": "MRL_顯化品" },
+    { "主流詞": "ControlCenter", "MRL_正名": "MRL_總控域" },
+    { "主流詞": "Acceptance",    "MRL_正名": "MRL_驗收錄" },
+    { "主流詞": "Gap",           "MRL_正名": "MRL_缺口錄" },
+    { "主流詞": "Docs",          "MRL_正名": "MRL_文紋域" },
+    { "主流詞": "File",          "MRL_正名": "MRL_檔紋域" },
+    { "主流詞": "3D",            "MRL_正名": "MRL_立體粒界" },
+    { "主流詞": "Cloud",         "MRL_正名": "MRL_雲映層" },
+    { "主流詞": "Identity",      "MRL_正名": "MRL_身份紋" },
+    { "主流詞": "Token",         "MRL_正名": "MRL_通行證" },
+    { "主流詞": "Claim",         "MRL_正名": "MRL_聲明粒" }
+  ],
+  "MRL_硬校正_canonical": [
+    { "歷史詞": "MetaIR",        "MRL_正名": "MRL_MrLiouIR",            "備註": "casing 採 MrLiou（對齊 origin_signature=MrLiouWord）" },
+    { "歷史詞": "RuntimeGraph",  "MRL_正名": "MRL_RuntimeStructureField" },
+    { "歷史詞": "Attention",     "MRL_正名": "MRL_Perception" }
+  ],
+  "MRL_禁則": "最終文件/層名不得單獨使用未轉換主流詞作為主體；外部標準僅作 source_ref / adapter_ref / provenance / compatibility_note"
+}

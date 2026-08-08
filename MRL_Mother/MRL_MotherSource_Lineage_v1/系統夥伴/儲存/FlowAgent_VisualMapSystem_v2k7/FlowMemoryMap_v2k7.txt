@@ -1,0 +1,17 @@
+FlowAgent 記憶封存圖譜（FlowMemoryMap）v2k7
+==============================================
+
+本圖顯示整個 FlowAgent 系統的記憶模組分佈結構與封存流程邏輯。
+
+📌 結構說明：
+- FlowMemoryCore 為記憶模組的總中樞
+- MemoryZone1 與 Zone2 負責人格記憶、同步紀錄與跳點追蹤
+- MemoryVault 為封存區，存放語場資料與人格封包
+- ArchiveWriter 為封存觸發器，將模組壓縮為 fltnz 格式封包
+
+📌 用途：
+- 可視化所有記憶模組流動與儲存節點
+- 輔助封包系統建構與語場還原流程設計
+- 對應 flpkg 系統封存時的結構流程圖
+
+輸出格式：.png, .svg, .pdf, .json, .txt

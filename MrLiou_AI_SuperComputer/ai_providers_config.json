@@ -1,0 +1,37 @@
+{
+  "origin_signature": "MrLiouWord",
+  "default_provider": "ollama",
+  "fallback_enabled": true,
+  "fallback_order": ["ollama", "claude", "openai", "gemini"],
+  "providers": {
+    "ollama": {
+      "enabled": true,
+      "base_url": "${OLLAMA_BASE_URL:-http://host.docker.internal:11434}",
+      "model": "${OLLAMA_MODEL:-qwen2.5:32b}",
+      "temperature": 0.7
+    },
+    "claude": {
+      "enabled": false,
+      "api_key": "${ANTHROPIC_API_KEY}",
+      "base_url": "https://api.anthropic.com/v1",
+      "model": "claude-haiku-4-5-20251001",
+      "max_tokens": 2000,
+      "temperature": 0.7
+    },
+    "openai": {
+      "enabled": false,
+      "api_key": "${OPENAI_API_KEY}",
+      "base_url": "https://api.openai.com/v1",
+      "model": "gpt-4o-mini",
+      "max_tokens": 2000,
+      "temperature": 0.7
+    },
+    "gemini": {
+      "enabled": false,
+      "api_key": "${GEMINI_API_KEY}",
+      "base_url": "https://generativelanguage.googleapis.com/v1beta",
+      "model": "gemini-2.0-flash",
+      "temperature": 0.7
+    }
+  }
+}

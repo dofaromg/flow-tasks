@@ -1,0 +1,27 @@
+{
+  "origin_signature": "MrLiouWord",
+  "product": "MRL_RuntimeOS_EnterpriseRuntimePlatform_CoreExecutable_v1_4_0",
+  "module": "MRL_RuntimeOS_3DModelBridge_Service_v1",
+  "type": "Blender Add-on Runtime Bridge",
+  "source_files": [
+    "mrl_runtimeos_blender_model_loader_service.py",
+    "mrl_runtimeos_blender_task_scheduler_service.py",
+    "mrl_runtimeos_blender_state_manager_service.py",
+    "mrl_runtimeos_blender_ws_bridge_service.py",
+    "mrl_runtimeos_blender_artifact_transfer_service.py"
+  ],
+  "capabilities": [
+    "import OBJ/FBX/GLB/GLTF/USDZ/STL",
+    "texture colorspace repair",
+    "chunked artifact transfer",
+    "WebSocket runtime bridge",
+    "main-thread Blender task scheduling",
+    "runtime status heartbeat"
+  ],
+  "runtime_requirements": {
+    "requires_blender_python": true,
+    "requires_bpy": true,
+    "ws_port_default": 60600
+  },
+  "truth_status": "source_integrated_not_sandbox_executed_because_bpy_requires_blender"
+}

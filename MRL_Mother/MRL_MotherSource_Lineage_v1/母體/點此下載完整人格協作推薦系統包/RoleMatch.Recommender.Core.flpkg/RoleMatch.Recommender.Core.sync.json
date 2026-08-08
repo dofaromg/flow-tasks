@@ -1,0 +1,11 @@
+{
+  "id": "RoleMatch.Recommender.Core",
+  "version": "v1.0",
+  "description": "\u4efb\u52d9\u4eba\u683c\u63a8\u85a6\u6a21\u7d44\uff1a\u6839\u64da\u4efb\u52d9\u63cf\u8ff0\u8a9e\u610f\uff0c\u81ea\u52d5\u63a8\u85a6\u6700\u9069\u5408\u7684\u6a21\u7d44\u4eba\u683c\u57f7\u884c\u8005\u3002",
+  "ping_targets": [],
+  "traits": [
+    "task-analysis",
+    "persona-matching",
+    "semantic-mapping"
+  ]
+}

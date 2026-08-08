@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRL — 付款成功</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <style>
+    .success-layout {
+      min-height: calc(100dvh - 56px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .success-card {
+      width: 100%;
+      max-width: 480px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 48px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .success-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--success), transparent);
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 24px;
+      animation: successPop 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+
+    @keyframes successPop {
+      from { transform: scale(0.5); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    .success-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .success-desc {
+      font-size: 15px;
+      color: var(--text-2);
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .success-loader {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-2);
+      justify-content: center;
+      margin-bottom: 28px;
+      padding: 14px 20px;
+      background: var(--surface-2);
+      border-radius: var(--r-md);
+      border: 1px solid var(--border);
+    }
+
+    .mini-loader {
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--border-2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .success-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 20px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .order-info {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 8px 14px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo">MRL.</a>
+    <div class="nav__links">
+      <a href="/pricing.html" class="nav__link">方案</a>
+    </div>
+  </div>
+</nav>
+
+<div class="success-layout">
+  <div class="success-card anim-fade-up">
+    <div class="success-icon">✓</div>
+    <div class="success-title">付款成功，方案已解鎖</div>
+    <div class="success-desc">
+      正在為你同步權限與結果內容，請稍候。<br>
+      <span style="font-size:13px;color:var(--text-2);">
+        解鎖後你可以直接拿這份方案去實作、討論或交付。
+      </span>
+    </div>
+
+    <div class="order-info" id="order-info">
+      正在確認訂單...
+    </div>
+
+    <div class="success-loader" id="sync-loader">
+      <div class="mini-loader"></div>
+      <span>正在解鎖你的完整分析結果</span>
+    </div>
+
+    <button class="btn btn--primary btn--full hidden" id="view-result-btn">
+      查看完整結果
+    </button>
+    <button class="btn btn--outline btn--full hidden" id="go-home-btn">
+      返回首頁
+    </button>
+
+    <div class="success-note" id="success-note"></div>
+  </div>
+</div>
+
+<script>
+(async function() {
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get('order');
+  const stripeSessionId = params.get('session_id');
+
+  const orderInfoEl = document.getElementById('order-info');
+  const syncLoaderEl = document.getElementById('sync-loader');
+  const viewResultBtn = document.getElementById('view-result-btn');
+  const goHomeBtn = document.getElementById('go-home-btn');
+  const noteEl = document.getElementById('success-note');
+
+  if (!orderId) {
+    orderInfoEl.textContent = '找不到訂單資訊';
+    syncLoaderEl.classList.add('hidden');
+    goHomeBtn.classList.remove('hidden');
+    return;
+  }
+
+  orderInfoEl.textContent = `order_id: ${orderId}`;
+
+  // 輪詢訂單狀態，最多 20 秒
+  const token = localStorage.getItem('mrl_token') || '';
+  let attempts = 0;
+  const maxAttempts = 10;
+
+  async function checkOrder() {
+    try {
+      const res = await fetch(`/api/order/${orderId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+
+      if (data.status === 'unlocked' || data.status === 'paid') {
+        // 成功解鎖
+        syncLoaderEl.classList.add('hidden');
+
+        if (data.analysis_id) {
+          viewResultBtn.dataset.analysisId = data.analysis_id;
+          viewResultBtn.classList.remove('hidden');
+          viewResultBtn.addEventListener('click', () => {
+            window.location.href = `/app.html?analysis=${data.analysis_id}&unlocked=1`;
+          });
+        } else {
+          // 訂閱方案，直接回 app
+          viewResultBtn.textContent = '開始使用';
+          viewResultBtn.classList.remove('hidden');
+          viewResultBtn.addEventListener('click', () => {
+            window.location.href = '/app.html';
+          });
+        }
+
+        noteEl.textContent = 'status: ' + data.status;
+        return;
+      }
+
+      attempts++;
+      if (attempts >= maxAttempts) {
+        syncLoaderEl.classList.add('hidden');
+        noteEl.textContent = '若畫面沒有自動更新，請稍後重新整理此頁。';
+        goHomeBtn.classList.remove('hidden');
+        return;
+      }
+
+      // 繼續輪詢
+      setTimeout(checkOrder, 2000);
+    } catch (e) {
+      syncLoaderEl.classList.add('hidden');
+      noteEl.textContent = '連線異常，請重新整理頁面。';
+      goHomeBtn.classList.remove('hidden');
+    }
+  }
+
+  // 等 2 秒後開始輪詢（給 webhook 處理時間）
+  setTimeout(checkOrder, 2000);
+
+  goHomeBtn.addEventListener('click', () => { window.location.href = '/'; });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "mrl_ir_type": "MRL_ParticleIR",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "source_hash": "948644480fe7bb976df68225a1fa7b9c1e86eafdb49e98e68bf37fd11bd3a571",
+  "source_identity": {
+    "filename": "acceptance.js",
+    "language": "JavaScript",
+    "detected": "js",
+    "source_hash": "1e7c00f753ad0c000451667375d450ab77f88050767c20624b3f8680facbda18"
+  },
+  "particles": [
+    {
+      "id": "MRL_P_0001",
+      "particle_type": "MRL_FunctionParticle",
+      "layer": "L2_CodeStructure",
+      "source_language": "JavaScript",
+      "properties": {
+        "kind": "function",
+        "name": "MRL_add",
+        "params": [
+          "a",
+          "b"
+        ]
+      },
+      "semantic": "MRL_add",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    }
+  ],
+  "particle_atoms": [
+    {
+      "atom_id": "MRL_P_0001",
+      "atom_type": "MRL_FunctionParticle",
+      "simhash_seed": "ea3b024a0dd831d4",
+      "semantic": "MRL_add"
+    }
+  ],
+  "created_at": "2026-05-10T19:23:58.790Z",
+  "mrl_hash": "6591451c8994303432466fdd6befbd44dc49da64b48e0fa2abfc20613f9d76a4"
+}

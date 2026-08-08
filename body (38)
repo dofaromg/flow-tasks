@@ -1,0 +1,17 @@
+# 关于使用 GitHub 应用进行身份验证
+
+GitHub App 可以作为应用自身、作为应用安装或代表用户进行身份验证。
+
+## 作为 GitHub App
+
+进行身份验证
+
+要以自己的身份进行身份验证，应用将使用 JSON Web 令牌 (JWT)。 当应用需要生成安装访问令牌时，应用应以应用自身进行身份验证。 需要安装访问令牌才能以应用安装形式进行身份验证。 当应用需要发出 API 请求以管理与应用相关的资源时，应用也应以应用自身进行身份验证。 例如应用需要列出安装它的帐户时。 有关详细信息，请参阅 [验证为 GitHub 应用程序](/zh/enterprise-cloud@latest/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app) 和 [为 GitHub 应用生成 JSON Web 令牌 (JWT)](/zh/enterprise-cloud@latest/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-json-web-token-jwt-for-a-github-app)。
+
+## 作为应用安装进行身份验证
+
+要以安装形式进行身份验证，应用将使用安装访问令牌。 当你希望将应用活动归因于应用时，应用应作为应用安装进行身份验证。 作为应用安装进行身份验证，可让你的应用访问安装应用的用户或组织拥有的资源。 作为应用安装进行身份验证的方式非常适合不涉及用户输入的自动化工作流。 有关详细信息，请参阅 [验证为 GitHub 应用程序安装](/zh/enterprise-cloud@latest/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app-installation) 和 [为 GitHub 应用生成安装访问令牌](/zh/enterprise-cloud@latest/apps/creating-github-apps/authenticating-with-a-github-app/generating-an-installation-access-token-for-a-github-app)。
+
+## 代表用户进行身份验证
+
+要代表用户进行身份验证，应用将使用用户访问令牌。 当你希望将应用活动归因于某个用户时，应用应代表用户进行身份验证。 与作为应用安装进行身份验证的方式类似，这样你的应用就能访问安装应用的用户或组织拥有的资源。 如果要确保应用仅执行特定用户可能执行的操作，则应选择代表用户进行身份验证。 有关详细信息，请参阅 [代表用户使用 GitHub 应用进行身份验证](/zh/enterprise-cloud@latest/apps/creating-github-apps/authenticating-with-a-github-app/identifying-and-authorizing-users-for-github-apps) 和 [为 GitHub 应用生成用户访问令牌](/zh/enterprise-cloud@latest/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app)。

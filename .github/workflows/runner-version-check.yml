@@ -1,0 +1,59 @@
+# Runner Version Compliance Check
+# origin_signature: MrLiouWord
+#
+# Validates that self-hosted runner images meet the v2.329.0 minimum.
+# Enforcement deadline: 2026-03-16
+# See: https://github.blog/changelog/2026-02-05-github-actions-self-hosted-runner-minimum-version-enforcement-extended
+
+name: Runner Version Check
+
+on:
+  push:
+    paths:
+      - 'infra/runner/**'
+  pull_request:
+    paths:
+      - 'infra/runner/**'
+
+env:
+  MIN_RUNNER_VERSION: "2.329.0"
+
+jobs:
+  check-version:
+    name: Verify runner version >= ${{ env.MIN_RUNNER_VERSION }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract RUNNER_VERSION from Dockerfile
+        id: extract
+        run: |
+          version=$(grep -oP 'ARG RUNNER_VERSION=\K[\d.]+' infra/runner/Dockerfile)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Runner version in Dockerfile: $version"
+
+      - name: Check minimum version
+        run: |
+          current="${{ steps.extract.outputs.version }}"
+          minimum="${{ env.MIN_RUNNER_VERSION }}"
+
+          # Compare versions
+          if [ "$(printf '%s\n' "$minimum" "$current" | sort -V | head -n1)" = "$minimum" ]; then
+            echo "✓ Runner version $current meets minimum $minimum"
+          else
+            echo "✗ Runner version $current is below minimum $minimum"
+            echo "  Deadline: 2026-03-16"
+            echo "  See: https://github.blog/changelog/2026-02-05-github-actions-self-hosted-runner-minimum-version-enforcement-extended"
+            exit 1
+          fi
+
+      - name: Check docker-compose version
+        run: |
+          compose_version=$(grep -oP 'RUNNER_VERSION:\s*"\K[\d.]+' infra/runner/docker-compose.yml)
+          minimum="${{ env.MIN_RUNNER_VERSION }}"
+          if [ "$(printf '%s\n' "$minimum" "$compose_version" | sort -V | head -n1)" = "$minimum" ]; then
+            echo "✓ docker-compose runner version $compose_version meets minimum $minimum"
+          else
+            echo "✗ docker-compose runner version $compose_version is below minimum $minimum"
+            exit 1
+          fi

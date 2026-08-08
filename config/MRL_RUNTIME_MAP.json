@@ -1,0 +1,50 @@
+{
+  "origin_signature": "MrLiouWord",
+  "version": "1.0.0",
+  "snapshot_date": "2026-07-08",
+  "runtimes": {
+    "node": {
+      "executable": "D:\\MrlToolchain\\node\\node.exe",
+      "services": [
+        {"name": "MRL_ASI_Engine", "script": "D:\\mrl\\asi-engine\\server.js", "port": 7700},
+        {"name": "MRL_Agent_Orchestrator", "script": "D:\\mrl\\agent\\orchestrator\\MRL_Agent_Orchestrator.cjs", "port": 7810},
+        {"name": "MRL_Toolchain_Engine", "script": "D:\\mrl\\agent\\tools\\MRL_Toolchain_Engine.cjs", "port": 7811},
+        {"name": "MRL_Memory_Engine", "script": "D:\\mrl\\agent\\memory\\MRL_Memory_Engine.cjs", "port": 7812},
+        {"name": "MRL_DB_Proxy", "script": "D:\\mrl\\db-proxy\\MRL_DB_Proxy.cjs", "port": 7801},
+        {"name": "MRL_Bridge", "script": "D:\\mrl\\bridge\\server.js", "port": 7800},
+        {"name": "MRL_Write_Guard", "script": "D:\\mrl\\write_guard\\guard.cjs", "port": 8799},
+        {"name": "MRL_PersistentLoop", "script": "persistentloop.cjs", "port": null},
+        {"name": "MRL_AI_Product_Server", "script": "MRL_Server.js + dist\\index.js", "port": 3000},
+        {"name": "MRL_RuntimeOS", "script": "D:\\MRL_Mother\\runtime\\MRL_RuntimeOS_v1_4_0\\MRL_API\\MRL_RuntimeServer.js", "port": 8790}
+      ],
+      "count": 10
+    },
+    "python": {
+      "executable": "D:\\MrlToolchain\\python\\python.exe",
+      "services": [
+        {"name": "MRL_Inference", "script": "D:\\mrl\\inference\\MRL_Inference_API.py", "port": 7500},
+        {"name": "MRL_FlowCoreLoop", "script": "D:\\MRL_Runtime\\FlowCoreLoop\\flowcore_loop.py", "port": 8787, "args": "serve --host 127.0.0.1 --port 8787 --vault-root D:\\MRL_Runtime\\FlowCoreLoop\\vault"},
+        {"name": "MRL_FlowAgent_API", "script": "D:\\mrl\\flowagent\\MRL_flowagent_api_server.py", "port": 7900},
+        {"name": "MRL_ParticleGlobe", "script": "D:\\MRL_Runtime\\ParticleGlobe\\particle_globe_memory_system.py", "port": 8788, "args": "serve --host 127.0.0.1 --port 8788"},
+        {"name": "MRL_RuntimeAdapter", "script": "D:\\mrl\\mother\\mrl_runtime_adapter.py", "port": null},
+        {"name": "MRL_AI_OS", "script": "D:\\mrl\\MRL_MotherSystem_ControlPanel.py", "port": 7950},
+        {"name": "MRL_ReasoningEngine", "script": "D:\\mrl\\reasoning_engine\\mrl_reasoning_engine.py", "port": 7810},
+        {"name": "MRL_FlowOS_Runner", "script": "D:\\mrl\\flowos\\mrl_flowos_runner.py", "port": 7815},
+        {"name": "MRL_Realtime_Voice", "script": "D:\\mrl\\voice_agent\\mrl_realtime_voice.py", "port": 7820},
+        {"name": "MRL_API_Service", "script": "D:\\mrl\\api\\MRL_API_Service.py", "port": 7830},
+        {"name": "MRL_BuilderModule", "script": "D:\\mrl\\builder\\MRL_BuilderModule.py", "port": 7840}
+      ],
+      "count": 11
+    },
+    "infrastructure": {
+      "services": [
+        {"name": "MRL_PostgreSQL", "executable": "D:\\pgsql\\bin\\pg_ctl.exe", "port": 5432},
+        {"name": "mrl_redis", "executable": "D:\\redis\\redis-server.exe", "port": 6379},
+        {"name": "MariaDB", "executable": "C:\\Program Files\\MariaDB 11.4\\bin\\mysqld.exe", "port": 3306},
+        {"name": "MRL_Tunnel", "executable": "D:\\cloudflared.exe", "port": 20241}
+      ],
+      "count": 4
+    }
+  },
+  "total_processes": 25
+}

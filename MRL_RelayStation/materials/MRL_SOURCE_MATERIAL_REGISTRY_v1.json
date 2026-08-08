@@ -1,0 +1,55 @@
+{
+  "registry_id": "MRL_SOURCE_MATERIAL_REGISTRY_v1",
+  "authority_account": "dofaromg",
+  "default_material_status": "material_only",
+  "rules": {
+    "archived_documents_are_not_canonical": true,
+    "external_model_outputs_are_not_canonical": true,
+    "materials_may_supply_terms_examples_history_and_candidate_logic": true,
+    "materials_require_reconstruction_and_verification_before_product_use": true,
+    "only_dofaromg_may_approve_canonical_products": true
+  },
+  "material_groups": [
+    {
+      "id": "mrl.material.metacode",
+      "sources": ["MR.L 系統的元代碼（Meta-code）定義文件"],
+      "use": ["particle syntax", "routing", "tensor", "dimension projection", "collapse"]
+    },
+    {
+      "id": "mrl.material.reasoning",
+      "sources": ["reasoning_engine_spec.docx"],
+      "use": ["seven-layer architecture", "reasoning strategies", "deployment candidates"]
+    },
+    {
+      "id": "mrl.material.law0",
+      "sources": ["世界🌍.docx"],
+      "use": ["origin signature semantics", "layer mapping", "verification candidates"]
+    },
+    {
+      "id": "mrl.material.flowagent",
+      "sources": ["FlowAgent.SystemPlan.FullStack.v1"],
+      "use": ["module inventory", "runtime lineage", "package format history"]
+    },
+    {
+      "id": "mrl.material.ontology",
+      "sources": ["粒子語場_觀點整合與本體記錄報告", "粒子語言初步計劃"],
+      "use": ["ontology", "language-field mapping", "research roadmap"]
+    },
+    {
+      "id": "mrl.material.persona",
+      "sources": ["分析師小腦.docx"],
+      "use": ["analyst persona behavior", "ROAO workflow", "guardian constraints"]
+    },
+    {
+      "id": "mrl.material.implementation",
+      "sources": ["知識引擎.docx"],
+      "use": ["Cloudflare integration candidate", "D1/R2/Vectorize patterns"],
+      "restrictions": ["remove randomness", "restore deterministic replay", "verify APIs"]
+    },
+    {
+      "id": "mrl.material.history",
+      "sources": ["演化過程.txt", "結構.pdf"],
+      "use": ["historical evidence", "append-only event model", "formula candidates"]
+    }
+  ]
+}

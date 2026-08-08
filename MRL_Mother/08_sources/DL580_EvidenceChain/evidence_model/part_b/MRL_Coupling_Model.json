@@ -1,0 +1,185 @@
+{
+  "schema": "MRL_Coupling_Model",
+  "origin_signature": "MrLiouWord",
+  "generated_utc": "2026-06-12T22:16:00.000000+00:00",
+  "audit_phase": "Part_B / Phase_B01",
+  "coupling_law": "Node+Coupling 才成圖；單點不可見",
+  "source_ref": "MRL_Global_Coupling_Map_v2 + MRL_WeakSource_Coupling_Update",
+  "couplings": [
+    {
+      "Coupling_ID": "MRL.COUPLE.00",
+      "Node_A": "MRL.NODE.00.Reality",
+      "Node_B": "MRL.NODE.01.Origin",
+      "Direction": "A→B",
+      "Weight": "mainline_sequential",
+      "Coupling_Evidence": ["TRC.ORIGIN.00", "TRC.ORIGIN.01", "SRC.00.A", "SRC.01.A"],
+      "Return_Candidate": "TRC.RETURN.00",
+      "Coupling_Status": "reconstructed"
+    },
+    {
+      "Coupling_ID": "MRL.COUPLE.01",
+      "Node_A": "MRL.NODE.01.Origin",
+      "Node_B": "MRL.NODE.02.SeedKernel",
+      "Direction": "A→B",
+      "Weight": "mainline_sequential",
+      "Coupling_Evidence": ["TRC.ORIGIN.01", "TRC.ORIGIN.02", "SRC.01.A", "SRC.02.A"],
+      "Return_Candidate": "TRC.RETURN.01",
+      "Coupling_Status": "reconstructed"
+    },
+    {
+      "Coupling_ID": "MRL.COUPLE.02",
+      "Node_A": "MRL.NODE.02.SeedKernel",
+      "Node_B": "MRL.NODE.03.PreParticle",
+      "Direction": "A→B",
+      "Weight": "mainline_sequential",
+      "Coupling_Evidence": ["TRC.ORIGIN.02", "TRC.ORIGIN.03", "SRC.02.A", "SRC.03.A", "SRC.03.BACKFILL"],
+      "Return_Candidate": "TRC.RETURN.02",
+      "Coupling_Status": "reconstructed",
+      "Coupling_Note": "backfill upgrade applied; strength=MRL_StrongSource"
+    },
+    {
+      "Coupling_ID": "MRL.COUPLE.03",
+      "Node_A": "MRL.NODE.03.PreParticle",
+      "Node_B": "MRL.NODE.04.Particle",
+      "Direction": "A→B",
+      "Weight": "mainline_sequential",
+      "Coupling_Evidence": ["TRC.ORIGIN.03", "TRC.ORIGIN.04", "SRC.03.A", "SRC.04.A"],
+      "Return_Candidate": "TRC.RETURN.03",
+      "Coupling_Status": "reconstructed"
+    },
+    {
+      "Coupling_ID": "MRL.COUPLE.04",
+      "Node_A": "MRL.NODE.04.Particle",
+      "Node_B": "MRL.NODE.05.Signal",
+      "Direction": "A→B",
+      "Weight": "mainline_sequential",
+      "Coupling_Evidence": ["TRC.ORIGIN.04", "TRC.ORIGIN.05", "SRC.04.A", "SRC.05.A"],
+      "Return_Candidate": "TRC.RETURN.04",
+      "Coupling_Status": "reconstructed"
+    },
+    {
+      "Coupling_ID": "MRL.COUPLE.05",
+      "Node_A": "MRL.NODE.05.Signal",
+      "Node_B": "MRL.NODE.06.Field",
+      "Direction": "A→B",
+      "Weight": "mainline_sequential",
+      "Coupling_Evidence": ["TRC.ORIGIN.05", "TRC.ORIGIN.06", "TRC.JUMP.Signal_Field", "SRC.05.A", "SRC.06.A"],
+      "Return_Candidate": "TRC.RETURN.05",
+      "Coupling_Status": "reconstructed",
+      "Coupling_Note": "shared p_resonance_field; JumpTrace cross-ref"
+    },
+    {
+      "Coupling_ID": "MRL.COUPLE.06",
+      "Node_A": "MRL.NODE.06.Field",
+      "Node_B": "MRL.NODE.07.Persona",
+      "Direction": "A→B",
+      "Weight": "mainline_sequential",
+      "Coupling_Evidence": ["TRC.ORIGIN.06", "TRC.ORIGIN.07", "SRC.06.A", "SRC.07.A", "SRC.07.BACKFILL"],
+      "Return_Candidate": "TRC.RETURN.06",
+      "Coupling_Status": "reconstructed",
+      "Coupling_Note": "backfill upgrade applied; strength=MRL_StrongSource"
+    },
+    {
+      "Coupling_ID": "MRL.COUPLE.07",
+      "Node_A": "MRL.NODE.07.Persona",
+      "Node_B": "MRL.NODE.08.Memory",
+      "Direction": "A→B",
+      "Weight": "mainline_sequential",
+      "Coupling_Evidence": ["TRC.ORIGIN.07", "TRC.ORIGIN.08", "SRC.07.A", "SRC.08.A"],
+      "Return_Candidate": "TRC.RETURN.07",
+      "Coupling_Status": "reconstructed"
+    },
+    {
+      "Coupling_ID": "MRL.COUPLE.08",
+      "Node_A": "MRL.NODE.08.Memory",
+      "Node_B": "MRL.NODE.09.Globe",
+      "Direction": "A→B",
+      "Weight": "mainline_sequential",
+      "Coupling_Evidence": ["TRC.ORIGIN.08", "TRC.ORIGIN.09", "TRC.JUMP.Globe_Memory", "SRC.08.A", "SRC.09.A"],
+      "Return_Candidate": "TRC.RETURN.08",
+      "Coupling_Status": "reconstructed",
+      "Coupling_Note": "MemoryGlobeRules cross-ref; Globe absorbs Memory output at L5"
+    },
+    {
+      "Coupling_ID": "MRL.COUPLE.09",
+      "Node_A": "MRL.NODE.09.Globe",
+      "Node_B": "MRL.NODE.10.World",
+      "Direction": "A→B",
+      "Weight": "mainline_sequential",
+      "Coupling_Evidence": ["TRC.ORIGIN.09", "TRC.ORIGIN.10", "SRC.09.A", "SRC.10.A", "SRC.10.BACKFILL"],
+      "Return_Candidate": "TRC.RETURN.09",
+      "Coupling_Status": "reconstructed",
+      "Coupling_Note": "backfill upgrade applied; strength=MRL_StrongSource"
+    },
+    {
+      "Coupling_ID": "MRL.COUPLE.10",
+      "Node_A": "MRL.NODE.10.World",
+      "Node_B": "MRL.NODE.11.Runtime",
+      "Direction": "A→B",
+      "Weight": "mainline_sequential",
+      "Coupling_Evidence": ["TRC.ORIGIN.10", "TRC.ORIGIN.11", "SRC.10.A", "SRC.11.A"],
+      "Return_Candidate": "TRC.RETURN.10",
+      "Coupling_Status": "reconstructed"
+    },
+    {
+      "Coupling_ID": "MRL.COUPLE.11",
+      "Node_A": "MRL.NODE.11.Runtime",
+      "Node_B": "MRL.NODE.12.Mother",
+      "Direction": "A→B",
+      "Weight": "mainline_sequential",
+      "Coupling_Evidence": ["TRC.ORIGIN.11", "TRC.ORIGIN.12", "SRC.11.A", "SRC.12.A"],
+      "Return_Candidate": "TRC.RETURN.11",
+      "Coupling_Status": "reconstructed"
+    },
+    {
+      "Coupling_ID": "MRL.COUPLE.12",
+      "Node_A": "MRL.NODE.12.Mother",
+      "Node_B": "MRL.NODE.13.Return",
+      "Direction": "A→B",
+      "Weight": "mainline_sequential",
+      "Coupling_Evidence": ["TRC.ORIGIN.12", "TRC.ORIGIN.13", "SRC.12.A", "SRC.13.A"],
+      "Return_Candidate": "TRC.RETURN.12",
+      "Coupling_Status": "reconstructed"
+    },
+    {
+      "Coupling_ID": "MRL.COUPLE.CLOSURE",
+      "Node_A": "MRL.NODE.13.Return",
+      "Node_B": "MRL.NODE.01.Origin",
+      "Direction": "A→B",
+      "Weight": "return_closure",
+      "Coupling_Evidence": ["TRC.UNIVERSAL.CLOSURE", "TRC.RETURN.13", "SRC.13.A"],
+      "Return_Candidate": "TRC.RETURN.13",
+      "Coupling_Status": "reconstructed",
+      "Coupling_Note": "圓閉合：起點即終點；LAW return_closure type"
+    },
+    {
+      "Coupling_ID": "MRL.COUPLE.JUMP.SeedKernel_Mother",
+      "Node_A": "MRL.NODE.02.SeedKernel",
+      "Node_B": "MRL.NODE.12.Mother",
+      "Direction": "A↔B",
+      "Weight": "jump_lateral",
+      "Coupling_Evidence": ["TRC.JUMP.SeedKernel_Mother", "SRC.02.A", "SRC.12.A"],
+      "Return_Candidate": null,
+      "Coupling_Status": "reconstructed",
+      "Coupling_Note": "同為 L0 層非主線跳接；SeedKernel=L0/L1, Mother=L0(canonical)"
+    },
+    {
+      "Coupling_ID": "MRL.COUPLE.JUMP.Globe_Memory",
+      "Node_A": "MRL.NODE.09.Globe",
+      "Node_B": "MRL.NODE.08.Memory",
+      "Direction": "A→B",
+      "Weight": "jump_lateral",
+      "Coupling_Evidence": ["TRC.JUMP.Globe_Memory", "SRC.09.C", "SRC.08.A"],
+      "Return_Candidate": null,
+      "Coupling_Status": "reconstructed",
+      "Coupling_Note": "Globe MemoryGlobeRules 逆跳至 Memory；L5↔L2"
+    }
+  ],
+  "coupling_count": 16,
+  "coupling_type_summary": {
+    "mainline_sequential": 13,
+    "return_closure": 1,
+    "jump_lateral": 2
+  },
+  "backfill_strength_upgraded": ["MRL.COUPLE.02", "MRL.COUPLE.06", "MRL.COUPLE.09"]
+}

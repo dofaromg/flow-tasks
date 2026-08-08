@@ -9,8 +9,41 @@ import json
 import os
 import hashlib
 from datetime import datetime
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Tuple, Union
 from pathlib import Path
+from functools import lru_cache
+from concurrent.futures import ThreadPoolExecutor
+
+
+# Checksum caching helpers
+def _make_hashable_mas(obj: Any) -> Union[Tuple, Any]:
+    """Convert an object to a hashable representation for caching."""
+    if isinstance(obj, dict):
+        return tuple(sorted((k, _make_hashable_mas(v)) for k, v in obj.items()))
+    elif isinstance(obj, list):
+        return tuple(_make_hashable_mas(item) for item in obj)
+    return obj
+
+
+def _reconstruct_mas(hashable_data: Union[Tuple, Any]) -> Any:
+    """Reconstruct original data structure from hashable format."""
+    if isinstance(hashable_data, tuple):
+        # Check if it looks like dict items (tuple of key-value pairs)
+        if hashable_data and isinstance(hashable_data[0], tuple) and len(hashable_data[0]) == 2:
+            return {k: _reconstruct_mas(v) for k, v in hashable_data}
+        else:
+            return [_reconstruct_mas(item) for item in hashable_data]
+    return hashable_data
+
+
+@lru_cache(maxsize=256)
+def _cached_checksum_mas(hashable_data: Tuple) -> str:
+    """Cached checksum calculation for repeated data."""
+    # Reconstruct data from hashable format for JSON serialization
+    reconstructed = _reconstruct_mas(hashable_data)
+    data_str = json.dumps(reconstructed, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(data_str.encode('utf-8')).hexdigest()
+
 
 class MemoryArchiveSeed:
     """記憶封存種子核心類別"""
@@ -70,8 +103,8 @@ class MemoryArchiveSeed:
         
         # 儲存種子
         seed_file = self.storage_path / f"{seed_name}.mseed.json"
-        with open(seed_file, 'w', encoding='utf-8') as f:
-            json.dump(seed, f, indent=2, ensure_ascii=False)
+        with open(seed_file, 'w', encoding='utf-8') as seed_output_file:
+            json.dump(seed, seed_output_file, indent=2, ensure_ascii=False)
         
         return {
             "seed_name": seed_name,
@@ -95,8 +128,8 @@ class MemoryArchiveSeed:
         if not seed_file.exists():
             raise FileNotFoundError(f"記憶種子不存在: {seed_name}")
         
-        with open(seed_file, 'r', encoding='utf-8') as f:
-            seed = json.load(f)
+        with open(seed_file, 'r', encoding='utf-8') as seed_input_file:
+            seed = json.load(seed_input_file)
         
         # 驗證完整性
         current_checksum = self._generate_checksum(seed["particle_data"])
@@ -129,24 +162,50 @@ class MemoryArchiveSeed:
         
         return compressed
     
-    def list_seeds(self) -> List[Dict[str, Any]]:
-        """
-        列出所有記憶種子
+    def _read_seed_file(self, seed_file: Path) -> Optional[Dict[str, Any]]:
+        """Helper method to read a single seed file.
         
+        Performance optimization: Enables parallel file reading.
+        
+        Args:
+            seed_file: Path to the seed file
+            
         Returns:
-            種子資訊列表
+            Seed info dict or None if read fails
         """
-        seeds = []
-        
-        for seed_file in self.storage_path.glob("*.mseed.json"):
+        try:
             with open(seed_file, 'r', encoding='utf-8') as f:
                 seed = json.load(f)
-                seeds.append({
+                return {
                     "seed_name": seed["seed_name"],
                     "created_at": seed["created_at"],
                     "checksum": seed["checksum"],
                     "file": str(seed_file)
-                })
+                }
+        except Exception:
+            # Silently skip malformed seed files
+            return None
+    
+    def list_seeds(self) -> List[Dict[str, Any]]:
+        """
+        列出所有記憶種子
+        
+        Performance optimization: Uses parallel file I/O for faster reading
+        when multiple seed files exist.
+        
+        Returns:
+            種子資訊列表
+        """
+        seed_files = list(self.storage_path.glob("*.mseed.json"))
+        
+        # Use parallel reading for better I/O performance
+        # Auto-scale workers: min(4, cpu_count) for optimal performance
+        max_workers = min(4, os.cpu_count() or 1)
+        
+        seeds = []
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            results = executor.map(self._read_seed_file, seed_files)
+            seeds = [seed for seed in results if seed is not None]
         
         return sorted(seeds, key=lambda x: x["created_at"], reverse=True)
     
@@ -168,21 +227,25 @@ class MemoryArchiveSeed:
         if not seed_names:
             raise ValueError("至少需要一個種子來合併")
         
-        # 載入所有種子
-        seeds = [self.restore_seed(name) for name in seed_names]
-        
-        # 合併粒子資料
+        # 合併粒子資料 (使用生成器避免一次性載入所有種子到記憶體)
+        # Merge particle data (using generator to avoid loading all seeds at once)
         merged_data = {
             "merged_from": seed_names,
             "merged_at": datetime.now().isoformat(),
             "particles": []
         }
         
-        for seed in seeds:
+        # 逐個處理種子以節省記憶體
+        # Process seeds one by one to save memory
+        for seed_name in seed_names:
+            seed = self.restore_seed(seed_name)
             if isinstance(seed["particle_data"], list):
                 merged_data["particles"].extend(seed["particle_data"])
             else:
                 merged_data["particles"].append(seed["particle_data"])
+            # 釋放當前種子的參考以允許垃圾回收
+            # Release reference to allow garbage collection
+            del seed
         
         # 創建合併後的種子
         if merged_name is None:
@@ -220,8 +283,8 @@ class MemoryArchiveSeed:
             }
         }
         
-        with open(export_path, 'w', encoding='utf-8') as f:
-            json.dump(export_data, f, indent=2, ensure_ascii=False)
+        with open(export_path, 'w', encoding='utf-8') as export_output_file:
+            json.dump(export_data, export_output_file, indent=2, ensure_ascii=False)
         
         return export_path
     
@@ -235,8 +298,8 @@ class MemoryArchiveSeed:
         Returns:
             匯入的種子資訊
         """
-        with open(import_path, 'r', encoding='utf-8') as f:
-            import_data = json.load(f)
+        with open(import_path, 'r', encoding='utf-8') as import_input_file:
+            import_data = json.load(import_input_file)
         
         # 驗證格式
         if "seed_name" not in import_data:
@@ -264,7 +327,7 @@ class MemoryArchiveSeed:
     
     def _generate_checksum(self, data: Any) -> str:
         """
-        生成資料校驗碼
+        生成資料校驗碼（帶快取優化）
         
         Args:
             data: 要校驗的資料
@@ -272,8 +335,13 @@ class MemoryArchiveSeed:
         Returns:
             校驗碼
         """
-        data_str = json.dumps(data, sort_keys=True, ensure_ascii=False)
-        return hashlib.sha256(data_str.encode('utf-8')).hexdigest()
+        try:
+            hashable = _make_hashable_mas(data)
+            return _cached_checksum_mas(hashable)
+        except (TypeError, AttributeError):
+            # Fallback for non-hashable or complex data
+            data_str = json.dumps(data, sort_keys=True, ensure_ascii=False)
+            return hashlib.sha256(data_str.encode('utf-8')).hexdigest()
 
 
 def interactive_demo():
