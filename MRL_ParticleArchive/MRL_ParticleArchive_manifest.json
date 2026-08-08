@@ -1,0 +1,202 @@
+{
+  "library": "MRL_ParticleArchive",
+  "source": "PR#19 (Copilot add-missing-features)",
+  "origin_signature": "MrLiouWord",
+  "particle_count": 14,
+  "all_signed": true,
+  "particles": [
+    {
+      "canonical_name": "MRL_EnvProductionExample_v1",
+      "source_external_name": ".env.production.example",
+      "role": "material",
+      "origin": "MrLiouWord",
+      "payload": {
+        "bytes": 3162,
+        "lines": 109,
+        "archived_as": "MRL_ParticleArchive/PR19/.env.production.example"
+      },
+      "manifestable": true,
+      "_signature": "MrLiouWord",
+      "_sig_hash": "36ed0c815e8c580da8f20265ae32c5c8686f4a8d9e6fb292a7974005163b7a58"
+    },
+    {
+      "canonical_name": "MRL_09WorkflowMemoryIntegration_v1",
+      "source_external_name": "09_workflow/MRL_memory_integration.py",
+      "role": "material",
+      "origin": "MrLiouWord",
+      "payload": {
+        "bytes": 14485,
+        "lines": 457,
+        "archived_as": "MRL_ParticleArchive/PR19/09_workflow__MRL_memory_integration.py"
+      },
+      "manifestable": true,
+      "_signature": "MrLiouWord",
+      "_sig_hash": "ee876c2304b6471e51633a70908949b8e527a233c1a03217a59e99282cd66baf"
+    },
+    {
+      "canonical_name": "MRL_09WorkflowResultGating_v1",
+      "source_external_name": "09_workflow/MRL_result_gating.py",
+      "role": "material",
+      "origin": "MrLiouWord",
+      "payload": {
+        "bytes": 19056,
+        "lines": 609,
+        "archived_as": "MRL_ParticleArchive/PR19/09_workflow__MRL_result_gating.py"
+      },
+      "manifestable": true,
+      "_signature": "MrLiouWord",
+      "_sig_hash": "9dbc74d7e9621653e96de3df0206bf6a7afdbdf6b62343878ab78afe278b151d"
+    },
+    {
+      "canonical_name": "MRL_09WorkflowRuntimeConfig_v1",
+      "source_external_name": "09_workflow/MRL_runtime_config.py",
+      "role": "material",
+      "origin": "MrLiouWord",
+      "payload": {
+        "bytes": 9368,
+        "lines": 287,
+        "archived_as": "MRL_ParticleArchive/PR19/09_workflow__MRL_runtime_config.py"
+      },
+      "manifestable": true,
+      "_signature": "MrLiouWord",
+      "_sig_hash": "ad5d19745294da810c9eacfad6905dfd091770004eb5084aa26c4432f5470bb4"
+    },
+    {
+      "canonical_name": "MRL_09WorkflowTaskOrchestrator_v1",
+      "source_external_name": "09_workflow/MRL_task_orchestrator.py",
+      "role": "material",
+      "origin": "MrLiouWord",
+      "payload": {
+        "bytes": 16117,
+        "lines": 514,
+        "archived_as": "MRL_ParticleArchive/PR19/09_workflow__MRL_task_orchestrator.py"
+      },
+      "manifestable": true,
+      "_signature": "MrLiouWord",
+      "_sig_hash": "ba89a1b01367fc2d28cdab12af0927e5a688e3af38bd3dc84695fca622365708"
+    },
+    {
+      "canonical_name": "MRL_09WorkflowMultiAgent_v1",
+      "source_external_name": "09_workflow/multi_agent.py",
+      "role": "material",
+      "origin": "MrLiouWord",
+      "payload": {
+        "bytes": 13841,
+        "lines": 426,
+        "archived_as": "MRL_ParticleArchive/PR19/09_workflow__multi_agent.py"
+      },
+      "manifestable": true,
+      "_signature": "MrLiouWord",
+      "_sig_hash": "f49aa29fe2b7b74aec8010849a8ee8263b8938b40c5f142ef3072516beadcbc6"
+    },
+    {
+      "canonical_name": "MRL_DocsDEPLOYMENT_v1",
+      "source_external_name": "docs/DEPLOYMENT.md",
+      "role": "material",
+      "origin": "MrLiouWord",
+      "payload": {
+        "bytes": 9451,
+        "lines": 482,
+        "archived_as": "MRL_ParticleArchive/PR19/docs__DEPLOYMENT.md"
+      },
+      "manifestable": true,
+      "_signature": "MrLiouWord",
+      "_sig_hash": "385a3203a6a333f8fdf8ee23781d9d9296f07af1bc836fca874520496a3f3d73"
+    },
+    {
+      "canonical_name": "MRL_DocsIMPLEMENTATIONSUMMARY_v1",
+      "source_external_name": "docs/IMPLEMENTATION_SUMMARY.md",
+      "role": "material",
+      "origin": "MrLiouWord",
+      "payload": {
+        "bytes": 18749,
+        "lines": 554,
+        "archived_as": "MRL_ParticleArchive/PR19/docs__IMPLEMENTATION_SUMMARY.md"
+      },
+      "manifestable": true,
+      "_signature": "MrLiouWord",
+      "_sig_hash": "9008a6cc3d094c4b37c10b0ce94632ca1966a6dd960436c7f10a9eae30e3b0fd"
+    },
+    {
+      "canonical_name": "MRL_DocsP0PRODUCTIONCORE_v1",
+      "source_external_name": "docs/P0_PRODUCTION_CORE.md",
+      "role": "material",
+      "origin": "MrLiouWord",
+      "payload": {
+        "bytes": 19223,
+        "lines": 748,
+        "archived_as": "MRL_ParticleArchive/PR19/docs__P0_PRODUCTION_CORE.md"
+      },
+      "manifestable": true,
+      "_signature": "MrLiouWord",
+      "_sig_hash": "5751f78ffa6cf4c884669920438e9a17da5b4976f0d48ffbbf856b3fd435a1c8"
+    },
+    {
+      "canonical_name": "MRL_UiAppREADME_v1",
+      "source_external_name": "ui/mrl_app/README.md",
+      "role": "material",
+      "origin": "MrLiouWord",
+      "payload": {
+        "bytes": 10897,
+        "lines": 475,
+        "archived_as": "MRL_ParticleArchive/PR19/ui__mrl_app__README.md"
+      },
+      "manifestable": true,
+      "_signature": "MrLiouWord",
+      "_sig_hash": "a9b2f884214bb853423cc0f950a7fa99053b5bc745ecd29f60f2460f5678c5eb"
+    },
+    {
+      "canonical_name": "MRL_UiAppApp_v1",
+      "source_external_name": "ui/mrl_app/app.js",
+      "role": "material",
+      "origin": "MrLiouWord",
+      "payload": {
+        "bytes": 16207,
+        "lines": 474,
+        "archived_as": "MRL_ParticleArchive/PR19/ui__mrl_app__app.js"
+      },
+      "manifestable": true,
+      "_signature": "MrLiouWord",
+      "_sig_hash": "8ac9cd35cc55508eed282855a4266abed908059f534dc947be03ac055ad31395"
+    },
+    {
+      "canonical_name": "MRL_UiAppIndexHtml_v1",
+      "source_external_name": "ui/mrl_app/index.html",
+      "role": "material",
+      "origin": "MrLiouWord",
+      "payload": {
+        "bytes": 6724,
+        "lines": 144,
+        "archived_as": "MRL_ParticleArchive/PR19/ui__mrl_app__index.html"
+      },
+      "manifestable": true,
+      "_signature": "MrLiouWord",
+      "_sig_hash": "a0e101726309f1e01cd0bfbd63f733b06f7cecac35016114a46cddfbbaf6b912"
+    },
+    {
+      "canonical_name": "MRL_UiAppStylesCss_v1",
+      "source_external_name": "ui/mrl_app/styles.css",
+      "role": "material",
+      "origin": "MrLiouWord",
+      "payload": {
+        "bytes": 8602,
+        "lines": 519,
+        "archived_as": "MRL_ParticleArchive/PR19/ui__mrl_app__styles.css"
+      },
+      "manifestable": true,
+      "_signature": "MrLiouWord",
+      "_sig_hash": "ee942f19dbee865709d73c437f3cc1b29c065440d1283222ab5d0a9b0379ca9f"
+    }
+  ],
+  "external_particles": [
+    {
+      "canonical_name": "MRL_OpenGraphProtocol_v1",
+      "source": "Open Graph Protocol (ogp.me)",
+      "archived_as": "MRL_ParticleArchive/External/MRL_OpenGraphProtocol_v1.json",
+      "kind": "external_protocol_spec",
+      "signed": true
+    }
+  ],
+  "_signature": "MrLiouWord",
+  "_sig_hash": "884b55f88b09aa4cc35dddfc654b5ba1839a9154ecb7f73b199c992e8e218c36"
+}

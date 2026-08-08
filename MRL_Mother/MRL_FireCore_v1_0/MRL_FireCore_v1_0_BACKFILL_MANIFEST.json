@@ -1,0 +1,371 @@
+{
+  "package": "MRL_FireCore_v1_0",
+  "created_at_utc": "2026-07-01T15:52:08Z",
+  "target_path": "D:\\modules\\MRL_FireCore_v1_0",
+  "origin_signature": "MrLiouWord",
+  "policy": {
+    "local_backfill_only": true,
+    "cloudflare_write": false,
+    "dl580_private_key_included": false,
+    "manifest_self_hash_policy": "self hash omitted to avoid recursive hash mutation"
+  },
+  "expected_modules": [
+    "mrl-firecore-auth",
+    "mrl-firecore-store",
+    "mrl-firecore-vault",
+    "mrl-firecore-live",
+    "mrl-firecore-push",
+    "mrl-firecore-trace"
+  ],
+  "file_count": 58,
+  "files": [
+    {
+      "path": "DEPENDENCY_TREE.md",
+      "size": 1096,
+      "sha256": "bdb1df1151e68a2c7d279cb8b25f78c665c8f7acc5d8d60d11b3d9c2a877c736",
+      "kind": "file"
+    },
+    {
+      "path": "EXPECTED_FILE_LIST.md",
+      "size": 804,
+      "sha256": "b31eb849d670d5084a18a4f6dadef3a7604b342050d56f5aba521a8e9a2bfec7",
+      "kind": "file"
+    },
+    {
+      "path": "MRL_FireCore_v1_0_AUDIT_REPORT.md",
+      "size": 972,
+      "sha256": "0793d1ec1d645cc573495ef88b28ff6ed13da0dc8ea43551651afc735fe17666",
+      "kind": "file"
+    },
+    {
+      "path": "MRL_FireCore_v1_0_SHA256SUMS.txt",
+      "size": 5911,
+      "sha256": "8852d194b631ea88050cedeab3c73f8fcefd8f020b9998c2fcb1fdbc8856380f",
+      "kind": "file"
+    },
+    {
+      "path": "README_BACKFILL.md",
+      "size": 1988,
+      "sha256": "112abb8326c54d7d35b326fc80a56af69198f7d441b77fd8239ca528b10ef015",
+      "kind": "file"
+    },
+    {
+      "path": "config/mrl-firecore.env.example",
+      "size": 360,
+      "sha256": "1c2091a7568cd62c00fc0d47108cbd25549ec5e051cb721ae3f3967df4fba970",
+      "kind": "file"
+    },
+    {
+      "path": "config/wrangler.shared.toml",
+      "size": 294,
+      "sha256": "a7c0bb89966291cb23f1ccd27c3e9aacdb28afe2c7fcaaa81d4cad7dac551753",
+      "kind": "file"
+    },
+    {
+      "path": "docs/DL580_CLOUDFLARE_EDGE_NOTES.md",
+      "size": 826,
+      "sha256": "c2528d2d7a2950d13eedc4b18a8447106c951a6fba0e967b8cacbbb86a7523c9",
+      "kind": "file"
+    },
+    {
+      "path": "docs/FIREBASE_TO_FIRECORE_MAPPING.md",
+      "size": 909,
+      "sha256": "194414563e6eed03ffcc03c9be02c00e5dfb58dbbfaa055297fd18db71137522",
+      "kind": "file"
+    },
+    {
+      "path": "docs/MRL_FireCore_v1_0_Local_Backfill.md",
+      "size": 472,
+      "sha256": "884af2a719da2fbc826776d489f9ac41ef8fa1cc977fa1fe8069dca785f655e5",
+      "kind": "file"
+    },
+    {
+      "path": "docs/SECURITY_BOUNDARY.md",
+      "size": 826,
+      "sha256": "85428c1c408a5fbc9c0bdc79c9b5319747d7be0451e133138173b0fc9ec95eb3",
+      "kind": "file"
+    },
+    {
+      "path": "install_to_D_modules.ps1",
+      "size": 896,
+      "sha256": "99808164c7ffbd92cbd11c4d1cd03bd514d5e7e38d837e1ded312d9fb038d4a3",
+      "kind": "file"
+    },
+    {
+      "path": "modules/MRL_FIRECORE_MODULE_INDEX.json",
+      "size": 3354,
+      "sha256": "6fc50a58c46a822633f5e51b25cd104edb45e7e941cbbc7eeba22ff80e42138e",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-auth/README.md",
+      "size": 640,
+      "sha256": "ed5564c1112168971e5ceee4ae5d9ab81108b771ff1e3016601ac2195e012ff5",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-auth/migrations/0001_mrl_firecore_auth.sql",
+      "size": 1235,
+      "sha256": "9962c353145acce30feccce546464c388635016aa355dcf293464055433325a4",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-auth/package.json",
+      "size": 499,
+      "sha256": "cb22e6eb369cefd4868577cb6e52d2a79f3b9488f3afede457fe578201c57c2e",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-auth/src/index.ts",
+      "size": 2519,
+      "sha256": "ea369b09da9a3e7950491531200b1063d86ecd6ff5d5ac1b0f07ed0ffee26561",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-auth/tests/health.test.ts",
+      "size": 409,
+      "sha256": "1a9f910779ae48be155d84159bf6dde3973d49f5f083bc04cf50c37f27b5a809",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-auth/wrangler.toml",
+      "size": 386,
+      "sha256": "7bd02a7b3f1747a035b060557068295d48f30add435be73e94206b92eee664f8",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-live/README.md",
+      "size": 626,
+      "sha256": "41b349750b76ae3d817a33c9302738e8febdc50d91b5e457f165d2fd513e6eb2",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-live/migrations/0001_mrl_firecore_live.sql",
+      "size": 1039,
+      "sha256": "5835ecabac4bbfe9332656497b51d8a1fe273825ca094c0a6310435736b4394e",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-live/package.json",
+      "size": 505,
+      "sha256": "f93e63f7ac6c1f4dae981a358180ce1669e34c8806e4dbee8793a46e7fc013bd",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-live/src/index.ts",
+      "size": 2457,
+      "sha256": "1a362fbafd5f0cea9caff034628a7e5f9a9cd20cd2a667858c1f8e90b40ea356",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-live/tests/health.test.ts",
+      "size": 409,
+      "sha256": "e590da2bee22d2c6326485af040c6bab73e473fbac1cf4430ca9260d261994ed",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-live/wrangler.toml",
+      "size": 392,
+      "sha256": "420114ba3ddd925cb523dd1803963bb6da9d2c7d67754145485529775faaa1c1",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-push/README.md",
+      "size": 620,
+      "sha256": "5c1d687fe0e89b3c097e5c130d73a5583152a4f136d6c162c1cf3eaac492bea9",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-push/migrations/0001_mrl_firecore_push.sql",
+      "size": 952,
+      "sha256": "49a14c9268cd11c90e171a6304bf66cc9456d216a7e9fd3aefcb1fa69ca1a360",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-push/package.json",
+      "size": 507,
+      "sha256": "36f41152f037f33c93224a4178d47fb46c919bf518b4097406d5805f117b9664",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-push/src/index.ts",
+      "size": 2477,
+      "sha256": "412bd2abc171749fa3bf9fec1a0f4ca692497674ef92413fbcabfb5fd59ea8b9",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-push/tests/health.test.ts",
+      "size": 409,
+      "sha256": "da44f1da1c954cf0d7c9b5415fbdfb78742fdfb7c6ca2a538f1bcf1300b8d2b9",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-push/wrangler.toml",
+      "size": 394,
+      "sha256": "5dbc8d095df3b0867dcc7d136c666681b31e26c798c4bbb183768e9df997484b",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-store/README.md",
+      "size": 629,
+      "sha256": "a615bede8a95aed6d7545700d04482fe3caeee9e96ac022b24b42a1c11ba507d",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-store/migrations/0001_mrl_firecore_store.sql",
+      "size": 1212,
+      "sha256": "684107fee295d88b14f14354a88269ea21e01037a452c46e864919e7df45d4c5",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-store/package.json",
+      "size": 496,
+      "sha256": "ea76f40c3110611803d704117584a1fe33b514d525d4f04a10466643ac0125b2",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-store/src/index.ts",
+      "size": 2505,
+      "sha256": "22d851dfda700b8625c8d6a897575988041deb13fe610f75352ae8371e7ff946",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-store/tests/health.test.ts",
+      "size": 411,
+      "sha256": "f2ee80d2396fd148104a8db9852234044305400318f024745037c5ea5b4ef831",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-store/wrangler.toml",
+      "size": 384,
+      "sha256": "4e4143739cc49c243d228bf09e0650caf7847f00135ebd67c5e057dc05e7deff",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-trace/README.md",
+      "size": 609,
+      "sha256": "e8df8dca18324fff4e8ab8bfcb9ffbcdddd1c1244f406b934c58a0df28c833d7",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-trace/migrations/0001_mrl_firecore_trace.sql",
+      "size": 1012,
+      "sha256": "b7cd9d5b9188373b42504c619518c2853d49c8c97432ecaec2a939457b5e0617",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-trace/package.json",
+      "size": 496,
+      "sha256": "06bbf9f1e29f3b5171fe8ebef07773c329f5e9d43decade705c7297034f66557",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-trace/src/index.ts",
+      "size": 2498,
+      "sha256": "4054787c7feb1c99b224e8f49c279583ae31df39ed7c69bd71cb5347c356e694",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-trace/tests/health.test.ts",
+      "size": 411,
+      "sha256": "6d8061fc30ba676e22bc511deb55a5ffac76ad083b88efb0c16036fb40655ff9",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-trace/wrangler.toml",
+      "size": 384,
+      "sha256": "8cc93227cbe1919277fc9a7a7de33a6dda5d0c15852393cdc2446cdea1f67851",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-vault/README.md",
+      "size": 618,
+      "sha256": "999adb9bb8277d59fcc10aaccdaa97a18fc10c42c96028c792c8c907a8f3f674",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-vault/migrations/0001_mrl_firecore_vault.sql",
+      "size": 1199,
+      "sha256": "7857a765305662a0000e8f382f9c231bf70c32131cc0279d54bdee44c6154fc3",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-vault/package.json",
+      "size": 503,
+      "sha256": "27216f3f915ccb4b2fa7d3b8f7f9b575b729f54ef05430ef1512f5ad3ae4a57c",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-vault/src/index.ts",
+      "size": 2504,
+      "sha256": "7d075ccb0be324908920e259f2644beb21b5f741451bfdf68929f62239e77e1f",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-vault/tests/health.test.ts",
+      "size": 411,
+      "sha256": "81a7b1352def0901aef984e8c72f97de36693cab0298b23336abfb8314072e70",
+      "kind": "file"
+    },
+    {
+      "path": "modules/mrl-firecore-vault/wrangler.toml",
+      "size": 391,
+      "sha256": "13d517c0c1e967b069ab5ce29c2450fd1c8bffd7c360fd32151344f23caa7ab9",
+      "kind": "file"
+    },
+    {
+      "path": "runtime/dl580-signing-service/README.md",
+      "size": 304,
+      "sha256": "666d70e0424453385ef5a9fc90e442a9300f11139b0d7abfeee333c51fb76585",
+      "kind": "file"
+    },
+    {
+      "path": "runtime/dl580-signing-service/signature_contract.json",
+      "size": 560,
+      "sha256": "2119349376aaa520f915bb612b3dc33c1f68b5ff8293f391c2aea6e655832be9",
+      "kind": "file"
+    },
+    {
+      "path": "schemas/mrl_firecore_all.sql",
+      "size": 7306,
+      "sha256": "df4133c510eea6909329f2dc0b2dea370a8634865e70d183da922ce98d15e5f8",
+      "kind": "file"
+    },
+    {
+      "path": "scripts/generate_sha256_manifest.ps1",
+      "size": 525,
+      "sha256": "3a692a90589bb8eb6c29227cf3ecb5bdc6c9fcb067c6357b12461de380bdc511",
+      "kind": "file"
+    },
+    {
+      "path": "scripts/healthcheck_local.ps1",
+      "size": 746,
+      "sha256": "331d2db56bd3cfa17c7e9857fc9fb009bf42b1f459203d5e3be17e8bcdd6e37b",
+      "kind": "file"
+    },
+    {
+      "path": "sdk/ios/README.md",
+      "size": 466,
+      "sha256": "af2099922c353a7fb93b909c94e7a636bf1b3f6602ef468439b2a3a58edde267",
+      "kind": "file"
+    },
+    {
+      "path": "sdk/web/README.md",
+      "size": 661,
+      "sha256": "21c468a009a3deeba9f8603c60e4ce20ba96a565deab8a959c3ad77b24ce9bb6",
+      "kind": "file"
+    },
+    {
+      "path": "verify_backfill.ps1",
+      "size": 1343,
+      "sha256": "ba9eb5f17355109960767425224a9d843b49d09d5eaeee30e0c43e35ebe4f39c",
+      "kind": "file"
+    },
+    {
+      "path": "MRL_FireCore_v1_0_BACKFILL_MANIFEST.json",
+      "size": null,
+      "sha256": "MANIFEST_SELF_HASH_OMITTED",
+      "kind": "manifest"
+    }
+  ]
+}

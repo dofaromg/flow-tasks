@@ -1,0 +1,83 @@
+# Memory Quick Mount Configuration
+# 記憶快速掛載配置
+
+# Context and snapshot directories
+context_dir: "particle_core/context"
+snapshot_dir: "particle_core/snapshots"
+cache_dir: "particle_core/cache"
+
+# Memory seeds to mount on startup
+seeds:
+  - "particle_core/examples/agent_seed.json"
+  - "particle_core/examples/workflow_seed.json"
+
+# Wire protocol settings
+wire:
+  # Default message type (0x02 = M_UPSERT)
+  default_msg_type: 0x02
+  
+  # Default key class (0x10 = K_MCP)
+  default_key_class: 0x10
+  
+  # Default capabilities (0x30000000 = P_TOOLS | P_APPS)
+  capabilities: 0x30000000
+  
+  # Enable compression for wire protocol
+  use_compression: true
+  
+  # Record ID ranges
+  record_id_ranges:
+    system_min: 0x00000001
+    system_max: 0x000FFFFF
+    user_min: 0x00100000
+    user_max: 0x0FFFFFFF
+    snapshot_min: 0x10000000
+    snapshot_max: 0x1FFFFFFF
+
+# Compression settings
+compression:
+  # Compression algorithm (basic or advanced)
+  algorithm: "advanced"
+  
+  # Enable recursive compression for nested structures
+  recursive: true
+  
+  # Compression statistics tracking
+  track_stats: true
+
+# Logging settings
+logging:
+  # Enable conversion logging
+  enabled: true
+  
+  # Log level (debug, info, warning, error)
+  level: "info"
+  
+  # Log file path (optional)
+  log_file: null
+
+# Performance settings
+performance:
+  # Enable caching for frequent operations
+  enable_caching: true
+  
+  # Cache size limit (number of entries)
+  cache_size: 256
+  
+  # Enable parallel processing for batch operations
+  parallel_processing: false
+
+# Integration settings
+integration:
+  # MongoDB connection (if available)
+  mongodb:
+    enabled: false
+    connection_string: "mongodb://localhost:27017"
+    database: "flowagent"
+    collection: "memory_seeds"
+  
+  # File system backup
+  backup:
+    enabled: true
+    backup_dir: "particle_core/backups"
+    retention_days: 30

@@ -1,0 +1,116 @@
+下面把「自行開發 ToF （Time‑of‑Flight）陣列」拆成 三條漸進式路徑，每條都列出起步零件、開源參考與關鍵難點。您可先用「最快能跑通」的做法驗證演算法，再逐步往高階硬體擴張。
+
+⸻
+
+0 . 先自問四個規格問題
+
+問題	典型選項	為什麼要先想清楚
+量程	0‑4 m（室內）、4‑10 m（庭院）、> 30 m（戶外）	直接決定發射功率、接收器靈敏度與眼安設計
+解析度 (FOV×像素)	8×8、16×16、320×240	像素越多，讀出帶寬與 MCU/SoC 算力需求越高
+更新率	5 Hz、15 Hz、30 Hz	動物逃竄 → 15 Hz 以上較順；靜態測距則可降速省電
+光源波長	850 nm、940 nm、1064 nm	影響探測器種類與眼安限值；手機/室內首選 940 nm
+
+
+⸻
+
+1 . 「拿得到就能跑」— COTS 多區塊 ToF 模組路徑
+
+用意：先跑通距離計算、點雲融合與 UWB 結合，全靠 I²C/SPI 就能抓資料。
+
+元件	關鍵規格	單價	取得方式
+ST VL53L8CX 8×8	0‑4 m、64 區、65° FoV、I²C/SPI	$29（裸 IC），$45（Pololu Breakout） ￼ ￼	Digi‑Key / Mouser
+MCU 或 SBC	ESP32‑S3、Raspberry Pi 5、Jetson Orin Nano	$6 ～ $249	既有開發板
+VCSEL	已整合在 VL53L8CX 內部（Class 1）	—	—
+
+步驟
+	1.	焊接或直接買 Breakout → I²C 0x52 地址。
+	2.	讀 ST 官方驅動 (stmvl53l5cx_api)；開 Ranging\_And\_Multizone\_Example 5 分鐘內就能看 8×8 深度矩陣。
+	3.	在 ROS2 寫 Node，把 8×8 距離塞進 sensor_msgs/PointCloud2。
+	4.	與 UWB anchor 融合：把 Tag 座標投影到同一 map frame，即可測試「找貓」功能。
+
+優缺點
+	•	👍 最快 1‑2 天有結果；Class 1 眼安已認證。
+	•	👎 量程僅 4 m，動物衝到庭院就量不到；FoV 固定 65°。
+
+⸻
+
+2 . 「自己選光源 + 採用現成 SPAD」— 中階可擴張路徑
+
+元件	規格	價格	購買管道
+ESPROS EPC660 (QVGA 320×240)	0‑10 m；外接光源；12‑bit 並口	$68（裸片），$399（Eval Kit） ￼ ￼	Digi‑Key / 官方
+VCSEL 陣列 (940 nm 150‑500 mW)	您截圖裡的模組即可	$1‑3 / pcs	淘/阿里巴巴
+脈衝驅動板	GaN FET、最短 2 ns、> 10 A	$229（EPC9154 Eval） ￼	EPC 官網
+光學	Trench DOE or TIR lens	$10‑20	Edmund/Asphera
+
+步驟
+	1.	先買 EPC660 Eval Kit：帶鏡頭 + LED 光源，可立刻熟悉寄存器 / 距離演算法。
+	2.	換光源：拔掉 LED，改由 VCSEL + DOE 投 60° × 45° 光斑；用 EPC9154 GaN Driver 打 10 ns 脈衝，每脈衝 10 A → 峰值 100 W。
+	3.	同步訊號：EPC660 需要光源頻率 20‑100 MHz；Driver 上拉 GPIO，或用 PLL 鎖相。
+	4.	交叉談窗：用 18 % 反射率灰卡分 0.5 m、1 m、3 m 掃點，寫 Python 做線性校正。
+
+優缺點
+	•	👍 解析度與射程大幅提升；VCSEL 波形可自訂（脈衝或 FMCW）。
+	•	👎 需要射頻級 PCB Layout；EPC660 接口是 12‑bit 並口 → MCU 不夠快須上 FPGA 或 CSI‑2 Bridge。
+
+⸻
+
+3 . 「完全客制化」— 掃描 LiDAR 式 ToF（開源硬體參考）
+
+參考專案	要點	進度
+OpenTOFLidar（GitHub）	STM32 + 外掛 TDC7200；單點 VCSEL + R/C 伺服掃描；已開 10 m Demo	￼
+Analog Devices Open‑Source LiDAR Platform	可換收發模組、FPGA Zync MPSoC；支援 100 m 扫描	￼
+Mirrorcle MEMS DevKit + 自制 VCSEL Driver	1/2″ MEMS 鏡 ±15°；掃描速 60 fps	￼ ￼
+
+此路徑需 MEMS 鏡 + 單像素 SPAD + 高壓驅動，研發週期 12 + 月，適合最終要做到 > 15 m、300 fps 追蹤的小型移動平台。
+
+⸻
+
+4 . 共通難點與解法
+
+難點	快速解法
+眼安 IEC 60825‑1 計算	用 ST “Safety Calculator” 或 EPC AppNote AN032 提供的 MPE 表格 ￼
+脈衝同步抖動 < 1 ns	MCU 觸發 → PLL → 拍立石晶振；或直接用 FPGA MMCM
+反射率飄移 / 多重回波	做 per‑pixel 信號信噪比闕值，弱反射丟棄；或二次掃描平均
+溫漂	NTC　+　EEPROM 溫補表；VCSEL 漂移 ≈ 0.06 nm / °C
+
+
+⸻
+
+5 . 兩套「起手式 BOM」參考
+
+5.1 極速驗證套件（24 h 內可跑通）
+
+零件	數量	單價	小計
+VL53L8CX Breakout	1	$45	$45
+Raspberry Pi 5 (8 GB)	1	$80	$80
+3D‑列印固定架	1	$5	$5
+合計			$130
+
+插上 I²C、跑 ST 官方 Python 範例，即可輸出連續 8×8 深度。
+
+5.2 可擴張 QVGA 模組（4‑6 週開發）
+
+零件	數量	單價	小計
+EPC660 BC Carrier	1	$120	$120
+EPC9154 VCSEL Driver	1	$229	$229
+940 nm VCSEL 150 mW	4	$2	$8
+nRF5340 DK（做同步時脈 + BLE）	1	$69	$69
+CSI‑2 Bridge (Lattice CrossLink‑U)	1	$34	$34
+Optics & DOE	—	$40	$40
+合計			$500
+
+
+⸻
+
+6 . 建議起步 4 步驟
+	1.	明確列出 Target 表格（量程、FOV、解析度、帧率、成本上限）。
+	2.	買 VL53L8CX 開發板 → 在 ROS2 得到 PointCloud2；驗證 UWB 融合流程。
+	3.	確定要超過 4 m / 高解析度時，轉向 EPC660 + 外掛 VCSEL，先用 Eval Kit 拿到裸距離資料；之後再換自制 Driver。
+	4.	把光源/驅動 PCB Layout 跑一次 Prototype，重點檢查：脈衝上升 < 2 ns、過衝 < 10 %。
+
+做到第 4 步，您就有了 可控光源 + 多像素深度輸出 的「自製 ToF 陣列」，後續只剩機械與演算法打磨。若您需要：
+	•	驅動板原理圖 / BOM（EPC9154 簡化版）
+	•	EPC660 連接 CSI‑2 Bridge 的 HDL 範例
+	•	眼安計算 Excel 模板（依波長/孔徑自動給 MPE）
+
+…隨時告訴我，我可以幫您把文件與參考設計整理出來。祝您動手順利，早日打造自己的 ToF 感測陣列！

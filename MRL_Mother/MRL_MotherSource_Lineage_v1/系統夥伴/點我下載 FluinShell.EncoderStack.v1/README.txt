@@ -1,0 +1,1 @@
+This package contains the core EncoderStack for FluinShell layer, enabling signal flow control, modulation, and synchronization using particle logic encoding.

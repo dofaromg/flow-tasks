@@ -1,0 +1,328 @@
+{
+  "origin_signature": "MrLiouWord",
+  "version": "1.0.0",
+  "snapshot_date": "2026-07-10T19:45:00Z",
+  "mrl_ai_system_absorbed": true,
+  "absorbed_source_modules": {
+    "total_files": 3916,
+    "location": "MRL_Mother/",
+    "layers": [
+      "00_rootlaw", "01_schema", "02_principles", "03_memory",
+      "04_runtime", "05_persona", "06_trace", "07_ingest", "08_sources"
+    ],
+    "workflow_modules": 78,
+    "subsystems": [
+      "MRL_UniversalRuntimeLanguage_Core_v1",
+      "MRL_RuntimeOS_v1_4_0",
+      "MRL_Runtime (PIDScope + Terminal)",
+      "MRL_MotherModel",
+      "MRL_FireCore_v1_0",
+      "MRL_BaseWorld_DB_v1",
+      "MRL_3DScanner_ProductBridge_v1_1",
+      "MRL_MotherSystem_ControlPanel",
+      "MRL_Symbolic",
+      "MRL_Adapters"
+    ],
+    "lineage_archive": "MRL_MotherSource_Lineage_v1 (FlowAgent v1-v56, 3030 files)",
+    "test_suite": "tests_mrl_ai_system (52 files)"
+  },
+  "canonical_runtime": "DL580 G9 (Windows Server)",
+  "service_manager": "NSSM 2.24 (D:\\nssm\\nssm-2.24\\win64\\nssm.exe)",
+  "toolchain": {
+    "node": "D:\\MrlToolchain\\node\\node.exe",
+    "python": "D:\\MrlToolchain\\python\\python.exe"
+  },
+  "services": [
+    {
+      "service_name": "MRL_Agent_Orchestrator",
+      "script": "D:\\mrl\\agent\\orchestrator\\MRL_Agent_Orchestrator.cjs",
+      "runtime": "node",
+      "port": 7810,
+      "health_endpoint": "/",
+      "health_status": "alive",
+      "dependencies": [
+        "MRL_Memory_Engine",
+        "MRL_Toolchain_Engine",
+        "mrl_redis"
+      ],
+      "layer": "core_engine"
+    },
+    {
+      "service_name": "MRL_AI_OS",
+      "script": "D:\\mrl\\MRL_MotherSystem_ControlPanel.py",
+      "runtime": "python",
+      "port": 7950,
+      "health_endpoint": null,
+      "health_status": "running",
+      "dependencies": [
+        "MRL_PostgreSQL",
+        "mrl_redis"
+      ],
+      "layer": "platform"
+    },
+    {
+      "service_name": "MRL_AI_Product_Server",
+      "script": "MRL_Server.js + dist\\index.js",
+      "runtime": "node",
+      "port": 3000,
+      "health_endpoint": "/health",
+      "health_status": "running",
+      "dependencies": [
+        "MRL_PostgreSQL"
+      ],
+      "layer": "platform"
+    },
+    {
+      "service_name": "MRL_ASI_Engine",
+      "script": "D:\\mrl\\asi-engine\\server.js",
+      "runtime": "node",
+      "port": 7700,
+      "health_endpoint": "/health",
+      "health_status": "running",
+      "dependencies": [
+        "MRL_PostgreSQL",
+        "mrl_redis",
+        "MRL_DB_Proxy"
+      ],
+      "layer": "core_engine"
+    },
+    {
+      "service_name": "MRL_Bridge",
+      "script": "D:\\mrl\\bridge\\server.js",
+      "runtime": "node",
+      "port": 7800,
+      "health_endpoint": "/health",
+      "health_status": "running",
+      "dependencies": [
+        "MRL_ASI_Engine",
+        "MRL_Tunnel"
+      ],
+      "layer": "network"
+    },
+    {
+      "service_name": "MRL_DB_Proxy",
+      "script": "D:\\mrl\\db-proxy\\MRL_DB_Proxy.cjs",
+      "runtime": "node",
+      "port": 7801,
+      "health_endpoint": null,
+      "health_status": "running",
+      "dependencies": [
+        "MRL_PostgreSQL",
+        "mrl_redis"
+      ],
+      "layer": "infrastructure"
+    },
+    {
+      "service_name": "MRL_FlowAgent_API",
+      "script": "D:\\mrl\\flowagent\\MRL_flowagent_api_server.py",
+      "runtime": "python",
+      "port": 7900,
+      "health_endpoint": null,
+      "health_status": "running",
+      "dependencies": [
+        "MRL_Inference",
+        "MRL_Memory_Engine"
+      ],
+      "layer": "ai_inference"
+    },
+    {
+      "service_name": "MRL_FlowCoreLoop",
+      "script": "D:\\MRL_Runtime\\FlowCoreLoop\\flowcore_loop.py",
+      "runtime": "python",
+      "port": 8787,
+      "health_endpoint": "/health",
+      "health_status": "running",
+      "dependencies": [
+        "MRL_Inference"
+      ],
+      "layer": "ai_inference"
+    },
+    {
+      "service_name": "MRL_Inference",
+      "script": "D:\\mrl\\inference\\MRL_Inference_API.py",
+      "runtime": "python",
+      "port": 7500,
+      "health_endpoint": null,
+      "health_status": "running",
+      "dependencies": [],
+      "layer": "ai_inference"
+    },
+    {
+      "service_name": "MRL_LayerA_PIDScope",
+      "script": null,
+      "runtime": "unknown",
+      "port": null,
+      "health_endpoint": null,
+      "health_status": "running",
+      "dependencies": [],
+      "layer": "monitoring"
+    },
+    {
+      "service_name": "MRL_Memory_Engine",
+      "script": "D:\\mrl\\agent\\memory\\MRL_Memory_Engine.cjs",
+      "runtime": "node",
+      "port": 7812,
+      "health_endpoint": "/MRL_health",
+      "health_status": "200 OK",
+      "health_response": {
+        "version": "2.0.0",
+        "persistence": true,
+        "vault": "D:\\mrl\\agent\\memory\\MRL_memory_vault\\MRL_memory.mseed.jsonl",
+        "semantic": 2,
+        "episodic": 3,
+        "working": 1
+      },
+      "dependencies": [
+        "mrl_redis"
+      ],
+      "layer": "core_engine"
+    },
+    {
+      "service_name": "MRL_Operations",
+      "script": null,
+      "runtime": "unknown",
+      "port": null,
+      "health_endpoint": null,
+      "health_status": "paused",
+      "dependencies": [],
+      "layer": "monitoring"
+    },
+    {
+      "service_name": "MRL_Particle_Sync_Worker",
+      "script": null,
+      "runtime": "unknown",
+      "port": null,
+      "health_endpoint": null,
+      "health_status": "running",
+      "dependencies": [
+        "MRL_PostgreSQL"
+      ],
+      "layer": "sync"
+    },
+    {
+      "service_name": "MRL_ParticleGlobe",
+      "script": "D:\\MRL_Runtime\\ParticleGlobe\\particle_globe_memory_system.py",
+      "runtime": "python",
+      "port": 8788,
+      "health_endpoint": null,
+      "health_status": "running",
+      "dependencies": [],
+      "layer": "ai_inference"
+    },
+    {
+      "service_name": "MRL_PersistentLoop",
+      "script": "persistentloop.cjs",
+      "runtime": "node",
+      "port": null,
+      "health_endpoint": null,
+      "health_status": "running",
+      "dependencies": [
+        "mrl_redis"
+      ],
+      "layer": "core_engine"
+    },
+    {
+      "service_name": "MRL_PostgreSQL",
+      "script": "D:\\pgsql\\bin\\pg_ctl.exe runservice -N \"MRL_PostgreSQL\" -D \"D:\\pgsql\\data\"",
+      "runtime": "postgres",
+      "port": 5432,
+      "health_endpoint": null,
+      "health_status": "running",
+      "dependencies": [],
+      "layer": "infrastructure"
+    },
+    {
+      "service_name": "mrl_redis",
+      "script": "D:\\redis\\redis-server.exe --service-run --port 6379 --service-name MRL_Redis",
+      "runtime": "redis",
+      "port": 6379,
+      "health_endpoint": null,
+      "health_status": "running",
+      "dependencies": [],
+      "layer": "infrastructure"
+    },
+    {
+      "service_name": "MRL_RuntimeAdapter",
+      "script": "D:\\mrl\\mother\\mrl_runtime_adapter.py",
+      "runtime": "python",
+      "port": 8788,
+      "health_endpoint": null,
+      "health_status": "running",
+      "dependencies": [
+        "MRL_PostgreSQL"
+      ],
+      "layer": "platform"
+    },
+    {
+      "service_name": "MRL_Toolchain_Engine",
+      "script": "D:\\mrl\\agent\\tools\\MRL_Toolchain_Engine.cjs",
+      "runtime": "node",
+      "port": 7811,
+      "health_endpoint": "/MRL_health",
+      "health_status": "200 OK",
+      "health_response": {
+        "version": "1.0.0",
+        "tools": 3,
+        "engines": 0
+      },
+      "dependencies": [
+        "mrl_redis"
+      ],
+      "layer": "core_engine"
+    },
+    {
+      "service_name": "MRL_Tunnel",
+      "script": "D:\\cloudflared.exe",
+      "runtime": "cloudflared",
+      "port": 20241,
+      "health_endpoint": null,
+      "health_status": "running",
+      "dependencies": [],
+      "layer": "network"
+    },
+    {
+      "service_name": "MRL_Write_Guard",
+      "script": "D:\\mrl\\write_guard\\guard.cjs",
+      "runtime": "node",
+      "port": 8799,
+      "health_endpoint": null,
+      "health_status": "running",
+      "dependencies": [],
+      "layer": "core_engine"
+    },
+    {
+      "service_name": "MRL_Platform_Server",
+      "script": "D:\\mrl\\platform\\MRL_Platform_Server.py",
+      "runtime": "python",
+      "port": 8790,
+      "health_endpoint": "/health",
+      "health_status": "unknown",
+      "dependencies": [
+        "MRL_PostgreSQL",
+        "mrl_redis"
+      ],
+      "layer": "platform"
+    }
+  ],
+  "additional_infrastructure": {
+    "mariadb": {
+      "port": 3306,
+      "path": "C:\\Program Files\\MariaDB 11.4\\bin\\mysqld.exe",
+      "note": "Not managed by NSSM, runs as native Windows service"
+    },
+    "tailscale": {
+      "port": 60286,
+      "path": "C:\\Program Files\\Tailscale\\tailscaled.exe"
+    },
+    "sshd": {
+      "port": 22,
+      "path": "C:\\Windows\\System32\\OpenSSH\\sshd.exe"
+    }
+  },
+  "topology": {
+    "entry": "Internet → cloudflared(:20241) → MRL_Bridge(:7800)",
+    "engine_cluster": "ASI_Engine(:7700) ↔ Agent_Orchestrator(:7810) ↔ Memory_Engine(:7812) ↔ Toolchain(:7811)",
+    "ai_cluster": "Inference(:7500) → FlowCoreLoop(:8787) / FlowAgent(:7900) / ParticleGlobe(:8788)",
+    "data_layer": "PostgreSQL(:5432) ↔ DB_Proxy(:7801) / Redis(:6379) / MariaDB(:3306)"
+  }
+}

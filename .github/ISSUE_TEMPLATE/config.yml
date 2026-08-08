@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 Documentation / 文件說明
+    url: https://github.com/dofaromg/flow-tasks/blob/main/README.md
+    about: Check out the documentation before opening an issue / 在開啟議題前請先查閱文件
+  - name: 💬 Discussions / 討論區
+    url: https://github.com/dofaromg/flow-tasks/discussions
+    about: Ask questions and discuss ideas / 提問與討論想法

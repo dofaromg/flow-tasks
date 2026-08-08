@@ -1,0 +1,19 @@
+{
+  "name": "mrl-runtimeos-enterprise-runtimeplatform-coreexecutable-v1-4-0",
+  "version": "1.4.0",
+  "description": "MRL_RuntimeOS_EnterpriseRuntimePlatform_CoreExecutable_v1_4_0 - enterprise-grade RuntimeOS with parser, MetaIR, ParticleIR, RuntimeGraph, Attention routing, RuntimeNode/Mesh, real AI model gateway connectors, skill modules, artifact transfer, Blender 3D model bridge source, audit, auth, OpenAPI, deployment scripts.",
+  "main": "MRL_API/MRL_RuntimeServer.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node MRL_API/MRL_RuntimeServer.js",
+    "acceptance": "node MRL_Acceptance/MRL_Acceptance_TestSuite.js",
+    "smoke": "node MRL_Acceptance/MRL_Smoke_Dl580.js",
+    "parse": "node MRL_Scripts/MRL_CLI.js parse",
+    "execute": "node MRL_Scripts/MRL_CLI.js execute",
+    "job": "node MRL_Scripts/MRL_CLI.js job"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18"
+  }
+}

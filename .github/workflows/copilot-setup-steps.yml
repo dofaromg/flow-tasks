@@ -1,0 +1,36 @@
+name: "Copilot Setup Steps"
+
+# This workflow sets up the development environment for GitHub Copilot coding agent
+# The Copilot agent uses this workflow to prepare its ephemeral environment
+# Note: workflow_call is required for Copilot coding agent to invoke this workflow
+
+on: workflow_call
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r particle_core/requirements.txt
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install Node.js dependencies
+        run: npm ci

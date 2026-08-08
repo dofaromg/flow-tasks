@@ -1,0 +1,73 @@
+{
+  "package": "Mrldl580",
+  "version": "1.0.0",
+  "origin_signature": "MrLiouWord",
+  "file_count": 13,
+  "files": [
+    {
+      "path": "API_MAP.md",
+      "size": 1096,
+      "sha256": "0cc84bffd59659967174f36f20b0004a70e9583627c5cbd0dc64611544618244"
+    },
+    {
+      "path": "EVIDENCE_NOTES.md",
+      "size": 909,
+      "sha256": "aad206ed1139a28d7ee6d7eba6a681a78ba42ec70e3d59624a015c067b3d98e1"
+    },
+    {
+      "path": "README.md",
+      "size": 629,
+      "sha256": "cc034ad0c144627af0a65dc118b28816e379910041f2f4c09f758e83427afe72"
+    },
+    {
+      "path": "evidence/01_dl580_powershell.png",
+      "size": 771400,
+      "sha256": "cdf523e492edd6f2d40fa5da0868e58825e4923686b587994692038c7d456b93"
+    },
+    {
+      "path": "evidence/02_dl580_powershell.png",
+      "size": 790589,
+      "sha256": "b8fc127abe46195c3d6eb0e8b54869e115b5349bb303dc5184db675766e89c99"
+    },
+    {
+      "path": "evidence/03_dl580_powershell.jpeg",
+      "size": 514026,
+      "sha256": "ab32d904a81fd00bea20351d8581995e308bf461047c60c5e5522578c964efc9"
+    },
+    {
+      "path": "evidence/04_dl580_powershell.jpeg",
+      "size": 479686,
+      "sha256": "3f10972727240a6eb11d7fa4b2cffd2bbd2736bca08289f1d259cfc0a2f4402a"
+    },
+    {
+      "path": "evidence/05_dl580_powershell.jpeg",
+      "size": 471155,
+      "sha256": "7b1ae47973a8197b386dd9ddb75916e57a48302ea7ffe5ce5411e3a813ba3f0b"
+    },
+    {
+      "path": "evidence/06_dl580_powershell.png",
+      "size": 750672,
+      "sha256": "6a174a8d68e5b109d33c58acd803849d5d0a7fa64eaef6db66354d2a2a400f97"
+    },
+    {
+      "path": "evidence/07_dl580_powershell.png",
+      "size": 879443,
+      "sha256": "09ffd461a5a8746179388552cb0e0722cd0caa9ae5ba32bd9ca603ea863d1cce"
+    },
+    {
+      "path": "evidence/08_dl580_powershell.png",
+      "size": 841675,
+      "sha256": "4482605068a4d4d94b39f39753ae7884b66a3e00bf398d092a072060f5275896"
+    },
+    {
+      "path": "evidence/09_dl580_powershell.png",
+      "size": 819109,
+      "sha256": "6ed7cc8aaabfadeac1bb2a209f012f9a176069c010bf174f853eefcfa36f6844"
+    },
+    {
+      "path": "evidence/10_dl580_powershell.png",
+      "size": 809225,
+      "sha256": "bb1c0a48d3c117fce6b664c1cb43dc03bf0798be74ca0eef0e157ddc96243d7a"
+    }
+  ]
+}

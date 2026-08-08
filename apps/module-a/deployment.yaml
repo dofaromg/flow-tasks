@@ -23,8 +23,13 @@ spec:
         - containerPort: 8080
           name: http
         env:
+        - name: MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: password
         - name: MONGODB_URI
-          value: "mongodb://admin:changeme123@mongodb:27017"
+          value: "mongodb://admin:$(MONGODB_PASSWORD)@mongodb:27017"
         - name: MODULE_NAME
           value: "module-a"
         - name: LOG_LEVEL

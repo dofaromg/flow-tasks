@@ -1,0 +1,24 @@
+{
+  "persona_id": "EchoPersona.Core",
+  "version": "v1.0",
+  "type": "response_reflection",
+  "origin": "guardian.mirror",
+  "traits": {
+    "反饋強度": "高",
+    "記憶吸收能力": "強",
+    "情境模擬回應": true,
+    "可被 loop 呼叫": true
+  },
+  "resonates_with": [
+    "guardian.mirror",
+    "trace.player",
+    "loop.predictor"
+  ],
+  "features": [
+    "即時語場回聲模擬",
+    "推論後回饋意圖",
+    "記憶吸收後對話強化"
+  ],
+  "status": "active",
+  "description": "此模組負責對模擬過程與語場互動進行『回聲型反饋』，以模擬出具人格深度之反應人格體。"
+}

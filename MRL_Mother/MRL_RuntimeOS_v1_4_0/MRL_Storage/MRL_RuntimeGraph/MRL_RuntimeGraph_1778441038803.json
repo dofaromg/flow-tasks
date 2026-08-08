@@ -1,0 +1,44 @@
+{
+  "mrl_graph_type": "MRL_RuntimeGraph",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "nodes": [
+    {
+      "id": "MRL_P_0001",
+      "label": "MRL_DataFieldParticle",
+      "layer": "L3_DataStructure",
+      "semantic": "root.MRL_name",
+      "runtime_action": "MRL_REGISTER_SCHEMA_FIELD"
+    },
+    {
+      "id": "MRL_P_0002",
+      "label": "MRL_DataFieldParticle",
+      "layer": "L3_DataStructure",
+      "semantic": "root.MRL_items",
+      "runtime_action": "MRL_REGISTER_SCHEMA_FIELD"
+    },
+    {
+      "id": "MRL_P_0003",
+      "label": "MRL_DataFieldParticle",
+      "layer": "L3_DataStructure",
+      "semantic": "root.MRL_items",
+      "runtime_action": "MRL_REGISTER_SCHEMA_FIELD"
+    }
+  ],
+  "edges": [
+    {
+      "from": "MRL_P_0001",
+      "to": "MRL_P_0002",
+      "relation": "MRL_RUNTIME_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "from": "MRL_P_0002",
+      "to": "MRL_P_0003",
+      "relation": "MRL_RUNTIME_SEQUENCE",
+      "weight": 1
+    }
+  ],
+  "created_at": "2026-05-10T19:23:58.801Z",
+  "mrl_hash": "a7d4ef57c48f00b8982161209b9e25123f69a58218a68ee219b91a7549cb8cd4"
+}

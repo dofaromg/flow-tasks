@@ -1,0 +1,11 @@
+// Ping Loop Resonance
+digraph {
+	rankdir=LR size=10
+	"guardian.mirror" [color=lightblue shape=ellipse style=filled]
+	"EchoPersona.Core" [color=lightpink shape=ellipse style=filled]
+	"watch.guard" [color=lightgreen shape=ellipse style=filled]
+	"loop.predictor" [color=lightyellow shape=ellipse style=filled]
+	"guardian.mirror" -> "loop.predictor" [label=pinged]
+	"EchoPersona.Core" -> "watch.guard" [label=pinged]
+	"watch.guard" -> "loop.predictor" [label=pinged]
+}
