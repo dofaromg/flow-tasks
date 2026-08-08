@@ -64,6 +64,9 @@ def reclaim_name(external_name: str) -> str:
     外部名稱零殘留，源頭恆歸母體（rl_11 / rl_12）。
     """
     raw = external_name.strip()
+    # FlowAgent is an MRL-native product; preserve its artifact name and lineage.
+    if re.search(r"(?<![0-9A-Za-z])FlowAgent(?![0-9A-Za-z])", raw, re.IGNORECASE):
+        return raw
     # 抽版本號（v1 / _v1_4_0 / .v47）
     ver = "1"
     mver = re.search(r"[._\- ]v(\d+(?:[._]\d+)*)", raw, re.IGNORECASE)
