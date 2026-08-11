@@ -1,0 +1,30 @@
+{
+  "origin_signature": "MrLiouWord",
+  "branch": "z8-particle-bridge-v0.4",
+  "policy": "additive-only",
+  "preserve": [
+    "Z8 original system",
+    "小智 voice entry",
+    "微聊 UI entry",
+    "existing history and names"
+  ],
+  "mapping": {
+    "xiaozhi_voice": "z8.xiaozhi.voice",
+    "weiliao_text": "z8.line.text",
+    "weiliao_transport": "LINE Messaging API"
+  },
+  "runtime": {
+    "host": "DL580 local",
+    "engine_default": "qwen-main",
+    "engine_optional": "muse-agent",
+    "voice_modes": ["chatgpt", "line"],
+    "mode_default": "dry-run"
+  },
+  "excluded_new_gates": [
+    "XTC contract",
+    "XTC authorization as a project gate",
+    "binding-number whitelist as a project gate",
+    "official approval as a project gate"
+  ],
+  "technical_signing_only": "APK code signing, if used, is packaging integrity and is not a contract or transfer of control."
+}
