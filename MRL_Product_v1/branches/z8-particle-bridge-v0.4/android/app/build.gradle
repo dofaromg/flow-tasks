@@ -1,0 +1,28 @@
+plugins {
+    id "com.android.application"
+}
+
+android {
+    namespace "com.mrliou.z8bridge"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.mrliou.z8bridge"
+        minSdk 27
+        targetSdk 27
+        versionCode 4
+        versionName "0.4.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
