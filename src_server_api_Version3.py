@@ -1,29 +1,3 @@
-from flask import Flask, request, jsonify
-import subprocess
-
-app = Flask(__name__)
-
-@app.route('/translate', methods=['POST'])
-def translate():
-    text = request.json.get('text', '')
-    completed = subprocess.run(
-        ['python', 'advanced_parser.py', text],
-        capture_output=True,
-        text=True
-    )
-    result = completed.stdout
-    return jsonify({'result': result})
-
-@app.route('/restore', methods=['POST'])
-def restore():
-    file = request.json.get('file', '')
-    completed = subprocess.run(
-        ['python', 'FluinTraceInterpreter.py', file],
-        capture_output=True,
-        text=True
-    )
-    result = completed.stdout
-    return jsonify({'result': result})
 """MrLiouAI REST API Server v3.
 
 This module provides a Flask-based REST API server for the MrLiouAI system.
@@ -55,10 +29,11 @@ Example requests:
 Version: 3.0
 """
 
-from flask import Flask, request, jsonify
-import subprocess
 import sys
 from typing import Any
+
+from flask import Flask, jsonify, request
+import subprocess
 
 app = Flask(__name__)
 
@@ -77,7 +52,6 @@ def run_safe_command(script: str, argument: str) -> str:
         The stdout output if successful, stderr if failed, or error message
     """
     try:
-        # Use sys.executable for security - ensures we use the same Python interpreter
         result = subprocess.run(
             [sys.executable, script, argument],
             capture_output=True,
