@@ -1,0 +1,16 @@
+{
+  "name": "@mrliou/z8-particle-bridge",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "description": "Additive Z8 bridge: 小智 voice and 微聊 UI events to the MRL particle runtime and LINE Messaging API.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test",
+    "audit": "node scripts/audit.mjs"
+  },
+  "license": "UNLICENSED"
+}
