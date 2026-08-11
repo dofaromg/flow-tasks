@@ -1,0 +1,28 @@
+{
+  "version": "0.4.0",
+  "origin_signature": "MrLiouWord",
+  "channels": [
+    {
+      "source": "xiaozhi",
+      "kind": "voice",
+      "particle_type": "z8.xiaozhi.voice",
+      "direction": "outbound",
+      "pipeline": ["observe", "map", "stt", "qwen-main|muse-agent", "chatgpt-voice|line-voice", "revert-record"]
+    },
+    {
+      "source": "weiliao",
+      "kind": "text",
+      "particle_type": "z8.line.text",
+      "direction": "outbound",
+      "pipeline": ["observe", "map", "ledger", "dry-run|apply", "LINE Messaging API", "revert-record"]
+    },
+    {
+      "source": "line",
+      "kind": "text",
+      "particle_type": "z8.line.text",
+      "direction": "inbound",
+      "pipeline": ["raw-body HMAC-SHA256", "dedupe", "ledger", "qwen-main|muse-agent", "LINE reply"]
+    }
+  ],
+  "revert_semantics": "Revert disables or tombstones this branch mapping. It cannot recall a LINE message already delivered by LINE."
+}
