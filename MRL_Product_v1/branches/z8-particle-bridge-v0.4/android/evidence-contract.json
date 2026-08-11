@@ -1,0 +1,10 @@
+{
+  "status": "awaiting-owned-device-evidence",
+  "required_for_automatic_observation": {
+    "xiaozhi": ["package", "activity_or_service", "observable_intent_or_log_event", "codec", "audio_reference_access"],
+    "weiliao": ["package", "activity", "send_intent_or_accessibility_event", "text_field_event", "target_mapping"],
+    "device": ["abi", "android_release", "sdk", "screen_size"]
+  },
+  "collector": "scripts/Collect-Z8Evidence.ps1",
+  "rule": "Do not guess, replace vendor endpoints, read private app databases, or alter the original system."
+}
