@@ -1,0 +1,4 @@
+module(
+    name = "mrliou_z8_particle_bridge",
+    version = "0.4.0",
+)
