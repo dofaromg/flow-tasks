@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <permission
+        android:name="com.mrliou.z8bridge.permission.SEND_Z8_EVENT"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.mrliou.z8bridge.permission.SEND_Z8_EVENT" />
+
+    <application
+        android:allowBackup="false"
+        android:label="MRL Z8 Bridge"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.Material.Light.NoActionBar"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".BridgeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".Z8EventReceiver"
+            android:exported="true"
+            android:permission="com.mrliou.z8bridge.permission.SEND_Z8_EVENT">
+            <intent-filter>
+                <action android:name="com.mrliou.z8bridge.EVENT" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>
