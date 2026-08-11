@@ -28,6 +28,8 @@ const required = [
   "android/evidence-contract.json",
   "android/app/src/main/AndroidManifest.xml",
   "android/app/src/main/java/com/mrliou/z8bridge/Z8EventReceiver.java",
+  "docs/MRL_Z8_ParticleBridge_v0.4_Combined_Delivery_Report.md",
+  "docs/DELIVERY_AUDIT.json",
 ];
 
 async function walk(directory) {
@@ -48,6 +50,8 @@ function hash(content) {
 
 const files = (await walk(root)).sort();
 const relFiles = files.map((path) => relative(root, path).replaceAll("\\", "/"));
+const sourcePayloadFiles = relFiles.filter((path) => path !== "MANIFEST.sha256");
+const packageManifestPresent = relFiles.includes("MANIFEST.sha256");
 const missing = required.filter((path) => !relFiles.includes(path));
 const empty = [];
 const placeholders = [];
@@ -68,6 +72,11 @@ for (const path of files) {
 }
 
 const packageJson = JSON.parse(await readFile(join(root, "package.json"), "utf8"));
+const deliveryAudit = JSON.parse(await readFile(join(root, "docs", "DELIVERY_AUDIT.json"), "utf8"));
+const expectedFiles = [...deliveryAudit.file_list].sort();
+const missingExpected = expectedFiles.filter((path) => !sourcePayloadFiles.includes(path));
+const unexpectedExpected = sourcePayloadFiles.filter((path) => !expectedFiles.includes(path));
+const duplicateExpected = expectedFiles.filter((path, index) => expectedFiles.indexOf(path) !== index);
 const mappingSource = [
   await readFile(join(root, "src", "mapping.js"), "utf8"),
   await readFile(join(root, "src", "constants.js"), "utf8"),
@@ -84,6 +93,9 @@ const assertions = {
   no_empty_files: empty.length === 0,
   no_placeholders: placeholders.length === 0,
   no_secret_candidates: secretCandidates.length === 0,
+  expected_file_count_matches: sourcePayloadFiles.length === deliveryAudit.expected.source_files,
+  expected_file_list_matches:
+    missingExpected.length === 0 && unexpectedExpected.length === 0 && duplicateExpected.length === 0,
 };
 
 const failed = Object.entries(assertions).filter(([, passed]) => !passed).map(([name]) => name);
@@ -92,12 +104,24 @@ const report = {
   project: "MRL_Z8_ParticleBridge",
   version: packageJson.version,
   files: manifest.length,
+  source_payload_files: sourcePayloadFiles.length,
+  package_manifest_present: packageManifestPresent,
   aggregate_sha256: aggregate,
   assertions,
   missing,
   empty,
   placeholders,
   secret_candidates: secretCandidates,
+  requested_vs_generated: {
+    expected_files: expectedFiles.length,
+    generated_files: sourcePayloadFiles.length,
+    missing_files: missingExpected,
+    unexpected_files: unexpectedExpected,
+    duplicate_expected_files: duplicateExpected,
+    coverage_percent: expectedFiles.length === 0
+      ? 0
+      : Number((((expectedFiles.length - missingExpected.length) / expectedFiles.length) * 100).toFixed(2)),
+  },
 };
 
 console.log(JSON.stringify(report, null, 2));
