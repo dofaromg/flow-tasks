@@ -183,7 +183,7 @@ function utf8ToBase64(value: string): string {
   const chunks: string[] = [];
   for (let i = 0; i < bytes.length; i += chunkSize) {
     const chunk = bytes.subarray(i, i + chunkSize);
-    chunks.push(String.fromCharCode.apply(null, Array.from(chunk)));
+    chunks.push(String.fromCharCode.apply(null, chunk as unknown as number[]));
   }
   return btoa(chunks.join(''));
 }
