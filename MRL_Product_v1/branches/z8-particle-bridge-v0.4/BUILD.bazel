@@ -1,0 +1,28 @@
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "runtime_sources",
+    srcs = glob(["src/**/*.js"]),
+)
+
+filegroup(
+    name = "runtime_tests",
+    srcs = glob(["test/**/*.test.js"]),
+)
+
+filegroup(
+    name = "windows_delivery",
+    srcs = glob(["scripts/*.ps1"]),
+)
+
+filegroup(
+    name = "z8_particle_bridge_v0_4",
+    srcs = [
+        ":runtime_sources",
+        ":runtime_tests",
+        ":windows_delivery",
+        ".env.example",
+        "README.md",
+        "package.json",
+    ] + glob(["config/**", "docs/**", "android/**"]),
+)
