@@ -44,7 +44,7 @@
     {
       "name": "mrl-store",
       "status": "UNVERIFIED_IN_THIS_REPOSITORY",
-      "action": "do_not_claim_present_or_absent_without_repository evidence"
+      "action": "do_not_claim_present_or_absent_without_repository_evidence"
     }
   ]
 }
