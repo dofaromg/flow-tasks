@@ -35,8 +35,8 @@
 
 ```bash
 # 1. 克隆倉庫（私人）
-git clone https://github.com/dofaromg/flow-tasks.git
-cd flow-tasks
+git clone https://github.com/dofaromg/FlowAgent.Runtime.git
+cd FlowAgent.Runtime
 
 # 2. 設置環境變數（可選）
 cp .env.example .env.private
@@ -404,7 +404,7 @@ python -m pytest --cov=particle_core --cov-report=html
 ### 推薦目錄結構
 
 ```
-flow-tasks/
+FlowAgent.Runtime/
 ├── private_notes/              # 🔒 私人筆記（不提交）
 │   ├── observations/          # 觀測記錄
 │   ├── experiments/           # 實驗記錄

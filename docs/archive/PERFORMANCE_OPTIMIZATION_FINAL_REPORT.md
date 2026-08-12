@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-Successfully completed comprehensive analysis of the flow-tasks repository for performance optimizations. **All critical and high-priority performance issues were already addressed in previous work.** This report documents those optimizations, provides tooling for continuous monitoring, and establishes best practices for future development.
+Successfully completed comprehensive analysis of the FlowAgent.Runtime repository for performance optimizations. **All critical and high-priority performance issues were already addressed in previous work.** This report documents those optimizations, provides tooling for continuous monitoring, and establishes best practices for future development.
 
 ---
 

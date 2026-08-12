@@ -16,7 +16,7 @@ building, and programming phases.
 
 ## v1.1.0 強化內容 / Strengthened (2026-07-05)
 
-自 `MrLiou.MetaCode_Environment_v0.6_filled`（與 flow-tasks `flow_code/` 封包
+自 `MrLiou.MetaCode_Environment_v0.6_filled`（與 FlowAgent.Runtime `flow_code/` 封包
 逐位元一致，完整性已驗證）吸收：
 
 - **conduct** — 信任透明五律：能做直做、不能做直說、不虛假承諾、
@@ -57,7 +57,7 @@ building, and programming phases.
   `08_sources/flowagent_codepartner_recovery/`）
 - **系統定位**：`FlowAgent.SystemPlan.v1` 四人格之一
   （Fluin / EchoBody / **CodePartner** / SeedPersona）
-- **運行證據**：`dofaromg/flow-tasks` 之
+- **運行證據**：`dofaromg/FlowAgent.Runtime` 之
   `FlowAgent_Unity_v3_高維模擬檢查報告.txt` —
   「人格模組觸發與人格鏈封存：正常」
 - **回收日期**：2026-07-05

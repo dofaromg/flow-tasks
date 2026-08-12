@@ -2,13 +2,13 @@
 # 匯出到 FlowHub 的整合套件
 
 **生成日期 (Generated)**: 2026-01-03  
-**來源 (Source)**: dofaromg/flow-tasks  
+**來源 (Source)**: dofaromg/FlowAgent.Runtime  
 **目標 (Target)**: dofaromg/flowhub  
 **提交範圍 (Commit Range)**: ba6f6a8..efa908e (5 commits)
 
 ## 版本歷史 / Version History
 
-**Commit**: [`ffebfa0`](https://github.com/dofaromg/flow-tasks/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)  
+**Commit**: [`ffebfa0`](https://github.com/dofaromg/FlowAgent.Runtime/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)  
 **Date**: 2026-01-03 05:44:29 UTC  
 **Author**: copilot-swe-agent[bot]  
 **Message**: Add FlowHub integration export package (patches and bundle)  
@@ -47,12 +47,12 @@ cd /path/to/flowhub
 git bundle verify /path/to/flowhub-integration.bundle
 
 # 拉取提交
-git remote add flow-tasks /path/to/flowhub-integration.bundle
-git fetch flow-tasks
+git remote add FlowAgent.Runtime /path/to/flowhub-integration.bundle
+git fetch FlowAgent.Runtime
 
 # 建立分支並合併
 git checkout -b feature/memory-cache
-git merge flow-tasks/copilot/update-flow-tasks
+git merge FlowAgent.Runtime/copilot/update-FlowAgent.Runtime
 ```
 
 ### 方法 2: 使用 Patch 檔案
@@ -162,7 +162,7 @@ python particle_core/tests/test_wire_memory_integration.py
 
 ## 注意事項 (Notes)
 
-1. **路徑檢查**: 確保 flowhub 的目錄結構與 flow-tasks 相容
+1. **路徑檢查**: 確保 flowhub 的目錄結構與 FlowAgent.Runtime 相容
 2. **衝突處理**: 如遇衝突，使用 `git am --3way` 或手動解決
 3. **測試**: 應用後務必執行測試驗證功能正常
 

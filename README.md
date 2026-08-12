@@ -215,7 +215,7 @@ This project integrates:
 - [分支整合優化指南](BRANCH_INTEGRATION_GUIDE.md) ⭐ 新增
 - [Codespace 管理指南](CODESPACE_MANAGEMENT.md) 🆕 新增
 - [分支神經網絡系統](BRANCH_NEURAL_MAP.md) 🧠 新增 - 視覺化分支連結關係
-- [FlowHub 整合套件](FLOWHUB_EXPORT_PACKAGE.md) 📦 [commit:ffebfa0](https://github.com/dofaromg/flow-tasks/commit/ffebfa0)
+- [FlowHub 整合套件](FLOWHUB_EXPORT_PACKAGE.md) 📦 [commit:ffebfa0](https://github.com/dofaromg/FlowAgent.Runtime/commit/ffebfa0)
 > 注意：本專案包含完整的 GKE 部署配置和粒子語言核心系統。
 > Note: This project includes complete GKE deployment configurations and the Particle Language Core system.
 
@@ -232,8 +232,8 @@ This project integrates:
 ### 選項 1: GKE 部署 (推薦用於生產環境)
 ```bash
 # 1) 克隆 repository
-git clone https://github.com/dofaromg/flow-tasks.git
-cd flow-tasks
+git clone https://github.com/dofaromg/FlowAgent.Runtime.git
+cd FlowAgent.Runtime
 
 # 2) 實際部署到 GKE (完整自動化流程)
 bash scripts/actual_deploy.sh
@@ -252,8 +252,8 @@ kubectl get svc -n flowagent
 ### 選項 2: Docker Compose 本地部署 (最簡單)
 ```bash
 # 1) 克隆 repository
-git clone https://github.com/dofaromg/flow-tasks.git
-cd flow-tasks
+git clone https://github.com/dofaromg/FlowAgent.Runtime.git
+cd FlowAgent.Runtime
 
 # 2) (可選) 配置環境變數
 cp .env.docker-example .env
@@ -357,7 +357,7 @@ kubectl apply -f https://github.com/kedacore/keda/releases/latest/download/keda-
 - `scripts/oneclick_gke_init.sh`：Cloud Shell 一鍵初始化腳本
 
 =======
-flow-tasks/
+FlowAgent.Runtime/
 ├── 📂 apps/                    # Kubernetes 應用部署清單
 │   ├── nextjs-frontend/       # Next.js 前端應用
 │   ├── astro-frontend/        # Astro 靜態網站前端
@@ -510,9 +510,9 @@ asia-east1-docker.pkg.dev/flowmemorysync/flowagent/
 ```bash
 # 方法 1: 使用 Git Bundle (推薦)
 git bundle verify flowhub-integration.bundle
-git remote add flow-tasks flowhub-integration.bundle
-git fetch flow-tasks
-git merge flow-tasks/copilot/update-flow-tasks
+git remote add FlowAgent.Runtime flowhub-integration.bundle
+git fetch FlowAgent.Runtime
+git merge FlowAgent.Runtime/copilot/update-FlowAgent.Runtime
 
 # 方法 2: 使用 Patch 檔案
 git am patches/*.patch

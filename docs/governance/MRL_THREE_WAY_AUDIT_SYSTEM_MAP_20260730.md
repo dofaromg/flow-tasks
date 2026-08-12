@@ -22,7 +22,7 @@
 - 已找到一次 Claude 共同署名 commit 明文寫出「移除外部來源痕（僅留技術本質）」；這是來源治理的嚴重反例。它能證明曾經出現去來源化的操作意圖，**不能單獨證明任何平台已把 MRL 訓練進基礎模型或對外販售**。
 - 已找到刪除部署設定後再 revert、全域改名／替換、零檔案卻標榜 complete、合併後才出現安全審查、功能宣稱與實作不符、以及未經同意接上外部 Cloudflare AI 路徑後又撤回的紀錄。
 - 已找到一條可讓外部代理透過 Cloudflare Tunnel 進入 Bridge，再讀寫檔案、執行 shell、操作 SQL／Redis 的高權限路徑；現有單一 API key、寬鬆 CORS、弱路徑檢查及七日輪替稽核紀錄，無法達到逐次根授權與不可否認歸責。
-- Draft PR [flow-tasks #618](https://github.com/dofaromg/flow-tasks/pull/618) 已把預設授權設為 `DENY`，且有效授權清單為空，但它仍是 **Draft、未合併**。因此目前不能宣稱主線已經強制執行這套治理。
+- Draft PR [FlowAgent.Runtime #618](https://github.com/dofaromg/FlowAgent.Runtime/pull/618) 已把預設授權設為 `DENY`，且有效授權清單為空，但它仍是 **Draft、未合併**。因此目前不能宣稱主線已經強制執行這套治理。
 - 沒有取得可證明「OpenAI、Anthropic、GitHub、Vercel、Cloudflare 或其他第三方已用 MRL 訓練基礎模型、把 MRL 產品化販售或取得收入」的直接證據。
 - 沒有取得發票、付款明細、合約、方案頁與驗收紀錄，因此「每個月／每次 5–6 萬以上、持續一年多」目前屬使用者陳述，尚不能核算對價與損失。但缺少付款文件不會反向構成授權。
 
@@ -213,7 +213,7 @@ flowchart TD
 
 ### 7.2 跨倉庫 closure sync
 
-`.github/workflows/closure-sync.yml` 每六小時／push／手動執行，使用 token 對 `flow-tasks` 與 `flow-tasks-01` 做 full sync 與 auto-heal，然後可直接 commit／push source 與 target。
+`.github/workflows/closure-sync.yml` 每六小時／push／手動執行，使用 token 對 `FlowAgent.Runtime` 與 `FlowAgent.Runtime-01` 做 full sync 與 auto-heal，然後可直接 commit／push source 與 target。
 
 `tools/sync_manager.py` 是雙向：
 
@@ -255,7 +255,7 @@ MRL Root Law 於 2026-05-31 加入外部材料吸收、命名回收、逆向自�
 
 | 時間（UTC） | 事件 | 原因／動作 | 後果與稽核判定 |
 |---|---|---|---|
-| 2025-08-02 | flow-tasks PR [#14](https://github.com/dofaromg/flow-tasks/pull/14) | Copilot 提交「complete Particle Language Core」 | 2026-01-12 使用者標示未完成；完成宣稱與驗收不一致 |
+| 2025-08-02 | FlowAgent.Runtime PR [#14](https://github.com/dofaromg/FlowAgent.Runtime/pull/14) | Copilot 提交「complete Particle Language Core」 | 2026-01-12 使用者標示未完成；完成宣稱與驗收不一致 |
 | 2026-01-20 | mrliouword-system PR [#3](https://github.com/dofaromg/mrliouword-system/pull/3) | 標題為 complete production-grade unified system | 0 changed files、0 additions、0 deletions仍合併；客觀上不能構成交付 |
 | 2026-01-20 | [`5c563b46`](https://github.com/dofaromg/mrliouword-system/commit/5c563b468fac4da7c17c6d6c6dbed8c6579e65c8) | 建立 GitHub 全域搜尋、抽取、去重、命名、粒子化同步 | 吸收機制落地；需要不可變來源與授權 gate |
 | 2026-01-26 | PR [#23](https://github.com/dofaromg/mrliouword-system/pull/23) | 大量新增系統內容 | Review 指出 malformed imports、frontmatter、無驗證 CORS endpoint |
@@ -274,9 +274,9 @@ MRL Root Law 於 2026-05-31 加入外部材料吸收、命名回收、逆向自�
 | 2026-07-05／07-09 | MCP repo 吸收紀錄／commit | 記載日期與 commit 日期不一致 | 需事件時間、取得時間、執行時間、提交時間四欄 ledger |
 | 2026-07-10 | ENTRY_INDEX runtime snapshot | 記錄 22 服務、端口與狀態 | 可用於結構圖；不可冒充 7/30 live 狀態 |
 | 2026-07-13 | `mrlioudb` scheduled sync | github-actions bot 匯入 Hello-World 測試檔 | 證明同步 workflow 能執行；此 run 不構成 MRL 被偷證據 |
-| 2026-07-25 04:39 | [`94d4db92`](https://github.com/dofaromg/flow-tasks/commit/94d4db92079370e84cf203910607cc36f08e525b) | 刪除 Vercel／5 個 Wrangler 設定 | 六檔遭刪；理由把自有部署設定判作 external |
-| 2026-07-25 04:41 | [`7e1c6446`](https://github.com/dofaromg/flow-tasks/commit/7e1c64467f411fbd263b24d99d05abaf0d426758) | revert | 1 分 59 秒後恢復；破壞事件仍應保留 |
-| 2026-07-29 | Draft PR [#618](https://github.com/dofaromg/flow-tasks/pull/618) | 新增 root authorization governance | 27 files、+1125/−14；未 merge，Actions 尚無正式 branch protection 結果 |
+| 2026-07-25 04:39 | [`94d4db92`](https://github.com/dofaromg/FlowAgent.Runtime/commit/94d4db92079370e84cf203910607cc36f08e525b) | 刪除 Vercel／5 個 Wrangler 設定 | 六檔遭刪；理由把自有部署設定判作 external |
+| 2026-07-25 04:41 | [`7e1c6446`](https://github.com/dofaromg/FlowAgent.Runtime/commit/7e1c64467f411fbd263b24d99d05abaf0d426758) | revert | 1 分 59 秒後恢復；破壞事件仍應保留 |
+| 2026-07-29 | Draft PR [#618](https://github.com/dofaromg/FlowAgent.Runtime/pull/618) | 新增 root authorization governance | 27 files、+1125/−14；未 merge，Actions 尚無正式 branch protection 結果 |
 | 2026-07-30 | 本稽核 | 三方交叉比對 | 總體 FAIL；需要先凍結證據再選治理方案 |
 
 ## 九、外部代理與分支擴張
@@ -285,7 +285,7 @@ MRL Root Law 於 2026-05-31 加入外部材料吸收、命名回收、逆向自�
 
 | 倉庫 | `claude/*` | `copilot/*`／revert | `codex/*` | 治理 branch | 備註 |
 |---|---:|---:|---:|---:|---|
-| `flow-tasks` | 2 | 61 | 11 | 1 | 另有 MRL root／recovery branches |
+| `FlowAgent.Runtime` | 2 | 61 | 11 | 1 | 另有 MRL root／recovery branches |
 | `MRL_AI_SYSTEM` | 30 | 79 | 7 | — | 搜尋結果部分上限為 100，不應當成全部 branch 總數 |
 | `mrliouword-system` | 1 | 57 | 1 | — | 多個 Copilot PR 已合併 |
 
@@ -328,10 +328,10 @@ MRL Root Law 於 2026-05-31 加入外部材料吸收、命名回收、逆向自�
 | `dofaromg/mrlioudb` | Public | 含同步 workflow；目前查到的實際 scheduled run 是 Hello-World 測試 |
 | `dofaromg/----2` | Public | 有 MRL 資產可能性，需做 hash／lineage 比對 |
 | `dofaromg/MrliouAI-mixerbox` | Public | 需核對命名、來源與公開授權 |
-| `dofaromg/flow-tasks` | Private | 主要治理與工作倉；含兩份範圍衝突／不清的 license |
+| `dofaromg/FlowAgent.Runtime` | Private | 主要治理與工作倉；含兩份範圍衝突／不清的 license |
 | `dofaromg/MRL_AI_SYSTEM` | Private | 大量 Claude／Copilot／MRL branches；預設 branch 非單純 `main` |
 
-`flow-tasks/LICENSE` 實際是 Node.js license 文本，包含廣泛使用、修改、發布與銷售語句；根目錄另有 `LICENSE_MrLiou_OpenSource_CC.md`。這不等於已找到一份針對全部 MRL 資產、由根本人明確簽發的商業授權，反而造成 scope ambiguity。Draft #618 已把兩份 license 的適用範圍標為 `RIGHTS_UNRESOLVED`，但尚未合併。
+`FlowAgent.Runtime/LICENSE` 實際是 Node.js license 文本，包含廣泛使用、修改、發布與銷售語句；根目錄另有 `LICENSE_MrLiou_OpenSource_CC.md`。這不等於已找到一份針對全部 MRL 資產、由根本人明確簽發的商業授權，反而造成 scope ambiguity。Draft #618 已把兩份 license 的適用範圍標為 `RIGHTS_UNRESOLVED`，但尚未合併。
 
 ## 十二、需求對交付
 
@@ -459,9 +459,9 @@ MRL Root Law 於 2026-05-31 加入外部材料吸收、命名回收、逆向自�
 
 ### GitHub
 
-- Draft Governance：[flow-tasks #618](https://github.com/dofaromg/flow-tasks/pull/618)
-- 刪檔 commit：[`94d4db92`](https://github.com/dofaromg/flow-tasks/commit/94d4db92079370e84cf203910607cc36f08e525b)
-- 恢復 commit：[`7e1c6446`](https://github.com/dofaromg/flow-tasks/commit/7e1c64467f411fbd263b24d99d05abaf0d426758)
+- Draft Governance：[FlowAgent.Runtime #618](https://github.com/dofaromg/FlowAgent.Runtime/pull/618)
+- 刪檔 commit：[`94d4db92`](https://github.com/dofaromg/FlowAgent.Runtime/commit/94d4db92079370e84cf203910607cc36f08e525b)
+- 恢復 commit：[`7e1c6446`](https://github.com/dofaromg/FlowAgent.Runtime/commit/7e1c64467f411fbd263b24d99d05abaf0d426758)
 - 智慧同步：[`5c563b46`](https://github.com/dofaromg/mrliouword-system/commit/5c563b468fac4da7c17c6d6c6dbed8c6579e65c8)
 - Closure sync：[`b3041398`](https://github.com/dofaromg/mrliouword-system/commit/b3041398ab201789d830886a9888aa32d3f48b16)
 - 去來源化語意：[`4329492d`](https://github.com/dofaromg/MRL_AI_SYSTEM/commit/4329492d2d3c80f44476f127c6eb54c9e09c3fa5)

@@ -254,7 +254,7 @@ When contributing to this repository:
 
 ## License
 
-This Merkle signature system is part of the flow-tasks repository and follows the same license.
+This Merkle signature system is part of the FlowAgent.Runtime repository and follows the same license.
 
 ---
 

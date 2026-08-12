@@ -8,7 +8,7 @@
 
 ## Summary
 
-Investigation of PR #198 (https://github.com/dofaromg/flow-tasks/pull/198) revealed that **all changes intended for the PR have already been successfully merged into the main branch**. The PR shows as "not mergeable" due to unrelated git histories, but this is not a blocker since no actual merge is needed.
+Investigation of PR #198 (https://github.com/dofaromg/FlowAgent.Runtime/pull/198) revealed that **all changes intended for the PR have already been successfully merged into the main branch**. The PR shows as "not mergeable" due to unrelated git histories, but this is not a blocker since no actual merge is needed.
 
 ---
 
@@ -183,7 +183,7 @@ All PR #198 features are ready:
 ### Branch Comparison
 
 ```bash
-PR Branch: origin/copilot/update-flow-tasks (commit acc2da9)
+PR Branch: origin/copilot/update-FlowAgent.Runtime (commit acc2da9)
 Main Branch: origin/main (commit 5dfa09a)
 Common Ancestor: None (unrelated histories)
 

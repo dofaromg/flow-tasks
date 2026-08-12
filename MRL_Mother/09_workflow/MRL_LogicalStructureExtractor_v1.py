@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-MRL_LogicalStructureExtractor_v1.py — 邏輯架構提取器（flow-tasks 回收對齊版）
+MRL_LogicalStructureExtractor_v1.py — 邏輯架構提取器（FlowAgent.Runtime 回收對齊版）
 origin_signature: MrLiouWord
 layer: L2 PARTICLE + L6 REFLECT
 
 ═══════════════════════════════════════════════════════════════════════════════
   回收來源（rl_12 命名回收 / rl_11 源頭主權）：
-    外部 repo  dofaromg/flow-tasks  之「智能倉庫同步系統 / LogicalStructureExtractor」
+    外部 repo  dofaromg/FlowAgent.Runtime  之「智能倉庫同步系統 / LogicalStructureExtractor」
     → 以母體 canonical MRL_LogicalStructureExtractor_v1 取代呈現（取代非依賴）。
     原貼文內容保全於 MRL_ParticleArchive/flow_tasks/（rl_15 粒子不滅）。
 
@@ -29,7 +29,7 @@ from typing import Any, Dict, List
 
 from MRL_utils import ORIGIN_SIGNATURE
 class MRL_LogicalStructureExtractor:
-    """邏輯架構提取器（flow-tasks 回收對齊版）。"""
+    """邏輯架構提取器（FlowAgent.Runtime 回收對齊版）。"""
 
     def __init__(self) -> None:
         self.origin_signature = ORIGIN_SIGNATURE

@@ -196,4 +196,4 @@ FlowAgent GKE 部署基礎設施已完整實施並驗證，包括：
 **相關連結**:
 - [GKE 控制台](https://console.cloud.google.com/kubernetes/list?project=flowmemorysync)
 - [Artifact Registry](https://console.cloud.google.com/artifacts?project=flowmemorysync)
-- [GitHub Actions](https://github.com/dofaromg/flow-tasks/actions)
+- [GitHub Actions](https://github.com/dofaromg/FlowAgent.Runtime/actions)

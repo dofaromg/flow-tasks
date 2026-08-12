@@ -528,7 +528,7 @@ xcode-select --install
 **解決**:
 ```bash
 # 確保在正確的目錄
-cd /path/to/flow-tasks
+cd /path/to/FlowAgent.Runtime
 export PYTHONPATH="${PYTHONPATH}:$(pwd)/particle_core/src/memory"
 ```
 
@@ -657,8 +657,8 @@ def validate_wire_header(header):
 
 ## 聯絡方式 (Contact)
 
-- 專案: flow-tasks
-- GitHub: dofaromg/flow-tasks
+- 專案: FlowAgent.Runtime
+- GitHub: dofaromg/FlowAgent.Runtime
 - 文檔: particle_core/docs/
 
 ---

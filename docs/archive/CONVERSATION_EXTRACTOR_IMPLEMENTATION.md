@@ -1,7 +1,7 @@
 # Conversation Knowledge Extractor - Implementation Summary
 
 ## Overview
-Successfully implemented a comprehensive Conversation Knowledge Extractor for the FlowAgent/flow-tasks repository.
+Successfully implemented a comprehensive Conversation Knowledge Extractor for the FlowAgent/FlowAgent.Runtime repository.
 
 ## Files Created
 

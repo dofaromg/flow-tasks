@@ -28,7 +28,7 @@ Tests run: 8, Tests passed: 8, Tests failed: 0
 ### 2. Run Python Integration Tests
 
 ```bash
-cd /path/to/flow-tasks
+cd /path/to/FlowAgent.Runtime
 python particle_core/tests/test_wire_memory_integration.py
 ```
 
@@ -148,7 +148,7 @@ export PYTHONPATH="${PYTHONPATH}:$(pwd)/particle_core/src/memory"
 ## Support
 
 - Documentation: `particle_core/docs/wire_memory_integration.md`
-- GitHub: dofaromg/flow-tasks
+- GitHub: dofaromg/FlowAgent.Runtime
 - Issues: GitHub Issues
 
 ---

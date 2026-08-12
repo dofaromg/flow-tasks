@@ -8,7 +8,7 @@
 
 ## Problem Statement
 
-**Pull Request**: [#228 - Introduce ParticleDefensiveClient and NeuralLink with defensive GitHub sync](https://github.com/dofaromg/flow-tasks/pull/228)
+**Pull Request**: [#228 - Introduce ParticleDefensiveClient and NeuralLink with defensive GitHub sync](https://github.com/dofaromg/FlowAgent.Runtime/pull/228)
 
 **Issue**: The PR had a merge conflict with status `mergeable: false` and `mergeable_state: dirty`
 
@@ -312,6 +312,6 @@ The base branch (`codex/add-github-actions-deployment-workflow`) is ready to acc
 
 **Prepared by**: GitHub Copilot Agent  
 **Date**: January 26, 2026  
-**Repository**: dofaromg/flow-tasks  
-**Branch**: copilot/update-flow-tasks-again  
+**Repository**: dofaromg/FlowAgent.Runtime  
+**Branch**: copilot/update-FlowAgent.Runtime-again  
 **Commit**: 6665f29

@@ -32,6 +32,12 @@
   "replacement_exempt_paths": [
     ".mrliou/authority-lock.json"
   ],
+  "replacement_scope": {
+    "mode": "git_tracked",
+    "exclude_paths": [
+      ".mrliou/authority-lock.json"
+    ]
+  },
   "signature_targets": {
     "markdown": [
       "AGENTS.md"

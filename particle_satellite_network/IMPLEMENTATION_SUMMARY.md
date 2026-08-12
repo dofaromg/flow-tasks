@@ -4,7 +4,7 @@
 ## 📅 Project Information
 
 - **Project Name**: Particle AI Satellite Network (粒子AI未來星鏈平行粒子雲網路)
-- **Repository**: dofaromg/flow-tasks
+- **Repository**: dofaromg/FlowAgent.Runtime
 - **Implementation Date**: 2026-02-07
 - **Status**: ✅ **COMPLETE AND FULLY OPERATIONAL**
 - **Version**: 1.0.0

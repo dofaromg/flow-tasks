@@ -2,7 +2,7 @@
 # origin_signature: MrLiouWord
 #
 # Deploy self-hosted runners across cloud regions.
-# Each runner registers with GitHub and picks up jobs from the flow-tasks repo.
+# Each runner registers with GitHub and picks up jobs from the FlowAgent.Runtime repo.
 #
 # Usage:
 #   GITHUB_TOKEN=<PAT> RUNNER_NAME=<name> RUNNER_LABELS=<labels> docker compose up -d

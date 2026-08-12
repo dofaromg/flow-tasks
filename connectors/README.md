@@ -344,7 +344,7 @@ Solution:
 
 ```bash
 # Set up cron job for health checks
-0 * * * * cd /path/to/flow-tasks && python -m connectors.connector_manager --check-all
+0 * * * * cd /path/to/FlowAgent.Runtime && python -m connectors.connector_manager --check-all
 ```
 
 ## 🤝 Contributing / 貢獻

@@ -120,5 +120,5 @@ The work requested in PR #228 has been completed and is present in the base bran
 
 **Prepared by**: Copilot Agent  
 **Date**: January 17, 2026  
-**Repository**: dofaromg/flow-tasks  
+**Repository**: dofaromg/FlowAgent.Runtime  
 **Branch**: copilot/update-flow-task-228

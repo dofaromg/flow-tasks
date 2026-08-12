@@ -6,8 +6,8 @@
 
 ```bash
 # 克隆 repository
-git clone https://github.com/dofaromg/flow-tasks.git
-cd flow-tasks
+git clone https://github.com/dofaromg/FlowAgent.Runtime.git
+cd FlowAgent.Runtime
 
 # 初始化 GKE 叢集
 bash scripts/oneclick_gke_init.sh
@@ -233,4 +233,4 @@ wget -O- http://mongodb:27017
 - [GKE 控制台](https://console.cloud.google.com/kubernetes/list?project=flowmemorysync)
 - [Artifact Registry](https://console.cloud.google.com/artifacts?project=flowmemorysync)
 - [Cloud Shell](https://console.cloud.google.com/?cloudshell=true&project=flowmemorysync)
-- [GitHub Actions](https://github.com/dofaromg/flow-tasks/actions)
+- [GitHub Actions](https://github.com/dofaromg/FlowAgent.Runtime/actions)

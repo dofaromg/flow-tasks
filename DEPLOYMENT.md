@@ -21,8 +21,8 @@
 
 ```bash
 # 1. 克隆 repository
-git clone https://github.com/dofaromg/flow-tasks.git
-cd flow-tasks
+git clone https://github.com/dofaromg/FlowAgent.Runtime.git
+cd FlowAgent.Runtime
 
 # 2. 執行初始化腳本
 bash scripts/oneclick_gke_init.sh

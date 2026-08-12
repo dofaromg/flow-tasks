@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 #### 2026-01-03 - FlowHub Integration Export Package
-- **Commit**: [`ffebfa0`](https://github.com/dofaromg/flow-tasks/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)
+- **Commit**: [`ffebfa0`](https://github.com/dofaromg/FlowAgent.Runtime/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)
 - Added complete FlowHub integration export package with patches and git bundle
 - Created FLOWHUB_EXPORT_PACKAGE.md documentation (180 lines)
 - Created FLOWHUB_INTEGRATION_GUIDE.md with integration instructions (283 lines)
@@ -51,7 +51,7 @@ For detailed version history and commit references, see:
   - 7 core Swift source files (414 LOC)
   - Complete project documentation (README.md, XCODE_SETUP.md)
   - Implementation summary: [MRLIOUWORD_IMPLEMENTATION_SUMMARY.md](MRLIOUWORD_IMPLEMENTATION_SUMMARY.md)
-  - Reference commit: [c785f4d](https://github.com/dofaromg/flow-tasks/commit/c785f4d33e92a46ce2515da4ab7360f1685ed43b)
+  - Reference commit: [c785f4d](https://github.com/dofaromg/FlowAgent.Runtime/commit/c785f4d33e92a46ce2515da4ab7360f1685ed43b)
 
 ### Documentation
 - Added MrliouWord section to main README.md

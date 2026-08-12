@@ -384,7 +384,7 @@ bash scripts/check_deployment_status.sh
 
 **相關連結**:
 - Pull Request: [待建立]
-- GitHub Actions: https://github.com/dofaromg/flow-tasks/actions
+- GitHub Actions: https://github.com/dofaromg/FlowAgent.Runtime/actions
 - GKE 控制台: https://console.cloud.google.com/kubernetes/list?project=flowmemorysync
 
 **作者**: GitHub Copilot  

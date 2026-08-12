@@ -171,7 +171,7 @@ Tests:
 $ git bundle list-heads flowhub-integration.bundle
 efa908ebd567ed08f816b180ea7e6099ad07c65b HEAD
 
-# Bundle contains branch: copilot/update-flow-tasks
+# Bundle contains branch: copilot/update-FlowAgent.Runtime
 # Commit range: ba6f6a8..efa908e (5 commits)
 ```
 
@@ -269,10 +269,10 @@ The package is complete and ready for integration into the dofaromg/flowhub repo
 
 ```bash
 # In flowhub repository
-git remote add flow-tasks-bundle /path/to/flowhub-integration.bundle
-git fetch flow-tasks-bundle
+git remote add FlowAgent.Runtime-bundle /path/to/flowhub-integration.bundle
+git fetch FlowAgent.Runtime-bundle
 git checkout -b feature/memory-cache-integration
-git merge flow-tasks-bundle/copilot/update-flow-tasks
+git merge FlowAgent.Runtime-bundle/copilot/update-FlowAgent.Runtime
 ```
 
 ---

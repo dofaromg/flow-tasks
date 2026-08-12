@@ -329,7 +329,7 @@ result = consolidator.consolidate_to_target(
 
 ---
 
-**專案**: flow-tasks  
+**專案**: FlowAgent.Runtime  
 **工具**: 記憶種子合併工具 v1.0  
 **作者**: MRLiou / dofaromg  
 **更新**: 2025-12-11

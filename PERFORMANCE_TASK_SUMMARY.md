@@ -1,7 +1,7 @@
 # Performance Optimization Task - Completion Summary
 
 ## Task Overview
-**Objective**: Identify and suggest improvements to slow or inefficient code in the flow-tasks repository.
+**Objective**: Identify and suggest improvements to slow or inefficient code in the FlowAgent.Runtime repository.
 
 **Completion Date**: 2026-02-04  
 **Status**: ✅ **COMPLETE**

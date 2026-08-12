@@ -1,7 +1,7 @@
 # PR #210 Resolution Summary
 
 **Date**: 2026-01-14  
-**PR**: https://github.com/dofaromg/flow-tasks/pull/210  
+**PR**: https://github.com/dofaromg/FlowAgent.Runtime/pull/210  
 **Title**: Add bidirectional file format support to Conversation Extractor  
 **Status**: ✅ **RESOLVED - Changes Already Integrated**
 
@@ -151,7 +151,7 @@ All features work correctly in the current main branch (commit 74a0fa3).
 
 ## References
 
-- **PR #210**: https://github.com/dofaromg/flow-tasks/pull/210
+- **PR #210**: https://github.com/dofaromg/FlowAgent.Runtime/pull/210
 - **Main Branch**: commit 74a0fa3 (current HEAD)
 - **PR Branch**: commit b6bbed2 (grafted)
 - **Initial Implementation**: commit 9f66312

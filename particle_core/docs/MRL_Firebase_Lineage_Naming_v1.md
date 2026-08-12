@@ -5,7 +5,7 @@ Cloudflare Worker、網域與專案 ID 都是定位或部署資料，不會因�
 
 ## 正名原則
 
-1. `dofaromg/flow-tasks` 是原始根倉庫，正式角色名為 `MRL_SourceRoot_v1`。
+1. `dofaromg/FlowAgent.Runtime` 是原始根倉庫，正式角色名為 `MRL_SourceRoot_v1`。
 2. 由母體產出或回收完成的系統一律使用 `MRL_<功能>_v<n>`。
 3. Firebase、Cloudflare、GitHub 等只記在 `provider` 或 `historical_alias`，不得作為產品主權名稱。
 4. 尚未從 Firebase Studio 匯出並完成 SHA-256 比對的項目，只能標記 `pending_recovery`，不得宣稱已回到 DL580。
@@ -15,7 +15,7 @@ Cloudflare Worker、網域與專案 ID 都是定位或部署資料，不會因�
 
 | 現有／歷史標記 | 正式 MRL 名稱 | 角色 | 當下證據狀態 |
 |---|---|---|---|
-| `dofaromg/flow-tasks` | `MRL_SourceRoot_v1` | 原始根倉庫與血統收斂點 | `verified_repository` |
+| `dofaromg/FlowAgent.Runtime` | `MRL_SourceRoot_v1` | 原始根倉庫與血統收斂點 | `verified_repository` |
 | DL580 G9 | `MRL_DL580_MotherNode_v1` | 唯一 canonical mother runtime | `runtime_evidence_required_per_head` |
 | Firebase 衍生後端能力 | `MRL_FireCore_v1_0` | Auth／Store／Vault／Live／Push／Trace | `verified_in_repository_not_deployed` |
 | Firebase Studio workspace | `MRL_CloudStudioBranch_v1` | 雲端工作室分支來源 | `pending_recovery` |

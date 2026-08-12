@@ -16,8 +16,8 @@
 
 #### 1. 克隆倉庫
 ```bash
-git clone https://github.com/dofaromg/flow-tasks.git
-cd flow-tasks
+git clone https://github.com/dofaromg/FlowAgent.Runtime.git
+cd FlowAgent.Runtime
 ```
 
 #### 2. 配置環境變數（可選）
@@ -187,17 +187,17 @@ ports:
 docker volume ls
 
 # 查看 MongoDB 數據卷詳情
-docker volume inspect flow-tasks_mongodb-data
+docker volume inspect FlowAgent.Runtime_mongodb-data
 
 # 備份數據卷
-docker run --rm -v flow-tasks_mongodb-data:/data -v $(pwd):/backup \
+docker run --rm -v FlowAgent.Runtime_mongodb-data:/data -v $(pwd):/backup \
   busybox tar czf /backup/mongodb-backup.tar.gz /data
 ```
 
 ### 恢復數據
 ```bash
 # 從備份恢復
-docker run --rm -v flow-tasks_mongodb-data:/data -v $(pwd):/backup \
+docker run --rm -v FlowAgent.Runtime_mongodb-data:/data -v $(pwd):/backup \
   busybox tar xzf /backup/mongodb-backup.tar.gz -C /
 ```
 
@@ -302,7 +302,7 @@ NODE_ENV=production docker-compose up -d
 docker stats
 
 # 只查看特定容器
-docker stats flow-tasks_nextjs-frontend_1
+docker stats FlowAgent.Runtime_nextjs-frontend_1
 ```
 
 ### 日誌管理
@@ -394,8 +394,8 @@ sudo chmod +x /usr/local/bin/docker-compose
 ### 2. 部署應用
 ```bash
 # 克隆倉庫
-git clone https://github.com/dofaromg/flow-tasks.git
-cd flow-tasks
+git clone https://github.com/dofaromg/FlowAgent.Runtime.git
+cd FlowAgent.Runtime
 
 # 配置環境變數
 cp .env.docker-example .env
@@ -421,7 +421,7 @@ After=docker.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-WorkingDirectory=/path/to/flow-tasks
+WorkingDirectory=/path/to/FlowAgent.Runtime
 ExecStart=/usr/local/bin/docker-compose up -d
 ExecStop=/usr/local/bin/docker-compose down
 
@@ -460,7 +460,7 @@ sudo systemctl start flowagent
 
 ## 🆘 需要幫助？
 
-- [GitHub Issues](https://github.com/dofaromg/flow-tasks/issues)
+- [GitHub Issues](https://github.com/dofaromg/FlowAgent.Runtime/issues)
 - [Docker 社群](https://forums.docker.com)
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/docker-compose)
 

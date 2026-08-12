@@ -215,7 +215,7 @@ gh workflow run codespace-monitoring.yml
 gh codespace code -c miniature-computing-machine
 
 # 2. 安裝監控系統
-cd /path/to/flow-tasks
+cd /path/to/FlowAgent.Runtime
 ./scripts/monitor-codespaces.sh
 
 # 3. 設置提醒
@@ -228,7 +228,7 @@ cat CODESPACE_MANAGEMENT.md
 ---
 
 **創建日期**：2025-12-13  
-**倉庫**：dofaromg/flow-tasks  
+**倉庫**：dofaromg/FlowAgent.Runtime  
 **狀態**：✅ 已實施完整的 Codespace 管理系統
 
 **注意**：此分析和建議是針對您收到的 GitHub Codespace 刪除警告通知而創建的。系統已準備就緒，現在需要您採取行動！

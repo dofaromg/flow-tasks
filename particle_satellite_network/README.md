@@ -45,8 +45,8 @@ Ground         ←→ 終端介面層      ←→ End Users       ←→ Trigger
 
 1. **克隆倉庫**
 ```bash
-git clone https://github.com/dofaromg/flow-tasks.git
-cd flow-tasks
+git clone https://github.com/dofaromg/FlowAgent.Runtime.git
+cd FlowAgent.Runtime
 ```
 
 2. **創建並激活虛擬環境**
@@ -239,7 +239,7 @@ processor = CICDSignalProcessor()
 
 # 處理 Git Push 事件
 commit_data = {
-    "repo": "dofaromg/flow-tasks",
+    "repo": "dofaromg/FlowAgent.Runtime",
     "branch": "main",
     "commit": "abc123"
 }
@@ -304,7 +304,7 @@ MIT License - 詳見 [LICENSE](../LICENSE) 文件
 
 **MRLiou (劉先生)**
 - GitHub: [@dofaromg](https://github.com/dofaromg)
-- 項目: [flow-tasks](https://github.com/dofaromg/flow-tasks)
+- 項目: [FlowAgent.Runtime](https://github.com/dofaromg/FlowAgent.Runtime)
 
 ## 🙏 致謝
 

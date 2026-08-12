@@ -1,4 +1,4 @@
-# Test script for particle language integration with flow-tasks
+# Test script for particle language integration with FlowAgent.Runtime
 import os
 import sys
 import json
@@ -7,11 +7,11 @@ import pytest
 
 
 def test_task_integration():
-    """Test integration with flow-tasks system"""
+    """Test integration with FlowAgent.Runtime system"""
     print("=== Flow-Tasks Integration Test ===")
     
     # Check if we're in the right location
-    assert os.path.exists("tasks"), "Not in flow-tasks root directory"
+    assert os.path.exists("tasks"), "Not in FlowAgent.Runtime root directory"
         
     # Check task definition
     task_file = "tasks/2025-07-31_particle-language-core.yaml"
@@ -50,7 +50,7 @@ def test_task_integration():
     print("✓ All integration tests passed!")
 
 def create_task_result():
-    """Create a task result following flow-tasks pattern"""
+    """Create a task result following FlowAgent.Runtime pattern"""
     
     # Ensure results directory exists
     os.makedirs("tasks/results", exist_ok=True)

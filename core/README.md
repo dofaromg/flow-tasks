@@ -33,7 +33,7 @@ This project adopts a multi-language architecture with clear division of respons
 ### 目錄結構 / Directory Structure
 
 ```
-flow-tasks/
+FlowAgent.Runtime/
 ├── core/                    # 核心模組 (本目錄)
 │   ├── __init__.py         # Python 包初始化
 │   ├── memory_system.py    # 記憶系統實現
@@ -110,7 +110,7 @@ particle = dictionary.get_particle("FX.01")  # 取得「記住」粒子
 
 ### 關鍵儲存庫連結 / Key Repository Links
 
-- **主儲存庫 / Main Repository**: [https://github.com/dofaromg/flow-tasks](https://github.com/dofaromg/flow-tasks)
+- **主儲存庫 / Main Repository**: [https://github.com/dofaromg/FlowAgent.Runtime](https://github.com/dofaromg/FlowAgent.Runtime)
 - **粒子語言規格 / Particle Language Spec**: [`particle_core/language_spec/`](../particle_core/language_spec/)
 - **系統架構文檔 / System Architecture**: [`ARCHITECTURE.md`](../ARCHITECTURE.md)
 - **部署指南 / Deployment Guide**: [`DEPLOYMENT.md`](../DEPLOYMENT.md)
@@ -164,7 +164,7 @@ print(f"粒子: {particle.human_view}")  # 輸出: 粒子: 記住
 
 ```bash
 # 執行核心測試
-cd /home/runner/work/flow-tasks/flow-tasks
+cd /home/runner/work/FlowAgent.Runtime/FlowAgent.Runtime
 python -m pytest tests/ -v
 
 # 執行粒子核心測試

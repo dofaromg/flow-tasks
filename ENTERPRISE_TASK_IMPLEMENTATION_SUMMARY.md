@@ -279,7 +279,7 @@ while True:
 ## 📁 文件結構 / File Structure
 
 ```
-flow-tasks/
+FlowAgent.Runtime/
 ├── enterprise_task_manager.py       # 主實現 (21,564 字符)
 ├── test_enterprise_task_manager.py  # 測試套件 (15,140 字符)
 ├── ENTERPRISE_TASK_MANAGER_GUIDE.md # 用戶指南 (9,262 字符)

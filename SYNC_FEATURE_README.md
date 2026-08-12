@@ -292,7 +292,7 @@ Issues and Pull Requests are welcome!
 
 - 📖 查看[完整文檔](docs/EXTERNAL_REPO_SYNC.md)
 - 💡 查看[範例集](docs/REPO_SYNC_EXAMPLES.md)
-- 🐛 [提交 Issue](https://github.com/dofaromg/flow-tasks/issues)
+- 🐛 [提交 Issue](https://github.com/dofaromg/FlowAgent.Runtime/issues)
 - 💬 在 PR 中留言討論
 
 ## 📄 授權 / License

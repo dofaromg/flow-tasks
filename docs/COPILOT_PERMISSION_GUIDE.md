@@ -142,7 +142,7 @@ python cli.py --config config/dev-mode.yaml
 2. 或前往 https://github.com/{owner}/{repo}/settings/copilot
 3. 啟用「Allow Copilot to operate on this repository」
 
-### 對於本倉庫 (flow-tasks)
+### 對於本倉庫 (FlowAgent.Runtime)
 
 本倉庫已配置 Copilot 相關設定：
 - `.github/copilot-instructions.md` - Copilot 專用指令

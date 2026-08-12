@@ -1,6 +1,6 @@
 # Task Completion Summary: PR #196 Validation
 
-**Issue**: https://github.com/dofaromg/flow-tasks/pull/196  
+**Issue**: https://github.com/dofaromg/FlowAgent.Runtime/pull/196  
 **Task**: Validate the Wire-Memory Integration implementation  
 **Status**: ✅ **COMPLETED SUCCESSFULLY**  
 **Date**: 2026-01-02

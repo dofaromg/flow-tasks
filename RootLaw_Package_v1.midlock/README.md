@@ -241,7 +241,7 @@ Every 90 days (next: 2026-04-26):
 
 ## Additional Resources
 
-- **Main Repository**: [dofaromg/flow-tasks](https://github.com/dofaromg/flow-tasks)
+- **Main Repository**: [dofaromg/FlowAgent.Runtime](https://github.com/dofaromg/FlowAgent.Runtime)
 - **Particle Core Docs**: `particle_core/docs/`
 - **Architecture Guide**: `ARCHITECTURE.md`
 - **Contributing Guide**: `BRANCH_INTEGRATION_GUIDE.md`
@@ -259,7 +259,7 @@ Every 90 days (next: 2026-04-26):
   - `rootlaw-waiver`: Waiver requests
   - `evidence-missing`: Missing evidence
   - `evidence-validation`: Evidence discrepancies
-- **Maintainer**: Repository owner (dofaromg/flow-tasks)
+- **Maintainer**: Repository owner (dofaromg/FlowAgent.Runtime)
 - **Emergency**: Create issue with `critical` label
 
 ---

@@ -15,7 +15,7 @@ setup(
     description="MRLiou Structural Earth Runtime - 中心不變的骨架定義與壓力場映射",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/dofaromg/flow-tasks",
+    url="https://github.com/dofaromg/FlowAgent.Runtime",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",

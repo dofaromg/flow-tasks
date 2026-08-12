@@ -90,8 +90,8 @@
 
 ```bash
 # 克隆倉庫
-git clone https://github.com/dofaromg/flow-tasks.git
-cd flow-tasks
+git clone https://github.com/dofaromg/FlowAgent.Runtime.git
+cd FlowAgent.Runtime
 
 # 運行部署腳本
 sudo bash scripts/deploy_ultimate.sh
@@ -181,7 +181,7 @@ python tests/performance_benchmark.py
 ## 📦 項目結構
 
 ```
-flow-tasks/
+FlowAgent.Runtime/
 ├── ultimate_engines/        # AI引擎模組
 │   ├── digital_human_ultra.py
 │   ├── voice_clone_unlimited.py
@@ -253,7 +253,7 @@ MIT License - 詳見 [LICENSE](LICENSE)
 
 ## 💬 聯繫方式
 
-- GitHub Issues: [提交問題](https://github.com/dofaromg/flow-tasks/issues)
+- GitHub Issues: [提交問題](https://github.com/dofaromg/FlowAgent.Runtime/issues)
 - Email: z814241@gmail.com
 
 ---

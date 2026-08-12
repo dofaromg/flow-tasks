@@ -382,7 +382,7 @@ kubectl rollout undo deployment/nextjs-frontend -n flowagent --to-revision=N
 
 ### 獲取幫助
 
-- GitHub Issues: [github.com/dofaromg/flow-tasks/issues](https://github.com/dofaromg/flow-tasks/issues)
+- GitHub Issues: [github.com/dofaromg/FlowAgent.Runtime/issues](https://github.com/dofaromg/FlowAgent.Runtime/issues)
 - GKE 文檔: [cloud.google.com/kubernetes-engine/docs](https://cloud.google.com/kubernetes-engine/docs)
 - Next.js 文檔: [nextjs.org/docs](https://nextjs.org/docs)
 

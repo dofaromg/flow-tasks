@@ -5,7 +5,7 @@
 
 ## 版本歷史 / Version History
 
-**Commit**: [`ffebfa0`](https://github.com/dofaromg/flow-tasks/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)  
+**Commit**: [`ffebfa0`](https://github.com/dofaromg/FlowAgent.Runtime/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)  
 **Date**: 2026-01-03 05:44:29 UTC  
 **Author**: copilot-swe-agent[bot]  
 **Message**: Add FlowHub integration export package (patches and bundle)  
@@ -57,13 +57,13 @@ git bundle list-heads /tmp/flowhub-integration.bundle
 
 ```bash
 # 建立追蹤遠端
-git remote add flow-tasks-bundle /tmp/flowhub-integration.bundle
+git remote add FlowAgent.Runtime-bundle /tmp/flowhub-integration.bundle
 
 # 拉取提交
-git fetch flow-tasks-bundle
+git fetch FlowAgent.Runtime-bundle
 
 # 查看可用的分支/提交
-git log --oneline flow-tasks-bundle/copilot/update-flow-tasks -10
+git log --oneline FlowAgent.Runtime-bundle/copilot/update-FlowAgent.Runtime -10
 ```
 
 ### 步驟 5: 合併或 Cherry-pick
@@ -74,7 +74,7 @@ git log --oneline flow-tasks-bundle/copilot/update-flow-tasks -10
 git checkout -b feature/memory-cache-integration
 
 # 合併提交
-git merge flow-tasks-bundle/copilot/update-flow-tasks
+git merge FlowAgent.Runtime-bundle/copilot/update-FlowAgent.Runtime
 
 # 推送到 flowhub
 git push origin feature/memory-cache-integration
@@ -86,7 +86,7 @@ git push origin feature/memory-cache-integration
 git checkout -b feature/memory-cache-integration
 
 # 查看提交列表
-git log --oneline flow-tasks-bundle/copilot/update-flow-tasks
+git log --oneline FlowAgent.Runtime-bundle/copilot/update-FlowAgent.Runtime
 
 # Cherry-pick 需要的提交（替換成實際的 commit hash）
 git cherry-pick <commit-hash>
@@ -150,23 +150,23 @@ git push origin feature/memory-cache-integration
 
 ### 新增的檔案
 
-從 `flow-tasks` 複製到 `flowhub`:
+從 `FlowAgent.Runtime` 複製到 `flowhub`:
 
 ```bash
 # Memory Cache System
-cp flow-tasks/particle_core/src/memory/memory_cache_disk.py \
+cp FlowAgent.Runtime/particle_core/src/memory/memory_cache_disk.py \
    flowhub/particle_core/src/memory/
 
-cp flow-tasks/particle_core/tests/test_memory_cache_disk.py \
+cp FlowAgent.Runtime/particle_core/tests/test_memory_cache_disk.py \
    flowhub/particle_core/tests/
 
-cp flow-tasks/particle_core/docs/memory_cache_disk_mapping.md \
+cp FlowAgent.Runtime/particle_core/docs/memory_cache_disk_mapping.md \
    flowhub/particle_core/docs/
 
 # Summary Documents
-cp flow-tasks/VALIDATION_SUMMARY_PR196.md flowhub/
-cp flow-tasks/TASK_COMPLETION_SUMMARY.md flowhub/
-cp flow-tasks/MEMORY_CACHE_IMPLEMENTATION_SUMMARY.md flowhub/
+cp FlowAgent.Runtime/VALIDATION_SUMMARY_PR196.md flowhub/
+cp FlowAgent.Runtime/TASK_COMPLETION_SUMMARY.md flowhub/
+cp FlowAgent.Runtime/MEMORY_CACHE_IMPLEMENTATION_SUMMARY.md flowhub/
 ```
 
 ### 修改的檔案
@@ -286,6 +286,6 @@ pip install PyYAML  # 用於 config.yaml 解析 (可選)
 ---
 
 **生成日期**: 2026-01-03  
-**來源儲存庫**: dofaromg/flow-tasks  
+**來源儲存庫**: dofaromg/FlowAgent.Runtime  
 **目標儲存庫**: dofaromg/flowhub  
 **提交範圍**: ba6f6a8..efa908e

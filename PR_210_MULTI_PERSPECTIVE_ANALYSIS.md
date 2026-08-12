@@ -2,7 +2,7 @@
 # PR #210 Multi-Perspective Comparative Analysis
 
 **日期 Date**: 2026-01-14  
-**PR**: https://github.com/dofaromg/flow-tasks/pull/210  
+**PR**: https://github.com/dofaromg/FlowAgent.Runtime/pull/210  
 **分析目的 Analysis Purpose**: 利用 grafted commit 衝突，從不同視角驗證功能完整性
 
 ---

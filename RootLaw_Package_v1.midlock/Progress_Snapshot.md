@@ -175,7 +175,7 @@ Tracks task progress, anchors, and archived milestones for the RootLaw Package v
 
 ## Contact and Maintenance
 
-**Package Maintainer**: Repository owner (dofaromg/flow-tasks)  
+**Package Maintainer**: Repository owner (dofaromg/FlowAgent.Runtime)  
 **Questions/Issues**: GitHub Issues with label `rootlaw-package`  
 **Contribution Process**: Pull requests following E-3 progressive enforcement  
 **Emergency Contact**: Create GitHub issue with `critical` label

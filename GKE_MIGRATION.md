@@ -327,7 +327,7 @@ kubectl rollout restart deployment/nextjs-frontend -n flowagent
 
 - [GKE 控制台](https://console.cloud.google.com/kubernetes/list?project=flowmemorysync)
 - [Artifact Registry](https://console.cloud.google.com/artifacts?project=flowmemorysync)
-- [GitHub Actions](https://github.com/dofaromg/flow-tasks/actions)
+- [GitHub Actions](https://github.com/dofaromg/FlowAgent.Runtime/actions)
 
 ## 🆘 故障排除
 
@@ -391,6 +391,6 @@ gcloud compute forwarding-rules list
 
 ## 📞 需要幫助？
 
-- GitHub Issues: [github.com/dofaromg/flow-tasks/issues](https://github.com/dofaromg/flow-tasks/issues)
+- GitHub Issues: [github.com/dofaromg/FlowAgent.Runtime/issues](https://github.com/dofaromg/FlowAgent.Runtime/issues)
 - GKE 文檔: [cloud.google.com/kubernetes-engine/docs](https://cloud.google.com/kubernetes-engine/docs)
 - Next.js 文檔: [nextjs.org/docs](https://nextjs.org/docs)

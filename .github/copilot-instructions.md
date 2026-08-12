@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions for flow-tasks
+# GitHub Copilot Instructions for FlowAgent.Runtime
 
 ## Project Overview
 
@@ -35,7 +35,7 @@ This is the **FlowAgent GKE Starter** repository, featuring a complete GitOps + 
 ## Project Structure
 
 ```
-flow-tasks/
+FlowAgent.Runtime/
 ├── particle_core/          # Particle Language Core System
 │   ├── src/               # Core source modules
 │   ├── config/            # Configuration files
@@ -549,7 +549,7 @@ kubectl apply --dry-run=client -k cluster/overlays/prod/
 
 ### Path Issues
 - Use absolute paths when in doubt
-- For particle core: `/home/runner/work/flow-tasks/flow-tasks/particle_core/`
+- For particle core: `/home/runner/work/FlowAgent.Runtime/FlowAgent.Runtime/particle_core/`
 - Use `os.path.join()` or `pathlib.Path()` for cross-platform compatibility
 
 ## Git and Version Control

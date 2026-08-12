@@ -42,6 +42,6 @@
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "mounts": [
-    "source=flow-tasks-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+    "source=FlowAgent.Runtime-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
   ]
 }

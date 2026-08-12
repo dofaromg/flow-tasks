@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-Successfully identified and fixed **5 critical and high-priority performance issues** across the flow-tasks repository, achieving an overall **2-3x performance improvement** for common operations. All changes are backward compatible, thoroughly tested, and documented.
+Successfully identified and fixed **5 critical and high-priority performance issues** across the FlowAgent.Runtime repository, achieving an overall **2-3x performance improvement** for common operations. All changes are backward compatible, thoroughly tested, and documented.
 
 ---
 
@@ -167,7 +167,7 @@ else:
 
 ## Conclusion
 
-This performance optimization effort successfully achieved its goal of identifying and fixing slow or inefficient code in the flow-tasks repository. The implemented changes provide significant performance improvements while maintaining code quality, backward compatibility, and system reliability.
+This performance optimization effort successfully achieved its goal of identifying and fixing slow or inefficient code in the FlowAgent.Runtime repository. The implemented changes provide significant performance improvements while maintaining code quality, backward compatibility, and system reliability.
 
 All optimizations have been thoroughly tested, reviewed, and documented. The codebase is now more efficient, maintainable, and ready for production use.
 

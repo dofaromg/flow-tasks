@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document summarizes the performance optimizations implemented to address slow and inefficient code patterns in the flow-tasks repository.
+This document summarizes the performance optimizations implemented to address slow and inefficient code patterns in the FlowAgent.Runtime repository.
 
 ## Optimization Results
 

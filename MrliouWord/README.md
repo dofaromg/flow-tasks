@@ -64,8 +64,8 @@ MrliouWord 是一款結合 LiDAR 精密掃描和 AI 快照建模的智慧3D掃�
 ### 1. 環境設置
 ```bash
 # 克隆專案
-git clone https://github.com/dofaromg/flow-tasks.git
-cd flow-tasks/MrliouWord
+git clone https://github.com/dofaromg/FlowAgent.Runtime.git
+cd FlowAgent.Runtime/MrliouWord
 
 # 參閱 XCODE_SETUP.md 創建 Xcode 項目
 # 或使用 Xcode 的 "New Project" 功能並添加現有源文件

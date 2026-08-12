@@ -1,7 +1,7 @@
 task_id: flowos-neural-link
 language: typescript
 description: FlowOS Edge Worker - Neural Link & Gate System Implementation
-commit_reference: https://github.com/dofaromg/flow-tasks/commit/b6725bd4e5b41231a0eb47cc9b14fd058da9a890
+commit_reference: https://github.com/dofaromg/FlowAgent.Runtime/commit/b6725bd4e5b41231a0eb47cc9b14fd058da9a890
 target_directory: flowos/src/
 components:
   - core/neural_link.ts         # Neural Link & Particle Neural Link classes

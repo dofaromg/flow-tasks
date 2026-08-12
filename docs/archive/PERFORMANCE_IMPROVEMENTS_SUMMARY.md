@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-This document provides a comprehensive summary of performance improvements in the flow-tasks repository. All **critical** and **high-priority** optimizations have been verified as implemented, and comprehensive performance monitoring tools have been added.
+This document provides a comprehensive summary of performance improvements in the FlowAgent.Runtime repository. All **critical** and **high-priority** optimizations have been verified as implemented, and comprehensive performance monitoring tools have been added.
 
 ### Key Achievements
 

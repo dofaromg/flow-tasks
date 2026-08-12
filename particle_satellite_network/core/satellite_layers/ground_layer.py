@@ -353,7 +353,7 @@ if __name__ == "__main__":
         # 發送 CI/CD 觸發事件
         cicd_event = {
             "type": "git_push",
-            "repo": "dofaromg/flow-tasks",
+            "repo": "dofaromg/FlowAgent.Runtime",
             "branch": "main",
             "commit": "abc123"
         }

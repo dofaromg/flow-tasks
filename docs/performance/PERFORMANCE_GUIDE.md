@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides practical guidelines and code examples for writing performant code in the flow-tasks repository.
+This document provides practical guidelines and code examples for writing performant code in the FlowAgent.Runtime repository.
 
 ---
 

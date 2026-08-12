@@ -242,7 +242,7 @@ python create_sample_seeds.py --help
 
 ---
 
-**專案**: flow-tasks  
+**專案**: FlowAgent.Runtime  
 **功能**: 記憶種子合併工具  
 **版本**: v1.0  
 **日期**: 2025-12-11  

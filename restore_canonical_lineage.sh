@@ -19,6 +19,7 @@ python3 - "$ROOT_DIR" "$CONFIG_PATH" "$MODE" <<'PY'
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -31,6 +32,7 @@ signature = cfg["origin_signature"]
 mappings = cfg.get("canonical_mappings", [])
 governed_paths = cfg.get("governed_paths", [])
 replacement_exempt = set(cfg.get("replacement_exempt_paths", []))
+replacement_scope = cfg.get("replacement_scope", {})
 targets = cfg.get("signature_targets", {})
 
 md_targets = set(targets.get("markdown", []))
@@ -42,6 +44,20 @@ changed_files: list[str] = []
 required_fixes: list[str] = []
 
 
+def git(*args: str, allow_one: bool = False) -> str:
+    proc = subprocess.run(
+        ["git", *args],
+        cwd=root,
+        text=True,
+        capture_output=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    if proc.returncode and not (allow_one and proc.returncode == 1):
+        raise SystemExit(proc.stderr.strip() or f"git command failed: {' '.join(args)}")
+    return proc.stdout
+
+
 def apply_replacements(content: str) -> str:
     result = content
     for item in mappings:
@@ -50,6 +66,26 @@ def apply_replacements(content: str) -> str:
         if isinstance(src, str) and src and isinstance(dst, str):
             result = result.replace(src, dst)
     return result
+
+
+def list_replacement_targets() -> list[str]:
+    mode = replacement_scope.get("mode", "git_tracked")
+    if mode != "git_tracked":
+        raise SystemExit(f"Unsupported replacement_scope.mode: {mode}")
+
+    excluded = set(replacement_scope.get("exclude_paths", []))
+    matched: set[str] = set()
+    for item in mappings:
+        src = item.get("from")
+        if not isinstance(src, str) or not src:
+            continue
+        out = git("grep", "-I", "-l", "-F", "-e", src, "--", ".", allow_one=True)
+        for line in out.splitlines():
+            path = line.strip()
+            if not path or path in excluded:
+                continue
+            matched.add(path)
+    return sorted(matched)
 
 
 def ensure_markdown_signature(content: str) -> str:
@@ -89,7 +125,10 @@ def ensure_json_signature(path: Path, content: str) -> str:
     return json.dumps(reordered, ensure_ascii=False, indent=2) + "\n"
 
 
-for rel in governed_paths:
+replacement_targets = list_replacement_targets()
+process_paths = sorted(set(governed_paths) | set(replacement_targets))
+
+for rel in process_paths:
     path = root / rel
     if not path.exists():
         missing_files.append(rel)
@@ -97,7 +136,10 @@ for rel in governed_paths:
     if path.is_dir():
         continue
 
-    current = path.read_text(encoding="utf-8")
+    try:
+        current = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        continue
     updated = current if rel in replacement_exempt else apply_replacements(current)
 
     if rel in md_targets:
@@ -115,9 +157,10 @@ for rel in governed_paths:
             path.write_text(updated, encoding="utf-8")
             changed_files.append(rel)
 
-if missing_files:
+required_missing = [item for item in missing_files if item in governed_paths]
+if required_missing:
     print("Missing governed files:", file=sys.stderr)
-    for item in missing_files:
+    for item in required_missing:
         print(f"  - {item}", file=sys.stderr)
     raise SystemExit(1)
 

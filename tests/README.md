@@ -260,7 +260,7 @@ If tests fail, check:
 
 2. 路徑是否正確 / Paths are correct
    ```bash
-   cd /home/runner/work/flow-tasks/flow-tasks
+   cd /home/runner/work/FlowAgent.Runtime/FlowAgent.Runtime
    pytest tests/
    ```
 
@@ -276,7 +276,7 @@ If you encounter import errors:
 
 ```bash
 # 確保在專案根目錄 / Ensure in project root
-export PYTHONPATH=/home/runner/work/flow-tasks/flow-tasks:$PYTHONPATH
+export PYTHONPATH=/home/runner/work/FlowAgent.Runtime/FlowAgent.Runtime:$PYTHONPATH
 ```
 
 ## 相關文檔 / Related Documentation

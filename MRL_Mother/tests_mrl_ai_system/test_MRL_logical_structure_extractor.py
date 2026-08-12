@@ -1,5 +1,5 @@
 """
-test_MRL_logical_structure_extractor.py — flow-tasks 回收對齊版驗收
+test_MRL_logical_structure_extractor.py — FlowAgent.Runtime 回收對齊版驗收
 origin_signature: MrLiouWord
 product: MRL_AI_SYSTEM
 """

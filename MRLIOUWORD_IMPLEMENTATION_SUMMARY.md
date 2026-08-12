@@ -2,7 +2,7 @@
 # MrliouWord iOS 3D掃描器 - 實作摘要
 
 **Date**: 2026-01-12  
-**Reference Commit**: [c785f4d](https://github.com/dofaromg/flow-tasks/commit/c785f4d33e92a46ce2515da4ab7360f1685ed43b)  
+**Reference Commit**: [c785f4d](https://github.com/dofaromg/FlowAgent.Runtime/commit/c785f4d33e92a46ce2515da4ab7360f1685ed43b)  
 **Status**: ✅ Initial Implementation Complete
 
 ---
@@ -230,12 +230,12 @@ MrliouWord/
 
 ---
 
-## Integration with flow-tasks Repository | 與 flow-tasks 儲存庫的整合
+## Integration with FlowAgent.Runtime Repository | 與 FlowAgent.Runtime 儲存庫的整合
 
 ### Repository Location | 儲存庫位置
-The MrliouWord project is located at `/MrliouWord/` in the flow-tasks repository, maintaining its independence while benefiting from the shared infrastructure.
+The MrliouWord project is located at `/MrliouWord/` in the FlowAgent.Runtime repository, maintaining its independence while benefiting from the shared infrastructure.
 
-MrliouWord 專案位於 flow-tasks 儲存庫的 `/MrliouWord/` 目錄中，保持其獨立性的同時受益於共享基礎設施。
+MrliouWord 專案位於 FlowAgent.Runtime 儲存庫的 `/MrliouWord/` 目錄中，保持其獨立性的同時受益於共享基礎設施。
 
 ### Shared Resources | 共享資源
 - Git workflows and CI/CD pipelines
@@ -292,8 +292,8 @@ MrliouWord 專案位於 flow-tasks 儲存庫的 `/MrliouWord/` 目錄中，保�
 ### Setup Instructions | 設置說明
 ```bash
 # Clone the repository
-git clone https://github.com/dofaromg/flow-tasks.git
-cd flow-tasks/MrliouWord
+git clone https://github.com/dofaromg/FlowAgent.Runtime.git
+cd FlowAgent.Runtime/MrliouWord
 
 # Refer to XCODE_SETUP.md for detailed Xcode project creation
 # Or use Xcode's "New Project" feature and add existing source files
@@ -328,10 +328,10 @@ cd flow-tasks/MrliouWord
 ### Documentation | 文檔
 - [Project README](MrliouWord/README.md) - Complete project documentation
 - [Xcode Setup Guide](MrliouWord/XCODE_SETUP.md) - Detailed setup instructions
-- [flow-tasks Main README](README.md) - Repository overview
+- [FlowAgent.Runtime Main README](README.md) - Repository overview
 
 ### Reference Commit | 參考提交
-- Initial implementation: [c785f4d](https://github.com/dofaromg/flow-tasks/commit/c785f4d33e92a46ce2515da4ab7360f1685ed43b)
+- Initial implementation: [c785f4d](https://github.com/dofaromg/FlowAgent.Runtime/commit/c785f4d33e92a46ce2515da4ab7360f1685ed43b)
 
 ### External Links | 外部連結
 - [SwiftUI Documentation](https://developer.apple.com/documentation/swiftui/)
@@ -342,9 +342,9 @@ cd flow-tasks/MrliouWord
 
 ## Summary | 總結
 
-The MrliouWord iOS 3D scanner project represents a significant addition to the flow-tasks repository, combining cutting-edge 3D scanning technology with an innovative three-mode user experience design. The initial implementation provides a solid foundation with 7 core Swift source files totaling 414 lines of code, organized in a clean, modular architecture that supports future expansion and feature development.
+The MrliouWord iOS 3D scanner project represents a significant addition to the FlowAgent.Runtime repository, combining cutting-edge 3D scanning technology with an innovative three-mode user experience design. The initial implementation provides a solid foundation with 7 core Swift source files totaling 414 lines of code, organized in a clean, modular architecture that supports future expansion and feature development.
 
-MrliouWord iOS 3D掃描器專案為 flow-tasks 儲存庫增添了重要內容，結合最先進的3D掃描技術與創新的三模式用戶體驗設計。初始實作提供了堅實的基礎，包含7個核心 Swift 源碼文件，共414行代碼，採用清晰的模組化架構，支援未來的擴展和功能開發。
+MrliouWord iOS 3D掃描器專案為 FlowAgent.Runtime 儲存庫增添了重要內容，結合最先進的3D掃描技術與創新的三模式用戶體驗設計。初始實作提供了堅實的基礎，包含7個核心 Swift 源碼文件，共414行代碼，採用清晰的模組化架構，支援未來的擴展和功能開發。
 
 The project's vision to become the "TikTok of 3D Content Creation" is supported by its focus on ease of use (Easy mode), learning and exploration (Explore mode), and professional capabilities (Professional mode), making it accessible to users of all skill levels.
 

@@ -235,7 +235,7 @@ if __name__ == "__main__":
         
         # 模擬 Git Push
         commit_data = {
-            "repo": "dofaromg/flow-tasks",
+            "repo": "dofaromg/FlowAgent.Runtime",
             "branch": "main",
             "commit": "abc123def456",
             "author": "dofaromg"

@@ -421,7 +421,7 @@ password: "your-password-with-special-chars"
 
 ### 緊急聯絡 / Emergency Contact
 
-- GitHub Issues: https://github.com/dofaromg/flow-tasks/issues
+- GitHub Issues: https://github.com/dofaromg/FlowAgent.Runtime/issues
 - 安全問題 / Security Issues: 使用 GitHub Security Advisory
 
 ---

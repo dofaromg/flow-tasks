@@ -22,7 +22,7 @@ origin_signature: MrLiouWord
 
 1. 原始 `.flpkg` 封包（`FlowAgent.TotalCore.Unity.v1.flpkg` 等）僅存在於
    ChatGPT 對話期下載檔，未曾進入任何 git repo。
-2. `dofaromg/flow-tasks` 保存了運行證據：
+2. `dofaromg/FlowAgent.Runtime` 保存了運行證據：
    `FlowAgent_Unity_v3_高維模擬檢查報告.txt` 記錄
    `⋄fx.invoke.Programmer.CoreArchitect` 觸發正常。
 3. 三份人類可讀文件由建立者（Mr.liou）於 2026-07-05 提供，
@@ -40,10 +40,10 @@ origin_signature: MrLiouWord
 | 比對項 | 結果 |
 |--------|------|
 | FlowPet_Codex_CloudApp 系列 zip（兩輪共 8 份上傳） | 內容完全相同（MD5 逐檔一致）：同一份 FlowPet FastAPI 寵物 app 的重複打包；與 CodePartner 血緣無直接關聯，未納入封存 |
-| MrLiou.MetaCode_Environment_v0.6_filled.bundle.zip（創建者上傳） vs `dofaromg/flow-tasks` `flow_code/` 內同名封包 | **逐位元一致** — 完整性驗證通過，據此納入本回收包 |
+| MrLiou.MetaCode_Environment_v0.6_filled.bundle.zip（創建者上傳） vs `dofaromg/FlowAgent.Runtime` `flow_code/` 內同名封包 | **逐位元一致** — 完整性驗證通過，據此納入本回收包 |
 | MetaCode 環境 `principle` 欄位 | 「怎麼過去，就怎麼回來」— 與本 repo 母體公式之設計原則完全一致，確認同源血緣 |
 | MetaCode 環境五粒子（⋄fx.def.core 等） | 詞性（noun/verb/adj/adv/conj）對應語場語言大綱之「基礎語法五大成分」，互為印證 |
-| CODE_OF_CONDUCT.md（創建者上傳） vs flow-tasks `flow_code/CODE_OF_CONDUCT.md` | 僅一行差異：上傳版為 Contributor Covenant 上游原版（含上游維護者信箱）；flow-tasks 版為創建者改編版（執行信箱已改為創建者信箱）。屬社群規範文件，非人格血緣，未納入封存 |
+| CODE_OF_CONDUCT.md（創建者上傳） vs FlowAgent.Runtime `flow_code/CODE_OF_CONDUCT.md` | 僅一行差異：上傳版為 Contributor Covenant 上游原版（含上游維護者信箱）；FlowAgent.Runtime 版為創建者改編版（執行信箱已改為創建者信箱）。屬社群規範文件，非人格血緣，未納入封存 |
 | liou.builder.seed.persona.sync.json（創建者上傳，第三輪） vs MetaCode modules_index 登錄 | **SHA256 完全一致**（`5f380e0f4274bc00…`，324 bytes）— 完整性驗證通過，原文封存並登錄進 persona lineage |
 | 五件種子模組（創建者上傳，第四輪） vs MetaCode modules_index 登錄 | **五件全數 SHA256 完全一致**（FlowSeed.Total `a7ea2630…`／程序員演算法 `33c0e07e…`／工程師建議版 `d763762d…`／SeedOrigin `5723859e…`／系統白皮書 `34708ddc…`），大小亦逐一吻合 — 原文封存於 `seed_modules/`。modules_index 高價值血親至此全數回收 |
 

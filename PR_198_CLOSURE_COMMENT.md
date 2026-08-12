@@ -72,13 +72,13 @@ All features are tested and passing:
 
 ## Why This Happened
 
-The PR branch `copilot/update-flow-tasks` (commit `acc2da9`) was created with a grafted git history that has no common ancestor with current main. While this PR was being prepared, the same features were merged to main through other commits:
+The PR branch `copilot/update-FlowAgent.Runtime` (commit `acc2da9`) was created with a grafted git history that has no common ancestor with current main. While this PR was being prepared, the same features were merged to main through other commits:
 
 ```bash
-$ git merge-base origin/main origin/copilot/update-flow-tasks
+$ git merge-base origin/main origin/copilot/update-FlowAgent.Runtime
 # (no common ancestor found)
 
-$ git diff --stat origin/main origin/copilot/update-flow-tasks
+$ git diff --stat origin/main origin/copilot/update-FlowAgent.Runtime
 74 files changed, 504 insertions(+), 25,599 deletions(-)
 ```
 

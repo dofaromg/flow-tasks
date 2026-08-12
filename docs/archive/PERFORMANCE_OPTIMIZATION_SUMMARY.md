@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document summarizes all performance optimizations implemented in the flow-tasks repository, along with verification and best practices for maintaining high performance.
+This document summarizes all performance optimizations implemented in the FlowAgent.Runtime repository, along with verification and best practices for maintaining high performance.
 
 **Last Updated**: 2025-12-13  
 **Status**: ✅ All Critical and High Priority Optimizations Implemented

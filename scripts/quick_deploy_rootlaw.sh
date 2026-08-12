@@ -136,7 +136,7 @@ case $choice in
             less ROOTLAW_DEPLOYMENT_GUIDE.md
         else
             echo -e "${YELLOW}使用說明檔案不存在${NC}"
-            echo "請參閱: https://github.com/dofaromg/flow-tasks/blob/main/ROOTLAW_DEPLOYMENT_GUIDE.md"
+            echo "請參閱: https://github.com/dofaromg/FlowAgent.Runtime/blob/main/ROOTLAW_DEPLOYMENT_GUIDE.md"
         fi
         ;;
     

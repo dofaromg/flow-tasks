@@ -15,7 +15,7 @@ The repository uses a shallow clone with grafted history. To ensure accurate ana
 - Located both reference commits in the git history:
   - **Before PR #204**: `1750739` (Verify PR #217 merge completion)
   - **After PR #204**: `9b1411e` (Implement context management strategies)
-  - **Current main**: `1139b9a` (Merge branch 'copilot/update-flow-tasks-documentation-again')
+  - **Current main**: `1139b9a` (Merge branch 'copilot/update-FlowAgent.Runtime-documentation-again')
 
 ### 2. File Comparison Process
 

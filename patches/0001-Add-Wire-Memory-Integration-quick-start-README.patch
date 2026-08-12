@@ -45,7 +45,7 @@ index 0000000..46d2388
 +### 2. Run Python Integration Tests
 +
 +```bash
-+cd /path/to/flow-tasks
++cd /path/to/FlowAgent.Runtime
 +python particle_core/tests/test_wire_memory_integration.py
 +```
 +
@@ -165,7 +165,7 @@ index 0000000..46d2388
 +## Support
 +
 +- Documentation: `particle_core/docs/wire_memory_integration.md`
-+- GitHub: dofaromg/flow-tasks
++- GitHub: dofaromg/FlowAgent.Runtime
 +- Issues: GitHub Issues
 +
 +---

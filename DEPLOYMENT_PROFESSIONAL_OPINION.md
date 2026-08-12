@@ -676,7 +676,7 @@ With security hardening completed, deployment risk is minimal due to:
 | High memory | `kubectl top pods` | Adjust resource limits |
 
 **Emergency Contacts**:
-- GitHub Issues: https://github.com/dofaromg/flow-tasks/issues
+- GitHub Issues: https://github.com/dofaromg/FlowAgent.Runtime/issues
 - GCP Support: https://cloud.google.com/support
 
 ---

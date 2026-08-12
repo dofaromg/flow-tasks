@@ -737,7 +737,7 @@ index 0000000..5d28311
 +
 +## License
 +
-+This Merkle signature system is part of the flow-tasks repository and follows the same license.
++This Merkle signature system is part of the FlowAgent.Runtime repository and follows the same license.
 +
 +---
 +
@@ -1045,7 +1045,7 @@ index 0000000..2115bd2
 +
 +**Date**: 2026-02-07  
 +**Status**: ✅ COMPLETE  
-+**Repository**: dofaromg/flow-tasks  
++**Repository**: dofaromg/FlowAgent.Runtime  
 +**Branch**: copilot/setup-git-hooks-and-actions
 +
 +---
@@ -1369,6 +1369,6 @@ index 0000000..2115bd2
 +---
 +
 +**Implementation By**: GitHub Copilot  
-+**Repository**: https://github.com/dofaromg/flow-tasks  
++**Repository**: https://github.com/dofaromg/FlowAgent.Runtime  
 +**Branch**: copilot/setup-git-hooks-and-actions  
 +**Date**: 2026-02-07

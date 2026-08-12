@@ -12,7 +12,7 @@ spec:
   project: default
   
   source:
-    repoURL: https://github.com/dofaromg/flow-tasks.git
+    repoURL: https://github.com/dofaromg/FlowAgent.Runtime.git
     # 追蹤 develop 分支用於 staging 環境
     # Track develop branch for staging environment
     targetRevision: develop
@@ -48,7 +48,7 @@ spec:
   project: default
   
   source:
-    repoURL: https://github.com/dofaromg/flow-tasks.git
+    repoURL: https://github.com/dofaromg/FlowAgent.Runtime.git
     # 追蹤 main 分支用於生產環境
     # Track main branch for production environment
     targetRevision: main

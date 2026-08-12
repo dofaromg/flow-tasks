@@ -1,6 +1,6 @@
 # Performance Improvements
 
-This document outlines the performance optimizations applied to the flow-tasks repository.
+This document outlines the performance optimizations applied to the FlowAgent.Runtime repository.
 
 ## Summary
 

@@ -2,16 +2,16 @@
 # FlowHub 整合匯出套件 - 實作摘要
 
 **Date**: 2026-01-03  
-**Reference Commit**: [ffebfa0](https://github.com/dofaromg/flow-tasks/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)  
+**Reference Commit**: [ffebfa0](https://github.com/dofaromg/FlowAgent.Runtime/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)  
 **Status**: ✅ Complete and Verified
 
 ---
 
 ## Objective | 目標
 
-Verify and document the FlowHub Integration Export Package that was added to the flow-tasks repository. This package provides a complete, tested, and documented system for exporting the Memory Cache Disk Mapping and Wire-Memory Integration features to the dofaromg/flowhub repository.
+Verify and document the FlowHub Integration Export Package that was added to the FlowAgent.Runtime repository. This package provides a complete, tested, and documented system for exporting the Memory Cache Disk Mapping and Wire-Memory Integration features to the dofaromg/flowhub repository.
 
-驗證並記錄已新增到 flow-tasks 儲存庫的 FlowHub 整合匯出套件。此套件提供完整、經過測試且有文檔的系統，用於將記憶體快取磁碟映射和 Wire-Memory 整合功能匯出到 dofaromg/flowhub 儲存庫。
+驗證並記錄已新增到 FlowAgent.Runtime 儲存庫的 FlowHub 整合匯出套件。此套件提供完整、經過測試且有文檔的系統，用於將記憶體快取磁碟映射和 Wire-Memory 整合功能匯出到 dofaromg/flowhub 儲存庫。
 
 ---
 
@@ -108,9 +108,9 @@ Three documented methods for applying to dofaromg/flowhub:
 
 ### Method A: Git Bundle (Recommended | 推薦)
 ```bash
-git remote add flow-tasks-bundle flowhub-integration.bundle
-git fetch flow-tasks-bundle
-git merge flow-tasks-bundle/copilot/update-flow-tasks
+git remote add FlowAgent.Runtime-bundle flowhub-integration.bundle
+git fetch FlowAgent.Runtime-bundle
+git merge FlowAgent.Runtime-bundle/copilot/update-FlowAgent.Runtime
 ```
 
 ### Method B: Patch Files
@@ -218,10 +218,10 @@ cache_dir: "particle_core/cache"  ✅ Present
    ```bash
    # Example using Git Bundle
    cd /path/to/flowhub
-   git remote add flow-tasks /path/to/flowhub-integration.bundle
-   git fetch flow-tasks
+   git remote add FlowAgent.Runtime /path/to/flowhub-integration.bundle
+   git fetch FlowAgent.Runtime
    git checkout -b feature/memory-cache-integration
-   git merge flow-tasks/copilot/update-flow-tasks
+   git merge FlowAgent.Runtime/copilot/update-FlowAgent.Runtime
    ```
 
 3. **Verify Integration**
@@ -266,7 +266,7 @@ FlowHub 整合匯出套件（commit ffebfa0）已經過全面驗證，並已**�
 
 ## References | 參考資料
 
-- **Reference Commit**: [ffebfa0](https://github.com/dofaromg/flow-tasks/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)
+- **Reference Commit**: [ffebfa0](https://github.com/dofaromg/FlowAgent.Runtime/commit/ffebfa0ecb172f43257bb565d7b0012e4b511763)
 - **Documentation**: 
   - `FLOWHUB_EXPORT_PACKAGE.md` - Package contents
   - `FLOWHUB_INTEGRATION_GUIDE.md` - Integration instructions

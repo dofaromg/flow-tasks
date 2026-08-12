@@ -97,5 +97,5 @@ score = min(1, score)                  # 正規化，降序排序 → AttentionR
 
 ## 6. 待釐清 / 下一步
 
-- runnable particle_core（logic_pipeline/memory_archive_seed）在外部 `flow-tasks`，本 repo 未內含；要實跑驗收需上傳其 source 或授權該 repo。
+- runnable particle_core（logic_pipeline/memory_archive_seed）在外部 `FlowAgent.Runtime`，本 repo 未內含；要實跑驗收需上傳其 source 或授權該 repo。
 - 若要在母體內把「Perception 確定性注意力」接成可呼叫服務（給 DL580/RuntimeOS 共用），可另開增量；本檔先完成方法萃取與定位。

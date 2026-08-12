@@ -17,7 +17,7 @@ This document provides a complete deployment structure index for FlowAgent, allo
 ## 🗺️ 部署結構地圖 / Deployment Structure Map
 
 ```
-flow-tasks/
+FlowAgent.Runtime/
 ├── 📦 apps/                          # 應用程式部署清單 / Application Deployments
 │   ├── keda/                         # KEDA 自動擴展 / Auto-scaling
 │   │   └── module-a-scaledobject.yaml
@@ -231,7 +231,7 @@ bash scripts/oneclick_gke_init.sh
 - `argocd/app.yaml` - ArgoCD 應用定義
   - 自動同步: ✅
   - 自我修復: ✅
-  - Repository: github.com/dofaromg/flow-tasks
+  - Repository: github.com/dofaromg/FlowAgent.Runtime
   - Path: cluster/overlays/prod
 
 ---

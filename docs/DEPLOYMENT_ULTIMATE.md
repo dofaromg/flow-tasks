@@ -27,8 +27,8 @@
 
 ```bash
 # 1. 克隆倉庫
-git clone https://github.com/dofaromg/flow-tasks.git
-cd flow-tasks
+git clone https://github.com/dofaromg/FlowAgent.Runtime.git
+cd FlowAgent.Runtime
 
 # 2. 運行部署腳本
 sudo bash scripts/deploy_ultimate.sh

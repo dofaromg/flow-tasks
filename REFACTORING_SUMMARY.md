@@ -1,7 +1,7 @@
 # Code Refactoring Summary
 
 ## Overview
-This document summarizes the duplicated code refactoring performed on the flow-tasks repository.
+This document summarizes the duplicated code refactoring performed on the FlowAgent.Runtime repository.
 
 ## Objectives
 - Identify and eliminate duplicated code patterns

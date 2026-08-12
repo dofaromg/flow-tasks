@@ -1,7 +1,7 @@
 # Performance Optimization Summary
 
 ## Overview
-This document summarizes the performance optimizations implemented to improve the efficiency of the flow-tasks repository.
+This document summarizes the performance optimizations implemented to improve the efficiency of the FlowAgent.Runtime repository.
 
 ## Critical Issues Fixed (🔴)
 

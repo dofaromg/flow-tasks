@@ -223,7 +223,7 @@ GitHub Free/Pro accounts include:
 
 1. **Create codespace** from this repository:
    ```bash
-   gh codespace create --repo dofaromg/flow-tasks
+   gh codespace create --repo dofaromg/FlowAgent.Runtime
    ```
 
 2. **Connect to codespace**:
@@ -304,4 +304,4 @@ For the **miniature computing-machine** codespace mentioned in the notification:
 ---
 
 **Last Updated**: 2025-12-13  
-**Repository**: dofaromg/flow-tasks
+**Repository**: dofaromg/FlowAgent.Runtime

@@ -57,7 +57,7 @@ The `devcontainer.json` file defines:
 
 2. **Via GitHub CLI**:
    ```bash
-   gh codespace create --repo dofaromg/flow-tasks
+   gh codespace create --repo dofaromg/FlowAgent.Runtime
    ```
 
 3. **Via VS Code**:

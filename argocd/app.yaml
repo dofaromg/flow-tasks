@@ -7,7 +7,7 @@ spec:
   project: default
   
   source:
-    repoURL: https://github.com/dofaromg/flow-tasks.git
+    repoURL: https://github.com/dofaromg/FlowAgent.Runtime.git
     targetRevision: HEAD
     path: cluster/overlays/prod
   

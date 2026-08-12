@@ -11,7 +11,7 @@ This file shows the complete deployment configuration directory of FlowAgent in 
 ## 📂 完整部署目錄結構 / Complete Deployment Directory Structure
 
 ```
-flow-tasks/
+FlowAgent.Runtime/
 │
 ├── 🚀 apps/                                    # 應用程式部署清單目錄
 │   │                                           # Application Deployment Manifests
@@ -64,7 +64,7 @@ flow-tasks/
 │   ├── app.yaml                              # ⭐ ArgoCD 應用定義 (主要)
 │   │                                         # - 自動同步: enabled
 │   │                                         # - 自我修復: enabled
-│   │                                         # - Repository: github.com/dofaromg/flow-tasks
+│   │                                         # - Repository: github.com/dofaromg/FlowAgent.Runtime
 │   │                                         # - Path: cluster/overlays/prod
 │   │
 │   ├── app-multi-env.yaml                    # 多環境 ArgoCD 配置

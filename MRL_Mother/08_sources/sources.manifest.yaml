@@ -39,7 +39,7 @@ sources:
       (FlowLLM.SeedPersona.Programmer.CoreArchitect.v1.flpkg human-readable seed,
       FlowAgent.SystemPlan.FullStack.v1, 語場語言系統建構大綱 2025-07-23,
       MrLiou.MetaCode_Environment_v0.6_filled — bit-identical to the
-      dofaromg/flow-tasks flow_code/ bundle, integrity verified)
+      dofaromg/FlowAgent.Runtime flow_code/ bundle, integrity verified)
     implementations:
       - "05_persona/codepartner/persona.yaml"
 

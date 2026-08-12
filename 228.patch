@@ -3516,7 +3516,7 @@ index 0000000..8ffa9e3
 +# PR #228 Task Completion Summary
 +
 +## Task Assignment
-+**Issue**: Implement necessary changes for PR #228 (https://github.com/dofaromg/flow-tasks/pull/228)
++**Issue**: Implement necessary changes for PR #228 (https://github.com/dofaromg/FlowAgent.Runtime/pull/228)
 +
 +**PR Title**: Introduce ParticleDefensiveClient and NeuralLink with defensive GitHub sync
 +
@@ -3640,7 +3640,7 @@ index 0000000..8ffa9e3
 +
 +**Prepared by**: GitHub Copilot Agent  
 +**Date**: January 17, 2026  
-+**Repository**: dofaromg/flow-tasks  
++**Repository**: dofaromg/FlowAgent.Runtime  
 +**Working Branch**: copilot/update-flow-task-228  
 +**Commit**: 2323983
 diff --git a/PR228_RESOLUTION_STATUS.md b/PR228_RESOLUTION_STATUS.md
@@ -3771,7 +3771,7 @@ index 0000000..6b47c16
 +
 +**Prepared by**: Copilot Agent  
 +**Date**: January 17, 2026  
-+**Repository**: dofaromg/flow-tasks  
++**Repository**: dofaromg/FlowAgent.Runtime  
 +**Branch**: copilot/update-flow-task-228
 
 From 7a16110111f23b93be97efdb5f42fb1d256dc366 Mon Sep 17 00:00:00 2001
@@ -3801,7 +3801,7 @@ index 0000000..31dd569
 +
 +**Date**: January 25, 2026  
 +**Issue**: Implement necessary changes for PR #228  
-+**PR URL**: https://github.com/dofaromg/flow-tasks/pull/228  
++**PR URL**: https://github.com/dofaromg/FlowAgent.Runtime/pull/228  
 +**Status**: ✅ **ALL REQUIREMENTS ALREADY IMPLEMENTED**
 +
 +## Executive Summary
@@ -4046,4 +4046,4 @@ index 0000000..31dd569
 +**Prepared by**: GitHub Copilot Agent  
 +**Date**: January 25, 2026  
 +**Branch**: copilot/fix-merge-conflict-issue  
-+**Repository**: dofaromg/flow-tasks
++**Repository**: dofaromg/FlowAgent.Runtime

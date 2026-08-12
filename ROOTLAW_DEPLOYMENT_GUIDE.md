@@ -292,7 +292,7 @@ python scripts/deploy_rootlaw_package.py \
 **錯誤**: `RootLaw Package 不存在`
 
 **解決方案**:
-- 確保在 flow-tasks 倉庫根目錄執行
+- 確保在 FlowAgent.Runtime 倉庫根目錄執行
 - 使用 `--source` 參數指定正確的源目錄
 - 確認 `RootLaw_Package_v1.midlock/` 目錄存在
 

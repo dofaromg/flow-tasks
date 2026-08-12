@@ -1,7 +1,7 @@
 # PR #228 Task Completion Summary
 
 ## Task Assignment
-**Issue**: Implement necessary changes for PR #228 (https://github.com/dofaromg/flow-tasks/pull/228)
+**Issue**: Implement necessary changes for PR #228 (https://github.com/dofaromg/FlowAgent.Runtime/pull/228)
 
 **PR Title**: Introduce ParticleDefensiveClient and NeuralLink with defensive GitHub sync
 
@@ -125,6 +125,6 @@ The base branch (`codex/add-github-actions-deployment-workflow`) at commit 8dcaf
 
 **Prepared by**: GitHub Copilot Agent  
 **Date**: January 17, 2026  
-**Repository**: dofaromg/flow-tasks  
+**Repository**: dofaromg/FlowAgent.Runtime  
 **Working Branch**: copilot/update-flow-task-228  
 **Commit**: 2323983

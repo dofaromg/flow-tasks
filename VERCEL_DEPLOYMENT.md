@@ -11,7 +11,7 @@
 
 ## 🚀 快速部署 Quick Deploy
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdofaromg%2Fflow-tasks)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdofaromg%2FFlowAgent.Runtime)
 
 ## 📋 前置需求 Prerequisites
 
@@ -40,7 +40,7 @@
 1. 前往 [Vercel Dashboard](https://vercel.com/dashboard)
 2. 點擊 "Add New..." → "Project"
 3. 選擇 "Import Git Repository"
-4. 選擇 `dofaromg/flow-tasks` 倉庫
+4. 選擇 `dofaromg/FlowAgent.Runtime` 倉庫
 5. 點擊 "Import"
 
 ### 步驟 2: 配置專案
@@ -274,7 +274,7 @@ export default nextConfig;
 ## 🆘 需要幫助？
 
 - **Vercel 支援**: [vercel.com/support](https://vercel.com/support)
-- **GitHub Issues**: [github.com/dofaromg/flow-tasks/issues](https://github.com/dofaromg/flow-tasks/issues)
+- **GitHub Issues**: [github.com/dofaromg/FlowAgent.Runtime/issues](https://github.com/dofaromg/FlowAgent.Runtime/issues)
 - **Next.js 討論**: [github.com/vercel/next.js/discussions](https://github.com/vercel/next.js/discussions)
 
 ---

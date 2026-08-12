@@ -265,7 +265,7 @@ def main():
     print("Performance Benchmark Suite")
     print("="*60)
     print("\nThis benchmark measures the performance of key operations")
-    print("in the flow-tasks repository after optimizations.")
+    print("in the FlowAgent.Runtime repository after optimizations.")
     print("\nNote: Results may vary based on system performance.")
     
     try:

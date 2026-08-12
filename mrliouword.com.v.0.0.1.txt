@@ -31,8 +31,8 @@ mrliouword.com.	86400	IN	NS	mcgrory.ns.cloudflare.com.
 mrliouword.com.	86400	IN	NS	raphaela.ns.cloudflare.com.
 
 ;; CNAME Records
-mrliouword.com.	1	IN	CNAME	flow-tasks.pages.dev. ; cf_tags=cf-proxied:true
-www.mrliouword.com.	1	IN	CNAME	flow-tasks.pages.dev. ; cf_tags=cf-proxied:true
+mrliouword.com.	1	IN	CNAME	FlowAgent.Runtime.pages.dev. ; cf_tags=cf-proxied:true
+www.mrliouword.com.	1	IN	CNAME	FlowAgent.Runtime.pages.dev. ; cf_tags=cf-proxied:true
 
 ;; TXT Records
 _dmarc.mrliouword.com.	1	IN	TXT	"v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s; rua=mailto:z814241@gmail.com"

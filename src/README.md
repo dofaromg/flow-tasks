@@ -342,13 +342,13 @@ Contributions are welcome! Please follow these guidelines:
 
 ## 許可證 / License
 
-This project follows the flow-tasks repository license. See LICENSE for details.
+This project follows the FlowAgent.Runtime repository license. See LICENSE for details.
 
 ## 聯繫 / Contact
 
 - Author: MRLiou
 - Email: z814241@gmail.com
-- Repository: https://github.com/dofaromg/flow-tasks
+- Repository: https://github.com/dofaromg/FlowAgent.Runtime
 
 ## 更新日誌 / Changelog
 

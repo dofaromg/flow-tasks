@@ -2,7 +2,7 @@
 
 **Date**: 2026-02-07  
 **Status**: ✅ COMPLETE  
-**Repository**: dofaromg/flow-tasks  
+**Repository**: dofaromg/FlowAgent.Runtime  
 **Branch**: copilot/setup-git-hooks-and-actions
 
 ---
@@ -326,6 +326,6 @@ The system is ready for production use and will:
 ---
 
 **Implementation By**: GitHub Copilot  
-**Repository**: https://github.com/dofaromg/flow-tasks  
+**Repository**: https://github.com/dofaromg/FlowAgent.Runtime  
 **Branch**: copilot/setup-git-hooks-and-actions  
 **Date**: 2026-02-07

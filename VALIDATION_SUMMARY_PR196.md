@@ -3,7 +3,7 @@
 
 **Date**: 2026-01-02  
 **Validator**: GitHub Copilot Coding Agent  
-**PR**: [#196 - Wire-Memory Integration](https://github.com/dofaromg/flow-tasks/pull/196)  
+**PR**: [#196 - Wire-Memory Integration](https://github.com/dofaromg/FlowAgent.Runtime/pull/196)  
 **Status**: ✅ **VALIDATED - ALL TESTS PASSED**
 
 ---
@@ -315,6 +315,6 @@ All functionality works as specified. Implementation is complete and ready for p
 ---
 
 **Related Files**:
-- PR: https://github.com/dofaromg/flow-tasks/pull/196
+- PR: https://github.com/dofaromg/FlowAgent.Runtime/pull/196
 - Documentation: `particle_core/docs/wire_memory_integration.md`
 - Quick Start: `particle_core/src/wire/README.md`

@@ -1,7 +1,7 @@
 {
   "metadata": {
     "scan_time": "2026-02-03T01:18:07.748330",
-    "root_path": "/home/runner/work/flow-tasks/flow-tasks",
+    "root_path": "/home/runner/work/FlowAgent.Runtime/FlowAgent.Runtime",
     "max_depth": 8,
     "version": "v1.0.0"
   },
@@ -61,7 +61,7 @@
   },
   "structure": {
     "type": "directory",
-    "name": "flow-tasks",
+    "name": "FlowAgent.Runtime",
     "emoji": "📁",
     "path": ".",
     "depth": 0,

@@ -294,14 +294,14 @@ The current implementation includes enhancements beyond the original commit:
 
 **Verified By:** GitHub Copilot AI Agent  
 **Verification Date:** 2026-01-14T17:04:00+00:00  
-**Branch:** copilot/update-flow-tasks-another-one  
+**Branch:** copilot/update-FlowAgent.Runtime-another-one  
 **Commit:** 4f67964
 
 ---
 
 ## References
 
-- Original Commit: https://github.com/dofaromg/flow-tasks/commit/7a466289b1e443b9ca15f3a69dc9e5e476091f21
+- Original Commit: https://github.com/dofaromg/FlowAgent.Runtime/commit/7a466289b1e443b9ca15f3a69dc9e5e476091f21
 - CI Workflow: `.github/workflows/ci.yml`
 - Documentation: `README.md` (line 273-330)
 - Code: `amp/`, `adapters/`, `cli.py`

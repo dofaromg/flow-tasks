@@ -139,7 +139,7 @@ docker-compose up -d
 1. 前往 [railway.app](https://railway.app)
 2. 使用 GitHub 登入
 3. 點擊 "New Project" → "Deploy from GitHub repo"
-4. 選擇 `dofaromg/flow-tasks`
+4. 選擇 `dofaromg/FlowAgent.Runtime`
 5. 配置環境變數（如需要）
 6. 點擊 "Deploy"
 
@@ -573,8 +573,8 @@ A: 大部分情況不需要！專案已配置支持：
 - [Next.js 部署文檔](https://nextjs.org/docs/deployment)
 
 ### 社群支持
-- [GitHub Issues](https://github.com/dofaromg/flow-tasks/issues)
-- [GitHub Discussions](https://github.com/dofaromg/flow-tasks/discussions)
+- [GitHub Issues](https://github.com/dofaromg/FlowAgent.Runtime/issues)
+- [GitHub Discussions](https://github.com/dofaromg/FlowAgent.Runtime/discussions)
 
 ---
 
@@ -604,4 +604,4 @@ A: 大部分情況不需要！專案已配置支持：
 
 **🎉 結論**: 你已經在使用最好的方案（GKE）！如果需要更簡單的管理，Railway.app 是最佳替代。
 
-如有任何問題，請在 [GitHub Issues](https://github.com/dofaromg/flow-tasks/issues) 提出！
+如有任何問題，請在 [GitHub Issues](https://github.com/dofaromg/FlowAgent.Runtime/issues) 提出！

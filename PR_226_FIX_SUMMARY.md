@@ -3,7 +3,7 @@
 ## Overview
 This document summarizes the changes made to address code review feedback for PR #226: "Add worker entrypoint, ParticleNeuralLink, FlowGate, ConfigManager and adapter scaffolding"
 
-**PR Link**: https://github.com/dofaromg/flow-tasks/pull/226
+**PR Link**: https://github.com/dofaromg/FlowAgent.Runtime/pull/226
 
 ## Changes Applied
 

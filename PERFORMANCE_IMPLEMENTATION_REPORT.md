@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-Successfully identified and optimized **5 critical performance bottlenecks** across the flow-tasks repository, resulting in:
+Successfully identified and optimized **5 critical performance bottlenecks** across the FlowAgent.Runtime repository, resulting in:
 
 - **1.5-2.5x average speedup** across optimized operations
 - **30-40% reduction** in disk I/O operations

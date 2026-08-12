@@ -8,7 +8,7 @@
 
 ## 📦 部署摘要
 
-MRLiou Structural Earth Runtime v1.1 已成功部署至 `dofaromg/flow-tasks` 倉庫。這是一個完整的壓力場映射與跳層衍生系統，具備可前進/後退的軌跡回放功能。
+MRLiou Structural Earth Runtime v1.1 已成功部署至 `dofaromg/FlowAgent.Runtime` 倉庫。這是一個完整的壓力場映射與跳層衍生系統，具備可前進/後退的軌跡回放功能。
 
 ---
 
@@ -385,7 +385,7 @@ mlriou-earth replay \
 - **文檔**: README.md, USAGE_GUIDE.md
 - **測試**: test_mlriou_earth.py
 - **示例**: examples/sample_nodes.json
-- **倉庫**: dofaromg/flow-tasks
+- **倉庫**: dofaromg/FlowAgent.Runtime
 
 ---
 

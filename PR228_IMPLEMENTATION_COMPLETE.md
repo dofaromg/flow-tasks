@@ -2,7 +2,7 @@
 
 **Date**: January 25, 2026  
 **Issue**: Implement necessary changes for PR #228  
-**PR URL**: https://github.com/dofaromg/flow-tasks/pull/228  
+**PR URL**: https://github.com/dofaromg/FlowAgent.Runtime/pull/228  
 **Status**: ✅ **ALL REQUIREMENTS ALREADY IMPLEMENTED**
 
 ## Executive Summary
@@ -247,4 +247,4 @@ The code is production-ready with noted areas for future enhancement (testing, s
 **Prepared by**: GitHub Copilot Agent  
 **Date**: January 25, 2026  
 **Branch**: copilot/fix-merge-conflict-issue  
-**Repository**: dofaromg/flow-tasks
+**Repository**: dofaromg/FlowAgent.Runtime

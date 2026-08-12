@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-The flow-tasks repository represents a **mature, multi-layered enterprise system** with:
+The FlowAgent.Runtime repository represents a **mature, multi-layered enterprise system** with:
 
 - **Organizational Hierarchy**: 9 levels (Mrliou → MRL → Kernel → Platform → Runtime → Service → Module → Adapter → Archive)
 - **Total Components**: 120+ directories, 156+ code files, 12 active CI/CD workflows

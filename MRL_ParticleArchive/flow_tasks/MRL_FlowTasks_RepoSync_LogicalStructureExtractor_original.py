@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# 回收來源: dofaromg/flow-tasks  （Mr.liou 貼入,原文保全,rl_15 不滅）
+# 回收來源: dofaromg/FlowAgent.Runtime  （Mr.liou 貼入,原文保全,rl_15 不滅）
 # canonical 取代版: 09_workflow/MRL_LogicalStructureExtractor_v1.py
 """
 Intelligent Repository Synchronization System
