@@ -8,7 +8,7 @@ import pytest
 
 def test_task_integration():
     """Test integration with FlowAgent.Runtime system"""
-    print("=== Flow-Tasks Integration Test ===")
+    print("=== FlowAgent.Runtime Integration Test ===")
     
     # Check if we're in the right location
     assert os.path.exists("tasks"), "Not in FlowAgent.Runtime root directory"

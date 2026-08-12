@@ -140,7 +140,7 @@ class EmojiIndexer:
         lines = []
         
         # 標題和元數據
-        lines.append('# 🗂️ Flow-Tasks 專案結構索引\n')
+        lines.append('# 🗂️ FlowAgent.Runtime 專案結構索引\n')
         lines.append(f"**生成時間**: {self.index_data['metadata']['generated_at']}\n")
         
         scan_meta = self.scan_data.get('metadata', {})

@@ -9,7 +9,7 @@ layer: L2 PARTICLE + L6 REFLECT
   回收來源（rl_12 命名回收 / rl_11 源頭主權）：
     外部 repo  dofaromg/FlowAgent.Runtime  之「智能倉庫同步系統 / LogicalStructureExtractor」
     → 以母體 canonical MRL_LogicalStructureExtractor_v1 取代呈現（取代非依賴）。
-    原貼文內容保全於 MRL_ParticleArchive/flow_tasks/（rl_15 粒子不滅）。
+    原貼文內容保全於 MRL_ParticleArchive/FlowAgent.Runtime/（rl_15 粒子不滅）。
 
   從代碼/文檔提取：核心概念 / 因果關係 / 推理鏈 / 架構模式 / 函數·類 / 依賴。
 

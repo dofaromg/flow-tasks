@@ -125,7 +125,7 @@ The following files were ADDED (not lost) in recent merges:
 | PR/Commit | Description | Files Changed | Status |
 |-----------|-------------|---------------|--------|
 | PR #204 | Context management strategies | +18 files | ✅ Merged successfully |
-| PR #247 | Update flow tasks requirements | Modified files | ✅ No deletions |
+| PR #247 | Update FlowAgent.Runtime requirements | Modified files | ✅ No deletions |
 | PR #248 | Fix undefined constants | Modified files | ✅ No deletions |
 | PR #249 | Update task flow logic | Modified files | ✅ No deletions |
 

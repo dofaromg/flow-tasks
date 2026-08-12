@@ -7,6 +7,22 @@
       "to": "FlowAgent.Runtime"
     },
     {
+      "from": "Flow-Tasks",
+      "to": "FlowAgent.Runtime"
+    },
+    {
+      "from": "flow tasks",
+      "to": "FlowAgent.Runtime"
+    },
+    {
+      "from": "Flow Tasks",
+      "to": "FlowAgent.Runtime"
+    },
+    {
+      "from": "flow_tasks",
+      "to": "FlowAgent.Runtime"
+    },
+    {
       "from": "mrl-silly-api",
       "to": "MrLiouWord.Chat.Runtime (mrl-agi)"
     },
@@ -30,12 +46,14 @@
     "authority-lock.json"
   ],
   "replacement_exempt_paths": [
-    "authority-lock.json"
+    "authority-lock.json",
+    ".github/workflows/mrl_governance_lock.yml"
   ],
   "replacement_scope": {
     "mode": "git_tracked",
     "exclude_paths": [
-      "authority-lock.json"
+      "authority-lock.json",
+      ".github/workflows/mrl_governance_lock.yml"
     ]
   },
   "signature_targets": {

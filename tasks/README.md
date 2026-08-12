@@ -45,7 +45,6 @@ The processor checks task schema, target existence, Python syntax/imports, C com
 - 完整倉庫檢查預設啟用；需要只跑任務驗證時可明確停用。
 
 ```powershell
-$env:FLOW_TASKS_REPOSITORY_CHECKS = "0"
+$env:FLOWAGENT_RUNTIME_REPOSITORY_CHECKS = "0"
 python process_tasks.py
 ```
-

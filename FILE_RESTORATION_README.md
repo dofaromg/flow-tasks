@@ -17,7 +17,7 @@ All 350 files from commit `1750739` are preserved, plus 29 new files were added.
 The user was concerned that files might have been lost during recent PR merges:
 - PR #204: Context management strategies (merged 1 hour ago)
 - PR #248: Fix undefined constants (merged 20 minutes ago)  
-- PR #247: Update flow tasks requirements (merged 29 minutes ago)
+- PR #247: Update FlowAgent.Runtime requirements (merged 29 minutes ago)
 - PR #249: Update task flow logic (merged 28 minutes ago)
 
 ## Investigation Results

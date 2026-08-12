@@ -93,7 +93,7 @@ class TaskProcessor:
         self.results_dir = self.tasks_dir / "results"
         self.results_dir.mkdir(parents=True, exist_ok=True)
         if run_repository_checks is None:
-            env_value = os.getenv("FLOW_TASKS_REPOSITORY_CHECKS", "1").strip().lower()
+            env_value = os.getenv("FLOWAGENT_RUNTIME_REPOSITORY_CHECKS", "1").strip().lower()
             run_repository_checks = env_value not in {"0", "false", "no", "off"}
         self.run_repository_checks_enabled = bool(run_repository_checks)
 

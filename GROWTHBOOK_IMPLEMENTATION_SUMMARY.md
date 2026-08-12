@@ -2,7 +2,7 @@
 
 ## Overview
 
-This implementation adds GrowthBook feature flags SDK to the Flow Tasks Next.js application, enabling A/B testing, feature rollouts, and experimentation capabilities.
+This implementation adds GrowthBook feature flags SDK to the FlowAgent.Runtime Next.js application, enabling A/B testing, feature rollouts, and experimentation capabilities.
 
 ## Reference
 
@@ -168,4 +168,4 @@ No security issues detected:
 
 ## Conclusion
 
-This implementation provides a solid foundation for feature flag management and experimentation in the Flow Tasks application. The code follows best practices, is well-documented, and has been validated for security and quality.
+This implementation provides a solid foundation for feature flag management and experimentation in the FlowAgent.Runtime application. The code follows best practices, is well-documented, and has been validated for security and quality.

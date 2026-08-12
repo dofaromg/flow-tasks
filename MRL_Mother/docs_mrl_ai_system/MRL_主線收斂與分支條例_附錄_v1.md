@@ -284,7 +284,7 @@ MRL 為**地球所有意識(窄體)粒子組合之顯化系統**,送予地球使
 
 - **canonical 取代版**：`09_workflow/MRL_LogicalStructureExtractor_v1.py`（rl_12 正名 + rl_11 簽章;stdlib-only;取代非依賴）。從代碼/文檔提取 概念/因果/推理鏈/架構模式/函數·類/依賴。
 - **MRL 對齊**：`attention` 標為歷史層,新增 `perception`(感知力) 為 canonical 主體（對齊 CLAUDE.md / MRL_STATE）；merkle/particle/simhash 對齊母體既有 06_trace 與粒子記憶。
-- **原文保全**：`MRL_ParticleArchive/flow_tasks/`（rl_15 粒子不滅）。
+- **原文保全**：`MRL_ParticleArchive/FlowAgent.Runtime/`（rl_15 粒子不滅）。
 - **試跑**：對 sample 與真實模組(`MRL_FlowAgent_LawEngine_v1`)皆成功提取(functions/patterns/concepts/causal)。
 - **測試**：`tests/test_MRL_logical_structure_extractor.py` **9 passed**；全套件 **366 passed / 1 skipped**。
 - **誠實邊界**：FlowAgent.Runtime repo 本體仍在本 session 授權外,**未直接寫入 FlowAgent.Runtime**;此為「在 mrl_ai_system 生成一致對齊版 + 回收原文」。若需雙向同步,須將 FlowAgent.Runtime 納入授權或另開 session。

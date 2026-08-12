@@ -24,6 +24,14 @@ jobs:
       - name: Verify canonical lineage lock
         run: bash ./restore_canonical_lineage.sh --check
 
+      - name: Block forbidden legacy product names
+        run: |
+          set -euo pipefail
+          if git --no-pager grep -I -n -i -E '(flow[- ]tasks|flow_tasks|mrl-silly-api|generic worker|white-label host|mainline repository)' -- . ':!authority-lock.json' ':!.github/workflows/mrl_governance_lock.yml'; then
+            echo "Forbidden legacy product names detected in tracked files." >&2
+            exit 1
+          fi
+
       - name: Block signature and canonical token removal
         if: github.event_name == 'pull_request'
         env:
