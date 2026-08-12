@@ -9,4 +9,7 @@
 /scripts/validate_mrl_governance.py @dofaromg
 /.github/CODEOWNERS @dofaromg
 /.github/workflows/mrl-* @dofaromg
+/.github/workflows/mrl_governance_lock.yml @dofaromg
+/.mrliou/authority-lock.json @dofaromg
+/restore_canonical_lineage.sh @dofaromg
 /LICENSE* @dofaromg

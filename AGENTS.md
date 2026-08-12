@@ -1,3 +1,7 @@
+---
+origin_signature: MrLiouWord
+---
+
 # AGENTS.md
 
 > Instructions for AI coding agents (GitHub Copilot Coding Agent, Claude, etc.) working in this repository.
@@ -24,7 +28,7 @@
 ## Repository Layout
 
 ```
-flow-tasks/
+FlowAgent.Runtime/
 ├── particle_core/          # Particle Language Core
 │   ├── src/                # Core Python modules
 │   ├── config/             # JSON configuration

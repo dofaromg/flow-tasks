@@ -1,0 +1,51 @@
+{
+  "origin_signature": "MrLiouWord",
+  "canonical_root": "MrLiouWord.Source.Main",
+  "canonical_mappings": [
+    {
+      "from": "flow-tasks",
+      "to": "FlowAgent.Runtime"
+    },
+    {
+      "from": "mrl-silly-api",
+      "to": "MrLiouWord.Chat.Runtime (mrl-agi)"
+    },
+    {
+      "from": "Generic Worker",
+      "to": "MrLiouWord.Chat.Runtime (mrl-agi)"
+    },
+    {
+      "from": "white-label host",
+      "to": "MrLiouWord.Domain.Secondary (mrliouhan.ai)"
+    },
+    {
+      "from": "mainline repository",
+      "to": "MrLiouWord.Source.Main"
+    }
+  ],
+  "governed_paths": [
+    "AGENTS.md",
+    ".github/CODEOWNERS",
+    ".github/workflows/mrl_governance_lock.yml",
+    ".mrliou/authority-lock.json"
+  ],
+  "replacement_exempt_paths": [
+    ".mrliou/authority-lock.json"
+  ],
+  "signature_targets": {
+    "markdown": [
+      "AGENTS.md"
+    ],
+    "json": [
+      ".mrliou/authority-lock.json"
+    ],
+    "yaml": [
+      ".github/workflows/mrl_governance_lock.yml"
+    ]
+  },
+  "protection": {
+    "required_owner": "@dofaromg",
+    "block_on_signature_removal": true,
+    "block_on_canonical_drift": true
+  }
+}

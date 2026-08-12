@@ -1,0 +1,41 @@
+# origin_signature: MrLiouWord
+name: MRL Governance Lock
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - agent/**
+
+permissions:
+  contents: read
+
+jobs:
+  governance-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify canonical lineage lock
+        run: bash ./restore_canonical_lineage.sh --check
+
+      - name: Block signature and canonical token removal
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          if git --no-pager diff --unified=0 "${BASE_SHA}...HEAD" -- \
+              AGENTS.md \
+              .mrliou/authority-lock.json \
+              .github/CODEOWNERS \
+              .github/workflows/mrl_governance_lock.yml \
+            | grep -E '^\-[^-].*(origin_signature: MrLiouWord|FlowAgent\.Runtime|MrLiouWord)'; then
+            echo "Unauthorized removal detected in protected governance files." >&2
+            exit 1
+          fi
