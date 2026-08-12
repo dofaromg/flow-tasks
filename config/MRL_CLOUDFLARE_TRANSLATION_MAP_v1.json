@@ -1,0 +1,377 @@
+{
+  "schema_version": "1.0.0",
+  "mapping_version": "2026-08-12.1",
+  "map_id": "MRL_Cloudflare_TranslationStation_v1",
+  "origin_signature": "MrLiouWord",
+  "classification": "external_adapter_translation_map",
+  "authority": {
+    "canonical_root": "MRL",
+    "external_provider": "Cloudflare",
+    "provider_role": "adapter",
+    "default_forward_action": "HOLD",
+    "destructive_side_rewrite_allowed": false,
+    "implicit_name_equivalence_allowed": false,
+    "unknown_is_match": false,
+    "history_rewrite_allowed": false
+  },
+  "tri_state": {
+    "MATCH": 0,
+    "MISMATCH": 1,
+    "UNKNOWN": null
+  },
+  "thresholds": {
+    "minimum_confidence": 0.8,
+    "singularity_score": 0.25,
+    "critical_unknown_action": "HOLD_INSUFFICIENT_EVIDENCE",
+    "critical_mismatch_action": "HOLD_SINGULARITY"
+  },
+  "inconsistency_parameters": [
+    {
+      "id": "delta_identity",
+      "weight": 5,
+      "critical": true,
+      "meaning": "canonical node identity versus external project identity"
+    },
+    {
+      "id": "delta_runtime",
+      "weight": 5,
+      "critical": true,
+      "meaning": "canonical runtime grammar versus provider runtime kind"
+    },
+    {
+      "id": "delta_source_root",
+      "weight": 3,
+      "critical": false,
+      "meaning": "canonical source root versus provider build root"
+    },
+    {
+      "id": "delta_entrypoint",
+      "weight": 4,
+      "critical": true,
+      "meaning": "canonical entrypoint versus provider entrypoint"
+    },
+    {
+      "id": "delta_build_method",
+      "weight": 4,
+      "critical": true,
+      "meaning": "canonical build method versus provider build command"
+    },
+    {
+      "id": "delta_deploy_policy",
+      "weight": 5,
+      "critical": true,
+      "meaning": "MRL promotion authority versus provider automatic deployment policy"
+    },
+    {
+      "id": "delta_binding_contract",
+      "weight": 5,
+      "critical": true,
+      "meaning": "required KV, D1, R2 and Durable Object bindings versus provider bindings"
+    },
+    {
+      "id": "delta_trigger",
+      "weight": 3,
+      "critical": false,
+      "meaning": "canonical promotion trigger versus provider Git trigger"
+    },
+    {
+      "id": "delta_method_signature",
+      "weight": 4,
+      "critical": true,
+      "meaning": "boundary method signature and parameter semantics"
+    },
+    {
+      "id": "delta_encoding_invariant",
+      "weight": 5,
+      "critical": true,
+      "meaning": "UTF-8 to Base64 output equivalence across chunk implementations"
+    },
+    {
+      "id": "delta_history_return",
+      "weight": 4,
+      "critical": true,
+      "meaning": "append-only MRL evidence versus mutable provider status comments"
+    },
+    {
+      "id": "delta_timing",
+      "weight": 2,
+      "critical": false,
+      "meaning": "trigger and callback timing discontinuity for the same source SHA"
+    },
+    {
+      "id": "delta_provenance",
+      "weight": 4,
+      "critical": true,
+      "meaning": "source SHA, mapping version, build ID and parameter snapshot coverage"
+    }
+  ],
+  "formulas": {
+    "known_weight": "K = sum(w_i for delta_i in {MATCH,MISMATCH})",
+    "mismatch_weight": "M = sum(w_i for delta_i = MISMATCH)",
+    "total_weight": "W = sum(w_i)",
+    "singularity_score": "S = M / K when K > 0, otherwise UNKNOWN",
+    "confidence": "C = K / W",
+    "forward": "T_f(intent,map_v) = provider_request when identity is active_verified and all critical deltas are known and translatable; otherwise HOLD",
+    "reverse": "T_r(event,map_v) = append_only_evidence(canonical_identity,external_identity,source_sha,build_id,parameter_snapshot,result)",
+    "round_trip": "P(T_r(T_f(x,map_v),map_v)) = P(x), where P preserves canonical identity, external alias, source SHA and mapping version",
+    "encoding": "B64_c(x) = Base64(concat(UTF8(x)[k*c:(k+1)*c])) and DecodeBase64(B64_c(x)) = UTF8(x) for every c > 0"
+  },
+  "canonical_profiles": [
+    {
+      "id": "mrl_nextjs_frontend_gke",
+      "canonical_identity": "MRL.NextJS.Frontend",
+      "runtime": "nextjs_standalone_gke",
+      "source_root": ".",
+      "entrypoint": "next.config.mjs",
+      "build_method": "npm run build",
+      "deploy_policy": "gke_gitops",
+      "trigger": ".github/workflows/cd-deploy.yml",
+      "binding_contract": [],
+      "history_return": "append_only_mrl_trace",
+      "evidence": [
+        "NEXTJS_DEPLOYMENT_QUICK_GUIDE.md",
+        "GKE_MIGRATION.md",
+        "next.config.mjs"
+      ]
+    },
+    {
+      "id": "flowos_neural_gate",
+      "canonical_identity": "flowos-neural-gate",
+      "runtime": "cloudflare_worker",
+      "source_root": "flowos",
+      "entrypoint": "src/index.ts",
+      "build_method": "npm run build",
+      "deploy_policy": "explicit_mapped_deploy",
+      "trigger": "explicit_translation_station_promotion",
+      "binding_contract": [
+        "MRLIOUWORD_VAULT",
+        "PARTICLE_AUTH_VAULT",
+        "GATE_CONFIG",
+        "DB",
+        "PARTICLES",
+        "GATE_ENGINE"
+      ],
+      "method_signature": "handleVCSCommit(request,env)",
+      "encoding_profile": "utf8_base64_chunk_invariant_v1",
+      "history_return": "append_only_mrl_trace",
+      "evidence": [
+        "flowos/wrangler.toml",
+        "flowos/src/index.ts",
+        "flowos/src/vcs-gate-unified.ts"
+      ]
+    },
+    {
+      "id": "mrlflow_tasks_shell",
+      "canonical_identity": "mrlflow-tasks",
+      "runtime": "shell",
+      "source_root": null,
+      "entrypoint": null,
+      "build_method": null,
+      "deploy_policy": "requires_explicit_deployment",
+      "trigger": "operator_promotion",
+      "binding_contract": null,
+      "history_return": "append_only_mrl_trace",
+      "evidence": [
+        "MRLiou_Engine/workers/system-hub.js"
+      ]
+    },
+    {
+      "id": "mrl_firecore_store_local",
+      "canonical_identity": "mrl-firecore-store",
+      "runtime": "cloudflare_worker_local_backfill",
+      "source_root": "MRL_Mother/MRL_FireCore_v1_0/modules/mrl-firecore-store",
+      "entrypoint": "src/index.ts",
+      "build_method": "npm run check",
+      "deploy_policy": "local_backfill_no_deploy",
+      "trigger": "explicit_operator_promotion",
+      "binding_contract": [
+        "MRL_FC_STORE_DB"
+      ],
+      "deployment_guard": "MRL_FIRECORE_NO_DEPLOY=1",
+      "history_return": "append_only_mrl_trace",
+      "evidence": [
+        "MRL_Mother/MRL_FireCore_v1_0/modules/mrl-firecore-store/README.md",
+        "MRL_Mother/MRL_FireCore_v1_0/modules/mrl-firecore-store/wrangler.toml"
+      ]
+    }
+  ],
+  "external_nodes": [
+    {
+      "node_id": "cloudflare_pages_flow_tasks",
+      "provider_kind": "pages",
+      "external_project": "flow-tasks",
+      "candidate_profile": "mrl_nextjs_frontend_gke",
+      "link_state": "historical_shadow_unverified",
+      "forward_action": "HOLD",
+      "observed_source_sha": "43ff96f75833c4ef2da92afd1f415cd533e848d1",
+      "observed_result": "BUILD_FAILED",
+      "observed_at": "2026-08-11T08:20:29Z",
+      "mutable_comment": "https://github.com/dofaromg/flow-tasks/pull/616#issuecomment-5089659876",
+      "delta_states": {
+        "delta_identity": "UNKNOWN",
+        "delta_runtime": "MISMATCH",
+        "delta_source_root": "UNKNOWN",
+        "delta_entrypoint": "UNKNOWN",
+        "delta_build_method": "UNKNOWN",
+        "delta_deploy_policy": "MISMATCH",
+        "delta_binding_contract": "UNKNOWN",
+        "delta_trigger": "MISMATCH",
+        "delta_method_signature": "UNKNOWN",
+        "delta_encoding_invariant": "UNKNOWN",
+        "delta_history_return": "MISMATCH",
+        "delta_timing": "UNKNOWN",
+        "delta_provenance": "MISMATCH"
+      }
+    },
+    {
+      "node_id": "cloudflare_worker_flow_tasks",
+      "provider_kind": "workers",
+      "external_project": "flow-tasks",
+      "candidate_profile": "flowos_neural_gate",
+      "link_state": "historical_failure_scope_unverified",
+      "forward_action": "HOLD",
+      "observed_source_sha": "43ff96f75833c4ef2da92afd1f415cd533e848d1",
+      "observed_result": "DEPLOYMENT_FAILED",
+      "observed_at": "2026-08-11T08:20:49Z",
+      "mutable_comment": "https://github.com/dofaromg/flow-tasks/pull/616#issuecomment-5089669725",
+      "delta_states": {
+        "delta_identity": "UNKNOWN",
+        "delta_runtime": "UNKNOWN",
+        "delta_source_root": "UNKNOWN",
+        "delta_entrypoint": "UNKNOWN",
+        "delta_build_method": "UNKNOWN",
+        "delta_deploy_policy": "UNKNOWN",
+        "delta_binding_contract": "UNKNOWN",
+        "delta_trigger": "MISMATCH",
+        "delta_method_signature": "UNKNOWN",
+        "delta_encoding_invariant": "UNKNOWN",
+        "delta_history_return": "MISMATCH",
+        "delta_timing": "UNKNOWN",
+        "delta_provenance": "MISMATCH"
+      }
+    },
+    {
+      "node_id": "cloudflare_worker_mrlflow_tasks",
+      "provider_kind": "workers",
+      "external_project": "mrlflow-tasks",
+      "candidate_profile": "mrlflow_tasks_shell",
+      "link_state": "shell_not_promoted",
+      "forward_action": "HOLD",
+      "observed_source_sha": "43ff96f75833c4ef2da92afd1f415cd533e848d1",
+      "observed_result": "DEPLOYMENT_FAILED",
+      "observed_at": "2026-08-11T09:31:01Z",
+      "mutable_comment": "https://github.com/dofaromg/flow-tasks/pull/616#issuecomment-5089669462",
+      "delta_states": {
+        "delta_identity": "MATCH",
+        "delta_runtime": "MISMATCH",
+        "delta_source_root": "UNKNOWN",
+        "delta_entrypoint": "UNKNOWN",
+        "delta_build_method": "UNKNOWN",
+        "delta_deploy_policy": "MISMATCH",
+        "delta_binding_contract": "UNKNOWN",
+        "delta_trigger": "MISMATCH",
+        "delta_method_signature": "UNKNOWN",
+        "delta_encoding_invariant": "UNKNOWN",
+        "delta_history_return": "MISMATCH",
+        "delta_timing": "MISMATCH",
+        "delta_provenance": "MISMATCH"
+      }
+    },
+    {
+      "node_id": "cloudflare_worker_mrl_store",
+      "provider_kind": "workers",
+      "external_project": "mrl-store",
+      "candidate_profile": "mrl_firecore_store_local",
+      "link_state": "unverified_name_similarity_only",
+      "forward_action": "HOLD",
+      "observed_source_sha": "43ff96f75833c4ef2da92afd1f415cd533e848d1",
+      "observed_result": "DEPLOYMENT_FAILED",
+      "observed_at": "2026-08-11T08:20:55Z",
+      "mutable_comment": "https://github.com/dofaromg/flow-tasks/pull/616#issuecomment-5089667059",
+      "delta_states": {
+        "delta_identity": "UNKNOWN",
+        "delta_runtime": "UNKNOWN",
+        "delta_source_root": "UNKNOWN",
+        "delta_entrypoint": "UNKNOWN",
+        "delta_build_method": "UNKNOWN",
+        "delta_deploy_policy": "UNKNOWN",
+        "delta_binding_contract": "UNKNOWN",
+        "delta_trigger": "MISMATCH",
+        "delta_method_signature": "UNKNOWN",
+        "delta_encoding_invariant": "UNKNOWN",
+        "delta_history_return": "MISMATCH",
+        "delta_timing": "UNKNOWN",
+        "delta_provenance": "MISMATCH"
+      },
+      "identity_guard": "mrl-store MUST NOT be equated to mrl-firecore-store without explicit evidence"
+    }
+  ],
+  "method_change_history": [
+    {
+      "source_sha": "09a19e2019e2e719c2f76b7a1e6e81f5a3934c9d",
+      "method": "utf8ToBase64",
+      "parameter_form": "String.fromCharCode(...Uint8Array.subarray)",
+      "observed_at": "2026-08-11T08:17:16Z"
+    },
+    {
+      "source_sha": "fe6449704f8f0c4af4e053c78bf73c1ccc7db161",
+      "method": "utf8ToBase64",
+      "parameter_form": "String.fromCharCode.apply(null,Array.from(Uint8Array.subarray))",
+      "observed_at": "2026-08-11T08:18:19Z"
+    },
+    {
+      "source_sha": "43ff96f75833c4ef2da92afd1f415cd533e848d1",
+      "method": "utf8ToBase64",
+      "parameter_form": "String.fromCharCode.apply(null,Uint8Array.subarray as number[])",
+      "observed_at": "2026-08-11T08:19:27Z"
+    }
+  ],
+  "historical_evidence": [
+    {
+      "path": "MRL_RelayStation/evidence/MRL_AUTHORITY_EVIDENCE_CHAIN_v1.jsonl",
+      "sequence": 3,
+      "scope": [
+        "Cloudflare Pages",
+        "flow-tasks Worker",
+        "mrl-store Worker",
+        "mrlflow-tasks Worker"
+      ],
+      "meaning": "the same four-node failure scope previously appeared around a corrupted FlowOS worker entry"
+    },
+    {
+      "commit": "945c616441d2f3613ab2960d80207dfc453d5543",
+      "meaning": "real GitHub Contents API writes replaced blob-only false success"
+    },
+    {
+      "commit": "365f26cc75d22f9b799b25bdcff54858d7328848",
+      "meaning": "worker environment declared ENABLE_GITHUB_SYNC and GITHUB_REPO"
+    }
+  ],
+  "return_evidence_fields": [
+    "event_id",
+    "map_id",
+    "mapping_version",
+    "origin_signature",
+    "canonical_profile",
+    "provider",
+    "provider_kind",
+    "external_project",
+    "source_sha",
+    "build_id",
+    "parameter_snapshot",
+    "delta_vector",
+    "singularity_score",
+    "confidence",
+    "result",
+    "observed_at"
+  ],
+  "invariants": [
+    "external provider names remain unchanged",
+    "canonical MRL identities remain unchanged",
+    "UNKNOWN never becomes MATCH",
+    "no candidate profile becomes active by name similarity",
+    "local_backfill_no_deploy never becomes automatic deployment",
+    "forward and reverse records preserve source SHA and mapping version",
+    "provider mutable comments are copied into append-only MRL evidence rather than rewritten"
+  ]
+}

@@ -1,6 +1,7 @@
 {
   "schema_version": "1.0.0",
   "origin_signature": "MrLiouWord",
+  "canonical_system_identity": "MrliouAI",
   "policy": {
     "classification_before_transformation": true,
     "external_assets_remain_external": true,
@@ -12,11 +13,43 @@
   },
   "mappings": [
     {
+      "source": "OpenAI",
+      "classification": "external_material_source",
+      "mrl_extension": "MrliouAI",
+      "preserve_source_name": true
+    },
+    {
+      "source": "OpenAI API",
+      "classification": "external_provider_interface",
+      "mrl_extension": "MrlAPI",
+      "preserve_source_name": true
+    },
+    {
+      "source": "Claude",
+      "classification": "external_material_provider",
+      "mrl_extension": "mrlclaude",
+      "preserve_source_name": true
+    },
+    {
+      "source": "Cloud",
+      "classification": "external_infrastructure_material",
+      "mrl_extension": "mrlcloud",
+      "preserve_source_name": true
+    },
+    {
+      "source": "MRL system identity",
+      "classification": "mrl_owned_identity",
+      "mrl_extension": "MrliouAI",
+      "preserve_source_name": true
+    },
+    {
       "source": "FlowAgent",
       "classification": "mrl_native_product_module",
+      "mrl_extension": "FlowAgent",
+      "preserve_source_name": true,
+      "replace_with_mrliouai": false,
       "canonical": "FlowAgent",
       "rename_allowed": false,
-      "replace_with_mrliouai": false,
       "preserve_history": true
     },
     {
@@ -51,5 +84,13 @@
       "extension_boundary": "MRL_GCP_Interface",
       "claim_external_ownership": false
     }
+  ],
+  "round_trip_contract": [
+    "external_source",
+    "material_record",
+    "mrl_extension",
+    "dependency_map",
+    "source_provenance",
+    "return_reference"
   ]
 }

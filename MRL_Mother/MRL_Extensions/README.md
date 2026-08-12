@@ -1,9 +1,36 @@
 # MRL Extensions
 
-origin_signature: MrLiouWord
+`origin_signature: MrLiouWord`
 
-This directory is the landing boundary for MRL-created adapters, bridges and extensions derived from classified external material.
+This namespace contains MRL-owned extensions derived from external materials without modifying or claiming the original external platforms.
 
-An extension must preserve the external source name and evidence, use a separate MRL-owned identifier, identify its author and license scope, declare dependencies and return traces to MRL_Mother. It must not replace FlowAgent, MRL_Mother, MrliouAI or historical lineage.
+## Extension identities
 
-Nothing placed here creates authorization to use, redistribute, commercialize or delegate MRL assets. Authorization is controlled only by the root authority registry.
+### MrliouAI
+MRL system identity and integration surface. It does not replace the MRL-native FlowAgent product module.
+
+### MrlAPI
+MRL-owned API gateway, routing, policy, memory, trace, and orchestration layer. External APIs retain their provider names at the adapter boundary.
+
+### mrlclaude
+MRL-owned Claude material adapter and derived workflow layer. `Claude` remains the external source/provider name.
+
+### mrlcloud
+MRL-owned cloud abstraction, deployment, synchronization, and infrastructure control layer. Vendor cloud identifiers remain unchanged where technically required.
+
+### FlowAgent
+Original MRL product module. Preserve its name, history, files, packages, interfaces, and runtime lineage in full.
+
+## Boundary pattern
+
+```text
+External provider or platform
+  -> MRL_Adapters/<Provider>
+  -> material/provenance record
+  -> MRL_Extensions/<MRL-owned extension>
+  -> FlowAgent or other MRL-native product module
+```
+
+The external adapter boundary and MRL-owned implementation boundary must remain distinguishable.
+
+An extension must preserve source evidence, use separate MRL-owned identifiers, declare dependencies, and return traces to MRL_Mother. Nothing in this folder grants authorization rights; root authority registries control authorization scope.
