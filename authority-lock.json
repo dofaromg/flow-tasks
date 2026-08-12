@@ -27,15 +27,15 @@
     "AGENTS.md",
     ".github/CODEOWNERS",
     ".github/workflows/mrl_governance_lock.yml",
-    ".mrliou/authority-lock.json"
+    "authority-lock.json"
   ],
   "replacement_exempt_paths": [
-    ".mrliou/authority-lock.json"
+    "authority-lock.json"
   ],
   "replacement_scope": {
     "mode": "git_tracked",
     "exclude_paths": [
-      ".mrliou/authority-lock.json"
+      "authority-lock.json"
     ]
   },
   "signature_targets": {
@@ -43,7 +43,7 @@
       "AGENTS.md"
     ],
     "json": [
-      ".mrliou/authority-lock.json"
+      "authority-lock.json"
     ],
     "yaml": [
       ".github/workflows/mrl_governance_lock.yml"

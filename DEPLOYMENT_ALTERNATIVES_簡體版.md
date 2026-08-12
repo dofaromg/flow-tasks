@@ -160,7 +160,7 @@ A: Google Kubernetes Engine (GKE) - 穩定可靠！
 
 ## 🆘 需要協助？
 
-有問題請到：[GitHub Issues](https://github.com/dofaromg/flow-tasks/issues)
+有問題請到：[GitHub Issues](https://github.com/dofaromg/FlowAgent.Runtime/issues)
 
 ---
 

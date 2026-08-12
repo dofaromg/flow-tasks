@@ -32,7 +32,7 @@ jobs:
           set -euo pipefail
           if git --no-pager diff --unified=0 "${BASE_SHA}...HEAD" -- \
               AGENTS.md \
-              .mrliou/authority-lock.json \
+              authority-lock.json \
               .github/CODEOWNERS \
               .github/workflows/mrl_governance_lock.yml \
             | grep -E '^\-[^-].*(origin_signature: MrLiouWord|FlowAgent\.Runtime|MrLiouWord)'; then

@@ -118,7 +118,7 @@
           "type": "task-request",
           "description": "幫我建新的，然後私人ㄦ",
           "repoOwner": "dofaromg",
-          "repoName": "flow-tasks",
+          "repoName": "FlowAgent.Runtime",
           "ref": "main"
         }
       ],

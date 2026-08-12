@@ -65,8 +65,8 @@ kubectl apply -k cluster/overlays/prod/
 
 ### 選項 B: Docker 本地部署
 ```bash
-git clone https://github.com/dofaromg/flow-tasks.git
-cd flow-tasks
+git clone https://github.com/dofaromg/FlowAgent.Runtime.git
+cd FlowAgent.Runtime
 docker-compose up -d
 # 訪問 http://localhost:3000
 ```
@@ -147,8 +147,8 @@ docker-compose up -d
 - [GKE 部署指南](DEPLOYMENT.md)
 
 ### 社群支持
-- [GitHub Issues](https://github.com/dofaromg/flow-tasks/issues)
-- [GitHub Discussions](https://github.com/dofaromg/flow-tasks/discussions)
+- [GitHub Issues](https://github.com/dofaromg/FlowAgent.Runtime/issues)
+- [GitHub Discussions](https://github.com/dofaromg/FlowAgent.Runtime/discussions)
 
 ---
 

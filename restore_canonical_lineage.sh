@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIG_PATH="${ROOT_DIR}/.mrliou/authority-lock.json"
+CONFIG_PATH="${ROOT_DIR}/authority-lock.json"
 MODE="${1:-}"
 
 if [[ "${MODE}" != "" && "${MODE}" != "--check" ]]; then
@@ -46,7 +46,7 @@ required_fixes: list[str] = []
 
 def git(*args: str, allow_one: bool = False) -> str:
     proc = subprocess.run(
-        ["git", *args],
+        ["git", "-c", "core.quotePath=false", *args],
         cwd=root,
         text=True,
         capture_output=True,
