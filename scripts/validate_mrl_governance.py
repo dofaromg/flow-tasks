@@ -17,6 +17,10 @@ HISTORY="config/MRL_HISTORICAL_EXTENSION_MAP_v1.json"
 AUTH="config/MRL_AUTHORIZATION_REGISTRY_v1.json"
 MIGRATIONS="config/MRL_MIGRATION_CONTRACTS_v1.json"
 CRITICAL="config/MRL_CRITICAL_ASSET_INVENTORY_v1.json"
+TRANSLATION="config/MRL_CLOUDFLARE_TRANSLATION_MAP_v1.json"
+TRANSLATION_DOC="MRL_Mother/MRL_Adapters/Cloudflare/MRL_CLOUDFLARE_TRANSLATION_STATION_v1.md"
+TRANSLATION_ENGINE="scripts/mrl_cloudflare_translation_station.py"
+TRANSLATION_TEST="tests/test_mrl_cloudflare_translation_station.py"
 LICENSE_SCOPE="config/MRL_LICENSE_SCOPE_REGISTRY_v1.json"
 ROOT_AUTH="MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md"
 RIGHTS="MRL_Mother/00_rootlaw/MRL_AUTHORIZATION_AND_OPERATING_RIGHTS_v1.md"
@@ -28,6 +32,9 @@ IDENTIFIERS={"MrLiouWord","origin_signature","MRL","MRL_Mother","MrliouAI","Flow
 EXACT={"LICENSE","LICENSE_MrLiou_OpenSource_CC.md","vercel.json","flowos/wrangler.toml","particle-chat-v42/wrangler.toml","particle-edge-v4/wrangler.toml","vector-attention-engine/wrangler.jsonc","MRL_Mother/root_sources/wrangler.jsonc",ROOTLAW,ENGINE,GUARD,".github/CODEOWNERS",".github/workflows/mrl-root-governance-gate.yml","scripts/validate_mrl_governance.py"}
 MIGRATION_FIELDS={"record_id","source_identifier","target_identifier","classification","compatibility_alias","dependency_set","data_effects","rollback","authorized_by","authorization_reference","verification","status"}
 AUTH_FIELDS={"record_id","grantee","scope","actions","issued_by","issued_at","expires_at","evidence_reference","rollback"}
+TRANSLATION_PARAMETERS={"delta_identity","delta_runtime","delta_source_root","delta_entrypoint","delta_build_method","delta_deploy_policy","delta_binding_contract","delta_trigger","delta_method_signature","delta_encoding_invariant","delta_history_return","delta_timing","delta_provenance"}
+TRANSLATION_FORMULAS={"known_weight","mismatch_weight","total_weight","singularity_score","confidence","forward","reverse","round_trip","encoding"}
+TRANSLATION_RETURN_FIELDS={"event_id","map_id","mapping_version","origin_signature","canonical_profile","provider","provider_kind","external_project","source_sha","build_id","parameter_snapshot","delta_vector","singularity_score","confidence","result","observed_at"}
 
 class Failure(RuntimeError): pass
 def fail(msg): raise Failure(msg)
@@ -73,6 +80,64 @@ def approved_migration(term,records,classification=None):
         if not classification and r.get("source_identifier")!=term: continue
         return True
     return False
+
+def validate_translation(ref=None):
+    data=obj(TRANSLATION,ref)
+    if data.get("schema_version")!="1.0.0" or data.get("origin_signature")!="MrLiouWord": fail("translation map identity mismatch")
+    if not data.get("mapping_version") or data.get("map_id")!="MRL_Cloudflare_TranslationStation_v1": fail("translation map version missing")
+    authority=data.get("authority",{})
+    if authority.get("canonical_root")!="MRL" or authority.get("external_provider")!="Cloudflare" or authority.get("provider_role")!="adapter": fail("translation authority boundary mismatch")
+    for flag in ("destructive_side_rewrite_allowed","implicit_name_equivalence_allowed","unknown_is_match","history_rewrite_allowed"):
+        if authority.get(flag) is not False: fail(f"translation safety flag enabled: {flag}")
+    if data.get("tri_state")!={"MATCH":0,"MISMATCH":1,"UNKNOWN":None}: fail("translation tri-state changed")
+
+    parameters=data.get("inconsistency_parameters")
+    if not isinstance(parameters,list): fail("translation parameters missing")
+    parameter_ids=[]
+    for item in parameters:
+        if not isinstance(item,dict) or not isinstance(item.get("id"),str): fail("invalid translation parameter")
+        if not isinstance(item.get("weight"),int) or item["weight"]<=0 or not isinstance(item.get("critical"),bool): fail(f"invalid translation parameter contract: {item.get('id')}")
+        parameter_ids.append(item["id"])
+    if set(parameter_ids)!=TRANSLATION_PARAMETERS or len(parameter_ids)!=len(set(parameter_ids)): fail("translation parameter coverage mismatch")
+    if not TRANSLATION_FORMULAS.issubset(data.get("formulas",{})): fail("translation formula coverage mismatch")
+
+    profiles=data.get("canonical_profiles")
+    if not isinstance(profiles,list) or not profiles: fail("canonical translation profiles missing")
+    profile_ids=[]
+    profile_map={}
+    for profile in profiles:
+        if not isinstance(profile,dict) or not isinstance(profile.get("id"),str) or not profile.get("canonical_identity") or not profile.get("deploy_policy"): fail("invalid canonical translation profile")
+        profile_ids.append(profile["id"]); profile_map[profile["id"]]=profile
+    if len(profile_ids)!=len(set(profile_ids)): fail("duplicate canonical translation profile")
+
+    nodes=data.get("external_nodes")
+    if not isinstance(nodes,list) or len(nodes)!=4: fail("Cloudflare external-node coverage mismatch")
+    node_keys=[]
+    for node in nodes:
+        if not isinstance(node,dict): fail("invalid external translation node")
+        key=(node.get("provider_kind"),node.get("external_project")); node_keys.append(key)
+        if key[0] not in {"pages","workers"} or not isinstance(key[1],str): fail("invalid external translation identity")
+        candidate=node.get("candidate_profile")
+        if candidate not in profile_map: fail(f"unknown translation candidate: {candidate}")
+        if node.get("link_state")!="active_verified" and node.get("forward_action")!="HOLD": fail(f"unverified translation node can deploy: {key}")
+        if profile_map[candidate].get("deploy_policy") in {"gke_gitops","requires_explicit_deployment","local_backfill_no_deploy"} and node.get("forward_action")!="HOLD": fail(f"no-deploy translation node can deploy: {key}")
+        vector=node.get("delta_states",{})
+        if set(vector)!=TRANSLATION_PARAMETERS or not set(vector.values()).issubset({"MATCH","MISMATCH","UNKNOWN"}): fail(f"translation delta vector invalid: {key}")
+        if not re.fullmatch(r"[0-9a-f]{40}",str(node.get("observed_source_sha",""))): fail(f"translation source SHA invalid: {key}")
+    if len(node_keys)!=len(set(node_keys)): fail("duplicate Cloudflare external translation node")
+    mrl_store=next((n for n in nodes if n.get("provider_kind")=="workers" and n.get("external_project")=="mrl-store"),{})
+    if mrl_store.get("link_state")!="unverified_name_similarity_only" or mrl_store.get("delta_states",{}).get("delta_identity")!="UNKNOWN": fail("mrl-store identity was inferred")
+
+    history=data.get("method_change_history")
+    if not isinstance(history,list) or len(history)<3 or any(item.get("method")!="utf8ToBase64" for item in history if isinstance(item,dict)): fail("translation method-change history incomplete")
+    times=[item.get("observed_at") for item in history]
+    if times!=sorted(times): fail("translation method-change history unordered")
+    if not TRANSLATION_RETURN_FIELDS.issubset(data.get("return_evidence_fields",[])): fail("translation return evidence incomplete")
+    if len(data.get("invariants",[]))<7: fail("translation invariants incomplete")
+    tokens(TRANSLATION_DOC,["Three-state difference model","Forward translation","Reverse translation","Round-trip invariant","UTF-8/Base64 method invariant","`UNKNOWN` is never converted to `MATCH`"],ref)
+    tokens(TRANSLATION_ENGINE,["def validate_registry","def score_delta_vector","def translate_forward","def translate_reverse","def verify_encoding_invariant","sanitize_snapshot"],ref)
+    tokens(TRANSLATION_TEST,["test_unknown_critical_parameters_never_pass","test_verified_synthetic_link_round_trips_without_renaming","test_encoding_formula_is_chunk_invariant_for_unicode_and_large_input"],ref)
+    return {"parameters":len(parameter_ids),"canonical_profiles":len(profile_ids),"external_nodes":len(nodes),"method_changes":len(history)}
 
 def validate_static(ref=None):
     manifest=obj(MANIFEST,ref)
@@ -145,7 +210,8 @@ def validate_static(ref=None):
     for item in obj(CRITICAL,ref).get("required_files",[]):
         if not isinstance(item,dict) or not isinstance(item.get("path"),str): fail("critical inventory entry invalid")
         real(item["path"],ref)
-    return {"expected":len(paths),"present":len(paths),"sha256_covered":len(sums)}
+    translation=validate_translation(ref)
+    return {"expected":len(paths),"present":len(paths),"sha256_covered":len(sums),"translation":translation}
 
 def term_count(ref,term):
     out=git("grep","-I","-o","-F","--no-color","-e",term,ref,"--",".",allow_one=True)

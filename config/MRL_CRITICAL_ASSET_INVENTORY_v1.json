@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "origin_signature": "MrLiouWord",
   "deletion_default": "DENY",
   "required_files": [
@@ -38,13 +38,44 @@
     {
       "path": "MRL_Mother/09_workflow/MRL_OriginBoundary_Guard_v1.py",
       "classification": "runtime_boundary"
+    },
+    {
+      "path": "config/MRL_CLOUDFLARE_TRANSLATION_MAP_v1.json",
+      "classification": "external_adapter_translation_map"
+    },
+    {
+      "path": "scripts/mrl_cloudflare_translation_station.py",
+      "classification": "bidirectional_translation_boundary"
+    },
+    {
+      "path": "MRL_Mother/MRL_Adapters/Cloudflare/MRL_CLOUDFLARE_TRANSLATION_STATION_v1.md",
+      "classification": "translation_formula_and_invariant_spec"
     }
   ],
   "unresolved_inventory": [
     {
       "name": "mrl-store",
+      "provider_kind": "workers",
       "status": "UNVERIFIED_IN_THIS_REPOSITORY",
       "action": "do_not_claim_present_or_absent_without_repository_evidence"
+    },
+    {
+      "name": "flow-tasks",
+      "provider_kind": "pages",
+      "status": "HISTORICAL_SHADOW_UNVERIFIED",
+      "action": "capture_cloudflare_root_build_output_and_promotion_parameters"
+    },
+    {
+      "name": "flow-tasks",
+      "provider_kind": "workers",
+      "status": "HISTORICAL_FAILURE_SCOPE_UNVERIFIED",
+      "action": "do_not_equate_with_flowos_neural_gate_without_explicit_mapping"
+    },
+    {
+      "name": "mrlflow-tasks",
+      "provider_kind": "workers",
+      "status": "SHELL_NOT_PROMOTED",
+      "action": "require_entrypoint_build_binding_and_operator_promotion_evidence"
     }
   ]
 }

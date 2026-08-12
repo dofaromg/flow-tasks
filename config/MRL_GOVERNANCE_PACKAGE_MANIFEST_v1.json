@@ -11,7 +11,7 @@
     "no_global_rename",
     "no_implicit_authorization"
   ],
-  "expected_file_count": 28,
+  "expected_file_count": 34,
   "dependency_tree": {
     "authority": [
       "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
@@ -38,11 +38,18 @@
       "MRL_Mother/06_trace/MRL_GITHUB_CHANGE_INCIDENT_20260729_v1.md",
       "MRL_Mother/06_trace/MRL_GOVERNANCE_PACKAGE_SHA256SUMS_v1.txt",
       "docs/governance/MRL_THREE_WAY_AUDIT_SYSTEM_MAP_20260730.md"
+    ],
+    "translation_boundary": [
+      "MRL_Mother/MRL_Adapters/Cloudflare/README.md",
+      "MRL_Mother/MRL_Adapters/Cloudflare/MRL_CLOUDFLARE_TRANSLATION_STATION_v1.md",
+      "config/MRL_CLOUDFLARE_TRANSLATION_MAP_v1.json",
+      "scripts/mrl_cloudflare_translation_station.py",
+      "tests/test_mrl_cloudflare_translation_station.py"
     ]
   },
   "requested_vs_delivered": {
     "requested": "find missing governance and add laws and explanations",
-    "delivered": "28 governed artifacts including 22 new files and 5 runtime/rule/test modifications plus one SHA256 evidence file; includes the three-way system, authorization, provenance, and causal audit",
+    "delivered": "34 governed artifacts including the original root governance chain plus a bidirectional Cloudflare translation boundary, 13 three-state inconsistency parameters, forward/reverse formulas, round-trip tests, and SHA256 evidence",
     "coverage_target": "100%"
   },
   "artifacts": [
@@ -190,7 +197,11 @@
         "config/MRL_NAMING_LINEAGE_REGISTRY_v1.json",
         "config/MRL_HISTORICAL_EXTENSION_MAP_v1.json",
         "config/MRL_AUTHORIZATION_REGISTRY_v1.json",
-        "config/MRL_MIGRATION_CONTRACTS_v1.json"
+        "config/MRL_MIGRATION_CONTRACTS_v1.json",
+        "config/MRL_CLOUDFLARE_TRANSLATION_MAP_v1.json",
+        "MRL_Mother/MRL_Adapters/Cloudflare/MRL_CLOUDFLARE_TRANSLATION_STATION_v1.md",
+        "scripts/mrl_cloudflare_translation_station.py",
+        "tests/test_mrl_cloudflare_translation_station.py"
       ],
       "required": true
     },
@@ -228,7 +239,8 @@
       "path": ".github/workflows/mrl-governance-tests.yml",
       "dependencies": [
         "scripts/validate_mrl_governance.py",
-        "MRL_Mother/tests_mrl_ai_system/test_MRL_governance_contracts.py"
+        "MRL_Mother/tests_mrl_ai_system/test_MRL_governance_contracts.py",
+        "tests/test_mrl_cloudflare_translation_station.py"
       ],
       "required": true
     },
@@ -246,6 +258,56 @@
         "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
         "config/MRL_AUTHORIZATION_REGISTRY_v1.json",
         "MRL_Mother/06_trace/MRL_GITHUB_CHANGE_INCIDENT_20260729_v1.md"
+      ],
+      "required": true
+    },
+    {
+      "path": "MRL_Mother/MRL_Adapters/Cloudflare/README.md",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+        "MRL_Mother/MRL_Adapters/Cloudflare/MRL_CLOUDFLARE_TRANSLATION_STATION_v1.md",
+        "config/MRL_CLOUDFLARE_TRANSLATION_MAP_v1.json"
+      ],
+      "required": true
+    },
+    {
+      "path": "MRL_Mother/MRL_Adapters/Cloudflare/MRL_CLOUDFLARE_TRANSLATION_STATION_v1.md",
+      "dependencies": [
+        "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
+        "config/MRL_CLOUDFLARE_TRANSLATION_MAP_v1.json",
+        "MRL_RelayStation/evidence/MRL_AUTHORITY_EVIDENCE_CHAIN_v1.jsonl"
+      ],
+      "required": true
+    },
+    {
+      "path": "config/MRL_CLOUDFLARE_TRANSLATION_MAP_v1.json",
+      "dependencies": [
+        "config/MRL_CRITICAL_ASSET_INVENTORY_v1.json",
+        "flowos/wrangler.toml",
+        "MRL_RelayStation/evidence/MRL_AUTHORITY_EVIDENCE_CHAIN_v1.jsonl"
+      ],
+      "required": true
+    },
+    {
+      "path": "scripts/mrl_cloudflare_translation_station.py",
+      "dependencies": [
+        "config/MRL_CLOUDFLARE_TRANSLATION_MAP_v1.json",
+        "MRL_Mother/MRL_Adapters/Cloudflare/MRL_CLOUDFLARE_TRANSLATION_STATION_v1.md"
+      ],
+      "required": true
+    },
+    {
+      "path": "tests/test_mrl_cloudflare_translation_station.py",
+      "dependencies": [
+        "scripts/mrl_cloudflare_translation_station.py",
+        "config/MRL_CLOUDFLARE_TRANSLATION_MAP_v1.json"
+      ],
+      "required": true
+    },
+    {
+      "path": "CHANGELOG.md",
+      "dependencies": [
+        "MRL_Mother/MRL_Adapters/Cloudflare/MRL_CLOUDFLARE_TRANSLATION_STATION_v1.md"
       ],
       "required": true
     },

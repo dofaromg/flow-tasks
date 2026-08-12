@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added the MRL Cloudflare Translation Station v1 as a non-destructive,
+  bidirectional boundary between canonical MRL deployment intent and Cloudflare
+  Pages/Workers project grammar.
+- Added 13 weighted three-state inconsistency parameters, forward/reverse
+  translation formulas, round-trip provenance invariants, and chunk-independent
+  UTF-8/Base64 verification.
+- Added machine-readable mappings for the four Cloudflare nodes observed on PR
+  #616. All unresolved, shell, historical-shadow, and local-backfill identities
+  default to `HOLD`; no Cloudflare project is renamed or automatically remapped.
+- Added append-only provider result normalization with secret-value redaction,
+  unit tests, governance-manifest coverage, and SHA-256 evidence.
+
 ## [3.0.0] - 2026-02-09
 
 ### Changed
