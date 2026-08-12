@@ -178,8 +178,8 @@ export default function MrliouMobile() {
                 <Card title="PersistentLoop" subtitle="執行循環與狀態協調。" right={<StatusPill value={loop?.persistent_loop?.status} />}>
                   <Metric label="Role" value={loop?.persistent_loop?.role} />
                   <Metric label="Convergence Engine" value={convergence?.engine} />
-                  <Metric label="Threshold" value={convergence?.convergence_threshold} />
-                  <Metric label="Last Check" value={convergence?.last_check} />
+                  <Metric label="Threshold" value={convergence?.mobius_loop?.convergence_threshold} />
+                  <Metric label="Last Check" value={convergence?.snapshot_generated_at || convergence?.timestamp} />
                 </Card>
                 <Card title="Layer A" subtitle="目前 runtime signal source。" right={<StatusPill value={status?.layer_a?.status} />}>
                   <Metric label="Signal Source" value={status?.layer_a?.signal_source} mono />
@@ -227,7 +227,7 @@ export default function MrliouMobile() {
                   <Metric label="Artifact Storage" value="Google Drive" />
                   <Metric label="Visualization" value="Mrliou Mobile" />
                   <Metric label="Consistency Audit" value="MRL Audit" />
-                  <Metric label="Final Approval" value="Human owner" />
+                  <Metric label="Final Approval" value="Mr.liou" />
                 </Card>
               </>
             )}
