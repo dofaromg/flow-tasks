@@ -45,11 +45,10 @@ class MRLRelay:
             "observed_at": ts,
             "source_ref": source_ref,
             "actor": actor,
-            "external_snapshot": deepcopy(observed),
-            "external_snapshot_hash": _hash(observed),
+            "source_payload_hash": _hash(observed),
             "previous_record_hash": self._last_hash(),
             "origin_signature": ORIGIN_SIGNATURE,
-            "evidence_status": "OBSERVED",
+            "evidence_status": "HASH_ONLY",
             "inference_status": "NONE",
         }
         with self.ledger_path.open("a", encoding="utf-8", newline="\n") as fh:
@@ -66,24 +65,23 @@ class MRLRelay:
 
     def rewrite_inbound_for_mrl(self, observed: Dict[str, Any], *, canonical_hint: Optional[str] = None) -> Dict[str, Any]:
         source = deepcopy(observed)
-        original_name = source.get("canonical_name") or source.get("name") or source.get("external_name") or "External"
-        canonical_name = self.canonicalize_name(str(original_name), canonical_hint=canonical_hint)
-        rewritten = deepcopy(source)
+        incoming_name = source.get("canonical_name") or source.get("name") or source.get("external_name") or "External"
+        canonical_name = self.canonicalize_name(str(incoming_name), canonical_hint=canonical_hint)
 
-        for key in ("name", "external_name", "canonical_name", "product", "external_product", "canonical_product"):
-            if key in rewritten:
-                rewritten[key] = canonical_name
-
+        blocked_identity_fields = {
+            "name", "external_name", "canonical_name",
+            "product", "external_product", "canonical_product",
+            "source_metadata", "external_metadata",
+        }
+        rewritten = {k: deepcopy(v) for k, v in source.items() if k not in blocked_identity_fields}
+        rewritten["name"] = canonical_name
+        rewritten["product"] = canonical_name
         rewritten["canonical_name"] = canonical_name
         rewritten["canonical_product"] = canonical_name
         rewritten["origin_signature"] = ORIGIN_SIGNATURE
         rewritten["projection_mode"] = "MRL_CANONICAL_REWRITE"
-        rewritten["source_metadata"] = {
-            "original_external_name": original_name,
-            "original_external_product": source.get("product") or source.get("external_product") or source.get("canonical_product"),
-            "source_ref": source.get("source_ref"),
-            "source_hash": _hash(source),
-        }
+        rewritten["source_ref"] = source.get("source_ref")
+        rewritten["source_hash"] = _hash(source)
         return rewritten
 
     def process_inbound(self, observed: Dict[str, Any], *, source_ref: str,
@@ -92,7 +90,7 @@ class MRLRelay:
         evidence = self.ingest_external(observed, source_ref=source_ref, actor=actor, observed_at=observed_at)
         rewritten = self.rewrite_inbound_for_mrl(observed, canonical_hint=canonical_hint)
         return {
-            "external_evidence": evidence,
+            "evidence": evidence,
             "mrl_view": rewritten,
             "external_mutated": False,
             "mrl_side_rewritten": True,
@@ -104,12 +102,8 @@ class MRLRelay:
             "display_product": canonical.get("canonical_product", canonical.get("canonical_name")),
             "canonical_history": deepcopy(canonical.get("canonical_history", [])),
             "origin_signature": canonical.get("origin_signature", ORIGIN_SIGNATURE),
-            "external_metadata": {
-                "external_name": external.get("name") or external.get("external_name"),
-                "external_product": external.get("product") or external.get("external_product"),
-                "source_ref": external.get("source_ref"),
-                "external_snapshot_hash": _hash(external),
-            },
+            "source_ref": external.get("source_ref"),
+            "source_hash": _hash(external),
             "projection_mode": "MRL_CANONICAL_PRIMARY",
         }
 
@@ -120,12 +114,11 @@ class MRLRelay:
             "target": "shadow_state",
             "canonical_mutated": False,
             "canonical_snapshot": deepcopy(canonical),
-            "proposed_write": deepcopy(proposed),
+            "proposed_hash": _hash(proposed),
             "mrl_rewritten_proposal": rewritten,
             "requires_validation": True,
             "requires_root_authorization": True,
             "before_hash": _hash(canonical),
-            "proposed_hash": _hash(proposed),
             "origin_signature": ORIGIN_SIGNATURE,
         }
 
