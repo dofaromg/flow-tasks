@@ -1,6 +1,16 @@
+from __future__ import annotations
+
+import importlib.util
 from pathlib import Path
 
-from MRL_Mother._06_trace.MRL_EvidenceVault_v1 import MRL_EvidenceVault, verify_ledger
+MODULE_PATH = Path(__file__).resolve().parents[1] / "06_trace" / "MRL_EvidenceVault_v1.py"
+spec = importlib.util.spec_from_file_location("MRL_EvidenceVault_v1", MODULE_PATH)
+module = importlib.util.module_from_spec(spec)
+assert spec and spec.loader
+spec.loader.exec_module(module)
+
+MRL_EvidenceVault = module.MRL_EvidenceVault
+verify_ledger = module.verify_ledger
 
 
 def test_append_only_evidence_chain(tmp_path: Path):
