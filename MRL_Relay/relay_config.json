@@ -1,11 +1,12 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "origin_signature": "MrLiouWord",
   "mode": "independent_middle_processing_layer",
   "left_terminal": {
     "role": "external_source",
     "authority": "external_only",
     "accept_names_as_observed": true,
+    "mutate_external_source": false,
     "allow_direct_canonical_write": false
   },
   "middle_layer": {
@@ -14,6 +15,8 @@
     "preserve_before_after": true,
     "preserve_source_ref": true,
     "preserve_original_name": true,
+    "rewrite_all_inbound_for_mrl": true,
+    "default_unmapped_prefix": "MRL_",
     "projection_required": true,
     "validation_required": true
   },
@@ -22,6 +25,7 @@
     "display_authority": "MRL",
     "display_external_alias_as_primary": false,
     "external_write_mode": "shadow_only",
-    "root_authorization_required_for_canonical_change": true
+    "root_authorization_required_for_canonical_change": true,
+    "canonical_rewrite_is_local_only": true
   }
 }
