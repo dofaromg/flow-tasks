@@ -24,4 +24,4 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install --disable-pip-version-check pytest pyyaml
       - run: python scripts/validate_mrl_governance.py --ref HEAD
-      - run: python -m pytest -q MRL_Mother/tests_mrl_ai_system/test_MRL_governance_contracts.py MRL_Mother/tests_mrl_ai_system/test_MRL_flowagent_lawengine.py MRL_Mother/tests_mrl_ai_system/test_MRL_origin_boundary_guard.py
+      - run: python -m pytest -q MRL_Mother/tests_mrl_ai_system/test_MRL_governance_contracts.py MRL_Mother/tests_mrl_ai_system/test_MRL_flowagent_lawengine.py MRL_Mother/tests_mrl_ai_system/test_MRL_origin_boundary_guard.py MRL_Mother/tests_mrl_ai_system/test_MRL_canonical_projection.py
