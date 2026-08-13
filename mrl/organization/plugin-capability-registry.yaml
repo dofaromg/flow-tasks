@@ -1,0 +1,90 @@
+organization: MRL_RnD_Team_v1
+origin_signature: MrLiouWord
+record_date: 2026-08-13
+
+state_model:
+  OBSERVED_PLUGIN: visible in user-provided plugin UI / screen recording
+  CALLABLE_NOW: exposed to this conversation as a callable connector/tool
+  CONNECTED_READ: successful read performed
+  CONNECTED_WRITE: successful write performed
+  UNVERIFIED: not yet checked in current context
+
+callable_now:
+  research:
+    - Consensus
+    - Sider_Scholar
+    - Coursera
+    - Podcast_App
+  engineering:
+    - GitHub
+    - Vercel
+    - Atlassian_Rovo
+    - OpenAI_Platform
+    - Alpic
+  design:
+    - Figma
+    - Canva
+    - Adobe
+  data_observability:
+    - Airtable
+    - PostHog
+    - Alpaca
+  coordination:
+    - Slack
+    - Linear
+    - Gmail
+    - Google_Calendar
+    - Google_Contacts
+  evidence_storage:
+    - Notion
+    - Google_Drive
+    - Dropbox
+  business_delivery:
+    - Stripe
+    - HubSpot
+  discovery_reference:
+    - AllTrails
+    - Booking.com
+    - Tripadvisor
+  creative_media:
+    - Krikey_AI_Animation
+
+observed_in_screen_recording:
+  - Gmail
+  - GitHub
+  - Google Drive
+  - Google Calendar
+  - Notion
+  - Slack
+  - Dropbox
+  - Linear
+  - Vercel
+  - Figma
+  - Canva
+  - Adobe
+  - Consensus
+  - Sider Scholar
+  - Coursera
+  - Podcast App
+  - PostHog
+  - Airtable
+  - Alpaca
+  - Atlassian Rovo
+  - Stripe
+  - Tripadvisor
+  - Booking.com
+  - Data Analytics
+  - Spreadsheets
+  - Presentations
+  - PDF
+  - Outlook Email
+  - Teams
+  - security/compliance plugin candidates visible in the catalog
+
+rules:
+  - observed_does_not_imply_connected
+  - callable_does_not_imply_permission_for_every_action
+  - tool_name_is_interface_not_mrl_canonical_identity
+  - supplied_implementation_defaults_to_IMPLEMENTED_SOURCE
+  - runtime_verification_is_separate
+  - final_approval_is_Mr_liou
