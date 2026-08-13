@@ -5,6 +5,11 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [mrl-governance-verify]
+  issues:
+    types: [opened]
 
 permissions:
   contents: read
@@ -31,6 +36,6 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: python scripts/validate_mrl_governance.py --base "$BASE_SHA" --head "$HEAD_SHA"
-      - name: Validate main
-        if: github.event_name == 'push'
+      - name: Validate current main/default ref
+        if: github.event_name != 'pull_request_target'
         run: python scripts/validate_mrl_governance.py --ref HEAD
