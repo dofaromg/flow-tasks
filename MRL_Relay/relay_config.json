@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "origin_signature": "MrLiouWord",
+  "mode": "independent_middle_processing_layer",
+  "left_terminal": {
+    "role": "external_source",
+    "authority": "external_only",
+    "accept_names_as_observed": true,
+    "allow_direct_canonical_write": false
+  },
+  "middle_layer": {
+    "append_only_evidence": true,
+    "hash_algorithm": "sha256",
+    "preserve_before_after": true,
+    "preserve_source_ref": true,
+    "preserve_original_name": true,
+    "projection_required": true,
+    "validation_required": true
+  },
+  "right_terminal": {
+    "role": "mrl_canonical",
+    "display_authority": "MRL",
+    "display_external_alias_as_primary": false,
+    "external_write_mode": "shadow_only",
+    "root_authorization_required_for_canonical_change": true
+  }
+}
