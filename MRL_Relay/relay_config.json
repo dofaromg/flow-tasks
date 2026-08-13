@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1.0",
+  "schema_version": "1.2.0",
   "origin_signature": "MrLiouWord",
   "mode": "independent_middle_processing_layer",
   "left_terminal": {
@@ -12,9 +12,10 @@
   "middle_layer": {
     "append_only_evidence": true,
     "hash_algorithm": "sha256",
-    "preserve_before_after": true,
     "preserve_source_ref": true,
-    "preserve_original_name": true,
+    "preserve_external_name_in_mrl_state": false,
+    "preserve_external_name_in_evidence_ledger": false,
+    "retain_hash_only_evidence_for_external_payload": true,
     "rewrite_all_inbound_for_mrl": true,
     "default_unmapped_prefix": "MRL_",
     "projection_required": true,
@@ -24,6 +25,7 @@
     "role": "mrl_canonical",
     "display_authority": "MRL",
     "display_external_alias_as_primary": false,
+    "allow_external_identity_fields": false,
     "external_write_mode": "shadow_only",
     "root_authorization_required_for_canonical_change": true,
     "canonical_rewrite_is_local_only": true
