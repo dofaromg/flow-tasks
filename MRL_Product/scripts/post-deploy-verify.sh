@@ -52,21 +52,27 @@ done
 echo ""
 echo "── HTTP 端點驗收 ──"
 
-# 直接打 app port（繞過 nginx）
-check_http "/health (direct app:$APP_PORT)" "http://$HOST:$APP_PORT/health" "200"
+# App 的 3000 只暴露在 Docker network，不對 host publish。
+# 因此 direct-app probe 必須在 app 容器內執行，避免 localhost:3000 假性失敗。
+APP_STATUS=$(docker exec mrl-app sh -c "curl -s -o /dev/null -w '%{http_code}' --max-time 10 http://127.0.0.1:${APP_PORT}/health" 2>/dev/null || echo "000")
+if [ "$APP_STATUS" = "200" ]; then
+  log_ok "/health (inside mrl-app:$APP_PORT) (HTTP 200)"
+else
+  log_fail "/health (inside mrl-app:$APP_PORT) (expected 200, got $APP_STATUS)"
+fi
 
-# 透過 nginx
+# 透過 nginx 對外入口
 check_http "/health (via nginx:$PORT)"      "http://$HOST:$PORT/health" "200"
 check_http "/ (homepage)"                   "http://$HOST:$PORT/" "200"
 check_http "/pricing.html"                  "http://$HOST:$PORT/pricing.html" "200"
 
 # API
-check_http "POST /api/session"              "http://$HOST:$PORT/api/session" "405"  # GET 會 405
+check_http "GET /api/session → 405"          "http://$HOST:$PORT/api/session" "405"
 check_http "GET /api/nonexistent → 404"     "http://$HOST:$PORT/api/nonexistent_endpoint_xyz" "404"
 
 echo ""
 echo "── Health Response 內容 ──"
-HEALTH_BODY=$(curl -s --max-time 10 "http://$HOST:$APP_PORT/health" 2>/dev/null || echo '{}')
+HEALTH_BODY=$(docker exec mrl-app sh -c "curl -s --max-time 10 http://127.0.0.1:${APP_PORT}/health" 2>/dev/null || echo '{}')
 if echo "$HEALTH_BODY" | grep -q '"status":"ok"'; then
   log_ok "health.status = ok"
 else
