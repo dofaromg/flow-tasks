@@ -1,0 +1,95 @@
+name: MRL Product CI
+
+on:
+  pull_request:
+    paths:
+      - 'MRL_Product/**'
+      - '.github/workflows/mrl-product-ci.yml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'MRL_Product/**'
+      - '.github/workflows/mrl-product-ci.yml'
+  workflow_dispatch:
+
+jobs:
+  runtime-contract:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: MRL_Product
+    env:
+      NODE_ENV: development
+      PORT: '3000'
+      BASE_URL: http://127.0.0.1:3000
+      DB_PATH: ./storage/ci.sqlite
+      JWT_SECRET: ci-only-jwt-secret
+      ADMIN_KEY: ci-only-admin-key
+      ANTHROPIC_API_KEY: ci-placeholder-not-called
+      STRIPE_MODE: test
+      STRIPE_SECRET_KEY: sk_test_ci_placeholder_not_real
+      STRIPE_WEBHOOK_SECRET: whsec_ci_placeholder_not_real
+      STRIPE_PRICE_SUB: price_ci_placeholder_not_real
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: MRL_Product/package-lock.json
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Shell syntax checks
+        run: |
+          bash -n scripts/health-check.sh
+          bash -n scripts/post-deploy-verify.sh
+          bash -n scripts/backup.sh
+          bash -n scripts/rollback.sh
+
+      - name: Config guard check
+        run: node -e "const c=require('./backend/config'); if(c.stripeMode!=='test') process.exit(1); console.log('stripeMode='+c.stripeMode)"
+
+      - name: Start local runtime
+        run: |
+          node backend/server.js > /tmp/mrl-product-ci.log 2>&1 &
+          echo $! > /tmp/mrl-product-ci.pid
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:3000/health >/tmp/health.json; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/mrl-product-ci.log
+          exit 1
+
+      - name: Verify health and session contract
+        run: |
+          grep -q '"status":"ok"' /tmp/health.json
+          grep -q 'MrLiouWord' /tmp/health.json
+          curl -fsS -X POST http://127.0.0.1:3000/api/session -H 'Content-Type: application/json' >/tmp/session.json
+          grep -q '"token"' /tmp/session.json
+
+      - name: Verify SQLite persistence contract
+        run: |
+          test -s storage/ci.sqlite
+          node - <<'NODE'
+          const Database = require('better-sqlite3');
+          const db = new Database('./storage/ci.sqlite');
+          const tables = db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(r => r.name);
+          if (!tables.includes('ledger')) throw new Error(`ledger table missing: ${tables.join(',')}`);
+          console.log(tables.join(','));
+          db.close();
+          NODE
+
+      - name: Build production container
+        run: docker build -f deploy/Dockerfile -t mrl-product-v1:ci .
+
+      - name: Stop local runtime
+        if: always()
+        run: |
+          if [ -f /tmp/mrl-product-ci.pid ]; then kill "$(cat /tmp/mrl-product-ci.pid)" 2>/dev/null || true; fi
+          rm -f storage/ci.sqlite
