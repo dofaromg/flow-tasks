@@ -58,8 +58,9 @@ check "SQLite 存在" \
 check "Logs/app 存在" \
   "ls -d /opt/mrl_product_v1/logs/app 2>/dev/null && echo found" \
   "found"
+# 不依賴 sqlite3 CLI；容器本身已使用 better-sqlite3。
 check "DB 已建表" \
-  "docker compose -f /opt/mrl_product_v1/app/deploy/docker-compose.yml exec -T app sh -c \"sqlite3 /app/storage/db.sqlite '.tables'\"" \
+  "docker exec mrl-app node -e \"const Database=require('better-sqlite3'); const db=new Database(process.env.DB_PATH || '/app/storage/db.sqlite'); const rows=db.prepare('SELECT name FROM sqlite_master WHERE type=\\\"table\\\"').all(); console.log(rows.map(r=>r.name).join(' ')); db.close();\"" \
   "ledger"
 
 echo ""
