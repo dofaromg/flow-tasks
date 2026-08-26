@@ -4,6 +4,7 @@ graph TD
 
   %% 節點定義
   main["● main<br/>L7"]:::trunk
+  agent_mrl_governance_negative_probe_20260826["● agent/mrl-governance-negative-probe-20260826<br/>L3"]:::experimental
   231["● 231<br/>L3"]:::experimental
   MRL_AI_Partner_Origin_v1["● MRL_AI_Partner_Origin_v1<br/>L3"]:::experimental
   MRL_RelayStation_Authority_v1["● MRL_RelayStation_Authority_v1<br/>L3"]:::experimental
@@ -111,6 +112,7 @@ graph TD
   宥麟["● 宥麟<br/>L3"]:::experimental
 
   %% 連結定義
+  main -.->|active| agent_mrl_governance_negative_probe_20260826
   main -.->|active| 231
   main -.->|active| MRL_AI_Partner_Origin_v1
   main -.->|active| MRL_RelayStation_Authority_v1
