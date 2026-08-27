@@ -67,6 +67,16 @@ function getPRData() {
 function buildNeuralNetwork() {
   const branches = getAllBranches();
   const prData = getPRData();
+  const generatedAt = new Date().toISOString();
+  let previousMap = null;
+  try {
+    previousMap = JSON.parse(fs.readFileSync('neural-links/branch-map.json', 'utf-8'));
+  } catch {
+    previousMap = null;
+  }
+  const previousSynapses = new Map(
+    (previousMap?.neural_network?.synapses || []).map(s => [`${s.from}\0${s.to}`, s])
+  );
   const canonicalIds = new Set();
   const rootId = toMRLNodeId('main');
   canonicalIds.add(rootId);
@@ -80,7 +90,7 @@ function buildNeuralNetwork() {
       source_identity_field: "source_branch",
       source_identity_mutated: false
     },
-    updated_at: new Date().toISOString(),
+    updated_at: previousMap?.updated_at || generatedAt,
     neural_network: {
       nodes: [],
       synapses: []
@@ -139,9 +149,15 @@ function buildNeuralNetwork() {
       type: pr?.state === "MERGED" ? "merge" : "influence",
       weight: pr?.state === "MERGED" ? 0.95 : 0.5,
       pr_number: pr?.number,
-      timestamp: pr?.mergedAt || pr?.createdAt || new Date().toISOString()
+      timestamp: pr?.mergedAt || pr?.createdAt ||
+        previousSynapses.get(`${rootId}\0${canonicalId}`)?.timestamp || generatedAt
     });
   });
+
+  if (JSON.stringify(previousMap?.neural_network) !==
+      JSON.stringify(neuralNetwork.neural_network)) {
+    neuralNetwork.updated_at = generatedAt;
+  }
   
   return neuralNetwork;
 }
