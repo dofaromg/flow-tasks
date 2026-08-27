@@ -76,7 +76,13 @@ export class BranchNeuralSystem {
   
   // 註冊新的神經元節點
   registerNode(node: NeuralNode): void {
-    const canonicalId = toMRLNodeId(node.id);
+    const sourceBranch = node.source_branch ?? node.id;
+    const canonicalId = toMRLNodeId(sourceBranch);
+
+    if (node.source_branch && toMRLNodeId(node.id) !== canonicalId) {
+      throw new Error(`MRL provenance violation: node id "${node.id}" does not match source_branch "${node.source_branch}"`);
+    }
+
     if (this.network.nodes.some(existing => existing.id === canonicalId)) {
       throw new Error(`MRL naming collision: duplicate node id "${canonicalId}"`);
     }
@@ -84,7 +90,7 @@ export class BranchNeuralSystem {
     this.network.nodes.push({
       ...node,
       id: canonicalId,
-      source_branch: node.source_branch ?? node.id,
+      source_branch: sourceBranch,
       naming_authority: 'MRL',
       parent: node.parent ? toMRLNodeId(node.parent) : undefined
     });
@@ -92,10 +98,18 @@ export class BranchNeuralSystem {
   
   // 建立突觸連結
   createSynapse(synapse: Synapse): void {
+    const from = toMRLNodeId(synapse.from);
+    const to = toMRLNodeId(synapse.to);
+    const nodeIds = new Set(this.network.nodes.map(node => node.id));
+
+    if (!nodeIds.has(from) || !nodeIds.has(to)) {
+      throw new Error(`MRL chain violation: unresolved synapse ${from} -> ${to}`);
+    }
+
     this.network.synapses.push({
       ...synapse,
-      from: toMRLNodeId(synapse.from),
-      to: toMRLNodeId(synapse.to)
+      from,
+      to
     });
   }
   
@@ -157,12 +171,19 @@ export class BranchNeuralSystem {
   // 輸出為 Mermaid
   toMermaid(): string {
     let mermaid = "graph TD\n";
+    const mermaidIds = new Map<string, string>();
     
     // 生成節點
     this.network.nodes.forEach(node => {
+      const renderedId = this.sanitizeId(node.id);
+      const previousId = mermaidIds.get(renderedId);
+      if (previousId) {
+        throw new Error(`MRL Mermaid collision: "${previousId}" and "${node.id}" both render as "${renderedId}"`);
+      }
+      mermaidIds.set(renderedId, node.id);
       const label = `${node.id}<br/>${node.layer}`;
       const prInfo = node.merged_pr ? ` #${node.merged_pr}` : '';
-      mermaid += `  ${this.sanitizeId(node.id)}[${label}${prInfo}]:::${node.type}\n`;
+      mermaid += `  ${renderedId}[${label}${prInfo}]:::${node.type}\n`;
     });
     
     mermaid += "\n";
@@ -192,13 +213,22 @@ export class BranchNeuralSystem {
   
   // 載入網絡資料
   loadNetwork(network: NeuralNetwork): void {
-    const nodes = network.nodes.map(node => ({
-      ...node,
-      id: toMRLNodeId(node.id),
-      source_branch: node.source_branch ?? node.id,
-      naming_authority: 'MRL' as const,
-      parent: node.parent ? toMRLNodeId(node.parent) : undefined
-    }));
+    const nodes = network.nodes.map(node => {
+      const sourceBranch = node.source_branch ?? node.id;
+      const canonicalId = toMRLNodeId(sourceBranch);
+
+      if (node.source_branch && toMRLNodeId(node.id) !== canonicalId) {
+        throw new Error(`MRL provenance violation: node id "${node.id}" does not match source_branch "${node.source_branch}"`);
+      }
+
+      return {
+        ...node,
+        id: canonicalId,
+        source_branch: sourceBranch,
+        naming_authority: 'MRL' as const,
+        parent: node.parent ? toMRLNodeId(node.parent) : undefined
+      };
+    });
 
     const ids = new Set<string>();
     nodes.forEach(node => {
@@ -206,6 +236,18 @@ export class BranchNeuralSystem {
         throw new Error(`MRL naming collision: duplicate node id "${node.id}"`);
       }
       ids.add(node.id);
+    });
+
+    const synapses = network.synapses.map(synapse => ({
+      ...synapse,
+      from: toMRLNodeId(synapse.from),
+      to: toMRLNodeId(synapse.to)
+    }));
+
+    synapses.forEach(synapse => {
+      if (!ids.has(synapse.from) || !ids.has(synapse.to)) {
+        throw new Error(`MRL chain violation: unresolved synapse ${synapse.from} -> ${synapse.to}`);
+      }
     });
 
     this.network = {
@@ -218,11 +260,7 @@ export class BranchNeuralSystem {
         source_identity_mutated: false
       },
       nodes,
-      synapses: network.synapses.map(synapse => ({
-        ...synapse,
-        from: toMRLNodeId(synapse.from),
-        to: toMRLNodeId(synapse.to)
-      }))
+      synapses
     };
   }
   
