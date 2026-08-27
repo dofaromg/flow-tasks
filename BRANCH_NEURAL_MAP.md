@@ -99,29 +99,39 @@ import { BranchNeuralSystem } from './src/neural-links/neural-index';
 // 建立神經網絡實例
 const neural = new BranchNeuralSystem();
 
-// 註冊節點
+// 註冊 root 與功能節點；canonical identity 與來源分欄保存
 neural.registerNode({
-  id: 'feature/new-feature',
+  id: 'MRL_main',
+  source_branch: 'main',
+  type: 'trunk',
+  layer: 'L7',
+  status: 'active',
+  energy: 1.0
+});
+
+neural.registerNode({
+  id: 'MRL_feature/new-feature',
+  source_branch: 'feature/new-feature',
   type: 'feature',
   layer: 'L5',
   status: 'active',
   energy: 0.8
 });
 
-// 建立連結
+// 建立連結：from / to 僅使用已註冊的 canonical MRL ID
 neural.createSynapse({
-  from: 'main',
-  to: 'feature/new-feature',
+  from: 'MRL_main',
+  to: 'MRL_feature/new-feature',
   type: 'influence',
   weight: 0.8,
   timestamp: new Date().toISOString()
 });
 
 // 追溯路徑
-const path = neural.tracePath('main', 'feature/new-feature');
+const path = neural.tracePath('MRL_main', 'MRL_feature/new-feature');
 
 // 計算影響力
-const influence = neural.calculateInfluence('main');
+const influence = neural.calculateInfluence('MRL_main');
 
 // 生成 Mermaid 圖
 const mermaid = neural.toMermaid();
