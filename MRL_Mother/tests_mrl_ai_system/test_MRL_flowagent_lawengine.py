@@ -122,6 +122,9 @@ class TestGateUnity:
         assert r["source_block"]["role"] == "material"
         assert r["canonical_block"]["role"] == "mrl_native_product"
         assert r["source_to_product_link"]["preserve_source"] is True
+        assert r["MRL_world_model_top_view"]["product_container_ref"] == "canonical_block"
+        assert r["MRL_world_model_top_view"]["parameter_sources"]["native_identity_snapshot"] == \
+            "module_load"
 
     def test_out_carries_origin_signature(self, engine):
         r = engine.gate("out", {"msg": "hello world"})
