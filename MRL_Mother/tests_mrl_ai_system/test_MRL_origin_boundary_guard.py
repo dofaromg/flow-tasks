@@ -76,6 +76,10 @@ class TestIntake:
         assert m["source_block"]["role"] == "material" # bp_1 平行來源區塊
         assert m["canonical_block"]["role"] == "mrl_native_product"
         assert m["source_to_product_link"]["preserve_source"] is True
+        assert m["MRL_world_model_top_view"]["architecture"] == \
+            "dual_internal_container_parallel_projection"
+        assert m["MRL_world_model_top_view"]["source_container_ref"] == "source_block"
+        assert m["MRL_world_model_top_view"]["parameter_sources"]["environment_override"] is False
         assert m["origin"] == "MrLiouWord"             # rl_11:源頭歸母體
         assert verify_signature(m) is True             # LAW-0
         assert m["source_external_name"] == "FlowAgent.Runtime.v47.zip"  # No-Delete 來源保留
