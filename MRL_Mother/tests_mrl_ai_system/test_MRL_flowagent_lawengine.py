@@ -1,5 +1,5 @@
 """
-test_MRL_mrliouai_lawengine.py — 母體活引擎驗收
+test_MRL_flowagent_lawengine.py — 母體活引擎驗收
 origin_signature: MrLiouWord
 product: MRL_AI_SYSTEM
 
@@ -12,8 +12,8 @@ import pathlib
 
 import pytest
 
-from MRL_MrLiouAI_LawEngine_v1 import (
-    MRL_MrLiouAILawEngine,
+from MRL_FlowAgent_LawEngine_v1 import (
+    MRL_FlowAgentLawEngine,
     THREE_STRIKE_THRESHOLD,
     load_rootlaw,
     reclaim_name,
@@ -22,7 +22,7 @@ from MRL_MrLiouAI_LawEngine_v1 import (
 
 @pytest.fixture
 def engine(tmp_path):
-    return MRL_MrLiouAILawEngine(chronicle_path=tmp_path / "chron.jsonl")
+    return MRL_FlowAgentLawEngine(chronicle_path=tmp_path / "chron.jsonl")
 
 
 # ─── rootlaw 載入 ──────────────────────────────────────────────────────────────
@@ -45,7 +45,7 @@ class TestRootlaw:
 
 class TestNamingReclamation:
     def test_external_shell_becomes_mrl_canonical(self):
-        assert reclaim_name("MrLiouAI.Runtime.v47.zip") == "MRL_MrLiouAIRuntime_v47"
+        assert reclaim_name("FlowAgent.Runtime.v47.zip") == "FlowAgent.Runtime.v47.zip"
 
     def test_no_external_name_residue(self):
         out = reclaim_name("guardian.mirror.trace.loop.v2.flpkg.zip")
@@ -115,10 +115,16 @@ class TestMobiusMajority:
 
 class TestGateUnity:
     def test_in_reclaims_external_name(self, engine):
-        r = engine.gate("in", {"name": "MrLiouAI.Runtime.v47.zip"})
+        r = engine.gate("in", {"name": "FlowAgent.Runtime.v47.zip"})
         assert r["direction"] == "in"
-        assert r["reclaimed"] == "MRL_MrLiouAIRuntime_v47"
-        assert r["as"] == "material"
+        assert r["reclaimed"] == "FlowAgent.Runtime.v47.zip"
+        assert r["as"] == "mrl_native_product"
+        assert r["source_block"]["role"] == "material"
+        assert r["canonical_block"]["role"] == "mrl_native_product"
+        assert r["source_to_product_link"]["preserve_source"] is True
+        assert r["MRL_world_model_top_view"]["product_container_ref"] == "canonical_block"
+        assert r["MRL_world_model_top_view"]["parameter_sources"]["native_identity_snapshot"] == \
+            "module_load"
 
     def test_out_carries_origin_signature(self, engine):
         r = engine.gate("out", {"msg": "hello world"})
@@ -133,6 +139,18 @@ class TestGateUnity:
     def test_invalid_direction_rejected(self, engine):
         with pytest.raises(ValueError):
             engine.gate("sideways", {})
+
+    def test_custom_rootlaw_is_visible_in_top_view(self, tmp_path):
+        custom_rootlaw = tmp_path / "rootlaw.override.yaml"
+        custom_rootlaw.write_text("version: 9\ninvariants: []\n", encoding="utf-8")
+        custom_engine = MRL_FlowAgentLawEngine(
+            chronicle_path=tmp_path / "chron.jsonl",
+            rootlaw_path=custom_rootlaw,
+        )
+        result = custom_engine.gate("in", {"name": "external.module"})
+        sources = result["MRL_world_model_top_view"]["parameter_sources"]
+        assert sources["rootlaw"] == str(custom_rootlaw.resolve())
+        assert sources["rootlaw_override"] is True
 
 
 # ─── rl_14 平行世界生成 ────────────────────────────────────────────────────────
@@ -215,13 +233,26 @@ class TestChronicleAndLoop:
         assert pathlib.Path(engine.chronicle_path).exists()
         assert "test" in pathlib.Path(engine.chronicle_path).read_text(encoding="utf-8")
 
+    def test_gate_result_mutation_cannot_rewrite_audit_snapshot(self, engine):
+        result = engine.gate("in", {"name": "external.module"})
+        result["source_block"]["name"] = "mutated-after-gate"
+        assert engine._events[-1]["detail"]["source_block"]["name"] == "external.module"
+
     def test_self_acceptance_passes(self, engine):
         rep = engine.self_acceptance()
         assert rep["verified"] is True
-        assert rep["token"] == "MRL_MRLIOUAI_LAWENGINE_LOOP_PASS"
+        assert rep["token"] == "MRL_FLOWAGENT_LAWENGINE_LOOP_PASS"
         assert rep["origin_signature"] == "MrLiouWord"
 
     def test_loop_records_events(self, engine):
         rep = engine.run_loop({"source": "t", "law_particles": {"a": True, "b": True}})
         assert rep["events_recorded"] >= 1
         assert rep["mirror"]["rootlaw_version"] >= 5
+
+
+class TestNativeIdentityClassification:
+    def test_flowagent_is_manifestable_without_rename(self, engine):
+        result = engine.can_manifest("FlowAgent.Runtime.v47.zip")
+        assert result["manifest"] is True
+        assert result["reclaimed"] is None
+        assert result["reason"] == "mrl_native_identity"

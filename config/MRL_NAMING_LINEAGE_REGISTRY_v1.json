@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0.0",
+  "origin_signature": "MrLiouWord",
+  "root_authority": {
+    "principal": "Mr.liou",
+    "authority": "final"
+  },
+  "canonical_root": "MRL",
+  "hierarchy": {
+    "MRL": {
+      "parent": null,
+      "classification": "canonical_root",
+      "preserve_exact_identity": true
+    },
+    "MRL_Mother": {
+      "parent": "MRL",
+      "classification": "mother_system",
+      "preserve_exact_identity": true
+    },
+    "MrliouAI": {
+      "parent": "MRL",
+      "classification": "system_identity",
+      "preserve_exact_identity": true
+    },
+    "FlowAgent": {
+      "parent": "MRL",
+      "classification": "mrl_native_product_module",
+      "preserve_exact_identity": true
+    },
+    "flowmemorysync": {
+      "parent": "MRL",
+      "classification": "mrl_native_service_lineage",
+      "preserve_exact_identity": true
+    }
+  },
+  "protected_identifiers": [
+    "MrLiouWord",
+    "origin_signature",
+    "MRL",
+    "MRL_Mother",
+    "MrliouAI",
+    "FlowAgent",
+    "flowmemorysync"
+  ],
+  "immutable_lineage_prefixes": [
+    "MRL_Mother/MRL_MotherSource_Lineage_v1/",
+    "MRL_Mother/08_sources/",
+    "MRL_Mother/root_sources/"
+  ],
+  "protected_exact_paths": [
+    "LICENSE",
+    "LICENSE_MrLiou_OpenSource_CC.md",
+    "vercel.json",
+    "flowos/wrangler.toml",
+    "particle-chat-v42/wrangler.toml",
+    "particle-edge-v4/wrangler.toml",
+    "vector-attention-engine/wrangler.jsonc",
+    "MRL_Mother/root_sources/wrangler.jsonc",
+    "MRL_Mother/00_rootlaw/rootlaw.yaml",
+    "MRL_Mother/09_workflow/MRL_FlowAgent_LawEngine_v1.py",
+    "MRL_Mother/09_workflow/MRL_OriginBoundary_Guard_v1.py",
+    ".github/CODEOWNERS",
+    ".github/workflows/mrl-root-governance-gate.yml",
+    "scripts/validate_mrl_governance.py"
+  ],
+  "rename_contract": {
+    "classification_before_transform": true,
+    "global_string_replace_allowed": false,
+    "lineage_preservation_required": true,
+    "protected_identifier_file_threshold": 25,
+    "mass_change_file_threshold": 100,
+    "required_fields": [
+      "record_id",
+      "source_identifier",
+      "target_identifier",
+      "classification",
+      "compatibility_alias",
+      "dependency_set",
+      "data_effects",
+      "rollback",
+      "authorized_by",
+      "authorization_reference",
+      "verification",
+      "status"
+    ]
+  }
+}

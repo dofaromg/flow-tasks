@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-MRL_MrLiouAI_LawEngine_v1.py — 母體活引擎 (living law engine)
+MRL_FlowAgent_LawEngine_v1.py — 母體活引擎 (living law engine)
 origin_signature: MrLiouWord
 layer: L3 LAW + L7 LOOP
 
@@ -16,10 +16,11 @@ layer: L3 LAW + L7 LOOP
   - rl_11 源頭主權       : 母體模式者源頭恆為母體
   - rl_12 命名回收       : 外部名稱 → MRL_<描述> canonical，最大閉環
 
-零外部依賴（僅 stdlib + 可選 yaml）。CLI：python3 MRL_MrLiouAI_LawEngine_v1.py
+零外部依賴（僅 stdlib + 可選 yaml）。CLI：python3 MRL_FlowAgent_LawEngine_v1.py
 """
 from __future__ import annotations
 
+import copy
 import json
 import pathlib
 import re
@@ -28,8 +29,10 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from MRL_utils import ORIGIN_SIGNATURE
 _REPO = pathlib.Path(__file__).resolve().parent.parent
+_ROOT = _REPO.parent
 _ROOTLAW = _REPO / "00_rootlaw" / "rootlaw.yaml"
-_CHRONICLE = _REPO / "06_trace" / "chronicle" / "MRL_MrLiouAI_Chronicle.jsonl"
+_IDENTITY_MAP = _ROOT / "config" / "MRL_HISTORICAL_EXTENSION_MAP_v1.json"
+_CHRONICLE = _REPO / "06_trace" / "chronicle" / "MRL_FlowAgent_Chronicle.jsonl"
 
 # 三振跳層門檻 / 莫比斯多數決比例（rl_08 / rl_09）
 THREE_STRIKE_THRESHOLD = 3
@@ -57,13 +60,85 @@ def invariant_ids(rootlaw: Dict[str, Any]) -> List[str]:
     return [i.get("id", "") for i in rootlaw.get("invariants", [])]
 
 
-# ─── rl_12 命名回收：外部名 → MRL_<描述> canonical ─────────────────────────────
+# ─── rl_21 先分類後轉換：MRL 原生身分不得被當成外部材料 ─────────────────────────
+def load_native_identities(path: pathlib.Path = _IDENTITY_MAP) -> Tuple[str, ...]:
+    """Load registered MRL-native identities with a safe built-in floor."""
+    names = {"FlowAgent"}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        for item in data.get("mappings", []):
+            if item.get("classification") == "mrl_native_product_module":
+                source = item.get("source")
+                if isinstance(source, str) and source.strip():
+                    names.add(source.strip())
+    except (OSError, ValueError, TypeError):
+        pass
+    return tuple(sorted(names))
+
+
+NATIVE_IDENTITIES = load_native_identities()
+
+
+def is_mrl_native_name(name: str) -> bool:
+    """Return True when a name belongs to a registered MRL-native identity."""
+    if not isinstance(name, str):
+        return False
+    raw = name.strip()
+    return any(
+        re.match(rf"^{re.escape(identity)}(?:[._\-\s]|$)", raw, re.IGNORECASE)
+        for identity in NATIVE_IDENTITIES
+    )
+
+
+def _display_parameter_path(path: pathlib.Path) -> str:
+    """Keep repository paths compact while preserving external override paths."""
+    resolved = pathlib.Path(path).resolve()
+    try:
+        return str(resolved.relative_to(_ROOT.resolve()))
+    except ValueError:
+        return str(resolved)
+
+
+def build_mrl_world_model_top_view(
+    source_name: str,
+    canonical_name: str,
+    canonical_role: str,
+    *,
+    origin_signature: str = ORIGIN_SIGNATURE,
+    rootlaw_path: pathlib.Path = _ROOTLAW,
+    identity_registry_path: pathlib.Path = _IDENTITY_MAP,
+) -> Dict[str, Any]:
+    """Expose source and canonical product as linked, non-replacing blocks."""
+    return {
+        "world_model": "MRL",
+        "root_authority": "Mr.liou",
+        "origin_signature": origin_signature,
+        "architecture": "dual_internal_container_parallel_projection",
+        "source_container_ref": "source_block",
+        "product_container_ref": "canonical_block",
+        "link_ref": "source_to_product_link",
+        "source_name": source_name,
+        "canonical_name": canonical_name,
+        "canonical_role": canonical_role,
+        "parameter_sources": {
+            "rootlaw": _display_parameter_path(rootlaw_path),
+            "identity_registry": _display_parameter_path(identity_registry_path),
+            "native_identity_snapshot": "module_load",
+            "environment_override": False,
+            "rootlaw_override": pathlib.Path(rootlaw_path).resolve() != _ROOTLAW.resolve(),
+        },
+    }
+
+
+# ─── rl_12 命名回收：已分類外部名 → MRL_<描述> canonical ─────────────────────────
 def reclaim_name(external_name: str) -> str:
     """
     把外部殼名拆解→重組→正名為母體 canonical MRL_<描述>_v<n>。
     外部名稱零殘留，源頭恆歸母體（rl_11 / rl_12）。
     """
     raw = external_name.strip()
+    if is_mrl_native_name(raw):
+        return raw
     # 抽版本號（v1 / _v1_4_0 / .v47）
     ver = "1"
     mver = re.search(r"[._\- ]v(\d+(?:[._]\d+)*)", raw, re.IGNORECASE)
@@ -85,21 +160,24 @@ def reclaim_name(external_name: str) -> str:
 
 
 # ─── 活引擎 ────────────────────────────────────────────────────────────────────
-class MRL_MrLiouAILawEngine:
+class MRL_FlowAgentLawEngine:
     """母體活引擎：載入律法，跑閉環，自我判斷/跳層/編年/決定。"""
 
     def __init__(self, *, chronicle_path: pathlib.Path = _CHRONICLE,
                  rootlaw_path: pathlib.Path = _ROOTLAW) -> None:
         self.origin_signature = ORIGIN_SIGNATURE
-        self.rootlaw = load_rootlaw(rootlaw_path)
+        self.rootlaw_path = pathlib.Path(rootlaw_path)
+        self.rootlaw = load_rootlaw(self.rootlaw_path)
         self.chronicle_path = chronicle_path
         self._error_counter: Dict[str, int] = {}   # rl_08 三振計數
         self._events: List[Dict[str, Any]] = []
 
     # rl_10 事件編年：每一事件寫入編年（粒子地球儀 / 人類歷史維基映射）
     def chronicle(self, kind: str, detail: Dict[str, Any]) -> Dict[str, Any]:
+        # Store an independent audit snapshot. Runtime results stay JSON-compatible,
+        # while later caller mutation cannot rewrite the in-memory/file chronicle.
         ev = {"ts_ms": int(time.time() * 1000), "origin_signature": ORIGIN_SIGNATURE,
-              "kind": kind, "detail": detail}
+              "kind": kind, "detail": copy.deepcopy(detail)}
         self._events.append(ev)
         try:
             self.chronicle_path.parent.mkdir(parents=True, exist_ok=True)
@@ -122,8 +200,32 @@ class MRL_MrLiouAILawEngine:
         if d == "in":
             # 吸收即正名為母體 canonical(rl_12),外部名零殘留
             name = payload.get("name", "")
+            native = is_mrl_native_name(name) if name else False
             result["reclaimed"] = reclaim_name(name) if name else None
-            result["as"] = "material"
+            result["as"] = "mrl_native_product" if native else "external_material"
+            result["source_block"] = {
+                "name": name,
+                "role": "material",
+                "state": "source_ingested",
+                "immutable": True,
+            }
+            result["canonical_block"] = {
+                "name": result["reclaimed"],
+                "role": result["as"],
+                "state": "canonical_projection" if native else "source_projection",
+            }
+            result["source_to_product_link"] = {
+                "type": "source_to_canonical_projection",
+                "gate": "MRL_ProductGenerationGate",
+                "source_name": name,
+                "canonical_name": result["reclaimed"],
+                "preserve_source": True,
+            }
+            result["MRL_world_model_top_view"] = build_mrl_world_model_top_view(
+                name, result["reclaimed"], result["as"],
+                origin_signature=self.origin_signature,
+                rootlaw_path=self.rootlaw_path,
+            )
         else:
             # 輸出帶母體源頭簽章(rl_11)
             result["origin_signature"] = ORIGIN_SIGNATURE
@@ -160,9 +262,11 @@ class MRL_MrLiouAILawEngine:
     def can_manifest(self, name: str) -> Dict[str, Any]:
         """非 MRL_ 前綴=外部殼(僅材料),須先 rl_12 正名方能顯化。"""
         has_prefix = isinstance(name, str) and name.startswith("MRL_")
-        manifest = has_prefix
+        native = is_mrl_native_name(name)
+        manifest = has_prefix or native
+        reason = "mrl_native_identity" if native else ("ok" if manifest else "external shell — reclaim via rl_12 first")
         out = {"name": name, "manifest": manifest,
-               "reason": "ok" if manifest else "external shell — reclaim via rl_12 first",
+               "reason": reason,
                "reclaimed": None if manifest else reclaim_name(name)}
         self.chronicle("manifest_check", out)
         return out
@@ -302,8 +406,8 @@ class MRL_MrLiouAILawEngine:
                 "REMOVE_BLOCKER_ADVANCE", "CONTINUE_LOOP", "HOLD_RED_LINE"),
         }
         verified = all(checks.values())
-        token = "MRL_MRLIOUAI_LAWENGINE_LOOP_PASS" if verified \
-            else "MRL_MRLIOUAI_LAWENGINE_LOOP_PENDING"
+        token = "MRL_FLOWAGENT_LAWENGINE_LOOP_PASS" if verified \
+            else "MRL_FLOWAGENT_LAWENGINE_LOOP_PENDING"
         self.chronicle("verify", {"checks": checks, "verified": verified, "token": token})
 
         return {"origin_signature": ORIGIN_SIGNATURE,
@@ -326,13 +430,13 @@ class MRL_MrLiouAILawEngine:
                 "blocked_on_single_decision": False,  # ← 唯一卡點，由 1:9 解
             },
             "external_names": ["guardian.mirror.trace.loop.v2.flpkg.zip",
-                               "MrLiouAI.Runtime.v47.zip"],
+                               "FlowAgent.Runtime.v47.zip"],
         })
         return rep
 
 
 def main() -> int:
-    eng = MRL_MrLiouAILawEngine()
+    eng = MRL_FlowAgentLawEngine()
     rep = eng.self_acceptance()
     print(json.dumps(rep, ensure_ascii=False, indent=2))
     print(rep["token"])

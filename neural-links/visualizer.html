@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MrLiou Neural Branch Visualizer</title>
+  <title>MRL Branch Neural Visualizer</title>
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <style>
     * {
@@ -179,7 +179,7 @@
 </head>
 <body>
   <header>
-    <h1>🧠 MrLiou Branch Neural Network</h1>
+    <h1>🧠 MRL Branch Neural Network</h1>
     <p class="signature">origin_signature: MrLiouWord</p>
   </header>
   
@@ -391,15 +391,27 @@
       const content = document.getElementById('info-content');
       
       title.textContent = node.id;
-      content.innerHTML = `
-        <p><strong>Type:</strong> ${node.type}</p>
-        <p><strong>Layer:</strong> ${node.layer}</p>
-        <p><strong>Status:</strong> ${node.status}</p>
-        <p><strong>Energy:</strong> ${(node.energy * 100).toFixed(1)}%</p>
-        ${node.frequency_hz ? `<p><strong>Frequency:</strong> ${node.frequency_hz} Hz</p>` : ''}
-        ${node.merged_pr ? `<p><strong>PR:</strong> #${node.merged_pr}</p>` : ''}
-        ${node.parent ? `<p><strong>Parent:</strong> ${node.parent}</p>` : ''}
-      `;
+      content.replaceChildren();
+
+      const fields = [
+        ['Canonical ID', node.id],
+        ...(node.source_branch ? [['Source Branch', node.source_branch]] : []),
+        ['Type', node.type],
+        ['Layer', node.layer],
+        ['Status', node.status],
+        ['Energy', `${(node.energy * 100).toFixed(1)}%`],
+        ...(node.frequency_hz ? [['Frequency', `${node.frequency_hz} Hz`]] : []),
+        ...(node.merged_pr ? [['PR', `#${node.merged_pr}`]] : []),
+        ...(node.parent ? [['Parent', node.parent]] : [])
+      ];
+
+      fields.forEach(([label, value]) => {
+        const row = document.createElement('p');
+        const name = document.createElement('strong');
+        name.textContent = `${label}:`;
+        row.append(name, document.createTextNode(` ${String(value)}`));
+        content.appendChild(row);
+      });
       
       panel.classList.add('visible');
     }
@@ -425,7 +437,7 @@
       }
       const dataStr = JSON.stringify(currentData, null, 2);
       const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-      const exportFileDefaultName = `branch-neural-network-${new Date().toISOString().split('T')[0]}.json`;
+      const exportFileDefaultName = `MRL_branch-neural-network-${new Date().toISOString().split('T')[0]}.json`;
       
       const linkElement = document.createElement('a');
       linkElement.setAttribute('href', dataUri);
