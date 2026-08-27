@@ -7,7 +7,7 @@
     "source_identity_field": "source_branch",
     "source_identity_mutated": false
   },
-  "updated_at": "2026-08-27T09:06:19.041Z",
+  "updated_at": "2026-08-27T19:33:26.685Z",
   "neural_network": {
     "nodes": [
       {
@@ -21,16 +21,16 @@
         "energy": 1
       },
       {
-        "id": "MRL_Module_Implementation_v1",
-        "source_branch": "MRL_Module_Implementation_v1",
+        "id": "MRL_System_Integration_v1",
+        "source_branch": "MRL_System_Integration_v1",
         "naming_authority": "MRL",
         "type": "experimental",
         "layer": "L3",
         "parent": "MRL_main",
         "status": "active",
         "energy": 0.7,
-        "merged_pr": 631,
-        "created_at": "2026-08-27T08:57:48Z"
+        "merged_pr": 614,
+        "created_at": "2026-07-25T04:39:40Z"
       },
       {
         "id": "MRL_231",
@@ -52,7 +52,9 @@
         "layer": "L3",
         "parent": "MRL_main",
         "status": "active",
-        "energy": 0.7
+        "energy": 0.7,
+        "merged_pr": 632,
+        "created_at": "2026-08-27T09:08:08Z"
       },
       {
         "id": "MRL_AI_Partner_Origin_v1",
@@ -66,6 +68,19 @@
         "merged_pr": 622,
         "created_at": "2026-08-12T15:30:33Z",
         "merged_at": "2026-08-12T20:00:11Z"
+      },
+      {
+        "id": "MRL_Module_Implementation_v1",
+        "source_branch": "MRL_Module_Implementation_v1",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "merged",
+        "energy": 0.95,
+        "merged_pr": 631,
+        "created_at": "2026-08-27T08:57:48Z",
+        "merged_at": "2026-08-27T19:04:30Z"
       },
       {
         "id": "MRL_Outer_Automation_Fix_v1",
@@ -91,18 +106,6 @@
         "merged_pr": 620,
         "created_at": "2026-08-02T14:30:34Z",
         "merged_at": "2026-08-06T11:51:58Z"
-      },
-      {
-        "id": "MRL_System_Integration_v1",
-        "source_branch": "MRL_System_Integration_v1",
-        "naming_authority": "MRL",
-        "type": "experimental",
-        "layer": "L3",
-        "parent": "MRL_main",
-        "status": "active",
-        "energy": 0.7,
-        "merged_pr": 614,
-        "created_at": "2026-07-25T04:39:40Z"
       },
       {
         "id": "MRL_auto-expansion-naming-prefix-v1",
@@ -1318,11 +1321,11 @@
     "synapses": [
       {
         "from": "MRL_main",
-        "to": "MRL_Module_Implementation_v1",
+        "to": "MRL_System_Integration_v1",
         "type": "influence",
         "weight": 0.5,
-        "pr_number": 631,
-        "timestamp": "2026-08-27T08:57:48Z"
+        "pr_number": 614,
+        "timestamp": "2026-07-25T04:39:40Z"
       },
       {
         "from": "MRL_main",
@@ -1337,7 +1340,8 @@
         "to": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T09:06:19.041Z"
+        "pr_number": 632,
+        "timestamp": "2026-08-27T09:08:08Z"
       },
       {
         "from": "MRL_main",
@@ -1346,6 +1350,14 @@
         "weight": 0.95,
         "pr_number": 622,
         "timestamp": "2026-08-12T20:00:11Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "MRL_Module_Implementation_v1",
+        "type": "merge",
+        "weight": 0.95,
+        "pr_number": 631,
+        "timestamp": "2026-08-27T19:04:30Z"
       },
       {
         "from": "MRL_main",
@@ -1362,14 +1374,6 @@
         "weight": 0.95,
         "pr_number": 620,
         "timestamp": "2026-08-06T11:51:58Z"
-      },
-      {
-        "from": "MRL_main",
-        "to": "MRL_System_Integration_v1",
-        "type": "influence",
-        "weight": 0.5,
-        "pr_number": 614,
-        "timestamp": "2026-07-25T04:39:40Z"
       },
       {
         "from": "MRL_main",
