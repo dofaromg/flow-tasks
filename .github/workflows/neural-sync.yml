@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - 'neural-links/**'
   pull_request:
-    types: [opened, closed, merged, synchronize]
+    types: [opened, closed, synchronize]
     paths-ignore:
       - 'neural-links/**'
   workflow_dispatch:
