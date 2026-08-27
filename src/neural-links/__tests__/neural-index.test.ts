@@ -1,13 +1,25 @@
 // origin_signature: MrLiouWord
 // Unit tests for neural-index.ts
 
-import { BranchNeuralSystem, NeuralNode, Synapse } from '../neural-index';
+import { BranchNeuralSystem, NeuralNode, Synapse, toMRLNodeId } from '../neural-index';
 
 describe('BranchNeuralSystem', () => {
   let neural: BranchNeuralSystem;
 
   beforeEach(() => {
     neural = new BranchNeuralSystem();
+  });
+
+  describe('MRL canonical naming', () => {
+    it('adds the MRL_ prefix and preserves the exact source identity', () => {
+      expect(toMRLNodeId('feature/example')).toBe('MRL_feature/example');
+      expect(toMRLNodeId('mrl_existing')).toBe('MRL_existing');
+    });
+
+    it('rejects an empty canonical identity', () => {
+      expect(() => toMRLNodeId('')).toThrow('non-empty source identity');
+      expect(() => toMRLNodeId('MRL_')).toThrow('content after the MRL_ prefix');
+    });
   });
 
   describe('registerNode', () => {
@@ -24,7 +36,8 @@ describe('BranchNeuralSystem', () => {
       const network = neural.exportNetwork();
       
       expect(network.nodes).toHaveLength(1);
-      expect(network.nodes[0].id).toBe('test-branch');
+      expect(network.nodes[0].id).toBe('MRL_test-branch');
+      expect(network.nodes[0].source_branch).toBe('test-branch');
     });
 
     it('should register multiple nodes', () => {
@@ -63,8 +76,8 @@ describe('BranchNeuralSystem', () => {
       const network = neural.exportNetwork();
       
       expect(network.synapses).toHaveLength(1);
-      expect(network.synapses[0].from).toBe('main');
-      expect(network.synapses[0].to).toBe('feature/test');
+      expect(network.synapses[0].from).toBe('MRL_main');
+      expect(network.synapses[0].to).toBe('MRL_feature/test');
     });
   });
 
@@ -94,15 +107,15 @@ describe('BranchNeuralSystem', () => {
     it('should find direct path', () => {
       const path = neural.tracePath('main', 'feature/a');
       expect(path).toHaveLength(1);
-      expect(path[0].from).toBe('main');
-      expect(path[0].to).toBe('feature/a');
+      expect(path[0].from).toBe('MRL_main');
+      expect(path[0].to).toBe('MRL_feature/a');
     });
 
     it('should find indirect path', () => {
       const path = neural.tracePath('main', 'feature/b');
       expect(path).toHaveLength(2);
       expect(path[0].from).toBe('main');
-      expect(path[1].to).toBe('feature/b');
+      expect(path[1].to).toBe('MRL_feature/b');
     });
 
     it('should return empty array when no path exists', () => {
@@ -171,8 +184,8 @@ describe('BranchNeuralSystem', () => {
     it('should get all children of a node', () => {
       const children = neural.getChildren('main');
       expect(children).toHaveLength(2);
-      expect(children.map(c => c.id)).toContain('feature/a');
-      expect(children.map(c => c.id)).toContain('feature/b');
+      expect(children.map(c => c.id)).toContain('MRL_feature/a');
+      expect(children.map(c => c.id)).toContain('MRL_feature/b');
     });
 
     it('should return empty array for leaf nodes', () => {
@@ -240,8 +253,8 @@ describe('BranchNeuralSystem', () => {
       const mermaid = neural.toMermaid();
       
       expect(mermaid).toContain('graph TD');
-      expect(mermaid).toContain('main[');
-      expect(mermaid).toContain('copilot_test[');
+      expect(mermaid).toContain('MRL_main[');
+      expect(mermaid).toContain('MRL_copilot_test[');
       expect(mermaid).toContain('-->|merged|');
       expect(mermaid).toContain('classDef trunk');
       expect(mermaid).toContain('classDef cognitive');
@@ -251,9 +264,9 @@ describe('BranchNeuralSystem', () => {
       const mermaid = neural.toMermaid();
       // ID should be sanitized (used in references)
       expect(mermaid).toContain('copilot_test[');
-      expect(mermaid).toContain('main -->|merged| copilot_test');
+      expect(mermaid).toContain('MRL_main -->|merged| MRL_copilot_test');
       // But label can contain original name
-      expect(mermaid).toContain('copilot/test<br/>');
+      expect(mermaid).toContain('MRL_copilot/test<br/>');
     });
 
     it('should include PR numbers', () => {
