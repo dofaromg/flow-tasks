@@ -23,6 +23,17 @@ describe('BranchNeuralSystem', () => {
   });
 
   describe('registerNode', () => {
+    it('rejects a canonical/source provenance mismatch', () => {
+      expect(() => neural.registerNode({
+        id: 'MRL_feature/a',
+        source_branch: 'feature/b',
+        type: 'feature',
+        layer: 'L5',
+        status: 'active',
+        energy: 0.7
+      })).toThrow('provenance violation');
+    });
+
     it('should register a new node', () => {
       const node: NeuralNode = {
         id: 'test-branch',
@@ -64,6 +75,9 @@ describe('BranchNeuralSystem', () => {
 
   describe('createSynapse', () => {
     it('should create a synapse between nodes', () => {
+      neural.registerNode({ id: 'main', type: 'trunk', layer: 'L7', status: 'active', energy: 1.0 });
+      neural.registerNode({ id: 'feature/test', type: 'feature', layer: 'L5', status: 'active', energy: 0.7 });
+
       const synapse: Synapse = {
         from: 'main',
         to: 'feature/test',
@@ -78,6 +92,18 @@ describe('BranchNeuralSystem', () => {
       expect(network.synapses).toHaveLength(1);
       expect(network.synapses[0].from).toBe('MRL_main');
       expect(network.synapses[0].to).toBe('MRL_feature/test');
+    });
+
+    it('should reject unresolved synapses', () => {
+      neural.registerNode({ id: 'main', type: 'trunk', layer: 'L7', status: 'active', energy: 1.0 });
+
+      expect(() => neural.createSynapse({
+        from: 'main',
+        to: 'missing',
+        type: 'influence',
+        weight: 0.5,
+        timestamp: '2026-02-08T00:00:00Z'
+      })).toThrow('unresolved synapse');
     });
   });
 
@@ -114,7 +140,7 @@ describe('BranchNeuralSystem', () => {
     it('should find indirect path', () => {
       const path = neural.tracePath('main', 'feature/b');
       expect(path).toHaveLength(2);
-      expect(path[0].from).toBe('main');
+      expect(path[0].from).toBe('MRL_main');
       expect(path[1].to).toBe('MRL_feature/b');
     });
 
@@ -128,6 +154,8 @@ describe('BranchNeuralSystem', () => {
   describe('calculateInfluence', () => {
     beforeEach(() => {
       neural.registerNode({ id: 'main', type: 'trunk', layer: 'L7', status: 'active', energy: 1.0 });
+      neural.registerNode({ id: 'feature/a', type: 'feature', layer: 'L5', status: 'active', energy: 0.8 });
+      neural.registerNode({ id: 'feature/b', type: 'feature', layer: 'L5', status: 'active', energy: 0.7 });
       
       neural.createSynapse({
         from: 'main',
@@ -263,7 +291,7 @@ describe('BranchNeuralSystem', () => {
     it('should sanitize node IDs in references', () => {
       const mermaid = neural.toMermaid();
       // ID should be sanitized (used in references)
-      expect(mermaid).toContain('copilot_test[');
+      expect(mermaid).toContain('MRL_copilot_test[');
       expect(mermaid).toContain('MRL_main -->|merged| MRL_copilot_test');
       // But label can contain original name
       expect(mermaid).toContain('MRL_copilot/test<br/>');
@@ -273,6 +301,13 @@ describe('BranchNeuralSystem', () => {
       const mermaid = neural.toMermaid();
       expect(mermaid).toContain('#388');
     });
+
+    it('should reject Mermaid identifier collisions', () => {
+      const collision = new BranchNeuralSystem();
+      collision.registerNode({ id: 'feature/a-b', type: 'feature', layer: 'L5', status: 'active', energy: 0.7 });
+      collision.registerNode({ id: 'feature/a_b', type: 'feature', layer: 'L5', status: 'active', energy: 0.7 });
+      expect(() => collision.toMermaid()).toThrow('Mermaid collision');
+    });
   });
 
   describe('loadNetwork and exportNetwork', () => {
@@ -280,7 +315,8 @@ describe('BranchNeuralSystem', () => {
       const testNetwork = {
         origin_signature: 'MrLiouWord',
         nodes: [
-          { id: 'main', type: 'trunk' as const, layer: 'L7', status: 'active' as const, energy: 1.0 }
+          { id: 'main', type: 'trunk' as const, layer: 'L7', status: 'active' as const, energy: 1.0 },
+          { id: 'test', type: 'feature' as const, layer: 'L5', status: 'active' as const, energy: 0.7 }
         ],
         synapses: [
           {
@@ -296,7 +332,7 @@ describe('BranchNeuralSystem', () => {
       neural.loadNetwork(testNetwork);
       const exported = neural.exportNetwork();
 
-      expect(exported.nodes).toHaveLength(1);
+      expect(exported.nodes).toHaveLength(2);
       expect(exported.synapses).toHaveLength(1);
       expect(exported.origin_signature).toBe('MrLiouWord');
     });
