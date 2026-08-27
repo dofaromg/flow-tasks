@@ -1,5 +1,6 @@
 // origin_signature: MrLiouWord
 const fs = require('fs');
+const { toMRLNodeId } = require('./update-neural-map');
 
 // 清理節點 ID 使其符合 Mermaid 語法
 function sanitizeId(id) {
@@ -15,6 +16,7 @@ function validateMRLNaming(data) {
   }
 
   const ids = new Set();
+  const mermaidIds = new Map();
   nodes.forEach(node => {
     if (typeof node.id !== 'string' || !node.id.startsWith('MRL_')) {
       throw new Error(`MRL naming violation: node id "${node.id}" must start with MRL_`);
@@ -22,10 +24,23 @@ function validateMRLNaming(data) {
     if (typeof node.source_branch !== 'string' || !node.source_branch) {
       throw new Error(`MRL provenance violation: node "${node.id}" is missing source_branch`);
     }
+
+    const expectedId = toMRLNodeId(node.source_branch);
+    if (node.id !== expectedId) {
+      throw new Error(`MRL provenance violation: node "${node.id}" does not match source_branch "${node.source_branch}" (expected "${expectedId}")`);
+    }
+
     if (ids.has(node.id)) {
       throw new Error(`MRL naming collision: duplicate node id "${node.id}"`);
     }
     ids.add(node.id);
+
+    const mermaidId = sanitizeId(node.id);
+    const previousId = mermaidIds.get(mermaidId);
+    if (previousId) {
+      throw new Error(`MRL Mermaid collision: "${previousId}" and "${node.id}" both render as "${mermaidId}"`);
+    }
+    mermaidIds.set(mermaidId, node.id);
   });
 
   synapses.forEach(synapse => {
