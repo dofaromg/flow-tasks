@@ -101,6 +101,7 @@ def main() -> int:
     try:
         server.serve_forever()
     except KeyboardInterrupt:
+        # graceful shutdown on Ctrl-C; no cleanup needed beyond server_close() in finally
         pass
     finally:
         server.server_close()

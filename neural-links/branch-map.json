@@ -43,6 +43,16 @@
         "created_at": "2025-11-30T07:57:39Z"
       },
       {
+        "id": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
+        "source_branch": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7
+      },
+      {
         "id": "MRL_AI_Partner_Origin_v1",
         "source_branch": "MRL_AI_Partner_Origin_v1",
         "naming_authority": "MRL",
@@ -1330,6 +1340,13 @@
         "weight": 0.5,
         "pr_number": 93,
         "timestamp": "2025-11-30T07:57:39Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
+        "type": "influence",
+        "weight": 0.5,
+        "timestamp": "2026-08-27T09:06:19.041Z"
       },
       {
         "from": "MRL_main",
