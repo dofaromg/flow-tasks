@@ -135,6 +135,7 @@ class MRL_OriginBoundaryGuard:
                 external_name,
                 canonical,
                 "mrl_native_product" if native else "external_material",
+                origin_signature=self.origin_signature,
             ),
         }
         return embed_signature(material, self.origin_signature)  # LAW-0
