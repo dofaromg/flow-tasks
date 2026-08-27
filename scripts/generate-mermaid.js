@@ -6,8 +6,41 @@ function sanitizeId(id) {
   return id.replace(/[\/\-\.]/g, '_');
 }
 
+function validateMRLNaming(data) {
+  const nodes = data?.neural_network?.nodes;
+  const synapses = data?.neural_network?.synapses;
+
+  if (!Array.isArray(nodes) || !Array.isArray(synapses)) {
+    throw new Error('MRL neural map requires nodes and synapses arrays');
+  }
+
+  const ids = new Set();
+  nodes.forEach(node => {
+    if (typeof node.id !== 'string' || !node.id.startsWith('MRL_')) {
+      throw new Error(`MRL naming violation: node id "${node.id}" must start with MRL_`);
+    }
+    if (typeof node.source_branch !== 'string' || !node.source_branch) {
+      throw new Error(`MRL provenance violation: node "${node.id}" is missing source_branch`);
+    }
+    if (ids.has(node.id)) {
+      throw new Error(`MRL naming collision: duplicate node id "${node.id}"`);
+    }
+    ids.add(node.id);
+  });
+
+  synapses.forEach(synapse => {
+    if (!ids.has(synapse.from) || !ids.has(synapse.to)) {
+      throw new Error(`MRL chain violation: unresolved synapse ${synapse.from} -> ${synapse.to}`);
+    }
+  });
+
+  return true;
+}
+
 // 生成 Mermaid 圖
 function generateMermaidGraph(data) {
+  validateMRLNaming(data);
+
   let mermaid = "```mermaid\n";
   mermaid += "graph TD\n";
   
@@ -97,4 +130,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { generateMermaidGraph, sanitizeId };
+module.exports = { generateMermaidGraph, sanitizeId, validateMRLNaming };
