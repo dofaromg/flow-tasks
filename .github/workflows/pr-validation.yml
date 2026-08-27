@@ -194,10 +194,10 @@ jobs:
           echo "=== PR Validation Complete ==="
           echo "All required checks have been completed"
           
-          if [ "${{ needs.lint-and-format.result }}" != "success" ] || \
-             [ "${{ needs.test-validation.result }}" != "success" ] || \
-             [ "${{ needs.k8s-validation.result }}" != "success" ] || \
-             [ "${{ needs.integration-status.result }}" != "success" ]; then
+          if [ "${{ needs['lint-and-format'].result }}" != "success" ] || \
+             [ "${{ needs['test-validation'].result }}" != "success" ] || \
+             [ "${{ needs['k8s-validation'].result }}" != "success" ] || \
+             [ "${{ needs['integration-status'].result }}" != "success" ]; then
             echo "⚠ Some checks did not pass completely - please review"
             exit 0
           else
