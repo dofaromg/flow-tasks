@@ -3,8 +3,12 @@ name: Neural Branch Sync
 on:
   push:
     branches: ['**']
+    paths-ignore:
+      - 'neural-links/**'
   pull_request:
     types: [opened, closed, merged, synchronize]
+    paths-ignore:
+      - 'neural-links/**'
   workflow_dispatch:
 
 permissions:
@@ -106,7 +110,7 @@ jobs:
           git config --global user.name "MrLiouWord Neural Bot"
           git config --global user.email "neural@mrliouword.dev"
           git add neural-links/
-          git commit -m "🧠 Auto-sync neural network map [skip ci]" || echo "No changes to commit"
+          git commit -m "chore(MRL_neural-map): synchronize canonical topology" || echo "No changes to commit"
           git push origin HEAD || echo "Push failed, may need manual intervention"
       
       - name: Display Neural Stats
