@@ -42,8 +42,9 @@ jobs:
       github.event_name != 'issue_comment' ||
       (github.event.comment.body == '@copilot update-structure-index')
     
+    # 不再直寫受保護 main，故不需要 contents: write。
     permissions:
-      contents: write
+      contents: read
       issues: write
       pull-requests: write
     
@@ -112,26 +113,14 @@ jobs:
           
           cat diff-report.md
       
-      - name: 💾 Commit and Push Changes
+      # 不再繞過分支保護直接推 main。
+      # 本輪：偵測到變更即封存為 artifact + 可審查報告（見下方 Upload Artifacts / Diff Report）。
+      # 後續若要自動落庫，應由專用分支開 PR，經 ROOT 認可後合併。
+      - name: 📦 Archive changes (no direct write to protected main)
         if: steps.check_changes.outputs.has_changes == 'true'
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          
-          git add STRUCTURE.md
-          git add .copilot/structure-index.json
-          git add .copilot/structure.fltnz
-          git add .copilot/structure-scan.json
-          
-          git commit -m "🗂️ Auto-update structure index
-
-          - Updated by GitHub Actions
-          - Triggered by: ${{ github.event_name }}
-          - Scan depth: ${{ github.event.inputs.scan_depth || '8' }}
-          - Timestamp: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
-          "
-          
-          git push
+          echo "🔄 偵測到結構索引變更 —— 已封存為 artifact 與 diff 報告，未寫入受保護 main。"
+          echo "後續自動落庫請由專用分支開 PR（ROOT 認可後合併）。"
       
       - name: 💬 Comment on Issue (if triggered by comment)
         if: |
@@ -144,7 +133,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '✅ 結構索引已自動更新！\n\n請查看最新的 [STRUCTURE.md](../blob/main/STRUCTURE.md) 和 [結構索引](.copilot/structure-index.json)。'
+              body: '🗂️ 結構索引已重新產生並封存為本次 run 的 artifact（未寫入受保護 main）。\n\n請於 Actions run 下載 `structure-index-' + context.runNumber + '` 檢視；若要落庫，請由專用分支開 PR 經 ROOT 認可後合併。'
             })
       
       - name: 📤 Upload Artifacts
@@ -171,15 +160,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           
           if [ -f .copilot/structure-scan.json ]; then
-            echo "### 📊 掃描統計" >> $GITHUB_STEP_SUMMARY
-            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
-            import json
-
-            with open('.copilot/structure-scan.json', 'r') as handle:
-                data = json.load(handle)
-            stats = data.get('statistics', {})
-            print(f'- 總檔案數: {stats.get("total_files", 0):,}')
-            print(f'- 總目錄數: {stats.get("total_dirs", 0):,}')
-            print(f'- 總代碼行數: {stats.get("total_lines", 0):,}')
-            PY
+            echo "### 📊 掃描統計" >> "$GITHUB_STEP_SUMMARY"
+            # 無 heredoc：避免 YAML→shell 縮排交界導致終止符失效。改用單行 python -c。
+            python -c "import json; d=json.load(open('.copilot/structure-scan.json')); s=d.get('statistics', {}); print('- 總檔案數: {:,}'.format(s.get('total_files', 0))); print('- 總目錄數: {:,}'.format(s.get('total_dirs', 0))); print('- 總代碼行數: {:,}'.format(s.get('total_lines', 0)))" >> "$GITHUB_STEP_SUMMARY" || true
           fi
