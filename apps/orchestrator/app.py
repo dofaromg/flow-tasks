@@ -35,10 +35,12 @@ def orchestrate():
     try:
         result = core.run_pipeline(payload, _remote_compute)
     except ValueError as e:
-        return jsonify({'ok': False, 'error': str(e)}), 400
+        # Log detail server-side; do not expose exception text to the client.
+        logger.info("orchestrate rejected: %s", e)
+        return jsonify({'ok': False, 'error': 'invalid_request'}), 400
     except requests.RequestException as e:
         logger.error("module-a call failed: %s", e)
-        return jsonify({'ok': False, 'error': 'module_a_unreachable', 'detail': str(e)}), 502
+        return jsonify({'ok': False, 'error': 'module_a_unreachable'}), 502
     return jsonify(result)
 
 
