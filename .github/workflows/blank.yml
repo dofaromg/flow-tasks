@@ -29,11 +29,21 @@ jobs:
         with:
           python-version: '3.x'
 
+      # process_tasks.py performs repository-level npm lint/build checks.
+      # Keep the Node execution environment explicit instead of depending on
+      # whichever tools happen to be preinstalled on the runner image.
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
       # Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          npm ci
 
       # Run task validation
       - name: Validate FlowAgent tasks
