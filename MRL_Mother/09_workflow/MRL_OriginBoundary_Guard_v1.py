@@ -37,6 +37,7 @@ if str(_HERE) not in sys.path:
 
 # rl_12 命名回收實作（單一真實來源,避免重複實作 → No-Delete/Additive 一致）
 from MRL_FlowAgent_LawEngine_v1 import (  # noqa: E402
+    build_mrl_world_model_top_view,
     is_mrl_native_name,
     reclaim_name,
 )
@@ -130,6 +131,11 @@ class MRL_OriginBoundaryGuard:
                 "canonical_name": canonical,
                 "preserve_source": True,
             },
+            "MRL_world_model_top_view": build_mrl_world_model_top_view(
+                external_name,
+                canonical,
+                "mrl_native_product" if native else "external_material",
+            ),
         }
         return embed_signature(material, self.origin_signature)  # LAW-0
 
