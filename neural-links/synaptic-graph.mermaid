@@ -4,7 +4,7 @@ graph TD
 
   %% 節點定義
   MRL_main["● MRL_main<br/>L7"]:::trunk
-  MRL_Mrliou_OuterAutomation_ProtectedBridge_v1["● MRL_Mrliou_OuterAutomation_ProtectedBridge_v1<br/>L3 #629"]:::experimental
+  MRL_Module_Implementation_v1["● MRL_Module_Implementation_v1<br/>L3"]:::experimental
   MRL_231["● MRL_231<br/>L3 #93"]:::experimental
   MRL_AI_Partner_Origin_v1["✓ MRL_AI_Partner_Origin_v1<br/>L3 #622"]:::experimental
   MRL_Outer_Automation_Fix_v1["● MRL_Outer_Automation_Fix_v1<br/>L3 #630"]:::experimental
@@ -14,6 +14,7 @@ graph TD
   MRL_historical_extension_recovery_v1["● MRL_historical_extension_recovery_v1<br/>L3 #616"]:::experimental
   MRL_historical_reextension_v1["● MRL_historical_reextension_v1<br/>L3"]:::experimental
   MRL_root_recovery_v1["● MRL_root_recovery_v1<br/>L3 #615"]:::experimental
+  MRL_Mrliou_OuterAutomation_ProtectedBridge_v1["✓ MRL_Mrliou_OuterAutomation_ProtectedBridge_v1<br/>L3 #629"]:::experimental
   MRL_Mrliou_SourceToProduct_ParallelLink_v1["✓ MRL_Mrliou_SourceToProduct_ParallelLink_v1<br/>L3 #628"]:::experimental
   MRL_agent_mrl_governance_negative_probe_20260826["● MRL_agent/mrl-governance-negative-probe-20260826<br/>L3 #626"]:::experimental
   MRL_agent_mrl_product_runtime_gate["● MRL_agent/mrl-product-runtime-gate<br/>L3"]:::experimental
@@ -116,7 +117,7 @@ graph TD
   MRL_宥麟["● MRL_宥麟<br/>L3"]:::experimental
 
   %% 連結定義
-  MRL_main -.->|active| MRL_Mrliou_OuterAutomation_ProtectedBridge_v1
+  MRL_main -.->|active| MRL_Module_Implementation_v1
   MRL_main -.->|active| MRL_231
   MRL_main -->|merged| MRL_AI_Partner_Origin_v1
   MRL_main -.->|active| MRL_Outer_Automation_Fix_v1
@@ -126,6 +127,7 @@ graph TD
   MRL_main -.->|active| MRL_historical_extension_recovery_v1
   MRL_main -.->|active| MRL_historical_reextension_v1
   MRL_main -.->|active| MRL_root_recovery_v1
+  MRL_main -->|merged| MRL_Mrliou_OuterAutomation_ProtectedBridge_v1
   MRL_main -->|merged| MRL_Mrliou_SourceToProduct_ParallelLink_v1
   MRL_main -.->|active| MRL_agent_mrl_governance_negative_probe_20260826
   MRL_main -.->|active| MRL_agent_mrl_product_runtime_gate
