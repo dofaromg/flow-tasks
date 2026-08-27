@@ -7,7 +7,7 @@
     "source_identity_field": "source_branch",
     "source_identity_mutated": false
   },
-  "updated_at": "2026-08-27T09:07:04.047Z",
+  "updated_at": "2026-08-27T19:48:44.207Z",
   "neural_network": {
     "nodes": [
       {
@@ -28,7 +28,9 @@
         "layer": "L3",
         "parent": "MRL_main",
         "status": "active",
-        "energy": 0.7
+        "energy": 0.7,
+        "merged_pr": 632,
+        "created_at": "2026-08-27T09:08:08Z"
       },
       {
         "id": "MRL_231",
@@ -41,16 +43,6 @@
         "energy": 0.7,
         "merged_pr": 93,
         "created_at": "2025-11-30T07:57:39Z"
-      },
-      {
-        "id": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
-        "source_branch": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
-        "naming_authority": "MRL",
-        "type": "experimental",
-        "layer": "L3",
-        "parent": "MRL_main",
-        "status": "active",
-        "energy": 0.7
       },
       {
         "id": "MRL_AI_Partner_Origin_v1",
@@ -72,10 +64,11 @@
         "type": "experimental",
         "layer": "L3",
         "parent": "MRL_main",
-        "status": "active",
-        "energy": 0.7,
+        "status": "merged",
+        "energy": 0.95,
         "merged_pr": 631,
-        "created_at": "2026-08-27T08:57:48Z"
+        "created_at": "2026-08-27T08:57:48Z",
+        "merged_at": "2026-08-27T19:04:30Z"
       },
       {
         "id": "MRL_Outer_Automation_Fix_v1",
@@ -1331,7 +1324,8 @@
         "to": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T09:07:04.047Z"
+        "pr_number": 632,
+        "timestamp": "2026-08-27T09:08:08Z"
       },
       {
         "from": "MRL_main",
@@ -1340,13 +1334,6 @@
         "weight": 0.5,
         "pr_number": 93,
         "timestamp": "2025-11-30T07:57:39Z"
-      },
-      {
-        "from": "MRL_main",
-        "to": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
-        "type": "influence",
-        "weight": 0.5,
-        "timestamp": "2026-08-27T09:06:19.041Z"
       },
       {
         "from": "MRL_main",
@@ -1359,10 +1346,10 @@
       {
         "from": "MRL_main",
         "to": "MRL_Module_Implementation_v1",
-        "type": "influence",
-        "weight": 0.5,
+        "type": "merge",
+        "weight": 0.95,
         "pr_number": 631,
-        "timestamp": "2026-08-27T08:57:48Z"
+        "timestamp": "2026-08-27T19:04:30Z"
       },
       {
         "from": "MRL_main",
