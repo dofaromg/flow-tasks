@@ -1,7 +1,28 @@
 // origin_signature: MrLiouWord
 
+export const MRL_NAMING_PREFIX = 'MRL_';
+
+export function toMRLNodeId(sourceIdentity: string): string {
+  if (typeof sourceIdentity !== 'string' || !sourceIdentity.trim()) {
+    throw new Error('MRL naming requires a non-empty source identity');
+  }
+
+  const trimmed = sourceIdentity.trim();
+  if (/^MRL_/i.test(trimmed)) {
+    const suffix = trimmed.slice(MRL_NAMING_PREFIX.length);
+    if (!suffix) {
+      throw new Error('MRL naming requires content after the MRL_ prefix');
+    }
+    return `${MRL_NAMING_PREFIX}${suffix}`;
+  }
+
+  return `${MRL_NAMING_PREFIX}${trimmed}`;
+}
+
 export interface NeuralNode {
   id: string;
+  source_branch?: string;
+  naming_authority?: 'MRL';
   type: 'trunk' | 'cognitive' | 'feature' | 'hotfix' | 'experimental';
   layer: string;
   frequency_hz?: number;
@@ -24,6 +45,13 @@ export interface Synapse {
 
 export interface NeuralNetwork {
   origin_signature: string;
+  naming_policy?: {
+    version: string;
+    canonical_prefix: 'MRL_';
+    canonical_identity_field: 'id';
+    source_identity_field: 'source_branch';
+    source_identity_mutated: false;
+  };
   nodes: NeuralNode[];
   synapses: Synapse[];
 }
@@ -34,6 +62,13 @@ export class BranchNeuralSystem {
   constructor() {
     this.network = {
       origin_signature: "MrLiouWord",
+      naming_policy: {
+        version: "MRL_AutoExpansion_Naming_v1",
+        canonical_prefix: "MRL_",
+        canonical_identity_field: "id",
+        source_identity_field: "source_branch",
+        source_identity_mutated: false
+      },
       nodes: [],
       synapses: []
     };
@@ -41,24 +76,41 @@ export class BranchNeuralSystem {
   
   // 註冊新的神經元節點
   registerNode(node: NeuralNode): void {
-    this.network.nodes.push(node);
+    const canonicalId = toMRLNodeId(node.id);
+    if (this.network.nodes.some(existing => existing.id === canonicalId)) {
+      throw new Error(`MRL naming collision: duplicate node id "${canonicalId}"`);
+    }
+
+    this.network.nodes.push({
+      ...node,
+      id: canonicalId,
+      source_branch: node.source_branch ?? node.id,
+      naming_authority: 'MRL',
+      parent: node.parent ? toMRLNodeId(node.parent) : undefined
+    });
   }
   
   // 建立突觸連結
   createSynapse(synapse: Synapse): void {
-    this.network.synapses.push(synapse);
+    this.network.synapses.push({
+      ...synapse,
+      from: toMRLNodeId(synapse.from),
+      to: toMRLNodeId(synapse.to)
+    });
   }
   
   // 追溯神經路徑 (BFS)
   tracePath(from: string, to: string): Synapse[] {
+    const canonicalFrom = toMRLNodeId(from);
+    const canonicalTo = toMRLNodeId(to);
     const visited = new Set<string>();
-    const queue: Array<{node: string, path: Synapse[]}> = [{node: from, path: []}];
+    const queue: Array<{node: string, path: Synapse[]}> = [{node: canonicalFrom, path: []}];
     
     while (queue.length > 0) {
       const current = queue.shift();
       if (!current) continue;
       
-      if (current.node === to) {
+      if (current.node === canonicalTo) {
         return current.path;
       }
       
@@ -79,22 +131,25 @@ export class BranchNeuralSystem {
   
   // 計算分支影響力
   calculateInfluence(branchId: string): number {
-    const synapses = this.network.synapses.filter(s => s.from === branchId);
+    const canonicalId = toMRLNodeId(branchId);
+    const synapses = this.network.synapses.filter(s => s.from === canonicalId);
     if (synapses.length === 0) return 0;
     return synapses.reduce((sum, s) => sum + s.weight, 0) / synapses.length;
   }
   
   // 獲取所有子節點
   getChildren(branchId: string): NeuralNode[] {
+    const canonicalId = toMRLNodeId(branchId);
     const childIds = this.network.synapses
-      .filter(s => s.from === branchId)
+      .filter(s => s.from === canonicalId)
       .map(s => s.to);
     return this.network.nodes.filter(n => childIds.includes(n.id));
   }
   
   // 獲取節點深度
   getDepth(branchId: string): number {
-    const node = this.network.nodes.find(n => n.id === branchId);
+    const canonicalId = toMRLNodeId(branchId);
+    const node = this.network.nodes.find(n => n.id === canonicalId);
     if (!node || !node.parent) return 0;
     return 1 + this.getDepth(node.parent);
   }
@@ -137,7 +192,38 @@ export class BranchNeuralSystem {
   
   // 載入網絡資料
   loadNetwork(network: NeuralNetwork): void {
-    this.network = network;
+    const nodes = network.nodes.map(node => ({
+      ...node,
+      id: toMRLNodeId(node.id),
+      source_branch: node.source_branch ?? node.id,
+      naming_authority: 'MRL' as const,
+      parent: node.parent ? toMRLNodeId(node.parent) : undefined
+    }));
+
+    const ids = new Set<string>();
+    nodes.forEach(node => {
+      if (ids.has(node.id)) {
+        throw new Error(`MRL naming collision: duplicate node id "${node.id}"`);
+      }
+      ids.add(node.id);
+    });
+
+    this.network = {
+      ...network,
+      naming_policy: {
+        version: "MRL_AutoExpansion_Naming_v1",
+        canonical_prefix: "MRL_",
+        canonical_identity_field: "id",
+        source_identity_field: "source_branch",
+        source_identity_mutated: false
+      },
+      nodes,
+      synapses: network.synapses.map(synapse => ({
+        ...synapse,
+        from: toMRLNodeId(synapse.from),
+        to: toMRLNodeId(synapse.to)
+      }))
+    };
   }
   
   // 匯出網絡資料
