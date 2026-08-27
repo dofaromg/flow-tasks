@@ -19,7 +19,8 @@ on:
       - 'MrLiou_AI_SuperComputer/**'
       - 'particle_core/**'
 
-  # Validate index automation itself before it reaches protected main.
+  # Validate the global-world observer itself before it reaches protected main;
+  # observing parallel PR worlds never grants them merged-world authority.
   pull_request:
     paths:
       - '.github/workflows/structure-indexer.yml'
