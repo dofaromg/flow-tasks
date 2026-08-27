@@ -40,7 +40,8 @@ jobs:
           const cases = [
             ['feature/example', 'MRL_feature/example'],
             ['mrl_existing', 'MRL_existing'],
-            ['MRL_existing', 'MRL_existing']
+            ['MRL_existing', 'MRL_existing'],
+            ['Mrliou_MRL_SourceToProduct_ParallelLink_v1', 'MRL_Mrliou_SourceToProduct_ParallelLink_v1']
           ];
           for (const [source, expected] of cases) {
             const actual = toMRLNodeId(source);
