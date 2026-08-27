@@ -20,7 +20,7 @@ env:
 
 jobs:
   check-version:
-    name: Verify runner version >= ${{ env.MIN_RUNNER_VERSION }}
+    name: Verify minimum runner version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
