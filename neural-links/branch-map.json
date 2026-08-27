@@ -7,7 +7,7 @@
     "source_identity_field": "source_branch",
     "source_identity_mutated": false
   },
-  "updated_at": "2026-08-27T02:28:26.434Z",
+  "updated_at": "2026-08-27T03:01:23.016Z",
   "neural_network": {
     "nodes": [
       {
@@ -1308,7 +1308,7 @@
         "to": "MRL_historical_reextension_v1",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.434Z"
+        "timestamp": "2026-08-27T03:01:23.016Z"
       },
       {
         "from": "MRL_main",
@@ -1331,7 +1331,7 @@
         "to": "MRL_agent/mrl-product-runtime-gate",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.434Z"
+        "timestamp": "2026-08-27T03:01:23.016Z"
       },
       {
         "from": "MRL_main",
@@ -1346,7 +1346,7 @@
         "to": "MRL_agent/verify-mrl-governance-gate-execution",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.434Z"
+        "timestamp": "2026-08-27T03:01:23.016Z"
       },
       {
         "from": "MRL_main",
@@ -1361,7 +1361,7 @@
         "to": "MRL_claude/add-claude-md-01VTkQZge74QPvPJJGWjg3v9",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.434Z"
+        "timestamp": "2026-08-27T03:01:23.016Z"
       },
       {
         "from": "MRL_main",
@@ -1408,7 +1408,7 @@
         "to": "MRL_codex/create-issue-in-dofaromg-flow-tasks",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.434Z"
+        "timestamp": "2026-08-27T03:01:23.016Z"
       },
       {
         "from": "MRL_main",
@@ -1431,7 +1431,7 @@
         "to": "MRL_codex/fix-name-restoration-mechanism",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.434Z"
+        "timestamp": "2026-08-27T03:01:23.016Z"
       },
       {
         "from": "MRL_main",
@@ -1446,28 +1446,28 @@
         "to": "MRL_codex/setup-ci/cd-with-github-actions",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.016Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_codex/setup-ci/cd-with-github-actions-eg2986",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.016Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_codex/update-model-to-gpt-5.2-codex",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.016Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_copilot/49074",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
@@ -1490,21 +1490,21 @@
         "to": "MRL_copilot/add-sub-issue-for-mrl-ai-system",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_copilot/adjust-communication-style",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_copilot/analyze-system-status",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
@@ -1519,7 +1519,7 @@
         "to": "MRL_copilot/dl580-evidence-validation",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
@@ -1694,21 +1694,21 @@
         "to": "MRL_copilot/health-monitor-concept-discussion",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_copilot/https-github-com-mrliou",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_copilot/https-github-com-mrliou-again",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
@@ -1739,7 +1739,7 @@
         "to": "MRL_copilot/law-definition-structure",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
@@ -1754,14 +1754,14 @@
         "to": "MRL_copilot/mrliou-frontend-deployment-guide",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_copilot/optimize-core-performance",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
@@ -1776,14 +1776,14 @@
         "to": "MRL_copilot/pull-123",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_copilot/pull-123-review-files",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
@@ -1870,14 +1870,14 @@
         "to": "MRL_copilot/task-217537952-1010512921-48c73cca-4274-47ab-a354-b15e6cb8677e",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_copilot/task-217537952-1010512921-b98c14a5-1738-4200-a061-a27f687b34e1",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
@@ -1892,7 +1892,7 @@
         "to": "MRL_copilot/update-navigation-cookbook-app",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
@@ -1915,14 +1915,14 @@
         "to": "MRL_copilot/update-readme-structure",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_copilot/update-readme-structure-again",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
@@ -1937,42 +1937,42 @@
         "to": "MRL_copilot/verify-code-coverage",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_copilot/view-action-run-details",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_copilot/worker-170-wikipedia-backend-integration",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_dofaromg/issue53",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_mrl-relay-middle-layer",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_mrl/governance-live-probe-20260826",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
@@ -1987,7 +1987,7 @@
         "to": "MRL_mrl/rnd-team-organization-v1",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
@@ -2026,7 +2026,7 @@
         "to": "MRL_revert-411-copilot/add-login-interface-system",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
@@ -2057,21 +2057,21 @@
         "to": "MRL_z8-particle-bridge",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_劉",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       },
       {
         "from": "MRL_main",
         "to": "MRL_宥麟",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-08-27T02:28:26.435Z"
+        "timestamp": "2026-08-27T03:01:23.017Z"
       }
     ]
   }
