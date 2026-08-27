@@ -172,13 +172,14 @@ jobs:
           
           if [ -f .copilot/structure-scan.json ]; then
             echo "### 📊 掃描統計" >> $GITHUB_STEP_SUMMARY
-            python -c "
-import json
-with open('.copilot/structure-scan.json', 'r') as f:
-    data = json.load(f)
-    stats = data.get('statistics', {})
-    print(f'- 總檔案數: {stats.get(\"total_files\", 0):,}')
-    print(f'- 總目錄數: {stats.get(\"total_dirs\", 0):,}')
-    print(f'- 總代碼行數: {stats.get(\"total_lines\", 0):,}')
-            " >> $GITHUB_STEP_SUMMARY
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+            import json
+
+            with open('.copilot/structure-scan.json', 'r') as handle:
+                data = json.load(handle)
+            stats = data.get('statistics', {})
+            print(f'- 總檔案數: {stats.get("total_files", 0):,}')
+            print(f'- 總目錄數: {stats.get("total_dirs", 0):,}')
+            print(f'- 總代碼行數: {stats.get("total_lines", 0):,}')
+            PY
           fi
