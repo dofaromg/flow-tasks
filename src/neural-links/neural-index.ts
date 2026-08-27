@@ -76,7 +76,14 @@ export class BranchNeuralSystem {
   
   // 註冊新的神經元節點
   registerNode(node: NeuralNode): void {
-    const sourceBranch = node.source_branch ?? node.id;
+    if (node.source_branch !== undefined && !node.source_branch.trim()) {
+      throw new Error('MRL provenance violation: source_branch must be non-empty when provided');
+    }
+    if (/^MRL_/i.test(node.id.trim()) && !node.source_branch) {
+      throw new Error(`MRL provenance violation: canonical node id "${node.id}" requires explicit source_branch`);
+    }
+
+    const sourceBranch = node.source_branch?.trim() ?? node.id.trim();
     const canonicalId = toMRLNodeId(sourceBranch);
 
     if (node.source_branch && toMRLNodeId(node.id) !== canonicalId) {
@@ -214,7 +221,14 @@ export class BranchNeuralSystem {
   // 載入網絡資料
   loadNetwork(network: NeuralNetwork): void {
     const nodes = network.nodes.map(node => {
-      const sourceBranch = node.source_branch ?? node.id;
+      if (node.source_branch !== undefined && !node.source_branch.trim()) {
+        throw new Error('MRL provenance violation: source_branch must be non-empty when provided');
+      }
+      if (/^MRL_/i.test(node.id.trim()) && !node.source_branch) {
+        throw new Error(`MRL provenance violation: canonical node id "${node.id}" requires explicit source_branch`);
+      }
+
+      const sourceBranch = node.source_branch?.trim() ?? node.id.trim();
       const canonicalId = toMRLNodeId(sourceBranch);
 
       if (node.source_branch && toMRLNodeId(node.id) !== canonicalId) {
