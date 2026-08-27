@@ -159,6 +159,24 @@ class MRL_FlowAgentLawEngine:
             native = is_mrl_native_name(name) if name else False
             result["reclaimed"] = reclaim_name(name) if name else None
             result["as"] = "mrl_native_product" if native else "external_material"
+            result["source_block"] = {
+                "name": name,
+                "role": "material",
+                "state": "source_ingested",
+                "immutable": True,
+            }
+            result["canonical_block"] = {
+                "name": result["reclaimed"],
+                "role": result["as"],
+                "state": "canonical_projection" if native else "source_projection",
+            }
+            result["source_to_product_link"] = {
+                "type": "source_to_canonical_projection",
+                "gate": "MRL_ProductGenerationGate",
+                "source_name": name,
+                "canonical_name": result["reclaimed"],
+                "preserve_source": True,
+            }
         else:
             # 輸出帶母體源頭簽章(rl_11)
             result["origin_signature"] = ORIGIN_SIGNATURE
