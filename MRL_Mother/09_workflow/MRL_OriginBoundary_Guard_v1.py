@@ -112,6 +112,24 @@ class MRL_OriginBoundaryGuard:
             "payload": payload or {},
             "manifestable": is_mrl_manifestable_identity(canonical),
             "classification_rule": "rl_21_classification_before_reclamation",
+            "source_block": {
+                "name": external_name,
+                "role": "material",
+                "state": "source_ingested",
+                "immutable": True,
+            },
+            "canonical_block": {
+                "name": canonical,
+                "role": "mrl_native_product" if native else "external_material",
+                "state": "canonical_projection" if native else "source_projection",
+            },
+            "source_to_product_link": {
+                "type": "source_to_canonical_projection",
+                "gate": "MRL_ProductGenerationGate",
+                "source_name": external_name,
+                "canonical_name": canonical,
+                "preserve_source": True,
+            },
         }
         return embed_signature(material, self.origin_signature)  # LAW-0
 
