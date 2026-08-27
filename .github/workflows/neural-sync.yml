@@ -36,6 +36,7 @@ jobs:
         run: |
           node -e "
           const { toMRLNodeId } = require('./scripts/update-neural-map');
+          const { validateMRLNaming } = require('./scripts/generate-mermaid');
           const cases = [
             ['feature/example', 'MRL_feature/example'],
             ['mrl_existing', 'MRL_existing'],
@@ -48,6 +49,34 @@ jobs:
           let rejected = false;
           try { toMRLNodeId('MRL_'); } catch { rejected = true; }
           if (!rejected) throw new Error('MRL_ without a suffix must be rejected');
+
+          const expectReject = (data, label) => {
+            let failed = false;
+            try { validateMRLNaming(data); } catch { failed = true; }
+            if (!failed) throw new Error(label + ' must be rejected');
+          };
+          expectReject({
+            neural_network: {
+              nodes: [{ id: 'MRL_feature/a', source_branch: 'feature/b' }],
+              synapses: []
+            }
+          }, 'canonical/source mismatch');
+          expectReject({
+            neural_network: {
+              nodes: [
+                { id: 'MRL_feature/a-b', source_branch: 'feature/a-b' },
+                { id: 'MRL_feature/a_b', source_branch: 'feature/a_b' }
+              ],
+              synapses: []
+            }
+          }, 'Mermaid identifier collision');
+          expectReject({
+            neural_network: {
+              nodes: [{ id: 'MRL_main', source_branch: 'main' }],
+              synapses: [{ from: 'MRL_main', to: 'MRL_missing' }]
+            }
+          }, 'unresolved synapse');
+
           console.log('MRL_NAMING_NORMALIZATION_PASS');
           "
 
