@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MrLiou Neural Branch Visualizer</title>
+  <title>MRL Branch Neural Visualizer</title>
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <style>
     * {
@@ -179,7 +179,7 @@
 </head>
 <body>
   <header>
-    <h1>🧠 MrLiou Branch Neural Network</h1>
+    <h1>🧠 MRL Branch Neural Network</h1>
     <p class="signature">origin_signature: MrLiouWord</p>
   </header>
   
@@ -392,6 +392,8 @@
       
       title.textContent = node.id;
       content.innerHTML = `
+        <p><strong>Canonical ID:</strong> ${node.id}</p>
+        ${node.source_branch ? `<p><strong>Source Branch:</strong> ${node.source_branch}</p>` : ''}
         <p><strong>Type:</strong> ${node.type}</p>
         <p><strong>Layer:</strong> ${node.layer}</p>
         <p><strong>Status:</strong> ${node.status}</p>
@@ -425,7 +427,7 @@
       }
       const dataStr = JSON.stringify(currentData, null, 2);
       const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-      const exportFileDefaultName = `branch-neural-network-${new Date().toISOString().split('T')[0]}.json`;
+      const exportFileDefaultName = `MRL_branch-neural-network-${new Date().toISOString().split('T')[0]}.json`;
       
       const linkElement = document.createElement('a');
       linkElement.setAttribute('href', dataUri);
