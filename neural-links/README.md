@@ -19,6 +19,8 @@ Example: Git branch `copilot/example` becomes graph node `MRL_copilot/example`, 
 
 Generation fails if a node lacks the prefix, loses `source_branch`, duplicates a canonical ID, or creates an unresolved synapse. Existing Git branches are not renamed.
 
+Enforcement order: normalize source identity → validate canonical naming and provenance → render JSON/Mermaid → commit generated evidence.
+
 ## Files
 
 ### branch-map.json
