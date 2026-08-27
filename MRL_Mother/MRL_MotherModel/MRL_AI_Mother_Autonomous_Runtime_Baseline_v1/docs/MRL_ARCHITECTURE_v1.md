@@ -12,7 +12,9 @@ MRL_MotherModel_v0_1 (existing evidence/recovery mother)
    └─ APIWorks Gateway
 ```
 
-The package is additive. It does not rename or overwrite the existing mother model, `llm_gateway.py`, `FluinMemoryVault.py`, EvidenceVault, or DL580 WaveStack. Later integration may adapt those modules behind the interfaces created here.
+The package is additive. It does not rename or overwrite the existing mother model, `llm_gateway.py`, `FluinMemoryVault.py`, EvidenceVault, or any existing hardware-specific WaveStack. Later integration may adapt those modules behind the interfaces created here.
+
+The canonical deployment boundary is hardware-neutral: GitHub distributes the construction package, MRL distributes a separately checksummed model release, and the customer runs both on hardware they control. Local records do not leave that hardware unless the customer explicitly builds and submits an MRL return bundle.
 
 ## Runtime flow
 
@@ -65,4 +67,3 @@ Universal Passports use a separate additive version chain. `source_identity` is 
 5. Add signed Passport transitions and canonical-world Evidence Gate.
 6. Expose through APIWorks after authentication, rate-limit, billing and privacy Gates exist.
 7. Connect CareOS only after its data classification and consent Gate is defined.
-

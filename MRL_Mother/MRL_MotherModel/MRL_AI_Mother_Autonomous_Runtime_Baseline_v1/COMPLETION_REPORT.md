@@ -13,15 +13,19 @@ Begin the bottom-up architecture for an MRL-owned AI mother model, prioritize re
 - additive Universal Passport Registry with source identity and Return Anchor;
 - APIWorks health, inference and memory-recall endpoints;
 - external-host rejection and tamper-detection tests;
-- PowerShell start and DL580 acceptance scripts;
+- hardware-neutral PowerShell start and acceptance scripts;
+- model-release manifest schema;
+- explicit-consent, checksummed data-return bundle builder;
+- commercial agreement structure mapped from the current OpenAI business-services agreement architecture;
 - architecture, acceptance, dependency and audit documentation;
 - expected-file and SHA-256 evidence.
 
 ## Completion boundary
 
-GitHub construction package: `DELIVERY_PASS` after CI verification.  
-Real DL580 local-model runtime: `AUTONOMY_GATE_OPEN` until the live acceptance script passes.  
-MRL-native tokenizer/training: next engineering layer, not falsely included in v1.  
+GitHub construction package: `DELIVERY_PASS` after CI verification.
+Real model on user-owned hardware: `AUTONOMY_GATE_OPEN` until the live acceptance script passes.
+Return-bundle construction: `PASS`; provider receiving API remains `RECEIVER_GATE_OPEN`.
+MRL-native tokenizer/training: next engineering layer, not falsely included in v1.
 CareOS integration: downstream track after APIWorks mother-runtime acceptance.
 
 ## Next additive layers
@@ -33,4 +37,4 @@ CareOS integration: downstream track after APIWorks mother-runtime acceptance.
 5. `MRL_FlowAgent_Tool_Runtime_Bridge_v1`
 6. `MRL_APIWorks_Auth_Billing_Product_Gate_v1`
 7. `MRL_CareOS_WorldPassport_Bridge_v1`
-
+8. `MRL_Authenticated_Return_Receiver_v1`

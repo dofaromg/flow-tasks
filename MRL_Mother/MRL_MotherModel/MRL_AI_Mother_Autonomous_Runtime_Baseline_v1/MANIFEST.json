@@ -2,12 +2,12 @@
   "schema": "MRL_GitHub_Construction_Package_Manifest_v1",
   "canonical_id": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
   "display_name": "MRL AI Mother Autonomous Runtime Baseline v1",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "origin_signature": "MrLiouWord",
   "parent": "MRL_MotherModel_v0_1",
   "source_branch": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
   "delivery_type": "EXECUTABLE_GITHUB_CONSTRUCTION_PACKAGE",
-  "expected_file_count": 25,
+  "expected_file_count": 32,
   "runtime_dependencies": {
     "python": ">=3.10 standard library",
     "local_model_server": ["Ollama", "llama.cpp OpenAI-compatible server"],
@@ -16,12 +16,15 @@
   "entrypoints": {
     "gateway": "runtime/MRL_apiworks_gateway_v1.py",
     "package_verification": "scripts/MRL_verify_package_v1.py",
-    "dl580_start": "scripts/MRL_start_runtime_v1.ps1",
-    "dl580_acceptance": "scripts/MRL_acceptance_v1.ps1"
+    "byoh_start": "scripts/MRL_start_runtime_v1.ps1",
+    "byoh_acceptance": "scripts/MRL_acceptance_v1.ps1",
+    "return_bundle": "scripts/MRL_prepare_return_bundle_v1.ps1"
   },
   "gates": {
     "package_delivery": "DELIVERY_PASS",
-    "dl580_local_model_runtime": "AUTONOMY_GATE_OPEN",
+    "byoh_real_model_runtime": "AUTONOMY_GATE_OPEN",
+    "return_bundle_creation": "PASS",
+    "provider_receiving_endpoint": "RECEIVER_GATE_OPEN",
     "external_model_offline": "REQUIRED",
     "apiworks_public_release": "OUT_OF_SCOPE_BLOCKED"
   },

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MRL_return_bundle.schema.json",
+  "title": "MRL Return Bundle v1",
+  "type": "object",
+  "required": ["bundle_id", "hardware_id", "model_release_id", "purpose", "consent", "files", "origin_signature"],
+  "properties": {
+    "bundle_id": {"type": "string", "pattern": "^MRL_return_"},
+    "hardware_id": {"type": "string", "minLength": 1},
+    "model_release_id": {"type": "string", "pattern": "^MRL_"},
+    "purpose": {"type": "string", "minLength": 1},
+    "consent": {
+      "type": "object",
+      "required": ["explicit", "automatic_upload"],
+      "properties": {"explicit": {"const": true}, "automatic_upload": {"const": false}}
+    },
+    "files": {"type": "array", "minItems": 1},
+    "origin_signature": {"const": "MrLiouWord"}
+  },
+  "additionalProperties": true
+}

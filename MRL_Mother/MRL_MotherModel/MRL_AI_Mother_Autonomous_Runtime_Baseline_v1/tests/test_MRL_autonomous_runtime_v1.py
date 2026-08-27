@@ -21,6 +21,11 @@ from runtime.MRL_apiworks_gateway_v1 import build_handler
 from runtime.MRL_local_model_adapter_v1 import MRLModelGateError, require_loopback_endpoint
 from runtime.MRL_mother_runtime_v1 import MRLMotherRuntime
 from runtime.MRL_passport_registry_v1 import MRLPassportRegistry
+from runtime.MRL_return_bundle_v1 import (
+    MRLReturnBundleError,
+    build_return_bundle,
+    verify_return_bundle,
+)
 
 
 class _FakeOllamaHandler(BaseHTTPRequestHandler):
@@ -190,6 +195,67 @@ class MRLAutonomousRuntimeTests(unittest.TestCase):
         records = broken.evidence.chain.read_all()
         self.assertEqual(records[-1]["payload"]["state"], "FAIL")
         self.assertTrue(broken.evidence.verify()["ok"])
+
+    def test_return_bundle_requires_explicit_consent(self) -> None:
+        source = self.data_dir / "evidence.json"
+        source.write_text('{"ok": true}', encoding="utf-8")
+        with self.assertRaises(MRLReturnBundleError):
+            build_return_bundle(
+                files=[source],
+                output_path=self.data_dir / "return.zip",
+                policy={
+                    "automatic_upload_allowed": False,
+                    "allowed_extensions": [".json"],
+                    "max_bundle_bytes": 1024,
+                },
+                consent=False,
+                purpose="support",
+                hardware_id="MRL_hardware_test",
+                model_release_id="MRL_model_test",
+            )
+
+    def test_return_bundle_is_complete_and_verifiable(self) -> None:
+        source = self.data_dir / "evidence.jsonl"
+        source.write_text('{"state":"PASS"}\n', encoding="utf-8")
+        output = self.data_dir / "return.zip"
+        result = build_return_bundle(
+            files=[source],
+            output_path=output,
+            policy={
+                "automatic_upload_allowed": False,
+                "allowed_extensions": [".jsonl"],
+                "blocked_filenames": [".env"],
+                "max_bundle_bytes": 1024,
+            },
+            consent=True,
+            purpose="support evidence",
+            hardware_id="MRL_hardware_test",
+            model_release_id="MRL_model_test",
+        )
+        self.assertTrue(output.is_file())
+        self.assertEqual(result["manifest"]["consent"]["automatic_upload"], False)
+        self.assertEqual(result["manifest"]["files"][0]["name"], "evidence.jsonl")
+        verified = verify_return_bundle(output)
+        self.assertTrue(verified["ok"])
+        self.assertEqual(verified["files"], 1)
+
+    def test_return_bundle_rejects_disallowed_file_type(self) -> None:
+        source = self.data_dir / "secret.key"
+        source.write_text("not-for-return", encoding="utf-8")
+        with self.assertRaises(MRLReturnBundleError):
+            build_return_bundle(
+                files=[source],
+                output_path=self.data_dir / "return.zip",
+                policy={
+                    "automatic_upload_allowed": False,
+                    "allowed_extensions": [".json"],
+                    "max_bundle_bytes": 1024,
+                },
+                consent=True,
+                purpose="support",
+                hardware_id="MRL_hardware_test",
+                model_release_id="MRL_model_test",
+            )
 
 
 if __name__ == "__main__":

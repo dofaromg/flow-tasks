@@ -62,4 +62,4 @@ See: `../MRL_AI_ModuleModel_Recovery_Map_v1.md`
 
 ## Additive Runtime Children
 
-- [`MRL_AI_Mother_Autonomous_Runtime_Baseline_v1`](MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/README.md) — executable local-model → MemoryVault → Evidence → Universal Passport → APIWorks baseline. GitHub package delivery is verified independently; DL580 real-model acceptance remains evidence-gated.
+- [`MRL_AI_Mother_Autonomous_Runtime_Baseline_v1`](MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/README.md) — portable GitHub construction package for a user-hardware local model → MemoryVault → Evidence → Universal Passport → APIWorks loop, plus explicit-consent file-return bundles. Real-model acceptance remains installation-specific and evidence-gated.

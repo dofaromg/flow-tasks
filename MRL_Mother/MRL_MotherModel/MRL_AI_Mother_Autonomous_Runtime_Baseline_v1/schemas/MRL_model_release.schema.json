@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MRL_model_release.schema.json",
+  "title": "MRL Model Release v1",
+  "type": "object",
+  "required": ["release_id", "model_name", "version", "sha256", "size", "runtime", "origin_signature"],
+  "properties": {
+    "release_id": {"type": "string", "pattern": "^MRL_"},
+    "model_name": {"type": "string", "minLength": 1},
+    "version": {"type": "string", "minLength": 1},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "size": {"type": "integer", "minimum": 1},
+    "runtime": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "license_ref": {"type": "string"},
+    "origin_signature": {"const": "MrLiouWord"}
+  },
+  "additionalProperties": true
+}
