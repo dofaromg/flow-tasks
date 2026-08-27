@@ -89,6 +89,29 @@ def is_mrl_native_name(name: str) -> bool:
     )
 
 
+def build_mrl_world_model_top_view(source_name: str, canonical_name: str,
+                                   canonical_role: str) -> Dict[str, Any]:
+    """Expose source and canonical product as linked, non-replacing blocks."""
+    return {
+        "world_model": "MRL",
+        "root_authority": "Mr.liou",
+        "origin_signature": ORIGIN_SIGNATURE,
+        "architecture": "dual_internal_container_parallel_projection",
+        "source_container_ref": "source_block",
+        "product_container_ref": "canonical_block",
+        "link_ref": "source_to_product_link",
+        "source_name": source_name,
+        "canonical_name": canonical_name,
+        "canonical_role": canonical_role,
+        "parameter_sources": {
+            "rootlaw": str(_ROOTLAW.relative_to(_ROOT)),
+            "identity_registry": str(_IDENTITY_MAP.relative_to(_ROOT)),
+            "native_identity_snapshot": "module_load",
+            "environment_override": False,
+        },
+    }
+
+
 # ─── rl_12 命名回收：已分類外部名 → MRL_<描述> canonical ─────────────────────────
 def reclaim_name(external_name: str) -> str:
     """
@@ -177,6 +200,9 @@ class MRL_FlowAgentLawEngine:
                 "canonical_name": result["reclaimed"],
                 "preserve_source": True,
             }
+            result["MRL_world_model_top_view"] = build_mrl_world_model_top_view(
+                name, result["reclaimed"], result["as"]
+            )
         else:
             # 輸出帶母體源頭簽章(rl_11)
             result["origin_signature"] = ORIGIN_SIGNATURE
