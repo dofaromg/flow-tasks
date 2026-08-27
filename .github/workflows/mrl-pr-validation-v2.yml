@@ -1,0 +1,59 @@
+name: MRL PR Validation v2
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    types:
+      - opened
+      - synchronize
+      - reopened
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mrl-pr-validation:
+    name: MRL PR validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout proposed change
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements.txt
+
+      - name: Run integration tests
+        run: python test_integration.py
+
+      - name: Run comprehensive tests
+        run: python test_comprehensive.py
+
+      - name: Validate particle core import
+        run: |
+          cd particle_core
+          python -c "import sys; sys.path.insert(0, 'src'); print('Particle core import check passed')"
+
+      - name: Render production Kubernetes overlay
+        run: kubectl kustomize cluster/overlays/prod/ > /tmp/MRL_prod_manifests.yaml
+
+      - name: Validate rendered YAML
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import yaml
+          documents = list(yaml.safe_load_all(Path('/tmp/MRL_prod_manifests.yaml').read_text()))
+          assert documents, 'production overlay rendered no YAML documents'
+          print(f'MRL_PR_VALIDATION_V2_PASS: {len(documents)} YAML documents')
+          PY
