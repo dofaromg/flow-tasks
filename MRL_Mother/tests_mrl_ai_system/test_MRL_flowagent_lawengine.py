@@ -119,7 +119,9 @@ class TestGateUnity:
         assert r["direction"] == "in"
         assert r["reclaimed"] == "FlowAgent.Runtime.v47.zip"
         assert r["as"] == "mrl_native_product"
-        assert r["as"] == "material"
+        assert r["source_block"]["role"] == "material"
+        assert r["canonical_block"]["role"] == "mrl_native_product"
+        assert r["source_to_product_link"]["preserve_source"] is True
 
     def test_out_carries_origin_signature(self, engine):
         r = engine.gate("out", {"msg": "hello world"})
