@@ -88,6 +88,19 @@ class TestIntake:
         m = guard.intake_external("weird name with spaces!!")
         assert m["manifestable"] is True               # rl_16:正名後可顯化
 
+    def test_custom_origin_is_consistent_with_top_view_and_signature(self):
+        custom_guard = MRL_OriginBoundaryGuard("MRL_CustomOrigin")
+        material = custom_guard.intake_external("external.module")
+        assert material["origin"] == "MRL_CustomOrigin"
+        assert material["MRL_world_model_top_view"]["origin_signature"] == \
+            "MRL_CustomOrigin"
+        assert verify_signature(material, "MRL_CustomOrigin") is True
+
+    def test_source_block_mutation_is_tamper_evident(self, guard):
+        material = guard.intake_external("external.module")
+        material["source_block"]["name"] = "mutated-after-signing"
+        assert verify_signature(material) is False
+
 
 # ─── rl_11 源頭主權斷言 ───────────────────────────────────────────────────────
 
