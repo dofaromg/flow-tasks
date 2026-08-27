@@ -114,9 +114,14 @@ def verify_return_bundle(path: Path) -> dict[str, Any]:
         names = set(archive.namelist())
         if MANIFEST_NAME not in names:
             return {"ok": False, "reason": "manifest_missing"}
-        manifest = json.loads(archive.read(MANIFEST_NAME).decode("utf-8"))
-        expected = {f"payload/{entry['name']}" for entry in manifest.get("files", [])}
-        actual = names - {MANIFEST_NAME}
+        try:
+            manifest = json.loads(archive.read(MANIFEST_NAME).decode("utf-8"))
+            if not isinstance(manifest, dict) or not isinstance(manifest.get("files"), list):
+                return {"ok": False, "reason": "manifest_malformed"}
+        except (ValueError, KeyError) as exc:
+            return {"ok": False, "reason": f"manifest_parse_error: {exc}"}
+        expected = {f"payload/{entry['name']}" for entry in manifest["files"]}
+        actual = {n for n in names if not n.endswith("/")} - {MANIFEST_NAME}
         if actual != expected:
             return {"ok": False, "reason": "payload_coverage_mismatch"}
         for entry in manifest["files"]:

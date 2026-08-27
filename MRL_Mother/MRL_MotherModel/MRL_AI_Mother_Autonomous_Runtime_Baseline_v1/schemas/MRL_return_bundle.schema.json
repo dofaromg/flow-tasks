@@ -17,5 +17,4 @@
     "files": {"type": "array", "minItems": 1},
     "origin_signature": {"const": "MrLiouWord"}
   },
-  "additionalProperties": true
-}
+  "additionalProperties": false

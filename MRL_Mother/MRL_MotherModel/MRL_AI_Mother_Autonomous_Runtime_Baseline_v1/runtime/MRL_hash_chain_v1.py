@@ -39,14 +39,29 @@ class MRLHashChain:
                 records.append(item)
         return records
 
+    def _tail_record(self) -> dict[str, Any] | None:
+        """Return the last non-empty record without parsing the entire file."""
+        last_line: str | None = None
+        with self.path.open("r", encoding="utf-8") as stream:
+            for line in stream:
+                if line.strip():
+                    last_line = line
+        if last_line is None:
+            return None
+        item = json.loads(last_line)
+        if not isinstance(item, dict):
+            raise ValueError(f"{self.ledger_id}: tail record must be an object")
+        return item
+
     def append(self, payload: dict[str, Any]) -> dict[str, Any]:
         """Append payload with previous-hash linkage and return the sealed record."""
         with self._lock:
-            records = self._records()
-            previous_hash = records[-1]["record_hash"] if records else "GENESIS"
+            tail = self._tail_record()
+            previous_hash = tail["record_hash"] if tail is not None else "GENESIS"
+            sequence = (tail["sequence"] + 1) if tail is not None else 1
             body = {
                 "ledger_id": self.ledger_id,
-                "sequence": len(records) + 1,
+                "sequence": sequence,
                 "previous_hash": previous_hash,
                 "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
                 "payload": payload,

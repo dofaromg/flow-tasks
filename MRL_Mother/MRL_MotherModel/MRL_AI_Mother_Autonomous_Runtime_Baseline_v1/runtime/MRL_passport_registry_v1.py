@@ -85,6 +85,8 @@ class MRLPassportRegistry:
         previous_hash = "GENESIS"
         count = 0
         for count, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+            if not line.strip():
+                continue
             passport = json.loads(line)
             if passport.get("version") != count:
                 return {"ok": False, "reason": "version_mismatch", "version": count}
