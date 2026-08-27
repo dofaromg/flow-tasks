@@ -140,6 +140,18 @@ class TestGateUnity:
         with pytest.raises(ValueError):
             engine.gate("sideways", {})
 
+    def test_custom_rootlaw_is_visible_in_top_view(self, tmp_path):
+        custom_rootlaw = tmp_path / "rootlaw.override.yaml"
+        custom_rootlaw.write_text("version: 9\ninvariants: []\n", encoding="utf-8")
+        custom_engine = MRL_FlowAgentLawEngine(
+            chronicle_path=tmp_path / "chron.jsonl",
+            rootlaw_path=custom_rootlaw,
+        )
+        result = custom_engine.gate("in", {"name": "external.module"})
+        sources = result["MRL_world_model_top_view"]["parameter_sources"]
+        assert sources["rootlaw"] == str(custom_rootlaw.resolve())
+        assert sources["rootlaw_override"] is True
+
 
 # ─── rl_14 平行世界生成 ────────────────────────────────────────────────────────
 
@@ -220,6 +232,11 @@ class TestChronicleAndLoop:
         engine.chronicle("test", {"k": "v"})
         assert pathlib.Path(engine.chronicle_path).exists()
         assert "test" in pathlib.Path(engine.chronicle_path).read_text(encoding="utf-8")
+
+    def test_gate_result_mutation_cannot_rewrite_audit_snapshot(self, engine):
+        result = engine.gate("in", {"name": "external.module"})
+        result["source_block"]["name"] = "mutated-after-gate"
+        assert engine._events[-1]["detail"]["source_block"]["name"] == "external.module"
 
     def test_self_acceptance_passes(self, engine):
         rep = engine.self_acceptance()
