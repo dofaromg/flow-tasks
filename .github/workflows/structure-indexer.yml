@@ -43,9 +43,8 @@ jobs:
       (github.event.comment.body == '@copilot update-structure-index')
     
     permissions:
-      contents: write
+      contents: read
       issues: write
-      pull-requests: write
     
     steps:
       - name: 📥 Checkout Repository
@@ -112,26 +111,11 @@ jobs:
           
           cat diff-report.md
       
-      - name: 💾 Commit and Push Changes
+      - name: 📦 Preserve Generated Changes for Review
         if: steps.check_changes.outputs.has_changes == 'true'
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          
-          git add STRUCTURE.md
-          git add .copilot/structure-index.json
-          git add .copilot/structure.fltnz
-          git add .copilot/structure-scan.json
-          
-          git commit -m "🗂️ Auto-update structure index
-
-          - Updated by GitHub Actions
-          - Triggered by: ${{ github.event_name }}
-          - Scan depth: ${{ github.event.inputs.scan_depth || '8' }}
-          - Timestamp: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
-          "
-          
-          git push
+          echo "Generated structure changes are preserved in the workflow artifact."
+          echo "Protected main is not mutated directly; apply them through a reviewed PR."
       
       - name: 💬 Comment on Issue (if triggered by comment)
         if: |
@@ -144,7 +128,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '✅ 結構索引已自動更新！\n\n請查看最新的 [STRUCTURE.md](../blob/main/STRUCTURE.md) 和 [結構索引](.copilot/structure-index.json)。'
+              body: '✅ 結構索引已生成並封存為 workflow artifact；主分支未被直接修改，請透過審查 PR 套用。'
             })
       
       - name: 📤 Upload Artifacts
@@ -172,14 +156,5 @@ jobs:
           
           if [ -f .copilot/structure-scan.json ]; then
             echo "### 📊 掃描統計" >> $GITHUB_STEP_SUMMARY
-            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
-            import json
-
-            with open('.copilot/structure-scan.json', 'r') as handle:
-                data = json.load(handle)
-            stats = data.get('statistics', {})
-            print(f'- 總檔案數: {stats.get("total_files", 0):,}')
-            print(f'- 總目錄數: {stats.get("total_dirs", 0):,}')
-            print(f'- 總代碼行數: {stats.get("total_lines", 0):,}')
-            PY
+            python -c "import json; s=json.load(open('.copilot/structure-scan.json')).get('statistics', {}); print('- 總檔案數: {:,}'.format(s.get('total_files', 0))); print('- 總目錄數: {:,}'.format(s.get('total_dirs', 0))); print('- 總代碼行數: {:,}'.format(s.get('total_lines', 0)))" >> "$GITHUB_STEP_SUMMARY"
           fi
