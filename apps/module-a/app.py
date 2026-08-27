@@ -33,7 +33,9 @@ def compute():
     try:
         result = core.compute_particle(data.get('text'))
     except ValueError as e:
-        return jsonify({'ok': False, 'error': str(e)}), 400
+        # Log detail server-side; do not expose exception text to the client.
+        logger.info("compute rejected: %s", e)
+        return jsonify({'ok': False, 'error': 'invalid_input'}), 400
     logger.info("computed particle: tokens=%s", result['token_count'])
     return jsonify({'ok': True, 'result': result})
 
