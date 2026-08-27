@@ -56,7 +56,7 @@ def build_return_bundle(
     if not hardware_id.strip() or not model_release_id.strip():
         raise MRLReturnBundleError("hardware_id and model_release_id are required")
 
-    selected = [Path(item).resolve() for item in files]
+    selected = [Path(item) for item in files]
     if not selected:
         raise MRLReturnBundleError("at least one explicit file is required")
     allowed = {str(item).lower() for item in policy.get("allowed_extensions", [])}
@@ -66,8 +66,11 @@ def build_return_bundle(
     entries: list[dict[str, Any]] = []
     seen_names: set[str] = set()
 
-    for source in selected:
-        if not source.is_file() or source.is_symlink():
+    for raw in selected:
+        if raw.is_symlink() or not raw.is_file():
+            raise MRLReturnBundleError(f"not a regular file: {raw.name}")
+        source = raw.resolve(strict=True)
+        if source.is_symlink():
             raise MRLReturnBundleError(f"not a regular file: {source.name}")
         if source.name.lower() in blocked_names:
             raise MRLReturnBundleError(f"blocked filename: {source.name}")
