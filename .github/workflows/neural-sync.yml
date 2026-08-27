@@ -32,6 +32,25 @@ jobs:
         run: |
           node scripts/update-neural-map.js
       
+      - name: Test MRL naming normalization
+        run: |
+          node -e "
+          const { toMRLNodeId } = require('./scripts/update-neural-map');
+          const cases = [
+            ['feature/example', 'MRL_feature/example'],
+            ['mrl_existing', 'MRL_existing'],
+            ['MRL_existing', 'MRL_existing']
+          ];
+          for (const [source, expected] of cases) {
+            const actual = toMRLNodeId(source);
+            if (actual !== expected) throw new Error(source + ' normalized to ' + actual + ', expected ' + expected);
+          }
+          let rejected = false;
+          try { toMRLNodeId('MRL_'); } catch { rejected = true; }
+          if (!rejected) throw new Error('MRL_ without a suffix must be rejected');
+          console.log('MRL_NAMING_NORMALIZATION_PASS');
+          "
+
       - name: Validate MRL canonical naming
         run: |
           node -e "
