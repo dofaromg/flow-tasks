@@ -2,6 +2,25 @@
 const fs = require('fs');
 const { execSync } = require('child_process');
 
+const MRL_NAMING_PREFIX = 'MRL_';
+
+function toMRLNodeId(sourceIdentity) {
+  if (typeof sourceIdentity !== 'string' || !sourceIdentity.trim()) {
+    throw new Error('MRL naming requires a non-empty source identity');
+  }
+
+  const trimmed = sourceIdentity.trim();
+  if (/^MRL_/i.test(trimmed)) {
+    const suffix = trimmed.slice(MRL_NAMING_PREFIX.length);
+    if (!suffix) {
+      throw new Error('MRL naming requires content after the MRL_ prefix');
+    }
+    return `${MRL_NAMING_PREFIX}${suffix}`;
+  }
+
+  return `${MRL_NAMING_PREFIX}${trimmed}`;
+}
+
 // 獲取所有分支
 function getAllBranches() {
   try {
@@ -39,9 +58,19 @@ function getPRData() {
 function buildNeuralNetwork() {
   const branches = getAllBranches();
   const prData = getPRData();
+  const canonicalIds = new Set();
+  const rootId = toMRLNodeId('main');
+  canonicalIds.add(rootId);
   
   const neuralNetwork = {
     origin_signature: "MrLiouWord",
+    naming_policy: {
+      version: "MRL_AutoExpansion_Naming_v1",
+      canonical_prefix: MRL_NAMING_PREFIX,
+      canonical_identity_field: "id",
+      source_identity_field: "source_branch",
+      source_identity_mutated: false
+    },
     updated_at: new Date().toISOString(),
     neural_network: {
       nodes: [],
@@ -51,7 +80,9 @@ function buildNeuralNetwork() {
   
   // 主幹節點
   neuralNetwork.neural_network.nodes.push({
-    id: "main",
+    id: rootId,
+    source_branch: "main",
+    naming_authority: "MRL",
     type: "trunk",
     layer: "L7",
     frequency_hz: 164.88,
@@ -64,12 +95,20 @@ function buildNeuralNetwork() {
     if (branch === 'main') return;
     
     const pr = prData.find(p => p.headRefName === branch);
+    const canonicalId = toMRLNodeId(branch);
+
+    if (canonicalIds.has(canonicalId)) {
+      throw new Error(`MRL canonical identity collision: ${canonicalId} from source branch ${branch}`);
+    }
+    canonicalIds.add(canonicalId);
     
     const node = {
-      id: branch,
+      id: canonicalId,
+      source_branch: branch,
+      naming_authority: "MRL",
       type: getBranchType(branch),
       layer: getBranchLayer(branch),
-      parent: "main",
+      parent: rootId,
       status: pr?.state === "MERGED" ? "merged" : "active",
       energy: pr?.state === "MERGED" ? 0.95 : 0.7
     };
@@ -86,8 +125,8 @@ function buildNeuralNetwork() {
     
     // 建立突觸
     neuralNetwork.neural_network.synapses.push({
-      from: "main",
-      to: branch,
+      from: rootId,
+      to: canonicalId,
       type: pr?.state === "MERGED" ? "merge" : "influence",
       weight: pr?.state === "MERGED" ? 0.95 : 0.5,
       pr_number: pr?.number,
@@ -153,4 +192,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { buildNeuralNetwork, getBranchType, getBranchLayer };
+module.exports = { MRL_NAMING_PREFIX, toMRLNodeId, buildNeuralNetwork, getBranchType, getBranchLayer };
