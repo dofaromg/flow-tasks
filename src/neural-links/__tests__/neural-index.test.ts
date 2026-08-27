@@ -23,6 +23,28 @@ describe('BranchNeuralSystem', () => {
   });
 
   describe('registerNode', () => {
+    it('rejects a canonical node without explicit source provenance', () => {
+      expect(() => neural.registerNode({
+        id: 'MRL_feature/a',
+        type: 'feature',
+        layer: 'L5',
+        status: 'active',
+        energy: 0.7
+      })).toThrow('requires explicit source_branch');
+    });
+
+    it('accepts a canonical node when the exact source provenance is explicit', () => {
+      neural.registerNode({
+        id: 'MRL_feature/a',
+        source_branch: 'feature/a',
+        type: 'feature',
+        layer: 'L5',
+        status: 'active',
+        energy: 0.7
+      });
+      expect(neural.exportNetwork().nodes[0].source_branch).toBe('feature/a');
+    });
+
     it('rejects a canonical/source provenance mismatch', () => {
       expect(() => neural.registerNode({
         id: 'MRL_feature/a',
@@ -311,6 +333,16 @@ describe('BranchNeuralSystem', () => {
   });
 
   describe('loadNetwork and exportNetwork', () => {
+    it('rejects canonical loaded nodes without explicit source provenance', () => {
+      expect(() => neural.loadNetwork({
+        origin_signature: 'MrLiouWord',
+        nodes: [
+          { id: 'MRL_main', type: 'trunk', layer: 'L7', status: 'active', energy: 1.0 }
+        ],
+        synapses: []
+      })).toThrow('requires explicit source_branch');
+    });
+
     it('should load and export network correctly', () => {
       const testNetwork = {
         origin_signature: 'MrLiouWord',
