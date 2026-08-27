@@ -32,6 +32,16 @@ jobs:
         run: |
           node scripts/update-neural-map.js
       
+      - name: Validate MRL canonical naming
+        run: |
+          node -e "
+          const fs = require('fs');
+          const { validateMRLNaming } = require('./scripts/generate-mermaid');
+          const data = JSON.parse(fs.readFileSync('neural-links/branch-map.json', 'utf-8'));
+          validateMRLNaming(data);
+          console.log('MRL_NAMING_GATE_PASS: every canonical node id uses the MRL_ prefix and preserves source_branch');
+          "
+
       - name: Generate Mermaid Graph
         run: |
           node scripts/generate-mermaid.js
