@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MRL_Universal_Passport_v1",
+  "title": "MRL Universal Passport v1",
+  "type": "object",
+  "required": [
+    "schema",
+    "canonical_id",
+    "source_identity",
+    "world_state",
+    "capabilities",
+    "evidence_refs",
+    "return_anchor",
+    "environment",
+    "rights",
+    "previous_passport_hash",
+    "version",
+    "origin_signature",
+    "passport_hash"
+  ],
+  "properties": {
+    "schema": {"const": "MRL_Universal_Passport_v1"},
+    "canonical_id": {"type": "string", "pattern": "^MRL_[A-Za-z0-9_.:/-]+$"},
+    "source_identity": {"type": "string", "minLength": 1},
+    "world_state": {
+      "enum": ["source", "candidate", "canonical", "product", "archived"]
+    },
+    "capabilities": {"type": "array", "items": {"type": "string"}},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "return_anchor": {"type": "string", "minLength": 1},
+    "environment": {"type": "object"},
+    "rights": {"type": "object"},
+    "previous_passport_hash": {"type": "string"},
+    "version": {"type": "integer", "minimum": 1},
+    "origin_signature": {"const": "MrLiouWord"},
+    "passport_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}
+

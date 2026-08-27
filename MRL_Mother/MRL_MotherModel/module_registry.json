@@ -104,6 +104,17 @@
       "closure": "MRL.NODE.01.Origin"
     }
   ],
+  "additive_children": [
+    {
+      "module_id": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
+      "type": "autonomous_runtime",
+      "path": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
+      "package_state": "DELIVERY_PASS",
+      "live_runtime_state": "PENDING_DL580_LOCAL_MODEL_ACCEPTANCE",
+      "external_model_api_required": false,
+      "origin_signature": "MrLiouWord"
+    }
+  ],
   "infrastructure_modules": [
     {
       "module_id": "MRL_TopLevel_MasterIndex_v2",

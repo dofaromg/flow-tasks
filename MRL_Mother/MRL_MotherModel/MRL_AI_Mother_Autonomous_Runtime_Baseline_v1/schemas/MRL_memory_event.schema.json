@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MRL_Memory_Event_v1",
+  "title": "MRL Memory Event v1",
+  "type": "object",
+  "required": ["world_id", "session_id", "role", "content", "metadata"],
+  "properties": {
+    "world_id": {"type": "string", "pattern": "^MRL_"},
+    "session_id": {"type": "string", "minLength": 1},
+    "role": {"enum": ["system", "user", "assistant", "tool"]},
+    "content": {"type": "string", "minLength": 1},
+    "metadata": {"type": "object"}
+  },
+  "additionalProperties": false
+}
+
