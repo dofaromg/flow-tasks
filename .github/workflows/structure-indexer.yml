@@ -18,6 +18,13 @@ on:
       - '**/README.md'
       - 'MrLiou_AI_SuperComputer/**'
       - 'particle_core/**'
+
+  # Validate index automation itself before it reaches protected main.
+  pull_request:
+    paths:
+      - '.github/workflows/structure-indexer.yml'
+      - '.copilot/scanner/**'
+      - '.copilot/generator/**'
   
   # 手動觸發
   workflow_dispatch:
