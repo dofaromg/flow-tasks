@@ -21,6 +21,8 @@ Generation fails if a node lacks the prefix, loses `source_branch`, duplicates a
 
 Enforcement order: normalize source identity → validate canonical naming and provenance → render JSON/Mermaid → commit generated evidence.
 
+Integrity gates also reject canonical/source mismatches, unresolved synapses, and Mermaid identifier collisions.
+
 ## Files
 
 ### branch-map.json
