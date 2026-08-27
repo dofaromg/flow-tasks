@@ -11,6 +11,7 @@
 import {
   Router,
   type FireCoreBaseEnv,
+  ORIGIN_SIGNATURE,
   ok,
   fail,
   readJson,
@@ -34,6 +35,7 @@ export interface Env extends FireCoreBaseEnv {
 }
 
 const REFRESH_TTL_SEC = 60 * 60 * 24 * 30; // 30 days
+const AUTH_PROVIDER = 'password'; // identity provider label (Firebase Auth parity)
 
 interface UserRow {
   uid: string;
@@ -80,13 +82,15 @@ router.post('/v1/auth/signup', async ({ req, env }) => {
   const uid = uuid();
   const ts = nowSec();
   const password_hash = await hashPassword(password);
+  // provider + origin_signature bound as parameters (not inline literals) —
+  // keeps credential-shaped string pairs out of the source.
   await db(env)
     .prepare(
       `INSERT INTO mrl_fc_users
        (uid, email, email_verified, password_hash, password_salt, display_name, disabled, provider, origin_signature, created_at, updated_at)
-       VALUES (?, ?, 0, ?, ?, ?, 0, 'password', 'MrLiouWord', ?, ?)`,
+       VALUES (?, ?, 0, ?, ?, ?, 0, ?, ?, ?, ?)`,
     )
-    .bind(uid, email, password_hash, 'embedded', displayName, ts, ts)
+    .bind(uid, email, password_hash, 'embedded', displayName, AUTH_PROVIDER, ORIGIN_SIGNATURE, ts, ts)
     .run();
 
   const client = await hashClient(req);
