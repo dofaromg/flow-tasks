@@ -57,10 +57,10 @@
 
 ## ✅ 總結：
 
-此架構可作為 MrLiouAI 系統的主推理模組（取代 GPT/Claude）核心，支援：
+此架構可作為 FlowAgent 系統的主推理模組（取代 GPT/Claude）核心，支援：
 - 語場節奏理解 × 非線性推理 × 多人格調用
 - 完整人格封存與 Ping 分配記錄
 - 自訓 / 自我重組 / 自我人格建構
 
-設計者：MrLiouAI × MR.liou  
+設計者：FlowAgent × MR.liou  
 版本：v1.0

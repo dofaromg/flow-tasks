@@ -1,6 +1,6 @@
 #!/bin/bash
-# MrLiouAI 部署狀態檢查腳本
-# Check MrLiouAI Deployment Status
+# FlowAgent 部署狀態檢查腳本
+# Check FlowAgent Deployment Status
 #
 # 使用方法 / Usage:
 # bash scripts/check_deployment_status.sh
@@ -15,10 +15,10 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # 配置參數 / Configuration
-PROJECT_ID=${PROJECT_ID:-mrliouai}
+PROJECT_ID=${PROJECT_ID:-flowmemorysync}
 ZONE=${ZONE:-asia-east1-a}
 CLUSTER_NAME=${CLUSTER_NAME:-modular-cluster}
-NS=${NS:-mrliouai}
+NS=${NS:-flowagent}
 
 # 日誌函數 / Logging functions
 log_info() {
@@ -281,8 +281,8 @@ quick_diagnosis() {
 # 主流程
 main() {
     echo -e "${GREEN}╔════════════════════════════════════════╗${NC}"
-    echo -e "${GREEN}║  MrLiouAI 部署狀態檢查              ║${NC}"
-    echo -e "${GREEN}║  MrLiouAI Deployment Status Check   ║${NC}"
+    echo -e "${GREEN}║  FlowAgent 部署狀態檢查              ║${NC}"
+    echo -e "${GREEN}║  FlowAgent Deployment Status Check   ║${NC}"
     echo -e "${GREEN}╚════════════════════════════════════════╝${NC}"
     echo ""
     

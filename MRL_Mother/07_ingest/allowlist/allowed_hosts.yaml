@@ -1,4 +1,4 @@
-# Allowlisted hosts for MrLiouAI external calls.
+# Allowlisted hosts for FlowAgent external calls.
 # Start empty: deny-by-default. Add hosts only after verifying TOS + legal rights.
 hosts:
   - example.com

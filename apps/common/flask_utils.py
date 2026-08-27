@@ -1,6 +1,6 @@
 """
-Shared Flask utilities for MrLiouAI microservices
-MrLiouAI 微服務共用的 Flask 工具
+Shared Flask utilities for FlowAgent microservices
+FlowAgent 微服務共用的 Flask 工具
 """
 
 import logging

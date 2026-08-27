@@ -2,9 +2,9 @@
 
 ## 概述 (Overview)
 
-本文檔說明 MrLiouAI 專案的分支整合最佳實踐和優化建議。
+本文檔說明 FlowAgent 專案的分支整合最佳實踐和優化建議。
 
-This document outlines the branch integration best practices and optimization recommendations for the MrLiouAI project.
+This document outlines the branch integration best practices and optimization recommendations for the FlowAgent project.
 
 ## 分支策略 (Branch Strategy)
 
@@ -80,7 +80,7 @@ This workflow runs on every PR update:
 #### CI/CD 工作流程 (CI/CD Workflows)
 - **CI Build** (`.github/workflows/ci-build.yml`): 建置並推送 Docker 映像
 - **CD Deploy** (`.github/workflows/cd-deploy.yml`): 部署到 GKE 叢集
-- **MrLiouAI CI** (`.github/workflows/blank.yml`): MrLiouAI 任務系統測試
+- **FlowAgent CI** (`.github/workflows/blank.yml`): FlowAgent 任務系統測試
 
 ## 最佳實踐 (Best Practices)
 

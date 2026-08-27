@@ -84,9 +84,9 @@ Known confirmed capabilities:
 
 The DL580 should therefore be treated as a developing **Mother Runtime**, not merely as a database host.
 
-## MrLiouAI Main Line
+## FlowAgent Main Line
 
-MrLiouAI currently has confirmed components for:
+FlowAgent currently has confirmed components for:
 
 - Particle
 - Memory
@@ -103,7 +103,7 @@ Structure
   -> Agent
 ```
 
-This indicates that MrLiouAI is beginning to form a complete closed loop.
+This indicates that FlowAgent is beginning to form a complete closed loop.
 
 ## Main MRL Assets Recovered
 

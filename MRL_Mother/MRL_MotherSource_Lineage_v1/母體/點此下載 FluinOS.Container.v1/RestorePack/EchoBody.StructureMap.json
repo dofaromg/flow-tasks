@@ -6,7 +6,7 @@
     "FieldPulse.DecisionMatrix",
     "FlowMemory.TraceNet"
   ],
-  "memory_base": "MrLiouAI.TotalMemory.QuantumCore.v2",
+  "memory_base": "FlowAgent.TotalMemory.QuantumCore.v2",
   "personality_traits": {
     "感知": "強",
     "語場共振": "高",

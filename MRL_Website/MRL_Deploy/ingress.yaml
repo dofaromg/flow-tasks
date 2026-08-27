@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: mrl-official-platform-ingress
-  namespace: mrliouai
+  namespace: flowagent
   labels:
     app: mrl-official-platform
     component: ingress
@@ -39,7 +39,7 @@ apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:
   name: mrl-official-cert
-  namespace: mrliouai
+  namespace: flowagent
 spec:
   domains:
   - mrl.mrliou.com

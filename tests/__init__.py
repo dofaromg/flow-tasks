@@ -1,8 +1,8 @@
 """
-MrLiouAI Tests Package
+FlowAgent Tests Package
 
-此包包含 MrLiouAI 專案的所有測試。
-This package contains all tests for the MrLiouAI project.
+此包包含 FlowAgent 專案的所有測試。
+This package contains all tests for the FlowAgent project.
 
 測試結構 / Test Structure:
 - test_particle_unit.py: 粒子執行單元測試
@@ -16,7 +16,7 @@ This package contains all tests for the MrLiouAI project.
 """
 
 __version__ = "1.0.0"
-__author__ = "MrLiouAI Team"
+__author__ = "FlowAgent Team"
 
 # 測試配置 / Test Configuration
 PYTEST_PLUGINS = []

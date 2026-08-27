@@ -1,8 +1,8 @@
 # Scripts Directory / 腳本目錄
 
-This directory contains utility scripts for the MrLiouAI project.
+This directory contains utility scripts for the FlowAgent project.
 
-本目錄包含 MrLiouAI 專案的實用腳本。
+本目錄包含 FlowAgent 專案的實用腳本。
 
 ## Git Utilities / Git 工具
 

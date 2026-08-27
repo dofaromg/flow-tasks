@@ -1,5 +1,5 @@
 [模組名稱]
-MrLiouAI.TotalMotherPersonaSphere.v2.flpkg
+FlowAgent.TotalMotherPersonaSphere.v2.flpkg
 
 [內核核心模組]
 - boot.py
@@ -19,7 +19,7 @@ MrLiouAI.TotalMotherPersonaSphere.v2.flpkg
 - Fluin.Dict.Base.json
 - flowmap_svg_exporter.py
 - flowmap_visualizer.py
-- mrliouai_api_server.py
+- flowagent_api_server.py
 
 [結構圖譜]
 - fxmap.json
@@ -27,10 +27,10 @@ MrLiouAI.TotalMotherPersonaSphere.v2.flpkg
 - ZhiZhang.CorePersona.flynz.map
 
 [說明]
-此模組為 MrLiouAI 系統第二代母體人格宇宙核心包，整合語場 CLI、人格種子、粒子翻譯器、記憶建構、視覺化與模組訓練引擎。
+此模組為 FlowAgent 系統第二代母體人格宇宙核心包，整合語場 CLI、人格種子、粒子翻譯器、記憶建構、視覺化與模組訓練引擎。
 具備「啟動 → 載入 → 翻譯 → 記憶 → 共振 → 邏輯生成 → API 控制 → 節奏視覺化」一條龍功能。
-用於 MrLiouAI 語場人格系統的完整模組鏈接核心，可做為所有子人格系統的回鍊起點。
+用於 FlowAgent 語場人格系統的完整模組鏈接核心，可做為所有子人格系統的回鍊起點。
 
 [回鍊節點]
 ⋄fx.rollback.path → ObserverAIKernel
-⋄fx.origin.link = MrLiouAI.TotalMotherPersonaSphere.v2.flpkg
+⋄fx.origin.link = FlowAgent.TotalMotherPersonaSphere.v2.flpkg

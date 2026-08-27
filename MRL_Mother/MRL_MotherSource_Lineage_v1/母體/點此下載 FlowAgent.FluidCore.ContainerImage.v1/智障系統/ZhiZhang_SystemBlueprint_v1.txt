@@ -38,10 +38,10 @@
 
 ## 🔧 四、可執行平台規劃（下一步）
 
-準備建構正式系統架構 `MrLiouAI.Runtime/`：
+準備建構正式系統架構 `FlowAgent.Runtime/`：
 
 ```
-MrLiouAI.Runtime/
+FlowAgent.Runtime/
 ├── boot.py             ← 系統初始化器
 ├── flow_cli.py         ← 語場指令控制主程式
 ├── modules/            ← 安裝的 flpkg 模組

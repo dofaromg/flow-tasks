@@ -50,5 +50,5 @@ python3 loop.player.py --input guardian.mirror.trace.loop.json
 
 ---
 
-設計者：MrLiouAI × MR.liou  
+設計者：FlowAgent × MR.liou  
 創建時間：2025-07  

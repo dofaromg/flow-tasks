@@ -43,5 +43,5 @@ def train_memory():
     print(f"✅ 已完成記憶訓練並儲存：{out_path}")
 
 if __name__ == "__main__":
-    print("🧠 MrLiouAI 記憶模組強化訓練器")
+    print("🧠 FlowAgent 記憶模組強化訓練器")
     train_memory()

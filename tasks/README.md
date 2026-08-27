@@ -1,6 +1,6 @@
-# MrLiouAI Tasks
+# FlowAgent Tasks
 
-`tasks/` contains YAML task definitions and generated validation reports for MrLiouAI-driven implementation work.
+`tasks/` contains YAML task definitions and generated validation reports for FlowAgent-driven implementation work.
 
 ## Purpose
 

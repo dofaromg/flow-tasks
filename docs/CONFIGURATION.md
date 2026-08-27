@@ -1,9 +1,9 @@
 # Configuration System Documentation
 # 配置系統文檔
 
-A comprehensive configuration system for the MrLiouAI project with YAML-based configuration and integration with context management strategies.
+A comprehensive configuration system for the FlowAgent project with YAML-based configuration and integration with context management strategies.
 
-MrLiouAI 專案的綜合配置系統，支援基於 YAML 的配置和上下文管理策略整合。
+FlowAgent 專案的綜合配置系統，支援基於 YAML 的配置和上下文管理策略整合。
 
 ---
 

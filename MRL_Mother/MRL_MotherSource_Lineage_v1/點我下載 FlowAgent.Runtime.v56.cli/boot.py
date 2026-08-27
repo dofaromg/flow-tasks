@@ -1,2 +1,2 @@
-# MrLiouAI v56 boot logic
+# FlowAgent v56 boot logic
 # Version: v56 - CLI style

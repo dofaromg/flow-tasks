@@ -155,7 +155,7 @@ GitHub Actions (CI/CD)
     v
 Google Kubernetes Engine
     |
-    +---> mrliouai namespace
+    +---> flowagent namespace
           |
           +---> nextjs-frontend (LoadBalancer)
           +---> module-a (ClusterIP)
@@ -200,11 +200,11 @@ kubectl apply -k apps/nextjs-frontend/
 
 ```bash
 # 1. 構建映像
-docker build -t asia-east1-docker.pkg.dev/mrliouai/mrliouai/nextjs-frontend:latest \
+docker build -t asia-east1-docker.pkg.dev/flowmemorysync/flowagent/nextjs-frontend:latest \
   -f apps/nextjs-frontend/Dockerfile .
 
 # 2. 推送映像
-docker push asia-east1-docker.pkg.dev/mrliouai/mrliouai/nextjs-frontend:latest
+docker push asia-east1-docker.pkg.dev/flowmemorysync/flowagent/nextjs-frontend:latest
 
 # 3. 部署到 GKE
 kubectl apply -k cluster/overlays/prod/
@@ -214,7 +214,7 @@ kubectl apply -k cluster/overlays/prod/
 
 ```bash
 # 獲取外部 IP
-kubectl get svc nextjs-frontend -n mrliouai
+kubectl get svc nextjs-frontend -n flowagent
 
 # 輸出示例：
 # NAME              TYPE           EXTERNAL-IP      PORT(S)
@@ -319,11 +319,11 @@ Vercel 配置已保留，可立即回退：
 
 ```bash
 # 回滾 deployment
-kubectl rollout undo deployment/nextjs-frontend -n mrliouai
+kubectl rollout undo deployment/nextjs-frontend -n flowagent
 
 # 或回滾到特定版本
-kubectl rollout history deployment/nextjs-frontend -n mrliouai
-kubectl rollout undo deployment/nextjs-frontend -n mrliouai --to-revision=N
+kubectl rollout history deployment/nextjs-frontend -n flowagent
+kubectl rollout undo deployment/nextjs-frontend -n flowagent --to-revision=N
 ```
 
 ## 文件變更摘要

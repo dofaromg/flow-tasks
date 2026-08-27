@@ -4,7 +4,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: mrliouai-staging
+  name: flowagent-staging
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "1"
@@ -20,7 +20,7 @@ spec:
   
   destination:
     server: https://kubernetes.default.svc
-    namespace: mrliouai-staging
+    namespace: flowagent-staging
   
   syncPolicy:
     automated:
@@ -40,7 +40,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: mrliouai-production
+  name: flowagent-production
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "2"
@@ -56,7 +56,7 @@ spec:
   
   destination:
     server: https://kubernetes.default.svc
-    namespace: mrliouai
+    namespace: flowagent
   
   syncPolicy:
     automated:

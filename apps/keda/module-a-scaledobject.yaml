@@ -2,7 +2,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: module-a-scaledobject
-  namespace: mrliouai
+  namespace: flowagent
 spec:
   scaleTargetRef:
     name: module-a

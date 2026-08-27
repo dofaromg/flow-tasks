@@ -4,7 +4,7 @@
 llm_adapter.py — LLM Provider Gateway
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 MrLiouAIRuntime
+group: Y=3 FlowAgentRuntime
 
 Industry capability: unified LLM provider abstraction supporting OpenAI,
                      Anthropic, and local model endpoints — distilled from

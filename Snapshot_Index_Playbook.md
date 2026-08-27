@@ -48,4 +48,4 @@ _Last updated: 2025-09-12 03:17:02Z (UTC)_
 - Snapshot = “可還原 + 可驗證 的凍結點”
 - Index = “能把你找回來的最小地圖”
 
-— Prepared for Mr.liou • MrLiouAI
+— Prepared for Mr.liou • FlowAgent

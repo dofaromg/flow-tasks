@@ -24,7 +24,7 @@
       "services": [
         {"name": "MRL_Inference", "script": "D:\\mrl\\inference\\MRL_Inference_API.py", "port": 7500},
         {"name": "MRL_FlowCoreLoop", "script": "D:\\MRL_Runtime\\FlowCoreLoop\\flowcore_loop.py", "port": 8787, "args": "serve --host 127.0.0.1 --port 8787 --vault-root D:\\MRL_Runtime\\FlowCoreLoop\\vault"},
-        {"name": "MRL_MrLiouAI_API", "script": "D:\\mrl\\mrliouai\\MRL_mrliouai_api_server.py", "port": 7900},
+        {"name": "MRL_FlowAgent_API", "script": "D:\\mrl\\flowagent\\MRL_flowagent_api_server.py", "port": 7900},
         {"name": "MRL_ParticleGlobe", "script": "D:\\MRL_Runtime\\ParticleGlobe\\particle_globe_memory_system.py", "port": 8788, "args": "serve --host 127.0.0.1 --port 8788"},
         {"name": "MRL_RuntimeAdapter", "script": "D:\\mrl\\mother\\mrl_runtime_adapter.py", "port": null},
         {"name": "MRL_AI_OS", "script": "D:\\mrl\\MRL_MotherSystem_ControlPanel.py", "port": 7950},

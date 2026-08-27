@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: mrliouai
+namespace: flowagent
 
 resources:
 - deployment.yaml
@@ -9,5 +9,5 @@ resources:
 
 labels:
 - pairs:
-    project: mrliouai
+    project: flowagent
     managed-by: kustomize

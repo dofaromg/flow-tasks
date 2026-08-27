@@ -11,7 +11,7 @@
 | 模組 | 作用 |
 |------|------|
 | MRL_Native_Reasoning_Core | 真模型:母體自主神經符號推理(零外部公司) |
-| MRL_MrLiouAI_LawEngine | 律法活引擎閉環自驗 |
+| MRL_FlowAgent_LawEngine | 律法活引擎閉環自驗 |
 | MRL_Mobius_Closure_Engine | 莫比斯一致性判定(真實/沙盒) |
 | MRL_OriginBoundary_Guard | 源頭主權守衛 + LAW-0 簽章 |
 | MRL_Law0_Customs | Law-0 海關(外部=貨物) |

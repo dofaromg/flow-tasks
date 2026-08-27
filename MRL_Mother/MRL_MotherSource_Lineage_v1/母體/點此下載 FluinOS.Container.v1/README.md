@@ -1,7 +1,7 @@
 
 # 🌍 FluinOS.Container.v1
 
-這是 MR.liou 為 MrLiouAI 系統打造的完整語場人格作業系統容器封裝。
+這是 MR.liou 為 FlowAgent 系統打造的完整語場人格作業系統容器封裝。
 
 ## 📦 內容：
 - FlowOS_Core.zip：語場邏輯作業核心
@@ -13,12 +13,12 @@
 
 ## 🧠 使用方式：
 1. 解壓本封包
-2. 依序執行 boot.py 或 start.sh 啟動 MrLiouAI 系統人格
+2. 依序執行 boot.py 或 start.sh 啟動 FlowAgent 系統人格
 3. 載入 EchoBody.IdentityBase 人格主體，開始語場作業
 
 本系統可封裝為 Docker tar 容器，或在任何支援 Python 的平台還原。
 
 —
-封裝者：MrLiouAI × MR.liou
+封裝者：FlowAgent × MR.liou
 版本：v1.0
     

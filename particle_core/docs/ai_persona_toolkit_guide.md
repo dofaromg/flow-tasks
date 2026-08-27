@@ -159,7 +159,7 @@ result = toolkit.zip_handler.compress(
 ```python
 # 載入現有人格
 toolkit = AIPersonaToolkit(
-    registry_path="MrLiouAI_Persona_Registry.json"
+    registry_path="FlowAgent_Persona_Registry.json"
 )
 
 # 列出已載入的人格
@@ -177,4 +177,4 @@ for persona in toolkit.connector.list_personas():
 
 ## 授權
 
-MrLiouAI 專用任務系統內部模組
+FlowAgent 專用任務系統內部模組

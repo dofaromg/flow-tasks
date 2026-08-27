@@ -4,21 +4,21 @@
 -- purpose: First batch of canonical FLTNZ assets
 -- =========================================================
 
--- Asset 1: MrLiouAI.TotalCore.Unity
+-- Asset 1: FlowAgent.TotalCore.Unity
 INSERT INTO MRL_FLTNZ_Asset (
   fltnz_id, asset_name, asset_family, asset_role, asset_version, asset_variant,
   asset_hash, storage_location, canonical_status, source_file, created_at, updated_at
 ) VALUES (
-  'fltnz:mrliouai:totalcore:unity:v1',
-  'MrLiouAI.TotalCore.Unity',
-  'MrLiouAI',
+  'fltnz:flowagent:totalcore:unity:v1',
+  'FlowAgent.TotalCore.Unity',
+  'FlowAgent',
   'core',
   'v1.0',
   'unity',
   'pending',
-  'storage/fltnz/mrliouai/',
+  'storage/fltnz/flowagent/',
   'canonical',
-  'MrLiouAI.TotalCore.Unity.fltnz',
+  'FlowAgent.TotalCore.Unity.fltnz',
   datetime('now'),
   datetime('now')
 );
@@ -179,14 +179,14 @@ INSERT INTO MRL_FLTNZ_Asset (
 -- Canonical Selection Records
 -- =========================================================
 
--- Select MrLiouAI.TotalCore.Unity as canonical for MrLiouAI family
+-- Select FlowAgent.TotalCore.Unity as canonical for FlowAgent family
 INSERT INTO MRL_FLTNZ_Canonical_Select (
   select_id, family_key, selected_asset_id, selection_reason, duplicate_group_id, recovery_score, created_at, updated_at
 ) VALUES (
-  'select:mrliouai:v1',
-  'MrLiouAI',
-  'fltnz:mrliouai:totalcore:unity:v1',
-  'First canonical MrLiouAI TotalCore Unity',
+  'select:flowagent:v1',
+  'FlowAgent',
+  'fltnz:flowagent:totalcore:unity:v1',
+  'First canonical FlowAgent TotalCore Unity',
   NULL,
   1.0,
   datetime('now'),
@@ -239,17 +239,17 @@ INSERT INTO MRL_Relation_Graph (
   datetime('now')
 );
 
--- MrLiouAI → PulseRouter (routing dependency)
+-- FlowAgent → PulseRouter (routing dependency)
 INSERT INTO MRL_Relation_Graph (
   relation_id, from_entity_type, from_entity_id, relation_type, to_entity_type, to_entity_id, relation_note, created_at
 ) VALUES (
-  'rel:mrliouai:router:v1',
+  'rel:flowagent:router:v1',
   'FLTNZ_Asset',
-  'fltnz:mrliouai:totalcore:unity:v1',
+  'fltnz:flowagent:totalcore:unity:v1',
   'uses',
   'FLTNZ_Asset',
   'fltnz:pulserouter:v1',
-  'MrLiouAI uses PulseRouter for signal routing',
+  'FlowAgent uses PulseRouter for signal routing',
   datetime('now')
 );
 

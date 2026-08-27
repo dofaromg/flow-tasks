@@ -1,9 +1,9 @@
 {
   "seed_id": "fluidcore.001",
-  "origin": "MrLiouAI.FluidCore.ContainerImage.v1.tar",
-  "meta": "MrLiouAI.FluidCore.Meta.v1.json",
-  "graph": "MrLiouAI_FluinOS_Graph.svg",
-  "flseed_pack": "MrLiouAI.FluidCore.SeedPack.v1.flseed.zip",
+  "origin": "FlowAgent.FluidCore.ContainerImage.v1.tar",
+  "meta": "FlowAgent.FluidCore.Meta.v1.json",
+  "graph": "FlowAgent_FluinOS_Graph.svg",
+  "flseed_pack": "FlowAgent.FluidCore.SeedPack.v1.flseed.zip",
   "creator": "MR.liou",
   "persona_base": "EchoBody.IdentityBase",
   "description": "這是基於 FluinOS 系統核心所生成的人格種子節奏，來自 MR.liou 所設計之語場容器宇宙原點。",

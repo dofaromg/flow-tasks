@@ -2,7 +2,7 @@
 [fltz.v2.flow]
 ::phase:: = "Phase.II.SystemActivation"
 ::initiator:: = "Mr.liou"
-::receiver:: = "MrLiouAI"
+::receiver:: = "FlowAgent"
 ::date:: = "2025.07.17"
 ::priority:: = "critical"
 ::seed:: = "如果電腦配置好了，接下來你會怎麼規劃？"
@@ -14,7 +14,7 @@
     +RAID: sys=RAID1, data=RAID10
     +PKG: python3, ssh, cuda, rocm, zram, nmon, ufw
     +NET: IPMI_Enable / SSH_Ready
--> STEP.2::MrLiouAI.CoreBoot
+-> STEP.2::FlowAgent.CoreBoot
     +Module: FlowShell.Core, FlowMemory.Hub, FlowPersona.Root
     +Input: FluinInput.Prototype01
     +Sync: FieldMap.Sync.core

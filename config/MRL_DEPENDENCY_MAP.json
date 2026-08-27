@@ -33,7 +33,7 @@
       "services": [
         "MRL_Inference",
         "MRL_FlowCoreLoop",
-        "MRL_MrLiouAI_API",
+        "MRL_FlowAgent_API",
         "MRL_ParticleGlobe",
         "MRL_ReasoningEngine"
       ],
@@ -86,7 +86,7 @@
     "MRL_PersistentLoop": ["mrl_redis"],
     "MRL_Inference": [],
     "MRL_FlowCoreLoop": ["MRL_Inference"],
-    "MRL_MrLiouAI_API": ["MRL_Inference", "MRL_Memory_Engine"],
+    "MRL_FlowAgent_API": ["MRL_Inference", "MRL_Memory_Engine"],
     "MRL_ParticleGlobe": [],
     "MRL_Agent_Orchestrator": ["MRL_Memory_Engine", "MRL_Toolchain_Engine", "mrl_redis"],
     "MRL_RuntimeAdapter": ["MRL_PostgreSQL"],

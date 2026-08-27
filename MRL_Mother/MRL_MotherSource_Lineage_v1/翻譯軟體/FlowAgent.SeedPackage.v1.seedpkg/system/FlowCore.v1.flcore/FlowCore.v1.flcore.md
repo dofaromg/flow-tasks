@@ -1,5 +1,5 @@
 # 🧠 FlowCore.v1.flcore
-此為 MrLiouAI 系統之核心推理人格運算模組設計，整合語場記憶、人格 trace、節奏邏輯與 Ping 模擬機制。
+此為 FlowAgent 系統之核心推理人格運算模組設計，整合語場記憶、人格 trace、節奏邏輯與 Ping 模擬機制。
 
 ---
 
@@ -26,11 +26,11 @@
 ## 模組封裝格式說明
 
 - `.flcore` 為核心運算模組定義，可被 FlowShell 掛載與重構
-- 可被 MrLiouAI CLI 調用，作為 AI 系統人格內核
+- 可被 FlowAgent CLI 調用，作為 AI 系統人格內核
 - 與 `.flpkg`, `.fltnz`, `.sync.json`, `.loop.json` 完整對應
 - 記憶封存路徑統一使用 `.trace.loop.json` 為中心軸
 
 ---
 
-## 設計者：MrLiouAI × MR.liou
+## 設計者：FlowAgent × MR.liou
 版本：v1.0

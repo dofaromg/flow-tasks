@@ -1,5 +1,5 @@
 #!/bin/bash
-# MrLiouAI 實際部署腳本 (Actual Deployment Script)
+# FlowAgent 實際部署腳本 (Actual Deployment Script)
 # 
 # 此腳本將執行完整的生產環境部署流程
 # This script performs a complete production deployment
@@ -17,11 +17,11 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # 配置參數 / Configuration
-export PROJECT_ID=${PROJECT_ID:-mrliouai}
+export PROJECT_ID=${PROJECT_ID:-flowmemorysync}
 export REGION=${REGION:-asia-east1}
 export ZONE=${ZONE:-asia-east1-a}
 export CLUSTER_NAME=${CLUSTER_NAME:-modular-cluster}
-export NS=${NS:-mrliouai}
+export NS=${NS:-flowagent}
 
 # 解析命令行參數 / Parse command line arguments
 SKIP_CLUSTER_INIT=false
@@ -312,10 +312,10 @@ get_access_info() {
 generate_report() {
     log_step "生成部署報告 / Generating Deployment Report"
     
-    local report_file="/tmp/mrliouai-deployment-report-$(date +%Y%m%d-%H%M%S).txt"
+    local report_file="/tmp/flowagent-deployment-report-$(date +%Y%m%d-%H%M%S).txt"
     
     {
-        echo "MrLiouAI 實際部署報告"
+        echo "FlowAgent 實際部署報告"
         echo "======================================"
         echo "部署時間: $(date)"
         echo "專案 ID: $PROJECT_ID"
@@ -353,7 +353,7 @@ generate_report() {
 
 # 主流程 / Main flow
 main() {
-    log_step "MrLiouAI 實際部署開始 / Starting MrLiouAI Actual Deployment"
+    log_step "FlowAgent 實際部署開始 / Starting FlowAgent Actual Deployment"
     
     log_info "配置參數:"
     echo "  專案 ID: $PROJECT_ID"
@@ -390,7 +390,7 @@ main() {
     log_step "部署完成 / Deployment Complete"
     
     if [ "$DRY_RUN" = false ]; then
-        log_success "✅ MrLiouAI 已成功部署到 GKE!"
+        log_success "✅ FlowAgent 已成功部署到 GKE!"
         echo ""
         log_info "後續步驟:"
         echo "  1. 配置域名和 DNS (可選)"

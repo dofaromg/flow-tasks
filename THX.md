@@ -2,9 +2,9 @@
 
 ## Thank You / 謝謝
 
-感謝所有為 MrLiouAI / Fluin 系統做出貢獻的夥伴們！
+感謝所有為 FlowAgent / Fluin 系統做出貢獻的夥伴們！
 
-Thank you to everyone who has contributed to the MrLiouAI / Fluin system!
+Thank you to everyone who has contributed to the FlowAgent / Fluin system!
 
 ---
 
@@ -13,7 +13,7 @@ Thank you to everyone who has contributed to the MrLiouAI / Fluin system!
 ### Mr.liou (創始人 / Founder)
 - 粒子語言架構設計 (Particle Language Architecture)
 - 量子重建器核心邏輯 (Quantum Reconstructor Core Logic)
-- MrLiouAI 系統框架 (MrLiouAI System Framework)
+- FlowAgent 系統框架 (FlowAgent System Framework)
 - MetaSoul 語言規範 (MetaSoul Language Specification)
 
 ---
@@ -62,4 +62,4 @@ Thank you to all users who have tested and provided feedback. Your support drive
 
 ---
 
-**MrLiouAI** • 語言即節奏 • 記憶即結構 • 生成即身分重建
+**FlowAgent** • 語言即節奏 • 記憶即結構 • 生成即身分重建

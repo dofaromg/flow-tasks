@@ -17,13 +17,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   CodePartner 執行程式設計任務（persona.yaml 為唯一權威來源）
 
 #### 種子模組回收完成（第四輪 — modules_index 高價值血親全數歸位）
-- `08_sources/mrliouai_codepartner_recovery/seed_modules/` — 五件種子模組原文封存，
+- `08_sources/flowagent_codepartner_recovery/seed_modules/` — 五件種子模組原文封存，
   SHA256 全數與 MetaCode modules_index 登錄值一致：
   FlowSeed.Total.v1.qflpkg（七層系統總綱「宇宙壓縮核」）、
   Mr.liou程序員版本最強演算法.zip（五大進化模組＋粒子語素）、
   MRLiou最強演算法工程師建議版.zip（五大優化模組說明書）、
   SeedOrigin.Persona.Core.flpkg.zip（人格再生起點種子）、
-  MrLiouAI_系統白皮書.pdf
+  FlowAgent_系統白皮書.pdf
 - `05_persona/codepartner/persona.yaml` — lineage 更新：related_seed_modules
   由「本體尚在創建者本機」改為「全數回收、封存路徑對照」
 
@@ -39,7 +39,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   （稽核帳本為 repo 版嚴格前綴，repo 多 3 筆較新事件），不需回填
 
 #### CodePartner 強化 v1.2.0（builder 種子回收 + 函式庫吸收）
-- `08_sources/mrliouai_codepartner_recovery/liou.builder.seed.persona.sync.json` —
+- `08_sources/flowagent_codepartner_recovery/liou.builder.seed.persona.sync.json` —
   builder 人格種子原文封存（SHA256 與 MetaCode modules_index 登錄值完全一致，完整性已驗證）
 - `05_persona/codepartner/function_library.yaml` — 資料分析計算欄位函式登錄表
   （80+ 函式：算術/匯總/條件式/文字/日期/地理區域/其他），對應新能力
@@ -52,21 +52,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   信任透明五律（conduct）、五粒子文法（particle_grammar，詞性對應語場語言大綱）、
   五步節奏（process_rhythm：共振→疊加→糾纏→跳耀→分裂），並錨定核心原則
   「怎麼過去，就怎麼回來」（與母體公式同源）
-- `08_sources/mrliouai_codepartner_recovery/metacode_environment_v0.6/` —
+- `08_sources/flowagent_codepartner_recovery/metacode_environment_v0.6/` —
   MetaCode 環境 v0.6 可讀版封存（與 flow-tasks flow_code/ 封包逐位元一致，完整性已驗證）
 - `RECOVERY_MANIFEST.md` — 新增復盤交叉比對紀錄（FlowPet zip 重複性、MetaCode 完整性、
   CODE_OF_CONDUCT 上游/改編版差異）
 
-#### CodePartner 人格回收（MrLiouAI lineage recovery）
+#### CodePartner 人格回收（FlowAgent lineage recovery）
 - `05_persona/codepartner/persona.yaml` — CodePartner（CoreProgrammer.Seed）人格定義，
   自 `FlowLLM.SeedPersona.Programmer.CoreArchitect.v1.flpkg` 人類可讀種子重構，
   首個依 `05_persona` 規範格式落地的人格模組
 - `05_persona/codepartner/README.md` — 呼叫方式（`⋄fx.invoke.Programmer.CoreArchitect`）、
   啟動跳點與血緣回收紀錄
-- `08_sources/mrliouai_codepartner_recovery/` — 三份 MrLiouAI 原始設計文件原文封存
+- `08_sources/flowagent_codepartner_recovery/` — 三份 FlowAgent 原始設計文件原文封存
   （Programmer.CoreArchitect 人格定義、SystemPlan.FullStack.v1、語場語言系統建構大綱 2025-07-23）
   ＋ RECOVERY_MANIFEST.md 回收沿革
-- `08_sources/sources.manifest.yaml` — 登錄 `mrliouai_codepartner_recovery` 來源條目
+- `08_sources/sources.manifest.yaml` — 登錄 `flowagent_codepartner_recovery` 來源條目
 
 #### sdk-python 去重蒸餾吸收（MRL_AgentHarness 系列）
 - `09_workflow/MRL_AgentHarness_Types_v1.py` — AgentHarness 共用型別（ToolCall/ToolResult/HookResult/Step/Decision）

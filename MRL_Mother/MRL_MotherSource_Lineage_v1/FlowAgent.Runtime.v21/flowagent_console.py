@@ -1,5 +1,5 @@
 
-# mrliouai_console.py - MrLiouAI 總模組 CLI 控制台
+# flowagent_console.py - FlowAgent 總模組 CLI 控制台
 
 import os
 
@@ -26,7 +26,7 @@ def run_script(script_name):
 
 def menu():
     while True:
-        print("\n🌀 MrLiouAI CLI 控制台")
+        print("\n🌀 FlowAgent CLI 控制台")
         for key, (label, _) in OPTIONS.items():
             print(f"{key}. {label}")
         print("0. 離開")

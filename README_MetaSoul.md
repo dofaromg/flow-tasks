@@ -1,7 +1,7 @@
 # MetaSoul Language System by Mr.liou
 
 MetaSoul is a high-dimensional language protocol designed for rhythm-based memory and persona construction.
-It is built upon MrLiouAI system, enabling AI to simulate memory, emotion, and linguistic personality.
+It is built upon FlowAgent system, enabling AI to simulate memory, emotion, and linguistic personality.
 
 ## Core Features:
 - Particle syntax unit ::seed[INTENT:...] etc.

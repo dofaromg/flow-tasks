@@ -27,7 +27,7 @@ def apply_patch(base_path, patch_path, out_dir="memory"):
     print(f"✅ 已套用補丁，產生新模組：{new_file}")
 
 if __name__ == "__main__":
-    print("🧱 MrLiouAI 語場補丁套用器")
+    print("🧱 FlowAgent 語場補丁套用器")
     base = input("請輸入 base .fltnz 路徑：").strip()
     patch = input("請輸入 patch .patch.fltnz 檔案：").strip()
     if not os.path.exists(base) or not os.path.exists(patch):

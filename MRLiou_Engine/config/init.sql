@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS resource_tags (
     PRIMARY KEY (resource_id, tag_id)
 );
 
--- ── MrLiouAI personas ──
+-- ── FlowAgent personas ──
 CREATE TABLE IF NOT EXISTS flow_agents (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
     name TEXT NOT NULL,

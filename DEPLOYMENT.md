@@ -1,11 +1,11 @@
-# MrLiouAI GKE 部署指南
+# FlowAgent GKE 部署指南
 
-本指南提供完整的 MrLiouAI 叢集部署步驟。
+本指南提供完整的 FlowAgent 叢集部署步驟。
 
 ## 📋 前置需求
 
 1. **Google Cloud Platform 帳號**
-   - 已建立 GCP 專案 (例如: `mrliouai`)
+   - 已建立 GCP 專案 (例如: `flowmemorysync`)
    - 已啟用計費
 
 2. **本地工具**（如使用 Cloud Shell 則已預安裝）
@@ -36,11 +36,11 @@ kubectl apply -k cluster/overlays/prod
 #### 1. 設定環境變數
 
 ```bash
-export PROJECT_ID=mrliouai
+export PROJECT_ID=flowmemorysync
 export REGION=asia-east1
 export ZONE=asia-east1-a
 export CLUSTER_NAME=modular-cluster
-export NS=mrliouai
+export NS=flowagent
 ```
 
 #### 2. 設定 GCP 專案並啟用 API
@@ -133,7 +133,7 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 # 密碼: 使用上面的命令取得
 ```
 
-### 4. 部署 MrLiouAI 應用
+### 4. 部署 FlowAgent 應用
 
 ```bash
 kubectl apply -f argocd/app.yaml
@@ -145,7 +145,7 @@ kubectl apply -f argocd/app.yaml
 
 ```bash
 # 如果已安裝 ArgoCD CLI
-argocd app sync mrliouai
+argocd app sync flowagent
 ```
 
 ## 🔧 配置自定義參數
@@ -165,9 +165,9 @@ argocd app sync mrliouai
 
 ```yaml
 images:
-- name: asia-east1-docker.pkg.dev/YOUR_PROJECT/mrliouai/module-a
+- name: asia-east1-docker.pkg.dev/YOUR_PROJECT/flowagent/module-a
   newTag: latest
-- name: asia-east1-docker.pkg.dev/YOUR_PROJECT/mrliouai/orchestrator
+- name: asia-east1-docker.pkg.dev/YOUR_PROJECT/flowagent/orchestrator
   newTag: latest
 ```
 
@@ -222,13 +222,13 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 
 ```bash
 # Module-A 日誌
-kubectl logs -f deployment/module-a -n mrliouai
+kubectl logs -f deployment/module-a -n flowagent
 
 # Orchestrator 日誌
-kubectl logs -f deployment/orchestrator -n mrliouai
+kubectl logs -f deployment/orchestrator -n flowagent
 
 # MongoDB 日誌
-kubectl logs -f deployment/mongodb -n mrliouai
+kubectl logs -f deployment/mongodb -n flowagent
 ```
 
 ### 訪問 Prometheus
@@ -244,10 +244,10 @@ kubectl port-forward -n monitoring svc/prometheus 9090:9090
 
 ```bash
 # 查看 pod 詳情
-kubectl describe pod <pod-name> -n mrliouai
+kubectl describe pod <pod-name> -n flowagent
 
 # 查看事件
-kubectl get events -n mrliouai --sort-by='.lastTimestamp'
+kubectl get events -n flowagent --sort-by='.lastTimestamp'
 ```
 
 ### 映像拉取失敗
@@ -265,20 +265,20 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 
 ```bash
 # 檢查 service
-kubectl get svc -n mrliouai
+kubectl get svc -n flowagent
 
 # 檢查 endpoints
-kubectl get endpoints -n mrliouai
+kubectl get endpoints -n flowagent
 
 # 測試連接
-kubectl run test-pod --rm -i --tty --image=busybox -n mrliouai -- sh
+kubectl run test-pod --rm -i --tty --image=busybox -n flowagent -- sh
 # 在 pod 中: wget -O- http://module-a:8080/health
 ```
 
 ## 📦 架構說明
 
 ```
-mrliouai namespace
+flowagent namespace
 ├── MongoDB (資料庫)
 ├── Module-A (服務模組)
 │   ├── Deployment (2 replicas)
@@ -315,6 +315,6 @@ monitoring namespace
 
 ## 🔗 有用連結
 
-- [GKE 控制台](https://console.cloud.google.com/kubernetes/list?project=mrliouai)
-- [Artifact Registry](https://console.cloud.google.com/artifacts?project=mrliouai)
-- [Cloud Shell](https://console.cloud.google.com/?cloudshell=true&project=mrliouai)
+- [GKE 控制台](https://console.cloud.google.com/kubernetes/list?project=flowmemorysync)
+- [Artifact Registry](https://console.cloud.google.com/artifacts?project=flowmemorysync)
+- [Cloud Shell](https://console.cloud.google.com/?cloudshell=true&project=flowmemorysync)

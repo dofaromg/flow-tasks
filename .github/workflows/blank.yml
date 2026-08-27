@@ -1,6 +1,6 @@
-# MrLiouAI Task System CI Pipeline
+# FlowAgent Task System CI Pipeline
 
-name: MrLiouAI CI
+name: FlowAgent CI
 
 # Controls when the workflow will run
 on:
@@ -18,7 +18,7 @@ permissions:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # Test the MrLiouAI task system
+  # Test the FlowAgent task system
   test:
     runs-on: ubuntu-latest
 
@@ -49,9 +49,9 @@ jobs:
           npm ci
 
       # Run task validation
-      - name: Validate MrLiouAI tasks
+      - name: Validate FlowAgent tasks
         run: |
-          echo "=== MrLiouAI Task Validation ==="
+          echo "=== FlowAgent Task Validation ==="
           python process_tasks.py
 
       # Test Flask API functionality

@@ -36,7 +36,7 @@
       "pages": [
         {
           "page_id": "37c8eeee",
-          "name": "Mrliou_MRL_MrLiouAI",
+          "name": "Mrliou_MRL_FlowAgent",
           "status": "verified_local_copy",
           "blocks": 53,
           "size": 69432,
@@ -50,13 +50,13 @@
         },
         {
           "page_id": "75314b13",
-          "name": "MrLiouAI_Mother_Memory_Sphere",
+          "name": "FlowAgent_Mother_Memory_Sphere",
           "status": "permission_denied",
           "action_required": "Share to DL580 integration"
         },
         {
           "page_id": "0c962b1f",
-          "name": "MRL_ParticleBook_MrLiouAI_Mapping_v2.0",
+          "name": "MRL_ParticleBook_FlowAgent_Mapping_v2.0",
           "status": "permission_denied",
           "action_required": "Share to DL580 integration"
         }

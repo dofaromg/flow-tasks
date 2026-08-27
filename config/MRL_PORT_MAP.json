@@ -97,7 +97,7 @@
       "exposure": "local"
     },
     "7900": {
-      "service": "MRL_MrLiouAI_API",
+      "service": "MRL_FlowAgent_API",
       "runtime": "python",
       "protocol": "http",
       "exposure": "local"

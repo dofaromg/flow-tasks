@@ -1,5 +1,5 @@
 
-# persona_manager.py - MrLiouAI 人格模組 CLI 管理器
+# persona_manager.py - FlowAgent 人格模組 CLI 管理器
 
 import os
 
@@ -24,7 +24,7 @@ def activate_persona(code):
         print(f"❌ 未知人格代碼：{code}")
 
 def cli():
-    print("🔘 MrLiouAI 人格 CLI 控制面板")
+    print("🔘 FlowAgent 人格 CLI 控制面板")
     list_personas()
     while True:
         cmd = input("輸入人格代碼（或輸入 exit 離開）：")

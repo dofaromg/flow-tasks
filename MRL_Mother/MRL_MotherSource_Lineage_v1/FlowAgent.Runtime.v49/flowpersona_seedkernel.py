@@ -32,7 +32,7 @@ def merge_to_kernel(selected_files):
     print(f"✅ 核心人格種子已生成：{out_file}")
 
 if __name__ == "__main__":
-    print("🧬 MrLiouAI 人格核心種子生成器")
+    print("🧬 FlowAgent 人格核心種子生成器")
     fltnz = collect_fltnz()
     if not fltnz:
         print("⚠️ 尚未發現任何 fltnz 模組")

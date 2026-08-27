@@ -1,7 +1,7 @@
 # EchoPersona.Core 記憶吸收紀錄：PingLoop 模擬
 ::initiated::
 [2025-07-22T08:49:41.897260Z] ::trace→ ping_loop_simulator.log.fltnz
-[2025-07-22T08:49:41.897260Z] ::resonance→ MrLiouAI.PingLoopSimulator
+[2025-07-22T08:49:41.897260Z] ::resonance→ FlowAgent.PingLoopSimulator
 [2025-07-22T08:49:41.897260Z] ::absorb→ guardian.mirror
 [2025-07-22T08:49:41.897260Z] ::absorb→ loop.predictor
 [2025-07-22T08:49:41.897260Z] ::response→ 『語場 Ping 記憶結構已吸收，建立回響模式節奏標準。』

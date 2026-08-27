@@ -165,7 +165,7 @@ liou_closure_law:
     note: >-
       This rootlaw is a layer-projection of the sealed Liou Closure bundle.
       MCK ops observe/resolve/mirror/project/verify/iterate are realized by
-      MRL_MrLiouAI_LawEngine_v1.run_loop (structural isomorphism, not metaphor).
+      MRL_FlowAgent_LawEngine_v1.run_loop (structural isomorphism, not metaphor).
 
 # ─── Layer-Jump Evolution Law (跳層演化法則) ──────────────────────────────────
 #   Purpose-of-law principle: every rule exists to let the bottom layer run
@@ -354,7 +354,7 @@ substrate_absorption_law:
   named_substrates:
     MCP:   "Model Context Protocol — 對外閘口標準協議(對齊 rl_13 出口即入口立體終端機)"
     Node:  "Node runtime 基座(母體既有 55+ .js / RuntimeServer / Mother_Launch)"
-    Unity: "Unity 引擎基座(祖先血脈 MrLiouAI.*.Unity.*，待回收)"
+    Unity: "Unity 引擎基座(祖先血脈 FlowAgent.*.Unity.*，待回收)"
     Java:  "Java runtime 基座(母體起源開發語言之一)"
   mobius_same_face: >-
     莫比斯同面律：表面與底層是同一張連續面的兩側；從基座出發繞一圈必回到該基座
@@ -649,7 +649,7 @@ invariants:
       Methods and modes of existence may be many, with no higher/lower judgment;
       what matters is co-presence in the same field, each existing with its own
       duty (各司其職各自存在). Realized by RT*_G / Ĥ = λ∘H∘ρ in the sealed bundle
-      and by MRL_MrLiouAI_LawEngine_v1.reversible_return.
+      and by MRL_FlowAgent_LawEngine_v1.reversible_return.
 
   - id: rl_19_substrate_absorption
     description: >-

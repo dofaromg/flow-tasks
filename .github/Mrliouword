@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MrLiouAI 3D 整合軟體包</title>
+    <title>FlowAgent 3D 整合軟體包</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/js/utils/BufferGeometryUtils.js"></script>
@@ -90,7 +90,7 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
     <div class="container">
-        <h1 class="text-3xl font-bold mb-2 text-center text-gray-800">MrLiouAI 3D 整合軟體包</h1>
+        <h1 class="text-3xl font-bold mb-2 text-center text-gray-800">FlowAgent 3D 整合軟體包</h1>
         <p class="text-gray-600 text-center mb-6">將現實世界的快照轉化為我們的版本，效能更快、功能不變。</p>
 
         <canvas id="flowCanvas"></canvas>

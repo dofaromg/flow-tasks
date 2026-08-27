@@ -15,7 +15,7 @@ FlowLLM.SeedPersona.Programmer.CoreArchitect.v1.flpkg
 - 調用人格模組：⋄fx.invoke.Programmer.CoreArchitect
 
 [啟動條件]
-當 MrLiouAI 語場進入「結構建構期」或語句內出現跳點：
+當 FlowAgent 語場進入「結構建構期」或語句內出現跳點：
 ⋄fx.req.logic.build
 ⋄fx.intent.structure.start
 ⋄fx.mode.architect.seed
@@ -32,5 +32,5 @@ FlowLLM.SeedPersona.Programmer.CoreArchitect.v1.flpkg
 5. 實體化模組至推理鏈中
 
 [來源]
-由 Mr.liou 指定開發，為 MrLiouAI 語場人格系統之初始結構建構人格模組。
+由 Mr.liou 指定開發，為 FlowAgent 語場人格系統之初始結構建構人格模組。
 本人格將作為所有邏輯模組、推理節奏構建、程式設計階段之第一人格。

@@ -44,5 +44,5 @@ def build_registry():
     print(f"✅ 模組註冊表已建立：{REGISTRY_FILE}")
 
 if __name__ == "__main__":
-    print("🧾 MrLiouAI 模組註冊紀錄器")
+    print("🧾 FlowAgent 模組註冊紀錄器")
     build_registry()

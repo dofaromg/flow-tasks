@@ -238,7 +238,7 @@ services:
     depends_on:
       - nextjs-frontend
     networks:
-      - mrliouai-network
+      - flowagent-network
 ```
 
 ---
@@ -333,7 +333,7 @@ astro-frontend:
     - "4321:4321"
   restart: unless-stopped
   networks:
-    - mrliouai-network
+    - flowagent-network
 ```
 
 #### Redis 快取
@@ -346,7 +346,7 @@ redis:
     - redis-data:/data
   restart: unless-stopped
   networks:
-    - mrliouai-network
+    - flowagent-network
 ```
 
 ### 開發模式
@@ -408,13 +408,13 @@ docker-compose up -d
 ### 3. 設置自動啟動
 ```bash
 # 創建 systemd 服務
-sudo nano /etc/systemd/system/mrliouai.service
+sudo nano /etc/systemd/system/flowagent.service
 ```
 
 內容：
 ```ini
 [Unit]
-Description=MrLiouAI Docker Compose
+Description=FlowAgent Docker Compose
 Requires=docker.service
 After=docker.service
 
@@ -431,8 +431,8 @@ WantedBy=multi-user.target
 
 啟用服務：
 ```bash
-sudo systemctl enable mrliouai
-sudo systemctl start mrliouai
+sudo systemctl enable flowagent
+sudo systemctl start flowagent
 ```
 
 ---

@@ -82,8 +82,8 @@
 ### 4.2 程式範本（對映活引擎）
 
 ```python
-from MRL_MrLiouAI_LawEngine_v1 import MRL_MrLiouAILawEngine
-eng = MRL_MrLiouAILawEngine()
+from MRL_FlowAgent_LawEngine_v1 import MRL_FlowAgentLawEngine
+eng = MRL_FlowAgentLawEngine()
 
 # 1. fork 候選解（敗支不刪,保全為粒子）
 worlds = eng.generate_parallel_worlds("MRL_Conflict_buildCmd_v1", ["npm run build", "vite build"])

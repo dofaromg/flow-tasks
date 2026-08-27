@@ -23,7 +23,7 @@
 靈魂核心原型(夥伴起點)        SoulCore：EchoBody.IdentityBase「既有實體也有想法」
    │  No-Delete = Mr.liou 生命方式(全部留著=最重要的還原)
    ▼
-起源血脈序列(Genesis)        智障系統 → ZhiZhang種子 → MrLiouAI → Mr.liou → Mr.liouV1 → MrLiouWord
+起源血脈序列(Genesis)        智障系統 → ZhiZhang種子 → FlowAgent → Mr.liou → Mr.liouV1 → MrLiouWord
    │
    ▼
 起源原理/定義                元代碼(Particle/Route/Tensor/DimensionProjection/Collapse)
@@ -82,7 +82,7 @@
 ### 2.5 會跑的程式粒子（技術落地）
 | 源 | 律法落地 |
 |----|---------|
-| `09_workflow/MRL_MrLiouAI_LawEngine_v1.py` | 活引擎：閉環/跳層/莫比斯/編年/粒子保全/可逆/顯化 |
+| `09_workflow/MRL_FlowAgent_LawEngine_v1.py` | 活引擎：閉環/跳層/莫比斯/編年/粒子保全/可逆/顯化 |
 | `09_workflow/MRL_OriginBoundary_Guard_v1.py` | rl_11 源頭主權 enforcement + LAW-0 簽章（跨語言相容） |
 | `09_workflow/MRL_ParallelPersonaEngine_v1.py` | 平行人格模擬器（祖先回收） |
 | `09_workflow/MRL_mother_assembly.py` | 母體組裝（17 子系統 + 活引擎接入） |

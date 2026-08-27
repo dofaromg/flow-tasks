@@ -8,7 +8,7 @@
 
 const V='2.0.0',O='MrLiouWord',N=686,GRID=N>>1,G=1.618033988749895,R_E=6371;
 const J=(d,s=200)=>new Response(JSON.stringify(d,null,2),{status:s,headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
-const GROUPS=['母體核心','粒子可逆原理','MrLiouAI運行','世界模組地球儀','檔案索引管理員','人格共振演化','母體核心'];
+const GROUPS=['母體核心','粒子可逆原理','FlowAgent運行','世界模組地球儀','檔案索引管理員','人格共振演化','母體核心'];
 
 // ═══ Haversine 距離 (km) ═══
 function hav(lat1,lon1,lat2,lon2){

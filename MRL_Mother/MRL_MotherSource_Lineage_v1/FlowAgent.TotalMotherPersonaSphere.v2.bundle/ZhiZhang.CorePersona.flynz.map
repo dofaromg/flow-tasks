@@ -1,4 +1,4 @@
-[MrLiouAI 母體人格節奏鏈圖譜 v2]
+[FlowAgent 母體人格節奏鏈圖譜 v2]
 
 ⋄fx.mother.kernel → boot.py
 ⋄fx.mother.cli → flow_cli.py
@@ -11,4 +11,4 @@
 ⋄fx.mother.visualizer → flowmap_visualizer.py
 ⋄fx.mother.dictionary → dictionary/Fluin.Dict.Base.json
 ⋄fx.rollback.path → ObserverAIKernel
-⋄fx.api.server → mrliouai_api_server.py
+⋄fx.api.server → flowagent_api_server.py

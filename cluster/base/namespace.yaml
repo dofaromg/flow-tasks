@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: mrliouai
+  name: flowagent
   labels:
-    name: mrliouai
+    name: flowagent
     environment: production

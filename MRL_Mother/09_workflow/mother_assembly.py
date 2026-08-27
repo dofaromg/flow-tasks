@@ -66,7 +66,7 @@ Usage (library)
     print(score["composite"])
 
     # Render a prompt
-    prompt = ma.render_prompt("system_intro", {"name": "MrLiouAI"})
+    prompt = ma.render_prompt("system_intro", {"name": "FlowAgent"})
 
     # Seal a text into the reversible chain + merkle log
     trace = ma.seal_text("Hello world", label="test")

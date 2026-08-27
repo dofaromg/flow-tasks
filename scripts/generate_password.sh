@@ -81,7 +81,7 @@ if [ "$1" == "--apply" ]; then
         fi
         
         cat > .env << EOF
-# MrLiouAI MongoDB 密碼配置 / MongoDB Password Configuration
+# FlowAgent MongoDB 密碼配置 / MongoDB Password Configuration
 # 生成日期 / Generated: $(date +"%Y-%m-%d %H:%M:%S")
 # 
 # ⚠️  重要：此檔案包含敏感資訊，請勿提交到 Git！
@@ -106,7 +106,7 @@ EOF
         echo "  1. Kubernetes 部署 / For Kubernetes deployment:"
         echo "     kubectl create secret generic mongodb-secret \\"
         echo "       --from-literal=password='$NEW_PASSWORD' \\"
-        echo "       --namespace=mrliouai \\"
+        echo "       --namespace=flowagent \\"
         echo "       --dry-run=client -o yaml | kubectl apply -f -"
         echo ""
         echo "  2. Docker Compose 本地測試 / For local Docker Compose:"
@@ -126,7 +126,7 @@ else
     echo "  2. 應用到 Kubernetes / Apply to Kubernetes:"
     echo "     kubectl create secret generic mongodb-secret \\"
     echo "       --from-literal=password='$NEW_PASSWORD' \\"
-    echo "       --namespace=mrliouai \\"
+    echo "       --namespace=flowagent \\"
     echo "       --dry-run=client -o yaml | kubectl apply -f -"
     echo ""
     echo "  3. 或使用 --apply 參數自動更新本地配置 / Or use --apply to update local config:"

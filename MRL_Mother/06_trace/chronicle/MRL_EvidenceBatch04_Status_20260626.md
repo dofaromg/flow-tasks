@@ -46,7 +46,7 @@ scope = sandbox evidence chain
 - `MRL_Context_Snapshot_Batch04_20260612.md` — session continuation context.
 - Convergence engineering package v1.
 - Weak Source Backfill engineering package v1.
-- MrLiouAI Notion `raw.json` export — canonical, 69,432 bytes.
+- FlowAgent Notion `raw.json` export — canonical, 69,432 bytes.
 
 ---
 
@@ -54,7 +54,7 @@ scope = sandbox evidence chain
 
 1. Notion page sharing required for 3 pages:
    - Fluin particles
-   - MrLiouAI Memory
+   - FlowAgent Memory
    - ParticleBook mapping
 
 2. Batch 05 required:

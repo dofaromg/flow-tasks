@@ -73,7 +73,7 @@ integration:
   mongodb:
     enabled: false
     connection_string: "mongodb://localhost:27017"
-    database: "mrliouai"
+    database: "flowagent"
     collection: "memory_seeds"
   
   # File system backup

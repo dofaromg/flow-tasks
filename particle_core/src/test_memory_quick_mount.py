@@ -121,7 +121,7 @@ class TestAdvancedParticleCompressor(unittest.TestCase):
     def test_compress_nested_dict(self):
         """測試巢狀字典壓縮 / Test nested dictionary compression"""
         data = {
-            'agent': 'MrLiouAI',
+            'agent': 'FlowAgent',
             'config': {
                 'mode': 'production',
                 'enabled': True
@@ -132,7 +132,7 @@ class TestAdvancedParticleCompressor(unittest.TestCase):
         
         # 驗證巢狀結構符號
         # Verify nested structure symbols
-        self.assertIn('⊕agent:MrLiouAI', compressed)
+        self.assertIn('⊕agent:FlowAgent', compressed)
         self.assertIn('⊕config⟨', compressed)
         self.assertIn('⊕mode:production', compressed)
         self.assertIn('⟩', compressed)

@@ -515,9 +515,9 @@ pyyaml     # 用於 YAML 格式導出（可選，系統會自動降級）
 
 ## 授權
 
-遵循 MrLiouAI 項目的授權協議。
+遵循 FlowAgent 項目的授權協議。
 
 ---
 
 **更新日期**: 2026-01-04  
-**維護者**: MrLiouAI Team
+**維護者**: FlowAgent Team

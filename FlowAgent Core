@@ -1,10 +1,10 @@
-# mrliouai_core.py
+# flowagent_core.py
 
 import json
 import os
 import time
 
-class MrLiouAI:
+class FlowAgent:
     def __init__(self, seed_dir, memory_dir, persona_dir, reflex_dir):
         self.seed_dir = seed_dir
         self.memory_dir = memory_dir
@@ -64,12 +64,12 @@ class MrLiouAI:
             return prefix + " " + input_text
 
         # Default echo (占位，可換成 LLM)
-        return f"MrLiouAI: {input_text}"
+        return f"FlowAgent: {input_text}"
 
     # ---------------------------------------------------
 
 if __name__ == "__main__":
-    agent = MrLiouAI(
+    agent = FlowAgent(
         seed_dir="seed",
         memory_dir="memory",
         persona_dir="persona",

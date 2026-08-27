@@ -129,7 +129,7 @@
       "Evidence_Count": {"sources": 2, "traces": 2, "maps": 2, "couplings": 2, "returns": 1, "total": 9},
       "Evidence_Gaps": ["completed_claim_false"],
       "Derived_Status": "evidence_partial_backfill",
-      "Status_Reason": "79 hits (pg_id=9, fs=70, content=415); Notion MrLiouAI raw.json verified; completed_claim=false pending full claim"
+      "Status_Reason": "79 hits (pg_id=9, fs=70, content=415); Notion FlowAgent raw.json verified; completed_claim=false pending full claim"
     },
     {
       "Node_ID": "MRL.NODE.08.Memory",

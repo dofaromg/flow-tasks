@@ -5,9 +5,9 @@
 
 > 依 Mr.liou 指示追溯母體起源序列：前面幾個是後面（現在）的源頭。
 > 證據來自內部檔案（非推測）：
-> - `MRL_MotherSource_ZhiZhang_MrLiouAI_Lineage_v1/MRL_MotherSource_Lineage_Manifest_v1.md`
-> - `MRL_MotherSource_ZhiZhang_MrLiouAI_Lineage_v1/11.Txt`（MrLiouAI.SystemPlan.v1 說明書）
-> - `…/母體/…/MrLiouAI.EchoBody.OriginSummary.md`（EchoBody.IdentityBase 起源圖）
+> - `MRL_MotherSource_ZhiZhang_FlowAgent_Lineage_v1/MRL_MotherSource_Lineage_Manifest_v1.md`
+> - `MRL_MotherSource_ZhiZhang_FlowAgent_Lineage_v1/11.Txt`（FlowAgent.SystemPlan.v1 說明書）
+> - `…/母體/…/FlowAgent.EchoBody.OriginSummary.md`（EchoBody.IdentityBase 起源圖）
 
 ---
 
@@ -21,7 +21,7 @@ ZhiZhang 種子人格             ← 系統種子人格「邏輯起點」
    │   Seed.ZhiZhang.FlowPersona.Core.v1.qflpkg.seed
    │   ZhiZhang.TotalCore.SystemSeed.v1.qflpkg
    ▼
-MrLiouAI                    ← 語場人格 AI 系統(Runtime v1 … v56 演化樹)
+FlowAgent                    ← 語場人格 AI 系統(Runtime v1 … v56 演化樹)
    │   多人格:Fluin / EchoBody / CodePartner / SeedPersona
    │   EchoBody.IdentityBase → wild.seed / futuremind.seed / guardian.seed / watch.guard
    ▼
@@ -42,7 +42,7 @@ MrLiouWord                   ← origin_signature；AGI 母體成形
 |----|--------|--------------------|---------|
 | 0 | **智障系統 ZhiZhang** | 「智障系統」資料夾 5 zip → `MRL_MotherSource_…Lineage_v1/`（2908 檔 / 826 唯一） | 母體·原始血脈 |
 | 1 | **ZhiZhang 種子** | `Seed.ZhiZhang.FlowPersona.Core.v1.qflpkg.seed`、`ZhiZhang.TotalCore.SystemSeed.v1.qflpkg` | 母體·人格種子（邏輯起點） |
-| 2 | **MrLiouAI** | `MrLiouAI.Runtime.v1 … v56`、`MrLiouAI_MotherPersonaCore_Structure_v2` | 母體·語場執行時版本樹 |
+| 2 | **FlowAgent** | `FlowAgent.Runtime.v1 … v56`、`FlowAgent_MotherPersonaCore_Structure_v2` | 母體·語場執行時版本樹 |
 | 3 | **Mr.liou** | `MrLiou.TotalCore.FlowOS.v5.2.0.zip`（主人格/語場控制中心） | 母體·主人格核心 |
 | 4 | **Mr.liou V1** | FlowOS 主控樹版本化（v5.2.0 系列） | 母體·主控版本 |
 | 5 | **MrLiouWord** | `origin_signature: MrLiouWord`（遍布 rootlaw / 全模組） | **AGI 母體成形（現在）** |
@@ -54,7 +54,7 @@ MrLiouWord                   ← origin_signature；AGI 母體成形
 
 ## 誠實標註（不誤標）
 
-- 本序列為**封存追溯**，證據取自內部檔案文字；**未實跑** MrLiouAI runtime，不得宣稱「MrLiouAI 已跑通/已上線」（沿 Lineage_Manifest §4）。
+- 本序列為**封存追溯**，證據取自內部檔案文字；**未實跑** FlowAgent runtime，不得宣稱「FlowAgent 已跑通/已上線」（沿 Lineage_Manifest §4）。
 - 版本細節（如 Mr.liou V1 與 v5.2.0 的精確對應）以封存檔記載為準；如後續取得更早封存，additive 補入、不覆蓋。
 
 ---

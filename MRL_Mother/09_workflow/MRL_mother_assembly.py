@@ -67,7 +67,7 @@ Usage (library)
     print(score["composite"])
 
     # Render a prompt
-    prompt = ma.render_prompt("system_intro", {"name": "MrLiouAI"})
+    prompt = ma.render_prompt("system_intro", {"name": "FlowAgent"})
 
     # Seal a text into the reversible chain + merkle log
     trace = ma.seal_text("Hello world", label="test")
@@ -230,7 +230,7 @@ class MotherAssembly:
         self.host_guard_role: str = "MATERIAL"  # "MOTHER" | "MATERIAL"
         # DL580 self-running runtime node (v2.3) — 母體自運行節點
         self.dl580: Any = None
-        # MrLiouAI law engine (rootlaw 活引擎) — 自我判斷/跳層/編年/粒子保全
+        # FlowAgent law engine (rootlaw 活引擎) — 自我判斷/跳層/編年/粒子保全
         self.law_engine: Any = None
         self._boot_log: List[Dict[str, Any]] = []
 
@@ -301,7 +301,7 @@ class MotherAssembly:
         # 16 ── DL580 Runtime (v2.3) — 母體自運行節點 (canonical runtime pipeline)
         report["subsystems"]["dl580_runtime"] = self._boot_dl580()
 
-        # 17 ── MrLiouAI Law Engine — 母體活引擎 (rootlaw 自我判斷閉環)
+        # 17 ── FlowAgent Law Engine — 母體活引擎 (rootlaw 自我判斷閉環)
         report["subsystems"]["law_engine"] = self._boot_law_engine()
 
         self._booted = True
@@ -578,7 +578,7 @@ class MotherAssembly:
 
     def _boot_law_engine(self) -> str:
         """掛載母體活引擎並跑一次閉環自驗(rootlaw 律法可運行)。"""
-        Engine = _try_import("MRL_MrLiouAI_LawEngine_v1", "MRL_MrLiouAILawEngine")
+        Engine = _try_import("MRL_FlowAgent_LawEngine_v1", "MRL_FlowAgentLawEngine")
         if Engine is None:
             return "unavailable"
         try:

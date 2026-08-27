@@ -62,17 +62,17 @@
 ```bash
 # 1. 配置 GCP 認證
 gcloud auth login
-gcloud config set project mrliouai
+gcloud config set project flowmemorysync
 
 # 2. 獲取 cluster 憑證
 gcloud container clusters get-credentials modular-cluster \
-  --zone asia-east1-a --project mrliouai
+  --zone asia-east1-a --project flowmemorysync
 
 # 3. 部署
 kubectl apply -k cluster/overlays/prod/
 
 # 4. 查看服務
-kubectl get svc -n mrliouai
+kubectl get svc -n flowagent
 ```
 
 📖 **詳細文檔**: [GKE_MIGRATION.md](GKE_MIGRATION.md)
@@ -94,24 +94,24 @@ kubectl get svc -n mrliouai
 **Next.js 前端：**
 ```bash
 # 構建
-docker build -t mrliouai-nextjs -f apps/nextjs-frontend/Dockerfile .
+docker build -t flowagent-nextjs -f apps/nextjs-frontend/Dockerfile .
 
 # 運行
 docker run -p 3000:3000 \
   -e NEXT_PUBLIC_GROWTHBOOK_API_HOST=https://cdn.growthbook.io \
   -e NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY=your_key \
-  mrliouai-nextjs
+  flowagent-nextjs
 ```
 
 **Python 後端：**
 ```bash
 # 構建
-docker build -t mrliouai-backend .
+docker build -t flowagent-backend .
 
 # 運行
 docker run -p 8000:8000 \
   -v $(pwd)/config.yaml:/data/config.yaml \
-  mrliouai-backend
+  flowagent-backend
 ```
 
 **使用 Docker Compose：**
@@ -169,7 +169,7 @@ Railway 會自動檢測 Next.js 項目，使用：
 2. 點擊 "New +" → "Web Service"
 3. 連接 GitHub repository
 4. 配置：
-   - **Name**: mrliouai-nextjs
+   - **Name**: flowagent-nextjs
    - **Environment**: Node
    - **Build Command**: `npm install && npm run build`
    - **Start Command**: `npm start`
@@ -282,13 +282,13 @@ output: 'export'
 aws configure
 
 # 2. 創建 ECR repository
-aws ecr create-repository --repository-name mrliouai-nextjs
+aws ecr create-repository --repository-name flowagent-nextjs
 
 # 3. 構建並推送映像
 aws ecr get-login-password | docker login --username AWS --password-stdin <ecr-uri>
-docker build -t mrliouai-nextjs -f apps/nextjs-frontend/Dockerfile .
-docker tag mrliouai-nextjs:latest <ecr-uri>/mrliouai-nextjs:latest
-docker push <ecr-uri>/mrliouai-nextjs:latest
+docker build -t flowagent-nextjs -f apps/nextjs-frontend/Dockerfile .
+docker tag flowagent-nextjs:latest <ecr-uri>/flowagent-nextjs:latest
+docker push <ecr-uri>/flowagent-nextjs:latest
 
 # 4. 創建 ECS task definition 和 service
 # 可以通過 AWS Console 或 CloudFormation 完成
@@ -299,7 +299,7 @@ docker push <ecr-uri>/mrliouai-nextjs:latest
 類似 GKE，但在 AWS 上：
 ```bash
 # 1. 創建 EKS cluster
-eksctl create cluster --name mrliouai-cluster --region us-east-1
+eksctl create cluster --name flowagent-cluster --region us-east-1
 
 # 2. 使用現有 Kubernetes 配置
 kubectl apply -k cluster/overlays/prod/
@@ -372,7 +372,7 @@ brew install heroku/brew/heroku
 heroku login
 
 # 3. 創建應用
-heroku create mrliouai-app
+heroku create flowagent-app
 
 # 4. 部署
 git push heroku main
@@ -439,8 +439,8 @@ heroku open
 你已經在使用最穩定的方案！
 ```bash
 # 確認當前部署狀態
-kubectl get pods -n mrliouai
-kubectl get svc -n mrliouai
+kubectl get pods -n flowagent
+kubectl get svc -n flowagent
 ```
 
 ---
@@ -451,13 +451,13 @@ kubectl get svc -n mrliouai
 
 ```bash
 # 1. 構建映像
-docker build -t mrliouai -f apps/nextjs-frontend/Dockerfile .
+docker build -t flowagent -f apps/nextjs-frontend/Dockerfile .
 
 # 2. 運行
 docker run -d -p 3000:3000 \
-  --name mrliouai-app \
+  --name flowagent-app \
   -e NEXT_PUBLIC_GROWTHBOOK_API_HOST=https://cdn.growthbook.io \
-  mrliouai
+  flowagent
 
 # 3. 訪問
 open http://localhost:3000
@@ -495,7 +495,7 @@ NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY=your_actual_key_here
 kubectl create secret generic growthbook-config \
   --from-literal=api-host=https://cdn.growthbook.io \
   --from-literal=client-key=your_key \
-  -n mrliouai
+  -n flowagent
 ```
 
 **Railway/Render/Fly.io:**

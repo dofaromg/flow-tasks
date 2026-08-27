@@ -108,7 +108,7 @@ The MRLiou Particle Language Core system is **fully implemented**, **thoroughly 
 
 **Issue #13 (粒子) - RESOLVED** ✅
 
-This duplicate issue requires no additional work. The system is production-ready and fully integrated into the MrLiouAI task system.
+This duplicate issue requires no additional work. The system is production-ready and fully integrated into the FlowAgent task system.
 
 ---
 

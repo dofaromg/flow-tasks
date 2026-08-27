@@ -1,7 +1,7 @@
-MrLiouAI 記憶封存圖譜（FlowMemoryMap）v2k7
+FlowAgent 記憶封存圖譜（FlowMemoryMap）v2k7
 ==============================================
 
-本圖顯示整個 MrLiouAI 系統的記憶模組分佈結構與封存流程邏輯。
+本圖顯示整個 FlowAgent 系統的記憶模組分佈結構與封存流程邏輯。
 
 📌 結構說明：
 - FlowMemoryCore 為記憶模組的總中樞
