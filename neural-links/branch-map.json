@@ -7,7 +7,7 @@
     "source_identity_field": "source_branch",
     "source_identity_mutated": false
   },
-  "updated_at": "2026-08-28T05:30:50.647Z",
+  "updated_at": "2026-08-28T07:49:07.155Z",
   "neural_network": {
     "nodes": [
       {
@@ -68,6 +68,16 @@
         "energy": 0.7,
         "merged_pr": 633,
         "created_at": "2026-08-28T05:29:33Z"
+      },
+      {
+        "id": "MRL_Evidence_PR632_PreLinearization_f7ef604",
+        "source_branch": "MRL_Evidence_PR632_PreLinearization_f7ef604",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7
       },
       {
         "id": "MRL_Module_Implementation_v1",
@@ -1362,6 +1372,13 @@
         "weight": 0.5,
         "pr_number": 633,
         "timestamp": "2026-08-28T05:29:33Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "MRL_Evidence_PR632_PreLinearization_f7ef604",
+        "type": "influence",
+        "weight": 0.5,
+        "timestamp": "2026-08-28T07:49:07.155Z"
       },
       {
         "from": "MRL_main",

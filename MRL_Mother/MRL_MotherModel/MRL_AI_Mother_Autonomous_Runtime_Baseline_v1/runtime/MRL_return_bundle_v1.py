@@ -6,6 +6,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import tempfile
 import uuid
 import zipfile
 from datetime import datetime, timezone
@@ -120,10 +122,32 @@ def build_return_bundle(
         "total_bytes": total_bytes,
     }
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(output_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        archive.writestr(MANIFEST_NAME, json.dumps(manifest, ensure_ascii=False, indent=2))
-        for source in validated_sources:
-            archive.write(source, arcname=f"payload/{source.name}")
+    temporary_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w+b",
+            prefix=f".{output_path.name}.",
+            suffix=".tmp",
+            dir=output_path.parent,
+            delete=False,
+        ) as temporary:
+            temporary_path = Path(temporary.name)
+            with zipfile.ZipFile(
+                temporary, "w", compression=zipfile.ZIP_DEFLATED
+            ) as archive:
+                archive.writestr(
+                    MANIFEST_NAME,
+                    json.dumps(manifest, ensure_ascii=False, indent=2),
+                )
+                for source in validated_sources:
+                    archive.write(source, arcname=f"payload/{source.name}")
+            temporary.flush()
+            os.fsync(temporary.fileno())
+        os.replace(temporary_path, output_path)
+        temporary_path = None
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
     return {"manifest": manifest, "bundle_path": str(output_path), "bundle_sha256": _sha256(output_path)}
 
 

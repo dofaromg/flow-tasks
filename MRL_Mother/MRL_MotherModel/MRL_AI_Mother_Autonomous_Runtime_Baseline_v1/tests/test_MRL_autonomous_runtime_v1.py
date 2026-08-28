@@ -408,6 +408,28 @@ class MRLAutonomousRuntimeTests(unittest.TestCase):
             verify_return_bundle(output)["reason"], "manifest_total_bytes_mismatch"
         )
 
+    def test_return_bundle_atomically_replaces_existing_output(self) -> None:
+        """A completed temporary archive replaces output without leftover files."""
+        source = self.data_dir / "evidence.jsonl"
+        source.write_text('{"state":"PASS"}\n', encoding="utf-8")
+        output = self.data_dir / "return.zip"
+        output.write_text("previous output", encoding="utf-8")
+        build_return_bundle(
+            files=[source],
+            output_path=output,
+            policy={
+                "automatic_upload_allowed": False,
+                "allowed_extensions": [".jsonl"],
+                "max_bundle_bytes": 1024,
+            },
+            consent=True,
+            purpose="support",
+            hardware_id="MRL_hardware_test",
+            model_release_id="MRL_model_test",
+        )
+        self.assertTrue(verify_return_bundle(output)["ok"])
+        self.assertEqual(list(self.data_dir.glob(".return.zip.*.tmp")), [])
+
     def test_return_bundle_rejects_duplicate_archive_members(self) -> None:
         """Duplicate ZIP members cannot be hidden by set-based coverage checks."""
         output = self.data_dir / "duplicate.zip"
