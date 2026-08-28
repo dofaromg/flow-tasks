@@ -16,6 +16,13 @@ The package is additive. It does not rename or overwrite the existing mother mod
 
 The canonical deployment boundary is hardware-neutral: GitHub distributes the construction package, MRL distributes a separately checksummed model release, and the customer runs both on hardware they control. Local records do not leave that hardware unless the customer explicitly builds and submits an MRL return bundle.
 
+## 中文架構摘要
+
+這個子層把「本機模型推理、記憶、證據、萬用通行證、APIWorks」接成同一條
+可驗證迴路。Runtime 只允許連線到使用者硬體上的 loopback 模型服務；推理結果
+先寫入不可變記憶與證據鏈，再簽發保留來源身份與 Return Anchor 的 Passport。
+可變執行資料放在驗證包之外，避免污染 GitHub 建構包的 32／32 完整性證據。
+
 ## Runtime flow
 
 ```mermaid
@@ -67,3 +74,14 @@ Universal Passports use a separate additive version chain. `source_identity` is 
 5. Add signed Passport transitions and canonical-world Evidence Gate.
 6. Expose through APIWorks after authentication, rate-limit, billing and privacy Gates exist.
 7. Connect CareOS only after its data classification and consent Gate is defined.
+
+## Runnable verification example／可執行驗證範例
+
+在 repository root 執行以下命令，可驗證檔案覆蓋、SHA-256、母體父鏈及本機
+Runtime 合約；這不會連接任何外部模型 API。
+
+```powershell
+python MRL_Mother\MRL_MotherModel\MRL_AI_Mother_Autonomous_Runtime_Baseline_v1\scripts\MRL_verify_package_v1.py
+python MRL_Mother\MRL_MotherModel\scripts\mrl_mothermodel_verify.py
+python -m unittest discover -s MRL_Mother\MRL_MotherModel\MRL_AI_Mother_Autonomous_Runtime_Baseline_v1\tests -v
+```
