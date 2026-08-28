@@ -17,7 +17,7 @@
 | Process restart persistence | Code path present | Required follow-up test |
 | External API disconnected | Static Gate | Network-isolated run required |
 | Hardware utilization | Not available in CI | Optional performance baseline |
-| Model release manifest | Schema validation | Receipt hash must match |
+| Model release manifest | Schema validation | Model artifact must match manifest `sha256` |
 | Return requires explicit consent | Required | Required |
 | Return manifest coverage/SHA-256 | Required | Recheck before submission |
 | Background upload disabled | Required | Required |

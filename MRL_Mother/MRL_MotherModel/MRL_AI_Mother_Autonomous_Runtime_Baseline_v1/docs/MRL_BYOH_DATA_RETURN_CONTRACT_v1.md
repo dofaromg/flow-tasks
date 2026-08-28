@@ -25,6 +25,8 @@ GitHub carries the construction package. The user runs the supplied MRL model an
 
 There is no background telemetry and no automatic upload. The package creates a ZIP containing only explicitly selected files plus `MRL_RETURN_MANIFEST.json`. The manifest records hardware ID, model release ID, purpose, consent, file sizes and SHA-256 values. Secret-like filenames, empty files, disallowed extensions, duplicate names and oversized bundles are rejected locally.
 
+The builder resolves every selected source and the output path before opening the ZIP. It rejects an output path that names or aliases a selected source, so a failed build cannot truncate that source.
+
 The receiving API, authentication, retention period, deletion workflow and commercial terms are a separate release Gate. Until those are implemented, bundle creation is ready but network submission remains `RECEIVER_GATE_OPEN`.
 
 ## State model

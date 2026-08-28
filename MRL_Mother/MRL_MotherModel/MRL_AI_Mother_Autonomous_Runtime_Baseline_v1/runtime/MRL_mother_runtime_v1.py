@@ -86,7 +86,8 @@ class MRLMotherRuntime:
             raise ValueError("prompt must not be empty")
         if not world_id.startswith("MRL_"):
             raise ValueError("world_id must use the MRL_ canonical prefix")
-        session_id = session_id or f"MRL_session_{uuid.uuid4().hex}"
+        if session_id is None:
+            session_id = f"MRL_session_{uuid.uuid4().hex}"
         if not isinstance(session_id, str) or not re.fullmatch(
             r"MRL_session_[A-Za-z0-9_.:-]+", session_id
         ):

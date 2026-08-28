@@ -22,6 +22,7 @@ class MRLReturnBundleError(ValueError):
 
 
 def _sha256(path: Path) -> str:
+    """Return the SHA-256 digest for one regular file or propagate I/O failure."""
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
@@ -30,6 +31,7 @@ def _sha256(path: Path) -> str:
 
 
 def load_policy(path: Path) -> dict[str, Any]:
+    """Load a return policy and reject non-object or auto-upload configurations."""
     policy = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(policy, dict):
         raise MRLReturnBundleError("return policy must be a JSON object")
@@ -90,6 +92,19 @@ def build_return_bundle(
     if max_bytes <= 0 or total_bytes > max_bytes:
         raise MRLReturnBundleError("selected files exceed the configured bundle limit")
 
+    resolved_output = output_path.resolve(strict=False)
+    for source in validated_sources:
+        aliases_source = resolved_output == source
+        if output_path.exists():
+            try:
+                aliases_source = aliases_source or output_path.samefile(source)
+            except OSError:
+                pass
+        if aliases_source:
+            raise MRLReturnBundleError(
+                f"output path aliases selected source: {source.name}"
+            )
+
     manifest = {
         "schema": "MRL_Return_Bundle_v1",
         "bundle_id": f"MRL_return_{uuid.uuid4().hex}",
@@ -111,9 +126,12 @@ def build_return_bundle(
 
 
 def verify_return_bundle(path: Path) -> dict[str, Any]:
-    """Verify manifest coverage, sizes and SHA-256 values without extracting files."""
+    """Verify manifest semantics, coverage, sizes and hashes without extraction."""
     with zipfile.ZipFile(path, "r") as archive:
-        names = set(archive.namelist())
+        member_names = archive.namelist()
+        if len(member_names) != len(set(member_names)):
+            return {"ok": False, "reason": "payload_coverage_mismatch"}
+        names = set(member_names)
         if MANIFEST_NAME not in names:
             return {"ok": False, "reason": "manifest_missing"}
         try:
@@ -139,11 +157,30 @@ def verify_return_bundle(path: Path) -> dict[str, Any]:
         if any(
             not isinstance(entry, dict)
             or not isinstance(entry.get("name"), str)
+            or not entry.get("name")
             or not isinstance(entry.get("size"), int)
+            or isinstance(entry.get("size"), bool)
+            or entry.get("size", 0) <= 0
             or not isinstance(entry.get("sha256"), str)
             for entry in manifest["files"]
         ):
             return {"ok": False, "reason": "manifest_file_entry_malformed"}
+        consent = manifest.get("consent")
+        if consent != {"explicit": True, "automatic_upload": False}:
+            return {"ok": False, "reason": "manifest_consent_invalid"}
+        if manifest.get("schema") != "MRL_Return_Bundle_v1":
+            return {"ok": False, "reason": "manifest_schema_invalid"}
+        if manifest.get("origin_signature") != ORIGIN_SIGNATURE:
+            return {"ok": False, "reason": "manifest_origin_invalid"}
+        if not isinstance(manifest.get("total_bytes"), int) or isinstance(
+            manifest.get("total_bytes"), bool
+        ):
+            return {"ok": False, "reason": "manifest_total_bytes_invalid"}
+        payload_names = [entry["name"] for entry in manifest["files"]]
+        if len(payload_names) != len(set(payload_names)):
+            return {"ok": False, "reason": "payload_coverage_mismatch"}
+        if manifest["total_bytes"] != sum(entry["size"] for entry in manifest["files"]):
+            return {"ok": False, "reason": "manifest_total_bytes_mismatch"}
         expected = {f"payload/{entry['name']}" for entry in manifest["files"]}
         actual = {n for n in names if not n.endswith("/")} - {MANIFEST_NAME}
         if actual != expected:
@@ -163,6 +200,7 @@ def verify_return_bundle(path: Path) -> dict[str, Any]:
 
 
 def main() -> int:
+    """Build one explicit-consent bundle from CLI arguments and return its status."""
     parser = argparse.ArgumentParser(description="Build an explicit MRL return bundle")
     parser.add_argument("--policy", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)

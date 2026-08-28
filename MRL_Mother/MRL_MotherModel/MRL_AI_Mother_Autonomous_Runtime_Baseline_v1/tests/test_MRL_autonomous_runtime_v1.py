@@ -9,6 +9,8 @@ import tempfile
 import threading
 import unittest
 import urllib.request
+import warnings
+import zipfile
 from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -220,6 +222,17 @@ class MRLAutonomousRuntimeTests(unittest.TestCase):
         self.assertEqual(self.runtime.memory.chain.read_all(), [])
         self.assertEqual(self.runtime.evidence.chain.read_all(), [])
 
+    def test_blank_session_is_rejected_before_persistence(self) -> None:
+        """An explicit blank identity must not be replaced with a generated ID."""
+        with self.assertRaises(ValueError):
+            self.runtime.run(
+                prompt="must not persist",
+                world_id="MRL_test_world",
+                session_id="",
+            )
+        self.assertEqual(self.runtime.memory.chain.read_all(), [])
+        self.assertEqual(self.runtime.evidence.chain.read_all(), [])
+
     def test_apiworks_gateway_exposes_complete_audited_loop(self) -> None:
         gateway = ThreadingHTTPServer(("127.0.0.1", 0), build_handler(self.runtime))
         thread = threading.Thread(target=gateway.serve_forever, daemon=True)
@@ -335,6 +348,90 @@ class MRLAutonomousRuntimeTests(unittest.TestCase):
                 hardware_id="MRL_hardware_test",
                 model_release_id="MRL_model_test",
             )
+
+    def test_return_bundle_rejects_output_aliasing_source(self) -> None:
+        """Opening the output must never truncate a selected source file."""
+        source = self.data_dir / "evidence.jsonl"
+        original = b'{"state":"PASS"}\n'
+        source.write_bytes(original)
+        with self.assertRaises(MRLReturnBundleError):
+            build_return_bundle(
+                files=[source],
+                output_path=source,
+                policy={
+                    "automatic_upload_allowed": False,
+                    "allowed_extensions": [".jsonl"],
+                    "max_bundle_bytes": 1024,
+                },
+                consent=True,
+                purpose="support",
+                hardware_id="MRL_hardware_test",
+                model_release_id="MRL_model_test",
+            )
+        self.assertEqual(source.read_bytes(), original)
+
+    def test_return_bundle_rejects_invalid_manifest_semantics(self) -> None:
+        """Consent and total byte claims must match the verified payload."""
+        source = self.data_dir / "evidence.jsonl"
+        source.write_text('{"state":"PASS"}\n', encoding="utf-8")
+        output = self.data_dir / "return.zip"
+        build_return_bundle(
+            files=[source],
+            output_path=output,
+            policy={
+                "automatic_upload_allowed": False,
+                "allowed_extensions": [".jsonl"],
+                "max_bundle_bytes": 1024,
+            },
+            consent=True,
+            purpose="support",
+            hardware_id="MRL_hardware_test",
+            model_release_id="MRL_model_test",
+        )
+        with zipfile.ZipFile(output, "r") as archive:
+            payload = archive.read("payload/evidence.jsonl")
+            manifest = json.loads(archive.read("MRL_RETURN_MANIFEST.json"))
+        manifest["consent"]["explicit"] = False
+        with zipfile.ZipFile(output, "w") as archive:
+            archive.writestr("MRL_RETURN_MANIFEST.json", json.dumps(manifest))
+            archive.writestr("payload/evidence.jsonl", payload)
+        self.assertEqual(
+            verify_return_bundle(output)["reason"], "manifest_consent_invalid"
+        )
+
+        manifest["consent"]["explicit"] = True
+        manifest["total_bytes"] += 1
+        with zipfile.ZipFile(output, "w") as archive:
+            archive.writestr("MRL_RETURN_MANIFEST.json", json.dumps(manifest))
+            archive.writestr("payload/evidence.jsonl", payload)
+        self.assertEqual(
+            verify_return_bundle(output)["reason"], "manifest_total_bytes_mismatch"
+        )
+
+    def test_return_bundle_rejects_duplicate_archive_members(self) -> None:
+        """Duplicate ZIP members cannot be hidden by set-based coverage checks."""
+        output = self.data_dir / "duplicate.zip"
+        manifest = {
+            "schema": "MRL_Return_Bundle_v1",
+            "bundle_id": "MRL_return_duplicate",
+            "created_at": "2026-08-28T00:00:00+00:00",
+            "origin_signature": "MrLiouWord",
+            "hardware_id": "MRL_hardware_test",
+            "model_release_id": "MRL_model_test",
+            "purpose": "support",
+            "consent": {"explicit": True, "automatic_upload": False},
+            "files": [],
+            "total_bytes": 0,
+        }
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            with zipfile.ZipFile(output, "w") as archive:
+                encoded = json.dumps(manifest)
+                archive.writestr("MRL_RETURN_MANIFEST.json", encoded)
+                archive.writestr("MRL_RETURN_MANIFEST.json", encoded)
+        self.assertEqual(
+            verify_return_bundle(output)["reason"], "payload_coverage_mismatch"
+        )
 
 
 if __name__ == "__main__":

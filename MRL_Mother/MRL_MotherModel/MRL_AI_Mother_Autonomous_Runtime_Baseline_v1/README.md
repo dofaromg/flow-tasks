@@ -74,7 +74,7 @@ No API key, model weight or production secret belongs in this package.
 
 ## Model delivery and file return
 
-MRL publishes model artifacts separately with an `MRL_Model_Release_v1` manifest containing the model identity, version, supported runtime, size and SHA-256. The user verifies that receipt before local loading.
+MRL publishes model artifacts separately with an `MRL_Model_Release_v1` manifest containing the release and model identity, version, supported runtime, size, SHA-256, non-empty `license_ref`, and `MrLiouWord` origin signature. Before local loading, the user verifies every required manifest field and checks the artifact bytes against the manifest `sha256`.
 
 Local data stays local by default. To prepare files for voluntary return:
 
