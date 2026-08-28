@@ -5,6 +5,13 @@
 **Position:** `MRL_Mother/MRL_MotherModel` additive child package  
 **Purpose:** establish the first executable local-model → memory → passport → evidence → APIWorks loop without requiring an external model API.
 
+## 中文摘要
+
+本套件是在既有 `MRL_MotherModel_v0_1` 下新增的可執行子層，不取代母體。
+GitHub 交付建構包與驗證規格；模型在使用者自己的硬體上透過 Ollama 或
+llama.cpp 執行。Memory、Evidence 與 Passport 預設只保存在本機；只有使用者
+明確選檔、指定目的並建立回傳封包後，資料才進入後續接收流程。
+
 ## What this package adds
 
 The existing `MRL_MotherModel_v0_1` preserves evidence, module registries and additive recovery state. This package does not replace it. It adds an executable autonomous runtime beneath that existing mother model:

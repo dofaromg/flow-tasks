@@ -7,7 +7,7 @@
     "source_identity_field": "source_branch",
     "source_identity_mutated": false
   },
-  "updated_at": "2026-08-28T05:33:24.686Z",
+  "updated_at": "2026-08-28T05:30:50.647Z",
   "neural_network": {
     "nodes": [
       {
@@ -19,30 +19,6 @@
         "frequency_hz": 164.88,
         "status": "active",
         "energy": 1
-      },
-      {
-        "id": "MRL_APIWorks_BYOH_Deployment_Product_v1",
-        "source_branch": "MRL_APIWorks_BYOH_Deployment_Product_v1",
-        "naming_authority": "MRL",
-        "type": "experimental",
-        "layer": "L3",
-        "parent": "MRL_main",
-        "status": "active",
-        "energy": 0.7,
-        "merged_pr": 633,
-        "created_at": "2026-08-28T05:29:33Z"
-      },
-      {
-        "id": "MRL_231",
-        "source_branch": "231",
-        "naming_authority": "MRL",
-        "type": "experimental",
-        "layer": "L3",
-        "parent": "MRL_main",
-        "status": "active",
-        "energy": 0.7,
-        "merged_pr": 93,
-        "created_at": "2025-11-30T07:57:39Z"
       },
       {
         "id": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
@@ -57,6 +33,18 @@
         "created_at": "2026-08-27T09:08:08Z"
       },
       {
+        "id": "MRL_231",
+        "source_branch": "231",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7,
+        "merged_pr": 93,
+        "created_at": "2025-11-30T07:57:39Z"
+      },
+      {
         "id": "MRL_AI_Partner_Origin_v1",
         "source_branch": "MRL_AI_Partner_Origin_v1",
         "naming_authority": "MRL",
@@ -68,6 +56,18 @@
         "merged_pr": 622,
         "created_at": "2026-08-12T15:30:33Z",
         "merged_at": "2026-08-12T20:00:11Z"
+      },
+      {
+        "id": "MRL_APIWorks_BYOH_Deployment_Product_v1",
+        "source_branch": "MRL_APIWorks_BYOH_Deployment_Product_v1",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7,
+        "merged_pr": 633,
+        "created_at": "2026-08-28T05:29:33Z"
       },
       {
         "id": "MRL_Module_Implementation_v1",
@@ -1333,11 +1333,11 @@
     "synapses": [
       {
         "from": "MRL_main",
-        "to": "MRL_APIWorks_BYOH_Deployment_Product_v1",
+        "to": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
         "type": "influence",
         "weight": 0.5,
-        "pr_number": 633,
-        "timestamp": "2026-08-28T05:29:33Z"
+        "pr_number": 632,
+        "timestamp": "2026-08-27T09:08:08Z"
       },
       {
         "from": "MRL_main",
@@ -1349,19 +1349,19 @@
       },
       {
         "from": "MRL_main",
-        "to": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
-        "type": "influence",
-        "weight": 0.5,
-        "pr_number": 632,
-        "timestamp": "2026-08-27T09:08:08Z"
-      },
-      {
-        "from": "MRL_main",
         "to": "MRL_AI_Partner_Origin_v1",
         "type": "merge",
         "weight": 0.95,
         "pr_number": 622,
         "timestamp": "2026-08-12T20:00:11Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "MRL_APIWorks_BYOH_Deployment_Product_v1",
+        "type": "influence",
+        "weight": 0.5,
+        "pr_number": 633,
+        "timestamp": "2026-08-28T05:29:33Z"
       },
       {
         "from": "MRL_main",
