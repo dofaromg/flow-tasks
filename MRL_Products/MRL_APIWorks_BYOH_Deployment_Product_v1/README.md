@@ -45,27 +45,3 @@ python scripts\MRL_verify_product_source_v1.py
 ```
 
 輸出位於 `dist/`；`dist/` 是可重建產物，不納入來源封包。
-*** Add File: repo/MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/MANIFEST.json
-{
-  "schema": "MRL_Commercial_Product_Manifest_v1",
-  "canonical_id": "MRL_APIWorks_BYOH_Deployment_Product_v1",
-  "display_name": "MRL APIWorks BYOH Deployment Product v1",
-  "sku": "MRL-APIWORKS-BYOH-DEPLOY-V1",
-  "version": "1.0.0-rc1",
-  "origin_signature": "MrLiouWord",
-  "parent_runtime": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
-  "sale_model": "SIGNED_ORDER_FORM",
-  "price_model": "CUSTOM_QUOTE",
-  "included_customer_organizations": 1,
-  "included_byoh_nodes": 1,
-  "stabilization_support_days": 30,
-  "expected_source_file_count": 12,
-  "release_gates": {
-    "product_source": "CANDIDATE",
-    "parent_runtime_ci": "REQUIRED_PASS",
-    "customer_real_model_acceptance": "REQUIRED_PER_ORDER",
-    "legal_order_form": "REQUIRED_PER_ORDER",
-    "payment_collection": "REQUIRED_PER_ORDER"
-  }
-}
-
