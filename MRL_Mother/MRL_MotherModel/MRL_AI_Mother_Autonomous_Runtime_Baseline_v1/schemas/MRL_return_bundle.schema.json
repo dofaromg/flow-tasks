@@ -3,18 +3,35 @@
   "$id": "MRL_return_bundle.schema.json",
   "title": "MRL Return Bundle v1",
   "type": "object",
-  "required": ["bundle_id", "hardware_id", "model_release_id", "purpose", "consent", "files", "origin_signature"],
+  "required": ["schema", "bundle_id", "created_at", "hardware_id", "model_release_id", "purpose", "consent", "files", "total_bytes", "origin_signature"],
   "properties": {
+    "schema": {"const": "MRL_Return_Bundle_v1"},
     "bundle_id": {"type": "string", "pattern": "^MRL_return_"},
+    "created_at": {"type": "string", "format": "date-time"},
     "hardware_id": {"type": "string", "minLength": 1},
     "model_release_id": {"type": "string", "pattern": "^MRL_"},
     "purpose": {"type": "string", "minLength": 1},
     "consent": {
       "type": "object",
       "required": ["explicit", "automatic_upload"],
-      "properties": {"explicit": {"const": true}, "automatic_upload": {"const": false}}
+      "properties": {"explicit": {"const": true}, "automatic_upload": {"const": false}},
+      "additionalProperties": false
     },
-    "files": {"type": "array", "minItems": 1},
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "size", "sha256"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "size": {"type": "integer", "minimum": 1},
+          "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "total_bytes": {"type": "integer", "minimum": 1},
     "origin_signature": {"const": "MrLiouWord"}
   },
   "additionalProperties": false

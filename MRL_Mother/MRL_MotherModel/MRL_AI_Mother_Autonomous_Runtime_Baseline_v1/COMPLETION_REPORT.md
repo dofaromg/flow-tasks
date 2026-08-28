@@ -20,6 +20,19 @@ Begin the bottom-up architecture for an MRL-owned AI mother model, prioritize re
 - architecture, acceptance, dependency and audit documentation;
 - expected-file and SHA-256 evidence.
 
+## Evidence-closure hardening
+
+- Passport filenames use a collision-free canonical-ID digest.
+- Passport version allocation and ledger reads are serialized for the threaded gateway.
+- Invalid session identities are rejected before Memory or Evidence persistence.
+- Model health requires the configured model to be present, not merely a reachable server.
+- Redirects cannot move local model traffic outside loopback.
+- Mutable runtime data defaults outside the checksummed construction package.
+- Return manifests, resolved payload paths and streaming verification use one strict contract.
+- Package coverage and checksums: `32/32`, missing/extra/empty/mismatch: `0/0/0/0`.
+- Runtime and return-bundle regression tests: `15/15 PASS`.
+- Parent MotherModel and repository MRL governance: `PASS`.
+
 ## Completion boundary
 
 GitHub construction package: `DELIVERY_PASS` after CI verification.

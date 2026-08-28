@@ -2,7 +2,7 @@
   "schema": "MRL_GitHub_Construction_Package_Manifest_v1",
   "canonical_id": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
   "display_name": "MRL AI Mother Autonomous Runtime Baseline v1",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "origin_signature": "MrLiouWord",
   "parent": "MRL_MotherModel_v0_1",
   "source_branch": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",

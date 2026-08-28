@@ -4,7 +4,7 @@ param(
     [string]$ConfigPath = "..\config\MRL_runtime.local.example.json",
 
     [Parameter(Mandatory = $false)]
-    [string]$DataDirectory = "..\MRL_runtime_data",
+    [string]$DataDirectory = "..\..\MRL_AI_Mother_Runtime_Data",
 
     [Parameter(Mandatory = $false)]
     [int]$Port = 7811
@@ -31,4 +31,3 @@ try {
 finally {
     Pop-Location
 }
-

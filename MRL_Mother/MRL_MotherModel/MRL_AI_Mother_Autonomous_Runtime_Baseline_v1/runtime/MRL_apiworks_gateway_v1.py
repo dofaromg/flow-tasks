@@ -62,10 +62,13 @@ def build_handler(runtime: MRLMotherRuntime) -> type[BaseHTTPRequestHandler]:
             try:
                 body = _read_json(self)
                 if self.path == "/v1/mother/run":
+                    session_id = body.get("session_id")
+                    if session_id is not None and not isinstance(session_id, str):
+                        raise ValueError("session_id must be a string or null")
                     result = runtime.run(
                         prompt=str(body.get("prompt") or ""),
                         world_id=str(body.get("world_id") or "MRL_main"),
-                        session_id=body.get("session_id"),
+                        session_id=session_id,
                         system_prompt=str(
                             body.get("system_prompt")
                             or "You are the local MRL AI mother runtime."
@@ -110,4 +113,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

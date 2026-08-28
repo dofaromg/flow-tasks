@@ -5,7 +5,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED = ROOT / "EXPECTED_FILE_LIST.txt"
@@ -55,16 +57,43 @@ def main() -> int:
         and sha256(ROOT / name) != checksum_rows[name]
     )
 
-    forbidden = ("api.openai.com", "api.anthropic.com", "generativelanguage.googleapis.com")
     autonomy_violations: list[str] = []
+    config = json.loads(
+        (ROOT / "config" / "MRL_runtime.local.example.json").read_text(encoding="utf-8")
+    )
+    required_policy = {
+        "local_model_required": True,
+        "external_model_endpoints_allowed": False,
+        "stub_counts_as_inference": False,
+        "loopback_gateway_only": True,
+    }
+    if config.get("autonomy_policy") != required_policy:
+        autonomy_violations.append("config/MRL_runtime.local.example.json:autonomy_policy")
+    endpoint = str((config.get("local_model") or {}).get("endpoint") or "")
+    endpoint_url = urlparse(endpoint)
+    if endpoint_url.scheme not in {"http", "https"} or endpoint_url.hostname not in {
+        "127.0.0.1",
+        "localhost",
+        "::1",
+    }:
+        autonomy_violations.append("config/MRL_runtime.local.example.json:local_model.endpoint")
+    gateway_host = str((config.get("apiworks_gateway") or {}).get("host") or "")
+    if gateway_host not in {"127.0.0.1", "localhost", "::1"}:
+        autonomy_violations.append("config/MRL_runtime.local.example.json:apiworks_gateway.host")
+
     policy_files = list((ROOT / "runtime").glob("*.py")) + [
         ROOT / "config" / "MRL_runtime.local.example.json"
     ]
     for path in policy_files:
         content = path.read_text(encoding="utf-8")
-        for hostname in forbidden:
-            if hostname in content:
-                autonomy_violations.append(f"{path.relative_to(ROOT)}:{hostname}")
+        for candidate in re.findall(r'https?://[^\s"\']+', content):
+            if "{" in candidate or "}" in candidate:
+                continue
+            hostname = urlparse(candidate.rstrip("/),]")).hostname
+            if hostname not in {"127.0.0.1", "localhost", "::1"}:
+                autonomy_violations.append(
+                    f"{path.relative_to(ROOT)}:non_loopback_url:{hostname or candidate}"
+                )
 
     report = {
         "canonical_id": manifest.get("canonical_id"),
@@ -90,4 +119,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -64,6 +64,7 @@ def build_return_bundle(
     blocked_names = {str(item).lower() for item in policy.get("blocked_filenames", [])}
     total_bytes = 0
     entries: list[dict[str, Any]] = []
+    validated_sources: list[Path] = []
     seen_names: set[str] = set()
 
     for raw in selected:
@@ -84,6 +85,7 @@ def build_return_bundle(
             raise MRLReturnBundleError(f"empty file rejected: {source.name}")
         total_bytes += size
         entries.append({"name": source.name, "size": size, "sha256": _sha256(source)})
+        validated_sources.append(source)
 
     if max_bytes <= 0 or total_bytes > max_bytes:
         raise MRLReturnBundleError("selected files exceed the configured bundle limit")
@@ -103,7 +105,7 @@ def build_return_bundle(
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         archive.writestr(MANIFEST_NAME, json.dumps(manifest, ensure_ascii=False, indent=2))
-        for source in selected:
+        for source in validated_sources:
             archive.write(source, arcname=f"payload/{source.name}")
     return {"manifest": manifest, "bundle_path": str(output_path), "bundle_sha256": _sha256(output_path)}
 
@@ -120,15 +122,42 @@ def verify_return_bundle(path: Path) -> dict[str, Any]:
                 return {"ok": False, "reason": "manifest_malformed"}
         except (ValueError, KeyError) as exc:
             return {"ok": False, "reason": f"manifest_parse_error: {exc}"}
+        required = {
+            "schema",
+            "bundle_id",
+            "created_at",
+            "origin_signature",
+            "hardware_id",
+            "model_release_id",
+            "purpose",
+            "consent",
+            "files",
+            "total_bytes",
+        }
+        if not required.issubset(manifest):
+            return {"ok": False, "reason": "manifest_required_field_missing"}
+        if any(
+            not isinstance(entry, dict)
+            or not isinstance(entry.get("name"), str)
+            or not isinstance(entry.get("size"), int)
+            or not isinstance(entry.get("sha256"), str)
+            for entry in manifest["files"]
+        ):
+            return {"ok": False, "reason": "manifest_file_entry_malformed"}
         expected = {f"payload/{entry['name']}" for entry in manifest["files"]}
         actual = {n for n in names if not n.endswith("/")} - {MANIFEST_NAME}
         if actual != expected:
             return {"ok": False, "reason": "payload_coverage_mismatch"}
         for entry in manifest["files"]:
-            payload = archive.read(f"payload/{entry['name']}")
-            if len(payload) != entry["size"]:
+            size = 0
+            digest = hashlib.sha256()
+            with archive.open(f"payload/{entry['name']}", "r") as payload:
+                for chunk in iter(lambda: payload.read(1024 * 1024), b""):
+                    size += len(chunk)
+                    digest.update(chunk)
+            if size != entry["size"]:
                 return {"ok": False, "reason": "size_mismatch", "file": entry["name"]}
-            if hashlib.sha256(payload).hexdigest() != entry["sha256"]:
+            if digest.hexdigest() != entry["sha256"]:
                 return {"ok": False, "reason": "sha256_mismatch", "file": entry["name"]}
     return {"ok": True, "files": len(expected), "bundle_sha256": _sha256(path)}
 

@@ -41,7 +41,13 @@ def _json_request(url: str, payload: dict[str, Any] | None, timeout: int) -> dic
         headers={"Accept": "application/json", "Content-Type": "application/json"},
         method="GET" if payload is None else "POST",
     )
-    with urllib.request.urlopen(request, timeout=timeout) as response:
+    class _LoopbackRedirectHandler(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg, headers, newurl):  # type: ignore[no-untyped-def]
+            require_loopback_endpoint(newurl)
+            return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+    opener = urllib.request.build_opener(_LoopbackRedirectHandler())
+    with opener.open(request, timeout=timeout) as response:
         decoded = json.loads(response.read().decode("utf-8"))
     if not isinstance(decoded, dict):
         raise MRLModelGateError("local model returned a non-object response")
@@ -69,6 +75,22 @@ class MRLLocalModelAdapter:
         path = "/api/tags" if self.backend == "ollama" else "/v1/models"
         try:
             response = _json_request(f"{self.endpoint}{path}", None, 5)
+            if self.backend == "ollama":
+                available = {
+                    str(value)
+                    for item in response.get("models", [])
+                    if isinstance(item, dict)
+                    for value in (item.get("name"), item.get("model"))
+                    if value
+                }
+            else:
+                available = {
+                    str(item.get("id"))
+                    for item in response.get("data", [])
+                    if isinstance(item, dict) and item.get("id")
+                }
+            if self.model not in available:
+                raise MRLModelGateError("configured local model is not available")
             return {
                 "ready": True,
                 "backend": self.backend,
@@ -125,4 +147,3 @@ class MRLLocalModelAdapter:
             "external_model_required": False,
             "origin_signature": ORIGIN_SIGNATURE,
         }
-

@@ -9,6 +9,7 @@ import tempfile
 import threading
 import unittest
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -91,6 +92,38 @@ class MRLAutonomousRuntimeTests(unittest.TestCase):
         self.assertEqual(health["autonomy_gate"], "PASS")
         self.assertFalse(health["external_model_required"])
 
+    def test_health_rejects_missing_configured_model(self) -> None:
+        missing = MRLMotherRuntime(
+            {
+                "local_model": {
+                    "backend": "ollama",
+                    "endpoint": f"http://127.0.0.1:{self.server.server_port}",
+                    "model": "MRL_missing_model",
+                }
+            },
+            self.data_dir / "missing-model",
+        )
+        self.assertFalse(missing.health()["ready"])
+
+    def test_rejects_disabled_autonomy_policy(self) -> None:
+        with self.assertRaises(ValueError):
+            MRLMotherRuntime(
+                {
+                    "autonomy_policy": {
+                        "local_model_required": True,
+                        "external_model_endpoints_allowed": True,
+                        "stub_counts_as_inference": False,
+                        "loopback_gateway_only": True,
+                    },
+                    "local_model": {
+                        "backend": "ollama",
+                        "endpoint": f"http://127.0.0.1:{self.server.server_port}",
+                        "model": "MRL_test_model",
+                    },
+                },
+                self.data_dir / "bad-policy",
+            )
+
     def test_full_runtime_loop_persists_memory_evidence_and_passport(self) -> None:
         result = self.runtime.run(
             prompt="remember this particle",
@@ -140,6 +173,52 @@ class MRLAutonomousRuntimeTests(unittest.TestCase):
         self.assertEqual(second["version"], 2)
         self.assertEqual(second["previous_passport_hash"], first["passport_hash"])
         self.assertTrue(registry.verify("MRL_asset_1")["ok"])
+
+    def test_passport_storage_keys_do_not_collide(self) -> None:
+        registry = MRLPassportRegistry(self.data_dir)
+        for canonical_id in ("MRL_asset_a/b", "MRL_asset_a_b"):
+            registry.issue(
+                canonical_id=canonical_id,
+                source_identity=canonical_id,
+                world_state="source",
+                capabilities=[],
+                evidence_refs=[],
+                return_anchor="origin",
+                environment={},
+            )
+        self.assertEqual(registry.latest("MRL_asset_a/b")["canonical_id"], "MRL_asset_a/b")
+        self.assertEqual(registry.latest("MRL_asset_a_b")["canonical_id"], "MRL_asset_a_b")
+        self.assertEqual(len(list((self.data_dir / "passports").glob("*.jsonl"))), 2)
+
+    def test_passport_version_allocation_is_thread_safe(self) -> None:
+        registry = MRLPassportRegistry(self.data_dir)
+
+        def issue(index: int) -> int:
+            passport = registry.issue(
+                canonical_id="MRL_asset_concurrent",
+                source_identity="source/concurrent",
+                world_state="candidate",
+                capabilities=[f"MRL_CAP_{index}"],
+                evidence_refs=[str(index)],
+                return_anchor="origin",
+                environment={},
+            )
+            return int(passport["version"])
+
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            versions = list(executor.map(issue, range(20)))
+        self.assertEqual(sorted(versions), list(range(1, 21)))
+        self.assertTrue(registry.verify("MRL_asset_concurrent")["ok"])
+
+    def test_invalid_session_is_rejected_before_persistence(self) -> None:
+        with self.assertRaises(ValueError):
+            self.runtime.run(
+                prompt="must not persist",
+                world_id="MRL_test_world",
+                session_id="invalid/session",
+            )
+        self.assertEqual(self.runtime.memory.chain.read_all(), [])
+        self.assertEqual(self.runtime.evidence.chain.read_all(), [])
 
     def test_apiworks_gateway_exposes_complete_audited_loop(self) -> None:
         gateway = ThreadingHTTPServer(("127.0.0.1", 0), build_handler(self.runtime))

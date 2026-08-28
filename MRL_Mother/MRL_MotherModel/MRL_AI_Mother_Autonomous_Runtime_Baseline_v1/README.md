@@ -35,9 +35,13 @@ cd MRL_Mother\MRL_MotherModel\MRL_AI_Mother_Autonomous_Runtime_Baseline_v1\scrip
 .\MRL_start_runtime_v1.ps1
 ```
 
+The launcher stores mutable Memory, Evidence and Passport data in the sibling
+`MRL_AI_Mother_Runtime_Data` directory, outside this checksummed package.
+
 4. In a second PowerShell window, run:
 
 ```powershell
+cd MRL_Mother\MRL_MotherModel\MRL_AI_Mother_Autonomous_Runtime_Baseline_v1\scripts
 .\MRL_acceptance_v1.ps1
 ```
 
@@ -69,7 +73,7 @@ Local data stays local by default. To prepare files for voluntary return:
 
 ```powershell
 .\MRL_prepare_return_bundle_v1.ps1 `
-  -Files ".\MRL_runtime_data\memory.jsonl" `
+  -Files "..\..\MRL_AI_Mother_Runtime_Data\memory.jsonl" `
   -Purpose "support evidence" `
   -HardwareId "MRL_user_hardware_01" `
   -ModelReleaseId "MRL_model_release_01" `

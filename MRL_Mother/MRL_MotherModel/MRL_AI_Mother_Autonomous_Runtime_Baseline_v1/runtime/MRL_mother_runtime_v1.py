@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 import uuid
 from pathlib import Path
 from typing import Any
@@ -20,6 +21,22 @@ class MRLMotherRuntime:
 
     def __init__(self, config: dict[str, Any], data_dir: Path) -> None:
         self.config = config
+        policy = config.get("autonomy_policy") or {
+            "local_model_required": True,
+            "external_model_endpoints_allowed": False,
+            "stub_counts_as_inference": False,
+            "loopback_gateway_only": True,
+        }
+        required_policy = {
+            "local_model_required": True,
+            "external_model_endpoints_allowed": False,
+            "stub_counts_as_inference": False,
+            "loopback_gateway_only": True,
+        }
+        if not isinstance(policy, dict) or any(
+            policy.get(key) is not value for key, value in required_policy.items()
+        ):
+            raise ValueError("autonomy_policy must enforce local-only real inference")
         self.data_dir = data_dir
         self.data_dir.mkdir(parents=True, exist_ok=True)
         model = config.get("local_model") or {}
@@ -70,6 +87,10 @@ class MRLMotherRuntime:
         if not world_id.startswith("MRL_"):
             raise ValueError("world_id must use the MRL_ canonical prefix")
         session_id = session_id or f"MRL_session_{uuid.uuid4().hex}"
+        if not isinstance(session_id, str) or not re.fullmatch(
+            r"MRL_session_[A-Za-z0-9_.:-]+", session_id
+        ):
+            raise ValueError("session_id must be a valid MRL_session_ identity")
         input_record = self.memory.remember(
             world_id=world_id,
             session_id=session_id,
@@ -151,4 +172,3 @@ class MRLMotherRuntime:
             "records": self.memory.recall(world_id=world_id, session_id=session_id),
             "origin_signature": ORIGIN_SIGNATURE,
         }
-

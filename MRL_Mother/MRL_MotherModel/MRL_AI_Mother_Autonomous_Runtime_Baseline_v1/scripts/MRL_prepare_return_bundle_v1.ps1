@@ -13,6 +13,9 @@ $ErrorActionPreference = "Stop"
 $ScriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
 $PackageRoot = (Resolve-Path (Join-Path $ScriptDirectory "..")).Path
 $ResolvedPolicy = (Resolve-Path (Join-Path $ScriptDirectory $Policy)).Path
+if (-not $Consent.IsPresent) {
+    throw "Explicit -Consent is required to build an MRL return bundle"
+}
 
 Push-Location $PackageRoot
 try {

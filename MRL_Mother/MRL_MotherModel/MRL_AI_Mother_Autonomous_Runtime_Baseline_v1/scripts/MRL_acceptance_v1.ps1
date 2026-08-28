@@ -7,6 +7,11 @@ param(
 $ErrorActionPreference = "Stop"
 $ScriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
 $PackageRoot = (Resolve-Path (Join-Path $ScriptDirectory "..")).Path
+$GatewayUri = [Uri]$GatewayUrl
+$LoopbackHosts = @("127.0.0.1", "localhost", "::1")
+if ($GatewayUri.Scheme -ne "http" -or $LoopbackHosts -notcontains $GatewayUri.Host) {
+    throw "MRL acceptance requires an HTTP loopback gateway"
+}
 
 Push-Location $PackageRoot
 try {
@@ -47,4 +52,3 @@ try {
 finally {
     Pop-Location
 }
-
