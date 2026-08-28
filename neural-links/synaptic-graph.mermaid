@@ -4,10 +4,10 @@ graph TD
 
   %% 節點定義
   MRL_main["● MRL_main<br/>L7"]:::trunk
-  MRL_AI_Mother_Autonomous_Runtime_Baseline_v1["● MRL_AI_Mother_Autonomous_Runtime_Baseline_v1<br/>L3 #632"]:::experimental
-  MRL_231["● MRL_231<br/>L3 #93"]:::experimental
-  MRL_AI_Partner_Origin_v1["✓ MRL_AI_Partner_Origin_v1<br/>L3 #622"]:::experimental
   MRL_APIWorks_BYOH_Deployment_Product_v1["● MRL_APIWorks_BYOH_Deployment_Product_v1<br/>L3 #633"]:::experimental
+  MRL_231["● MRL_231<br/>L3 #93"]:::experimental
+  MRL_AI_Mother_Autonomous_Runtime_Baseline_v1["● MRL_AI_Mother_Autonomous_Runtime_Baseline_v1<br/>L3 #632"]:::experimental
+  MRL_AI_Partner_Origin_v1["✓ MRL_AI_Partner_Origin_v1<br/>L3 #622"]:::experimental
   MRL_Module_Implementation_v1["✓ MRL_Module_Implementation_v1<br/>L3 #631"]:::experimental
   MRL_Outer_Automation_Fix_v1["● MRL_Outer_Automation_Fix_v1<br/>L3 #630"]:::experimental
   MRL_RelayStation_Authority_v1["✓ MRL_RelayStation_Authority_v1<br/>L3 #620"]:::experimental
@@ -119,10 +119,10 @@ graph TD
   MRL_宥麟["● MRL_宥麟<br/>L3"]:::experimental
 
   %% 連結定義
-  MRL_main -.->|active| MRL_AI_Mother_Autonomous_Runtime_Baseline_v1
-  MRL_main -.->|active| MRL_231
-  MRL_main -->|merged| MRL_AI_Partner_Origin_v1
   MRL_main -.->|active| MRL_APIWorks_BYOH_Deployment_Product_v1
+  MRL_main -.->|active| MRL_231
+  MRL_main -.->|active| MRL_AI_Mother_Autonomous_Runtime_Baseline_v1
+  MRL_main -->|merged| MRL_AI_Partner_Origin_v1
   MRL_main -->|merged| MRL_Module_Implementation_v1
   MRL_main -.->|active| MRL_Outer_Automation_Fix_v1
   MRL_main -->|merged| MRL_RelayStation_Authority_v1
