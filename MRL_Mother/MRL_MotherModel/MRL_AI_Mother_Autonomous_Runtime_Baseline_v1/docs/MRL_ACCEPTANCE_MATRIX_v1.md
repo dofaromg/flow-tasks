@@ -49,3 +49,27 @@ The live acceptance record must preserve:
 12. acceptance timestamp and operator.
 
 No stub response, mock-server response or historical machine record can replace live evidence from the specific installation being accepted.
+
+## 繁體中文驗收摘要
+
+每一台使用者硬體都必須以該次安裝的真實模型重新驗收。模型檔案的實際 SHA-256 必須等於 `MRL_Model_Release_v1.sha256`；不得以 stub、mock server 或其他機器的歷史紀錄代替。驗收紀錄必須同時封存 Git Head、硬體／Runtime 身分、Memory 與 Evidence 鏈頭、Passport hash、外部模型斷線觀察及操作時間。
+
+Example live-acceptance evidence record／真實驗收證據範例：
+
+```json
+{
+  "schema": "MRL_AI_Mother_Live_Acceptance_v1",
+  "git_head": "<verified-commit-sha>",
+  "hardware_id": "MRL_hardware_01",
+  "runtime": "ollama",
+  "model_release_id": "MRL_model_release_01",
+  "model_sha256_verified": true,
+  "health_ready": true,
+  "memory_chain_head": "<sha256>",
+  "evidence_chain_head": "<sha256>",
+  "passport_hash": "<sha256>",
+  "external_model_disconnected": true,
+  "accepted_at": "2026-08-28T00:00:00Z",
+  "operator": "<operator-id>"
+}
+```
