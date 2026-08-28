@@ -1,0 +1,9 @@
+{
+  "schema": "MRL_Return_Policy_v1",
+  "automatic_upload_allowed": false,
+  "explicit_file_selection_required": true,
+  "max_bundle_bytes": 104857600,
+  "allowed_extensions": [".json", ".jsonl", ".md", ".txt", ".csv", ".log"],
+  "blocked_filenames": [".env", "id_rsa", "id_ed25519", "credentials.json"],
+  "transport": "USER_INITIATED_UPLOAD_ONLY"
+}
