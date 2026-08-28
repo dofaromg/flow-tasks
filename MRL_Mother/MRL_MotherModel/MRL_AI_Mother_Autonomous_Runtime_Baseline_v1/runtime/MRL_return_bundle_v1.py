@@ -98,8 +98,10 @@ def build_return_bundle(
         if output_path.exists():
             try:
                 aliases_source = aliases_source or output_path.samefile(source)
-            except OSError:
-                pass
+            except OSError as exc:
+                raise MRLReturnBundleError(
+                    f"cannot verify output identity: {output_path}"
+                ) from exc
         if aliases_source:
             raise MRLReturnBundleError(
                 f"output path aliases selected source: {source.name}"
