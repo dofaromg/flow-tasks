@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MRL_Evidence_Event_v1",
+  "title": "MRL Evidence Event v1",
+  "type": "object",
+  "required": ["event_type", "state", "subject_id", "details"],
+  "properties": {
+    "event_type": {"type": "string", "minLength": 1},
+    "state": {"enum": ["PASS", "FAIL", "OPEN", "OBSERVED"]},
+    "subject_id": {"type": "string", "minLength": 1},
+    "details": {"type": "object"}
+  },
+  "additionalProperties": false
+}
+
