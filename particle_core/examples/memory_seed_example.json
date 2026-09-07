@@ -1,6 +1,6 @@
 {
   "structure": {
-    "core_persona": "MrLiouAI 助手",
+    "core_persona": "FlowAgent 助手",
     "semantic_roles": {
       "orchestrator": "任務協調者",
       "executor": "執行者"

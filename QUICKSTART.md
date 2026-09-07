@@ -1,4 +1,4 @@
-# MrLiouAI GKE 部署快速參考
+# FlowAgent GKE 部署快速參考
 
 ## 🚀 快速開始
 
@@ -26,13 +26,13 @@ kubectl apply -k cluster/overlays/monitoring
 bash scripts/validate_deployment.sh
 
 # 查看 pods
-kubectl get pods -n mrliouai
+kubectl get pods -n flowagent
 
 # 查看 services
-kubectl get svc -n mrliouai
+kubectl get svc -n flowagent
 
 # 取得 Orchestrator 外部 IP
-kubectl get svc orchestrator -n mrliouai -w
+kubectl get svc orchestrator -n flowagent -w
 ```
 
 ## 📦 部署架構
@@ -63,25 +63,25 @@ kubectl get svc orchestrator -n mrliouai -w
 ### 查看狀態
 ```bash
 # 所有資源
-kubectl get all -n mrliouai
+kubectl get all -n flowagent
 
 # Deployment 狀態
-kubectl rollout status deployment/module-a -n mrliouai
-kubectl rollout status deployment/orchestrator -n mrliouai
+kubectl rollout status deployment/module-a -n flowagent
+kubectl rollout status deployment/orchestrator -n flowagent
 
 # 查看日誌
-kubectl logs -f deployment/module-a -n mrliouai
-kubectl logs -f deployment/orchestrator -n mrliouai
+kubectl logs -f deployment/module-a -n flowagent
+kubectl logs -f deployment/orchestrator -n flowagent
 ```
 
 ### 測試服務
 ```bash
 # Port forward Module-A
-kubectl port-forward svc/module-a 8080:8080 -n mrliouai
+kubectl port-forward svc/module-a 8080:8080 -n flowagent
 curl http://localhost:8080/health
 
 # Port forward Orchestrator
-kubectl port-forward svc/orchestrator 8081:80 -n mrliouai
+kubectl port-forward svc/orchestrator 8081:80 -n flowagent
 curl http://localhost:8081/health
 
 # 測試 Orchestrator
@@ -96,11 +96,11 @@ curl -X POST http://localhost:8081/orchestrate \
 kubectl apply -k cluster/overlays/prod
 
 # 重啟 deployment
-kubectl rollout restart deployment/module-a -n mrliouai
-kubectl rollout restart deployment/orchestrator -n mrliouai
+kubectl rollout restart deployment/module-a -n flowagent
+kubectl rollout restart deployment/orchestrator -n flowagent
 
 # 擴展 replicas
-kubectl scale deployment/module-a --replicas=3 -n mrliouai
+kubectl scale deployment/module-a --replicas=3 -n flowagent
 ```
 
 ### 查看監控
@@ -155,19 +155,19 @@ git push origin main
 ### Pods 無法啟動
 ```bash
 # 查看 pod 詳情
-kubectl describe pod <pod-name> -n mrliouai
+kubectl describe pod <pod-name> -n flowagent
 
 # 查看事件
-kubectl get events -n mrliouai --sort-by='.lastTimestamp'
+kubectl get events -n flowagent --sort-by='.lastTimestamp'
 
 # 查看日誌
-kubectl logs <pod-name> -n mrliouai
+kubectl logs <pod-name> -n flowagent
 ```
 
 ### 映像拉取失敗
 ```bash
 # 確保節點有權限訪問 Artifact Registry
-gcloud projects add-iam-policy-binding mrliouai \
+gcloud projects add-iam-policy-binding flowmemorysync \
   --member="serviceAccount:$(gcloud container clusters describe modular-cluster \
     --zone=asia-east1-a --format='value(nodeConfig.serviceAccount)')" \
   --role="roles/artifactregistry.reader"
@@ -176,7 +176,7 @@ gcloud projects add-iam-policy-binding mrliouai \
 ### Service 無法連接
 ```bash
 # 測試內部連接
-kubectl run test-pod --rm -i --tty --image=busybox -n mrliouai -- sh
+kubectl run test-pod --rm -i --tty --image=busybox -n flowagent -- sh
 # 在 pod 中:
 wget -O- http://module-a:8080/health
 wget -O- http://mongodb:27017
@@ -185,7 +185,7 @@ wget -O- http://mongodb:27017
 ## 📊 資源清單
 
 ### Namespaces
-- `mrliouai`: 應用程式
+- `flowagent`: 應用程式
 - `monitoring`: 監控系統
 
 ### Services
@@ -230,7 +230,7 @@ wget -O- http://mongodb:27017
 
 ## 🔗 有用連結
 
-- [GKE 控制台](https://console.cloud.google.com/kubernetes/list?project=mrliouai)
-- [Artifact Registry](https://console.cloud.google.com/artifacts?project=mrliouai)
-- [Cloud Shell](https://console.cloud.google.com/?cloudshell=true&project=mrliouai)
+- [GKE 控制台](https://console.cloud.google.com/kubernetes/list?project=flowmemorysync)
+- [Artifact Registry](https://console.cloud.google.com/artifacts?project=flowmemorysync)
+- [Cloud Shell](https://console.cloud.google.com/?cloudshell=true&project=flowmemorysync)
 - [GitHub Actions](https://github.com/dofaromg/flow-tasks/actions)

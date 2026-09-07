@@ -29,7 +29,7 @@ def diff_patch(base, new, out_dir="patches"):
     print(f"✅ 壓縮補丁檔已產生：{out_file}")
 
 if __name__ == "__main__":
-    print("📦 MrLiouAI 語場變異壓縮封裝器")
+    print("📦 FlowAgent 語場變異壓縮封裝器")
     b = input("請輸入 base fltnz 檔案：").strip()
     n = input("請輸入 new  fltnz 檔案：").strip()
     if not os.path.exists(b) or not os.path.exists(n):

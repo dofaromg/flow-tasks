@@ -1,6 +1,6 @@
 # 04_runtime
 
-MrLiouAI execution kernel (L7 LOOP layer).
+FlowAgent execution kernel (L7 LOOP layer).
 
 ## Files
 

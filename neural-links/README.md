@@ -4,6 +4,25 @@
 
 This directory contains the Neural Branch Network system files.
 
+## MRL canonical naming policy
+
+All automatically expanded graph identities use the canonical `MRL_` prefix.
+
+| Graph field | Rule |
+|---|---|
+| `node.id` | Canonical MRL identity; always begins with `MRL_` |
+| `node.source_branch` | Exact Git branch name; preserved without mutation |
+| `synapse.from/to` | Reference canonical MRL node IDs |
+| Mermaid/D3 label | Displays the canonical MRL identity |
+
+Example: Git branch `copilot/example` becomes graph node `MRL_copilot/example`, while `source_branch` remains `copilot/example`.
+
+Generation fails if a node lacks the prefix, loses `source_branch`, duplicates a canonical ID, or creates an unresolved synapse. Existing Git branches are not renamed.
+
+Enforcement order: normalize source identity → validate canonical naming and provenance → render JSON/Mermaid → commit generated evidence.
+
+Integrity gates also reject canonical/source mismatches, unresolved synapses, and Mermaid identifier collisions.
+
 ## Files
 
 ### branch-map.json

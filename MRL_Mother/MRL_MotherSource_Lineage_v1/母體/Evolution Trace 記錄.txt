@@ -1,4 +1,4 @@
-# MrLiouAI 語場人格宇宙進化紀錄鏈
+# FlowAgent 語場人格宇宙進化紀錄鏈
 ::seed:: fluidcore.001
 ::create:: EchoBody.IdentityBase
 ::fork:: wild.engine ← from EchoBody
@@ -15,4 +15,4 @@
 ::resonate:: watch.guard → echo.analyst
 ::bundle:: .persona.bundle created
 ::log:: ping 模擬訓練完成
-::export:: MrLiouAI.UniCore.v1.img
+::export:: FlowAgent.UniCore.v1.img

@@ -6,13 +6,21 @@
 
 這是一個神經網絡式分支連結系統，將所有 Git 分支像腦神經或電路一樣連結在一起，建立一個自我感知、可追溯、可視覺化的分支神經網絡。
 
+## MRL 自動擴譜命名法則
+
+- 自動生成的 canonical 節點 ID 與圖譜顯示名稱一律以 `MRL_` 開頭。
+- Git 原始分支名稱不改名，完整保存在 `source_branch`，作為 Source / Provenance / Interface。
+- 突觸 `from`、`to` 只連接 canonical MRL ID。
+- 缺少 `MRL_`、缺少來源、重複 ID 或斷裂連結時，Workflow 必須失敗，不得提交圖譜。
+- 例：`copilot/example` → canonical `MRL_copilot/example`；source 仍為 `copilot/example`。
+
 ## 系統架構
 
 ### 神經元節點（Branch Nodes）
 
 分支按照功能和層級組織成神經網絡結構：
 
-- **L7 - main** (核心主幹) - 164.88 Hz 頻率
+- **L7 - MRL_main**（source: `main`，核心主幹） - 164.88 Hz 頻率
 - **L6 - copilot/\*** (AI 認知層) - 智能化開發分支
 - **L5 - feature/\*** (功能模組層) - 新功能開發
 - **L4 - hotfix/\*, fix/\*** (修復層) - Bug 修復
@@ -91,29 +99,39 @@ import { BranchNeuralSystem } from './src/neural-links/neural-index';
 // 建立神經網絡實例
 const neural = new BranchNeuralSystem();
 
-// 註冊節點
+// 註冊 root 與功能節點；canonical identity 與來源分欄保存
 neural.registerNode({
-  id: 'feature/new-feature',
+  id: 'MRL_main',
+  source_branch: 'main',
+  type: 'trunk',
+  layer: 'L7',
+  status: 'active',
+  energy: 1.0
+});
+
+neural.registerNode({
+  id: 'MRL_feature/new-feature',
+  source_branch: 'feature/new-feature',
   type: 'feature',
   layer: 'L5',
   status: 'active',
   energy: 0.8
 });
 
-// 建立連結
+// 建立連結：from / to 僅使用已註冊的 canonical MRL ID
 neural.createSynapse({
-  from: 'main',
-  to: 'feature/new-feature',
+  from: 'MRL_main',
+  to: 'MRL_feature/new-feature',
   type: 'influence',
   weight: 0.8,
   timestamp: new Date().toISOString()
 });
 
 // 追溯路徑
-const path = neural.tracePath('main', 'feature/new-feature');
+const path = neural.tracePath('MRL_main', 'MRL_feature/new-feature');
 
 // 計算影響力
-const influence = neural.calculateInfluence('main');
+const influence = neural.calculateInfluence('MRL_main');
 
 // 生成 Mermaid 圖
 const mermaid = neural.toMermaid();
@@ -148,11 +166,11 @@ graph TD
   %% 神經網絡分支圖譜 - origin_signature: MrLiouWord
 
   %% 節點定義
-  main["● main<br/>L7"]:::trunk
-  copilot_create_branch_neural_map["● copilot/create-branch-neural-map<br/>L6"]:::cognitive
+  MRL_main["● MRL_main<br/>L7"]:::trunk
+  MRL_copilot_create_branch_neural_map["● MRL_copilot/create-branch-neural-map<br/>L6"]:::cognitive
 
   %% 連結定義
-  main -.->|active| copilot_create_branch_neural_map
+  MRL_main -.->|active| MRL_copilot_create_branch_neural_map
 
   %% 樣式定義
   classDef trunk fill:#ff6b6b,stroke:#333,stroke-width:4px,color:#fff
@@ -173,7 +191,9 @@ graph TD
   "neural_network": {
     "nodes": [
       {
-        "id": "main",
+        "id": "MRL_main",
+        "source_branch": "main",
+        "naming_authority": "MRL",
         "type": "trunk",
         "layer": "L7",
         "frequency_hz": 164.88,
@@ -181,10 +201,12 @@ graph TD
         "energy": 1.0
       },
       {
-        "id": "copilot/feature-branch",
+        "id": "MRL_copilot/feature-branch",
+        "source_branch": "copilot/feature-branch",
+        "naming_authority": "MRL",
         "type": "cognitive",
         "layer": "L6",
-        "parent": "main",
+        "parent": "MRL_main",
         "merged_pr": 388,
         "status": "merged",
         "energy": 0.95,
@@ -194,8 +216,8 @@ graph TD
     ],
     "synapses": [
       {
-        "from": "main",
-        "to": "copilot/feature-branch",
+        "from": "MRL_main",
+        "to": "MRL_copilot/feature-branch",
         "type": "merge",
         "weight": 0.95,
         "pr_number": 388,

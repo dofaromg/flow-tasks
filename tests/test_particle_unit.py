@@ -267,7 +267,7 @@ class TestParticleIntegration:
 # 測試運行入口 / Test entry point
 if __name__ == "__main__":
     print("=" * 60)
-    print("MrLiouAI 粒子執行單元測試 / Particle Execution Unit Tests")
+    print("FlowAgent 粒子執行單元測試 / Particle Execution Unit Tests")
     print("=" * 60)
     
     # 運行測試 / Run tests

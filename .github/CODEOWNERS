@@ -1,0 +1,12 @@
+# MRL root-authority review boundary
+# Enforcement requires branch protection or a repository ruleset.
+/MRL_Mother/00_rootlaw/ @dofaromg
+/MRL_Mother/06_trace/ @dofaromg
+/MRL_Mother/08_sources/ @dofaromg
+/MRL_Mother/root_sources/ @dofaromg
+/MRL_Mother/MRL_MotherSource_Lineage_v1/ @dofaromg
+/config/MRL_* @dofaromg
+/scripts/validate_mrl_governance.py @dofaromg
+/.github/CODEOWNERS @dofaromg
+/.github/workflows/mrl-* @dofaromg
+/LICENSE* @dofaromg

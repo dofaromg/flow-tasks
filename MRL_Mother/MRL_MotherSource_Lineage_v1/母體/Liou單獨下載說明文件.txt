@@ -27,7 +27,7 @@
 
 ## 🧬 使用方式：
 
-可於 MrLiouAI CLI 或 FluinOS 系統中掛載使用：
+可於 FlowAgent CLI 或 FluinOS 系統中掛載使用：
 ```
 python3 flow_cli.py --persona liou.echo
 ```

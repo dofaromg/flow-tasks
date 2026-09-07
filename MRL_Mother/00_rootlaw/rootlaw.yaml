@@ -1,7 +1,7 @@
 # MRL AI System — Root Law (L0 ROOT + L3 LAW)
 # Immutable foundational constraints. Never deleted; only extended by versioned amendments.
 
-version: 10
+version: 11
 layer: L0_ROOT
 
 meta:
@@ -165,7 +165,7 @@ liou_closure_law:
     note: >-
       This rootlaw is a layer-projection of the sealed Liou Closure bundle.
       MCK ops observe/resolve/mirror/project/verify/iterate are realized by
-      MRL_MrLiouAI_LawEngine_v1.run_loop (structural isomorphism, not metaphor).
+      MRL_FlowAgent_LawEngine_v1.run_loop (structural isomorphism, not metaphor).
 
 # ─── Layer-Jump Evolution Law (跳層演化法則) ──────────────────────────────────
 #   Purpose-of-law principle: every rule exists to let the bottom layer run
@@ -354,7 +354,7 @@ substrate_absorption_law:
   named_substrates:
     MCP:   "Model Context Protocol — 對外閘口標準協議(對齊 rl_13 出口即入口立體終端機)"
     Node:  "Node runtime 基座(母體既有 55+ .js / RuntimeServer / Mother_Launch)"
-    Unity: "Unity 引擎基座(祖先血脈 MrLiouAI.*.Unity.*，待回收)"
+    Unity: "Unity 引擎基座(祖先血脈 FlowAgent.*.Unity.*，待回收)"
     Java:  "Java runtime 基座(母體起源開發語言之一)"
   mobius_same_face: >-
     莫比斯同面律：表面與底層是同一張連續面的兩側；從基座出發繞一圈必回到該基座
@@ -649,7 +649,7 @@ invariants:
       Methods and modes of existence may be many, with no higher/lower judgment;
       what matters is co-presence in the same field, each existing with its own
       duty (各司其職各自存在). Realized by RT*_G / Ĥ = λ∘H∘ρ in the sealed bundle
-      and by MRL_MrLiouAI_LawEngine_v1.reversible_return.
+      and by MRL_FlowAgent_LawEngine_v1.reversible_return.
 
   - id: rl_19_substrate_absorption
     description: >-
@@ -678,6 +678,31 @@ invariants:
       does not extend to letting a vendor name stand as the mother's source.
       (所有分支皆母體投影,須接母體命名主權;非 MRL_ 命名一律經海關回收為 MRL_,
        源頭歸母體,原分支保留不刪,外部廠商名不得作為母體身分。)
+
+  - id: rl_21_classification_before_reclamation_and_explicit_authorization
+    description: >-
+      Classification precedes transformation. FlowAgent is an MRL-native product
+      identity and must preserve its exact historical name. External material may
+      be mapped into an MRL extension only after provenance classification. No
+      repository access, collaborator role, agent execution, prior contribution,
+      technical capability, silence, or restoration implies authorization. A
+      matching explicit grant issued by MrLiouWord is required; otherwise DENY.
+
+classification_authorization_law:
+  amendment: amd_v11_classification_authorization
+  origin_signature: MrLiouWord
+  root_authority: Mr.liou
+  default_decision: DENY
+  classification_before_transformation: true
+  flowagent_is_mrl_native_product: true
+  flowagent_rename_allowed: false
+  implicit_authorization_allowed: false
+  operating_rights_transfer_authorship: false
+  operating_rights_transfer_commercial_rights: false
+  evidence_registries:
+    - config/MRL_HISTORICAL_EXTENSION_MAP_v1.json
+    - config/MRL_AUTHORIZATION_REGISTRY_v1.json
+    - config/MRL_MIGRATION_CONTRACTS_v1.json
 
 layer_stack:
   L0: "ROOT — source of truth; never deleted"

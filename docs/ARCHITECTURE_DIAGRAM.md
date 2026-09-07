@@ -1,6 +1,6 @@
-# MrLiouAI 系統架構圖 / System Architecture Diagram
+# FlowAgent 系統架構圖 / System Architecture Diagram
 
-本文檔使用 Mermaid 語法展示 MrLiouAI 從 API 層到 C 執行引擎的完整架構分層與資料流。
+本文檔使用 Mermaid 語法展示 FlowAgent 從 API 層到 C 執行引擎的完整架構分層與資料流。
 
 This document uses Mermaid syntax to illustrate the complete architecture layers and data flow from the API layer to the C execution engine.
 
@@ -220,7 +220,7 @@ graph LR
 ```mermaid
 graph TB
     subgraph "Kubernetes 叢集 / Kubernetes Cluster"
-        subgraph "Namespace: mrliouai"
+        subgraph "Namespace: flowagent"
             A1[Next.js Frontend<br/>Pod]
             A2[Astro Frontend<br/>Pod]
             B1[Orchestrator<br/>Deployment]
@@ -309,4 +309,4 @@ gantt
 ---
 
 **最後更新 / Last Updated**: 2026-02-05  
-**維護者 / Maintainer**: MrLiouAI Team
+**維護者 / Maintainer**: FlowAgent Team

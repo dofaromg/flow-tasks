@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🌐 啟動 MrLiouAI 推理核心模組 FlowCore v1 ..."
+echo "🌐 啟動 FlowAgent 推理核心模組 FlowCore v1 ..."
 echo "🧠 掛載核心模組：FlowCore.v1.flcore.zip"
 echo "📦 掛載模組：guardian.mirror.trace.loop.bundle.v2.flpkg.zip"
 echo "🔁 載入工具：FluinTraceInterpreter + loop.player"

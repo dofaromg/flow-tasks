@@ -214,13 +214,13 @@ kubectl apply -k cluster/overlays/prod/
 ### 查看部署狀態
 ```bash
 # 查看所有資源
-kubectl get all -n mrliouai
+kubectl get all -n flowagent
 
 # 查看 Pod 狀態
-kubectl get pods -n mrliouai
+kubectl get pods -n flowagent
 
 # 查看 Service
-kubectl get svc -n mrliouai
+kubectl get svc -n flowagent
 ```
 
 ### 訪問文檔

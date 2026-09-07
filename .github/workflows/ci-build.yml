@@ -1,4 +1,4 @@
-name: CI - Build and Push MrLiouAI Container Images
+name: CI - Build and Push Container Images
 
 on:
   push:
@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 env:
-  PROJECT_ID: mrliouai
+  PROJECT_ID: flowmemorysync
   REGION: asia-east1
   REGISTRY: asia-east1-docker.pkg.dev
 
@@ -61,8 +61,8 @@ jobs:
     - name: Build Docker image
       run: |
         docker build \
-          -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/mrliouai/${{ matrix.service.name }}:${{ github.sha }} \
-          -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/mrliouai/${{ matrix.service.name }}:latest \
+          -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flowagent/${{ matrix.service.name }}:${{ github.sha }} \
+          -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flowagent/${{ matrix.service.name }}:latest \
           --build-arg NEXT_PUBLIC_GROWTHBOOK_API_HOST="${{ secrets.NEXT_PUBLIC_GROWTHBOOK_API_HOST }}" \
           --build-arg NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY="${{ secrets.NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY }}" \
           -f ${{ matrix.service.dockerfile }} \
@@ -70,13 +70,13 @@ jobs:
     
     - name: Push Docker image
       run: |
-        docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/mrliouai/${{ matrix.service.name }}:${{ github.sha }}
-        docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/mrliouai/${{ matrix.service.name }}:latest
+        docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flowagent/${{ matrix.service.name }}:${{ github.sha }}
+        docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flowagent/${{ matrix.service.name }}:latest
     
     - name: Summary
       run: |
         echo "### 🚀 Image Published" >> $GITHUB_STEP_SUMMARY
         echo "**Service:** ${{ matrix.service.name }}" >> $GITHUB_STEP_SUMMARY
         echo "**Tags:**" >> $GITHUB_STEP_SUMMARY
-        echo "- \`${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/mrliouai/${{ matrix.service.name }}:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
-        echo "- \`${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/mrliouai/${{ matrix.service.name }}:latest\`" >> $GITHUB_STEP_SUMMARY
+        echo "- \`${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flowagent/${{ matrix.service.name }}:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "- \`${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/flowagent/${{ matrix.service.name }}:latest\`" >> $GITHUB_STEP_SUMMARY

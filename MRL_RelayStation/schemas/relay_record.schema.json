@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mrl://schemas/relay_record.schema.json",
+  "title": "MRL Relay Record",
+  "type": "object",
+  "required": [
+    "record_id",
+    "source",
+    "requested_scope",
+    "generated_artifacts",
+    "provenance",
+    "verification",
+    "authority"
+  ],
+  "properties": {
+    "record_id": { "type": "string", "minLength": 1 },
+    "source": {
+      "type": "object",
+      "required": ["provider", "authority_level"],
+      "properties": {
+        "provider": { "type": "string" },
+        "model": { "type": ["string", "null"] },
+        "session": { "type": ["string", "null"] },
+        "branch": { "type": ["string", "null"] },
+        "commit": { "type": ["string", "null"] },
+        "authority_level": { "const": 0 }
+      },
+      "additionalProperties": false
+    },
+    "requested_scope": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "generated_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256", "size"],
+        "properties": {
+          "path": { "type": "string" },
+          "sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+          "size": { "type": "integer", "minimum": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["captured", "source_refs"],
+      "properties": {
+        "captured": { "type": "boolean", "const": true },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": ["status", "missing_count", "dependency_integrity", "evidence_integrity"],
+      "properties": {
+        "status": { "enum": ["pending", "passed", "failed"] },
+        "missing_count": { "type": "integer", "minimum": 0 },
+        "dependency_integrity": { "enum": ["pending", "passed", "failed"] },
+        "evidence_integrity": { "enum": ["pending", "passed", "failed"] },
+        "tests": { "enum": ["pending", "passed", "failed", "approved_exception"] }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "required": ["canonical_status", "promotion_authority"],
+      "properties": {
+        "canonical_status": { "enum": ["not_adopted", "quarantined", "adopted", "published", "revoked"] },
+        "promotion_authority": { "const": "MRL" },
+        "approval_record": { "type": ["string", "null"] }
+      }
+    }
+  },
+  "additionalProperties": false
+}

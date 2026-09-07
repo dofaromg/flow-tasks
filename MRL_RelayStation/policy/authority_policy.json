@@ -1,0 +1,85 @@
+{
+  "policy_id": "MRL_AUTHORITY_POLICY_v2",
+  "owner": "MRL",
+  "sovereign_account": "dofaromg",
+  "sovereign_role": "mother_authority",
+  "default_external_authority_level": "L0",
+  "providers": {
+    "dofaromg": {
+      "role": "mother_authority_account",
+      "may_propose": true,
+      "may_execute": true,
+      "may_promote": true,
+      "may_release": true
+    },
+    "chatgpt": {
+      "role": "external_reasoner",
+      "may_propose": true,
+      "may_execute": false,
+      "may_promote": false
+    },
+    "claude": {
+      "role": "external_reasoner_and_code_generator",
+      "may_propose": true,
+      "may_execute": false,
+      "may_promote": false
+    },
+    "copilot": {
+      "role": "external_code_agent",
+      "may_propose": true,
+      "may_execute": false,
+      "may_promote": false
+    },
+    "github": {
+      "role": "version_ledger",
+      "may_propose": false,
+      "may_execute": true,
+      "may_promote": false
+    },
+    "ci": {
+      "role": "test_evidence_provider",
+      "may_propose": false,
+      "may_execute": true,
+      "may_promote": false
+    }
+  },
+  "source_material_policy": {
+    "default_status": "material_only",
+    "may_supply_definitions": true,
+    "may_supply_examples": true,
+    "may_supply_historical_evidence": true,
+    "may_self_promote": false,
+    "may_override_sovereign_account": false,
+    "requires_reconstruction_before_product_use": true
+  },
+  "naming_authority": {
+    "canonical_origin": "mrl",
+    "random_name_policy": "deny_by_default",
+    "requirements": [
+      "randomly_generated_names_must_declare_origin_mrl",
+      "randomly_generated_names_must_use_mrl_prefix_or_namespace",
+      "randomly_generated_names_must_be_recorded_as_candidates",
+      "names_without_mrl_origin_must_not_be_constructed",
+      "names_without_provenance_must_not_be_adopted"
+    ]
+  },
+  "promotion": {
+    "L0_to_L1": ["normalize", "record_provenance"],
+    "L1_to_L2": ["verify_hashes", "verify_scope", "verify_dependencies", "run_tests"],
+    "L2_to_L3": ["explicit_dofaromg_approval"],
+    "L3_to_L4": ["release_manifest", "release_signature", "dofaromg_release_approval"],
+    "L4_to_L5": ["root_law_change_process", "explicit_dofaromg_approval"]
+  },
+  "prohibitions": [
+    "external_provider_self_promotion",
+    "model_claimed_completion_without_gate",
+    "github_commit_as_canonical_authority",
+    "ci_success_as_semantic_authority",
+    "source_branch_overwrite_by_relay",
+    "untracked_artifact_adoption",
+    "random_name_without_mrl_origin",
+    "construction_from_unprovenanced_random_name",
+    "material_source_as_sovereign_authority",
+    "promotion_without_dofaromg"
+  ]
+}

@@ -17,7 +17,7 @@ Our configuration aligns with the devcontainer specification as demonstrated in 
 }
 ```
 
-We extend this minimal specification with project-specific features, extensions, and lifecycle commands to support the MrLiouAI development workflow.
+We extend this minimal specification with project-specific features, extensions, and lifecycle commands to support the FlowAgent development workflow.
 
 ## Configuration
 

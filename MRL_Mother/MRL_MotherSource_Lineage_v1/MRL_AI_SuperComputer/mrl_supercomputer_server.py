@@ -1,7 +1,7 @@
 # origin_signature: MrLiouWord
 # MRL_AI_SuperComputer v1.0.0 — Unified Server
 # DL580 AI Supercomputer Line (port 8787)
-# Combines: FlowCore Loop + MrLiouAI API + ZoomEngine + ParticleEarth
+# Combines: FlowCore Loop + FlowAgent API + ZoomEngine + ParticleEarth
 # LAW-0 Compliant | origin_signature: MrLiouWord
 
 import os, sys, json, time, hashlib, uuid
@@ -77,12 +77,12 @@ def json_response(handler, data, status=200):
     handler.wfile.write(body)
 
 # ═══════════════════════════════════════
-# MrLiouAI Translate / Restore / Simulate
+# FlowAgent Translate / Restore / Simulate
 # ═══════════════════════════════════════
 
 fltnz_store = {}
 
-def mrliouai_translate(text, source_type="text"):
+def flowagent_translate(text, source_type="text"):
     h = hashlib.sha256(text.encode()).hexdigest()[:16]
     fp = f"fltnz_{h}"
     result = {
@@ -95,7 +95,7 @@ def mrliouai_translate(text, source_type="text"):
     add_trace("translate", {"fingerprint": fp})
     return result
 
-def mrliouai_restore(fltnz=None, fingerprint=None):
+def flowagent_restore(fltnz=None, fingerprint=None):
     if fingerprint and fingerprint in fltnz_store:
         return {"restored": fltnz_store[fingerprint], "source": "store", "reversibility": "100%", "origin_signature": ORIGIN}
     import re
@@ -104,7 +104,7 @@ def mrliouai_restore(fltnz=None, fingerprint=None):
         return {"restored": m.group(1), "source": "format", "reversibility": "100%", "origin_signature": ORIGIN}
     return {"restored": fltnz or "", "source": "passthrough", "origin_signature": ORIGIN}
 
-def mrliouai_simulate(question, persona="MrLiou.flpkg"):
+def flowagent_simulate(question, persona="MrLiou.flpkg"):
     persona_file = os.path.join(persona_dir, persona)
     persona_loaded = os.path.exists(persona_file)
     add_trace("simulate", {"question": question[:50], "persona": persona})
@@ -148,7 +148,7 @@ class MRLHandler(BaseHTTPRequestHandler):
                 "version": VERSION, "origin_signature": ORIGIN,
                 "port": PORT,
                 "subsystems": {
-                    "FlowCore": True, "MrLiouAI_API": True,
+                    "FlowCore": True, "FlowAgent_API": True,
                     "ZoomEngine": ZOOM_OK, "ParticleEarth": EARTH_OK,
                     "AI_Fusion": FUSION_OK, "AI_Providers": PROVIDERS_OK
                 },
@@ -156,9 +156,9 @@ class MRLHandler(BaseHTTPRequestHandler):
                 "trace_count": len(trace_log),
                 "endpoints": {
                     "GET /health": "健康檢查 + Merkle 錨點",
-                    "POST /mrliouai/translate": "萬物粒子化 (text → FLTNZ)",
-                    "POST /mrliouai/restore": "粒子還原 (FLTNZ → text)",
-                    "POST /mrliouai/simulate": "人格模組推理 (.flpkg 插拔)",
+                    "POST /flowagent/translate": "萬物粒子化 (text → FLTNZ)",
+                    "POST /flowagent/restore": "粒子還原 (FLTNZ → text)",
+                    "POST /flowagent/simulate": "人格模組推理 (.flpkg 插拔)",
                     "POST /api/project": "粒子地球投射 (ParticleEarth)",
                     "POST /api/zoom/in|out|set|expand|collapse": "ZoomEngine 縮放控制",
                     "POST /ai/fusion/execute": "AI 融合堆疊執行",
@@ -191,24 +191,24 @@ class MRLHandler(BaseHTTPRequestHandler):
         except Exception as e:
             return json_response(self, {"error": str(e)}, 400)
 
-        # ── MrLiouAI Translate ──
-        if path == "/mrliouai/translate":
+        # ── FlowAgent Translate ──
+        if path == "/flowagent/translate":
             text = body.get("text", "")
             if not text:
                 return json_response(self, {"error": "text required"}, 400)
-            return json_response(self, {"ok": True, **mrliouai_translate(text, body.get("source_type", "text"))})
+            return json_response(self, {"ok": True, **flowagent_translate(text, body.get("source_type", "text"))})
 
-        # ── MrLiouAI Restore ──
-        if path == "/mrliouai/restore":
-            return json_response(self, {"ok": True, **mrliouai_restore(body.get("fltnz"), body.get("fingerprint"))})
+        # ── FlowAgent Restore ──
+        if path == "/flowagent/restore":
+            return json_response(self, {"ok": True, **flowagent_restore(body.get("fltnz"), body.get("fingerprint"))})
 
-        # ── MrLiouAI Simulate ──
-        if path == "/mrliouai/simulate":
+        # ── FlowAgent Simulate ──
+        if path == "/flowagent/simulate":
             question = body.get("question", body.get("input", ""))
             persona = body.get("persona", "MrLiou.flpkg")
             if not question:
                 return json_response(self, {"error": "question required"}, 400)
-            return json_response(self, {"ok": True, **mrliouai_simulate(question, persona)})
+            return json_response(self, {"ok": True, **flowagent_simulate(question, persona)})
 
         # ── Particle Earth Projection ──
         if path == "/api/project" and EARTH_OK:
@@ -308,7 +308,7 @@ def main():
 #
 #   Subsystems:
 #     FlowCore Loop    ✅
-#     MrLiouAI API    ✅ (translate/restore/simulate)
+#     FlowAgent API    ✅ (translate/restore/simulate)
 #     ZoomEngine       {'✅' if ZOOM_OK else '❌ (zoom_engine.py not found)'}
 #     ParticleEarth    {'✅' if EARTH_OK else '❌ (particle_earth.py not found)'}
 #     AI Fusion        {'✅' if FUSION_OK else '❌ (ai_fusion_core.py not found)'}

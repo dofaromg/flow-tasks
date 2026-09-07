@@ -16,6 +16,7 @@ from MRL_OriginBoundary_Guard_v1 import (
     extract_signature,
     verify_signature,
     is_mrl_canonical,
+    is_mrl_manifestable_identity,
     is_mrliou_related,
     scan_for_boundary_violations,
     ORIGIN_SIGNATURE,
@@ -69,16 +70,36 @@ class TestManifestAndRelation:
 
 class TestIntake:
     def test_external_name_reclaimed_and_signed(self, guard):
-        m = guard.intake_external("MrLiouAI.Runtime.v47.zip")
-        assert m["canonical_name"].startswith("MRL_")
-        assert m["role"] == "material"                 # bp_1:外部=材料
+        m = guard.intake_external("FlowAgent.Runtime.v47.zip")
+        assert m["canonical_name"] == "FlowAgent.Runtime.v47.zip"
+        assert m["role"] == "mrl_native_product"
+        assert m["source_block"]["role"] == "material" # bp_1 平行來源區塊
+        assert m["canonical_block"]["role"] == "mrl_native_product"
+        assert m["source_to_product_link"]["preserve_source"] is True
+        assert m["MRL_world_model_top_view"]["architecture"] == \
+            "dual_internal_container_parallel_projection"
+        assert m["MRL_world_model_top_view"]["source_container_ref"] == "source_block"
+        assert m["MRL_world_model_top_view"]["parameter_sources"]["environment_override"] is False
         assert m["origin"] == "MrLiouWord"             # rl_11:源頭歸母體
         assert verify_signature(m) is True             # LAW-0
-        assert m["source_external_name"] == "MrLiouAI.Runtime.v47.zip"  # No-Delete 來源保留
+        assert m["source_external_name"] == "FlowAgent.Runtime.v47.zip"  # No-Delete 來源保留
 
     def test_intake_always_manifestable(self, guard):
         m = guard.intake_external("weird name with spaces!!")
         assert m["manifestable"] is True               # rl_16:正名後可顯化
+
+    def test_custom_origin_is_consistent_with_top_view_and_signature(self):
+        custom_guard = MRL_OriginBoundaryGuard("MRL_CustomOrigin")
+        material = custom_guard.intake_external("external.module")
+        assert material["origin"] == "MRL_CustomOrigin"
+        assert material["MRL_world_model_top_view"]["origin_signature"] == \
+            "MRL_CustomOrigin"
+        assert verify_signature(material, "MRL_CustomOrigin") is True
+
+    def test_source_block_mutation_is_tamper_evident(self, guard):
+        material = guard.intake_external("external.module")
+        material["source_block"]["name"] = "mutated-after-signing"
+        assert verify_signature(material) is False
 
 
 # ─── rl_11 源頭主權斷言 ───────────────────────────────────────────────────────
@@ -135,3 +156,11 @@ class TestBoundaryScan:
     def test_all_mrl_no_violation(self):
         rep = scan_for_boundary_violations(["MRL_A_v1", "MRL_B_v2"])
         assert rep["violation_count"] == 0
+
+
+class TestNativeProductBoundary:
+    def test_flowagent_is_manifestable_and_not_external(self, guard):
+        assert is_mrl_manifestable_identity("FlowAgent.Runtime.v47.zip") is True
+        record = guard.intake_external("FlowAgent.Runtime.v47.zip")
+        assert record["canonical_name"] == "FlowAgent.Runtime.v47.zip"
+        assert record["role"] == "mrl_native_product"

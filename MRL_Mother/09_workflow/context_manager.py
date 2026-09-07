@@ -4,7 +4,7 @@
 context_manager.py — Context Window Manager
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 MrLiouAIRuntime
+group: Y=3 FlowAgentRuntime
 
 Industry capability: intelligent context window management — prevents
                      token overflow and keeps the most relevant messages

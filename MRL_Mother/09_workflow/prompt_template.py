@@ -4,7 +4,7 @@
 prompt_template.py — Prompt Template Manager
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 MrLiouAIRuntime
+group: Y=3 FlowAgentRuntime
 
 Industry capability: structured prompt template management (LangChain-style).
 MRL extension: templates are versioned and stamped with origin_signature;
@@ -20,8 +20,8 @@ Usage (library)
     reg = TemplateRegistry()
     reg.add("greet", "Hello, {name}! You are a {role}.")
 
-    rendered = reg.render("greet", {"name": "MrLiouAI", "role": "kernel"})
-    print(rendered)   # Hello, MrLiouAI! You are a kernel.
+    rendered = reg.render("greet", {"name": "FlowAgent", "role": "kernel"})
+    print(rendered)   # Hello, FlowAgent! You are a kernel.
 
 CLI
 ---

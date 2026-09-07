@@ -1,7 +1,7 @@
-# MrLiouAI 測試套件 / MrLiouAI Test Suite
+# FlowAgent 測試套件 / FlowAgent Test Suite
 
-此目錄包含 MrLiouAI 專案的所有單元測試與整合測試。
-This directory contains all unit and integration tests for the MrLiouAI project.
+此目錄包含 FlowAgent 專案的所有單元測試與整合測試。
+This directory contains all unit and integration tests for the FlowAgent project.
 
 ## 測試結構 / Test Structure
 
@@ -289,4 +289,4 @@ export PYTHONPATH=/home/runner/work/flow-tasks/flow-tasks:$PYTHONPATH
 ---
 
 **最後更新 / Last Updated**: 2026-02-05  
-**維護者 / Maintainer**: MrLiouAI Team
+**維護者 / Maintainer**: FlowAgent Team

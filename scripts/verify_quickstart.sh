@@ -1,5 +1,5 @@
 #!/bin/bash
-# MrLiouAI Quick Start Verification Script
+# FlowAgent Quick Start Verification Script
 # 
 # This script verifies that all quick start deployment methods are properly configured
 # and ready to use.
@@ -16,7 +16,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 echo -e "${BLUE}========================================${NC}"
-echo -e "${BLUE}MrLiouAI Quick Start Verification${NC}"
+echo -e "${BLUE}FlowAgent Quick Start Verification${NC}"
 echo -e "${BLUE}========================================${NC}"
 echo ""
 

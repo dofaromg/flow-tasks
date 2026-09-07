@@ -1,9 +1,9 @@
 # API Documentation Guide
 # API 文檔指南
 
-This guide provides a comprehensive overview of all APIs available in the MrLiouAI project.
+This guide provides a comprehensive overview of all APIs available in the FlowAgent project.
 
-本指南提供 MrLiouAI 專案中所有可用 API 的綜合概述。
+本指南提供 FlowAgent 專案中所有可用 API 的綜合概述。
 
 ---
 
@@ -399,9 +399,9 @@ Report Canary/watermark triggered events.
 
 ## Configuration API
 
-The Configuration API provides programmatic access to MrLiouAI configuration.
+The Configuration API provides programmatic access to FlowAgent configuration.
 
-配置 API 提供對 MrLiouAI 配置的程式化存取。
+配置 API 提供對 FlowAgent 配置的程式化存取。
 
 ### ConfigLoader Class
 

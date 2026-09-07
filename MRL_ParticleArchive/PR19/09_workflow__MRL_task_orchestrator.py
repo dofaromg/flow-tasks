@@ -4,7 +4,7 @@
 MRL_task_orchestrator.py — Production Task Orchestration Engine
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 MrLiouAIRuntime
+group: Y=3 FlowAgentRuntime
 
 Combines scheduler.py + multi_agent.py into a production task engine with:
   - Task status: QUEUED / RUNNING / WAITING_TOOL / DONE / FAILED / SEALED

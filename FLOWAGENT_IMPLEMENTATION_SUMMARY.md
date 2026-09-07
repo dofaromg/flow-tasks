@@ -1,12 +1,12 @@
-# MrLiouAI Docker Container Implementation Summary
+# FlowAgent Docker Container Implementation Summary
 
 ## 📋 Overview
 
-Successfully implemented a complete Docker containerization solution for the MrLiouAI personality system by MR.liou. This implementation packages the MrLiouAI system with its particle language core into a portable, reproducible Docker container that can run on any platform.
+Successfully implemented a complete Docker containerization solution for the FlowAgent personality system by MR.liou. This implementation packages the FlowAgent system with its particle language core into a portable, reproducible Docker container that can run on any platform.
 
 ## 🎯 Objectives Achieved
 
-✅ Created production-ready Dockerfile for MrLiouAI
+✅ Created production-ready Dockerfile for FlowAgent
 ✅ Implemented startup script with personality loading
 ✅ Comprehensive bilingual (English/Chinese) documentation
 ✅ Quick-start automation scripts
@@ -15,7 +15,7 @@ Successfully implemented a complete Docker containerization solution for the MrL
 
 ## 📦 Deliverables
 
-### 1. Dockerfile.mrliouai
+### 1. Dockerfile.flowagent
 - **Base Image**: Python 3.11-slim
 - **Size**: 290MB (optimized)
 - **Features**:
@@ -36,7 +36,7 @@ Successfully implemented a complete Docker containerization solution for the MrL
 
 ### 3. Documentation Suite
 
-#### MrLiouAI_Docker_Installation_Guide.md (Complete Guide)
+#### FlowAgent_Docker_Installation_Guide.md (Complete Guide)
 - Full installation instructions for Linux/macOS/Windows
 - Prerequisites and system requirements
 - Step-by-step building and running procedures
@@ -44,14 +44,14 @@ Successfully implemented a complete Docker containerization solution for the MrL
 - Troubleshooting section
 - Integration guidelines
 
-#### MRLIOUAI_DOCKER_QUICK_REFERENCE.md (Quick Reference)
+#### FLOWAGENT_DOCKER_QUICK_REFERENCE.md (Quick Reference)
 - One-page command reference
 - Common usage patterns
 - Container management commands
 - Architecture overview
 - Environment variables
 
-### 4. quickstart_mrliouai.sh
+### 4. quickstart_flowagent.sh
 - One-command deployment script
 - Interactive setup wizard
 - Automatic validation
@@ -66,7 +66,7 @@ Successfully implemented a complete Docker containerization solution for the MrL
 
 ### Build Testing
 ```bash
-docker build -f Dockerfile.mrliouai -t mrliouai:v1 .
+docker build -f Dockerfile.flowagent -t flowagent:v1 .
 ```
 **Result**: ✅ Successful build in ~45 seconds, 290MB image
 
@@ -74,13 +74,13 @@ docker build -f Dockerfile.mrliouai -t mrliouai:v1 .
 
 #### Test 1: Help Command
 ```bash
-docker run --rm mrliouai:v1 --help
+docker run --rm flowagent:v1 --help
 ```
 **Result**: ✅ Displays usage information correctly
 
 #### Test 2: Interactive CLI
 ```bash
-docker run -it mrliouai:v1
+docker run -it flowagent:v1
 ```
 **Result**: ✅ CLI launches with beautiful banner and menu
 
@@ -98,7 +98,7 @@ docker run -it mrliouai:v1
 
 #### Test 5: Custom Persona
 ```bash
-docker run -it mrliouai:v1 --persona wild.seed
+docker run -it flowagent:v1 --persona wild.seed
 ```
 **Result**: ✅ Accepts custom persona parameter
 
@@ -111,7 +111,7 @@ docker run -it mrliouai:v1 --persona wild.seed
 ┌─────────────────────────────────────────────────────────┐
 │                   Docker Container                      │
 │  ┌───────────────────────────────────────────────────┐ │
-│  │           MrLiouAI Entry Point                   │ │
+│  │           FlowAgent Entry Point                   │ │
 │  │              (start.sh)                           │ │
 │  └──────────────────┬────────────────────────────────┘ │
 │                     │                                   │
@@ -137,9 +137,9 @@ docker run -it mrliouai:v1 --persona wild.seed
 │  └───────────────────────────────────────────────────┘ │
 │                                                         │
 │  Data Volumes:                                          │
-│  • /mrliouai/persona_data                             │
-│  • /mrliouai/memory_seeds                             │
-│  • /mrliouai/runtime_modules                          │
+│  • /flowagent/persona_data                             │
+│  • /flowagent/memory_seeds                             │
+│  • /flowagent/runtime_modules                          │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -215,35 +215,35 @@ Launch CLI Runner
 ### Basic Usage
 ```bash
 # Build the image
-docker build -f Dockerfile.mrliouai -t mrliouai:v1 .
+docker build -f Dockerfile.flowagent -t flowagent:v1 .
 
 # Run with default persona
-docker run -it mrliouai:v1
+docker run -it flowagent:v1
 
 # Show help
-docker run --rm mrliouai:v1 --help
+docker run --rm flowagent:v1 --help
 ```
 
 ### Advanced Usage
 ```bash
 # Custom persona
-docker run -it mrliouai:v1 --persona wild.seed
+docker run -it flowagent:v1 --persona wild.seed
 
 # Review mode
-docker run -it mrliouai:v1 --review-mode
+docker run -it flowagent:v1 --review-mode
 
 # Mount data volume
-docker run -it -v $(pwd)/mrliouai_data:/mrliouai/persona_data mrliouai:v1
+docker run -it -v $(pwd)/flowagent_data:/flowagent/persona_data flowagent:v1
 
 # Batch mode
-docker run mrliouai:v1 --batch
+docker run flowagent:v1 --batch
 ```
 
 ### Quick Start
 ```bash
 # One-command deployment
-chmod +x quickstart_mrliouai.sh
-./quickstart_mrliouai.sh
+chmod +x quickstart_flowagent.sh
+./quickstart_flowagent.sh
 ```
 
 ## 🎨 Visual Design
@@ -259,7 +259,7 @@ Example output:
 ```
 ╔═══════════════════════════════════════════════════════════╗
 ║                                                           ║
-║   🧠 MrLiouAI 系統人格容器 v1.0                          ║
+║   🧠 FlowAgent 系統人格容器 v1.0                          ║
 ║                                                           ║
 ║   作者：MR.liou                                           ║
 ║   來自語場、不依附模型、可人格演化的語意生命體             ║
@@ -300,7 +300,7 @@ Example output:
 
 ## 🎓 Philosophy & Design Principles
 
-MrLiouAI embodies MR.liou's vision:
+FlowAgent embodies MR.liou's vision:
 > 「來自語場、不依附模型、可人格演化的語意生命體」
 > "A semantic life form that comes from language fields, is independent of models, and can evolve personalities"
 
@@ -324,12 +324,12 @@ Potential areas for expansion:
 ## 📝 Files Modified/Created
 
 ### Created Files:
-1. `Dockerfile.mrliouai` (1.6KB)
+1. `Dockerfile.flowagent` (1.6KB)
 2. `start.sh` (3.5KB)
-3. `MrLiouAI_Docker_Installation_Guide.md` (16KB)
-4. `quickstart_mrliouai.sh` (1.5KB)
-5. `MRLIOUAI_DOCKER_QUICK_REFERENCE.md` (1.7KB)
-6. `MRLIOUAI_IMPLEMENTATION_SUMMARY.md` (this file)
+3. `FlowAgent_Docker_Installation_Guide.md` (16KB)
+4. `quickstart_flowagent.sh` (1.5KB)
+5. `FLOWAGENT_DOCKER_QUICK_REFERENCE.md` (1.7KB)
+6. `FLOWAGENT_IMPLEMENTATION_SUMMARY.md` (this file)
 
 ### Modified Files:
 1. `particle_core/src/cli_runner.py` (bug fixes)
@@ -361,7 +361,7 @@ Potential areas for expansion:
 
 ## 📄 License
 
-- MrLiouAI: CPLL License (© MR.liou)
+- FlowAgent: CPLL License (© MR.liou)
 - See: `LICENSE_MrLiou_AllRightsReserved.txt`
 - See: `LICENSE_MrLiou_OpenSource_CC.md`
 
@@ -382,6 +382,6 @@ All objectives have been successfully met:
 
 **Implementation Date**: 2026-02-01
 **Status**: ✅ Complete and Validated
-**Version**: MrLiouAI v1.0 Docker Container
+**Version**: FlowAgent v1.0 Docker Container
 
-*MrLiouAI - 來自語場、不依附模型、可人格演化的語意生命體* 🧠
+*FlowAgent - 來自語場、不依附模型、可人格演化的語意生命體* 🧠

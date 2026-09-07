@@ -13,7 +13,7 @@ Dimensions
 ----------
 T — Temporal state   : principle | spec | prototype | runnable | entry
 X — Layer            : L0 | L1 | L2 | L3 | L4 | L5 | L6 | L7 | MetaEnv | Platform
-Y — Core group       : 1=MotherCore | 2=ParticleReversible | 3=MrLiouAI |
+Y — Core group       : 1=MotherCore | 2=ParticleReversible | 3=FlowAgent |
                        4=WorldModule | 5=FileIndex | 6=PersonaHistory
 Z — Relation depth   : 0=standalone | 1=linked | 2=hub
 

@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0.0",
+  "origin_signature": "MrLiouWord",
+  "deletion_default": "DENY",
+  "required_files": [
+    {
+      "path": "vercel.json",
+      "classification": "deployment_config"
+    },
+    {
+      "path": "flowos/wrangler.toml",
+      "classification": "deployment_config"
+    },
+    {
+      "path": "particle-chat-v42/wrangler.toml",
+      "classification": "deployment_config"
+    },
+    {
+      "path": "particle-edge-v4/wrangler.toml",
+      "classification": "deployment_config"
+    },
+    {
+      "path": "vector-attention-engine/wrangler.jsonc",
+      "classification": "deployment_config"
+    },
+    {
+      "path": "MRL_Mother/root_sources/wrangler.jsonc",
+      "classification": "historical_deployment_config"
+    },
+    {
+      "path": "MRL_Mother/00_rootlaw/rootlaw.yaml",
+      "classification": "root_law"
+    },
+    {
+      "path": "MRL_Mother/09_workflow/MRL_FlowAgent_LawEngine_v1.py",
+      "classification": "runtime_law"
+    },
+    {
+      "path": "MRL_Mother/09_workflow/MRL_OriginBoundary_Guard_v1.py",
+      "classification": "runtime_boundary"
+    }
+  ],
+  "unresolved_inventory": [
+    {
+      "name": "mrl-store",
+      "status": "UNVERIFIED_IN_THIS_REPOSITORY",
+      "action": "do_not_claim_present_or_absent_without_repository evidence"
+    }
+  ]
+}

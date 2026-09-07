@@ -103,7 +103,7 @@ sqlite3 mrl_baseworld.db < MRL_FLTNZ_Asset_Seed_Insert_v1.sql
 
 ## 第一批 FLTNZ 資產 (9 個)
 
-1. **MrLiouAI.TotalCore.Unity** - MrLiouAI 核心統一體
+1. **FlowAgent.TotalCore.Unity** - FlowAgent 核心統一體
 2. **WorldSeed** - 世界種子
 3. **PulseRouter** - 脈衝路由器
 4. **EncoderStack** - 編碼器堆疊
@@ -127,7 +127,7 @@ sqlite3 mrl_baseworld.db < MRL_FLTNZ_Asset_Seed_Insert_v1.sql
 
 ### 基礎依賴
 - WorldSeed → Mother Memory Sphere (requires)
-- MrLiouAI → PulseRouter (uses)
+- FlowAgent → PulseRouter (uses)
 - PreParticle.Seed → WorldSeed (precedes)
 
 ---

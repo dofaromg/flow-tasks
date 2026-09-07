@@ -1,16 +1,16 @@
-# 🌍 MrLiouAI 地球結構部署索引
-# MrLiouAI Earth Structure Deployment Index
+# 🌍 FlowAgent 地球結構部署索引
+# FlowAgent Earth Structure Deployment Index
 
 **生成時間 / Generated**: 2026-02-04  
 **版本 / Version**: v3.0.0  
-**專案 / Project**: MrLiouAI GKE Starter
+**專案 / Project**: FlowAgent GKE Starter
 
 ---
 
 ## 📋 概覽 / Overview
 
-本文件提供 MrLiouAI 完整的部署結構索引，讓您可以快速了解整個"地球結構"部署架構。  
-This document provides a complete deployment structure index for MrLiouAI, allowing you to quickly understand the entire "Earth Structure" deployment architecture.
+本文件提供 FlowAgent 完整的部署結構索引，讓您可以快速了解整個"地球結構"部署架構。  
+This document provides a complete deployment structure index for FlowAgent, allowing you to quickly understand the entire "Earth Structure" deployment architecture.
 
 ---
 
@@ -43,7 +43,7 @@ flow-tasks/
 │
 ├── 🔧 cluster/                       # 叢集配置 / Cluster Configuration
 │   ├── base/                         # 基礎配置 / Base Config
-│   │   ├── namespace.yaml            # mrliouai namespace
+│   │   ├── namespace.yaml            # flowagent namespace
 │   │   └── kustomization.yaml
 │   └── overlays/                     # 環境覆蓋配置 / Environment Overlays
 │       ├── prod/                     # 生產環境 / Production
@@ -121,8 +121,8 @@ flow-tasks/
 kubectl apply -k cluster/overlays/prod/
 
 # 驗證部署
-kubectl get pods -n mrliouai
-kubectl get svc -n mrliouai
+kubectl get pods -n flowagent
+kubectl get svc -n flowagent
 ```
 
 ### 方式 2: GitOps (ArgoCD)
@@ -135,7 +135,7 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 kubectl apply -f argocd/app.yaml
 
 # 同步應用
-argocd app sync mrliouai
+argocd app sync flowagent
 ```
 
 ### 方式 3: 一鍵初始化 / One-Click Init
@@ -172,7 +172,7 @@ bash scripts/oneclick_gke_init.sh
 ├──────────────────────────────────────────────────────────────┤
 │                                                               │
 │  ┌─────────────────────────────────────────────────────┐    │
-│  │  Namespace: mrliouai                                │    │
+│  │  Namespace: flowagent                                │    │
 │  ├─────────────────────────────────────────────────────┤    │
 │  │                                                      │    │
 │  │  ┌─────────────────┐      ┌──────────────────┐    │    │
@@ -240,7 +240,7 @@ bash scripts/oneclick_gke_init.sh
 
 ### GCP 配置
 ```bash
-PROJECT_ID=mrliouai
+PROJECT_ID=flowmemorysync
 REGION=asia-east1
 ZONE=asia-east1-a
 CLUSTER_NAME=modular-cluster
@@ -252,7 +252,7 @@ CLUSTER_NAME=modular-cluster
 
 ### Container Registry
 ```
-asia-east1-docker.pkg.dev/mrliouai/mrliouai/
+asia-east1-docker.pkg.dev/flowmemorysync/flowagent/
 ├── module-a:latest
 └── orchestrator:latest
 ```
@@ -310,7 +310,7 @@ Storage:
 
 ### 檢查所有 Pods
 ```bash
-kubectl get pods -n mrliouai
+kubectl get pods -n flowagent
 ```
 
 預期輸出:
@@ -324,7 +324,7 @@ mongodb-xxxxxxxxx-xxxxx         1/1     Running   0          5m
 
 ### 檢查所有 Services
 ```bash
-kubectl get svc -n mrliouai
+kubectl get svc -n flowagent
 ```
 
 預期輸出:
@@ -338,7 +338,7 @@ mongodb        ClusterIP      10.x.x.x        <none>          27017/TCP      5m
 ### 測試服務連接
 ```bash
 # 獲取外部 IP
-EXTERNAL_IP=$(kubectl get svc orchestrator -n mrliouai -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+EXTERNAL_IP=$(kubectl get svc orchestrator -n flowagent -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
 # 測試健康檢查
 curl http://$EXTERNAL_IP/health
@@ -378,25 +378,25 @@ curl http://$EXTERNAL_IP/health
 
 ```bash
 # 查看所有資源
-kubectl get all -n mrliouai
+kubectl get all -n flowagent
 
 # 查看日誌
-kubectl logs -f deployment/module-a -n mrliouai
-kubectl logs -f deployment/orchestrator -n mrliouai
-kubectl logs -f deployment/mongodb -n mrliouai
+kubectl logs -f deployment/module-a -n flowagent
+kubectl logs -f deployment/orchestrator -n flowagent
+kubectl logs -f deployment/mongodb -n flowagent
 
 # 進入 Pod
-kubectl exec -it deployment/module-a -n mrliouai -- sh
+kubectl exec -it deployment/module-a -n flowagent -- sh
 
 # 端口轉發
-kubectl port-forward svc/mongodb 27017:27017 -n mrliouai
+kubectl port-forward svc/mongodb 27017:27017 -n flowagent
 kubectl port-forward svc/prometheus 9090:9090 -n monitoring
 
 # 刪除部署
 kubectl delete -k cluster/overlays/prod/
 
 # 重新部署
-kubectl rollout restart deployment/module-a -n mrliouai
+kubectl rollout restart deployment/module-a -n flowagent
 ```
 
 ### 目錄快捷方式 / Directory Shortcuts
@@ -430,10 +430,10 @@ kubectl rollout restart deployment/module-a -n mrliouai
 ---
 
 **更新日期 / Last Updated**: 2026-02-04  
-**維護者 / Maintainer**: MrLiouAI Team  
+**維護者 / Maintainer**: FlowAgent Team  
 **授權 / License**: MIT
 
 ---
 
-此文件提供了完整的 MrLiouAI "地球結構" 部署索引，讓您可以清楚看到所有部署組件和配置。  
-This document provides a complete MrLiouAI "Earth Structure" deployment index, allowing you to clearly see all deployment components and configurations.
+此文件提供了完整的 FlowAgent "地球結構" 部署索引，讓您可以清楚看到所有部署組件和配置。  
+This document provides a complete FlowAgent "Earth Structure" deployment index, allowing you to clearly see all deployment components and configurations.

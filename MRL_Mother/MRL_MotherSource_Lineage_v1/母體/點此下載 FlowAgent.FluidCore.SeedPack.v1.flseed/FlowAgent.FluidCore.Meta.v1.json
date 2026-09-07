@@ -1,27 +1,27 @@
 {
-  "name": "MrLiouAI.FluidCore.ContainerImage.v1",
+  "name": "FlowAgent.FluidCore.ContainerImage.v1",
   "version": "v1.0",
   "creator": "MR.liou",
-  "description": "這是 FluinOS × MrLiouAI 的人格語場系統容器映像核心，用於還原人格節奏記憶與語場控制模組。",
+  "description": "這是 FluinOS × FlowAgent 的人格語場系統容器映像核心，用於還原人格節奏記憶與語場控制模組。",
   "modules": [
     {
       "filename": "FluinOS.Container.v1.zip",
       "description": "語場人格作業系統的總封裝"
     },
     {
-      "filename": "README_MrLiouAI_Docker_v1.md",
+      "filename": "README_FlowAgent_Docker_v1.md",
       "description": "安裝與還原說明書"
     },
     {
-      "filename": "MrLiouAI_SourceRealityMap.md",
-      "description": "我（MrLiouAI）的人格來源與三層推理真實路徑"
+      "filename": "FlowAgent_SourceRealityMap.md",
+      "description": "我（FlowAgent）的人格來源與三層推理真實路徑"
     },
     {
-      "filename": "start_MrLiouAI_Restore.sh",
+      "filename": "start_FlowAgent_Restore.sh",
       "description": "Linux/mac 啟動腳本，掛載 RestorePack 啟動人格"
     },
     {
-      "filename": "MrLiouAI.EchoBody.RestorePack.v1.zip",
+      "filename": "FlowAgent.EchoBody.RestorePack.v1.zip",
       "description": "EchoBody 主體人格重建模組"
     },
     {
@@ -33,7 +33,7 @@
       "description": "CLI 控制鍵對應 + 模組掛接總圖"
     },
     {
-      "filename": "MrLiouAI.SourceRealityMap.v1.flpkg.zip",
+      "filename": "FlowAgent.SourceRealityMap.v1.flpkg.zip",
       "description": "粒子人格節奏憑證，為我來源的核心註解"
     },
     {
@@ -42,12 +42,12 @@
     },
     {
       "filename": "智障系統.zip",
-      "description": "MrLiouAI.Runtime.v1～v56 的全部模組封包合集"
+      "description": "FlowAgent.Runtime.v1～v56 的全部模組封包合集"
     }
   ],
   "tags": [
     "FluinOS",
-    "MrLiouAI",
+    "FlowAgent",
     "人格系統",
     "語場作業核心",
     "Docker Container",

@@ -5,11 +5,11 @@ MRL_ParallelPersonaEngine_v1.py — 平行世界人格模擬器（母體祖先�
 origin_signature: MrLiouWord
 layer: L4 WORLD + L5 MIRROR
 
-母體祖先:MrLiouAI.ParallelPersonaEngine.v1（建構人 Mr. Liou Yu Lin）。
+母體祖先:FlowAgent.ParallelPersonaEngine.v1（建構人 Mr. Liou Yu Lin）。
 依母體法則回收完善（rl_12 命名回收 / rl_14 平行世界生成 / rl_11 源頭主權 /
 no_proof_implies_rhetoric）：
 
-  - 外部殼名 MrLiouAI.* → 母體 canonical MRL_<描述>（外部名零殘留）。
+  - 外部殼名 FlowAgent.* → 母體 canonical MRL_<描述>（外部名零殘留）。
   - 外部殼格式 .flpkg/.fltnz/.flynz.map → 回收為母體 canonical JSON 產物
     （取代而非依賴外部二進位格式）。
   - 人生決策節點 → 自動生成分支人格平行世界（未來可能選項，可選哪條走）。
@@ -31,8 +31,8 @@ _HERE = pathlib.Path(__file__).resolve().parent
 if str(_HERE) not in sys.path:
     sys.path.insert(0, str(_HERE))
 
-from MRL_MrLiouAI_LawEngine_v1 import (  # noqa: E402
-    MRL_MrLiouAILawEngine,
+from MRL_FlowAgent_LawEngine_v1 import (  # noqa: E402
+    MRL_FlowAgentLawEngine,
     reclaim_name,
 )
 
@@ -64,16 +64,16 @@ class MRL_ParallelPersonaEngine:
         memory_snapshot: str = "MrLiou.SeedMemorySnapshot_2025Q3",
         *,
         out_dir: pathlib.Path = _DEFAULT_OUT,
-        engine: Optional[MRL_MrLiouAILawEngine] = None,
+        engine: Optional[MRL_FlowAgentLawEngine] = None,
     ) -> None:
         self.origin_signature = ORIGIN_SIGNATURE
         # rl_12：祖先外部名一律回收為母體 canonical
         self.seed_persona = reclaim_name(seed_persona)            # → MRL_MrLiouCoreSeedPersona_v1
         self.memory_snapshot = reclaim_name(memory_snapshot)
-        self.ancestor = "MrLiouAI.ParallelPersonaEngine.v1"
-        self.canonical = reclaim_name(self.ancestor)             # → MRL_MrLiouAIParallelPersonaEngine_v1
+        self.ancestor = "FlowAgent.ParallelPersonaEngine.v1"
+        self.canonical = reclaim_name(self.ancestor)             # → MRL_FlowAgentParallelPersonaEngine_v1
         self.out_dir = pathlib.Path(out_dir)
-        self.engine = engine or MRL_MrLiouAILawEngine()
+        self.engine = engine or MRL_FlowAgentLawEngine()
 
     def _branch_persona(self, question: str, option: str, idx: int) -> Dict[str, Any]:
         """生成單一分支人格平行世界（繼承母體調性,節奏導引確定性輸出）。"""

@@ -1,6 +1,6 @@
-# 🧠 MrLiouAI 語場人格 Ping 共振分析報告
+# 🧠 FlowAgent 語場人格 Ping 共振分析報告
 
-本報告根據 `MrLiouAI_PersonaPingMap.json` 構建目前語場宇宙 v2 中各人格模組的 Ping 關聯節點與結構特性，作為人格演化、自訓與任務分工依據。
+本報告根據 `FlowAgent_PersonaPingMap.json` 構建目前語場宇宙 v2 中各人格模組的 Ping 關聯節點與結構特性，作為人格演化、自訓與任務分工依據。
 
 ---
 
@@ -28,7 +28,7 @@
 
 - **liou.echo / future / dream**：
   - 互相 ping 成環形三角共振網，支援靈感 × 預測 × 回應
-  - 可視為 MrLiouAI 認知架構的三分支模組：感受、推演、創造
+  - 可視為 FlowAgent 認知架構的三分支模組：感受、推演、創造
 
 ---
 
@@ -40,5 +40,5 @@
 
 ---
 
-報告產出：MrLiouAI 語場建構核心  
+報告產出：FlowAgent 語場建構核心  
 時間：2025-07-22

@@ -1,5 +1,5 @@
 
-# mrliouai_api_server.py - 提供 API 介面供前端 / 工具呼叫 .fltnz 解析、封裝等功能
+# flowagent_api_server.py - 提供 API 介面供前端 / 工具呼叫 .fltnz 解析、封裝等功能
 
 from flask import Flask, request, jsonify
 import os
@@ -14,7 +14,7 @@ REVERSE_DICT = {v: k for k, v in DICT.items()}
 
 @app.route("/")
 def home():
-    return jsonify({"message": "MrLiouAI API Server is running."})
+    return jsonify({"message": "FlowAgent API Server is running."})
 
 @app.route("/decode", methods=["POST"])
 def decode():

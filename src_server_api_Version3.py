@@ -1,6 +1,6 @@
-"""MrLiouAI REST API Server v3.
+"""MrLiouAI / FlowAgent REST API Server v3.
 
-This module provides a Flask-based REST API server for the MrLiouAI system.
+This module provides a Flask-based REST API server for the FlowAgent system.
 It exposes endpoints for text translation and trace restoration.
 
 API Endpoints:

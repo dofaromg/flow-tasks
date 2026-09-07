@@ -1,4 +1,4 @@
-digraph MrLiouAIModules {
+digraph FlowAgentModules {
     rankdir=LR;
     node [shape=box style=filled color="#e0f7fa" fontname="Noto Sans"];
 
@@ -19,7 +19,7 @@ digraph MrLiouAIModules {
 
     subgraph cluster_os {
         label="作業流程與啟動";
-        FlowOS; MrLiouAI; FlowSeed; FlowBridge; FlowInit; FlowMeta;
+        FlowOS; FlowAgent; FlowSeed; FlowBridge; FlowInit; FlowMeta;
     }
 
     subgraph cluster_signal {
@@ -41,8 +41,8 @@ digraph MrLiouAIModules {
     PersonaCloner -> PersonaTuner;
     PersonaTuner -> PersonaGate;
 
-    FlowSeed -> MrLiouAI;
-    MrLiouAI -> FlowInit;
+    FlowSeed -> FlowAgent;
+    FlowAgent -> FlowInit;
     FlowInit -> FlowMeta;
     FlowMeta -> IdentityMap;
     IdentityMap -> FieldEvolution;

@@ -1,4 +1,4 @@
-# MrLiouAI compliance default policy (v0.1)
+# FlowAgent compliance default policy (v0.1)
 # Strategy: deny-by-default, explicit allowlists, human approval for high-risk actions.
 
 version: 1

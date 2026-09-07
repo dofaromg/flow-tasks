@@ -1,7 +1,7 @@
 # Conversation Knowledge Extractor - Implementation Summary
 
 ## Overview
-Successfully implemented a comprehensive Conversation Knowledge Extractor for the MrLiouAI/flow-tasks repository.
+Successfully implemented a comprehensive Conversation Knowledge Extractor for the FlowAgent/flow-tasks repository.
 
 ## Files Created
 
@@ -154,7 +154,7 @@ Running the demo creates:
 - `demo.txt` - Plain text conversation
 - `analysis_report.md` - Complete analysis report
 
-## Integration with MrLiouAI
+## Integration with FlowAgent
 
 ### Aligns with Project Structure
 - Placed in `particle_core/src/` with other core modules
@@ -193,7 +193,7 @@ The implementation is production-ready but could be enhanced with:
 
 ## Summary
 
-The Conversation Knowledge Extractor has been successfully implemented with all required features, comprehensive testing, and complete documentation. The module is ready for use and integrates seamlessly with the MrLiouAI project structure.
+The Conversation Knowledge Extractor has been successfully implemented with all required features, comprehensive testing, and complete documentation. The module is ready for use and integrates seamlessly with the FlowAgent project structure.
 
 **Total Implementation**:
 - 5 new files created

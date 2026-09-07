@@ -142,7 +142,7 @@ def demo_custom_text_formats():
     
     # 測試格式1: User: 和 Assistant: 格式
     format1_content = """User: 你好，請問你是誰？
-Assistant: 我是 MrLiouAI 系統的助手，專門協助處理粒子語言相關任務。
+Assistant: 我是 FlowAgent 系統的助手，專門協助處理粒子語言相關任務。
 
 User: 能介紹一下你的功能嗎？
 Assistant: 當然！我可以幫助你進行對話分析、邏輯結構提取、知識圖譜生成等工作。

@@ -54,7 +54,7 @@ class ParticleLanguageCLI:
         banner = Panel.fit(
             "[bold cyan]MRLiou Particle Language Core[/bold cyan]\n"
             "[green]粒子語言核心系統 CLI 模擬器[/green]\n"
-            "[dim]MrLiouAI 專用任務系統[/dim]",
+            "[dim]FlowAgent 專用任務系統[/dim]",
             style="blue"
         )
         self.console.print(banner)

@@ -4,7 +4,7 @@
 llm_gateway.py — Local LLM Gateway (zero external dependencies)
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 MrLiouAIRuntime
+group: Y=3 FlowAgentRuntime
 
 Goal: product-level local-only LLM access.  No cloud APIs, no third-party
       packages.  Every call is self-contained and fully auditable.

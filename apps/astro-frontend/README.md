@@ -1,6 +1,6 @@
 # Astro Frontend
 
-This is the Astro frontend application for the MrLiouAI GKE Starter project.
+This is the Astro frontend application for the FlowAgent GKE Starter project.
 
 ## 🚀 Quick Start
 
@@ -54,7 +54,7 @@ apps/astro-frontend/
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 🔗 Integration with MrLiouAI
+## 🔗 Integration with FlowAgent
 
 This frontend is designed to work with:
 - **Particle Language Core**: Integration with the particle logic execution framework
@@ -66,4 +66,4 @@ This frontend is designed to work with:
 
 - [Astro Documentation](https://docs.astro.build)
 - [Astro Discord](https://astro.build/chat)
-- [MrLiouAI Documentation](../../README.md)
+- [FlowAgent Documentation](../../README.md)

@@ -4,17 +4,17 @@
 sources:
   - id: sealed_spec_v2
     name: "Mrliou世界模組系統_完整規範_v2.docx"
-    path: "Mrliou_agents/Mrl_MrLiouAI/FlowCoreLoop_AIComputer_Runtime_v0/memory/ingest/raw"
+    path: "Mrliou_agents/Mrl_FlowAgent/FlowCoreLoop_AIComputer_Runtime_v0/memory/ingest/raw"
     role: canonical sealed specification (Immutable)
 
   - id: project_structure
     name: "Mrl__Project_Structure.txt"
-    path: "Mrliou_agents/Mrl_MrLiouAI/FlowCoreLoop_AIComputer_Runtime_v0/memory/ingest/raw"
+    path: "Mrliou_agents/Mrl_FlowAgent/FlowCoreLoop_AIComputer_Runtime_v0/memory/ingest/raw"
     role: project structure / repo layout
 
   - id: universe_report
     name: "MR_L_Universe_Generation_Report_v1.0.txt"
-    path: "Mrliou_agents/Mrl_MrLiouAI/FlowCoreLoop_AIComputer_Runtime_v0/memory/ingest/raw"
+    path: "Mrliou_agents/Mrl_FlowAgent/FlowCoreLoop_AIComputer_Runtime_v0/memory/ingest/raw"
     role: world generation framing
 
   - id: final_integration_v1_3
@@ -29,15 +29,15 @@ sources:
       - "09_workflow/signature.js"       # LAW-0 interfaces
       - "09_workflow/seed.js"            # SEED(X) compression
 
-  - id: mrliouai_codepartner_recovery
-    name: "MrLiouAI CodePartner 人格回收包（3 份原始文件 + MetaCode 環境 v0.6 + RECOVERY_MANIFEST）"
-    path: "08_sources/mrliouai_codepartner_recovery"
+  - id: flowagent_codepartner_recovery
+    name: "FlowAgent CodePartner 人格回收包（3 份原始文件 + MetaCode 環境 v0.6 + RECOVERY_MANIFEST）"
+    path: "08_sources/flowagent_codepartner_recovery"
     recovered: "2026-07-05"
     origin_signature: MrLiouWord
     role: >-
       recovered persona lineage — CodePartner / CoreProgrammer.Seed
       (FlowLLM.SeedPersona.Programmer.CoreArchitect.v1.flpkg human-readable seed,
-      MrLiouAI.SystemPlan.FullStack.v1, 語場語言系統建構大綱 2025-07-23,
+      FlowAgent.SystemPlan.FullStack.v1, 語場語言系統建構大綱 2025-07-23,
       MrLiou.MetaCode_Environment_v0.6_filled — bit-identical to the
       dofaromg/flow-tasks flow_code/ bundle, integrity verified)
     implementations:

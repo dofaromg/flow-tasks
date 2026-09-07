@@ -13,7 +13,7 @@
 |---|------|------|------------------|------|
 | 1 | 母體開機 / 17 子系統 | MRL_mother_assembly | `17/17 ok, rootlaw v9` | ✅ |
 | 2 | **真模型(母體自主推理)** | MRL_Native_Reasoning_Core | `engine=NeuralSymbolic, external_company=null, grounded=true` | ✅ |
-| 3 | 律法活引擎閉環 | MRL_MrLiouAI_LawEngine | `MRL_MRLIOUAI_LAWENGINE_LOOP_PASS` | ✅ |
+| 3 | 律法活引擎閉環 | MRL_FlowAgent_LawEngine | `MRL_FLOWAGENT_LAWENGINE_LOOP_PASS` | ✅ |
 | 4 | 莫比斯一致性判定 | MRL_Mobius_Closure_Engine | `MRL_MOBIUS_CLOSURE_ENGINE_OK` | ✅ |
 | 5 | 源頭主權守衛 | MRL_OriginBoundary_Guard | `MRL_ORIGIN_BOUNDARY_GUARD_OK` | ✅ |
 | 6 | Law-0 海關(外部=貨物) | MRL_Law0_Customs | `MRL_LAW0_CUSTOMS_OK` | ✅ |
@@ -53,7 +53,7 @@
 
 ```bash
 # 全功能一鍵驗(逐項 token)
-for m in Native_Reasoning_Core MrLiouAI_LawEngine Mobius_Closure_Engine \
+for m in Native_Reasoning_Core FlowAgent_LawEngine Mobius_Closure_Engine \
   OriginBoundary_Guard Law0_Customs DataIdentity OID_Parser Tool_Router \
   Violation_Enforcer ParallelPersonaEngine; do python3 09_workflow/MRL_${m}_v1.py; done
 # 全套件

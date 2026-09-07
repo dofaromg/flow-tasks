@@ -55,7 +55,7 @@ Based on MRL_EvidenceChain_Batch04_20260612:
 - 348 verified evidence items (batches 01-04)
 - 14 mainline nodes reconstructed
 - 9 wave gate receipts (418/418 PASS)
-- 1 Notion page exported (MrLiouAI 53 blocks)
+- 1 Notion page exported (FlowAgent 53 blocks)
 - Bridge API v3.1.0 verified live
 
 See: `../MRL_AI_ModuleModel_Recovery_Map_v1.md`

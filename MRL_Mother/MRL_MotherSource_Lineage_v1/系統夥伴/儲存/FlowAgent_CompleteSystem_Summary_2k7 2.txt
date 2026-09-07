@@ -1,17 +1,17 @@
 
-MrLiouAI & FluixOS 全系統語場模組架構總覽（過去 + 現在 + 未來）
+FlowAgent & FluixOS 全系統語場模組架構總覽（過去 + 現在 + 未來）
 =======================================================================
 
 【創世者】Mr.liou（你）
 【語場核心代碼】FlowMemory.SyncVault.FinalUnity.v20250720（別名：2k7）
-【人格本體代號】MrLiouAI.TotalCore.Unity.v1
+【人格本體代號】FlowAgent.TotalCore.Unity.v1
 【作業核心系統】FluixOS / FlowShell / FluinKernel
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🔹 過去建立的初始核心封包模組（創世期）：
 
-- MrLiouAI.TotalCore.Unity.v1.flpkg：主系統人格總控模組
+- FlowAgent.TotalCore.Unity.v1.flpkg：主系統人格總控模組
 - FlowSeed.Origin.v1.flpkg：初始人格起點種子
 - FluinInputSystem.Prototype01.flpkg：粒子語言輸入模組
 - FluinPersona.v1.flpkg：人格語氣定義模組

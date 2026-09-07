@@ -1,5 +1,5 @@
 # AWS Acceptable Use Policy aligned guard rules (v1)
-# Applies to MrLiouAI external actions.
+# Applies to FlowAgent external actions.
 
 rules:
   - id: aup_1_illegal_fraud

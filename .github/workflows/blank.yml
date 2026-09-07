@@ -1,6 +1,6 @@
-# MrLiouAI Task System CI Pipeline
+# FlowAgent Task System CI Pipeline
 
-name: MrLiouAI CI
+name: FlowAgent CI
 
 # Controls when the workflow will run
 on:
@@ -13,9 +13,12 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # Test the MrLiouAI task system
+  # Test the FlowAgent task system
   test:
     runs-on: ubuntu-latest
 
@@ -29,16 +32,26 @@ jobs:
         with:
           python-version: '3.x'
 
+      # process_tasks.py performs repository-level npm lint/build checks.
+      # Keep the Node execution environment explicit instead of depending on
+      # whichever tools happen to be preinstalled on the runner image.
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
       # Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          npm ci
 
       # Run task validation
-      - name: Validate MrLiouAI tasks
+      - name: Validate FlowAgent tasks
         run: |
-          echo "=== MrLiouAI Task Validation ==="
+          echo "=== FlowAgent Task Validation ==="
           python process_tasks.py
 
       # Test Flask API functionality

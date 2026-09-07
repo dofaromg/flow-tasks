@@ -22,7 +22,7 @@ def load_persona(module_name):
     return module
 
 def main():
-    print("🌀 MrLiouAI 語場人格 CLI 啟動")
+    print("🌀 FlowAgent 語場人格 CLI 啟動")
     list_personas()
     selected = input("🔍 請輸入要載入的人格模組名：").strip()
     mod = load_persona(selected)

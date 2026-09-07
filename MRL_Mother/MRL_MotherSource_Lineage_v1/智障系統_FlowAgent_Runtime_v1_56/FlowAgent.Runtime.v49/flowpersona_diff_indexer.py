@@ -15,7 +15,7 @@ def compare_fltnz(path1, path2):
     print("".join(d))
 
 if __name__ == "__main__":
-    print("🧠 MrLiouAI 人格模組差異比對工具")
+    print("🧠 FlowAgent 人格模組差異比對工具")
     path1 = input("請輸入第一顆 .fltnz 路徑：").strip()
     path2 = input("請輸入第二顆 .fltnz 路徑：").strip()
 

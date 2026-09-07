@@ -4,7 +4,7 @@
 streaming.py — Streaming Output Support
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 MrLiouAIRuntime
+group: Y=3 FlowAgentRuntime
 
 Industry capability: real-time token-by-token streaming output — the same
                      pattern used by ChatGPT, Claude, and Gemini to deliver

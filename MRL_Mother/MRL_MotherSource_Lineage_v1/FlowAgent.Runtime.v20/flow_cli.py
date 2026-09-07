@@ -1,7 +1,7 @@
 
-# flow_cli.py - MrLiouAI Runtime 主控 CLI
+# flow_cli.py - FlowAgent Runtime 主控 CLI
 
-print("🧠 MrLiouAI CLI 控制台")
+print("🧠 FlowAgent CLI 控制台")
 print("可執行指令：")
 print("- load persona")
 print("- show memory")

@@ -1,6 +1,6 @@
-# MrLiouAI 應用程式清單
+# FlowAgent 應用程式清單
 
-此目錄包含 MrLiouAI 系統的所有 Kubernetes 應用程式清單。
+此目錄包含 FlowAgent 系統的所有 Kubernetes 應用程式清單。
 
 ## 📁 目錄結構
 
@@ -91,16 +91,16 @@ kubectl apply -k cluster/overlays/prod
 
 ```bash
 cd apps/module-a
-docker build -t asia-east1-docker.pkg.dev/mrliouai/mrliouai/module-a:latest .
-docker push asia-east1-docker.pkg.dev/mrliouai/mrliouai/module-a:latest
+docker build -t asia-east1-docker.pkg.dev/flowmemorysync/flowagent/module-a:latest .
+docker push asia-east1-docker.pkg.dev/flowmemorysync/flowagent/module-a:latest
 ```
 
 ### Orchestrator
 
 ```bash
 cd apps/orchestrator
-docker build -t asia-east1-docker.pkg.dev/mrliouai/mrliouai/orchestrator:latest .
-docker push asia-east1-docker.pkg.dev/mrliouai/mrliouai/orchestrator:latest
+docker build -t asia-east1-docker.pkg.dev/flowmemorysync/flowagent/orchestrator:latest .
+docker push asia-east1-docker.pkg.dev/flowmemorysync/flowagent/orchestrator:latest
 ```
 
 ## 🔍 測試應用程式
@@ -123,17 +123,17 @@ python app.py
 
 ```bash
 # 檢查 pods
-kubectl get pods -n mrliouai
+kubectl get pods -n flowagent
 
 # 查看日誌
-kubectl logs -f deployment/module-a -n mrliouai
-kubectl logs -f deployment/orchestrator -n mrliouai
+kubectl logs -f deployment/module-a -n flowagent
+kubectl logs -f deployment/orchestrator -n flowagent
 
 # Port forward 測試
-kubectl port-forward svc/module-a 8080:8080 -n mrliouai
+kubectl port-forward svc/module-a 8080:8080 -n flowagent
 curl http://localhost:8080/health
 
-kubectl port-forward svc/orchestrator 8081:80 -n mrliouai
+kubectl port-forward svc/orchestrator 8081:80 -n flowagent
 curl http://localhost:8081/health
 ```
 

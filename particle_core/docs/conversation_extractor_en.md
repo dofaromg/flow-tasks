@@ -424,9 +424,9 @@ Issues and Pull Requests are welcome!
 
 ## License
 
-Follows the MrLiouAI project license.
+Follows the FlowAgent project license.
 
 ---
 
 **Last Updated**: 2026-01-04  
-**Maintainer**: MrLiouAI Team
+**Maintainer**: FlowAgent Team

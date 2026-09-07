@@ -1,5 +1,5 @@
 
-# flowdev_cli.py - MrLiouAI 開發總控 CLI 工具台
+# flowdev_cli.py - FlowAgent 開發總控 CLI 工具台
 
 import os
 import subprocess
@@ -8,7 +8,7 @@ TOOLS = {
     "1": ("📦 建立模組快照", "auto_snapshot_logger.py"),
     "2": ("⏳ 查看快照時間軸", "snapshot_timeline.py"),
     "3": ("📤 匯出指定快照為 ZIP", "snapshot_exporter.py"),
-    "4": ("🔁 還原快照到執行目錄", "mrliouai_replay.py"),
+    "4": ("🔁 還原快照到執行目錄", "flowagent_replay.py"),
     "5": ("🧠 模組版本比對器", "flowpkg_diff_tracker.py"),
     "6": ("📊 模組差異圖表", "flowpkg_diff_chart.py"),
     "7": ("🌳 模組節奏族譜樹", "flowpkg_version_tree.py"),

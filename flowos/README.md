@@ -1,6 +1,6 @@
 # FlowOS - Lightweight Runtime Skeleton
 
-FlowOS is a modular runtime system that provides core building blocks for the MrLiouAI architecture. It can run both as a Cloudflare Workers edge deployment and as a local library.
+FlowOS is a modular runtime system that provides core building blocks for the FlowAgent architecture. It can run both as a Cloudflare Workers edge deployment and as a local library.
 
 ## Architecture
 

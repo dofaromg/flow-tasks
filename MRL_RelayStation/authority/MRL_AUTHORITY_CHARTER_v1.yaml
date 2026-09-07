@@ -1,0 +1,85 @@
+version: MRL_AUTHORITY_CHARTER_v1
+owner: MRL
+status: active_candidate
+
+principles:
+  source_autonomy: true
+  no_forced_branch_convergence: true
+  external_models_are_providers: true
+  github_is_ledger_not_authority: true
+  ci_is_evidence_not_acceptance: true
+  canonical_promotion_requires_mrl_gate: true
+
+roles:
+  MRL:
+    authority_level: 5
+    permissions:
+      - define_semantics
+      - define_laws
+      - approve_canonical_state
+      - publish_release
+      - revoke_canonical_state
+  MRL_AuditSupervisor:
+    authority_level: 4
+    permissions:
+      - validate_scope
+      - validate_dependencies
+      - validate_evidence
+      - issue_delivery_pass
+      - issue_delivery_fail
+  MRL_RelayStation:
+    authority_level: 3
+    permissions:
+      - ingest
+      - normalize
+      - map
+      - preserve_provenance
+      - quarantine
+      - propose_promotion
+  Human_Owner:
+    authority_level: 5
+    permissions:
+      - approve_policy
+      - approve_release
+      - override_with_recorded_reason
+  External_Model:
+    examples: [ChatGPT, Claude, Copilot, Gemini]
+    authority_level: 0
+    permissions:
+      - propose
+      - analyze
+      - generate_candidate_artifacts
+  GitHub:
+    authority_level: 1
+    permissions:
+      - store
+      - version
+      - expose_commit_history
+  CI:
+    authority_level: 1
+    permissions:
+      - build
+      - test
+      - report
+
+promotion_gate:
+  required:
+    - provenance_present
+    - requested_scope_frozen
+    - generated_scope_recorded
+    - missing_count_zero
+    - dependency_integrity_pass
+    - evidence_integrity_pass
+    - tests_pass_or_exception_approved
+    - canonical_owner_approval
+  final_states:
+    pass: DELIVERY_PASS
+    fail: DELIVERY_FAIL
+
+forbidden:
+  - model_self_approval
+  - silent_scope_change
+  - branch_force_overwrite
+  - manifest_without_artifacts
+  - placeholder_as_delivery
+  - success_on_failed_external_commit

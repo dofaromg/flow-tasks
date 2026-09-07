@@ -44,7 +44,7 @@ core_groups:
       reversible chain. Answers: "how does the system compress, expand, and
       roll back?"
   "3":
-    name: MrLiouAIRuntime
+    name: FlowAgentRuntime
     description: >-
       The runtime that makes the system run: persona, memory, language-field,
       archival, CLI, containers. Answers: "how does the system execute?"
@@ -156,7 +156,7 @@ relations:
     links:
       - { type: depends_on,  to: "03_memory/merkle/memory_chain.py" }
       - { type: seals,       to: "06_trace/traces/runtime_trace.jsonl" }
-      - { type: implements,  to: "MrLiouAIRuntime / Kernel" }
+      - { type: implements,  to: "FlowAgentRuntime / Kernel" }
 
   - from: "04_runtime/runtime_manifest.yaml"
     layer: L7
@@ -205,7 +205,7 @@ relations:
     group: 3
     state: runnable
     links:
-      - { type: implements,  to: "MrLiouAIRuntime / L0–L7 stack" }
+      - { type: implements,  to: "FlowAgentRuntime / L0–L7 stack" }
       - { type: depends_on,  to: "09_workflow/signature.js" }
       - { type: depends_on,  to: "09_workflow/seed.js" }
 
@@ -248,7 +248,7 @@ relations:
     state: runnable
     links:
       - { type: extends,     to: "04_runtime/flowcore_loop.py" }
-      - { type: implements,  to: "MrLiouAIRuntime / CLI + HTTP" }
+      - { type: implements,  to: "FlowAgentRuntime / CLI + HTTP" }
       - { type: depends_on,  to: "09_workflow/signature.js" }
 
   - from: "09_workflow/FluinMemoryVault.py"
@@ -256,7 +256,7 @@ relations:
     group: 3
     state: runnable
     links:
-      - { type: implements,  to: "MrLiouAIRuntime / MemoryVault .flpkg" }
+      - { type: implements,  to: "FlowAgentRuntime / MemoryVault .flpkg" }
       - { type: depends_on,  to: "09_workflow/fltnz_parser.py" }
 
   - from: "09_workflow/FluinAnalyzer.py"
@@ -306,7 +306,7 @@ relations:
     group: 3
     state: runnable
     links:
-      - { type: implements,  to: "MrLiouAIRuntime / ToolRegistry" }
+      - { type: implements,  to: "FlowAgentRuntime / ToolRegistry" }
       - { type: depends_on,  to: "09_workflow/signature.js" }
 
   - from: "09_workflow/prompt_template.py"
@@ -314,7 +314,7 @@ relations:
     group: 3
     state: runnable
     links:
-      - { type: implements,  to: "MrLiouAIRuntime / PromptTemplate" }
+      - { type: implements,  to: "FlowAgentRuntime / PromptTemplate" }
       - { type: depends_on,  to: "09_workflow/tool_registry.py" }
 
   - from: "09_workflow/agent_planner.py"
@@ -322,7 +322,7 @@ relations:
     group: 3
     state: runnable
     links:
-      - { type: implements,  to: "MrLiouAIRuntime / ReActAgentLoop" }
+      - { type: implements,  to: "FlowAgentRuntime / ReActAgentLoop" }
       - { type: depends_on,  to: "09_workflow/tool_registry.py" }
       - { type: depends_on,  to: "09_workflow/prompt_template.py" }
 
@@ -339,7 +339,7 @@ relations:
     group: 3
     state: runnable
     links:
-      - { type: implements,  to: "MrLiouAIRuntime / PluginManager" }
+      - { type: implements,  to: "FlowAgentRuntime / PluginManager" }
       - { type: depends_on,  to: "09_workflow/tool_registry.py" }
       - { type: indexed_by,  to: "09_workflow/mrl_librarian.py" }
 

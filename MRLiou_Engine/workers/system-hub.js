@@ -25,7 +25,7 @@
  *   L3-Execution  → particle-pvm, particle-attention, particle-chat
  *   L4-Interface  → mrl-globe, mrl-observer, particle-console
  *   L5-Ecosystem  → particle-registry, particle-sync, mrl-librarian
- *   L6-Flow       → mrliouai-mother, particle-fusion, particle-mrliouai-api
+ *   L6-Flow       → flowagent-mother, particle-fusion, particle-flowagent-api
  *   L7-Meta       → mrliou-metaenv, mrliouword-system, particle-universe-pack
  *   L∞-Apps       → shengai-isp, kiosk-agent, douhua, mrl-care-kit...
  * 
@@ -156,10 +156,10 @@ const SYSTEM_MAP = {
       ]
     },
     "L6-Flow": {
-      description: "流動層 — MrLiouAI、Persona、注意力、融合引擎",
+      description: "流動層 — FlowAgent、Persona、注意力、融合引擎",
       particles: [
-        { id: "particle-mrliouai-api", role: "MrLiouAI API", status: "active" },
-        { id: "mrliouai-mother", role: "MrLiouAI 母體", status: "active" },
+        { id: "particle-flowagent-api", role: "FlowAgent API", status: "active" },
+        { id: "flowagent-mother", role: "FlowAgent 母體", status: "active" },
         { id: "particle-fusion", role: "粒子融合引擎", status: "active" },
         { id: "particle-synapse", role: "突觸連接", status: "active" },
         { id: "particle-attention", role: "MR.liou 注意力機制 (FOCUS→CHECK→SPREAD→REWEIGHT)", status: "active", version: "1.0.0" },
@@ -542,7 +542,7 @@ export default {
             L3: "pvm → ai-gateway → chat / research → sync-engine",
             L4: "globe ←→ observer ←→ console ←→ voice ←→ camera",
             L5: "librarian → health-monitor → registry ←→ sync ←→ connector",
-            L6: "mrliouai-api → mother → fusion → synapse → attention",
+            L6: "flowagent-api → mother → fusion → synapse → attention",
             L7: "metaenv(legacy) → universe-pack → version-tree → replay",
             "L∞": "shengai-isp → kiosk → care-kit → gcalendar → gdrive → gmail",
             output: "Response / State Change / δP₀"

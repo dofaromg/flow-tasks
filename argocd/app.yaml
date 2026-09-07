@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: mrliouai
+  name: flowagent
   namespace: argocd
 spec:
   project: default
@@ -13,7 +13,7 @@ spec:
   
   destination:
     server: https://kubernetes.default.svc
-    namespace: mrliouai
+    namespace: flowagent
   
   syncPolicy:
     automated:

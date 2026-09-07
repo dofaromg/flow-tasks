@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: orchestrator
-  namespace: mrliouai
+  namespace: flowagent
   labels:
     app: orchestrator
     component: orchestrator
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: orchestrator
-        image: asia-east1-docker.pkg.dev/mrliouai/mrliouai/orchestrator:latest
+        image: asia-east1-docker.pkg.dev/flowmemorysync/flowagent/orchestrator:latest
         ports:
         - containerPort: 8081
           name: http
@@ -58,7 +58,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: orchestrator
-  namespace: mrliouai
+  namespace: flowagent
   labels:
     app: orchestrator
 spec:

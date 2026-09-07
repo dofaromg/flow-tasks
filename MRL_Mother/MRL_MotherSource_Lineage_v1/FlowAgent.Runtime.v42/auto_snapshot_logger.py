@@ -1,5 +1,5 @@
 
-# auto_snapshot_logger.py - 封存 MrLiouAI 建構狀態與語場模組記憶快照
+# auto_snapshot_logger.py - 封存 FlowAgent 建構狀態與語場模組記憶快照
 
 import os
 import shutil

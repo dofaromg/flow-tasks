@@ -8,7 +8,7 @@
 
 ## 📋 任務概述
 
-本次任務為 MrLiouAI 專案實施完整的實際部署流程，包括自動化部署腳本、狀態檢查工具和詳盡的部署文檔。
+本次任務為 FlowAgent 專案實施完整的實際部署流程，包括自動化部署腳本、狀態檢查工具和詳盡的部署文檔。
 
 ### 問題背景
 
@@ -70,11 +70,11 @@ bash scripts/actual_deploy.sh --skip-monitoring     # 跳過監控部署
 **輸出示例**：
 ```
 ╔════════════════════════════════════════╗
-║  MrLiouAI 部署狀態檢查              ║
-║  MrLiouAI Deployment Status Check   ║
+║  FlowAgent 部署狀態檢查              ║
+║  FlowAgent Deployment Status Check   ║
 ╚════════════════════════════════════════╝
 
-[✓] 命名空間 'mrliouai' 存在
+[✓] 命名空間 'flowagent' 存在
 [✓] mongodb: 1/1 副本就緒
 [✓] module-a: 2/2 副本就緒
 [✓] orchestrator: 1/1 副本就緒
@@ -370,7 +370,7 @@ bash scripts/check_deployment_status.sh
 
 ## 🎉 總結
 
-本次實施為 MrLiouAI 專案提供了完整的實際部署解決方案，包括：
+本次實施為 FlowAgent 專案提供了完整的實際部署解決方案，包括：
 - ✅ 388 行的自動化部署腳本
 - ✅ 283 行的狀態檢查工具
 - ✅ 650 行的詳細部署指南
@@ -385,7 +385,7 @@ bash scripts/check_deployment_status.sh
 **相關連結**:
 - Pull Request: [待建立]
 - GitHub Actions: https://github.com/dofaromg/flow-tasks/actions
-- GKE 控制台: https://console.cloud.google.com/kubernetes/list?project=mrliouai
+- GKE 控制台: https://console.cloud.google.com/kubernetes/list?project=flowmemorysync
 
 **作者**: GitHub Copilot  
 **日期**: 2026-02-07

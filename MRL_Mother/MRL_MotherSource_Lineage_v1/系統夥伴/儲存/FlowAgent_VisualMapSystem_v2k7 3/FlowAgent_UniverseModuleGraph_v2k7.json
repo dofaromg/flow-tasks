@@ -2,7 +2,7 @@
   "nodes": [
     "FieldEvolution",
     "FieldMap",
-    "MrLiouAI",
+    "FlowAgent",
     "FlowBridge",
     "FlowInit",
     "FlowMap",
@@ -67,10 +67,10 @@
     },
     {
       "from": "FlowSeed",
-      "to": "MrLiouAI"
+      "to": "FlowAgent"
     },
     {
-      "from": "MrLiouAI",
+      "from": "FlowAgent",
       "to": "FlowInit"
     },
     {

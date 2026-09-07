@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MrLiouAI Task Processor.
+FlowAgent Task Processor.
 Automatically receives, parses, validates, and reports code generation tasks.
 """
 
@@ -24,7 +24,7 @@ import yaml
 
 
 class TaskProcessor:
-    """Validate MrLiouAI task definitions and repository health checks."""
+    """Validate FlowAgent task definitions and repository health checks."""
 
     TASK_FILE_PATTERN = re.compile(r"\d{4}-\d{2}-\d{2}_.+\.yaml")
     REQUIRED_TASK_FIELDS = ("task_id", "language", "description")
@@ -261,7 +261,7 @@ class TaskProcessor:
             result["warnings"].append(self._warning("c_compile", "gcc is not available; skipped C compile check"))
             return
 
-        with tempfile.TemporaryDirectory(prefix="mrliouai-c-") as tmp_dir:
+        with tempfile.TemporaryDirectory(prefix="flowagent-c-") as tmp_dir:
             output_path = Path(tmp_dir) / target_path.stem
             compile_result = self._run_command(["gcc", "-o", str(output_path), str(target_path)], timeout=60)
 
@@ -601,7 +601,7 @@ class TaskProcessor:
     def _generate_markdown_report(self, summary: Dict[str, Any]) -> None:
         """Generate a Markdown report for easy reading."""
         lines = [
-            "# MrLiouAI Task Processing Report\n\n",
+            "# FlowAgent Task Processing Report\n\n",
             f"**Report Generated:** {summary['processing_time']}\n\n",
             "## Executive Summary\n\n",
             f"- **Total Tasks:** {summary['total_tasks']}\n",
@@ -672,7 +672,7 @@ class TaskProcessor:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MrLiouAI Task Processing Report</title>
+    <title>FlowAgent Task Processing Report</title>
     <style>
         body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; padding: 20px; }}
         .container {{ max-width: 1200px; margin: 0 auto; background: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,.1); }}
@@ -689,7 +689,7 @@ class TaskProcessor:
     </style>
 </head>
 <body><div class="container">
-    <h1>📊 MrLiouAI Task Processing Report</h1>
+    <h1>📊 FlowAgent Task Processing Report</h1>
     <p>Generated: {html.escape(summary['processing_time'])}</p>
     <div class="summary-grid">
         <div class="metric-card"><div>Total Tasks</div><div class="metric-value">{summary['total_tasks']}</div></div>
@@ -745,7 +745,7 @@ class TaskProcessor:
 
     def print_summary(self, summary: Dict[str, Any]) -> None:
         """Print a formatted summary of task processing."""
-        print("=== MrLiouAI Task Processing Summary ===")
+        print("=== FlowAgent Task Processing Summary ===")
         print(f"Processing time: {summary['processing_time']}")
         print(f"Total tasks: {summary['total_tasks']}")
         print(f"Passed tasks: {summary['passed']}")
@@ -780,7 +780,7 @@ class TaskProcessor:
 def main() -> None:
     """Main entry point."""
     processor = TaskProcessor()
-    print("🚀 MrLiouAI Task Processor")
+    print("🚀 FlowAgent Task Processor")
     print("Automatically receiving, parsing and validating code generation tasks...")
     print()
 

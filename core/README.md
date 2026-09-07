@@ -1,10 +1,10 @@
-# MrLiouAI Core Module / 核心模組
+# FlowAgent Core Module / 核心模組
 
 ## 粒子語言系統簡介 / Particle Language System Introduction
 
-MrLiouAI 核心模組是 **粒子語言 (Particle Language)** 執行系統的核心實現，提供記憶管理、粒子字典與邏輯執行的基礎設施。粒子語言是一種創新的邏輯表達與執行框架，通過「粒子」（Particle）作為最小的邏輯執行單元，實現從高層 API 到底層 C 引擎的完整執行鏈路。
+FlowAgent 核心模組是 **粒子語言 (Particle Language)** 執行系統的核心實現，提供記憶管理、粒子字典與邏輯執行的基礎設施。粒子語言是一種創新的邏輯表達與執行框架，通過「粒子」（Particle）作為最小的邏輯執行單元，實現從高層 API 到底層 C 引擎的完整執行鏈路。
 
-The MrLiouAI core module is the foundational implementation of the **Particle Language** execution system, providing infrastructure for memory management, particle dictionaries, and logic execution. Particle Language is an innovative logical expression and execution framework that uses "particles" as the smallest logical execution units, implementing a complete execution chain from high-level API to low-level C engine.
+The FlowAgent core module is the foundational implementation of the **Particle Language** execution system, providing infrastructure for memory management, particle dictionaries, and logic execution. Particle Language is an innovative logical expression and execution framework that uses "particles" as the smallest logical execution units, implementing a complete execution chain from high-level API to low-level C engine.
 
 ### 核心特性 / Core Features
 
@@ -194,7 +194,7 @@ python demo.py demo
 
 ## 授權 / License
 
-MrLiouAI 專用任務系統內部模組  
+FlowAgent 專用任務系統內部模組  
 粒子語言規格遵循 CPLL 授權條款（© MR.liou）
 
 ---

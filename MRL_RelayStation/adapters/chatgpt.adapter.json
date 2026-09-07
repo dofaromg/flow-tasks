@@ -1,0 +1,27 @@
+{
+  "adapter_id": "MRL_CHATGPT_ADAPTER_v1",
+  "provider": "chatgpt",
+  "input_authority_level": "L0",
+  "output_type": "candidate_artifact",
+  "required_source_fields": [
+    "provider",
+    "session_or_conversation_id",
+    "captured_at"
+  ],
+  "required_request_fields": [
+    "requested_scope",
+    "expected_outputs"
+  ],
+  "normalization": {
+    "strip_provider_completion_claims": true,
+    "preserve_original_text_hash": true,
+    "map_tool_results_to_evidence": true,
+    "mark_uncited_claims_unverified": true
+  },
+  "authority_constraints": {
+    "can_write_canonical_memory": false,
+    "can_promote": false,
+    "can_release": false,
+    "maximum_level": "L1"
+  }
+}

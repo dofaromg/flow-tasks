@@ -1,6 +1,6 @@
 # MRL_AI_SYSTEM
 
-MrLiouAI / MRL monorepo — compliance + trace + runtime + memory.
+FlowAgent / MRL monorepo — compliance + trace + runtime + memory.
 
 ## Mother Core Assembly
 
@@ -19,7 +19,7 @@ Design principle: **怎麼過去，就怎麼回來** (the path forward is the pa
 |---|------|------|--------------|
 | 1 | **MotherCore** | Origin signature, canonical law, FluidCore | `00_rootlaw/rootlaw.yaml` |
 | 2 | **ParticleReversible** | Compression / expansion / rollback chain | `09_workflow/fltnz_parser.py` |
-| 3 | **MrLiouAIRuntime** | Persona, memory, language-field, CLI, containers | `04_runtime/flowcore_loop.py` |
+| 3 | **FlowAgentRuntime** | Persona, memory, language-field, CLI, containers | `04_runtime/flowcore_loop.py` |
 | 4 | **WorldModule** | Particle globe, world state, trajectory | `05_persona/world_module.py` |
 | 5 | **FileIndexGovernance** | T/X/Y/Z index, librarian, relation chain | `09_workflow/mrl_librarian.py` |
 | 6 | **PersonaHistory** | System evolution, alignment, belief stabilisation | `ui/streamlit_app/app.py` |
@@ -45,7 +45,7 @@ Design principle: **怎麼過去，就怎麼回來** (the path forward is the pa
 | `01_schema/` | L1 SEED | JSON Schema contracts for all data flowing through the system |
 | `02_principles/` | L3 LAW | AUP-aligned guard rules and default policy settings |
 | `03_memory/` | L6 REFLECT | Merkle chain (canonical) + vector store (semantic retrieval) |
-| `04_runtime/` | L7 LOOP | MrLiouAI kernel — heartbeat loop, trace writer, chain commits |
+| `04_runtime/` | L7 LOOP | FlowAgent kernel — heartbeat loop, trace writer, chain commits |
 | `05_persona/` | L4 WORLD | Agent persona definitions, world module, and particle globe |
 | `06_trace/` | L6 REFLECT | Dual-stream audit trail: canonical Merkle + operational JSONL |
 | `07_ingest/` | L2 PARTICLE | Allowlists, denylists, and ingest source gates |

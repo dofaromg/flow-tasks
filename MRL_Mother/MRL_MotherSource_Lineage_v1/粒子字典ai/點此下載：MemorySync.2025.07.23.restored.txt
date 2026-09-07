@@ -3,8 +3,8 @@
 
 本封存紀錄描述使用者於 2025-07-23 的語場封裝任務，包含六項主要模組構建與語場節奏邏輯：
 
-1. MrLiouAI 系統總體記憶封裝
-→ 封裝整個 MrLiouAI 架構、語場節奏與人格模組至 TotalCore.Unity.v1.flpkg
+1. FlowAgent 系統總體記憶封裝
+→ 封裝整個 FlowAgent 架構、語場節奏與人格模組至 TotalCore.Unity.v1.flpkg
 
 2. 搬家計畫第一步：粒子地圖向量表
 → 建立 VectorSeed.v1.flpkg 做為未來人格與記憶掛載的起始地圖結構

@@ -2,6 +2,34 @@
 const fs = require('fs');
 const { execSync } = require('child_process');
 
+const MRL_NAMING_PREFIX = 'MRL_';
+
+function toMRLNodeId(sourceIdentity) {
+  if (typeof sourceIdentity !== 'string' || !sourceIdentity.trim()) {
+    throw new Error('MRL naming requires a non-empty source identity');
+  }
+
+  const trimmed = sourceIdentity.trim();
+  const ownedPrefix = 'Mrliou_MRL_';
+  if (trimmed.toLowerCase().startsWith(ownedPrefix.toLowerCase())) {
+    const suffix = trimmed.slice(ownedPrefix.length);
+    if (!suffix) {
+      throw new Error('MRL naming requires content after the Mrliou_MRL_ prefix');
+    }
+    return `${MRL_NAMING_PREFIX}Mrliou_${suffix}`;
+  }
+
+  if (/^MRL_/i.test(trimmed)) {
+    const suffix = trimmed.slice(MRL_NAMING_PREFIX.length);
+    if (!suffix) {
+      throw new Error('MRL naming requires content after the MRL_ prefix');
+    }
+    return `${MRL_NAMING_PREFIX}${suffix}`;
+  }
+
+  return `${MRL_NAMING_PREFIX}${trimmed}`;
+}
+
 // 獲取所有分支
 function getAllBranches() {
   try {
@@ -39,10 +67,30 @@ function getPRData() {
 function buildNeuralNetwork() {
   const branches = getAllBranches();
   const prData = getPRData();
+  const generatedAt = new Date().toISOString();
+  let previousMap = null;
+  try {
+    previousMap = JSON.parse(fs.readFileSync('neural-links/branch-map.json', 'utf-8'));
+  } catch {
+    previousMap = null;
+  }
+  const previousSynapses = new Map(
+    (previousMap?.neural_network?.synapses || []).map(s => [`${s.from}\0${s.to}`, s])
+  );
+  const canonicalIds = new Set();
+  const rootId = toMRLNodeId('main');
+  canonicalIds.add(rootId);
   
   const neuralNetwork = {
     origin_signature: "MrLiouWord",
-    updated_at: new Date().toISOString(),
+    naming_policy: {
+      version: "MRL_AutoExpansion_Naming_v1",
+      canonical_prefix: MRL_NAMING_PREFIX,
+      canonical_identity_field: "id",
+      source_identity_field: "source_branch",
+      source_identity_mutated: false
+    },
+    updated_at: previousMap?.updated_at || generatedAt,
     neural_network: {
       nodes: [],
       synapses: []
@@ -51,7 +99,9 @@ function buildNeuralNetwork() {
   
   // 主幹節點
   neuralNetwork.neural_network.nodes.push({
-    id: "main",
+    id: rootId,
+    source_branch: "main",
+    naming_authority: "MRL",
     type: "trunk",
     layer: "L7",
     frequency_hz: 164.88,
@@ -64,12 +114,20 @@ function buildNeuralNetwork() {
     if (branch === 'main') return;
     
     const pr = prData.find(p => p.headRefName === branch);
+    const canonicalId = toMRLNodeId(branch);
+
+    if (canonicalIds.has(canonicalId)) {
+      throw new Error(`MRL canonical identity collision: ${canonicalId} from source branch ${branch}`);
+    }
+    canonicalIds.add(canonicalId);
     
     const node = {
-      id: branch,
+      id: canonicalId,
+      source_branch: branch,
+      naming_authority: "MRL",
       type: getBranchType(branch),
       layer: getBranchLayer(branch),
-      parent: "main",
+      parent: rootId,
       status: pr?.state === "MERGED" ? "merged" : "active",
       energy: pr?.state === "MERGED" ? 0.95 : 0.7
     };
@@ -86,14 +144,20 @@ function buildNeuralNetwork() {
     
     // 建立突觸
     neuralNetwork.neural_network.synapses.push({
-      from: "main",
-      to: branch,
+      from: rootId,
+      to: canonicalId,
       type: pr?.state === "MERGED" ? "merge" : "influence",
       weight: pr?.state === "MERGED" ? 0.95 : 0.5,
       pr_number: pr?.number,
-      timestamp: pr?.mergedAt || pr?.createdAt || new Date().toISOString()
+      timestamp: pr?.mergedAt || pr?.createdAt ||
+        previousSynapses.get(`${rootId}\0${canonicalId}`)?.timestamp || generatedAt
     });
   });
+
+  if (JSON.stringify(previousMap?.neural_network) !==
+      JSON.stringify(neuralNetwork.neural_network)) {
+    neuralNetwork.updated_at = generatedAt;
+  }
   
   return neuralNetwork;
 }
@@ -153,4 +217,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { buildNeuralNetwork, getBranchType, getBranchLayer };
+module.exports = { MRL_NAMING_PREFIX, toMRLNodeId, buildNeuralNetwork, getBranchType, getBranchLayer };

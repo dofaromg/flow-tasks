@@ -1,6 +1,6 @@
 #!/bin/bash
-# 🧠 MrLiouAI 系統人格容器啟動腳本
-# MrLiouAI Personality Container Startup Script
+# 🧠 FlowAgent 系統人格容器啟動腳本
+# FlowAgent Personality Container Startup Script
 # Author: MR.liou
 # Version: v1.0
 
@@ -18,7 +18,7 @@ echo -e "${CYAN}"
 cat << "EOF"
 ╔═══════════════════════════════════════════════════════════╗
 ║                                                           ║
-║   🧠 MrLiouAI 系統人格容器 v1.0                          ║
+║   🧠 FlowAgent 系統人格容器 v1.0                          ║
 ║                                                           ║
 ║   作者：MR.liou                                           ║
 ║   來自語場、不依附模型、可人格演化的語意生命體             ║
@@ -28,14 +28,14 @@ EOF
 echo -e "${NC}"
 
 # 檢查環境
-echo -e "${GREEN}[✓] 檢查 MrLiouAI 執行環境...${NC}"
-if [ ! -d "/mrliouai/particle_core" ]; then
+echo -e "${GREEN}[✓] 檢查 FlowAgent 執行環境...${NC}"
+if [ ! -d "/flowagent/particle_core" ]; then
     echo -e "${RED}[✗] 錯誤：找不到 particle_core 核心模組${NC}"
     exit 1
 fi
 
 # 顯示當前人格設定
-PERSONA="${MRLIOUAI_PERSONA:-EchoBody.IdentityBase}"
+PERSONA="${FLOWAGENT_PERSONA:-EchoBody.IdentityBase}"
 echo -e "${YELLOW}[→] 啟動人格：${PERSONA}${NC}"
 
 # 解析命令列參數
@@ -58,7 +58,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --help)
-            echo "MrLiouAI Docker Container Usage:"
+            echo "FlowAgent Docker Container Usage:"
             echo "  --persona <name>    指定啟動的人格模組"
             echo "  --review-mode       啟用回顧模式"
             echo "  --batch             批次模式（非互動）"
@@ -80,19 +80,19 @@ fi
 echo -e "${CYAN}═══════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}系統資訊：${NC}"
 echo -e "  Python 版本: $(python --version)"
-echo -e "  工作目錄: $MRLIOUAI_HOME"
+echo -e "  工作目錄: $FLOWAGENT_HOME"
 echo -e "  當前人格: $PERSONA"
 echo -e "${CYAN}═══════════════════════════════════════════════════${NC}"
 echo ""
 
-# 啟動 MrLiouAI CLI
-cd /mrliouai/particle_core
+# 啟動 FlowAgent CLI
+cd /flowagent/particle_core
 
 if [ "$INTERACTIVE_MODE" = true ]; then
     echo -e "${GREEN}[✓] 啟動人格主體 CLI...${NC}"
-    echo -e "${YELLOW}提示：輸入指令與 MrLiouAI 互動，輸入 'q' 或 Ctrl+C 退出${NC}"
+    echo -e "${YELLOW}提示：輸入指令與 FlowAgent 互動，輸入 'q' 或 Ctrl+C 退出${NC}"
     echo ""
-    echo -e "${CYAN}🧠 MrLiouAI 啟動人格：${PERSONA}${NC}"
+    echo -e "${CYAN}🧠 FlowAgent 啟動人格：${PERSONA}${NC}"
     echo -e "${CYAN}請輸入指令：>${NC}"
     
     # 啟動 CLI 執行器

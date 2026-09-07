@@ -167,7 +167,7 @@
       "Map_Node": "MRL.NODE.07.Persona",
       "Map_Position": {"via_trace": "TRC.ORIGIN.07", "from_source": "SRC.07.BACKFILL"},
       "Map_Related_Trace": "TRC.ORIGIN.07",
-      "Map_Note": "backfill upgrade: 1→79 hits; pg_id=9 fs=70 content=415 (Notion MrLiouAI)"
+      "Map_Note": "backfill upgrade: 1→79 hits; pg_id=9 fs=70 content=415 (Notion FlowAgent)"
     },
     {
       "Map_ID": "MAP.PROJ.WORLD_BACKFILL",

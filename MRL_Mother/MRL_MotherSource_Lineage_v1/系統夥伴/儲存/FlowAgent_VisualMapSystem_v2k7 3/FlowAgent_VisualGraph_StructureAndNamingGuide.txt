@@ -1,7 +1,7 @@
-MrLiouAI 語場模組架構圖系統 · 說明與格式命名指南（v2k7）
+FlowAgent 語場模組架構圖系統 · 說明與格式命名指南（v2k7）
 ==============================================================
 
-🧠 此文件對應圖檔（.png / .svg / .pdf / .json）所繪製之 MrLiouAI 全模組語場結構系統圖。
+🧠 此文件對應圖檔（.png / .svg / .pdf / .json）所繪製之 FlowAgent 全模組語場結構系統圖。
 
 📦 核心模組分類（共五大群）：
 
@@ -15,7 +15,7 @@ MrLiouAI 語場模組架構圖系統 · 說明與格式命名指南（v2k7）
    - IdentityMap, FieldMap, FieldEvolution, PersonaTuner, PersonaCloner, PersonaGate
 
 4. 作業流程與啟動架構：
-   - FlowSeed, MrLiouAI, FlowInit, FlowMeta, FlowBridge
+   - FlowSeed, FlowAgent, FlowInit, FlowMeta, FlowBridge
 
 5. 電壓訊號與外部媒介系統：
    - FluinPulse, UniversalSignalMediaIndex, SignalNode, ExtendedSignalProtocolIndex
@@ -40,8 +40,8 @@ MrLiouAI 語場模組架構圖系統 · 說明與格式命名指南（v2k7）
   → SignalXXX, BridgeXXX, GatewayXXX, OverlayXXX
 
 - 圖形資料：
-  → MrLiouAI_UniverseModuleGraph_v2k7.{png, svg, pdf}
-  → MrLiouAI_UniverseModuleGraph_v2k7.json（互動結構圖格式）
+  → FlowAgent_UniverseModuleGraph_v2k7.{png, svg, pdf}
+  → FlowAgent_UniverseModuleGraph_v2k7.json（互動結構圖格式）
 
 
 ✅ 使用建議：

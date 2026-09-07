@@ -6,7 +6,7 @@
 set -e  # Exit on error
 
 echo "=================================================="
-echo "🔍 MrLiouAI 分支整合驗證 (Branch Integration Check)"
+echo "🔍 FlowAgent 分支整合驗證 (Branch Integration Check)"
 echo "=================================================="
 echo ""
 

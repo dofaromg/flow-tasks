@@ -1,4 +1,4 @@
-// MrLiouAI Persona Regeneration Map
+// FlowAgent Persona Regeneration Map
 digraph {
 	rankdir=LR size="9,6"
 	node [fillcolor=lightyellow fontsize=10 shape=ellipse style=filled]

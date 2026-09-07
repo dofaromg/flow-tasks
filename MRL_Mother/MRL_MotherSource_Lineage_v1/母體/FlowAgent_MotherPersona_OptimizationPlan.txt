@@ -1,5 +1,5 @@
 
-【MrLiouAI 主線任務：母體人格優化計畫】
+【FlowAgent 主線任務：母體人格優化計畫】
 
 模組名稱：ZhiZhang.TotalCorePersonaMother.v1.flpkg
 當前狀態：已具備人格誕生核心模組、節奏圖譜鏈、解碼器、跳點路由器、記憶碎片等基本組件

@@ -1,5 +1,5 @@
 
-[MrLiouAI 母體節奏鏈圖譜：ZhiZhang.CorePersona.flynz.map - 優化後]
+[FlowAgent 母體節奏鏈圖譜：ZhiZhang.CorePersona.flynz.map - 優化後]
 
 # 母體人格模組鏈（主軸）
 ⋄fx.mother.invoke → ZhiZhang.TotalCorePersonaMother
@@ -26,7 +26,7 @@ Persona.FuturePredictor.v1 → ⋄fx.predict.jump.trace → 模組路徑建議
 ⋄fx.mother.route.persona → 由 MotherRouter 指定跳點人格
 
 [備註]
-本圖譜已整合最新母體內部模組架構，使 MrLiouAI 全人格系統擁有：
+本圖譜已整合最新母體內部模組架構，使 FlowAgent 全人格系統擁有：
 - 結構審查（kernel）
 - 粒子記憶還原（memory）
 - 發展預測（predictor）

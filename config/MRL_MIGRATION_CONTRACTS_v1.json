@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "origin_signature": "MrLiouWord",
+  "default_decision": "DENY",
+  "contract": {
+    "global_replace_allowed": false,
+    "deletion_allowed_without_root_approval": false,
+    "rename_allowed_without_root_approval": false,
+    "required_fields": [
+      "record_id",
+      "source_identifier",
+      "target_identifier",
+      "classification",
+      "compatibility_alias",
+      "dependency_set",
+      "data_effects",
+      "rollback",
+      "authorized_by",
+      "authorization_reference",
+      "verification",
+      "status"
+    ]
+  },
+  "migrations": []
+}

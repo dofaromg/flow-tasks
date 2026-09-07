@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mongodb-pvc
-  namespace: mrliouai
+  namespace: flowagent
 spec:
   accessModes:
   - ReadWriteOnce

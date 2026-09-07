@@ -1,6 +1,6 @@
 # GKE 部署基礎設施 - 實施總結
 
-**專案**: MrLiouAI GKE Starter  
+**專案**: FlowAgent GKE Starter  
 **任務**: 部署叢集 (Deploy Cluster)  
 **完成日期**: 2025-11-16  
 **分支**: copilot/deploy-cluster-setup  
@@ -9,7 +9,7 @@
 
 ## ✅ 任務完成總結
 
-已成功為 MrLiouAI 專案建立完整的 Google Kubernetes Engine (GKE) 部署基礎設施。
+已成功為 FlowAgent 專案建立完整的 Google Kubernetes Engine (GKE) 部署基礎設施。
 
 ### 交付成果統計
 - **新增檔案**: 32 個
@@ -181,7 +181,7 @@ $ bash scripts/validate_deployment.sh
 
 ## 🎉 總結
 
-MrLiouAI GKE 部署基礎設施已完整實施並驗證，包括：
+FlowAgent GKE 部署基礎設施已完整實施並驗證，包括：
 - ✅ 完整的 Kubernetes 清單
 - ✅ 多種部署方式
 - ✅ CI/CD 自動化
@@ -194,6 +194,6 @@ MrLiouAI GKE 部署基礎設施已完整實施並驗證，包括：
 ---
 
 **相關連結**:
-- [GKE 控制台](https://console.cloud.google.com/kubernetes/list?project=mrliouai)
-- [Artifact Registry](https://console.cloud.google.com/artifacts?project=mrliouai)
+- [GKE 控制台](https://console.cloud.google.com/kubernetes/list?project=flowmemorysync)
+- [Artifact Registry](https://console.cloud.google.com/artifacts?project=flowmemorysync)
 - [GitHub Actions](https://github.com/dofaromg/flow-tasks/actions)

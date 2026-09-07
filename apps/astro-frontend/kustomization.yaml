@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - deployment.yaml
 
-namespace: mrliouai
+namespace: flowagent

@@ -4,7 +4,7 @@ Integration Example with FlowCore and Process Tasks
 與 FlowCore 和 Process Tasks 的整合範例
 
 Demonstrates how to integrate context management strategies
-with existing MrLiouAI systems.
+with existing FlowAgent systems.
 """
 
 import sys
@@ -169,7 +169,7 @@ def integration_example_3_conversation_memory():
     print("  Window size: 30 messages")
     print("  Overlap: 5 messages")
     
-    # Simulate conversation with MrLiouAI
+    # Simulate conversation with FlowAgent
     conversation = [
         ("user", "請幫我實作上下文管理策略", 10),
         ("assistant", "好的，我會實作五種策略：Workspace、SlidingWindow、Summary、RAG、Hybrid", 10),

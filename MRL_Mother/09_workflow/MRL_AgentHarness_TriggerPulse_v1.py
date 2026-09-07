@@ -4,7 +4,7 @@
 MRL_AgentHarness_TriggerPulse_v1.py — Agent 執行骨架:觸發器脈衝（定時/檔變）
 origin_signature: MrLiouWord
 layer: L7 LOOP
-group: Y=3 MrLiouAIRuntime
+group: Y=3 FlowAgentRuntime
 
 吸收來源（母體吸收記錄）
 ----------------------

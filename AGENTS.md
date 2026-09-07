@@ -4,14 +4,14 @@
 
 ## Project Overview
 
-**MrLiouAI GKE Starter** is a bilingual (English / Traditional Chinese) GitOps + CI/CD foundation for deploying MrLiouAI services on Google Kubernetes Engine (GKE). It also hosts the **MRLiou Particle Language Core System** (粒子語言核心系統) — a logic-seed computation and function-chain execution framework.
+**FlowAgent GKE Starter** is a bilingual (English / Traditional Chinese) GitOps + CI/CD foundation for deploying FlowAgent services on Google Kubernetes Engine (GKE). It also hosts the **MRLiou Particle Language Core System** (粒子語言核心系統) — a logic-seed computation and function-chain execution framework.
 
 ### Key Subsystems
 
 | Subsystem | Location | Purpose |
 |---|---|---|
 | Particle Language Core | `particle_core/` | Logic seed computation, function-chain execution, compression/restoration, memory archival |
-| Next.js Frontend | `pages/`, `src/` | React/Next.js 15 web application (weather dashboard, MrLiouAI UI) |
+| Next.js Frontend | `pages/`, `src/` | React/Next.js 15 web application (weather dashboard, FlowAgent UI) |
 | Kubernetes Apps | `apps/` | Orchestrator, module-a, MongoDB, monitoring, frontend manifests |
 | Cluster Config | `cluster/` | Kustomize base + overlays for GKE prod |
 | GitOps | `argocd/` | Argo CD application definitions |
@@ -174,11 +174,11 @@ kubectl apply --dry-run=client -k cluster/overlays/prod/
 
 | Setting | Default |
 |---|---|
-| Project | `mrliouai` |
+| Project | `flowmemorysync` |
 | Region | `asia-east1` |
 | Zone | `asia-east1-a` |
 | Cluster | `modular-cluster` |
-| Container registry | `asia-east1-docker.pkg.dev/mrliouai/mrliouai/` |
+| Container registry | `asia-east1-docker.pkg.dev/flowmemorysync/flowagent/` |
 
 Update these values in manifests and `argocd/app.yaml` when forking or deploying to a different environment.
 

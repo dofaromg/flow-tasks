@@ -31,8 +31,8 @@ The following files are kept for reference and as a fallback option:
 kubectl apply -k cluster/overlays/prod/
 
 # Check deployment status
-kubectl get pods -n mrliouai
-kubectl get svc nextjs-frontend -n mrliouai
+kubectl get pods -n flowagent
+kubectl get svc nextjs-frontend -n flowagent
 ```
 
 For more details, see [GKE_MIGRATION.md](./GKE_MIGRATION.md).
