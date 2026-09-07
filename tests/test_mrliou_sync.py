@@ -354,10 +354,24 @@ def test_workflow_boundaries():
     assert "github.event_name != 'pull_request'" in job['if']
     assert "refs/heads/main" in job['if']
     assert job['needs'] == 'test'
+    assert 'runner.' not in yaml.safe_dump(job.get('env', {}))
     assert not any(s.get('continue-on-error') for s in job['steps'])
     text = (ROOT / '.github/workflows/sync-external-repos.yml').read_text()
     assert 'git add .' not in text and 'git push origin' not in text
     assert '${{ github.event.inputs.repo_name }}' not in text
+
+
+def test_runner_paths_are_prepared_at_step_scope(tmp_path):
+    workflow = yaml.safe_load((ROOT / '.github/workflows/sync-external-repos.yml').read_text())
+    prepare = workflow['jobs']['sync']['steps'][0]
+    env_file = tmp_path / 'github-env'
+    result = subprocess.run(['bash', '-eu', '-o', 'pipefail', '-c', prepare['run']],
+                            env={**os.environ, 'RUNNER_TEMP': str(tmp_path),
+                                 'GITHUB_ENV': str(env_file)}, capture_output=True)
+    assert result.returncode == 0, result.stderr
+    assert env_file.read_text().splitlines() == [
+        f'MRL_SYNC_ARTIFACT_DIR={tmp_path}/Mrliou_MRL_sync',
+        f'MRL_SYNC_REPORT={tmp_path}/Mrliou_MRL_sync/receipt.json']
 
 
 def test_enabled_route_shape():

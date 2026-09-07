@@ -55,10 +55,13 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    env:
-      MRL_SYNC_ARTIFACT_DIR: ${{ runner.temp }}/Mrliou_MRL_sync
-      MRL_SYNC_REPORT: ${{ runner.temp }}/Mrliou_MRL_sync/receipt.json
     steps:
+      - name: Prepare run-local receipt paths
+        run: |
+          {
+            echo "MRL_SYNC_ARTIFACT_DIR=$RUNNER_TEMP/Mrliou_MRL_sync"
+            echo "MRL_SYNC_REPORT=$RUNNER_TEMP/Mrliou_MRL_sync/receipt.json"
+          } >> "$GITHUB_ENV"
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
