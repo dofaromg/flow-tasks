@@ -4,11 +4,12 @@ graph TD
 
   %% 節點定義
   MRL_main["● MRL_main<br/>L7"]:::trunk
-  MRL_AI_Mother_Autonomous_Runtime_Baseline_v1["● MRL_AI_Mother_Autonomous_Runtime_Baseline_v1<br/>L3 #632"]:::experimental
+  MRL_Mrliou_sync_operations_20260907_v1["● MRL_Mrliou_sync_operations_20260907_v1<br/>L3"]:::experimental
   MRL_231["● MRL_231<br/>L3 #93"]:::experimental
+  MRL_AI_Mother_Autonomous_Runtime_Baseline_v1["✓ MRL_AI_Mother_Autonomous_Runtime_Baseline_v1<br/>L3 #632"]:::experimental
   MRL_AI_Partner_Origin_v1["✓ MRL_AI_Partner_Origin_v1<br/>L3 #622"]:::experimental
   MRL_APIWorks_BYOH_Deployment_Product_v1["● MRL_APIWorks_BYOH_Deployment_Product_v1<br/>L3 #633"]:::experimental
-  MRL_Evidence_PR632_PreLinearization_f7ef604["● MRL_Evidence_PR632_PreLinearization_f7ef604<br/>L3"]:::experimental
+  MRL_Evidence_PR632_PreLinearization_f7ef604["● MRL_Evidence_PR632_PreLinearization_f7ef604<br/>L3 #634"]:::experimental
   MRL_Module_Implementation_v1["✓ MRL_Module_Implementation_v1<br/>L3 #631"]:::experimental
   MRL_Outer_Automation_Fix_v1["● MRL_Outer_Automation_Fix_v1<br/>L3 #630"]:::experimental
   MRL_RelayStation_Authority_v1["✓ MRL_RelayStation_Authority_v1<br/>L3 #620"]:::experimental
@@ -74,6 +75,7 @@ graph TD
   MRL_copilot_improve_variable_function_names["✓ MRL_copilot/improve-variable-function-names<br/>L6 #64"]:::cognitive
   MRL_copilot_integrate_webgpu_neural_network["✓ MRL_copilot/integrate-webgpu-neural-network<br/>L6 #388"]:::cognitive
   MRL_copilot_law_definition_structure["● MRL_copilot/law-definition-structure<br/>L6"]:::cognitive
+  MRL_copilot_models_update["● MRL_copilot/models-update<br/>L6"]:::cognitive
   MRL_copilot_mrliou["✓ MRL_copilot/mrliou<br/>L6 #460"]:::cognitive
   MRL_copilot_mrliou_frontend_deployment_guide["● MRL_copilot/mrliou-frontend-deployment-guide<br/>L6"]:::cognitive
   MRL_copilot_optimize_core_performance["● MRL_copilot/optimize-core-performance<br/>L6"]:::cognitive
@@ -120,8 +122,9 @@ graph TD
   MRL_宥麟["● MRL_宥麟<br/>L3"]:::experimental
 
   %% 連結定義
-  MRL_main -.->|active| MRL_AI_Mother_Autonomous_Runtime_Baseline_v1
+  MRL_main -.->|active| MRL_Mrliou_sync_operations_20260907_v1
   MRL_main -.->|active| MRL_231
+  MRL_main -->|merged| MRL_AI_Mother_Autonomous_Runtime_Baseline_v1
   MRL_main -->|merged| MRL_AI_Partner_Origin_v1
   MRL_main -.->|active| MRL_APIWorks_BYOH_Deployment_Product_v1
   MRL_main -.->|active| MRL_Evidence_PR632_PreLinearization_f7ef604
@@ -190,6 +193,7 @@ graph TD
   MRL_main -->|merged| MRL_copilot_improve_variable_function_names
   MRL_main -->|merged| MRL_copilot_integrate_webgpu_neural_network
   MRL_main -.->|active| MRL_copilot_law_definition_structure
+  MRL_main -.->|active| MRL_copilot_models_update
   MRL_main -->|merged| MRL_copilot_mrliou
   MRL_main -.->|active| MRL_copilot_mrliou_frontend_deployment_guide
   MRL_main -.->|active| MRL_copilot_optimize_core_performance
