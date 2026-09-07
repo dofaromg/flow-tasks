@@ -7,7 +7,7 @@
     "source_identity_field": "source_branch",
     "source_identity_mutated": false
   },
-  "updated_at": "2026-09-07T07:20:07.205Z",
+  "updated_at": "2026-09-07T07:26:26.277Z",
   "neural_network": {
     "nodes": [
       {
@@ -28,7 +28,9 @@
         "layer": "L3",
         "parent": "MRL_main",
         "status": "active",
-        "energy": 0.7
+        "energy": 0.7,
+        "merged_pr": 635,
+        "created_at": "2026-09-07T07:22:38Z"
       },
       {
         "id": "MRL_231",
@@ -1369,7 +1371,8 @@
         "to": "MRL_Mrliou_sync_operations_20260907_v1",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-09-07T07:20:07.205Z"
+        "pr_number": 635,
+        "timestamp": "2026-09-07T07:22:38Z"
       },
       {
         "from": "MRL_main",
