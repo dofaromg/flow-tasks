@@ -1,114 +1,109 @@
 name: Sync External Repositories
-# 同步外部倉庫檔案
+# MrLiouWord — maintain existing sources; preserve main and repository history.
 
 on:
-  # Manual trigger / 手動觸發
   workflow_dispatch:
     inputs:
       repo_name:
-        description: '要同步的倉庫名稱 (留空則同步所有) / Repository name to sync (leave empty for all)'
+        description: '要同步的倉庫名稱 (留空則同步所有) / Repository name (empty for all)'
         required: false
         type: string
-  
-  # Scheduled sync (weekly on Monday at 00:00 UTC) / 定時同步（每週一 UTC 00:00）
   schedule:
     - cron: '0 0 * * 1'
-  
-  # On push to main branch when config file changes / 當配置檔案變更時
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - 'repos_sync.yaml'
       - '.github/workflows/sync-external-repos.yml'
+      - 'scripts/sync_external_repos.py'
+      - 'scripts/mrliou_publish_sync.sh'
+  pull_request:
+    paths:
+      - '.github/workflows/sync-external-repos.yml'
+      - 'scripts/sync_external_repos.py'
+      - 'scripts/mrliou_publish_sync.sh'
+      - 'tests/test_mrliou_sync.py'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: Mrliou_MRL-external-sync-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pyyaml pytest
+      - run: python -m pytest -q -o addopts='' tests/test_mrliou_sync.py
+      - run: bash -n scripts/mrliou_publish_sync.sh
+
   sync:
     name: Sync Files from External Repositories
+    needs: test
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 15
     permissions:
       contents: write
       pull-requests: write
-    
+    env:
+      MRL_SYNC_ARTIFACT_DIR: ${{ runner.temp }}/Mrliou_MRL_sync
+      MRL_SYNC_REPORT: ${{ runner.temp }}/Mrliou_MRL_sync/receipt.json
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
-      
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pyyaml
-      
-      - name: Configure Git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-      
-      - name: List configured repositories
-        run: |
-          echo "📋 配置的倉庫列表:"
-          python scripts/sync_external_repos.py --list
-      
+        run: python -m pip install pyyaml
+      - name: Require clean starting tree
+        run: test -z "$(git status --porcelain)"
       - name: Run synchronization
         id: sync
+        env:
+          SYNC_REPO: ${{ inputs.repo_name }}
         run: |
-          if [ -n "${{ github.event.inputs.repo_name }}" ]; then
-            echo "🔄 同步特定倉庫: ${{ github.event.inputs.repo_name }}"
-            python scripts/sync_external_repos.py --repo "${{ github.event.inputs.repo_name }}"
-          else
-            echo "🔄 同步所有倉庫"
-            python scripts/sync_external_repos.py
-          fi
-        continue-on-error: true
-      
-      - name: Check for changes
-        id: check_changes
-        run: |
-          if [[ -n $(git status -s) ]]; then
-            echo "有檔案變更 / Changes detected"
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-            git status -s
-          else
-            echo "沒有檔案變更 / No changes detected"
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-          fi
-      
-      - name: Commit and push changes
-        if: steps.check_changes.outputs.has_changes == 'true'
-        run: |
-          git add .
-          git commit -m "chore: sync files from external repositories
-
-          Automated sync by GitHub Actions
-          自動同步外部倉庫檔案
-          
-          Workflow: ${{ github.workflow }}
-          Run ID: ${{ github.run_id }}
-          Triggered by: ${{ github.event_name }}"
-          
-          git push origin ${{ github.ref_name }}
-      
+          args=(--report "$MRL_SYNC_REPORT")
+          if [[ -n "$SYNC_REPO" ]]; then args+=(--repo "$SYNC_REPO"); fi
+          python scripts/sync_external_repos.py "${args[@]}"
+      - name: Preserve candidate and open review PR
+        id: publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/mrliou_publish_sync.sh
+      - name: Preserve source receipt and recoverable candidate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mrliou_MRL-sync-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.MRL_SYNC_ARTIFACT_DIR }}/
+          if-no-files-found: warn
+          retention-days: 90
       - name: Create summary
         if: always()
+        env:
+          SYNC_OUTCOME: ${{ steps.sync.outcome }}
+          PUBLISH_OUTCOME: ${{ steps.publish.outcome }}
+          DELIVERY_STATE: ${{ steps.publish.outputs.state }}
         run: |
-          echo "## 🔄 倉庫同步摘要 / Repository Sync Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**觸發方式 / Triggered by:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "**分支 / Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "**時間 / Time:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
-          if [ "${{ steps.check_changes.outputs.has_changes }}" == "true" ]; then
-            echo "✅ **狀態 / Status:** 已同步並提交變更 / Changes synced and committed" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "ℹ️ **狀態 / Status:** 沒有變更 / No changes detected" >> $GITHUB_STEP_SUMMARY
-          fi
+          {
+            echo '## MRL synchronization — engineering transport'
+            echo "Synchronization: $SYNC_OUTCOME"
+            echo "Candidate publication: $PUBLISH_OUTCOME"
+            echo "Delivery state: ${DELIVERY_STATE:-not_delivered}"
+            echo 'Main unchanged. No automatic merge, product release, or rights transfer.'
+            echo 'Preserved conflicts and incomplete sync are detailed in the receipt.'
+          } >> "$GITHUB_STEP_SUMMARY"

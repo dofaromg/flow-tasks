@@ -1,0 +1,22 @@
+{
+  "artifact_id": "Mrliou_MRL_Sync_Delivery_v1",
+  "origin_signature": "MrLiouWord",
+  "baseline_sha": "25e8ac661ec82995ca90aeb6cf962990bae31356",
+  "expected_file_count": 7,
+  "delivery_mode": "git_commit_and_pull_request",
+  "archive_required": false,
+  "integrity": {"algorithm": "sha256", "payload_files_covered": 6, "manifest_identity": "Git blob identity; full manifest SHA-256 recorded in delivery PR"},
+  "rights_transfer": "NOT_GRANTED",
+  "commercial_release": "NOT_APPROVED_BY_SYNC",
+  "files": [
+    {"path": ".github/workflows/sync-external-repos.yml", "role": "workflow", "size_bytes": 3641, "sha256": "3d12083350dbc19d8f4d6fe4c3a3efbc3f13e11eadf08e75bc81a1266fc34593", "dependencies": ["scripts/sync_external_repos.py", "scripts/mrliou_publish_sync.sh", "tests/test_mrliou_sync.py", "repos_sync.yaml"]},
+    {"path": "scripts/sync_external_repos.py", "role": "synchronizer", "size_bytes": 20464, "sha256": "22316ee7bed70a3f467cefe4c2d4175daacff15309d7d422ec172bf4bab6cddb", "dependencies": ["repos_sync.yaml"]},
+    {"path": "scripts/mrliou_publish_sync.sh", "role": "publisher", "size_bytes": 6009, "sha256": "ef993ac7f99bcc2a320e52bc2ded5fd1377b6091b4acbd4c7f091066f37401bc", "dependencies": ["scripts/sync_external_repos.py"]},
+    {"path": "tests/test_mrliou_sync.py", "role": "offline_tests", "size_bytes": 15297, "sha256": "b42718fbad6159016ab32948bca431576268c695506d3aa16e035a45d89f8c4e", "dependencies": ["scripts/sync_external_repos.py", "scripts/mrliou_publish_sync.sh", ".github/workflows/sync-external-repos.yml"]},
+    {"path": "docs/Mrliou_MRL_Sync_Operations_v1.md", "role": "operations", "size_bytes": 10089, "sha256": "464300d9cf111895b45d4f2e1153db274e289e1adbd5342b3905409ebda8bfc4", "dependencies": ["scripts/sync_external_repos.py", "scripts/mrliou_publish_sync.sh"]},
+    {"path": "CHANGELOG.md", "role": "additive_history", "size_bytes": 3985, "sha256": "2e538f0919d50ff28c3207d60ffaa73411ad7233742ee3aa6bf81d77376c40b9", "dependencies": ["docs/Mrliou_MRL_Sync_Operations_v1.md"]},
+    {"path": "config/Mrliou_MRL_Sync_Delivery_v1.json", "role": "expected_delivery_map", "dependencies": [".github/workflows/sync-external-repos.yml", "scripts/sync_external_repos.py", "scripts/mrliou_publish_sync.sh", "tests/test_mrliou_sync.py", "docs/Mrliou_MRL_Sync_Operations_v1.md", "CHANGELOG.md"]}
+  ],
+  "preserved": ["repos_sync.yaml", ".github/workflows/mrl-root-governance-gate.yml", ".github/CODEOWNERS", "PR #633", "main history", "repository rules", "other repository routes"],
+  "out_of_scope": ["billing changes", "rights or license transfers", "private-source publication", "main bypass", "deployment or product release"]
+}

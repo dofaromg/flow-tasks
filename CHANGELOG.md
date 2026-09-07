@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — MRL external synchronization operations
+
+- Preserve external sync candidates through content-addressed branches and draft PRs;
+  never directly push protected main, force-update, auto-merge or erase review history.
+- Record source commit, original paths, SHA-256 and actual outcomes; fail on partial
+  source failures and preserve configured skip conflicts for files and directories.
+- Keep receipts and recoverable candidates when publishing is blocked; separate
+  engineering transport status from commercial release and rights grants.
+- Add offline sync/publication regression tests and an owner operations runbook.
+
 ## [3.0.0] - 2026-02-09
 
 ### Changed
