@@ -108,7 +108,7 @@ jobs:
           git diff --exit-code neural-links/ || echo "has_changes=true" >> $GITHUB_OUTPUT
       
       - name: Commit Neural Updates
-        if: steps.check_changes.outputs.has_changes == 'true' && github.event_name == 'push'
+        if: steps.check_changes.outputs.has_changes == 'true' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         run: |
           git config --global user.name "MrLiouWord Neural Bot"
           git config --global user.email "neural@mrliouword.dev"

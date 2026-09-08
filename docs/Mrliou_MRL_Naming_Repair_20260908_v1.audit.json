@@ -1,8 +1,8 @@
 {
   "origin_signature": "MrLiouWord",
   "base": "86ec74f928bec49fa9ccb505ba9e9f00ad067692",
-  "expected_file_count": 8,
-  "payload_count": 7,
+  "expected_file_count": 10,
+  "payload_count": 9,
   "files": [
     {
       "path": "scripts/update-neural-map.js",
@@ -20,24 +20,34 @@
       "sha256": "69ce5b604fd15eef0437345c70dcece79d9957f7a89acd0c5970bd72f6637e73"
     },
     {
+      "path": "src/neural-links/neural-index.ts",
+      "size": 9903,
+      "sha256": "4b5011e6e5ed77af857b78e8c016778d7e1324ba8117014b783b3f79ac29d119"
+    },
+    {
       "path": ".github/workflows/neural-sync.yml",
-      "size": 5360,
-      "sha256": "0cf8a924debac0ae647f9580e42bd529cf06246a5cb2a923c2251da3bdada978"
+      "size": 5406,
+      "sha256": "eef41ceca2065cf78a649b96add45a41f96a2a60bf965e0ccdce9970f0fdb9e3"
     },
     {
       "path": "neural-links/branch-map.json",
-      "size": 67551,
-      "sha256": "83e8b726d853a255fccb8ad57ca24f3e0399a81c903def69de608c468da7d039"
+      "size": 68783,
+      "sha256": "1fa558e54344cb78aeef5f3df101a397bda623240ee5a8cdb260e19282d23105"
     },
     {
       "path": "neural-links/synaptic-graph.mermaid",
-      "size": 20411,
-      "sha256": "6f20d24411f7af59a7616c22d6831573528dcfcc225a937cd61941ecada7b9e2"
+      "size": 20788,
+      "sha256": "97df7ed3604dd6f05f1525be4951880967cf0e34d582b09d7863acdfda611939"
     },
     {
       "path": "docs/Mrliou_MRL_Naming_Repair_20260908_v1.md",
-      "size": 3200,
-      "sha256": "4dbe5e1aff39dd1cddd108f0cc05d974961d8517c5921f3f50cd833c38b831b9"
+      "size": 4241,
+      "sha256": "7d994179bfff1b471457e6a0118f6f53150dd597c11c685ed3fd26d4b21944e2"
+    },
+    {
+      "path": "src/neural-links/__tests__/neural-index.test.ts",
+      "size": 12216,
+      "sha256": "53f6c208506c04c63072c9cb2e05fa9e64f124e9b4cfbc1d6499431aa28844b6"
     }
   ],
   "missing": [],
@@ -45,5 +55,7 @@
   "mismatch": [],
   "payload_coverage": "100%",
   "remote_checks": "PENDING",
-  "overall_request": "OPEN"
+  "overall_request": "OPEN",
+  "hash_scope": "commit containing this audit; later generated topology is a separate snapshot",
+  "reviewed_head": "cb1ed4083df33159bb14d58594efc54d9e2a9757"
 }
