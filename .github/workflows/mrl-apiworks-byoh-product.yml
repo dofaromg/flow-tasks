@@ -1,0 +1,32 @@
+name: MRL APIWorks BYOH Product
+
+on:
+  pull_request:
+    paths:
+      - "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/**"
+      - "MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/**"
+      - ".github/workflows/mrl-apiworks-byoh-product.yml"
+  push:
+    branches: [main]
+    paths:
+      - "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/**"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-product:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify parent runtime
+        run: python MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/scripts/MRL_verify_package_v1.py
+      - name: Test parent runtime
+        run: python -m unittest discover -s MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/tests -v
+      - name: Verify product source
+        run: python MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_verify_product_source_v1.py
+      - name: Build and inspect customer bundle
+        run: python -m unittest discover -s MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests -v
