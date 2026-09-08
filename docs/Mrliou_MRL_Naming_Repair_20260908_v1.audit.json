@@ -1,0 +1,49 @@
+{
+  "origin_signature": "MrLiouWord",
+  "base": "86ec74f928bec49fa9ccb505ba9e9f00ad067692",
+  "expected_file_count": 8,
+  "payload_count": 7,
+  "files": [
+    {
+      "path": "scripts/update-neural-map.js",
+      "size": 6280,
+      "sha256": "aba88b293a89cc08c5b73868e99a024844d15b17257431d2772c37e39ef722cb"
+    },
+    {
+      "path": "scripts/generate-mermaid.js",
+      "size": 5071,
+      "sha256": "d9c735877e4b78378eaa281500a6a5a4097eb45187044db4c7ddce13f332e365"
+    },
+    {
+      "path": "scripts/test-naming-authority.cjs",
+      "size": 1733,
+      "sha256": "69ce5b604fd15eef0437345c70dcece79d9957f7a89acd0c5970bd72f6637e73"
+    },
+    {
+      "path": ".github/workflows/neural-sync.yml",
+      "size": 5360,
+      "sha256": "0cf8a924debac0ae647f9580e42bd529cf06246a5cb2a923c2251da3bdada978"
+    },
+    {
+      "path": "neural-links/branch-map.json",
+      "size": 67551,
+      "sha256": "83e8b726d853a255fccb8ad57ca24f3e0399a81c903def69de608c468da7d039"
+    },
+    {
+      "path": "neural-links/synaptic-graph.mermaid",
+      "size": 20411,
+      "sha256": "6f20d24411f7af59a7616c22d6831573528dcfcc225a937cd61941ecada7b9e2"
+    },
+    {
+      "path": "docs/Mrliou_MRL_Naming_Repair_20260908_v1.md",
+      "size": 3200,
+      "sha256": "4dbe5e1aff39dd1cddd108f0cc05d974961d8517c5921f3f50cd833c38b831b9"
+    }
+  ],
+  "missing": [],
+  "extra": [],
+  "mismatch": [],
+  "payload_coverage": "100%",
+  "remote_checks": "PENDING",
+  "overall_request": "OPEN"
+}
