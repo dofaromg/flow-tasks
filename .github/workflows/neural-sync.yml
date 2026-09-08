@@ -45,7 +45,7 @@ jobs:
             ['feature/example', 'MRL_feature/example'],
             ['mrl_existing', 'MRL_existing'],
             ['MRL_existing', 'MRL_existing'],
-            ['Mrliou_MRL_SourceToProduct_ParallelLink_v1', 'MRL_Mrliou_SourceToProduct_ParallelLink_v1']
+            ['Mrliou_MRL_SourceToProduct_ParallelLink_v1', 'Mrliou_MRL_SourceToProduct_ParallelLink_v1']
           ];
           for (const [source, expected] of cases) {
             const actual = toMRLNodeId(source);
@@ -85,6 +85,9 @@ jobs:
           console.log('MRL_NAMING_NORMALIZATION_PASS');
           "
 
+      - name: Test authority preservation regressions
+        run: node --test scripts/test-naming-authority.cjs
+
       - name: Validate MRL canonical naming
         run: |
           node -e "
@@ -92,7 +95,7 @@ jobs:
           const { validateMRLNaming } = require('./scripts/generate-mermaid');
           const data = JSON.parse(fs.readFileSync('neural-links/branch-map.json', 'utf-8'));
           validateMRLNaming(data);
-          console.log('MRL_NAMING_GATE_PASS: every canonical node id uses the MRL_ prefix and preserves source_branch');
+          console.log('MRL_NAMING_GATE_PASS: canonical IDs preserve owned names and source_branch');
           "
 
       - name: Generate Mermaid Graph
@@ -105,13 +108,19 @@ jobs:
           git diff --exit-code neural-links/ || echo "has_changes=true" >> $GITHUB_OUTPUT
       
       - name: Commit Neural Updates
-        if: steps.check_changes.outputs.has_changes == 'true'
+        if: steps.check_changes.outputs.has_changes == 'true' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         run: |
           git config --global user.name "MrLiouWord Neural Bot"
           git config --global user.email "neural@mrliouword.dev"
           git add neural-links/
-          git commit -m "chore(MRL_neural-map): synchronize canonical topology" || echo "No changes to commit"
-          git push origin HEAD || echo "Push failed, may need manual intervention"
+          git commit -m "chore(MRL_neural-map): synchronize canonical topology"
+          if [ "$GITHUB_REF_NAME" = "main" ]; then
+            candidate="Mrliou_MRL_neural_sync/${GITHUB_SHA:0:12}-${GITHUB_RUN_ID}"
+            git push origin "HEAD:refs/heads/$candidate"
+            echo "Neural map candidate saved: $candidate; requires a reviewed PR into main." >> "$GITHUB_STEP_SUMMARY"
+          else
+            git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+          fi
       
       - name: Display Neural Stats
         run: |

@@ -16,17 +16,21 @@ $ResolvedPolicy = (Resolve-Path (Join-Path $ScriptDirectory $Policy)).Path
 if (-not $Consent.IsPresent) {
     throw "Explicit -Consent is required to build an MRL return bundle"
 }
+$ResolvedFiles = @(
+    $Files | ForEach-Object { (Resolve-Path -LiteralPath $_).Path }
+)
+$ResolvedOutput = [System.IO.Path]::GetFullPath($Output)
 
 Push-Location $PackageRoot
 try {
     python -m runtime.MRL_return_bundle_v1 `
         --policy $ResolvedPolicy `
-        --output $Output `
+        --output $ResolvedOutput `
         --purpose $Purpose `
         --hardware-id $HardwareId `
         --model-release-id $ModelReleaseId `
         --consent `
-        @Files
+        @ResolvedFiles
     if ($LASTEXITCODE -ne 0) { throw "MRL return bundle creation failed" }
 }
 finally {
