@@ -114,7 +114,13 @@ jobs:
           git config --global user.email "neural@mrliouword.dev"
           git add neural-links/
           git commit -m "chore(MRL_neural-map): synchronize canonical topology"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          if [ "$GITHUB_REF_NAME" = "main" ]; then
+            candidate="Mrliou_MRL_neural_sync/${GITHUB_SHA:0:12}-${GITHUB_RUN_ID}"
+            git push origin "HEAD:refs/heads/$candidate"
+            echo "Neural map candidate saved: $candidate; requires a reviewed PR into main." >> "$GITHUB_STEP_SUMMARY"
+          else
+            git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+          fi
       
       - name: Display Neural Stats
         run: |
