@@ -7,7 +7,7 @@
     "source_identity_field": "source_branch",
     "source_identity_mutated": false
   },
-  "updated_at": "2026-09-08T16:56:10.899Z",
+  "updated_at": "2026-09-08T17:23:45.078Z",
   "neural_network": {
     "nodes": [
       {
@@ -21,16 +21,16 @@
         "energy": 1
       },
       {
-        "id": "Mrliou_MRL_Naming_Repair_20260908_v1",
-        "source_branch": "Mrliou_MRL_Naming_Repair_20260908_v1",
+        "id": "Mrliou_MRL_BYOH_Mainline_Integration_20260908_v1",
+        "source_branch": "Mrliou_MRL_BYOH_Mainline_Integration_20260908_v1",
         "naming_authority": "MRL",
         "type": "experimental",
         "layer": "L3",
         "parent": "MRL_main",
         "status": "active",
         "energy": 0.7,
-        "merged_pr": 637,
-        "created_at": "2026-09-08T13:34:56Z"
+        "merged_pr": 638,
+        "created_at": "2026-09-08T17:23:28Z"
       },
       {
         "id": "MRL_231",
@@ -190,6 +190,19 @@
         "energy": 0.7,
         "merged_pr": 615,
         "created_at": "2026-07-27T09:18:16Z"
+      },
+      {
+        "id": "Mrliou_MRL_Naming_Repair_20260908_v1",
+        "source_branch": "Mrliou_MRL_Naming_Repair_20260908_v1",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "merged",
+        "energy": 0.95,
+        "merged_pr": 637,
+        "created_at": "2026-09-08T13:34:56Z",
+        "merged_at": "2026-09-08T17:15:47Z"
       },
       {
         "id": "Mrliou_MRL_OuterAutomation_ProtectedBridge_v1",
@@ -1394,11 +1407,11 @@
     "synapses": [
       {
         "from": "MRL_main",
-        "to": "Mrliou_MRL_Naming_Repair_20260908_v1",
+        "to": "Mrliou_MRL_BYOH_Mainline_Integration_20260908_v1",
         "type": "influence",
         "weight": 0.5,
-        "pr_number": 637,
-        "timestamp": "2026-09-08T13:34:56Z"
+        "pr_number": 638,
+        "timestamp": "2026-09-08T17:23:28Z"
       },
       {
         "from": "MRL_main",
@@ -1502,6 +1515,14 @@
         "weight": 0.5,
         "pr_number": 615,
         "timestamp": "2026-07-27T09:18:16Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "Mrliou_MRL_Naming_Repair_20260908_v1",
+        "type": "merge",
+        "weight": 0.95,
+        "pr_number": 637,
+        "timestamp": "2026-09-08T17:15:47Z"
       },
       {
         "from": "MRL_main",
