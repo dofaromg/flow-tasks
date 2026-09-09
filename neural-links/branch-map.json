@@ -7,7 +7,7 @@
     "source_identity_field": "source_branch",
     "source_identity_mutated": false
   },
-  "updated_at": "2026-09-09T07:30:31.174Z",
+  "updated_at": "2026-09-09T07:34:19.676Z",
   "neural_network": {
     "nodes": [
       {
@@ -19,18 +19,6 @@
         "frequency_hz": 164.88,
         "status": "active",
         "energy": 1
-      },
-      {
-        "id": "Mrliou_MRL_Cloudflare_Entry_20260909",
-        "source_branch": "Mrliou_MRL_Cloudflare_Entry_20260909",
-        "naming_authority": "MRL",
-        "type": "experimental",
-        "layer": "L3",
-        "parent": "MRL_main",
-        "status": "active",
-        "energy": 0.7,
-        "merged_pr": 641,
-        "created_at": "2026-09-09T07:30:27Z"
       },
       {
         "id": "MRL_231",
@@ -215,6 +203,19 @@
         "merged_pr": 638,
         "created_at": "2026-09-08T17:23:28Z",
         "merged_at": "2026-09-08T17:24:57Z"
+      },
+      {
+        "id": "Mrliou_MRL_Cloudflare_Entry_20260909",
+        "source_branch": "Mrliou_MRL_Cloudflare_Entry_20260909",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "merged",
+        "energy": 0.95,
+        "merged_pr": 641,
+        "created_at": "2026-09-09T07:30:27Z",
+        "merged_at": "2026-09-09T07:34:03Z"
       },
       {
         "id": "Mrliou_MRL_Naming_Repair_20260908_v1",
@@ -1445,14 +1446,6 @@
     "synapses": [
       {
         "from": "MRL_main",
-        "to": "Mrliou_MRL_Cloudflare_Entry_20260909",
-        "type": "influence",
-        "weight": 0.5,
-        "pr_number": 641,
-        "timestamp": "2026-09-09T07:30:27Z"
-      },
-      {
-        "from": "MRL_main",
         "to": "MRL_231",
         "type": "influence",
         "weight": 0.5,
@@ -1569,6 +1562,14 @@
         "weight": 0.95,
         "pr_number": 638,
         "timestamp": "2026-09-08T17:24:57Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "Mrliou_MRL_Cloudflare_Entry_20260909",
+        "type": "merge",
+        "weight": 0.95,
+        "pr_number": 641,
+        "timestamp": "2026-09-09T07:34:03Z"
       },
       {
         "from": "MRL_main",

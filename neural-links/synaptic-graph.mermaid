@@ -4,7 +4,6 @@ graph TD
 
   %% 節點定義
   MRL_main["● MRL_main<br/>L7"]:::trunk
-  Mrliou_MRL_Cloudflare_Entry_20260909["● Mrliou_MRL_Cloudflare_Entry_20260909<br/>L3 #641"]:::experimental
   MRL_231["● MRL_231<br/>L3 #93"]:::experimental
   MRL_AI_Mother_Autonomous_Runtime_Baseline_v1["✓ MRL_AI_Mother_Autonomous_Runtime_Baseline_v1<br/>L3 #632"]:::experimental
   MRL_AI_Partner_Origin_v1["✓ MRL_AI_Partner_Origin_v1<br/>L3 #622"]:::experimental
@@ -20,6 +19,7 @@ graph TD
   MRL_root_recovery_v1["● MRL_root_recovery_v1<br/>L3 #615"]:::experimental
   Mrliou_MRL_BYOH_633_Mainline_20260908["● Mrliou_MRL_BYOH_633_Mainline_20260908<br/>L3 #639"]:::experimental
   Mrliou_MRL_BYOH_Mainline_Integration_20260908_v1["✓ Mrliou_MRL_BYOH_Mainline_Integration_20260908_v1<br/>L3 #638"]:::experimental
+  Mrliou_MRL_Cloudflare_Entry_20260909["✓ Mrliou_MRL_Cloudflare_Entry_20260909<br/>L3 #641"]:::experimental
   Mrliou_MRL_Naming_Repair_20260908_v1["✓ Mrliou_MRL_Naming_Repair_20260908_v1<br/>L3 #637"]:::experimental
   Mrliou_MRL_OuterAutomation_ProtectedBridge_v1["✓ Mrliou_MRL_OuterAutomation_ProtectedBridge_v1<br/>L3 #629"]:::experimental
   Mrliou_MRL_SourceToProduct_ParallelLink_v1["✓ Mrliou_MRL_SourceToProduct_ParallelLink_v1<br/>L3 #628"]:::experimental
@@ -128,7 +128,6 @@ graph TD
   MRL_宥麟["● MRL_宥麟<br/>L3"]:::experimental
 
   %% 連結定義
-  MRL_main -.->|active| Mrliou_MRL_Cloudflare_Entry_20260909
   MRL_main -.->|active| MRL_231
   MRL_main -->|merged| MRL_AI_Mother_Autonomous_Runtime_Baseline_v1
   MRL_main -->|merged| MRL_AI_Partner_Origin_v1
@@ -144,6 +143,7 @@ graph TD
   MRL_main -.->|active| MRL_root_recovery_v1
   MRL_main -.->|active| Mrliou_MRL_BYOH_633_Mainline_20260908
   MRL_main -->|merged| Mrliou_MRL_BYOH_Mainline_Integration_20260908_v1
+  MRL_main -->|merged| Mrliou_MRL_Cloudflare_Entry_20260909
   MRL_main -->|merged| Mrliou_MRL_Naming_Repair_20260908_v1
   MRL_main -->|merged| Mrliou_MRL_OuterAutomation_ProtectedBridge_v1
   MRL_main -->|merged| Mrliou_MRL_SourceToProduct_ParallelLink_v1
