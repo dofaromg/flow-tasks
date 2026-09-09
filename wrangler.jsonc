@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Existing Cloudflare service locator, not the canonical MRL asset identity.
+  "name": "flow-tasks",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "build": {
+    "command": "npm run build:cloudflare"
+  }
+}
