@@ -10,8 +10,6 @@ assignees: mrliou
 清楚說明你遇到的問題。
 
 ## 🔄 重現步驟
-<<<<<<< 記憶
-=======
 1. 前往 '...'
 2. 點擊 '...'
 3. 看到錯誤
@@ -22,7 +20,8 @@ assignees: mrliou
 ## 💻 環境資訊
 - 作業系統: [例如：Windows 10, Ubuntu 22.04]
 - 瀏覽器/版本或執行環境: [例如：Chrome 139, Node.js 18]
->>>>>>> main
+
+## 🔄 Reproduction Steps
 1. Go to '...'
 2. Click on '...'
 3. See error
