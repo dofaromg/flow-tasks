@@ -1,0 +1,27 @@
+name: MRL APIWorks Commercial Closure Pack
+
+on:
+  pull_request:
+    paths:
+      - "MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/**"
+      - ".github/workflows/mrl-apiworks-commercial-closure.yml"
+  push:
+    branches: [main]
+    paths:
+      - "MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/**"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-commercial-closure-pack:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify package integrity
+        run: python MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/scripts/MRL_verify_commercial_closure_pack_v1.py
+      - name: Run package tests
+        run: python -m unittest discover -s MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/tests -v
