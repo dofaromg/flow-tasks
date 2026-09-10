@@ -7,7 +7,7 @@
     "source_identity_field": "source_branch",
     "source_identity_mutated": false
   },
-  "updated_at": "2026-09-09T07:30:31.174Z",
+  "updated_at": "2026-09-10T05:42:24.416Z",
   "neural_network": {
     "nodes": [
       {
@@ -21,16 +21,14 @@
         "energy": 1
       },
       {
-        "id": "Mrliou_MRL_Cloudflare_Entry_20260909",
-        "source_branch": "Mrliou_MRL_Cloudflare_Entry_20260909",
+        "id": "MRL_APIWorks_First_Transaction_Closure_v1",
+        "source_branch": "MRL_APIWorks_First_Transaction_Closure_v1",
         "naming_authority": "MRL",
         "type": "experimental",
         "layer": "L3",
         "parent": "MRL_main",
         "status": "active",
-        "energy": 0.7,
-        "merged_pr": 641,
-        "created_at": "2026-09-09T07:30:27Z"
+        "energy": 0.7
       },
       {
         "id": "MRL_231",
@@ -217,6 +215,19 @@
         "merged_at": "2026-09-08T17:24:57Z"
       },
       {
+        "id": "Mrliou_MRL_Cloudflare_Entry_20260909",
+        "source_branch": "Mrliou_MRL_Cloudflare_Entry_20260909",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "merged",
+        "energy": 0.95,
+        "merged_pr": 641,
+        "created_at": "2026-09-09T07:30:27Z",
+        "merged_at": "2026-09-09T07:34:03Z"
+      },
+      {
         "id": "Mrliou_MRL_Naming_Repair_20260908_v1",
         "source_branch": "Mrliou_MRL_Naming_Repair_20260908_v1",
         "naming_authority": "MRL",
@@ -280,6 +291,16 @@
         "merged_pr": 640,
         "created_at": "2026-09-08T17:26:22Z",
         "merged_at": "2026-09-08T17:27:02Z"
+      },
+      {
+        "id": "Mrliou_MRL_neural_sync/bc648a2dedec-34324512598",
+        "source_branch": "Mrliou_MRL_neural_sync/bc648a2dedec-34324512598",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7
       },
       {
         "id": "Mrliou_MRL_sync_operations_20260907_v1",
@@ -1445,11 +1466,10 @@
     "synapses": [
       {
         "from": "MRL_main",
-        "to": "Mrliou_MRL_Cloudflare_Entry_20260909",
+        "to": "MRL_APIWorks_First_Transaction_Closure_v1",
         "type": "influence",
         "weight": 0.5,
-        "pr_number": 641,
-        "timestamp": "2026-09-09T07:30:27Z"
+        "timestamp": "2026-09-10T05:42:24.416Z"
       },
       {
         "from": "MRL_main",
@@ -1572,6 +1592,14 @@
       },
       {
         "from": "MRL_main",
+        "to": "Mrliou_MRL_Cloudflare_Entry_20260909",
+        "type": "merge",
+        "weight": 0.95,
+        "pr_number": 641,
+        "timestamp": "2026-09-09T07:34:03Z"
+      },
+      {
+        "from": "MRL_main",
         "to": "Mrliou_MRL_Naming_Repair_20260908_v1",
         "type": "merge",
         "weight": 0.95,
@@ -1609,6 +1637,13 @@
         "weight": 0.95,
         "pr_number": 640,
         "timestamp": "2026-09-08T17:27:02Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "Mrliou_MRL_neural_sync/bc648a2dedec-34324512598",
+        "type": "influence",
+        "weight": 0.5,
+        "timestamp": "2026-09-10T05:42:24.416Z"
       },
       {
         "from": "MRL_main",
