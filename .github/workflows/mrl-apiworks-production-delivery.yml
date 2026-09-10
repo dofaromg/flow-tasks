@@ -1,0 +1,129 @@
+name: MRL APIWorks Production Customer Delivery
+
+on:
+  workflow_dispatch:
+    inputs:
+      order_reference:
+        description: "Opaque signed-order reference; never enter customer name, address, payment instrument, or signed-contract text."
+        required: true
+        type: string
+      payment_reference:
+        description: "Opaque independently confirmed payment reference; never enter card or bank data."
+        required: true
+        type: string
+      delivery_reference:
+        description: "Opaque authorized customer-delivery reference."
+        required: true
+        type: string
+      release_authorization:
+        description: "Type RELEASE_CUSTOMER_DELIVERY after the signed order and payment have been independently confirmed."
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mrl-apiworks-production-delivery
+  cancel-in-progress: false
+
+jobs:
+  build-authorized-customer-delivery:
+    name: Build authorized APIWorks customer delivery
+    runs-on: ubuntu-24.04
+    environment:
+      name: production
+    env:
+      ORDER_REFERENCE: ${{ inputs.order_reference }}
+      PAYMENT_REFERENCE: ${{ inputs.payment_reference }}
+      DELIVERY_REFERENCE: ${{ inputs.delivery_reference }}
+      RELEASE_AUTHORIZATION: ${{ inputs.release_authorization }}
+      PRODUCT_ROOT: MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1
+      CLOSURE_ROOT: MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Enforce production release authorization
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$RELEASE_AUTHORIZATION" = "RELEASE_CUSTOMER_DELIVERY"
+          for reference in "$ORDER_REFERENCE" "$PAYMENT_REFERENCE" "$DELIVERY_REFERENCE"; do
+            [[ "$reference" =~ ^MRL-[A-Z0-9][A-Z0-9._-]{5,127}$ ]] || {
+              echo "Each reference must be an opaque MRL-prefixed identifier; do not enter personal, payment, or banking data." >&2
+              exit 1
+            }
+          done
+
+      - name: Verify commercial closure package
+        run: |
+          python "$CLOSURE_ROOT/scripts/MRL_verify_commercial_closure_pack_v1.py"
+          python -m unittest discover -s "$CLOSURE_ROOT/tests" -v
+
+      - name: Verify APIWorks product source and parent runtime
+        run: |
+          python MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/scripts/MRL_verify_package_v1.py
+          python "$PRODUCT_ROOT/scripts/MRL_verify_product_source_v1.py"
+          python -m unittest discover -s "$PRODUCT_ROOT/tests" -v
+
+      - name: Build audited customer delivery ZIP
+        run: python "$PRODUCT_ROOT/scripts/MRL_build_product_bundle_v1.py"
+
+      - name: Generate delivery receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="$PRODUCT_ROOT/dist/MRL_APIWorks_BYOH_Deployment_Product_v1.zip"
+          ZIP_SHA256="$(sha256sum "$ZIP" | awk '{print $1}')"
+          export ZIP_SHA256
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          receipt = {
+              "schema": "MRL_APIWorks_Production_Delivery_Receipt_v1",
+              "canonical_product_id": "MRL_APIWorks_BYOH_Deployment_Product_v1",
+              "sku": "MRL-APIWORKS-BYOH-DEPLOY-V1",
+              "origin_signature": "MrLiouWord",
+              "order_reference": os.environ["ORDER_REFERENCE"],
+              "payment_reference": os.environ["PAYMENT_REFERENCE"],
+              "delivery_reference": os.environ["DELIVERY_REFERENCE"],
+              "product_commit": os.environ["GITHUB_SHA"],
+              "customer_bundle_sha256": os.environ["ZIP_SHA256"],
+              "delivery_gate": "PRODUCT_BUNDLE_DELIVERY_PASS",
+              "customer_acceptance": "PENDING_CUSTOMER_NODE_ACCEPTANCE_PASS",
+              "payout_reconciliation": "PENDING",
+              "revenue_state": "NOT_REALIZED_UNTIL_PAYMENT_ACCEPTANCE_AND_PAYOUT_EVIDENCE"
+          }
+          Path("MRL_APIWorks_Production_Delivery_Receipt.json").write_text(
+              json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+          )
+          PY
+          {
+            echo "## APIWorks production delivery artifact"
+            echo ""
+            echo "- Product: `MRL-APIWORKS-BYOH-DEPLOY-V1`"
+            echo "- Order reference: `$ORDER_REFERENCE`"
+            echo "- Payment reference: `$PAYMENT_REFERENCE`"
+            echo "- Delivery reference: `$DELIVERY_REFERENCE`"
+            echo "- Customer ZIP SHA-256: `$ZIP_SHA256`"
+            echo "- Delivery status: `PRODUCT_BUNDLE_DELIVERY_PASS`"
+            echo "- Customer acceptance: `PENDING_CUSTOMER_NODE_ACCEPTANCE_PASS`"
+            echo "- Revenue status: `NOT_REALIZED`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload authorized customer delivery artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MRL_APIWorks_BYOH_authorized_delivery_${{ github.run_id }}
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/dist/MRL_APIWorks_BYOH_Deployment_Product_v1.zip
+            MRL_APIWorks_Production_Delivery_Receipt.json
