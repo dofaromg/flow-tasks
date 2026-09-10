@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MRL APIWorks Transaction Evidence Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "canonical_product_id",
+    "sku",
+    "origin_signature",
+    "transaction_state",
+    "evidence_references"
+  ],
+  "properties": {
+    "canonical_product_id": {
+      "const": "MRL_APIWorks_BYOH_Deployment_Product_v1"
+    },
+    "sku": {
+      "const": "MRL-APIWORKS-BYOH-DEPLOY-V1"
+    },
+    "origin_signature": {
+      "const": "MrLiouWord"
+    },
+    "transaction_state": {
+      "enum": [
+        "QUOTE_PENDING",
+        "ORDER_SIGNED",
+        "PAYMENT_CONFIRMED",
+        "DEPLOYMENT_COMPLETED",
+        "CUSTOMER_ACCEPTANCE_PASS",
+        "PAYOUT_RECONCILED",
+        "FIRST_REALIZED_REVENUE_PASS"
+      ]
+    },
+    "evidence_references": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "order_reference",
+        "payment_reference",
+        "deployment_receipt_reference",
+        "acceptance_reference",
+        "payout_reference"
+      ],
+      "properties": {
+        "order_reference": {"type": ["string", "null"], "minLength": 1},
+        "payment_reference": {"type": ["string", "null"], "minLength": 1},
+        "deployment_receipt_reference": {"type": ["string", "null"], "minLength": 1},
+        "acceptance_reference": {"type": ["string", "null"], "minLength": 1},
+        "payout_reference": {"type": ["string", "null"], "minLength": 1}
+      }
+    },
+    "product_commit": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "customer_bundle_sha256": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"transaction_state": {"const": "FIRST_REALIZED_REVENUE_PASS"}}},
+      "then": {
+        "properties": {
+          "evidence_references": {
+            "properties": {
+              "order_reference": {"type": "string", "minLength": 1},
+              "payment_reference": {"type": "string", "minLength": 1},
+              "deployment_receipt_reference": {"type": "string", "minLength": 1},
+              "acceptance_reference": {"type": "string", "minLength": 1},
+              "payout_reference": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    }
+  ]
+}
