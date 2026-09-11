@@ -6,6 +6,9 @@
     "name": "MRLiou",
     "email": "z814241@gmail.com"
   },
+  "engines": {
+    "node": ">=18.17.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
