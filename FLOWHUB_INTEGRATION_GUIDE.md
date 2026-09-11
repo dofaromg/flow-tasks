@@ -13,26 +13,23 @@
 
 ## 內容 (Contents)
 
-### 1. Git Patch 檔案 (Individual Patches)
+### 1. Git Patch 檔案 (Patch File)
 
-位置: `/tmp/patches/`
+位置: `patches/0001-FlowHub-memory-cache-integration.patch`
 
-- `0001-Add-Wire-Memory-Integration-quick-start-README.patch`
-- `0002-Initial-plan.patch`
-- `0003-Complete-validation-of-Wire-Memory-Integration-PR-19.patch`
-- `0004-Add-task-completion-summary-for-PR-196-validation.patch`
-- `0005-Implement-memory-cache-disk-mapping-system-with-LRU-.patch`
-- `0006-Add-implementation-summary-for-memory-cache-disk-map.patch`
+這是一個綜合 patch，包含所有 FlowHub 記憶體快取整合所需的檔案。
 
 ### 2. Git Bundle (Complete Bundle)
 
-位置: `/tmp/flowhub-integration.bundle`
+位置: `flowhub-integration.bundle`
 
-包含所有 5 個提交的完整歷史記錄。
+⚠️ **重要提示**: 由於來源儲存庫經過 graft 處理，此 bundle 缺少必要的前置提交 (`efa908ebd567ed08f816b180ea7e6099ad07c65b`)，因此無法直接使用 `git bundle verify` 或在其他儲存庫中應用。
+
+**建議**: 使用 Patch 檔案或手動複製方法代替 bundle。
 
 ---
 
-## 方法 A: 使用 Git Bundle（推薦）
+## 方法 A: 使用 Patch 檔案（強烈推薦）
 
 ### 步驟 1: Clone flowhub 儲存庫
 
@@ -43,61 +40,21 @@ cd flowhub
 
 ### 步驟 2: 驗證 Bundle
 
-```bash
-git bundle verify /tmp/flowhub-integration.bundle
-```
-
-### 步驟 3: 列出 Bundle 內容
+⚠️ **重要**: Bundle 驗證會失敗，因為缺少前置提交。
 
 ```bash
-git bundle list-heads /tmp/flowhub-integration.bundle
+git bundle verify /path/to/flow-tasks/flowhub-integration.bundle
+# 預期輸出: error: Repository lacks these prerequisite commits
+# 這是正常的，建議改用 Patch 方法 (方法 B)
 ```
 
-### 步驟 4: 從 Bundle 拉取提交
+### 步驟 3-5: Bundle 方法不可用
 
-```bash
-# 建立追蹤遠端
-git remote add flow-tasks-bundle /tmp/flowhub-integration.bundle
-
-# 拉取提交
-git fetch flow-tasks-bundle
-
-# 查看可用的分支/提交
-git log --oneline flow-tasks-bundle/copilot/update-flow-tasks -10
-```
-
-### 步驟 5: 合併或 Cherry-pick
-
-**選項 A: 合併所有變更**
-```bash
-# 建立新分支
-git checkout -b feature/memory-cache-integration
-
-# 合併提交
-git merge flow-tasks-bundle/copilot/update-flow-tasks
-
-# 推送到 flowhub
-git push origin feature/memory-cache-integration
-```
-
-**選項 B: Cherry-pick 特定提交**
-```bash
-# 建立新分支
-git checkout -b feature/memory-cache-integration
-
-# 查看提交列表
-git log --oneline flow-tasks-bundle/copilot/update-flow-tasks
-
-# Cherry-pick 需要的提交（替換成實際的 commit hash）
-git cherry-pick <commit-hash>
-
-# 推送到 flowhub
-git push origin feature/memory-cache-integration
-```
+由於 bundle 缺少必要的前置提交，無法正常使用。**請改用方法 B (Patch) 或方法 C (手動複製)**。
 
 ---
 
-## 方法 B: 使用 Patch 檔案
+## 方法 B: 使用 Patch 檔案（強烈推薦）
 
 ### 步驟 1: Clone flowhub 儲存庫
 
@@ -112,27 +69,26 @@ cd flowhub
 git checkout -b feature/memory-cache-integration
 ```
 
-### 步驟 3: 應用 Patch 檔案
+### 步驟 3: 應用 Patch
 
-**應用所有 patches:**
 ```bash
-git am /tmp/patches/*.patch
+# 應用綜合 patch
+git am /path/to/flow-tasks/patches/0001-FlowHub-memory-cache-integration.patch
 ```
 
-**或逐一應用:**
+如果遇到衝突:
 ```bash
-git am /tmp/patches/0001-Add-Wire-Memory-Integration-quick-start-README.patch
-git am /tmp/patches/0002-Initial-plan.patch
-git am /tmp/patches/0003-Complete-validation-of-Wire-Memory-Integration-PR-19.patch
-git am /tmp/patches/0004-Add-task-completion-summary-for-PR-196-validation.patch
-git am /tmp/patches/0005-Implement-memory-cache-disk-mapping-system-with-LRU-.patch
-git am /tmp/patches/0006-Add-implementation-summary-for-memory-cache-disk-map.patch
+# 使用三方合併
+git am --3way /path/to/flow-tasks/patches/0001-FlowHub-memory-cache-integration.patch
+
+# 或手動解決衝突後繼續
+git am --continue
 ```
 
 ### 步驟 4: 檢查應用結果
 
 ```bash
-git log --oneline -6
+git log --oneline -3
 git status
 ```
 
@@ -279,13 +235,13 @@ pip install PyYAML  # 用於 config.yaml 解析 (可選)
 
 ## 檔案位置 (File Locations)
 
-- **Patch 檔案**: `/tmp/patches/*.patch`
-- **Git Bundle**: `/tmp/flowhub-integration.bundle`
-- **本 README**: 可以保存為 `FLOWHUB_INTEGRATION_GUIDE.md`
+- **Patch 檔案**: `patches/0001-FlowHub-memory-cache-integration.patch`
+- **Git Bundle**: `flowhub-integration.bundle` (⚠️ 可能無法使用)
+- **本 README**: `FLOWHUB_INTEGRATION_GUIDE.md`
 
 ---
 
 **生成日期**: 2026-01-03  
 **來源儲存庫**: dofaromg/flow-tasks  
 **目標儲存庫**: dofaromg/flowhub  
-**提交範圍**: ba6f6a8..efa908e
+**提交**: ffebfa0ecb172f43257bb565d7b0012e4b511763
