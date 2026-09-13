@@ -1,0 +1,27 @@
+{
+  "version": "v1",
+  "origin_signature": "MrLiouWord",
+  "operation": "SUPPLEMENT_EXISTING",
+  "module": "MRL_Causal_Optimization_Review_v1",
+  "existing_mother_position": "governance_review/correction_history/attestation",
+  "parallel_mother_created": false,
+  "required_lookup_chain": [
+    "Wake Memory",
+    "Mrliou_MRL_Origin_Registry_v1",
+    "Mrliou_MRL_Workspace_Node_Registry_v1",
+    "MRL_CanonicalRegistry v1.0",
+    "Mrliou_MRL_Authority_Registry_v1",
+    "MRL_Mother_Top_Source_Layer_v1"
+  ],
+  "notion_refs": {
+    "origin_registry": "https://app.notion.com/p/e771f33ea9e344f499ffcfeaff490758",
+    "workspace_node_registry": "https://app.notion.com/p/3b68eeeec5b58050a112d6c5d58c0d00",
+    "canonical_registry": "https://app.notion.com/p/f52809dd8ce64623a183c9f0ee6cdf27",
+    "authority_registry": "https://app.notion.com/p/3bb8eeeec5b581caafb7fc21e39177b8",
+    "top_source_layer": "https://app.notion.com/p/3b88eeeec5b581adb0aec7c998926133",
+    "world_model_engineering_navigation": "https://app.notion.com/p/3c38eeeec5b581ff8ed4c550121adddc"
+  },
+  "allowed_decisions": ["MAP_EXISTING", "SUPPLEMENT_EXISTING", "CREATE_NEW", "QUARANTINE_EXTERNAL", "HOLD_FOR_EVIDENCE"],
+  "create_new_requires_no_existing_node": true,
+  "backfill_required_after_create": true
+}
