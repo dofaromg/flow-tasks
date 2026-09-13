@@ -38,6 +38,17 @@ jobs:
           python
           MRL_Governance/MRL_Causal_Optimization_Review_v1/scripts/MRL_validate_causal_review_v1.py
           MRL_Governance/MRL_Causal_Optimization_Review_v1/examples/MRL_Causal_Review_Record_example.json
+      - name: Validate conversation-window error audit
+        run: >-
+          python
+          MRL_Governance/MRL_Causal_Optimization_Review_v1/scripts/MRL_validate_conversation_error_audit_v1.py
+          MRL_Governance/MRL_Causal_Optimization_Review_v1/MRL_Conversation_Error_Gates_v1.json
+          MRL_Governance/MRL_Causal_Optimization_Review_v1/examples/MRL_Conversation_Window_Error_Audit_20260913_v1.json
+      - name: Run conversation error regression tests
+        run: >-
+          python -m unittest
+          MRL_Governance/MRL_Causal_Optimization_Review_v1/tests/test_MRL_conversation_error_audit_v1.py
+          -v
       - name: Run attestation aggregation tests
         run: >-
           python -m unittest
