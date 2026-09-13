@@ -3,6 +3,7 @@
   "origin_signature": "MrLiouWord",
   "operation": "SUPPLEMENT_EXISTING",
   "module": "MRL_Causal_Optimization_Review_v1",
+  "existing_node_found": true,
   "existing_mother_position": "governance_review/correction_history/attestation",
   "parallel_mother_created": false,
   "required_lookup_chain": [
