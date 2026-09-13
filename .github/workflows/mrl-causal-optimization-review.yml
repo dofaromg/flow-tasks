@@ -1,0 +1,30 @@
+name: MRL Causal Optimization Review
+
+on:
+  pull_request:
+    paths:
+      - "MRL_Governance/MRL_Causal_Optimization_Review_v1/**"
+      - ".github/workflows/mrl-causal-optimization-review.yml"
+  push:
+    branches: [main]
+    paths:
+      - "MRL_Governance/MRL_Causal_Optimization_Review_v1/**"
+      - ".github/workflows/mrl-causal-optimization-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  causal-review:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate causal review example
+        run: >-
+          python
+          MRL_Governance/MRL_Causal_Optimization_Review_v1/scripts/MRL_validate_causal_review_v1.py
+          MRL_Governance/MRL_Causal_Optimization_Review_v1/examples/MRL_Causal_Review_Record_example.json
