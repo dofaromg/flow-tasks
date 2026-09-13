@@ -28,6 +28,11 @@ jobs:
           python
           MRL_Governance/MRL_Causal_Optimization_Review_v1/scripts/MRL_validate_existing_mother_preflight_v1.py
           MRL_Governance/MRL_Causal_Optimization_Review_v1/MRL_Existing_Mother_Preflight_v1.json
+      - name: Run anti-rebuild preflight tests
+        run: >-
+          python -m unittest
+          MRL_Governance/MRL_Causal_Optimization_Review_v1/tests/test_MRL_existing_mother_preflight_v1.py
+          -v
       - name: Validate causal review example
         run: >-
           python
