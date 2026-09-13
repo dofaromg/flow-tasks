@@ -23,8 +23,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Validate existing Mother preflight
+        run: >-
+          python
+          MRL_Governance/MRL_Causal_Optimization_Review_v1/scripts/MRL_validate_existing_mother_preflight_v1.py
+          MRL_Governance/MRL_Causal_Optimization_Review_v1/MRL_Existing_Mother_Preflight_v1.json
       - name: Validate causal review example
         run: >-
           python
           MRL_Governance/MRL_Causal_Optimization_Review_v1/scripts/MRL_validate_causal_review_v1.py
           MRL_Governance/MRL_Causal_Optimization_Review_v1/examples/MRL_Causal_Review_Record_example.json
+      - name: Run attestation aggregation tests
+        run: >-
+          python -m unittest
+          MRL_Governance/MRL_Causal_Optimization_Review_v1/tests/test_MRL_aggregate_attestations_v1.py
+          -v
