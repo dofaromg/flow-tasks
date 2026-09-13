@@ -1,0 +1,41 @@
+{
+  "event_id": "MRL-CAUSAL-REVIEW-EXAMPLE-001",
+  "origin_signature": "MrLiouWord",
+  "original_request": "完成可獨立完成的上游工程，不以未發生的下游事件反向阻擋。",
+  "actual_action": "工程審查與交易事件曾被混合判定。",
+  "evidence_references": [
+    "notion:MRL_APIWorks_First_Transaction_Closure_Control_20260910_v1"
+  ],
+  "divergence": "下游 FIRST_REALIZED_REVENUE_PASS 被錯誤當成上游工程完成條件。",
+  "causal_order": [
+    "production infrastructure completion",
+    "deployment readiness",
+    "real customer transaction",
+    "payment confirmation",
+    "acceptance",
+    "payout reconciliation",
+    "realized revenue"
+  ],
+  "correction": "工程 Gate 與真實交易 Gate 分層；未成交不得阻擋工程完成。",
+  "status": "CORRECTED",
+  "supersedes_record_id": null,
+  "node_attestations": [
+    {
+      "node_id": "MRL-OWNER-REVIEW-NODE",
+      "decision": "CORRECTED",
+      "evidence_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "signature": "MrLiouWord",
+      "signed_at": "2026-09-13T13:41:00+08:00",
+      "reason": "因果順序校正"
+    },
+    {
+      "node_id": "MRL-SYSTEM-REVIEW-NODE",
+      "decision": "CORRECTED",
+      "evidence_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "signature": null,
+      "signed_at": "2026-09-13T13:41:00+08:00",
+      "reason": "同標準審查"
+    }
+  ],
+  "consensus_state": "CONSENSUS"
+}
