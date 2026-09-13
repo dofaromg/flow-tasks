@@ -21,20 +21,20 @@
   "supersedes_record_id": null,
   "node_attestations": [
     {
-      "node_id": "MRL-OWNER-REVIEW-NODE",
+      "node_id": "MRL-EXAMPLE-OWNER-NODE",
       "decision": "CORRECTED",
       "evidence_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "signature_scheme": "SHA256_RECEIPT_V1",
-      "signature": "sha256:c7c1acb646cc1105823809c7f4f0b79f0cfcd330b8b74acf26de5955d40aaeec",
+      "signature_scheme": "ED25519",
+      "signature": "Fb2xIYoMmVwlj0/m3YLR1m2yf1vMRqZFCpc6/u3OeAjGe99ExLc3RTsY7l+dqtLtc/p1kvPotTNJjMvSDhk2Bw==",
       "signed_at": "2026-09-13T13:41:00+08:00",
       "reason": "因果順序校正"
     },
     {
-      "node_id": "MRL-SYSTEM-REVIEW-NODE",
+      "node_id": "MRL-EXAMPLE-SYSTEM-NODE",
       "decision": "CORRECTED",
       "evidence_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-      "signature_scheme": "SHA256_RECEIPT_V1",
-      "signature": "sha256:e43256d32d090545d5eabdf90a9a63d66fcdd63582c627b1b9130439d42b82fe",
+      "signature_scheme": "ED25519",
+      "signature": "dDPhUY95B3wvy1P21EPHaS/btMB60evkdhYrjSZBGFc2SOKehk11MJxMIeUDoE1c7ACVu1mU197yFAnj6UgVBw==",
       "signed_at": "2026-09-13T13:41:00+08:00",
       "reason": "同標準審查"
     }

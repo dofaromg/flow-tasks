@@ -2,11 +2,14 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
 import json
 from pathlib import Path
 from typing import Any
 
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 from jsonschema import Draft202012Validator, FormatChecker
 from jsonschema.exceptions import SchemaError
 
@@ -64,15 +67,48 @@ def receipt_payload(attestation: dict[str, Any]) -> bytes:
     ).encode("utf-8")
 
 
-def verify_signature(attestation: dict[str, Any]) -> bool:
-    """Verify the v1 deterministic SHA-256 integrity receipt."""
-    if attestation["signature_scheme"] != "SHA256_RECEIPT_V1":
+def load_trusted_keys(path: Path) -> dict[str, Ed25519PublicKey]:
+    """Load the explicit Ed25519 node trust registry used for this validation."""
+    registry = load(path)
+    if not isinstance(registry, dict):
+        fail("trusted-node registry must be an object")
+    if registry.get("signature_scheme") != "ED25519":
+        fail("trusted-node registry signature_scheme must be ED25519")
+    keys = registry.get("keys")
+    if not isinstance(keys, dict) or not keys:
+        fail("trusted-node registry keys must be a non-empty object")
+    trusted: dict[str, Ed25519PublicKey] = {}
+    for node_id, encoded_key in keys.items():
+        if not isinstance(node_id, str) or not node_id:
+            fail("trusted-node registry contains an invalid node_id")
+        try:
+            raw_key = base64.b64decode(encoded_key, validate=True)
+            trusted[node_id] = Ed25519PublicKey.from_public_bytes(raw_key)
+        except (TypeError, ValueError) as exc:
+            fail(f"invalid Ed25519 public key for {node_id}: {exc}")
+    return trusted
+
+
+def verify_signature(
+    attestation: dict[str, Any], trusted_keys: dict[str, Ed25519PublicKey]
+) -> bool:
+    """Verify a node signature against an explicitly trusted Ed25519 public key."""
+    if attestation["signature_scheme"] != "ED25519":
         return False
-    expected = "sha256:" + hashlib.sha256(receipt_payload(attestation)).hexdigest()
-    return attestation["signature"] == expected
+    public_key = trusted_keys.get(attestation["node_id"])
+    if public_key is None:
+        return False
+    try:
+        signature = base64.b64decode(attestation["signature"], validate=True)
+        public_key.verify(signature, receipt_payload(attestation))
+    except (InvalidSignature, TypeError, ValueError):
+        return False
+    return True
 
 
-def validate(record: dict[str, Any]) -> dict[str, Any]:
+def validate(
+    record: dict[str, Any], trusted_keys: dict[str, Ed25519PublicKey]
+) -> dict[str, Any]:
     """Validate a causal record and compute consensus from verified votes only."""
     enforce_schema(record)
     if record["status"] == "CORRECTED" and not record.get("correction"):
@@ -87,8 +123,8 @@ def validate(record: dict[str, Any]) -> dict[str, Any]:
         if node in seen:
             fail(f"duplicated node_id: {node}")
         seen.add(node)
-        if not verify_signature(item):
-            fail(f"invalid signature receipt: {node}")
+        if not verify_signature(item, trusted_keys):
+            fail(f"untrusted or invalid signature: {node}")
         decisions.append(item["decision"])
 
     if len(set(decisions)) == 1:
@@ -122,8 +158,16 @@ def main() -> None:
     """Validate the record supplied on the command line."""
     parser = argparse.ArgumentParser()
     parser.add_argument("record", type=Path)
+    parser.add_argument("trusted_node_keys", type=Path)
     args = parser.parse_args()
-    print(json.dumps(validate(load(args.record)), ensure_ascii=False, indent=2))
+    trusted_keys = load_trusted_keys(args.trusted_node_keys)
+    print(
+        json.dumps(
+            validate(load(args.record), trusted_keys),
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":

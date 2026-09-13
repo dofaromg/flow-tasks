@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "MRL_validate_causal_review_v1.py"
 EXAMPLE = ROOT / "examples" / "MRL_Causal_Review_Record_example.json"
+TRUST_STORE = ROOT / "examples" / "MRL_Trusted_Node_Keys_example.json"
 
 spec = importlib.util.spec_from_file_location("mrl_validate_causal_review", SCRIPT)
 mod = importlib.util.module_from_spec(spec)
@@ -18,15 +19,19 @@ class TestCausalReviewValidator(unittest.TestCase):
 
     def setUp(self):
         self.record = json.loads(EXAMPLE.read_text(encoding="utf-8"))
+        self.trusted_keys = mod.load_trusted_keys(TRUST_STORE)
 
     def assert_fails(self, record):
         """Assert that an invalid record fails closed."""
         with self.assertRaises(SystemExit):
-            mod.validate(record)
+            mod.validate(record, self.trusted_keys)
 
     def test_valid_example_passes(self):
         """Accept the published schema-conformant example."""
-        self.assertEqual(mod.validate(self.record)["computed_consensus"], "CONSENSUS")
+        self.assertEqual(
+            mod.validate(self.record, self.trusted_keys)["computed_consensus"],
+            "CONSENSUS",
+        )
 
     def test_unsigned_attestation_fails(self):
         """Reject a null receipt before its decision can be counted."""
@@ -38,6 +43,12 @@ class TestCausalReviewValidator(unittest.TestCase):
         """Reject a receipt when a signed decision is changed."""
         record = copy.deepcopy(self.record)
         record["node_attestations"][1]["decision"] = "FACT"
+        self.assert_fails(record)
+
+    def test_untrusted_node_fails(self):
+        """Reject a validly shaped signature from an untrusted node identity."""
+        record = copy.deepcopy(self.record)
+        record["node_attestations"][1]["node_id"] = "MRL-UNTRUSTED-NODE"
         self.assert_fails(record)
 
     def test_empty_event_id_fails(self):
