@@ -40,13 +40,21 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["node_id", "decision", "evidence_hash", "signed_at"],
+        "required": [
+          "node_id",
+          "decision",
+          "evidence_hash",
+          "signature_scheme",
+          "signature",
+          "signed_at"
+        ],
         "properties": {
           "node_id": {"type": "string", "minLength": 1},
           "decision": {"enum": ["FACT", "INFERENCE", "UNRESOLVED", "CORRECTED"]},
           "evidence_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
-          "signature": {"type": ["string", "null"]},
-          "signed_at": {"type": "string", "minLength": 1},
+          "signature_scheme": {"const": "SHA256_RECEIPT_V1"},
+          "signature": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+          "signed_at": {"type": "string", "format": "date-time"},
           "reason": {"type": ["string", "null"]}
         }
       }
