@@ -28,8 +28,22 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  authorize-production-reference:
+    name: Authorize main-only production dispatch
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Reject non-main dispatch references
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = "refs/heads/main" || {
+            echo "Production customer delivery must be dispatched from main; received $GITHUB_REF." >&2
+            exit 1
+          }
+
   build-authorized-customer-delivery:
     name: Build authorized APIWorks customer delivery
+    needs: authorize-production-reference
     runs-on: ubuntu-24.04
     environment:
       name: production
@@ -81,7 +95,9 @@ jobs:
           set -euo pipefail
           ZIP="$PRODUCT_ROOT/dist/MRL_APIWorks_BYOH_Deployment_Product_v1.zip"
           ZIP_SHA256="$(sha256sum "$ZIP" | awk '{print $1}')"
+          PRODUCT_COMMIT="$(git rev-parse HEAD)"
           export ZIP_SHA256
+          export PRODUCT_COMMIT
           python - <<'PY'
           import json
           import os
@@ -94,7 +110,7 @@ jobs:
               "order_reference": os.environ["ORDER_REFERENCE"],
               "payment_reference": os.environ["PAYMENT_REFERENCE"],
               "delivery_reference": os.environ["DELIVERY_REFERENCE"],
-              "product_commit": os.environ["GITHUB_SHA"],
+              "product_commit": os.environ["PRODUCT_COMMIT"],
               "customer_bundle_sha256": os.environ["ZIP_SHA256"],
               "delivery_gate": "PRODUCT_BUNDLE_DELIVERY_PASS",
               "customer_acceptance": "PENDING_CUSTOMER_NODE_ACCEPTANCE_PASS",
@@ -112,6 +128,7 @@ jobs:
             echo "- Order reference: `$ORDER_REFERENCE`"
             echo "- Payment reference: `$PAYMENT_REFERENCE`"
             echo "- Delivery reference: `$DELIVERY_REFERENCE`"
+            echo "- Product commit: `$PRODUCT_COMMIT`"
             echo "- Customer ZIP SHA-256: `$ZIP_SHA256`"
             echo "- Delivery status: `PRODUCT_BUNDLE_DELIVERY_PASS`"
             echo "- Customer acceptance: `PENDING_CUSTOMER_NODE_ACCEPTANCE_PASS`"
