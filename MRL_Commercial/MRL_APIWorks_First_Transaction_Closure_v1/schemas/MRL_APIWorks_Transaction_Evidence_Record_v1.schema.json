@@ -89,6 +89,8 @@
       "then": {
         "required": ["product_commit", "customer_bundle_sha256"],
         "properties": {
+          "product_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "customer_bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
           "evidence_references": {
             "properties": {
               "order_reference": {"type": "string", "minLength": 1},
@@ -104,6 +106,8 @@
       "then": {
         "required": ["product_commit", "customer_bundle_sha256"],
         "properties": {
+          "product_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "customer_bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
           "evidence_references": {
             "properties": {
               "order_reference": {"type": "string", "minLength": 1},
@@ -120,6 +124,8 @@
       "then": {
         "required": ["product_commit", "customer_bundle_sha256"],
         "properties": {
+          "product_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "customer_bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
           "evidence_references": {
             "properties": {
               "order_reference": {"type": "string", "minLength": 1},
@@ -137,6 +143,8 @@
       "then": {
         "required": ["product_commit", "customer_bundle_sha256"],
         "properties": {
+          "product_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "customer_bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
           "evidence_references": {
             "properties": {
               "order_reference": {"type": "string", "minLength": 1},
