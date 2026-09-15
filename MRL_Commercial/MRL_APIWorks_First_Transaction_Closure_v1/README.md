@@ -9,8 +9,8 @@ This package is the operational evidence layer for the first real APIWorks BYOH 
 
 ## Product baseline
 
-- Product integration: PR #638, merge commit `17d3e2e3571120635b3f191b71bdedca216fd4fe`.
-- Customer ZIP SHA-256: `4707ea3d39efaca6254cda123c0af5573415a06d57856ccbebadf00269daaff1`.
+- Acceptance-safe product baseline: `1.0.0-rc2`, PR #645, main commit `10248fd51138698d5d8aa144b969adcf8695c69e`.
+- Customer ZIP SHA-256 is generated for each authorized delivery and must be verified against that delivery's receipt; no superseded rc1 hash is canonical here.
 - Sale model: custom quote by signed order form.
 - Public catalog configuration, CI success, or an unpaid checkout do **not** constitute revenue.
 
