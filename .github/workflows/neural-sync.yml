@@ -108,19 +108,18 @@ jobs:
           git diff --exit-code neural-links/ || echo "has_changes=true" >> $GITHUB_OUTPUT
       
       - name: Commit Neural Updates
-        if: steps.check_changes.outputs.has_changes == 'true' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        # origin_signature: MrLiouWord
+        # Feature and PR refs are validation-only. Generated topology is always
+        # proposed on a candidate branch, never written back into the source ref.
+        if: steps.check_changes.outputs.has_changes == 'true' && ((github.event_name == 'push' && github.ref_name == 'main') || github.event_name == 'workflow_dispatch')
         run: |
           git config --global user.name "MrLiouWord Neural Bot"
           git config --global user.email "neural@mrliouword.dev"
           git add neural-links/
           git commit -m "chore(MRL_neural-map): synchronize canonical topology"
-          if [ "$GITHUB_REF_NAME" = "main" ]; then
-            candidate="Mrliou_MRL_neural_sync/${GITHUB_SHA:0:12}-${GITHUB_RUN_ID}"
-            git push origin "HEAD:refs/heads/$candidate"
-            echo "Neural map candidate saved: $candidate; requires a reviewed PR into main." >> "$GITHUB_STEP_SUMMARY"
-          else
-            git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
-          fi
+          candidate="Mrliou_MRL_neural_sync/${GITHUB_SHA:0:12}-${GITHUB_RUN_ID}"
+          git push origin "HEAD:refs/heads/$candidate"
+          echo "Neural map candidate saved: $candidate; requires a reviewed PR into main." >> "$GITHUB_STEP_SUMMARY"
       
       - name: Display Neural Stats
         run: |
