@@ -39,9 +39,11 @@
 
 ## 建立交付 ZIP
 
+從 GitHub repository checkout 的商品來源目錄執行：
+
 ```powershell
-python scripts\MRL_build_product_bundle_v1.py
 python scripts\MRL_verify_product_source_v1.py
+python scripts\MRL_build_product_bundle_v1.py
 ```
 
-輸出位於 `dist/`；`dist/` 是可重建產物，不納入來源封包。
+輸出位於 `dist/`；`dist/` 是可重建產物，不納入來源封包。客戶解壓後應從 ZIP 內的單一頂層目錄開始，依 `MRL_Products\MRL_APIWorks_BYOH_Deployment_Product_v1\docs\MRL_DELIVERY_ACCEPTANCE_v1.md` 操作；不要修改受 SHA 保護的 Runtime 範例設定。
