@@ -61,6 +61,7 @@ class CommercialClosurePackTests(unittest.TestCase):
                 "deployment_receipt_reference",
                 "acceptance_reference",
                 "payout_reference",
+                "revenue_ledger_reference",
             },
         }
         for state, references in expected.items():
