@@ -122,17 +122,19 @@ jobs:
           )
           PY
           {
-            echo "## APIWorks production delivery artifact"
-            echo ""
-            echo "- Product: `MRL-APIWORKS-BYOH-DEPLOY-V1`"
-            echo "- Order reference: `$ORDER_REFERENCE`"
-            echo "- Payment reference: `$PAYMENT_REFERENCE`"
-            echo "- Delivery reference: `$DELIVERY_REFERENCE`"
-            echo "- Product commit: `$PRODUCT_COMMIT`"
-            echo "- Customer ZIP SHA-256: `$ZIP_SHA256`"
-            echo "- Delivery status: `PRODUCT_BUNDLE_DELIVERY_PASS`"
-            echo "- Customer acceptance: `PENDING_CUSTOMER_NODE_ACCEPTANCE_PASS`"
-            echo "- Revenue status: `NOT_REALIZED`"
+            printf '%s\n' \
+              '## APIWorks production delivery artifact' \
+              '' \
+              '- Product: `MRL-APIWORKS-BYOH-DEPLOY-V1`'
+            printf -- '- Order reference: `%s`\n' "$ORDER_REFERENCE"
+            printf -- '- Payment reference: `%s`\n' "$PAYMENT_REFERENCE"
+            printf -- '- Delivery reference: `%s`\n' "$DELIVERY_REFERENCE"
+            printf -- '- Product commit: `%s`\n' "$PRODUCT_COMMIT"
+            printf -- '- Customer ZIP SHA-256: `%s`\n' "$ZIP_SHA256"
+            printf '%s\n' \
+              '- Delivery status: `PRODUCT_BUNDLE_DELIVERY_PASS`' \
+              '- Customer acceptance: `PENDING_CUSTOMER_NODE_ACCEPTANCE_PASS`' \
+              '- Revenue status: `NOT_REALIZED`'
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload authorized customer delivery artifact
