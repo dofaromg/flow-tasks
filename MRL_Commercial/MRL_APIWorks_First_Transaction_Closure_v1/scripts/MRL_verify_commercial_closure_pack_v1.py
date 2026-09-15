@@ -152,6 +152,21 @@ def validate_schema(schema: dict[str, object]) -> list[str]:
             required = then.get("required") if isinstance(then, dict) else None
             if required != ["product_commit", "customer_bundle_sha256"]:
                 failures.append(f"gate.{state}.artifact_identity")
+            for field, pattern in {
+                "product_commit": "^[0-9a-f]{40}$",
+                "customer_bundle_sha256": "^[0-9a-f]{64}$",
+            }.items():
+                definition = (
+                    then_properties.get(field)
+                    if isinstance(then_properties, dict)
+                    else None
+                )
+                if (
+                    not isinstance(definition, dict)
+                    or definition.get("type") != "string"
+                    or definition.get("pattern") != pattern
+                ):
+                    failures.append(f"gate.{state}.{field}.non_null")
 
     return sorted(failures)
 
