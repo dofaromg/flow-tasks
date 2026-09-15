@@ -93,6 +93,8 @@ class CommercialClosurePackTests(unittest.TestCase):
         self.assertIn('PRODUCT_COMMIT="$(git rev-parse HEAD)"', workflow)
         self.assertIn('os.environ["PRODUCT_COMMIT"]', workflow)
         self.assertNotIn('os.environ["GITHUB_SHA"]', workflow)
+        self.assertIn("printf -- '- Order reference: `%s`", workflow)
+        self.assertNotIn('echo "- Order reference: `', workflow)
 
 if __name__ == "__main__":
     unittest.main()
