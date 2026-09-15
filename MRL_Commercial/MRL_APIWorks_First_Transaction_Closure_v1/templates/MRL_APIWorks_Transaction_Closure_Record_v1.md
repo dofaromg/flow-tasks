@@ -19,6 +19,7 @@ This is an operational completion record, not a contract. Customer identity and 
 - Acceptance reference:
 - Payment reference:
 - Payout reconciliation reference:
+- Realized-revenue ledger reference:
 
 ## Gate results
 
