@@ -26,6 +26,7 @@ EXPECTED_REFERENCES = (
     "deployment_receipt_reference",
     "acceptance_reference",
     "payout_reference",
+    "revenue_ledger_reference",
 )
 STATE_REQUIREMENTS = {
     "ORDER_SIGNED": ("order_reference",),
@@ -41,7 +42,7 @@ STATE_REQUIREMENTS = {
         "deployment_receipt_reference",
         "acceptance_reference",
     ),
-    "PAYOUT_RECONCILED": EXPECTED_REFERENCES,
+    "PAYOUT_RECONCILED": EXPECTED_REFERENCES[:-1],
     "FIRST_REALIZED_REVENUE_PASS": EXPECTED_REFERENCES,
 }
 REQUIRED_RECORD_TEXT = {
