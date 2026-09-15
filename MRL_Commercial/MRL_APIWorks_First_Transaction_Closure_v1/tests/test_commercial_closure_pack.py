@@ -73,6 +73,14 @@ class CommercialClosurePackTests(unittest.TestCase):
                     rules[state]["required"],
                     ["product_commit", "customer_bundle_sha256"],
                 )
+                self.assertEqual(
+                    rules[state]["properties"]["product_commit"],
+                    {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+                )
+                self.assertEqual(
+                    rules[state]["properties"]["customer_bundle_sha256"],
+                    {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                )
 
     def test_delivery_workflow_binds_main_and_checked_out_commit(self) -> None:
         """Production delivery must reject non-main refs and receipt the built tree."""
