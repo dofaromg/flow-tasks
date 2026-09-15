@@ -7,7 +7,7 @@
     "source_identity_field": "source_branch",
     "source_identity_mutated": false
   },
-  "updated_at": "2026-09-15T13:37:38.277Z",
+  "updated_at": "2026-09-14T17:38:43.521Z",
   "neural_network": {
     "nodes": [
       {
@@ -21,16 +21,16 @@
         "energy": 1
       },
       {
-        "id": "MRL_APIWorks_First_Transaction_Closure_v1",
-        "source_branch": "MRL_APIWorks_First_Transaction_Closure_v1",
+        "id": "MRL_Mrliou_APIWorks_Public_Control_Plane_v1",
+        "source_branch": "Mrliou_APIWorks_Public_Control_Plane_v1",
         "naming_authority": "MRL",
         "type": "experimental",
         "layer": "L3",
         "parent": "MRL_main",
         "status": "active",
         "energy": 0.7,
-        "merged_pr": 642,
-        "created_at": "2026-09-10T05:44:35Z"
+        "merged_pr": 644,
+        "created_at": "2026-09-13T17:01:25Z"
       },
       {
         "id": "MRL_231",
@@ -81,6 +81,18 @@
         "energy": 0.7,
         "merged_pr": 633,
         "created_at": "2026-08-28T05:29:33Z"
+      },
+      {
+        "id": "MRL_APIWorks_First_Transaction_Closure_v1",
+        "source_branch": "MRL_APIWorks_First_Transaction_Closure_v1",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7,
+        "merged_pr": 642,
+        "created_at": "2026-09-10T05:44:35Z"
       },
       {
         "id": "MRL_Causal_Optimization_Review_v1",
@@ -204,19 +216,6 @@
         "created_at": "2026-07-27T09:18:16Z"
       },
       {
-        "id": "MRL_Mrliou_APIWorks_Public_Control_Plane_v1",
-        "source_branch": "Mrliou_APIWorks_Public_Control_Plane_v1",
-        "naming_authority": "MRL",
-        "type": "experimental",
-        "layer": "L3",
-        "parent": "MRL_main",
-        "status": "merged",
-        "energy": 0.95,
-        "merged_pr": 644,
-        "created_at": "2026-09-13T17:01:25Z",
-        "merged_at": "2026-09-15T05:17:04Z"
-      },
-      {
         "id": "Mrliou_MRL_BYOH_633_Mainline_20260908",
         "source_branch": "Mrliou_MRL_BYOH_633_Mainline_20260908",
         "naming_authority": "MRL",
@@ -307,16 +306,6 @@
         "merged_at": "2026-09-07T08:35:56Z"
       },
       {
-        "id": "Mrliou_MRL_neural_sync/10248fd51138-34975285661",
-        "source_branch": "Mrliou_MRL_neural_sync/10248fd51138-34975285661",
-        "naming_authority": "MRL",
-        "type": "experimental",
-        "layer": "L3",
-        "parent": "MRL_main",
-        "status": "active",
-        "energy": 0.7
-      },
-      {
         "id": "Mrliou_MRL_neural_sync/17d3e2e35711-34256954722",
         "source_branch": "Mrliou_MRL_neural_sync/17d3e2e35711-34256954722",
         "naming_authority": "MRL",
@@ -328,16 +317,6 @@
         "merged_pr": 640,
         "created_at": "2026-09-08T17:26:22Z",
         "merged_at": "2026-09-08T17:27:02Z"
-      },
-      {
-        "id": "Mrliou_MRL_neural_sync/5b8ec5fb610e-34932121251",
-        "source_branch": "Mrliou_MRL_neural_sync/5b8ec5fb610e-34932121251",
-        "naming_authority": "MRL",
-        "type": "experimental",
-        "layer": "L3",
-        "parent": "MRL_main",
-        "status": "active",
-        "energy": 0.7
       },
       {
         "id": "Mrliou_MRL_neural_sync/bc648a2dedec-34324512598",
@@ -1340,19 +1319,6 @@
         "energy": 0.7
       },
       {
-        "id": "MRL_fix/mrl-apiworks-customer-zip-acceptance-v1",
-        "source_branch": "fix/mrl-apiworks-customer-zip-acceptance-v1",
-        "naming_authority": "MRL",
-        "type": "hotfix",
-        "layer": "L4",
-        "parent": "MRL_main",
-        "status": "merged",
-        "energy": 0.95,
-        "merged_pr": 645,
-        "created_at": "2026-09-15T13:24:34Z",
-        "merged_at": "2026-09-15T13:29:04Z"
-      },
-      {
         "id": "MRL_mrl-relay-middle-layer",
         "source_branch": "mrl-relay-middle-layer",
         "naming_authority": "MRL",
@@ -1526,11 +1492,11 @@
     "synapses": [
       {
         "from": "MRL_main",
-        "to": "MRL_APIWorks_First_Transaction_Closure_v1",
+        "to": "MRL_Mrliou_APIWorks_Public_Control_Plane_v1",
         "type": "influence",
         "weight": 0.5,
-        "pr_number": 642,
-        "timestamp": "2026-09-10T05:44:35Z"
+        "pr_number": 644,
+        "timestamp": "2026-09-13T17:01:25Z"
       },
       {
         "from": "MRL_main",
@@ -1563,6 +1529,14 @@
         "weight": 0.5,
         "pr_number": 633,
         "timestamp": "2026-08-28T05:29:33Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "MRL_APIWorks_First_Transaction_Closure_v1",
+        "type": "influence",
+        "weight": 0.5,
+        "pr_number": 642,
+        "timestamp": "2026-09-10T05:44:35Z"
       },
       {
         "from": "MRL_main",
@@ -1645,14 +1619,6 @@
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_APIWorks_Public_Control_Plane_v1",
-        "type": "merge",
-        "weight": 0.95,
-        "pr_number": 644,
-        "timestamp": "2026-09-15T05:17:04Z"
-      },
-      {
-        "from": "MRL_main",
         "to": "Mrliou_MRL_BYOH_633_Mainline_20260908",
         "type": "influence",
         "weight": 0.5,
@@ -1709,25 +1675,11 @@
       },
       {
         "from": "MRL_main",
-        "to": "Mrliou_MRL_neural_sync/10248fd51138-34975285661",
-        "type": "influence",
-        "weight": 0.5,
-        "timestamp": "2026-09-15T13:37:38.277Z"
-      },
-      {
-        "from": "MRL_main",
         "to": "Mrliou_MRL_neural_sync/17d3e2e35711-34256954722",
         "type": "merge",
         "weight": 0.95,
         "pr_number": 640,
         "timestamp": "2026-09-08T17:27:02Z"
-      },
-      {
-        "from": "MRL_main",
-        "to": "Mrliou_MRL_neural_sync/5b8ec5fb610e-34932121251",
-        "type": "influence",
-        "weight": 0.5,
-        "timestamp": "2026-09-15T13:37:38.277Z"
       },
       {
         "from": "MRL_main",
@@ -2392,14 +2344,6 @@
         "type": "influence",
         "weight": 0.5,
         "timestamp": "2026-08-27T03:28:22.637Z"
-      },
-      {
-        "from": "MRL_main",
-        "to": "MRL_fix/mrl-apiworks-customer-zip-acceptance-v1",
-        "type": "merge",
-        "weight": 0.95,
-        "pr_number": 645,
-        "timestamp": "2026-09-15T13:29:04Z"
       },
       {
         "from": "MRL_main",
