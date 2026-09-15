@@ -4,12 +4,11 @@ graph TD
 
   %% 節點定義
   MRL_main["● MRL_main<br/>L7"]:::trunk
-  MRL_Mrliou_APIWorks_Public_Control_Plane_v1["● MRL_Mrliou_APIWorks_Public_Control_Plane_v1<br/>L3 #644"]:::experimental
   MRL_231["● MRL_231<br/>L3 #93"]:::experimental
   MRL_AI_Mother_Autonomous_Runtime_Baseline_v1["✓ MRL_AI_Mother_Autonomous_Runtime_Baseline_v1<br/>L3 #632"]:::experimental
   MRL_AI_Partner_Origin_v1["✓ MRL_AI_Partner_Origin_v1<br/>L3 #622"]:::experimental
   MRL_APIWorks_BYOH_Deployment_Product_v1["● MRL_APIWorks_BYOH_Deployment_Product_v1<br/>L3 #633"]:::experimental
-  MRL_APIWorks_First_Transaction_Closure_v1["● MRL_APIWorks_First_Transaction_Closure_v1<br/>L3 #642"]:::experimental
+  MRL_APIWorks_First_Transaction_Closure_v1["✓ MRL_APIWorks_First_Transaction_Closure_v1<br/>L3 #642"]:::experimental
   MRL_Causal_Optimization_Review_v1["● MRL_Causal_Optimization_Review_v1<br/>L3 #643"]:::experimental
   MRL_Evidence_PR632_PreLinearization_f7ef604["● MRL_Evidence_PR632_PreLinearization_f7ef604<br/>L3 #634"]:::experimental
   MRL_Module_Implementation_v1["✓ MRL_Module_Implementation_v1<br/>L3 #631"]:::experimental
@@ -20,6 +19,7 @@ graph TD
   MRL_historical_extension_recovery_v1["● MRL_historical_extension_recovery_v1<br/>L3 #616"]:::experimental
   MRL_historical_reextension_v1["● MRL_historical_reextension_v1<br/>L3"]:::experimental
   MRL_root_recovery_v1["● MRL_root_recovery_v1<br/>L3 #615"]:::experimental
+  MRL_Mrliou_APIWorks_Public_Control_Plane_v1["✓ MRL_Mrliou_APIWorks_Public_Control_Plane_v1<br/>L3 #644"]:::experimental
   Mrliou_MRL_BYOH_633_Mainline_20260908["● Mrliou_MRL_BYOH_633_Mainline_20260908<br/>L3 #639"]:::experimental
   Mrliou_MRL_BYOH_Mainline_Integration_20260908_v1["✓ Mrliou_MRL_BYOH_Mainline_Integration_20260908_v1<br/>L3 #638"]:::experimental
   Mrliou_MRL_Cloudflare_Entry_20260909["✓ Mrliou_MRL_Cloudflare_Entry_20260909<br/>L3 #641"]:::experimental
@@ -27,7 +27,10 @@ graph TD
   Mrliou_MRL_OuterAutomation_ProtectedBridge_v1["✓ Mrliou_MRL_OuterAutomation_ProtectedBridge_v1<br/>L3 #629"]:::experimental
   Mrliou_MRL_SourceToProduct_ParallelLink_v1["✓ Mrliou_MRL_SourceToProduct_ParallelLink_v1<br/>L3 #628"]:::experimental
   Mrliou_MRL_external_sync_ba73806676b4_148dba5ce171["✓ Mrliou_MRL_external_sync/ba73806676b4-148dba5ce171<br/>L3 #636"]:::experimental
+  Mrliou_MRL_neural_sync_0b92d6c0e3eb_34976921701["● Mrliou_MRL_neural_sync/0b92d6c0e3eb-34976921701<br/>L3"]:::experimental
+  Mrliou_MRL_neural_sync_10248fd51138_34975285661["● Mrliou_MRL_neural_sync/10248fd51138-34975285661<br/>L3"]:::experimental
   Mrliou_MRL_neural_sync_17d3e2e35711_34256954722["✓ Mrliou_MRL_neural_sync/17d3e2e35711-34256954722<br/>L3 #640"]:::experimental
+  Mrliou_MRL_neural_sync_5b8ec5fb610e_34932121251["● Mrliou_MRL_neural_sync/5b8ec5fb610e-34932121251<br/>L3"]:::experimental
   Mrliou_MRL_neural_sync_bc648a2dedec_34324512598["● Mrliou_MRL_neural_sync/bc648a2dedec-34324512598<br/>L3"]:::experimental
   Mrliou_MRL_sync_operations_20260907_v1["✓ Mrliou_MRL_sync_operations_20260907_v1<br/>L3 #635"]:::experimental
   MRL_agent_mrl_governance_negative_probe_20260826["● MRL_agent/mrl-governance-negative-probe-20260826<br/>L3 #626"]:::experimental
@@ -115,6 +118,8 @@ graph TD
   MRL_copilot_view_action_run_details["● MRL_copilot/view-action-run-details<br/>L6"]:::cognitive
   MRL_copilot_worker_170_wikipedia_backend_integration["● MRL_copilot/worker-170-wikipedia-backend-integration<br/>L6"]:::cognitive
   MRL_dofaromg_issue53["● MRL_dofaromg/issue53<br/>L3"]:::experimental
+  MRL_fix_mrl_apiworks_customer_zip_acceptance_v1["✓ MRL_fix/mrl-apiworks-customer-zip-acceptance-v1<br/>L4 #645"]:::hotfix
+  MRL_fix_neural_sync_no_feature_writeback_v1["✓ MRL_fix/neural-sync-no-feature-writeback-v1<br/>L4 #646"]:::hotfix
   MRL_mrl_relay_middle_layer["● MRL_mrl-relay-middle-layer<br/>L3"]:::experimental
   MRL_mrl_governance_live_probe_20260826["● MRL_mrl/governance-live-probe-20260826<br/>L3"]:::experimental
   MRL_mrl_mrliou_mobile_interface_v1["● MRL_mrl/mrliou-mobile-interface-v1<br/>L3 #621"]:::experimental
@@ -132,12 +137,11 @@ graph TD
   MRL_宥麟["● MRL_宥麟<br/>L3"]:::experimental
 
   %% 連結定義
-  MRL_main -.->|active| MRL_Mrliou_APIWorks_Public_Control_Plane_v1
   MRL_main -.->|active| MRL_231
   MRL_main -->|merged| MRL_AI_Mother_Autonomous_Runtime_Baseline_v1
   MRL_main -->|merged| MRL_AI_Partner_Origin_v1
   MRL_main -.->|active| MRL_APIWorks_BYOH_Deployment_Product_v1
-  MRL_main -.->|active| MRL_APIWorks_First_Transaction_Closure_v1
+  MRL_main -->|merged| MRL_APIWorks_First_Transaction_Closure_v1
   MRL_main -.->|active| MRL_Causal_Optimization_Review_v1
   MRL_main -.->|active| MRL_Evidence_PR632_PreLinearization_f7ef604
   MRL_main -->|merged| MRL_Module_Implementation_v1
@@ -148,6 +152,7 @@ graph TD
   MRL_main -.->|active| MRL_historical_extension_recovery_v1
   MRL_main -.->|active| MRL_historical_reextension_v1
   MRL_main -.->|active| MRL_root_recovery_v1
+  MRL_main -->|merged| MRL_Mrliou_APIWorks_Public_Control_Plane_v1
   MRL_main -.->|active| Mrliou_MRL_BYOH_633_Mainline_20260908
   MRL_main -->|merged| Mrliou_MRL_BYOH_Mainline_Integration_20260908_v1
   MRL_main -->|merged| Mrliou_MRL_Cloudflare_Entry_20260909
@@ -155,7 +160,10 @@ graph TD
   MRL_main -->|merged| Mrliou_MRL_OuterAutomation_ProtectedBridge_v1
   MRL_main -->|merged| Mrliou_MRL_SourceToProduct_ParallelLink_v1
   MRL_main -->|merged| Mrliou_MRL_external_sync_ba73806676b4_148dba5ce171
+  MRL_main -.->|active| Mrliou_MRL_neural_sync_0b92d6c0e3eb_34976921701
+  MRL_main -.->|active| Mrliou_MRL_neural_sync_10248fd51138_34975285661
   MRL_main -->|merged| Mrliou_MRL_neural_sync_17d3e2e35711_34256954722
+  MRL_main -.->|active| Mrliou_MRL_neural_sync_5b8ec5fb610e_34932121251
   MRL_main -.->|active| Mrliou_MRL_neural_sync_bc648a2dedec_34324512598
   MRL_main -->|merged| Mrliou_MRL_sync_operations_20260907_v1
   MRL_main -.->|active| MRL_agent_mrl_governance_negative_probe_20260826
@@ -243,6 +251,8 @@ graph TD
   MRL_main -.->|active| MRL_copilot_view_action_run_details
   MRL_main -.->|active| MRL_copilot_worker_170_wikipedia_backend_integration
   MRL_main -.->|active| MRL_dofaromg_issue53
+  MRL_main -->|merged| MRL_fix_mrl_apiworks_customer_zip_acceptance_v1
+  MRL_main -->|merged| MRL_fix_neural_sync_no_feature_writeback_v1
   MRL_main -.->|active| MRL_mrl_relay_middle_layer
   MRL_main -.->|active| MRL_mrl_governance_live_probe_20260826
   MRL_main -.->|active| MRL_mrl_mrliou_mobile_interface_v1
