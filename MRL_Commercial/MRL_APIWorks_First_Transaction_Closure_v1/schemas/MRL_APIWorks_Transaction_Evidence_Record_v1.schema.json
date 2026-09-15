@@ -39,14 +39,16 @@
         "payment_reference",
         "deployment_receipt_reference",
         "acceptance_reference",
-        "payout_reference"
+        "payout_reference",
+        "revenue_ledger_reference"
       ],
       "properties": {
         "order_reference": {"type": ["string", "null"], "minLength": 1},
         "payment_reference": {"type": ["string", "null"], "minLength": 1},
         "deployment_receipt_reference": {"type": ["string", "null"], "minLength": 1},
         "acceptance_reference": {"type": ["string", "null"], "minLength": 1},
-        "payout_reference": {"type": ["string", "null"], "minLength": 1}
+        "payout_reference": {"type": ["string", "null"], "minLength": 1},
+        "revenue_ledger_reference": {"type": ["string", "null"], "minLength": 1}
       }
     },
     "product_commit": {
@@ -151,7 +153,8 @@
               "payment_reference": {"type": "string", "minLength": 1},
               "deployment_receipt_reference": {"type": "string", "minLength": 1},
               "acceptance_reference": {"type": "string", "minLength": 1},
-              "payout_reference": {"type": "string", "minLength": 1}
+              "payout_reference": {"type": "string", "minLength": 1},
+              "revenue_ledger_reference": {"type": "string", "minLength": 1}
             }
           }
         }
