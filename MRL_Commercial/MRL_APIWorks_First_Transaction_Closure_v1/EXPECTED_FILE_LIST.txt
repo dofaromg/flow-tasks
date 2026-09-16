@@ -1,11 +1,15 @@
 README.md
 EXPECTED_FILE_LIST.txt
+config/MRL_APIWorks_public_routes.observed.json
 schemas/MRL_APIWorks_Transaction_Evidence_Record_v1.schema.json
+schemas/MRL_APIWorks_Public_Route_Receipt_v1.schema.json
 templates/MRL_APIWorks_Transaction_Closure_Record_v1.md
 scripts/MRL_verify_commercial_closure_pack_v1.py
 tests/test_commercial_closure_pack.py
 docs/Mrliou_MRL_Evidence_Entry_v1.md
+docs/Mrliou_MRL_Public_Route_Evidence_v1.md
 scripts/Mrliou_MRL_build_evidence_entry_v1.py
 scripts/Mrliou_MRL_verify_evidence_entry_v1.py
 tests/test_evidence_entry.py
 scripts/Mrliou_MRL_browser_acceptance_v1.mjs
+scripts/Mrliou_MRL_public_route_receipt_v1.py

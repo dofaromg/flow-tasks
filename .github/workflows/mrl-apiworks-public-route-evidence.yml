@@ -1,0 +1,55 @@
+name: MRL APIWorks Public Route Evidence
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_confirmation:
+        description: "Type CONFIRM_READ_ONLY_PUBLIC_ROUTE_PROBE"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  capture-public-route-evidence:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Authorize mainline read-only probe
+        run: |
+          test "$GITHUB_REF" = "refs/heads/main"
+          test "${{ inputs.release_confirmation }}" = "CONFIRM_READ_ONLY_PUBLIC_ROUTE_PROBE"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Capture bounded HTTP evidence
+        id: capture
+        continue-on-error: true
+        run: |
+          python MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/scripts/Mrliou_MRL_public_route_receipt_v1.py \
+            --route-map MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/config/MRL_APIWorks_public_routes.observed.json \
+            --output "${RUNNER_TEMP}/Mrliou_MRL_Public_Route_Evidence" \
+            --git-head "$(git rev-parse HEAD)"
+      - name: Independently verify captured evidence
+        id: verify
+        continue-on-error: true
+        run: |
+          python MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/scripts/Mrliou_MRL_public_route_receipt_v1.py \
+            --verify-only "${RUNNER_TEMP}/Mrliou_MRL_Public_Route_Evidence"
+      - name: Upload route evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mrliou_MRL_Public_Route_Evidence
+          path: ${{ runner.temp }}/Mrliou_MRL_Public_Route_Evidence
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce route evidence gate after retention
+        if: always()
+        env:
+          CAPTURE_OUTCOME: ${{ steps.capture.outcome }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+        run: |
+          test "$CAPTURE_OUTCOME" = "success"
+          test "$VERIFY_OUTCOME" = "success"

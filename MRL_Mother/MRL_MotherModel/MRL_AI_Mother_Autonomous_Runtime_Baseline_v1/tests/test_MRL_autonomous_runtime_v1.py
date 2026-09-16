@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import tempfile
 import threading
@@ -87,6 +88,68 @@ class MRLAutonomousRuntimeTests(unittest.TestCase):
     def test_rejects_external_model_endpoint(self) -> None:
         with self.assertRaises(MRLModelGateError):
             require_loopback_endpoint("https://example.com/v1")
+
+    def test_live_acceptance_receipt_verifier(self) -> None:
+        receipt = {
+            "schema": "MRL_AI_Mother_Live_Acceptance_v1",
+            "canonical_id": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
+            "origin_signature": "MrLiouWord",
+            "git_head": "a" * 40,
+            "hardware_id": "MRL_hardware_test",
+            "runtime_id": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
+            "backend": "ollama",
+            "model": "MRL_test_model",
+            "model_endpoint": "http://127.0.0.1:11434",
+            "model_release_id": "MRL_model_release_test",
+            "model_release_manifest_sha256": "9" * 64,
+            "model_artifact_sha256": "b" * 64,
+            "model_artifact_size_bytes": 1024,
+            "model_sha256_verified": True,
+            "health_ready": True,
+            "memory_chain_head": "c" * 64,
+            "evidence_chain_head": "d" * 64,
+            "passport_hash": "e" * 64,
+            "return_anchor": "f" * 64,
+            "evidence_ref": "1" * 64,
+            "request_sha256": "2" * 64,
+            "result_sha256": "3" * 64,
+            "external_model_disconnected": True,
+            "accepted_at": "2026-09-16T00:00:00+00:00",
+            "operator_id": "MRL_operator_test",
+            "acceptance_gate": "MRL_AI_MOTHER_AUTONOMOUS_RUNTIME_ACCEPTANCE_PASS",
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "receipt.json"
+            path.write_text(json.dumps(receipt), encoding="utf-8")
+            verifier = PACKAGE_ROOT / "scripts" / "MRL_verify_live_acceptance_receipt_v1.py"
+            completed = subprocess.run(
+                [sys.executable, str(verifier), str(path)],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
+            receipt["model_endpoint"] = "https://external.example/v1"
+            path.write_text(json.dumps(receipt), encoding="utf-8")
+            rejected = subprocess.run(
+                [sys.executable, str(verifier), str(path)],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertNotEqual(rejected.returncode, 0)
+
+    def test_powershell_acceptance_requires_audited_live_inputs(self) -> None:
+        script = (PACKAGE_ROOT / "scripts" / "MRL_acceptance_v1.ps1").read_text(
+            encoding="utf-8"
+        )
+        for required in (
+            "$GitHead", "$HardwareId", "$OperatorId", "$ModelArtifactPath",
+            "$ModelReleaseManifestPath", "$ReceiptPath", "$ExternalModelDisconnected",
+            "Get-FileHash", "MRL_verify_live_acceptance_receipt_v1.py",
+        ):
+            self.assertIn(required, script)
+        self.assertIn("MRL_AI_MOTHER_AUTONOMOUS_RUNTIME_ACCEPTANCE_PASS", script)
 
     def test_health_passes_with_loopback_model(self) -> None:
         health = self.runtime.health()

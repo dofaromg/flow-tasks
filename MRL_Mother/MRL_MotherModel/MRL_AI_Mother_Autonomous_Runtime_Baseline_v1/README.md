@@ -31,6 +31,11 @@ The existing `MRL_MotherModel_v0_1` preserves evidence, module registries and ad
 
 `MRL_AI_MOTHER_AUTONOMOUS_RUNTIME_ACCEPTANCE_PASS` requires a real supplied MRL model to run on the user's own hardware and the PowerShell acceptance flow to pass. No specific server, GPU or cloud is canonical.
 
+The acceptance flow emits a machine-verifiable JSON receipt bound to the exact
+Git head, MRL hardware/operator IDs, locally computed model artifact SHA-256,
+loopback endpoint, Memory/Evidence heads, Passport and request/result hashes.
+The verifier does not turn CI fixtures into real-model evidence.
+
 ## Quick start on user-owned hardware
 
 1. Copy the example configuration and set the exact installed local model name.
@@ -49,7 +54,10 @@ The launcher stores mutable Memory, Evidence and Passport data in the sibling
 
 ```powershell
 cd MRL_Mother\MRL_MotherModel\MRL_AI_Mother_Autonomous_Runtime_Baseline_v1\scripts
-.\MRL_acceptance_v1.ps1
+.\MRL_acceptance_v1.ps1 -GitHead "<commit>" -HardwareId "MRL_node_01" `
+  -OperatorId "MRL_operator_01" -ModelArtifactPath "D:\models\approved-model.gguf" `
+  -ModelReleaseManifestPath ".\MRL_model_release.json" -ExternalModelDisconnected `
+  -ReceiptPath ".\MRL_live_acceptance_receipt.json"
 ```
 
 ## APIWorks baseline surface

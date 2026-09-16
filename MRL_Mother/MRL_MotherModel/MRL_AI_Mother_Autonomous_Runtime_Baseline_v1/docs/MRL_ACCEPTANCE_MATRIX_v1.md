@@ -73,3 +73,12 @@ Example live-acceptance evidence record／真實驗收證據範例：
   "operator": "<operator-id>"
 }
 ```
+
+The PowerShell acceptance entrypoint now requires the Git head, MRL hardware and
+operator identifiers, a locally hashed model artifact, its MRL Model Release
+manifest, an explicit disconnected-external-model observation and an output
+receipt path. It cross-checks manifest origin, release ID, name, runtime, size
+and SHA-256 against the actual artifact and runtime result, writes the complete receipt, and immediately validates it with
+`scripts/MRL_verify_live_acceptance_receipt_v1.py`. A missing field, external
+model endpoint, hash mismatch or unverified disconnect observation fails the
+acceptance run instead of producing a PASS receipt.

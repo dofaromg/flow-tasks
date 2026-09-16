@@ -3,7 +3,7 @@
   "canonical_id": "MRL_APIWorks_BYOH_Deployment_Product_v1",
   "display_name": "MRL APIWorks BYOH Deployment Product v1",
   "sku": "MRL-APIWORKS-BYOH-DEPLOY-V1",
-  "version": "1.0.0-rc2",
+  "version": "1.0.0-rc3",
   "origin_signature": "MrLiouWord",
   "parent_runtime": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
   "sale_model": "SIGNED_ORDER_FORM",

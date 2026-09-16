@@ -6,12 +6,14 @@ on:
       - "MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/**"
       - ".github/workflows/mrl-apiworks-commercial-closure.yml"
       - ".github/workflows/mrl-apiworks-production-delivery.yml"
+      - ".github/workflows/mrl-apiworks-public-route-evidence.yml"
   push:
     branches: [main]
     paths:
       - "MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/**"
       - ".github/workflows/mrl-apiworks-commercial-closure.yml"
       - ".github/workflows/mrl-apiworks-production-delivery.yml"
+      - ".github/workflows/mrl-apiworks-public-route-evidence.yml"
 
 permissions:
   contents: read

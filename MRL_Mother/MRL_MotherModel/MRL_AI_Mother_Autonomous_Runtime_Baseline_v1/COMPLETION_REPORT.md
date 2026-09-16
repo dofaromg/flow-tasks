@@ -14,6 +14,7 @@ Begin the bottom-up architecture for an MRL-owned AI mother model, prioritize re
 - APIWorks health, inference and memory-recall endpoints;
 - external-host rejection and tamper-detection tests;
 - hardware-neutral PowerShell start and acceptance scripts;
+- structured live-model acceptance receipt schema and verifier;
 - model-release manifest schema;
 - explicit-consent, checksummed data-return bundle builder;
 - commercial agreement structure mapped from the current OpenAI business-services agreement architecture;
@@ -29,8 +30,8 @@ Begin the bottom-up architecture for an MRL-owned AI mother model, prioritize re
 - Redirects cannot move local model traffic outside loopback.
 - Mutable runtime data defaults outside the checksummed construction package.
 - Return manifests, resolved payload paths and streaming verification use one strict contract.
-- Package coverage and checksums: `32/32`, missing/extra/empty/mismatch: `0/0/0/0`.
-- Runtime and return-bundle regression tests: `15/15 PASS`.
+- Package coverage and checksums: `34/34`, missing/extra/empty/mismatch: `0/0/0/0`.
+- Runtime, live-receipt and return-bundle regression tests: rerun by the package gate for every change.
 - Parent MotherModel and repository MRL governance: `PASS`.
 
 ## Completion boundary

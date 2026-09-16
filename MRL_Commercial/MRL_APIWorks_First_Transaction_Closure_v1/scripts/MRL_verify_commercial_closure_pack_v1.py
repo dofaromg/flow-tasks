@@ -10,6 +10,8 @@ ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_LIST = ROOT / "EXPECTED_FILE_LIST.txt"
 SCHEMA = ROOT / "schemas" / "MRL_APIWorks_Transaction_Evidence_Record_v1.schema.json"
 RECORD = ROOT / "templates" / "MRL_APIWorks_Transaction_Closure_Record_v1.md"
+ROUTE_MAP = ROOT / "config" / "MRL_APIWorks_public_routes.observed.json"
+ROUTE_SCHEMA = ROOT / "schemas" / "MRL_APIWorks_Public_Route_Receipt_v1.schema.json"
 
 EXPECTED_STATES = (
     "QUOTE_PENDING",
@@ -171,6 +173,44 @@ def validate_schema(schema: dict[str, object]) -> list[str]:
 
     return sorted(failures)
 
+
+def validate_route_evidence_contract() -> list[str]:
+    failures: list[str] = []
+    route_map = json.loads(ROUTE_MAP.read_text(encoding="utf-8"))
+    if route_map.get("schema") != "MRL_APIWorks_Public_Route_Map_v1":
+        failures.append("route_map.schema")
+    if route_map.get("origin_signature") != "MrLiouWord":
+        failures.append("route_map.origin_signature")
+    if route_map.get("canonical_route_decision") != "UNRESOLVED":
+        failures.append("route_map.canonical_route_decision")
+    routes = route_map.get("routes")
+    if not isinstance(routes, list) or len(routes) != 3:
+        failures.append("route_map.routes")
+        routes = []
+    for index, route in enumerate(routes):
+        if not isinstance(route, dict):
+            failures.append(f"route_map.routes.{index}")
+            continue
+        if not str(route.get("url", "")).startswith("https://"):
+            failures.append(f"route_map.routes.{index}.https")
+        if route.get("production_traffic_asserted") is not False:
+            failures.append(f"route_map.routes.{index}.production_assertion")
+        if route.get("traffic_scope") != "VERSION_PREVIEW":
+            failures.append(f"route_map.routes.{index}.traffic_scope")
+    schema = json.loads(ROUTE_SCHEMA.read_text(encoding="utf-8"))
+    properties = schema.get("properties") if isinstance(schema, dict) else None
+    if not isinstance(properties, dict):
+        failures.append("route_schema.properties")
+    else:
+        for field, value in {
+            "schema": "MRL_APIWorks_Public_Route_Receipt_v1",
+            "origin_signature": "MrLiouWord",
+        }.items():
+            definition = properties.get(field)
+            if not isinstance(definition, dict) or definition.get("const") != value:
+                failures.append(f"route_schema.{field}")
+    return sorted(failures)
+
 def main() -> int:
     expected = {
         line.strip()
@@ -193,6 +233,7 @@ def main() -> int:
     record_failures = sorted(
         name for name, value in REQUIRED_RECORD_TEXT.items() if value not in record_text
     )
+    route_failures = validate_route_evidence_contract()
 
     print(f"expected={len(expected)} actual={len(actual)}")
     print(f"missing={missing}")
@@ -200,8 +241,9 @@ def main() -> int:
     print(f"empty={empty}")
     print(f"schema_failures={schema_failures}")
     print(f"record_failures={record_failures}")
+    print(f"route_failures={route_failures}")
 
-    return 1 if any((missing, extra, empty, schema_failures, record_failures)) else 0
+    return 1 if any((missing, extra, empty, schema_failures, record_failures, route_failures)) else 0
 
 if __name__ == "__main__":
     raise SystemExit(main())
