@@ -58,3 +58,20 @@ private record can link the review to historical material without publishing it.
 The review's engineering gate cannot promote customer acceptance, payment,
 payout, or realized revenue. Real deployment still needs an authorized customer
 node, installed model/configuration and a separately recorded acceptance run.
+
+## Browser acceptance
+
+The commercial-closure workflow builds the evidence entry from the checked-out
+commit, renders it with Chromium at desktop (1365×980) and mobile (390×844)
+viewports, and uploads a seven-file browser-evidence artifact. The gate requires:
+
+- five visible sections and the expected title/content;
+- every local link to resolve inside the generated entry;
+- no browser console/page errors;
+- no document-level horizontal overflow at either viewport;
+- non-empty PNG and rendered-DOM evidence with bound SHA-256 values;
+- exact expected/actual file coverage and a second independent verify-only run.
+
+This closes the repeatable browser-rendering gap. It does not claim that an
+arbitrary external browser/device, customer model node or public deployment has
+been accepted.

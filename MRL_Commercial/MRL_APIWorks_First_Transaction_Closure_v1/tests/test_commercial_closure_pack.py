@@ -97,5 +97,19 @@ class CommercialClosurePackTests(unittest.TestCase):
         self.assertIn("printf -- '- Order reference: `%s`", workflow)
         self.assertNotIn('echo "- Order reference: `', workflow)
 
+    def test_browser_acceptance_is_built_and_retained_by_ci(self) -> None:
+        """The closure workflow must render both viewports and retain evidence."""
+        workflow_path = (
+            ROOT.parents[1] / ".github/workflows/mrl-apiworks-commercial-closure.yml"
+        )
+        workflow = workflow_path.read_text(encoding="utf-8")
+        browser_script = "scripts/Mrliou_MRL_browser_acceptance_v1.mjs"
+        self.assertIn("Mrliou_MRL_build_evidence_entry_v1.py", workflow)
+        self.assertEqual(workflow.count(browser_script), 2)
+        self.assertIn("--verify-only", workflow)
+        self.assertIn("actions/upload-artifact@v4", workflow)
+        self.assertIn("Mrliou_MRL_APIWorks_Browser_Evidence", workflow)
+        self.assertNotIn("workflow_dispatch", workflow)
+
 if __name__ == "__main__":
     unittest.main()
