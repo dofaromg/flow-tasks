@@ -19,6 +19,25 @@ permissions:
   contents: read
 
 jobs:
+  verify-windows-powershell-receipt:
+    runs-on: windows-2022
+    timeout-minutes: 10
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - name: Preserve repository bytes during checkout
+        shell: powershell
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Exercise PowerShell 5.1 receipt and failure paths using protocol fixtures
+        shell: powershell
+        working-directory: MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1
+        run: |
+          python -m unittest tests.test_MRL_autonomous_runtime_v1.MRLPowershellReceiptTests -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
   verify-commercial-closure-pack:
     runs-on: ubuntu-24.04
     steps:

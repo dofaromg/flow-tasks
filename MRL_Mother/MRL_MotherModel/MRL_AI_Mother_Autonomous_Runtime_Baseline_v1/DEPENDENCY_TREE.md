@@ -54,7 +54,7 @@ cd MRL_Mother\MRL_MotherModel\MRL_AI_Mother_Autonomous_Runtime_Baseline_v1\scrip
 .\MRL_acceptance_v1.ps1 -GitHead "<commit>" -HardwareId "MRL_node_01" `
   -OperatorId "MRL_operator_01" -ModelArtifactPath "D:\models\approved-model.gguf" `
   -ModelReleaseManifestPath ".\MRL_model_release.json" -ExternalModelDisconnected `
-  -ReceiptPath ".\MRL_live_acceptance_receipt.json"
+  -ReceiptPath "..\..\MRL_live_acceptance_receipt.json"
 ```
 
 The second command verifies the checksummed package, tests the local Runtime,

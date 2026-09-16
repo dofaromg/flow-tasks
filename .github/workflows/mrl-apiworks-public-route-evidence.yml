@@ -16,9 +16,11 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Authorize mainline read-only probe
+        env:
+          RELEASE_CONFIRMATION: ${{ inputs.release_confirmation }}
         run: |
           test "$GITHUB_REF" = "refs/heads/main"
-          test "${{ inputs.release_confirmation }}" = "CONFIRM_READ_ONLY_PUBLIC_ROUTE_PROBE"
+          test "$RELEASE_CONFIRMATION" = "CONFIRM_READ_ONLY_PUBLIC_ROUTE_PROBE"
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:

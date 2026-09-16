@@ -39,7 +39,7 @@
     "git_head": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
     "hardware_id": {"type": "string", "pattern": "^MRL_[A-Za-z0-9_.:-]+$"},
     "runtime_id": {"type": "string", "minLength": 1},
-    "backend": {"enum": ["ollama", "llama.cpp"]},
+    "backend": {"enum": ["ollama", "llamacpp"]},
     "model": {"type": "string", "minLength": 1},
     "model_endpoint": {"type": "string", "minLength": 1},
     "model_release_id": {"type": "string", "pattern": "^MRL_[A-Za-z0-9_.:-]+$"},

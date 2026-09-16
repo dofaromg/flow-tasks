@@ -26,15 +26,37 @@ $ScriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
 $PackageRoot = (Resolve-Path (Join-Path $ScriptDirectory "..")).Path
 $GatewayUri = [Uri]$GatewayUrl
 $LoopbackHosts = @("127.0.0.1", "localhost", "::1")
-if ($GatewayUri.Scheme -ne "http" -or $LoopbackHosts -notcontains $GatewayUri.Host) {
+if ($GatewayUri.Scheme -ne "http" -or $LoopbackHosts -notcontains $GatewayUri.DnsSafeHost -or
+    $GatewayUri.UserInfo -or $GatewayUri.Query -or $GatewayUri.Fragment -or $GatewayUri.AbsolutePath -ne "/") {
     throw "MRL acceptance requires an HTTP loopback gateway"
 }
 if (-not $ExternalModelDisconnected.IsPresent) {
     throw "MRL acceptance requires an explicit external-model-disconnected observation"
 }
+$GatewayUrl = $GatewayUrl.TrimEnd("/")
+# Resolve against the caller before changing location; never pollute the signed package.
+$ResolvedReceiptPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($ReceiptPath)
+$PackagePrefix = $PackageRoot.TrimEnd([IO.Path]::DirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
+if ($ResolvedReceiptPath.StartsWith($PackagePrefix, [StringComparison]::OrdinalIgnoreCase) -or
+    $ResolvedReceiptPath -eq $PackageRoot) {
+    throw "MRL receipt must be outside the checksummed Runtime package"
+}
+if (Test-Path -LiteralPath $ResolvedReceiptPath) { throw "MRL receipt already exists; use a new path" }
+$TemporaryReceiptPath = $null
 $ResolvedModelArtifact = (Resolve-Path $ModelArtifactPath).Path
 $ResolvedModelReleaseManifest = (Resolve-Path $ModelReleaseManifestPath).Path
-$ModelRelease = Get-Content -Raw -Path $ResolvedModelReleaseManifest | ConvertFrom-Json
+$ModelRelease = Get-Content -Raw -Encoding UTF8 -LiteralPath $ResolvedModelReleaseManifest | ConvertFrom-Json
+foreach ($Field in @("version", "license_ref", "model_name")) {
+    if (-not ($ModelRelease.$Field -is [string]) -or [string]::IsNullOrWhiteSpace($ModelRelease.$Field)) {
+        throw "MRL model release manifest is missing $Field"
+    }
+}
+if (-not ($ModelRelease.runtime -is [array]) -or $ModelRelease.runtime.Count -lt 1) {
+    throw "MRL model release manifest runtime must be a non-empty array"
+}
+foreach ($Backend in $ModelRelease.runtime) {
+    if (-not ($Backend -is [string])) { throw "MRL model release runtime entries must be strings" }
+}
 if ($ModelRelease.origin_signature -ne "MrLiouWord") {
     throw "MRL model release manifest origin signature mismatch"
 }
@@ -49,7 +71,9 @@ if ($ActualModelSha256 -ne $ModelRelease.sha256.ToLowerInvariant()) {
     throw "MRL model artifact SHA-256 does not match the expected release hash"
 }
 $ActualModelSize = (Get-Item -LiteralPath $ResolvedModelArtifact).Length
-if ($ActualModelSize -ne [long]$ModelRelease.size) {
+if ($ActualModelSize -lt 1 -or $ModelRelease.size -is [bool] -or
+    -not ($ModelRelease.size -is [int] -or $ModelRelease.size -is [long]) -or
+    $ActualModelSize -ne [long]$ModelRelease.size) {
     throw "MRL model artifact size does not match the release manifest"
 }
 $ModelReleaseManifestSha256 = (Get-FileHash -Algorithm SHA256 -Path $ResolvedModelReleaseManifest).Hash.ToLowerInvariant()
@@ -73,7 +97,7 @@ try {
     python -m unittest discover -s tests -v
     if ($LASTEXITCODE -ne 0) { throw "MRL autonomous runtime tests failed" }
 
-    $Health = Invoke-RestMethod -Method Get -Uri "$GatewayUrl/health"
+    $Health = Invoke-RestMethod -Method Get -Uri "$GatewayUrl/health" -MaximumRedirection 0 -TimeoutSec 180
     if (-not $Health.ready) {
         throw "MRL local model runtime is not ready; autonomy Gate remains OPEN"
     }
@@ -81,7 +105,7 @@ try {
         throw "MRL autonomy Gate rejected an external model dependency"
     }
 
-    $SessionId = "MRL_session_acceptance_$([DateTimeOffset]::UtcNow.ToUnixTimeSeconds())"
+    $SessionId = "MRL_session_acceptance_$([Guid]::NewGuid().ToString('N'))"
     $Request = @{
         prompt = "MRL autonomous runtime acceptance"
         world_id = "MRL_acceptance_world"
@@ -92,6 +116,7 @@ try {
         -Method Post `
         -Uri "$GatewayUrl/v1/mother/run" `
         -ContentType "application/json" `
+        -MaximumRedirection 0 -TimeoutSec 180 `
         -Body $Request
     if (-not $Result.ok) { throw "MRL inference loop failed" }
     if (-not $Result.passport.passport_hash) { throw "MRL passport was not issued" }
@@ -103,10 +128,16 @@ try {
     $ResultJson = $Result | ConvertTo-Json -Depth 20 -Compress
     $ResultSha256 = Get-MrlSha256 $ResultJson
 
-    $Recall = Invoke-RestMethod -Method Get -Uri "$GatewayUrl/v1/memory/recall?world_id=MRL_acceptance_world&session_id=$SessionId"
+    $Recall = Invoke-RestMethod -Method Get -Uri "$GatewayUrl/v1/memory/recall?world_id=MRL_acceptance_world&session_id=$SessionId" -MaximumRedirection 0 -TimeoutSec 180
     if ($Recall.records.Count -ne 2) { throw "MRL memory replay expected exactly two records" }
 
-    $FinalHealth = Invoke-RestMethod -Method Get -Uri "$GatewayUrl/health"
+    if ($Recall.records[0].record_hash -ne $Result.memory.input -or
+        $Recall.records[1].record_hash -ne $Result.memory.output -or
+        $Result.passport.return_anchor -ne $Result.memory.input -or
+        @($Result.passport.evidence_refs) -notcontains $Result.evidence_ref) {
+        throw "MRL Memory, Evidence and Passport references disagree"
+    }
+    $FinalHealth = Invoke-RestMethod -Method Get -Uri "$GatewayUrl/health" -MaximumRedirection 0 -TimeoutSec 180
     if (-not $FinalHealth.ready) { throw "MRL runtime became unhealthy after inference" }
     $Receipt = [ordered]@{
         schema = "MRL_AI_Mother_Live_Acceptance_v1"
@@ -136,15 +167,20 @@ try {
         operator_id = $OperatorId
         acceptance_gate = "MRL_AI_MOTHER_AUTONOMOUS_RUNTIME_ACCEPTANCE_PASS"
     }
-    $ReceiptDirectory = Split-Path -Parent $ReceiptPath
+    $ReceiptDirectory = Split-Path -Parent $ResolvedReceiptPath
     if ($ReceiptDirectory) { New-Item -ItemType Directory -Force -Path $ReceiptDirectory | Out-Null }
-    $Receipt | ConvertTo-Json -Depth 20 | Set-Content -Encoding UTF8 -Path $ReceiptPath
+    $TemporaryReceiptPath = Join-Path $ReceiptDirectory (".MRL_receipt_" + [Guid]::NewGuid().ToString("N") + ".json")
+    [IO.File]::WriteAllText($TemporaryReceiptPath, ($Receipt | ConvertTo-Json -Depth 20), [Text.UTF8Encoding]::new($false))
 
-    python scripts/MRL_verify_live_acceptance_receipt_v1.py $ReceiptPath
+    python scripts/MRL_verify_live_acceptance_receipt_v1.py $TemporaryReceiptPath
     if ($LASTEXITCODE -ne 0) { throw "MRL live acceptance receipt verification failed" }
+    [IO.File]::Move($TemporaryReceiptPath, $ResolvedReceiptPath)
 
     Write-Host "MRL_AI_MOTHER_AUTONOMOUS_RUNTIME_ACCEPTANCE_PASS"
 }
 finally {
+    if ($TemporaryReceiptPath -and (Test-Path -LiteralPath $TemporaryReceiptPath)) {
+        Remove-Item -LiteralPath $TemporaryReceiptPath
+    }
     Pop-Location
 }

@@ -39,3 +39,13 @@ The workflow deliberately lets capture and offline verification reach the
 artifact-upload step even when a route fails. It uploads the FAIL receipt first
 and only then enforces the job gate, so an HTTP 500, timeout or checksum failure
 cannot disappear behind a red workflow status.
+
+`artifact_integrity_gate` validates the exact three-file package and receipt
+consistency separately from `http_result_gate`. A genuine HTTP failure may have
+artifact integrity PASS while the HTTP result and overall route gate stay FAIL.
+Editing `status_match` cannot override the recorded status. Every capture needs
+a new output directory to preserve previous observations.
+
+Oversized responses retain a failure receipt with `response_complete=false`,
+an explicit `RESPONSE_TOO_LARGE` error and the first 2 MiB hash; that hash is a
+bounded prefix, not a claim about the full body.

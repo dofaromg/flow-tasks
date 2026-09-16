@@ -59,12 +59,18 @@ def probe(route: dict[str, object], *, allow_loopback_http: bool) -> dict[str, o
     except urllib.error.HTTPError as exc:
         status = int(exc.code)
         headers = exc.headers
-        body = exc.read(MAX_BODY + 1)
+        try:
+            body = exc.read(MAX_BODY + 1)
+        except Exception as read_error:
+            error = f"{type(read_error).__name__}: response body read failed"
+        finally:
+            exc.close()
     except Exception as exc:  # network failure is evidence, not a crash
         headers = {}
         error = f"{type(exc).__name__}: {exc}"
     if len(body) > MAX_BODY:
-        raise ValueError(f"{route.get('route_id')}: response exceeds {MAX_BODY} bytes")
+        body = body[:MAX_BODY]
+        error = f"RESPONSE_TOO_LARGE: only first {MAX_BODY} bytes hashed"
     expected_status = int(route.get("expected_status", 200))
     selected_headers = {}
     for name in ("content-type", "content-length", "etag", "last-modified", "server", "cf-ray"):
@@ -77,8 +83,9 @@ def probe(route: dict[str, object], *, allow_loopback_http: bool) -> dict[str, o
         "url": url,
         "expected_status": expected_status,
         "http_status": status,
-        "status_match": status == expected_status,
+        "status_match": status == expected_status and error is None,
         "response_size_bytes": len(body),
+        "response_complete": error is None,
         "response_sha256": sha256_bytes(body),
         "selected_headers": selected_headers,
         "cloudflare_version_id": route.get("cloudflare_version_id"),
@@ -96,6 +103,8 @@ def validate_receipt(receipt: object) -> list[str]:
     if receipt.get("schema") != "MRL_APIWorks_Public_Route_Receipt_v1": failures.append("schema")
     if receipt.get("origin_signature") != "MrLiouWord": failures.append("origin_signature")
     if receipt.get("capture_mode") not in {"PUBLIC_HTTPS", "TEST_LOOPBACK"}: failures.append("capture_mode")
+    if receipt.get("canonical_route_decision") not in {"UNRESOLVED", "RESOLVED"}:
+        failures.append("canonical_route_decision")
     if not HEX40.fullmatch(str(receipt.get("probe_git_head", ""))): failures.append("probe_git_head")
     if not HEX64.fullmatch(str(receipt.get("route_map_sha256", ""))): failures.append("route_map_sha256")
     try:
@@ -107,48 +116,81 @@ def validate_receipt(receipt: object) -> list[str]:
     if not isinstance(routes, list) or not routes:
         failures.append("routes")
         routes = []
+    route_ids: set[str] = set()
     for index, route in enumerate(routes):
         if not isinstance(route, dict):
             failures.append(f"routes.{index}")
             continue
         if not route.get("route_id") or not route.get("service"): failures.append(f"routes.{index}.identity")
+        identity = str(route.get("route_id", ""))
+        if identity in route_ids: failures.append(f"routes.{index}.duplicate_identity")
+        route_ids.add(identity)
         if not HEX64.fullmatch(str(route.get("response_sha256", ""))): failures.append(f"routes.{index}.response_sha256")
-        if route.get("status_match") is not True: failures.append(f"routes.{index}.status_match")
+        expected = route.get("expected_status")
+        actual = route.get("http_status")
+        if type(expected) is not int or not 100 <= expected <= 599:
+            failures.append(f"routes.{index}.expected_status")
+        if type(actual) is not int or actual not in (0, *range(100, 600)):
+            failures.append(f"routes.{index}.http_status")
+        if route.get("status_match") is not (actual == expected and actual != 0 and route.get("error") is None):
+            failures.append(f"routes.{index}.status_match")
+        size = route.get("response_size_bytes")
+        if type(size) is not int or not 0 <= size <= MAX_BODY:
+            failures.append(f"routes.{index}.response_size_bytes")
+        if actual == 0 and (not route.get("error") or size != 0):
+            failures.append(f"routes.{index}.transport_error")
+        if route.get("response_complete") is not (route.get("error") is None):
+            failures.append(f"routes.{index}.response_complete")
+        if route.get("production_traffic_asserted") is not False:
+            failures.append(f"routes.{index}.unsupported_production_assertion")
         parsed = urlparse(str(route.get("url", "")))
         if receipt.get("capture_mode") == "PUBLIC_HTTPS" and parsed.scheme != "https": failures.append(f"routes.{index}.https")
-    expected_gate = (
-        "PUBLIC_ROUTE_HTTP_PASS" if receipt.get("capture_mode") == "PUBLIC_HTTPS"
-        else "PUBLIC_ROUTE_TEST_PASS"
+        if not parsed.hostname or parsed.username or parsed.password or parsed.fragment:
+            failures.append(f"routes.{index}.url")
+    passes = bool(routes) and all(
+        isinstance(route, dict) and type(route.get("http_status")) is int and
+        route.get("http_status") == route.get("expected_status") and
+        route.get("http_status") != 0 and route.get("error") is None for route in routes
     )
+    expected_gate = ("PUBLIC_ROUTE_HTTP_" if receipt.get("capture_mode") == "PUBLIC_HTTPS"
+                     else "PUBLIC_ROUTE_TEST_") + ("PASS" if passes else "FAIL")
     if receipt.get("public_route_gate") != expected_gate: failures.append("public_route_gate")
     return sorted(set(failures))
 
 
 def verify(directory: Path) -> dict[str, object]:
     expected = [line.strip() for line in (directory / "Expected_File_List.txt").read_text(encoding="utf-8").splitlines() if line.strip()]
-    actual = sorted(path.name for path in directory.iterdir() if path.is_file())
+    actual = sorted(path.relative_to(directory).as_posix() for path in directory.rglob("*") if path.is_file())
     rows = {}
     for line in (directory / "SHA256SUMS.txt").read_text(encoding="utf-8").splitlines():
         if line.strip():
             digest, name = line.split("  ", 1); rows[name] = digest
-    checksum_expected = sorted(name for name in expected if name != "SHA256SUMS.txt")
+    checksum_expected = sorted(name for name in EXPECTED if name != "SHA256SUMS.txt")
     receipt = json.loads((directory / "PUBLIC_ROUTE_RECEIPT.json").read_text(encoding="utf-8"))
     report = {
         "expected_count": len(expected),
         "actual_count": len(actual),
-        "missing": sorted(set(expected) - set(actual)),
-        "extra": sorted(set(actual) - set(expected)),
-        "empty": sorted(name for name in expected if (directory / name).exists() and not (directory / name).read_bytes()),
+        "manifest_failures": [] if len(expected) == len(EXPECTED) and set(expected) == set(EXPECTED) else ["expected_manifest_mismatch"],
+        "symlinks": sorted(path.relative_to(directory).as_posix() for path in directory.rglob("*") if path.is_symlink()),
+        "missing": sorted(set(EXPECTED) - set(actual)),
+        "extra": sorted(set(actual) - set(EXPECTED)),
+        "empty": sorted(name for name in EXPECTED if (directory / name).is_file() and not (directory / name).read_bytes()),
         "checksum_missing": sorted(set(checksum_expected) - set(rows)),
         "checksum_extra": sorted(set(rows) - set(checksum_expected)),
         "mismatch": sorted(name for name in checksum_expected if name in rows and (directory / name).exists() and sha256_file(directory / name) != rows[name]),
         "semantic_failures": validate_receipt(receipt),
     }
-    report["route_evidence_gate"] = "PASS" if not any(report[key] for key in ("missing", "extra", "empty", "checksum_missing", "checksum_extra", "mismatch", "semantic_failures")) else "FAIL"
+    report["artifact_integrity_gate"] = "PASS" if not any(report[key] for key in (
+        "missing", "extra", "empty", "checksum_missing", "checksum_extra", "mismatch",
+        "semantic_failures", "manifest_failures", "symlinks")) else "FAIL"
+    report["http_result_gate"] = receipt.get("public_route_gate")
+    report["route_evidence_gate"] = "PASS" if report["artifact_integrity_gate"] == "PASS" and receipt.get("public_route_gate") in {
+        "PUBLIC_ROUTE_HTTP_PASS", "PUBLIC_ROUTE_TEST_PASS"} else "FAIL"
     return report
 
 
 def capture(route_map_path: Path, output: Path, git_head: str, allow_loopback_http: bool) -> dict[str, object]:
+    if output.exists(): raise ValueError("output already exists; preserve it and use a new path")
     if not HEX40.fullmatch(git_head): raise ValueError("--git-head must be a lowercase 40-character SHA")
     route_map = json.loads(route_map_path.read_text(encoding="utf-8"))
     if route_map.get("schema") != "MRL_APIWorks_Public_Route_Map_v1" or route_map.get("origin_signature") != "MrLiouWord":
@@ -169,7 +211,7 @@ def capture(route_map_path: Path, output: Path, git_head: str, allow_loopback_ht
         "routes": results,
         "public_route_gate": ("PUBLIC_ROUTE_HTTP_" if mode == "PUBLIC_HTTPS" else "PUBLIC_ROUTE_TEST_") + ("PASS" if passed else "FAIL"),
     }
-    output.mkdir(parents=True, exist_ok=True)
+    output.mkdir(parents=True, exist_ok=False)
     (output / "PUBLIC_ROUTE_RECEIPT.json").write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (output / "Expected_File_List.txt").write_text("\n".join(EXPECTED) + "\n", encoding="utf-8")
     targets = [name for name in EXPECTED if name != "SHA256SUMS.txt"]

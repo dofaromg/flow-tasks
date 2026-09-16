@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import subprocess
 import sys
 import tempfile
@@ -15,7 +16,9 @@ ROOT = Path(__file__).resolve().parents[1]
 class _RouteHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802
         body = b"MRL route evidence fixture"
-        self.send_response(200)
+        if self.path == "/large":
+            body = b"X" * (2 * 1024 * 1024 + 1)
+        self.send_response(500 if self.path == "/failure" else 200)
         self.send_header("Content-Type", "text/plain; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
@@ -168,6 +171,51 @@ class CommercialClosurePackTests(unittest.TestCase):
                 receipt = json.loads((output / "PUBLIC_ROUTE_RECEIPT.json").read_text(encoding="utf-8"))
                 self.assertEqual(receipt["public_route_gate"], "PUBLIC_ROUTE_TEST_PASS")
                 self.assertFalse(receipt["routes"][0]["production_traffic_asserted"])
+                # A re-sealed forged PASS must still fail semantic verification.
+                receipt["routes"][0]["http_status"] = 500
+                (output / "PUBLIC_ROUTE_RECEIPT.json").write_text(json.dumps(receipt), encoding="utf-8")
+                (output / "SHA256SUMS.txt").write_text("\n".join(
+                    f"{hashlib.sha256((output / name).read_bytes()).hexdigest()}  {name}"
+                    for name in ("Expected_File_List.txt", "PUBLIC_ROUTE_RECEIPT.json")
+                ) + "\n", encoding="utf-8")
+                forged = subprocess.run([sys.executable, str(script), "--verify-only", str(output)],
+                                        capture_output=True, text=True)
+                self.assertNotEqual(forged.returncode, 0)
+                self.assertIn("status_match", forged.stdout)
+                # Failed HTTP observations remain valid evidence artifacts.
+                mapping = json.loads(route_map.read_text())
+                mapping["routes"][0]["url"] = f"http://127.0.0.1:{server.server_port}/failure"
+                route_map.write_text(json.dumps(mapping))
+                failed_output = temp / "failure-evidence"
+                failed = subprocess.run([
+                    sys.executable, str(script), "--route-map", str(route_map),
+                    "--output", str(failed_output), "--git-head", "b" * 40,
+                    "--allow-loopback-http",
+                ], capture_output=True, text=True)
+                self.assertEqual(failed.returncode, 1, failed.stdout + failed.stderr)
+                report = json.loads(failed.stdout)
+                self.assertEqual(report["artifact_integrity_gate"], "PASS")
+                self.assertEqual(report["http_result_gate"], "PUBLIC_ROUTE_TEST_FAIL")
+                (failed_output / "nested").mkdir()
+                (failed_output / "nested/extra.txt").write_text("unexpected")
+                extra = subprocess.run([sys.executable, str(script), "--verify-only", str(failed_output)],
+                                       capture_output=True, text=True)
+                self.assertEqual(json.loads(extra.stdout)["extra"], ["nested/extra.txt"])
+                # An oversized body still produces an auditable bounded FAIL receipt.
+                mapping["routes"][0]["url"] = f"http://127.0.0.1:{server.server_port}/large"
+                route_map.write_text(json.dumps(mapping))
+                large_output = temp / "large-evidence"
+                large = subprocess.run([
+                    sys.executable, str(script), "--route-map", str(route_map),
+                    "--output", str(large_output), "--git-head", "b" * 40,
+                    "--allow-loopback-http",
+                ], capture_output=True, text=True)
+                self.assertEqual(large.returncode, 1, large.stdout + large.stderr)
+                self.assertEqual(json.loads(large.stdout)["artifact_integrity_gate"], "PASS")
+                large_receipt = json.loads((large_output / "PUBLIC_ROUTE_RECEIPT.json").read_text())
+                self.assertFalse(large_receipt["routes"][0]["response_complete"])
+                self.assertEqual(large_receipt["routes"][0]["response_size_bytes"], 2 * 1024 * 1024)
+                self.assertIn("RESPONSE_TOO_LARGE", large_receipt["routes"][0]["error"])
         finally:
             server.shutdown()
             thread.join(timeout=5)

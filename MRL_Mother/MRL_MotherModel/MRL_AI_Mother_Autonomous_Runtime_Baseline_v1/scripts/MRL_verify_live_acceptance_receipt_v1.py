@@ -42,7 +42,7 @@ def validate(receipt: object) -> list[str]:
         "acceptance_gate": "MRL_AI_MOTHER_AUTONOMOUS_RUNTIME_ACCEPTANCE_PASS",
     }
     for field, value in constants.items():
-        if receipt.get(field) != value:
+        if type(receipt.get(field)) is not type(value) or receipt.get(field) != value:
             failures.append(field)
     if not HEX40.fullmatch(str(receipt.get("git_head", ""))):
         failures.append("git_head")
@@ -62,14 +62,14 @@ def validate(receipt: object) -> list[str]:
     ):
         if not HEX64.fullmatch(str(receipt.get(field, ""))):
             failures.append(field)
-    if receipt.get("backend") not in {"ollama", "llama.cpp"}:
+    if receipt.get("backend") not in {"ollama", "llamacpp"}:
         failures.append("backend")
-    if not isinstance(receipt.get("model_artifact_size_bytes"), int) or receipt["model_artifact_size_bytes"] < 1:
+    if type(receipt.get("model_artifact_size_bytes")) is not int or receipt["model_artifact_size_bytes"] < 1:
         failures.append("model_artifact_size_bytes")
     endpoint = urlparse(str(receipt.get("model_endpoint", "")))
     if endpoint.scheme not in {"http", "https"} or endpoint.hostname not in {
         "127.0.0.1", "localhost", "::1"
-    }:
+    } or endpoint.username or endpoint.password or endpoint.query or endpoint.fragment:
         failures.append("model_endpoint")
     for field in ("runtime_id", "model"):
         if not isinstance(receipt.get(field), str) or not receipt[field].strip():
@@ -88,10 +88,14 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("receipt", type=Path)
     args = parser.parse_args()
-    receipt = json.loads(args.receipt.read_text(encoding="utf-8"))
-    failures = validate(receipt)
+    try:
+        receipt = json.loads(args.receipt.read_text(encoding="utf-8-sig"))
+        failures = validate(receipt)
+    except (OSError, ValueError, TypeError) as exc:
+        failures = [f"invalid_receipt:{type(exc).__name__}"]
     report = {
         "receipt": str(args.receipt),
+        "verification_scope": "RECEIPT_FORMAT_ONLY_OPERATOR_ATTESTATIONS_NOT_INDEPENDENTLY_PROVED",
         "failures": failures,
         "acceptance_receipt_gate": "PASS" if not failures else "FAIL",
     }
