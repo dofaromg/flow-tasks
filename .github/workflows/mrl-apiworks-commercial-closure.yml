@@ -29,6 +29,11 @@ jobs:
         shell: powershell
         run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
+        with:
+          # Legacy files elsewhere use names Windows cannot create.
+          # Fetch exactly the complete runtime package exercised by this job.
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
