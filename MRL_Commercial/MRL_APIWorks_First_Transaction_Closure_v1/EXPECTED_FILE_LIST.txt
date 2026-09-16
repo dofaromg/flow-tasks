@@ -8,3 +8,4 @@ docs/Mrliou_MRL_Evidence_Entry_v1.md
 scripts/Mrliou_MRL_build_evidence_entry_v1.py
 scripts/Mrliou_MRL_verify_evidence_entry_v1.py
 tests/test_evidence_entry.py
+scripts/Mrliou_MRL_browser_acceptance_v1.mjs

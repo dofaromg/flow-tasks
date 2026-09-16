@@ -51,3 +51,18 @@ python scripts/Mrliou_MRL_build_evidence_entry_v1.py --output /absolute/new/priv
 Open the generated `index.html`; run `VERIFY_EVIDENCE.py` to independently
 recheck its integrity. Engineering verification does not change any transaction
 gate. No deployment, publishing or payment action is performed.
+
+The repository workflow also builds this entry from the reviewed commit and
+runs real Chromium desktop/mobile acceptance:
+
+```sh
+node scripts/Mrliou_MRL_browser_acceptance_v1.mjs \
+  --input /absolute/review \
+  --output /absolute/new/browser-evidence
+```
+
+The browser evidence contains desktop/mobile PNGs, rendered DOM snapshots,
+an exact expected-file list, SHA-256 coverage and a machine-readable receipt.
+It verifies the five visible sections, required content, local links, console
+errors and horizontal overflow. It remains product UI evidence, not customer
+model, payment or revenue evidence.
