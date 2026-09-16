@@ -109,6 +109,7 @@ class CommercialClosurePackTests(unittest.TestCase):
         self.assertIn("--verify-only", workflow)
         self.assertIn("actions/upload-artifact@v4", workflow)
         self.assertIn("Mrliou_MRL_APIWorks_Browser_Evidence", workflow)
+        self.assertIn("fonts-noto-cjk", workflow)
         self.assertNotIn("workflow_dispatch", workflow)
 
 if __name__ == "__main__":

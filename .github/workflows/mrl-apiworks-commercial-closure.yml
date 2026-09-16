@@ -34,6 +34,10 @@ jobs:
           cache: npm
       - name: Install locked browser dependency
         run: npm ci
+      - name: Install Traditional Chinese rendering font
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes fonts-noto-cjk
       - name: Build evidence entry from checked-out commit
         run: |
           python MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/scripts/Mrliou_MRL_build_evidence_entry_v1.py \

@@ -68,6 +68,8 @@ viewports, and uploads a seven-file browser-evidence artifact. The gate requires
 - five visible sections and the expected title/content;
 - every local link to resolve inside the generated entry;
 - no browser console/page errors;
+- a loaded Noto Sans CJK TC font so Traditional Chinese glyphs cannot silently
+  degrade into missing-character boxes;
 - no document-level horizontal overflow at either viewport;
 - non-empty PNG and rendered-DOM evidence with bound SHA-256 values;
 - exact expected/actual file coverage and a second independent verify-only run.
