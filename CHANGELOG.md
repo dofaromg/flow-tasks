@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-16 — Mrliou MRL dual-target Pages entry v1
+
+- Added an isolated static Cloudflare Pages build at `out/` while preserving the
+  existing OpenNext Worker build and all dynamic API routes.
+- Added a browser-local MRL receipt verifier, optional model-artifact SHA-256
+  comparison, and an operator-selected HTTPS Worker status probe.
+- Added fail-closed inventory, checksum, Node tests, browser acceptance and CI.
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
