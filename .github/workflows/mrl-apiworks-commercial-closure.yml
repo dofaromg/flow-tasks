@@ -19,21 +19,32 @@ permissions:
   contents: read
 
 jobs:
+  prepare-windows-runtime:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Export committed runtime bytes for Windows
+        run: |
+          mkdir -p "${RUNNER_TEMP}/windows-runtime"
+          git archive HEAD MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1 | tar -x -C "${RUNNER_TEMP}/windows-runtime"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MRL_Windows_Runtime_Source
+          path: ${{ runner.temp }}/windows-runtime
+          if-no-files-found: error
+          retention-days: 7
   verify-windows-powershell-receipt:
+    needs: prepare-windows-runtime
     runs-on: windows-2022
     timeout-minutes: 10
     env:
       PYTHONUTF8: "1"
     steps:
-      - name: Preserve repository bytes during checkout
-        shell: powershell
-        run: git config --global core.autocrlf false
-      - uses: actions/checkout@v4
+      # Windows Git rejects unrelated legacy names even in a sparse checkout.
+      # The archive contains the complete, unmodified committed runtime package.
+      - uses: actions/download-artifact@v4
         with:
-          # Legacy files elsewhere use names Windows cannot create.
-          # Fetch exactly the complete runtime package exercised by this job.
-          sparse-checkout-cone-mode: false
-          sparse-checkout: /MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/
+          name: MRL_Windows_Runtime_Source
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
