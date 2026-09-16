@@ -37,3 +37,17 @@ Every gate must carry evidence for the actual customer transaction. A missing ga
 ## Data boundary
 
 Use the repository only for non-sensitive references, hashes, identifiers, statuses, and redacted evidence receipts. Keep customer identity, addresses, payment instruments, Stripe secrets, signed agreements, and banking data in the authorized private system of record.
+
+## Offline evidence entrance
+
+[Evidence entry guide](docs/Mrliou_MRL_Evidence_Entry_v1.md) connects the existing
+product definition, exact source, Git role records, local tests and customer ZIP
+in a private offline review. Run from this package with a new output directory:
+
+```sh
+python scripts/Mrliou_MRL_build_evidence_entry_v1.py --output /absolute/new/private/review
+```
+
+Open the generated `index.html`; run `VERIFY_EVIDENCE.py` to independently
+recheck its integrity. Engineering verification does not change any transaction
+gate. No deployment, publishing or payment action is performed.
