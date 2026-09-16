@@ -182,6 +182,8 @@ async function generate(input, output) {
         text: document.body.innerText,
         viewportWidth: window.innerWidth,
         documentWidth: document.documentElement.scrollWidth,
+        cjkFontReady: document.fonts.check('16px "Noto Sans CJK TC"', "可驗證入口"),
+        bodyFontFamily: getComputedStyle(document.body).fontFamily,
       }));
       const links = safeLocalLinks(source, state.hrefs);
       const requiredMissing = REQUIRED_TEXT.filter((value) => !state.text.includes(value));
@@ -191,6 +193,8 @@ async function generate(input, output) {
         state.sectionCount !== 5 ||
         state.tableCount !== 1 ||
         state.documentWidth > state.viewportWidth ||
+        !state.cjkFontReady ||
+        !state.bodyFontFamily.includes("Noto Sans CJK TC") ||
         errors.length ||
         links.missing.length ||
         links.unsafe.length ||
@@ -222,6 +226,8 @@ async function generate(input, output) {
         unsafe_links: links.unsafe,
         console_errors: errors,
         horizontal_overflow_pixels: Math.max(0, state.documentWidth - state.viewportWidth),
+        cjk_font_ready: state.cjkFontReady,
+        body_font_family: state.bodyFontFamily,
       });
       await page.close();
     }

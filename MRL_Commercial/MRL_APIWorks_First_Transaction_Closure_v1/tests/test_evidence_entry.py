@@ -191,6 +191,18 @@ class EvidenceEntryTests(unittest.TestCase):
     def test_content_mapping_anchors_exist(self) -> None:
         self.assertEqual(len(content_mappings()), 5)
 
+    def test_generated_entry_declares_traditional_chinese_font(self) -> None:
+        """The browser evidence must not silently accept missing CJK glyphs."""
+        source = (SCRIPTS / "Mrliou_MRL_build_evidence_entry_v1.py").read_text(
+            encoding="utf-8"
+        )
+        browser = (SCRIPTS / "Mrliou_MRL_browser_acceptance_v1.mjs").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('"Noto Sans CJK TC"', source)
+        self.assertIn("document.fonts.check", browser)
+        self.assertIn("cjk_font_ready", browser)
+
 
 if __name__ == "__main__":
     unittest.main()

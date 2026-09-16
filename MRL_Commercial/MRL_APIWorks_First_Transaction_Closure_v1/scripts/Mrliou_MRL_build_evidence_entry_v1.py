@@ -132,7 +132,7 @@ def render_index(ledger: dict[str, Any], expected: list[str]) -> str:
     return f'''<!doctype html>
 <html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MRL APIWorks｜可驗證入口</title>
-<style>body{{font:16px/1.7 system-ui,sans-serif;max-width:1120px;margin:40px auto;padding:0 24px;color:#14283b;background:#f5f8fa}}h1,h2{{line-height:1.3}}section{{background:white;padding:22px;margin:20px 0;border:1px solid #d7e2e9;border-radius:12px}}table{{border-collapse:collapse;width:100%;font-size:14px}}td,th{{border:1px solid #d7e2e9;padding:10px;text-align:left;overflow-wrap:anywhere}}a{{color:#075b9a}}code{{overflow-wrap:anywhere}}.scroll{{overflow:auto}}</style>
+<style>body{{font:16px/1.7 "Noto Sans CJK TC","Noto Sans TC",system-ui,sans-serif;max-width:1120px;margin:40px auto;padding:0 24px;color:#14283b;background:#f5f8fa}}h1,h2{{line-height:1.3}}section{{background:white;padding:22px;margin:20px 0;border:1px solid #d7e2e9;border-radius:12px}}table{{border-collapse:collapse;width:100%;font-size:14px}}td,th{{border:1px solid #d7e2e9;padding:10px;text-align:left;overflow-wrap:anywhere}}a{{color:#075b9a}}code{{overflow-wrap:anywhere}}.scroll{{overflow:auto}}</style>
 <h1>MRL APIWorks｜可驗證入口</h1>
 <p>觀測紀錄 → 定義 → 程式 → 驗證 → 實際交付。origin_signature: MrLiouWord</p>
 <section><h2>01｜這個產品實際交付什麼</h2><p>既有 BYOH 單節點本機模型部署，含 Memory／Evidence／Passport 記錄與 30 天安裝穩定支援。模型權重、硬體與付款處理不包含在 ZIP 中。</p>
