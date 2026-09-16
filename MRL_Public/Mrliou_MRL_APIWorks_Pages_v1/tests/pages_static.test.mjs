@@ -81,6 +81,6 @@ test('browser renders and validates a local receipt without upload', async (cont
     assert.match(await page.$eval('#verify-result',node=>node.textContent),/^PASS/);
     await page.type('#worker-url','http://example.com'); await page.click('#check-status');
     await page.waitForFunction(()=>document.querySelector('#status-result').classList.contains('fail'));
-    assert.equal(consoleErrors.length,0);
+    assert.deepEqual(consoleErrors,[]);
   } finally { await browser.close(); server.close(); }
 });
