@@ -49,7 +49,7 @@
           <label for="model-file">模型檔（選填）</label>
           <input id="model-file" type="file">
           <button id="verify-receipt" type="button">本機核對</button>
-          <p class="hint">支援 Live Acceptance 與 Public Route Receipt。檔案只由此頁在記憶體讀取。</p>
+          <p class="hint">支援 Live Acceptance 與 Public Route Receipt。模型每次僅讀取 4 MiB，在本機分塊核對 SHA-256 並顯示進度，不上傳。</p>
         </div>
         <output id="verify-result" class="result neutral">等待選取收據。格式通過不等於獨立證明作者、付款或模型已載入。</output>
       </div>

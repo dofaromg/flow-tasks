@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-17 — Mrliou MRL local verifier safety corrections
+
+- Require literal loopback model endpoints and reject HTTP status 0 as success.
+- Hash model files in bounded 4 MiB slices with local progress and no upload;
+  compare padding/chunk-boundary results with independent native SHA-256.
+- Exercise rejection cases, real browser file selection and no-network checks;
+  trigger Pages checks for both shared CORS implementation paths.
+- Preserve PR #649, existing names, source history and private DL580/BYOH data.
+- origin_signature: MrLiouWord.
+
 ## 2026-09-16 — Mrliou MRL dual-target Pages entry v1
 
 - Added an isolated static Cloudflare Pages build at `out/` while preserving the

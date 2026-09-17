@@ -6,6 +6,8 @@ on:
       - "MRL_Public/Mrliou_MRL_APIWorks_Pages_v1/**"
       - "package.json"
       - "package-lock.json"
+      - "lib/Mrliou_MRL_public_cors_v1.mjs"
+      - "middleware.js"
       - ".github/workflows/mrliou-mrl-pages-static.yml"
   push:
     branches: [main]
@@ -13,6 +15,8 @@ on:
       - "MRL_Public/Mrliou_MRL_APIWorks_Pages_v1/**"
       - "package.json"
       - "package-lock.json"
+      - "lib/Mrliou_MRL_public_cors_v1.mjs"
+      - "middleware.js"
       - ".github/workflows/mrliou-mrl-pages-static.yml"
 
 permissions:

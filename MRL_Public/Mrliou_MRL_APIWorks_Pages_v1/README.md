@@ -26,6 +26,16 @@ The page can:
 - optionally compare a selected local model artifact with the SHA-256 recorded
   in a live acceptance receipt.
 
+Model hashing reads fixed 4 MiB slices, yields between slices and reports progress;
+it never buffers or uploads the complete model. Receipt/size errors are rejected
+before hashing. SHA-256 follows FIPS 180-4 and is regression-tested against native
+Node crypto at padding and chunk boundaries (not a FIPS certification claim).
+Reference: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
+
+Offline live receipts require literal HTTP(S) loopback (`localhost`, `127.0.0.1`,
+`[::1]`) without credentials, query or fragment. HTTP status 0 is transport failure,
+never a successful route match. Failure receipts remain readable as failure evidence.
+
 Selected files are read by browser JavaScript and are never uploaded by this
 package. A successful format check is not proof of authorship, production
 activation, customer acceptance, payment, or actual model-weight loading.
