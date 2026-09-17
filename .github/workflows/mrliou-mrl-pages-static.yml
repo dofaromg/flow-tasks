@@ -1,0 +1,47 @@
+name: Mrliou MRL Pages Static Entry
+
+on:
+  pull_request:
+    paths:
+      - "MRL_Public/Mrliou_MRL_APIWorks_Pages_v1/**"
+      - "package.json"
+      - "package-lock.json"
+      - "lib/Mrliou_MRL_public_cors_v1.mjs"
+      - "middleware.js"
+      - ".github/workflows/mrliou-mrl-pages-static.yml"
+  push:
+    branches: [main]
+    paths:
+      - "MRL_Public/Mrliou_MRL_APIWorks_Pages_v1/**"
+      - "package.json"
+      - "package-lock.json"
+      - "lib/Mrliou_MRL_public_cors_v1.mjs"
+      - "middleware.js"
+      - ".github/workflows/mrliou-mrl-pages-static.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-pages-static-entry:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      MRL_REQUIRE_BROWSER: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm run verify:pages-source
+      - run: npm run build:pages
+      - run: npm run verify:pages
+      - run: npm run test:pages
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Mrliou_MRL_APIWorks_Pages_v1
+          path: out
+          if-no-files-found: error
+          retention-days: 30

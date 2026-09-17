@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="MRL APIWorks public entry, Worker status and local evidence verifier">
+  <meta name="author" content="Mr.liou">
+  <link rel="icon" href="data:,">
+  <title>MRL APIWorks｜公開驗證入口</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="hero">
+    <nav><span class="brand">MRL APIWorks</span><a href="#boundary">架構</a><a href="#status">狀態</a><a href="#verify">收據核對</a></nav>
+    <div class="hero-copy">
+      <p class="eyebrow">MRL PUBLIC EVIDENCE ENTRY</p>
+      <h1>公開入口與私人 Runtime，邊界清楚地一起運作</h1>
+      <p>Pages 提供靜態入口與本機核對；Worker 執行動態 API；模型權重、母體拓撲與客戶資料留在 DL580／BYOH。</p>
+      <div class="pills"><span>origin_signature: MrLiouWord</span><span id="build-sha">build {{MRL_BUILD_SHA}}</span><span>無自動上傳</span></div>
+    </div>
+  </header>
+
+  <main>
+    <section id="boundary">
+      <div class="section-heading"><p class="eyebrow">01｜BOUNDARY</p><h2>三層部署職責</h2></div>
+      <div class="grid three">
+        <article><span class="number">01</span><h3>Cloudflare Pages</h3><p>公開首頁、產品說明、唯讀狀態與瀏覽器本機證據核對。</p><strong>不含伺服器祕密</strong></article>
+        <article><span class="number">02</span><h3>Cloudflare Worker</h3><p>Next 動態 API、Gate、授權、路由與公開 Runtime 回應。</p><strong>獨立版本與流量</strong></article>
+        <article><span class="number">03</span><h3>DL580／BYOH</h3><p>私人模型、Memory、Evidence、Passport 與客戶資料。</p><strong>不投影母體拓撲</strong></article>
+      </div>
+    </section>
+
+    <section id="status">
+      <div class="section-heading"><p class="eyebrow">02｜LIVE STATUS</p><h2>選擇 Worker 後即時檢查</h2></div>
+      <div class="panel">
+        <label for="worker-url">Worker HTTPS 根網址</label>
+        <div class="action-row"><input id="worker-url" type="url" placeholder="https://your-worker.example" autocomplete="off"><button id="check-status" type="button">檢查 /api/mrl/status</button></div>
+        <p class="hint">網址不會被儲存。若 Worker 未允許此 Pages 網域的 CORS，介面會如實顯示跨來源失敗。</p>
+        <output id="status-result" class="result neutral">尚未執行。建置成功不等於 production traffic 已啟用。</output>
+      </div>
+    </section>
+
+    <section id="verify">
+      <div class="section-heading"><p class="eyebrow">03｜LOCAL EVIDENCE</p><h2>在瀏覽器內核對 MRL 收據</h2></div>
+      <div class="grid two">
+        <div class="panel">
+          <label for="receipt-file">JSON 收據</label>
+          <input id="receipt-file" type="file" accept="application/json,.json">
+          <label for="model-file">模型檔（選填）</label>
+          <input id="model-file" type="file">
+          <button id="verify-receipt" type="button">本機核對</button>
+          <p class="hint">支援 Live Acceptance 與 Public Route Receipt。模型每次僅讀取 4 MiB，在本機分塊核對 SHA-256 並顯示進度，不上傳。</p>
+        </div>
+        <output id="verify-result" class="result neutral">等待選取收據。格式通過不等於獨立證明作者、付款或模型已載入。</output>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-heading"><p class="eyebrow">04｜GATES</p><h2>不同證據，不混成一個成功</h2></div>
+      <div class="gate-list"><span>頁面完整性</span><span>Worker HTTP</span><span>版本流量</span><span>現場模型</span><span>客戶驗收</span><span>交易收入</span></div>
+    </section>
+  </main>
+  <footer><span>Mrliou MRL APIWorks Pages v1</span><span>觀測者入口｜本機優先｜來源保留</span></footer>
+  <script src="/app.js" defer></script>
+</body>
+</html>
