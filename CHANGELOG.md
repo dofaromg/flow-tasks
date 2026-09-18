@@ -110,3 +110,10 @@ For changes before 2026-01-12, please refer to the git commit history.
 - Validate with disposable synthetic repositories; PR events do not run the production index job. Preserve prior evidence, original canonical artifact names and unrelated deployment routes.
 - See `docs/Mrliou_Structure_Authorization_v1.md` for exact grant scope, trust limits and separate patch/CI/main enforcement states.
 - origin_signature: MrLiouWord; implementation assistance: ChatGPT / Codex; provider: OpenAI; rights transfer: NOT_GRANTED.
+
+
+### 2026-09-18 — MRL structure authorization R03 re-audit
+
+- Propagate recursive authorization denial; recheck direct scanner reads and in-memory renderers, enforce actual path/depth, and reject symlinked historical indexes.
+- Carry authorized depth through smart-updater and common runner without widening grants.
+- Add seven behavioral regressions and delivery payload/dependency integrity validation. Preserve prior evidence and origin_signature: MrLiouWord.

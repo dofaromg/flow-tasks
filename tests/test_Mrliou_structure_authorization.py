@@ -170,6 +170,99 @@ updater.""" + method)
             self.assert_denied(result)
             self.assertIn('NO_RECORDED_GRANT', result.stderr)
 
+    def test_recursive_authorization_denial_is_not_swallowed(self):
+        self.grant()
+        result = self.run_code("""
+import sys
+from pathlib import Path
+sys.path.insert(0, '.copilot')
+from scanner import structure_scanner as module
+from Mrliou_structure_authorization import AuthorizationDenied
+scanner = module.StructureScanner()
+real = module.authorize
+calls = 0
+def revoke(*args, **kwargs):
+    global calls
+    calls += 1
+    if calls > 2:
+        raise AuthorizationDenied('SYNTHETIC_REVOKED')
+    return real(*args, **kwargs)
+module.authorize = revoke
+scanner.scan()
+""")
+        self.assert_denied(result)
+        self.assertIn('SYNTHETIC_REVOKED', result.stderr)
+        self.assertNotIn('掃描完成', result.stdout)
+
+    def test_direct_line_reader_rechecks_revocation(self):
+        self.grant()
+        result = self.run_code("""
+import sys,json
+from pathlib import Path
+sys.path.insert(0, '.copilot')
+from scanner.structure_scanner import StructureScanner
+scanner = StructureScanner()
+p = Path('config/MRL_AUTHORIZATION_REGISTRY_v1.json')
+d = json.loads(p.read_text()); d['active_grants'] = []; p.write_text(json.dumps(d))
+scanner.count_lines(Path('fixture.py'))
+""")
+        self.assert_denied(result)
+        self.assertIn('NO_RECORDED_GRANT', result.stderr)
+
+    def test_direct_line_reader_rejects_outside_and_symlink_paths(self):
+        self.grant()
+        outside = self.root.parent / 'outside.txt'; outside.write_text('outside')
+        (self.root / 'linked.txt').symlink_to(outside)
+        for path in ['../outside.txt', 'linked.txt']:
+            result = self.run_code("import sys; from pathlib import Path; sys.path.insert(0, '.copilot'); "
+                                   "from scanner.structure_scanner import StructureScanner; "
+                                   "StructureScanner().count_lines(Path(" + repr(path) + "))")
+            self.assert_denied(result)
+
+    def test_direct_nested_scan_cannot_reset_depth(self):
+        grant = self.grant(); grant['scope']['max_depth'] = 1; self.write_registry()
+        (self.root / 'one/two').mkdir(parents=True)
+        result = self.run_code("import sys; from pathlib import Path; sys.path.insert(0, '.copilot'); "
+                               "from scanner.structure_scanner import StructureScanner; "
+                               "StructureScanner(max_depth=1).scan_directory(Path('one/two'), 0)")
+        self.assert_denied(result)
+        self.assertIn('DEPTH_SCOPE_MISMATCH', result.stderr)
+
+    def test_smart_updater_accepts_reduced_depth_without_widening(self):
+        grant = self.grant(); grant['scope']['max_depth'] = 2; self.write_registry()
+        result = self.run_cli('.copilot/triggers/smart_updater.py', '--force', '--depth', '2')
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(json.loads((self.root / OUTPUTS[0]).read_text())['metadata']['max_depth'], 2)
+        result = self.run_cli('run_structure_index.py', '--depth', '2', '--check-triggers')
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_smart_updater_rejects_symlink_historical_index(self):
+        self.grant()
+        outside = self.root.parent / 'outside.json'; outside.write_text('{}')
+        (self.root / '.copilot/structure-index.json').symlink_to(outside)
+        result = self.run_cli('.copilot/triggers/smart_updater.py', '--check')
+        self.assert_denied(result)
+        self.assertIn('SYMLINK_DENIED', result.stderr)
+        self.assertEqual(outside.read_text(), '{}')
+
+    def test_in_memory_renderers_recheck_revocation(self):
+        for expr in ["scanner.generate_tree_view({})", "scanner.print_tree()",
+                     "indexer.categorize_module({})", "indexer.categorize_all()"]:
+            self.grant()
+            result = self.run_code("""
+import sys,json
+from pathlib import Path
+sys.path.insert(0, '.copilot')
+from scanner.structure_scanner import StructureScanner
+from generator.emoji_indexer import EmojiIndexer
+scanner = StructureScanner()
+indexer = EmojiIndexer(scan_data={'metadata': {'max_depth': 8}})
+p = Path('config/MRL_AUTHORIZATION_REGISTRY_v1.json')
+d = json.loads(p.read_text()); d['active_grants'] = []; p.write_text(json.dumps(d))
+""" + expr)
+            self.assert_denied(result)
+            self.assertIn('NO_RECORDED_GRANT', result.stderr)
+
     def test_generator_denies_before_input_read(self):
         result = self.run_cli(GENERATOR, '--input', '/definitely/missing/input.json')
         self.assert_denied(result)
@@ -396,6 +489,26 @@ x.generate_json()
         for depth in ['0', '-1', '9', '8; touch injected']:
             self.assert_denied(self.run_cli(SCANNER, '--depth', depth))
         self.assertFalse((self.root / 'injected').exists())
+
+
+class DeliveryContractTests(unittest.TestCase):
+    def test_delivery_payload_and_dependency_integrity(self):
+        manifest_path = 'config/Mrliou_Structure_Authorization_Delivery_v1.json'
+        manifest = json.loads((SOURCE / manifest_path).read_text())
+        expected = manifest['expected_files']
+        self.assertEqual(manifest['expected_file_count'], len(expected))
+        self.assertEqual(len(expected), len(set(expected)))
+        self.assertEqual(set(expected) - {manifest_path},
+                         {entry['path'] for entry in manifest['payload']})
+        for entry in manifest['payload']:
+            data = (SOURCE / entry['path']).read_bytes()
+            self.assertGreater(len(data), 0)
+            self.assertEqual(len(data), entry['size_bytes'], entry['path'])
+            self.assertEqual(hashlib.sha256(data).hexdigest(), entry['sha256'], entry['path'])
+        for dependencies in manifest['dependencies'].values():
+            for dependency in dependencies:
+                self.assertTrue((SOURCE / dependency).is_file(), dependency)
+                self.assertGreater((SOURCE / dependency).stat().st_size, 0, dependency)
 
 
 class WorkflowContractTests(unittest.TestCase):

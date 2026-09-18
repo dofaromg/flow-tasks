@@ -14,7 +14,7 @@ import hashlib
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from Mrliou_structure_authorization import authorize, exact_path, ROOT
+from Mrliou_structure_authorization import AuthorizationDenied, authorize, exact_path, ROOT
 
 
 class StructureScanner:
@@ -145,8 +145,19 @@ class StructureScanner:
         
         return '📁'
     
+    def _scoped_path(self, path: Path) -> Path:
+        """Validate the full path chain before reading a source path."""
+        path = Path(os.path.abspath(path))
+        if not path.is_relative_to(ROOT):
+            raise AuthorizationDenied('PATH_SCOPE_MISMATCH')
+        return exact_path(path, str(path.relative_to(ROOT)))
+
     def count_lines(self, file_path: Path) -> int:
         """計算檔案行數"""
+        authorize({'structure.scan'}, self.max_depth)
+        file_path = self._scoped_path(file_path)
+        if len(file_path.parent.relative_to(ROOT).parts) > self.max_depth:
+            raise AuthorizationDenied('DEPTH_SCOPE_MISMATCH')
         try:
             with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                 return len(f.readlines())
@@ -165,8 +176,9 @@ class StructureScanner:
             目錄結構字典
         """
         authorize({'structure.scan'}, self.max_depth)
-        if path.is_symlink() or not path.resolve().is_relative_to(ROOT):
-            raise PermissionError('PATH_SCOPE_MISMATCH')
+        path = self._scoped_path(path)
+        if type(current_depth) is not int or current_depth != len(path.relative_to(ROOT).parts):
+            raise AuthorizationDenied('DEPTH_SCOPE_MISMATCH')
         if current_depth > self.max_depth:
             return {}
         
@@ -243,6 +255,8 @@ class StructureScanner:
                     else:
                         self.scan_results['statistics']['file_types'][suffix] = 1
         
+        except AuthorizationDenied:
+            raise
         except PermissionError:
             pass
         
@@ -250,6 +264,7 @@ class StructureScanner:
     
     def scan(self) -> Dict:
         """執行完整掃描"""
+        authorize({'structure.scan'}, self.max_depth)
         print(f"🔍 開始掃描專案結構...")
         print(f"📂 根目錄: {self.root_path}")
         print(f"📊 最大深度: {self.max_depth} 層")
@@ -281,6 +296,7 @@ class StructureScanner:
     
     def generate_tree_view(self, node: Dict, prefix: str = '', is_last: bool = True) -> List[str]:
         """生成樹狀視圖"""
+        authorize({'structure.scan'}, self.max_depth)
         lines = []
         
         if node.get('type') == 'directory':
@@ -322,6 +338,7 @@ class StructureScanner:
     
     def print_tree(self):
         """列印樹狀結構"""
+        authorize({'structure.scan'}, self.max_depth)
         print("🌳 專案結構樹:")
         print()
         tree_lines = self.generate_tree_view(self.scan_results['structure'])
