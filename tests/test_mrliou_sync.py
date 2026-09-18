@@ -3,6 +3,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import shutil
 from pathlib import Path
 import subprocess
 
@@ -192,6 +193,18 @@ def publication(manager, tmp_path):
     # Simulate only the PR service. Local real Git exercises history and bundles.
     tools_dir = tmp_path / 'tools'
     tools_dir.mkdir()
+    # Keep real local Git for commits/pushes; report GitHub URLs only to the guard.
+    real_git = shutil.which('git')
+    shim = tools_dir / 'git'
+    shim.write_text("#!/usr/bin/env bash\nset -eu\n"
+                    'if [[ "${1:-}" == remote && "${2:-}" == get-url ]]; then\n'
+                    '  echo "${TEST_REMOTE_URL:-https://github.com/fixture/repo.git}"\n'
+                    '  if [[ "${TEST_SECOND_URL:-}" != "" ]]; then echo "$TEST_SECOND_URL"; fi\n'
+                    '  exit 0\nfi\n'
+                    'if [[ "${1:-}" == push || "${1:-}" == fetch || "${1:-}" == ls-remote ]]; then\n'
+                    '  echo "$*" >> "$GIT_NETWORK_LOG"\nfi\n'
+                    f'exec "{real_git}" "$@"\n')
+    shim.chmod(0o755)
     gh = tools_dir / 'gh'
     gh.write_text('''#!/usr/bin/env bash
 set -eu
@@ -212,6 +225,10 @@ fi
            'GITHUB_OUTPUT': str(tmp_path / 'outputs'),
            'GITHUB_STEP_SUMMARY': str(tmp_path / 'summary'),
            'GITHUB_REPOSITORY': 'fixture/repo',
+           'MRL_SYNC_PUBLISH': 'true', 'GITHUB_EVENT_NAME': 'workflow_dispatch',
+           'GITHUB_REF': 'refs/heads/main', 'GITHUB_ACTOR': 'fixture-owner',
+           'GITHUB_RUN_ID': '123', 'GITHUB_RUN_ATTEMPT': '1',
+           'GIT_NETWORK_LOG': str(tmp_path / 'network.log'),
            'GH_CALL_LOG': str(tmp_path / 'gh.log')}
     return m, remote, base, env, artifacts
 
@@ -395,3 +412,78 @@ def test_delivery_manifest_integrity():
         if entry['path'] != manifest_path:
             assert len(payload) == entry['size_bytes']
             assert hashlib.sha256(payload).hexdigest() == entry['sha256']
+
+
+
+@pytest.mark.parametrize('overrides', [
+    {'MRL_SYNC_PUBLISH': 'yes'},
+    {'GITHUB_EVENT_NAME': 'schedule'},
+    {'GITHUB_EVENT_NAME': 'pull_request'},
+    {'GITHUB_REF': 'refs/heads/other'},
+    {'GITHUB_ACTOR': ''},
+    {'GITHUB_RUN_ID': ''},
+    {'GITHUB_REPOSITORY': 'wrong/repository'},
+    {'TEST_REMOTE_URL': 'https://github.com/foreign/repo.git'},
+    {'TEST_REMOTE_URL': 'https://github.com.evil.invalid/fixture/repo.git'},
+    {'TEST_SECOND_URL': 'https://github.com/foreign/repo.git'},
+])
+def test_publish_denies_before_commit_or_network(publication, overrides):
+    p = publication
+    assert publish(p, **overrides).returncode != 0
+    assert git(p[0].repo_root, 'rev-parse', 'HEAD') == p[2]
+    assert not Path(p[3]['GIT_NETWORK_LOG']).exists()
+    assert not Path(p[3]['GH_CALL_LOG']).exists()
+
+
+@pytest.mark.parametrize('kind', ['insteadOf', 'pushInsteadOf'])
+def test_publish_rejects_url_rewrites(publication, kind):
+    p = publication
+    git(p[0].repo_root, 'config', f'url.https://foreign.invalid/.{kind}', 'https://github.com/')
+    assert publish(p).returncode != 0
+    assert not Path(p[3]['GIT_NETWORK_LOG']).exists()
+
+
+def test_default_is_local_candidate_without_network(publication):
+    p = publication
+    del p[3]['MRL_SYNC_PUBLISH']
+    result = publish(p)
+    assert result.returncode == 0, result.stderr
+    assert (p[4] / 'candidate.bundle').is_file()
+    assert 'local_candidate_only' in Path(p[3]['GITHUB_OUTPUT']).read_text()
+    assert not Path(p[3]['GIT_NETWORK_LOG']).exists()
+    assert not Path(p[3]['GH_CALL_LOG']).exists()
+    assert git(p[1], 'rev-parse', 'main') == p[2]
+
+
+def test_execution_identity_does_not_replace_source(publication):
+    p = publication
+    assert publish(p).returncode == 0
+    receipt = json.loads((p[4] / 'receipt.json').read_text())
+    assert receipt['execution']['trigger_actor'] == 'fixture-owner'
+    assert receipt['execution']['executor'] == 'github-actions[bot]'
+    assert receipt['execution']['ai_worker'] is None
+    assert receipt['execution']['origin_authority'] == 'Mr.liou / MrLiouWord'
+    assert receipt['files'][0]['source_url'] == p[0].receipt['files'][0]['source_url']
+    message = git(p[0].repo_root, 'log', '-1', '--format=%B')
+    assert 'Executor: github-actions[bot]' in message
+    assert 'origin_signature: MrLiouWord' in message
+
+
+@pytest.mark.parametrize('field,value', [('origin_signature', 'other'), ('rights_transfer', 'GRANTED')])
+def test_attribution_and_rights_tampering_denied(publication, field, value):
+    p = publication
+    path = p[4] / 'receipt.json'
+    receipt = json.loads(path.read_text())
+    receipt[field] = value
+    path.write_text(json.dumps(receipt))
+    assert publish(p).returncode != 0
+    assert not Path(p[3]['GIT_NETWORK_LOG']).exists()
+
+
+def test_workflow_publication_is_explicit():
+    workflow = yaml.safe_load((ROOT / '.github/workflows/sync-external-repos.yml').read_text())
+    events = workflow.get('on', workflow.get(True))
+    assert events['workflow_dispatch']['inputs']['publish_candidate']['default'] is False
+    step = next(s for s in workflow['jobs']['sync']['steps'] if s.get('id') == 'publish')
+    assert "github.event_name == 'workflow_dispatch'" in step['env']['MRL_SYNC_PUBLISH']
+    assert "inputs.publish_candidate" in step['env']['MRL_SYNC_PUBLISH']

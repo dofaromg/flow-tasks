@@ -4,6 +4,11 @@ name: Sync External Repositories
 on:
   workflow_dispatch:
     inputs:
+      publish_candidate:
+        description: 'Explicitly publish a same-repository candidate branch and draft PR'
+        required: false
+        type: boolean
+        default: false
       repo_name:
         description: '要同步的倉庫名稱 (留空則同步所有) / Repository name (empty for all)'
         required: false
@@ -23,6 +28,10 @@ on:
       - 'scripts/sync_external_repos.py'
       - 'scripts/mrliou_publish_sync.sh'
       - 'tests/test_mrliou_sync.py'
+      - 'config/Mrliou_MRL_Sync_Delivery_v1.json'
+      - 'docs/Mrliou_MRL_Sync_Operations_v1.md'
+      - 'CHANGELOG.md'
+      - 'repos_sync.yaml'
 
 permissions:
   contents: read
@@ -86,6 +95,7 @@ jobs:
         id: publish
         env:
           GH_TOKEN: ${{ github.token }}
+          MRL_SYNC_PUBLISH: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_candidate && 'true' || 'false' }}
         run: bash scripts/mrliou_publish_sync.sh
       - name: Preserve source receipt and recoverable candidate
         if: always()
@@ -110,3 +120,4 @@ jobs:
             echo 'Main unchanged. No automatic merge, product release, or rights transfer.'
             echo 'Preserved conflicts and incomplete sync are detailed in the receipt.'
           } >> "$GITHUB_STEP_SUMMARY"
+
