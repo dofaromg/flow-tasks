@@ -11,6 +11,10 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 from datetime import datetime
 import hashlib
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from Mrliou_structure_authorization import authorize, exact_path, ROOT
 
 
 class StructureScanner:
@@ -74,7 +78,8 @@ class StructureScanner:
             root_path: 專案根目錄路徑
             max_depth: 最大掃描深度
         """
-        self.root_path = Path(root_path).resolve()
+        authorize({'structure.scan'}, max_depth)
+        self.root_path = exact_path(root_path, '.')
         self.max_depth = max_depth
         self.scan_results = {
             'metadata': {
@@ -95,6 +100,8 @@ class StructureScanner:
     
     def should_ignore(self, path: Path) -> bool:
         """檢查是否應該忽略此路徑"""
+        if path.is_symlink():
+            return True
         name = path.name
         # 檢查忽略列表
         for ignore_pattern in self.IGNORE_DIRS:
@@ -157,6 +164,9 @@ class StructureScanner:
         Returns:
             目錄結構字典
         """
+        authorize({'structure.scan'}, self.max_depth)
+        if path.is_symlink() or not path.resolve().is_relative_to(ROOT):
+            raise PermissionError('PATH_SCOPE_MISMATCH')
         if current_depth > self.max_depth:
             return {}
         
@@ -180,7 +190,8 @@ class StructureScanner:
         }
         
         try:
-            items = sorted(path.iterdir(), key=lambda x: (not x.is_dir(), x.name))
+            items = sorted((item for item in path.iterdir() if not item.is_symlink()),
+                           key=lambda x: (not x.is_dir(), x.name))
             
             for item in items:
                 if self.should_ignore(item):
@@ -258,7 +269,8 @@ class StructureScanner:
     
     def save_json(self, output_path: str = '.copilot/structure-scan.json'):
         """儲存 JSON 格式結果"""
-        output_file = Path(output_path)
+        authorize({'structure.scan'}, self.max_depth)
+        output_file = exact_path(output_path, '.copilot/structure-scan.json')
         output_file.parent.mkdir(parents=True, exist_ok=True)
         
         with open(output_file, 'w', encoding='utf-8') as f:

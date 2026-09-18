@@ -1,0 +1,96 @@
+{
+  "origin_signature": "MrLiouWord",
+  "record_id": "Mrliou_Structure_Authorization_Delivery_v1",
+  "base_commit": "848f5d62aa807bf61529ceb740517297ab308603",
+  "expected_file_count": 9,
+  "expected_files": [
+    ".github/workflows/structure-indexer.yml",
+    ".copilot/scanner/structure_scanner.py",
+    ".copilot/generator/emoji_indexer.py",
+    "run_structure_index.py",
+    ".copilot/Mrliou_structure_authorization.py",
+    "tests/test_Mrliou_structure_authorization.py",
+    "docs/Mrliou_Structure_Authorization_v1.md",
+    "CHANGELOG.md",
+    "config/Mrliou_Structure_Authorization_Delivery_v1.json"
+  ],
+  "payload": [
+    {
+      "path": ".github/workflows/structure-indexer.yml",
+      "size_bytes": 7498,
+      "sha256": "de7ec8aa6f63d2abfb172167cda31fe2105159e538acdf8a1ea6a8501fb7ad38"
+    },
+    {
+      "path": ".copilot/scanner/structure_scanner.py",
+      "size_bytes": 12943,
+      "sha256": "b3832095521ff1ab529b5f83696249107b2f11d5405563b06abf448d8f76b981"
+    },
+    {
+      "path": ".copilot/generator/emoji_indexer.py",
+      "size_bytes": 13037,
+      "sha256": "a1a501e23a0805326a26ca24b8a9cb28f9dcf9a22489ffaaa700671eab1cb35d"
+    },
+    {
+      "path": "run_structure_index.py",
+      "size_bytes": 3936,
+      "sha256": "28640a704ac359122224eeab835e0d54e13d210b596983a4915838ec790fe894"
+    },
+    {
+      "path": ".copilot/Mrliou_structure_authorization.py",
+      "size_bytes": 8782,
+      "sha256": "ab46cc93fac990b3df411fe06526d93b3c9ff903d344665f24db45d42db9d6a1"
+    },
+    {
+      "path": "tests/test_Mrliou_structure_authorization.py",
+      "size_bytes": 18829,
+      "sha256": "04581762c0493768487422d6e3cf5db1a6cce9f886000e6c75782ed90343dab6"
+    },
+    {
+      "path": "docs/Mrliou_Structure_Authorization_v1.md",
+      "size_bytes": 8160,
+      "sha256": "28dda0206d2c295997933f4b6d12c15934600b39e9c4537340341265a995794e"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "size_bytes": 5284,
+      "sha256": "3301958e888f659cc8364b987f0fe2386c56cea7e01cfb979b234d356091c8ef"
+    }
+  ],
+  "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
+  "dependencies": {
+    "workflow": [
+      ".copilot/Mrliou_structure_authorization.py",
+      ".copilot/scanner/structure_scanner.py",
+      ".copilot/generator/emoji_indexer.py",
+      "config/MRL_AUTHORIZATION_REGISTRY_v1.json"
+    ],
+    "runner": [
+      ".copilot/Mrliou_structure_authorization.py",
+      ".copilot/scanner/structure_scanner.py",
+      ".copilot/generator/emoji_indexer.py",
+      ".copilot/triggers/smart_updater.py"
+    ],
+    "tests": [
+      ".copilot/Mrliou_structure_authorization.py",
+      ".copilot/scanner/structure_scanner.py",
+      ".copilot/generator/emoji_indexer.py",
+      "run_structure_index.py",
+      "config/MRL_AUTHORIZATION_REGISTRY_v1.json",
+      ".copilot/triggers/smart_updater.py",
+      ".github/workflows/structure-indexer.yml"
+    ]
+  },
+  "not_modified": [
+    "config/MRL_AUTHORIZATION_REGISTRY_v1.json",
+    ".copilot/structure-scan.json",
+    ".copilot/structure-index.json",
+    ".copilot/structure.fltnz",
+    "STRUCTURE.md",
+    "MRL_Mother/**",
+    "MRL_Products/**",
+    "all other workflows and routes"
+  ],
+  "local_tests": "30/30 PASS",
+  "main_enforcement": "OPEN_UNTIL_MERGE_AND_MAIN_RUN_VERIFICATION",
+  "zip": "NOT_REQUESTED"
+}
