@@ -22,12 +22,54 @@ import hashlib
 import json
 import os
 import pathlib
+import re
 import subprocess
 import sys
 
 report = json.loads(pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'))
 if report.get('success') is not True or report.get('errors'):
     raise SystemExit('Refusing to publish a failed or incomplete synchronization')
+if report.get('origin_signature') != 'MrLiouWord':
+    raise SystemExit('Missing or changed MRL origin signature')
+if report.get('rights_transfer') != 'NOT_GRANTED':
+    raise SystemExit('Synchronization cannot grant ownership or rights')
+repository = os.environ['GITHUB_REPOSITORY']
+if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', repository):
+    raise SystemExit('Invalid destination repository')
+publish = os.environ.get('MRL_SYNC_PUBLISH', 'false')
+if publish not in {'true', 'false'}:
+    raise SystemExit('Publication choice must be true or false')
+if publish == 'true':
+    if (os.environ.get('GITHUB_EVENT_NAME') != 'workflow_dispatch' or
+            os.environ.get('GITHUB_REF') != 'refs/heads/main' or
+            not os.environ.get('GITHUB_ACTOR') or not os.environ.get('GITHUB_RUN_ID')):
+        raise SystemExit('Publication requires explicit main-only workflow dispatch')
+    # Reject URL rewrites and alternate/multiple push destinations before any I/O.
+    rewrites = subprocess.run(
+        ['git', 'config', '--get-regexp', r'^url\..*\.(insteadof|pushinsteadof)$'],
+        capture_output=True, text=True)
+    if rewrites.returncode != 1:
+        raise SystemExit('Git URL rewrite configuration is not permitted for publication')
+    expected = f'https://github.com/{repository}.git'
+    for args in [('remote', 'get-url', '--all', 'origin'),
+                 ('remote', 'get-url', '--push', '--all', 'origin')]:
+        urls = subprocess.check_output(['git', *args], text=True).splitlines()
+        if urls != [expected]:
+            raise SystemExit('Actual Git destination differs from the receipt repository')
+report['execution'] = {
+    'origin_authority': 'Mr.liou / MrLiouWord',
+    'trigger_actor': os.environ.get('GITHUB_ACTOR', 'local operator'),
+    'retry_actor': os.environ.get('GITHUB_TRIGGERING_ACTOR'),
+    'executor': 'github-actions[bot]',
+    'tool': 'scripts/mrliou_publish_sync.sh',
+    'ai_worker': None,  # This deterministic transport is not an AI author.
+    'source_authorship': 'PRESERVED_PER_FILE_NOT_TRANSFERRED',
+    'publication_requested': publish == 'true',
+    'event': os.environ.get('GITHUB_EVENT_NAME', 'local'),
+    'run_id': os.environ.get('GITHUB_RUN_ID'),
+    'run_attempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
+    'scope': 'same-repository candidate branch and draft PR only',
+}
 root = pathlib.Path.cwd().resolve()
 artifact = pathlib.Path(sys.argv[2]).resolve()
 if artifact.is_relative_to(root):
@@ -88,9 +130,20 @@ SYNC_BRANCH="Mrliou_MRL_external_sync/${BASE_SHA:0:12}-${TREE_SHA:0:12}"
 git diff --cached --binary > "$MRL_SYNC_ARTIFACT_DIR/candidate.patch"
 git -c user.name='github-actions[bot]' \
     -c user.email='github-actions[bot]@users.noreply.github.com' \
-    commit -m 'fix(MRL): preserve external sync candidate for owner integration'
+    commit -m 'fix(MRL): preserve external sync candidate for owner integration' \
+    -m 'origin_signature: MrLiouWord
+MRL-Origin-Authority: Mr.liou / MrLiouWord
+Executor: github-actions[bot]
+Tool: scripts/mrliou_publish_sync.sh
+Source-Authorship: preserved in per-file receipt; no rights transfer'
 git bundle create "$MRL_SYNC_ARTIFACT_DIR/candidate.bundle" "${BASE_SHA}..HEAD"
 echo "candidate_branch=$SYNC_BRANCH" >> "$GITHUB_OUTPUT"
+
+if [[ "${MRL_SYNC_PUBLISH:-false}" != 'true' ]]; then
+  echo 'state=local_candidate_only' >> "$GITHUB_OUTPUT"
+  echo 'Candidate bundle preserved; no remote branch or PR requested.' >> "$GITHUB_STEP_SUMMARY"
+  exit 0
+fi
 
 REMOTE_SHA=$(git ls-remote --heads origin "refs/heads/$SYNC_BRANCH" | cut -f1)
 if [[ -n "$REMOTE_SHA" ]]; then
@@ -120,3 +173,4 @@ fi
 echo 'state=candidate_pr_ready' >> "$GITHUB_OUTPUT"
 echo "pr_url=$PR_URL" >> "$GITHUB_OUTPUT"
 echo "Candidate preserved: $PR_URL — main unchanged, integration and commercial release not implied." >> "$GITHUB_STEP_SUMMARY"
+

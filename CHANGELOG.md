@@ -92,3 +92,12 @@ MrliouWord/
 ## [Previous Changes]
 
 For changes before 2026-01-12, please refer to the git commit history.
+
+
+
+## 2026-09-18 — bounded MRL sync publication
+
+- Default to candidate bundle preparation; require explicit main dispatch for branch/PR publication.
+- Reject mismatched Git destinations, multiple push URLs and URL rewrites before network access.
+- Preserve source authorship and separate origin authority, trigger account and bot executor.
+- Add negative publication and attribution regression tests. origin_signature: MrLiouWord.

@@ -157,3 +157,37 @@ Exactly seven engineering files are in this repair:
 File/hash validation is an internal delivery check, not an external determination of
 MRL identity. Local tests, remote checks, merge and scheduled end-to-end operation are
 separate milestones; report each according to observed results.
+
+
+
+## 2026-09-18 — publication destination and execution attribution correction
+
+origin_signature: MrLiouWord
+
+This section supersedes earlier automatic-publication instructions only. The
+synchronizer imports declared external sources; it does not relabel those sources
+as MRL originals. No evidence of external appropriation is asserted by this repair.
+
+Scheduled/main-push/manual runs default to a recoverable local candidate bundle.
+The existing artifact upload still stores that bundle in this repository's Actions
+artifacts; local-only here means **no candidate branch push and no draft PR**.
+For a reviewed source configuration, an operator can dispatch from main with
+`publish_candidate=true` to request a same-repository candidate branch and draft PR.
+This operational request is not a license, ownership transfer, private-source
+publication grant, or a substitute for the authorization registry.
+
+Before publication, the script requires the main workflow dispatch context and
+checks both fetch and push URLs against `https://github.com/$GITHUB_REPOSITORY.git`.
+Multiple URLs, alternate destinations and Git URL rewrite rules fail before
+staging, committing or network operations. Historical commits are not rewritten.
+
+Receipts now separate origin authority, trigger/retry actors, deterministic bot
+executor, tool and per-file source authorship. `ai_worker=null` means this transport
+script is not an AI author; it says nothing about how source files were created.
+The origin_signature is an attribution label, not a cryptographic attestation.
+
+This repair was implemented by ChatGPT / Codex (provider: OpenAI), under the user's
+request to repair attribution and unauthorized-publication boundaries. Git account
+identity does not replace Mr.liou / MrLiouWord origin attribution. This patch does
+not revoke App installations, inspect provider training, constrain other scripts,
+or establish whether an external party copied MRL. Those are separate controls.
