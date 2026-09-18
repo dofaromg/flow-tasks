@@ -134,7 +134,7 @@ Record these states separately in the additive backfill:
 
 File-delivery coverage is only this repair's expected changed files. It must
 not be relabeled as whole-system, historical-investigation or commercial closure.
-The manifest lists all ten expected changes; it hashes the other nine files.
+The manifest lists all eleven expected changes; it hashes the other ten files.
 Its own SHA-256 is recorded externally in the delivery/backfill evidence to
 avoid a self-referential hash. No ZIP is required by this repository patch.
 
@@ -142,3 +142,12 @@ avoid a self-referential hash. No ZIP is required by this repository patch.
 ### Dependency correction discovered by PR CI
 
 Initial PR head `186f1f966ac145e069f245644f45df3184e6cc34` passed the 30 authorization tests but failed the existing sync integrity test: the append-only CHANGELOG grew from 4,419 to 5,284 bytes. The initial nine-file scope is explicitly revised to ten files, adding only `config/Mrliou_MRL_Sync_Delivery_v1.json` as an integrity dependency. Its live CHANGELOG size/hash are refreshed and its entire previous CHANGELOG entry is preserved under `additive_integrity_history`, tied to the original main SHA. No sync workflow, publisher, test, source route or old commit is changed. This is a repair of a regression introduced by this patch, not a pre-existing external blocker.
+
+
+### Review follow-up: direct smart updater and comment isolation
+
+At `048010a47e2b2ec675ddeff917664fdd400f9937`, direct `smart_updater.py --force` printed `NO_RECORDED_GRANT` but returned exit 0. The updated entrypoint checks authorization before reading/scanning, propagates authorization revocation, and returns exit 1 on denied or failed updates. An authorized no-change result still returns 0. Metrics writes also recheck authorization and their canonical path. No force flag grants permission.
+
+The regression job now ignores ordinary issue comments, preserving the exact `@copilot update-structure-index` trigger. Pull requests still run synthetic tests; production indexing remains restricted to main. Trigger-module changes are included in PR path filters.
+
+Delivery scope is explicitly revised from ten to eleven files by adding `.copilot/triggers/smart_updater.py`. Local verification: 36 authorization tests plus 54 existing sync tests, 90 total and 53 subtests passed. This is local evidence; main closure still requires the separate post-merge run described above. Previous stage records remain historical evidence.

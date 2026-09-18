@@ -26,6 +26,7 @@ on:
       - '.github/workflows/structure-indexer.yml'
       - '.copilot/scanner/**'
       - '.copilot/generator/**'
+      - '.copilot/triggers/**'
       - '.copilot/Mrliou_structure_authorization.py'
       - 'config/MRL_AUTHORIZATION_REGISTRY_v1.json'
       - 'tests/test_Mrliou_structure_authorization.py'
@@ -49,6 +50,9 @@ on:
 
 jobs:
   authorization-regression:
+    if: |
+      github.event_name != 'issue_comment' ||
+      github.event.comment.body == '@copilot update-structure-index'
     runs-on: ubuntu-latest
     permissions:
       contents: read

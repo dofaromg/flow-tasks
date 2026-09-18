@@ -6,11 +6,16 @@
 """
 
 import os
+import sys
 import json
 import subprocess
 from pathlib import Path
 from typing import Dict, List, Tuple
 from datetime import datetime, timedelta
+
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from Mrliou_structure_authorization import AuthorizationDenied, authorize, exact_path
 
 
 class SmartUpdater:
@@ -34,7 +39,8 @@ class SmartUpdater:
             root_path: 專案根目錄
             config_path: 配置檔案路徑（可選）
         """
-        self.root_path = Path(root_path).resolve()
+        authorize({'structure.scan'}, 8)
+        self.root_path = exact_path(root_path, '.')
         self.config_path = config_path
         
         # 載入或使用預設閾值
@@ -54,6 +60,7 @@ class SmartUpdater:
     
     def check_git_changes(self) -> Dict:
         """檢查 Git 變更"""
+        authorize({'structure.scan'}, 8)
         try:
             # 獲取最近的提交
             result = subprocess.run(
@@ -99,6 +106,7 @@ class SmartUpdater:
     
     def check_new_and_deleted_files(self) -> Tuple[int, int]:
         """檢查新增和刪除的檔案"""
+        authorize({'structure.scan'}, 8)
         try:
             # 獲取新增的檔案
             result_new = subprocess.run(
@@ -128,6 +136,7 @@ class SmartUpdater:
     
     def check_complexity_changes(self) -> float:
         """檢查複雜度變化"""
+        authorize({'structure.scan'}, 8)
         try:
             # 讀取舊的索引（如果存在）
             old_index_path = self.root_path / '.copilot' / 'structure-index.json'
@@ -159,6 +168,8 @@ class SmartUpdater:
                     }
                     return growth_rate
         
+        except AuthorizationDenied:
+            raise
         except Exception as e:
             print(f"⚠️  無法檢查複雜度變化: {e}")
         
@@ -194,7 +205,8 @@ class SmartUpdater:
         return should_trigger, reasons
     
     def trigger_update(self, force: bool = False):
-        """觸發結構索引更新"""
+        """觸發結構索引更新；無需更新回傳 False，失敗必須傳播例外。"""
+        authorize({'structure.scan', 'structure.generate'}, 8)
         if force:
             print("🔄 強制觸發結構索引更新...")
         else:
@@ -235,11 +247,12 @@ class SmartUpdater:
         
         except Exception as e:
             print(f"❌ 更新失敗: {e}")
-            return False
+            raise
     
     def save_metrics(self, output_path: str = '.copilot/update-metrics.json'):
         """儲存監控指標"""
-        output_file = Path(output_path)
+        authorize({'structure.scan'}, 8)
+        output_file = exact_path(output_path, '.copilot/update-metrics.json')
         output_file.parent.mkdir(parents=True, exist_ok=True)
         
         with open(output_file, 'w', encoding='utf-8') as f:
@@ -261,25 +274,33 @@ def main():
     
     args = parser.parse_args()
     
-    # 創建更新觸發器
-    updater = SmartUpdater(root_path=args.root, config_path=args.config)
-    
-    if args.check:
-        # 僅檢查
-        should_trigger, reasons = updater.should_trigger_update()
-        if should_trigger:
-            print("🚨 建議觸發更新:")
-            for reason in reasons:
-                print(f"  - {reason}")
+    try:
+        # 創建更新觸發器
+        updater = SmartUpdater(root_path=args.root, config_path=args.config)
+        
+        if args.check:
+            # 僅檢查
+            should_trigger, reasons = updater.should_trigger_update()
+            if should_trigger:
+                print("🚨 建議觸發更新:")
+                for reason in reasons:
+                    print(f"  - {reason}")
+            else:
+                print("✅ 無需更新")
         else:
-            print("✅ 無需更新")
-    else:
-        # 執行更新
-        updater.trigger_update(force=args.force)
-    
-    if args.save_metrics:
-        updater.save_metrics()
+            # 執行更新
+            updater.trigger_update(force=args.force)
+        
+        if args.save_metrics:
+            updater.save_metrics()
+    except AuthorizationDenied as error:
+        print(f"DENY: {error}", file=sys.stderr)
+        return 1
+    except Exception as error:
+        print(f"ERROR: {type(error).__name__}", file=sys.stderr)
+        return 1
+    return 0
 
 
 if __name__ == '__main__':
-    main()
+    raise SystemExit(main())

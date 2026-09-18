@@ -105,6 +105,71 @@ class AuthorizationTests(unittest.TestCase):
             self.assert_denied(self.run_cli(script))
             self.assertTrue(all(not (self.root / p).exists() for p in OUTPUTS))
 
+    def test_smart_updater_denial_is_nonzero_and_preserves_evidence(self):
+        for relative in OUTPUTS:
+            (self.root / relative).write_text('HISTORICAL_EVIDENCE_DO_NOT_CHANGE')
+        before = {p: (self.root / p).read_bytes() for p in OUTPUTS}
+        for args in [[], ['--force'], ['--check'], ['--save-metrics'],
+                     ['--force', '--save-metrics']]:
+            with self.subTest(args=args):
+                result = self.run_cli('.copilot/triggers/smart_updater.py', *args)
+                self.assert_denied(result)
+                self.assertIn('DENY: NO_RECORDED_GRANT', result.stderr)
+                self.assertNotIn('無需更新', result.stdout)
+                self.assertEqual(before, {p: (self.root / p).read_bytes() for p in OUTPUTS})
+                self.assertFalse((self.root / '.copilot/update-metrics.json').exists())
+
+    def test_smart_updater_authorized_force_succeeds(self):
+        self.grant()
+        result = self.run_cli('.copilot/triggers/smart_updater.py', '--force')
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertTrue(all((self.root / p).is_file() for p in OUTPUTS))
+
+    def test_smart_updater_authorized_noop_remains_successful(self):
+        self.grant()
+        result = self.run_code("""
+import sys
+sys.path.insert(0, '.copilot')
+from triggers import smart_updater
+smart_updater.SmartUpdater.should_trigger_update = lambda self: (False, [])
+raise SystemExit(smart_updater.main())
+""")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertTrue(all(not (self.root / p).exists() for p in OUTPUTS))
+
+    def test_smart_updater_generation_failure_is_nonzero(self):
+        self.grant()
+        result = self.run_code("""
+import sys
+sys.path.insert(0, '.copilot')
+from triggers import smart_updater
+from generator.emoji_indexer import EmojiIndexer
+def fail(self):
+    raise OSError('synthetic write failure')
+EmojiIndexer.generate_all = fail
+sys.argv = ['smart_updater.py', '--force']
+raise SystemExit(smart_updater.main())
+""")
+        self.assert_denied(result)
+        self.assertIn('ERROR: OSError', result.stderr)
+
+    def test_smart_updater_imported_methods_recheck_revocation(self):
+        self.grant()
+        for method in ['check_git_changes()', 'check_new_and_deleted_files()',
+                       'check_complexity_changes()', 'trigger_update(force=True)', 'save_metrics()']:
+            self.grant()
+            result = self.run_code("""
+import sys, json
+from pathlib import Path
+sys.path.insert(0, '.copilot')
+from triggers.smart_updater import SmartUpdater
+updater = SmartUpdater()
+p = Path('config/MRL_AUTHORIZATION_REGISTRY_v1.json')
+data = json.loads(p.read_text()); data['active_grants'] = []; p.write_text(json.dumps(data))
+updater.""" + method)
+            self.assert_denied(result)
+            self.assertIn('NO_RECORDED_GRANT', result.stderr)
+
     def test_generator_denies_before_input_read(self):
         result = self.run_cli(GENERATOR, '--input', '/definitely/missing/input.json')
         self.assert_denied(result)
@@ -345,6 +410,15 @@ class WorkflowContractTests(unittest.TestCase):
         paths = upload.split('          path: |\n')[1].split('          include-hidden-files:')[0]
         self.assertEqual([line.strip() for line in paths.splitlines()], list(OUTPUTS))
         self.assertIn('if-no-files-found: error', upload)
+
+    def test_ordinary_issue_comments_skip_regression_job(self):
+        source = (SOURCE / '.github/workflows/structure-indexer.yml').read_text()
+        job = source.split('  authorization-regression:\n')[1].split('  update-structure-index:')[0]
+        condition = job.split('    if: |\n')[1].split('    runs-on:')[0]
+        self.assertEqual(' '.join(condition.split()),
+                         "github.event_name != 'issue_comment' || "
+                         "github.event.comment.body == '@copilot update-structure-index'")
+        self.assertIn("'.copilot/triggers/**'", source)
 
     def test_pr_runs_only_synthetic_tests_and_no_generation(self):
         source = (SOURCE / '.github/workflows/structure-indexer.yml').read_text()
