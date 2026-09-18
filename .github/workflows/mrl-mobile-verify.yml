@@ -1,0 +1,43 @@
+name: MRL Mobile Interface Verify
+
+on:
+  pull_request:
+    paths:
+      - 'pages/mrliou.js'
+      - 'pages/api/mrl/**'
+      - 'lib/mrl-runtime*'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/mrl-mobile-verify.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify Mrliou mobile source is substantive
+        shell: bash
+        run: |
+          test -s pages/mrliou.js
+          grep -q "MrliouMobile" pages/mrliou.js
+          grep -q "/api/mrl/runtime/convergence" pages/mrliou.js
+          grep -q "Final Approval" pages/mrliou.js
+
+      - name: Build Next.js
+        run: npm run build
