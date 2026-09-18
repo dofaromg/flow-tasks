@@ -101,3 +101,12 @@ For changes before 2026-01-12, please refer to the git commit history.
 - Reject mismatched Git destinations, multiple push URLs and URL rewrites before network access.
 - Preserve source authorship and separate origin authority, trigger account and bot executor.
 - Add negative publication and attribution regression tests. origin_signature: MrLiouWord.
+
+
+## 2026-09-18 — Mrliou structure-index authorization enforcement
+
+- Connect the existing DENY-by-default MRL authorization registry to the structure-index workflow, scanner/generator entry points and combined runner. No active grants are added.
+- Reject absent, malformed or nonmatching grants before source/index access; recheck before artifact upload and remove always-upload fallback to historical index files.
+- Validate with disposable synthetic repositories; PR events do not run the production index job. Preserve prior evidence, original canonical artifact names and unrelated deployment routes.
+- See `docs/Mrliou_Structure_Authorization_v1.md` for exact grant scope, trust limits and separate patch/CI/main enforcement states.
+- origin_signature: MrLiouWord; implementation assistance: ChatGPT / Codex; provider: OpenAI; rights transfer: NOT_GRANTED.

@@ -9,6 +9,10 @@ import json
 from pathlib import Path
 from typing import Dict, List
 from datetime import datetime
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from Mrliou_structure_authorization import authorize, exact_path, ARTIFACTS
 
 
 class EmojiIndexer:
@@ -30,7 +34,7 @@ class EmojiIndexer:
         '📊 報表': ['reports/', 'logs/', 'metrics/'],
     }
     
-    def __init__(self, scan_data: Dict = None, scan_json_path: str = None):
+    def __init__(self, scan_data: Dict = None, scan_json_path: str = None, max_depth: int = 8):
         """
         初始化索引生成器
         
@@ -38,14 +42,20 @@ class EmojiIndexer:
             scan_data: 掃描數據字典
             scan_json_path: 掃描結果 JSON 檔案路徑
         """
+        authorize({'structure.generate'}, max_depth)
         if scan_data:
             self.scan_data = scan_data
         elif scan_json_path:
+            exact_path(scan_json_path, '.copilot/structure-scan.json')
             with open(scan_json_path, 'r', encoding='utf-8') as f:
                 self.scan_data = json.load(f)
         else:
             raise ValueError("必須提供 scan_data 或 scan_json_path")
         
+        self.authorized_depth = self.scan_data.get('metadata', {}).get('max_depth', max_depth)
+        if type(self.authorized_depth) is not int or self.authorized_depth > max_depth:
+            raise PermissionError('INPUT_DEPTH_SCOPE_MISMATCH')
+        authorize({'structure.generate'}, self.authorized_depth)
         self.categorized_modules = {}
         self.index_data = {
             'metadata': {
@@ -137,6 +147,8 @@ class EmojiIndexer:
     
     def generate_markdown(self, output_path: str = 'STRUCTURE.md'):
         """生成 Markdown 格式索引"""
+        authorize({'structure.generate'}, self.authorized_depth)
+        exact_path(output_path, 'STRUCTURE.md')
         lines = []
         
         # 標題和元數據
@@ -210,6 +222,8 @@ class EmojiIndexer:
     
     def generate_json(self, output_path: str = '.copilot/structure-index.json'):
         """生成 JSON 格式索引"""
+        authorize({'structure.generate'}, self.authorized_depth)
+        exact_path(output_path, '.copilot/structure-index.json')
         output_file = Path(output_path)
         output_file.parent.mkdir(parents=True, exist_ok=True)
         
@@ -221,6 +235,8 @@ class EmojiIndexer:
     
     def generate_fltnz(self, output_path: str = '.copilot/structure.fltnz'):
         """生成 Fluin 粒子格式索引"""
+        authorize({'structure.generate'}, self.authorized_depth)
+        exact_path(output_path, '.copilot/structure.fltnz')
         lines = []
         
         # Fluin 標記語言格式
@@ -275,6 +291,10 @@ class EmojiIndexer:
         """生成所有格式的索引"""
         print("\n🎨 開始生成表情符號索引...")
         
+        authorize({'structure.generate'}, self.authorized_depth)
+        exact_path(base_dir, '.')
+        for relative in ARTIFACTS[1:]:
+            exact_path(Path(base_dir) / relative, relative)
         # 分類模組
         self.categorize_all()
         
@@ -294,11 +314,12 @@ def main():
     parser.add_argument('--input', default='.copilot/structure-scan.json', 
                        help='掃描結果 JSON 檔案')
     parser.add_argument('--output-dir', default='.', help='輸出目錄')
+    parser.add_argument('--depth', type=int, default=8, help='授權掃描深度上限')
     
     args = parser.parse_args()
     
     # 創建生成器並生成索引
-    indexer = EmojiIndexer(scan_json_path=args.input)
+    indexer = EmojiIndexer(scan_json_path=args.input, max_depth=args.depth)
     indexer.generate_all(base_dir=args.output_dir)
 
 
