@@ -6,17 +6,54 @@ on:
       - "MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/**"
       - ".github/workflows/mrl-apiworks-commercial-closure.yml"
       - ".github/workflows/mrl-apiworks-production-delivery.yml"
+      - ".github/workflows/mrl-apiworks-public-route-evidence.yml"
   push:
     branches: [main]
     paths:
       - "MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/**"
       - ".github/workflows/mrl-apiworks-commercial-closure.yml"
       - ".github/workflows/mrl-apiworks-production-delivery.yml"
+      - ".github/workflows/mrl-apiworks-public-route-evidence.yml"
 
 permissions:
   contents: read
 
 jobs:
+  prepare-windows-runtime:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Export committed runtime bytes for Windows
+        run: |
+          mkdir -p "${RUNNER_TEMP}/windows-runtime"
+          git archive HEAD MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1 | tar -x -C "${RUNNER_TEMP}/windows-runtime"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MRL_Windows_Runtime_Source
+          path: ${{ runner.temp }}/windows-runtime
+          if-no-files-found: error
+          retention-days: 7
+  verify-windows-powershell-receipt:
+    needs: prepare-windows-runtime
+    runs-on: windows-2022
+    timeout-minutes: 10
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      # Windows Git rejects unrelated legacy names even in a sparse checkout.
+      # The archive contains the complete, unmodified committed runtime package.
+      - uses: actions/download-artifact@v4
+        with:
+          name: MRL_Windows_Runtime_Source
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Exercise PowerShell 5.1 receipt and failure paths using protocol fixtures
+        shell: powershell
+        working-directory: MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1
+        run: |
+          python -m unittest tests.test_MRL_autonomous_runtime_v1.MRLPowershellReceiptTests -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
   verify-commercial-closure-pack:
     runs-on: ubuntu-24.04
     steps:

@@ -4,6 +4,10 @@
 from __future__ import annotations
 
 import json
+import hashlib
+import os
+import shutil
+import subprocess
 import sys
 import tempfile
 import threading
@@ -41,12 +45,18 @@ class _FakeOllamaHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self) -> None:  # noqa: N802
+        if self.path == "/v1/models":
+            self._write({"data": [{"id": "MRL_test_model"}]})
+            return
         self._write({"models": [{"name": "MRL_test_model"}]})
 
     def do_POST(self) -> None:  # noqa: N802
         length = int(self.headers.get("Content-Length", "0"))
         request = json.loads(self.rfile.read(length).decode("utf-8"))
         prompt = request["messages"][-1]["content"]
+        if self.path == "/v1/chat/completions":
+            self._write({"choices": [{"message": {"content": f"MRL_LOCAL:{prompt}"}}]})
+            return
         self._write(
             {
                 "message": {"role": "assistant", "content": f"MRL_LOCAL:{prompt}"},
@@ -87,6 +97,78 @@ class MRLAutonomousRuntimeTests(unittest.TestCase):
     def test_rejects_external_model_endpoint(self) -> None:
         with self.assertRaises(MRLModelGateError):
             require_loopback_endpoint("https://example.com/v1")
+
+    def test_live_acceptance_receipt_verifier(self) -> None:
+        receipt = {
+            "schema": "MRL_AI_Mother_Live_Acceptance_v1",
+            "canonical_id": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
+            "origin_signature": "MrLiouWord",
+            "git_head": "a" * 40,
+            "hardware_id": "MRL_hardware_test",
+            "runtime_id": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
+            "backend": "ollama",
+            "model": "MRL_test_model",
+            "model_endpoint": "http://127.0.0.1:11434",
+            "model_release_id": "MRL_model_release_test",
+            "model_release_manifest_sha256": "9" * 64,
+            "model_artifact_sha256": "b" * 64,
+            "model_artifact_size_bytes": 1024,
+            "model_sha256_verified": True,
+            "health_ready": True,
+            "memory_chain_head": "c" * 64,
+            "evidence_chain_head": "d" * 64,
+            "passport_hash": "e" * 64,
+            "return_anchor": "f" * 64,
+            "evidence_ref": "1" * 64,
+            "request_sha256": "2" * 64,
+            "result_sha256": "3" * 64,
+            "external_model_disconnected": True,
+            "accepted_at": "2026-09-16T00:00:00+00:00",
+            "operator_id": "MRL_operator_test",
+            "acceptance_gate": "MRL_AI_MOTHER_AUTONOMOUS_RUNTIME_ACCEPTANCE_PASS",
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "receipt.json"
+            path.write_text(json.dumps(receipt), encoding="utf-8")
+            verifier = PACKAGE_ROOT / "scripts" / "MRL_verify_live_acceptance_receipt_v1.py"
+            completed = subprocess.run(
+                [sys.executable, str(verifier), str(path)],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
+            receipt["backend"] = "llamacpp"
+            path.write_text(json.dumps(receipt), encoding="utf-8-sig")
+            bom = subprocess.run([sys.executable, str(verifier), str(path)], capture_output=True)
+            self.assertEqual(bom.returncode, 0, bom.stdout + bom.stderr)
+            for field, value in (("health_ready", 1), ("model_artifact_size_bytes", True),
+                                 ("external_model_disconnected", False), ("passport_hash", "")):
+                invalid = {**receipt, field: value}
+                path.write_text(json.dumps(invalid), encoding="utf-8")
+                rejected = subprocess.run([sys.executable, str(verifier), str(path)], capture_output=True)
+                self.assertNotEqual(rejected.returncode, 0, field)
+            receipt["model_endpoint"] = "https://external.example/v1"
+            path.write_text(json.dumps(receipt), encoding="utf-8")
+            rejected = subprocess.run(
+                [sys.executable, str(verifier), str(path)],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertNotEqual(rejected.returncode, 0)
+
+    def test_powershell_acceptance_requires_audited_live_inputs(self) -> None:
+        script = (PACKAGE_ROOT / "scripts" / "MRL_acceptance_v1.ps1").read_text(
+            encoding="utf-8"
+        )
+        for required in (
+            "$GitHead", "$HardwareId", "$OperatorId", "$ModelArtifactPath",
+            "$ModelReleaseManifestPath", "$ReceiptPath", "$ExternalModelDisconnected",
+            "Get-FileHash", "MRL_verify_live_acceptance_receipt_v1.py",
+        ):
+            self.assertIn(required, script)
+        self.assertIn("MRL_AI_MOTHER_AUTONOMOUS_RUNTIME_ACCEPTANCE_PASS", script)
 
     def test_health_passes_with_loopback_model(self) -> None:
         health = self.runtime.health()
@@ -454,6 +536,92 @@ class MRLAutonomousRuntimeTests(unittest.TestCase):
         self.assertEqual(
             verify_return_bundle(output)["reason"], "payload_coverage_mismatch"
         )
+
+
+@unittest.skipUnless(
+    (shutil.which("powershell") or shutil.which("pwsh")) and
+    os.environ.get("MRL_ACCEPTANCE_TEST_CHILD") != "1",
+    "PowerShell unavailable or nested package verification",
+)
+class MRLPowershellReceiptTests(unittest.TestCase):
+    """Exercise the actual launcher with protocol fixtures; never certify a real model."""
+
+    def test_actual_powershell_receipt_both_backends_and_path_boundaries(self) -> None:
+        shell = shutil.which("powershell") or shutil.which("pwsh")
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            artifact = root / "model.bin"
+            artifact.write_bytes(b"MRL synthetic model artifact for protocol tests only")
+            release = root / "release.json"
+            release_record = {
+                "release_id": "MRL_test_release", "model_name": "MRL_test_model",
+                "origin_signature": "MrLiouWord", "version": "fixture-1",
+                "license_ref": "MRL_internal_test_only", "runtime": ["ollama", "llamacpp"],
+                "sha256": hashlib.sha256(artifact.read_bytes()).hexdigest(),
+                "size": artifact.stat().st_size,
+            }
+            release.write_text(json.dumps(release_record), encoding="utf-8")
+            model_server = ThreadingHTTPServer(("127.0.0.1", 0), _FakeOllamaHandler)
+            model_thread = threading.Thread(target=model_server.serve_forever, daemon=True)
+            model_thread.start()
+            script = PACKAGE_ROOT / "scripts/MRL_acceptance_v1.ps1"
+            env = {**os.environ, "MRL_ACCEPTANCE_TEST_CHILD": "1"}
+            try:
+                for backend in ("ollama", "llamacpp"):
+                    runtime = MRLMotherRuntime({"local_model": {
+                        "backend": backend, "endpoint": f"http://127.0.0.1:{model_server.server_port}",
+                        "model": "MRL_test_model",
+                    }}, root / backend)
+                    gateway = ThreadingHTTPServer(("127.0.0.1", 0), build_handler(runtime))
+                    thread = threading.Thread(target=gateway.serve_forever, daemon=True)
+                    thread.start()
+                    receipt = root / f"{backend}-receipt.json"
+                    command = [shell, "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
+                               "-File", str(script), "-GatewayUrl", f"http://127.0.0.1:{gateway.server_port}",
+                               "-GitHead", "a" * 40, "-HardwareId", "MRL_test_node",
+                               "-OperatorId", "MRL_test_operator", "-ModelArtifactPath", str(artifact),
+                               "-ModelReleaseManifestPath", str(release), "-ExternalModelDisconnected",
+                               "-ReceiptPath", receipt.name]
+                    try:
+                        result = subprocess.run(command, cwd=root, env=env, text=True,
+                                                capture_output=True, timeout=180)
+                        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                        self.assertTrue(receipt.is_file())
+                        data = json.loads(receipt.read_text(encoding="utf-8"))
+                        self.assertEqual(data["backend"], backend)
+                        self.assertEqual(data["model_artifact_sha256"], release_record["sha256"])
+                        old_bytes = receipt.read_bytes()
+                        repeated = subprocess.run(command, cwd=root, env=env, capture_output=True, timeout=30)
+                        self.assertNotEqual(repeated.returncode, 0)
+                        self.assertEqual(receipt.read_bytes(), old_bytes)
+                        # Output inside the package must fail before mutation.
+                        command[-1] = str(PACKAGE_ROOT / "MRL_forbidden_test_receipt.json")
+                        forbidden = subprocess.run(command, cwd=root, env=env, capture_output=True, timeout=30)
+                        self.assertNotEqual(forbidden.returncode, 0)
+                        self.assertFalse(Path(command[-1]).exists())
+                        # A failed model hash check must never leave a PASS receipt.
+                        command[-1] = str(root / f"{backend}-mismatch.json")
+                        artifact.write_bytes(b"tampered")
+                        bad_hash = subprocess.run(command, cwd=root, env=env, capture_output=True, timeout=30)
+                        self.assertNotEqual(bad_hash.returncode, 0)
+                        self.assertFalse(Path(command[-1]).exists())
+                        artifact.write_bytes(b"MRL synthetic model artifact for protocol tests only")
+                        for field in ("version", "license_ref"):
+                            incomplete = {key: val for key, val in release_record.items() if key != field}
+                            release.write_text(json.dumps(incomplete), encoding="utf-8")
+                            command[-1] = str(root / f"{backend}-missing-{field}.json")
+                            missing = subprocess.run(command, cwd=root, env=env, capture_output=True, timeout=30)
+                            self.assertNotEqual(missing.returncode, 0)
+                            self.assertFalse(Path(command[-1]).exists())
+                        release.write_text(json.dumps(release_record), encoding="utf-8")
+                    finally:
+                        gateway.shutdown()
+                        gateway.server_close()
+                        thread.join(timeout=5)
+            finally:
+                model_server.shutdown()
+                model_server.server_close()
+                model_thread.join(timeout=5)
 
 
 if __name__ == "__main__":

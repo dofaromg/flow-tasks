@@ -28,6 +28,7 @@ MRL_AI_Mother_Autonomous_Runtime_Baseline_v1
 │  ├─ MRL Universal Passport
 │  ├─ MRL Memory Event
 │  ├─ MRL Evidence Event
+│  ├─ MRL Live Acceptance Receipt
 │  ├─ MRL Model Release
 │  └─ MRL Return Bundle
 ├─ commercial contract layer
@@ -35,8 +36,9 @@ MRL_AI_Mother_Autonomous_Runtime_Baseline_v1
 │  └─ Services Agreement blueprint
 └─ acceptance
    ├─ package verifier
+   ├─ live receipt verifier
    ├─ Python integration tests
-   └─ PowerShell hardware-neutral live acceptance
+   └─ PowerShell hardware-neutral live acceptance + JSON receipt
 ```
 
 Python runtime dependencies: standard library only.  
@@ -49,10 +51,14 @@ Practical dependency flow／實際相依流程：
 cd MRL_Mother\MRL_MotherModel\MRL_AI_Mother_Autonomous_Runtime_Baseline_v1\scripts
 .\MRL_start_runtime_v1.ps1
 # In a second window／在第二個視窗：
-.\MRL_acceptance_v1.ps1
+.\MRL_acceptance_v1.ps1 -GitHead "<commit>" -HardwareId "MRL_node_01" `
+  -OperatorId "MRL_operator_01" -ModelArtifactPath "D:\models\approved-model.gguf" `
+  -ModelReleaseManifestPath ".\MRL_model_release.json" -ExternalModelDisconnected `
+  -ReceiptPath "..\..\MRL_live_acceptance_receipt.json"
 ```
 
 The second command verifies the checksummed package, tests the local Runtime,
 and accepts only a loopback model that can complete the audited Memory →
 Evidence → Passport loop. 第二個指令會驗證封包、測試本機 Runtime，並且只有
 完成 Memory → Evidence → Passport 證據閉環的 loopback 模型才會通過。
+通過後另以結構化收據封存 Git、硬體、模型雜湊與各鏈頭，並立即執行離線驗證器。

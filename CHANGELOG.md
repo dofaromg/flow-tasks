@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — MRL APIWorks verifiable runtime and route receipts
+
+- Emit and independently verify a structured real-model acceptance receipt bound
+  to the exact Git head, MRL node/operator identities, locally computed model
+  artifact SHA-256, loopback endpoint, Memory/Evidence heads and Passport.
+- Add a read-only public-route probe that preserves HTTP status, bounded response
+  hash, Worker Version metadata and an exact offline-verifiable evidence package.
+- Retain failed public-route evidence before enforcing the workflow gate; route
+  probing never deploys, changes DNS, selects versions or changes traffic.
+
 ### Fixed — MRL external synchronization operations
 
 - Preserve external sync candidates through content-addressed branches and draft PRs;

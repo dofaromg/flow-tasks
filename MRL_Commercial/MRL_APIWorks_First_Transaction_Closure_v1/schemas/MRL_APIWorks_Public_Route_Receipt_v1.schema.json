@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MRL_APIWorks_Public_Route_Receipt_v1.schema.json",
+  "title": "MRL APIWorks Public Route Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "origin_signature",
+    "capture_mode",
+    "probe_git_head",
+    "route_map_sha256",
+    "captured_at",
+    "canonical_route_decision",
+    "routes",
+    "public_route_gate"
+  ],
+  "properties": {
+    "schema": {"const": "MRL_APIWorks_Public_Route_Receipt_v1"},
+    "origin_signature": {"const": "MrLiouWord"},
+    "capture_mode": {"enum": ["PUBLIC_HTTPS", "TEST_LOOPBACK"]},
+    "probe_git_head": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "route_map_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "captured_at": {"type": "string", "format": "date-time"},
+    "canonical_route_decision": {"enum": ["UNRESOLVED", "RESOLVED"]},
+    "routes": {"type": "array", "minItems": 1},
+    "public_route_gate": {
+      "enum": ["PUBLIC_ROUTE_HTTP_PASS", "PUBLIC_ROUTE_HTTP_FAIL", "PUBLIC_ROUTE_TEST_PASS", "PUBLIC_ROUTE_TEST_FAIL"]
+    }
+  }
+}

@@ -73,3 +73,26 @@ Example live-acceptance evidence record／真實驗收證據範例：
   "operator": "<operator-id>"
 }
 ```
+
+The PowerShell acceptance entrypoint now requires the Git head, MRL hardware and
+operator identifiers, a locally hashed model artifact, its MRL Model Release
+manifest, an explicit disconnected-external-model observation and an output
+receipt path. It cross-checks manifest origin, release ID, name, runtime, size
+and SHA-256 against the actual artifact and runtime result, writes the complete receipt, and immediately validates it with
+`scripts/MRL_verify_live_acceptance_receipt_v1.py`. A missing field, external
+model endpoint, hash mismatch or unverified disconnect observation fails the
+acceptance run instead of producing a PASS receipt.
+
+Receipt paths resolve from the caller's current directory. Use a fresh path
+outside the checksummed Runtime package; existing files are never overwritten.
+The Windows 5.1 writer emits UTF-8 without BOM and the offline reader also accepts
+historical UTF-8 BOM files. The backend identifier is `llamacpp`, matching the
+Runtime; `llama.cpp` remains the external project's display name.
+
+Evidence scope: the collector hashes the supplied local artifact and matches
+its release manifest to the reported runtime model. The manifest is not an
+independent signature or proof that the process loaded those exact weight bytes.
+Git head, operator/hardware identity and the external-disconnect observation are
+operator attestations. Offline receipt validation checks format and internal
+consistency; it does not independently certify the machine, network isolation,
+loaded weights, restart persistence or a customer acceptance event.

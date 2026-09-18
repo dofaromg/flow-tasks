@@ -1,0 +1,37 @@
+{
+  "schema": "MRL_APIWorks_Public_Route_Map_v1",
+  "origin_signature": "MrLiouWord",
+  "canonical_route_decision": "UNRESOLVED",
+  "routes": [
+    {
+      "route_id": "MRL_flow_tasks_preview_20260913",
+      "service": "flow-tasks",
+      "url": "https://b65ffd51-flow-tasks.z814241.workers.dev/",
+      "expected_status": 200,
+      "cloudflare_version_id": "b65ffd51-ccbd-44fb-9545-f30e5125cf97",
+      "observed_git_head": "bc648a2dedec030d1961808ada1e9d9e06e4d73a",
+      "traffic_scope": "VERSION_PREVIEW",
+      "production_traffic_asserted": false
+    },
+    {
+      "route_id": "MRL_mrlflow_tasks_preview_20260913",
+      "service": "mrlflow-tasks",
+      "url": "https://e3fbe654-mrlflow-tasks.z814241.workers.dev/",
+      "expected_status": 200,
+      "cloudflare_version_id": "e3fbe654-78f2-4414-bacc-3034060c9f64",
+      "observed_git_head": "bc648a2dedec030d1961808ada1e9d9e06e4d73a",
+      "traffic_scope": "VERSION_PREVIEW",
+      "production_traffic_asserted": false
+    },
+    {
+      "route_id": "MRL_store_preview_20260913",
+      "service": "mrl-store",
+      "url": "https://304c93bf-mrl-store.z814241.workers.dev/",
+      "expected_status": 200,
+      "cloudflare_version_id": "304c93bf-6a5e-4324-aacc-634b14d5a00f",
+      "observed_git_head": "bc648a2dedec030d1961808ada1e9d9e06e4d73a",
+      "traffic_scope": "VERSION_PREVIEW",
+      "production_traffic_asserted": false
+    }
+  ]
+}

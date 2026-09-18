@@ -9,7 +9,8 @@ This package is the operational evidence layer for the first real APIWorks BYOH 
 
 ## Product baseline
 
-- Acceptance-safe product baseline: `1.0.0-rc2`, PR #645, main commit `10248fd51138698d5d8aa144b969adcf8695c69e`.
+- Previous acceptance-safe product baseline: `1.0.0-rc2`, PR #645, main commit `10248fd51138698d5d8aa144b969adcf8695c69e`.
+- Current source candidate: `1.0.0-rc3`, adding a structured real-model acceptance receipt and verifier; it becomes a mainline baseline only after its own PR and CI complete.
 - Customer ZIP SHA-256 is generated for each authorized delivery and must be verified against that delivery's receipt; no superseded rc1 hash is canonical here.
 - Sale model: custom quote by signed order form.
 - Public catalog configuration, CI success, or an unpaid checkout do **not** constitute revenue.
@@ -66,3 +67,26 @@ an exact expected-file list, SHA-256 coverage and a machine-readable receipt.
 It verifies the five visible sections, required content, local links, console
 errors and horizontal overflow. It remains product UI evidence, not customer
 model, payment or revenue evidence.
+
+## Read-only public route receipts
+
+`scripts/Mrliou_MRL_public_route_receipt_v1.py` captures bounded HTTPS evidence
+for the three version-specific Cloudflare Preview URLs already recorded by the
+closure control. It writes an exact three-file artifact containing the receipt,
+expected-file list and SHA-256 manifest, and supports offline re-verification.
+
+The manually authorized `MRL APIWorks Public Route Evidence` workflow runs only
+from `main`, performs GET requests, retains the artifact for 30 days, and never
+deploys, changes DNS, selects a Worker version or changes traffic allocation.
+The checked-in route map deliberately keeps the canonical route unresolved and
+production traffic unasserted.
+
+## Real-model acceptance receipt
+
+The customer package now requires the live PowerShell acceptance flow to hash a
+real local model artifact, cross-check its MRL Model Release manifest, bind Git/head, hardware and operator identities,
+confirm the external-model-disconnected observation, and produce a structured
+receipt. `MRL_verify_live_acceptance_receipt_v1.py` rejects missing fields,
+external model endpoints and non-PASS receipts. This creates the acceptance
+entrypoint; a real customer/node PASS remains unasserted until it is executed on
+the authorized installation.

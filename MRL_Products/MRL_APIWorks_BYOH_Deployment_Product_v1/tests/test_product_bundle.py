@@ -64,6 +64,10 @@ class ProductBundleTests(unittest.TestCase):
             acceptance = (product_root / "docs" / "MRL_DELIVERY_ACCEPTANCE_v1.md").read_text(encoding="utf-8")
             self.assertIn("-ConfigPath", acceptance)
             self.assertIn(r"..\..\..\..\customer_config\MRL_runtime.local.json", acceptance)
+            self.assertIn("-ModelArtifactPath", acceptance)
+            self.assertIn("-ModelReleaseManifestPath", acceptance)
+            self.assertIn("-ExternalModelDisconnected", acceptance)
+            self.assertIn("-ReceiptPath", acceptance)
             self.assertEqual(manifest["origin_signature"], "MrLiouWord")
 
 

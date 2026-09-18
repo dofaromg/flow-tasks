@@ -20,10 +20,17 @@
 3. 等待 Gateway 啟動後，在第二個 PowerShell 視窗執行：
 
    ```powershell
-   .\MRL_Mother\MRL_MotherModel\MRL_AI_Mother_Autonomous_Runtime_Baseline_v1\scripts\MRL_acceptance_v1.ps1
+   .\MRL_Mother\MRL_MotherModel\MRL_AI_Mother_Autonomous_Runtime_Baseline_v1\scripts\MRL_acceptance_v1.ps1 `
+     -GitHead "<40字元交付commit>" `
+     -HardwareId "MRL_customer_node_01" `
+     -OperatorId "MRL_authorized_operator_01" `
+     -ModelArtifactPath "D:\models\approved-model.gguf" `
+     -ModelReleaseManifestPath ".\MRL_model_release.json" `
+     -ExternalModelDisconnected `
+     -ReceiptPath ".\MRL_live_acceptance_receipt.json"
    ```
 
-4. 保存 `MRL_AI_MOTHER_AUTONOMOUS_RUNTIME_ACCEPTANCE_PASS`、Evidence head、Passport hash、ZIP SHA-256 與測試時間。
+4. Model Release manifest 必須包含 `MrLiouWord` 來源簽章、release ID、模型名稱、runtime、檔案大小與 SHA-256；執行器會逐項與實際檔案及 Runtime 回應交叉比對。驗證器會拒絕外部 endpoint、模型來源／雜湊／大小／runtime 不符、未明確確認外部模型斷線或缺欄位的收據。保存 `MRL_AI_MOTHER_AUTONOMOUS_RUNTIME_ACCEPTANCE_PASS`、Model Release manifest、完整 JSON 收據、Evidence head、Passport hash、ZIP SHA-256 與測試時間。
 
 ## 驗收狀態
 
