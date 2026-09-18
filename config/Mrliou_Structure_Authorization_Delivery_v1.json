@@ -2,7 +2,7 @@
   "origin_signature": "MrLiouWord",
   "record_id": "Mrliou_Structure_Authorization_Delivery_v1",
   "base_commit": "848f5d62aa807bf61529ceb740517297ab308603",
-  "expected_file_count": 9,
+  "expected_file_count": 10,
   "expected_files": [
     ".github/workflows/structure-indexer.yml",
     ".copilot/scanner/structure_scanner.py",
@@ -12,6 +12,7 @@
     "tests/test_Mrliou_structure_authorization.py",
     "docs/Mrliou_Structure_Authorization_v1.md",
     "CHANGELOG.md",
+    "config/Mrliou_MRL_Sync_Delivery_v1.json",
     "config/Mrliou_Structure_Authorization_Delivery_v1.json"
   ],
   "payload": [
@@ -47,13 +48,18 @@
     },
     {
       "path": "docs/Mrliou_Structure_Authorization_v1.md",
-      "size_bytes": 8160,
-      "sha256": "28dda0206d2c295997933f4b6d12c15934600b39e9c4537340341265a995794e"
+      "size_bytes": 8882,
+      "sha256": "f8d1f317680d364897cbd0822ec2433b068566f599fd2b3519fa77ee54baf5a2"
     },
     {
       "path": "CHANGELOG.md",
       "size_bytes": 5284,
       "sha256": "3301958e888f659cc8364b987f0fe2386c56cea7e01cfb979b234d356091c8ef"
+    },
+    {
+      "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+      "size_bytes": 3340,
+      "sha256": "034cf87effa661719e453f3d61821816eafd949a0fae7812b3144827901042cb"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -92,5 +98,11 @@
   ],
   "local_tests": "30/30 PASS",
   "main_enforcement": "OPEN_UNTIL_MERGE_AND_MAIN_RUN_VERIFICATION",
-  "zip": "NOT_REQUESTED"
+  "zip": "NOT_REQUESTED",
+  "scope_revision": {
+    "initial_file_count": 9,
+    "revised_file_count": 10,
+    "added_dependency": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+    "reason": "Repair live CHANGELOG checksum mismatch observed in PR #652 CI; preserve previous entry additively."
+  }
 }
