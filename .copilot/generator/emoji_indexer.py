@@ -81,6 +81,7 @@ class EmojiIndexer:
     
     def categorize_module(self, node: Dict, path_prefix: str = '') -> Dict:
         """分類模組"""
+        authorize({'structure.generate'}, self.authorized_depth)
         if not node:
             return {}
         
@@ -114,6 +115,7 @@ class EmojiIndexer:
     
     def categorize_all(self):
         """對所有模組進行分類"""
+        authorize({'structure.generate'}, self.authorized_depth)
         structure = self.scan_data.get('structure', {})
         
         # 遍歷所有節點並分類
@@ -124,6 +126,7 @@ class EmojiIndexer:
     
     def _categorize_node(self, node: Dict, parent_path: str = ''):
         """遞迴分類節點"""
+        authorize({'structure.generate'}, self.authorized_depth)
         if not node:
             return
         

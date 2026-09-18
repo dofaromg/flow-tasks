@@ -37,7 +37,7 @@ def run_full_scan(root_path: str = '.', max_depth: int = 8, check_triggers: bool
     # 檢查是否需要更新（如果啟用）
     if check_triggers:
         print("🔍 檢查更新觸發條件...")
-        updater = SmartUpdater(root_path=root_path)
+        updater = SmartUpdater(root_path=root_path, max_depth=max_depth)
         should_trigger, reasons = updater.should_trigger_update()
         
         if not should_trigger:

@@ -31,7 +31,7 @@ class SmartUpdater:
         'complexity_spike': 1.5,     # 複雜度增長 > 150%
     }
     
-    def __init__(self, root_path: str = '.', config_path: str = None):
+    def __init__(self, root_path: str = '.', config_path: str = None, max_depth: int = 8):
         """
         初始化更新觸發器
         
@@ -39,7 +39,8 @@ class SmartUpdater:
             root_path: 專案根目錄
             config_path: 配置檔案路徑（可選）
         """
-        authorize({'structure.scan'}, 8)
+        authorize({'structure.scan'}, max_depth)
+        self.max_depth = max_depth
         self.root_path = exact_path(root_path, '.')
         self.config_path = config_path
         
@@ -60,7 +61,7 @@ class SmartUpdater:
     
     def check_git_changes(self) -> Dict:
         """檢查 Git 變更"""
-        authorize({'structure.scan'}, 8)
+        authorize({'structure.scan'}, self.max_depth)
         try:
             # 獲取最近的提交
             result = subprocess.run(
@@ -106,7 +107,7 @@ class SmartUpdater:
     
     def check_new_and_deleted_files(self) -> Tuple[int, int]:
         """檢查新增和刪除的檔案"""
-        authorize({'structure.scan'}, 8)
+        authorize({'structure.scan'}, self.max_depth)
         try:
             # 獲取新增的檔案
             result_new = subprocess.run(
@@ -136,10 +137,11 @@ class SmartUpdater:
     
     def check_complexity_changes(self) -> float:
         """檢查複雜度變化"""
-        authorize({'structure.scan'}, 8)
+        authorize({'structure.scan'}, self.max_depth)
         try:
             # 讀取舊的索引（如果存在）
-            old_index_path = self.root_path / '.copilot' / 'structure-index.json'
+            old_index_path = exact_path(
+                self.root_path / '.copilot/structure-index.json', '.copilot/structure-index.json')
             if old_index_path.exists():
                 with open(old_index_path, 'r', encoding='utf-8') as f:
                     old_data = json.load(f)
@@ -155,7 +157,7 @@ class SmartUpdater:
                     sys.path.insert(0, str(copilot_dir))
                 
                 from scanner.structure_scanner import StructureScanner
-                scanner = StructureScanner(root_path=str(self.root_path), max_depth=8)
+                scanner = StructureScanner(root_path=str(self.root_path), max_depth=self.max_depth)
                 scanner.scan()
                 new_lines = scanner.scan_results['statistics']['total_lines']
                 
@@ -206,7 +208,7 @@ class SmartUpdater:
     
     def trigger_update(self, force: bool = False):
         """觸發結構索引更新；無需更新回傳 False，失敗必須傳播例外。"""
-        authorize({'structure.scan', 'structure.generate'}, 8)
+        authorize({'structure.scan', 'structure.generate'}, self.max_depth)
         if force:
             print("🔄 強制觸發結構索引更新...")
         else:
@@ -233,13 +235,13 @@ class SmartUpdater:
                 sys.path.insert(0, str(copilot_dir))
             
             from scanner.structure_scanner import StructureScanner
-            scanner = StructureScanner(root_path=str(self.root_path), max_depth=8)
+            scanner = StructureScanner(root_path=str(self.root_path), max_depth=self.max_depth)
             scanner.scan()
             scanner.save_json('.copilot/structure-scan.json')
             
             # 生成索引
             from generator.emoji_indexer import EmojiIndexer
-            indexer = EmojiIndexer(scan_data=scanner.scan_results)
+            indexer = EmojiIndexer(scan_data=scanner.scan_results, max_depth=self.max_depth)
             indexer.generate_all()
             
             print("✅ 結構索引更新完成！")
@@ -251,7 +253,7 @@ class SmartUpdater:
     
     def save_metrics(self, output_path: str = '.copilot/update-metrics.json'):
         """儲存監控指標"""
-        authorize({'structure.scan'}, 8)
+        authorize({'structure.scan'}, self.max_depth)
         output_file = exact_path(output_path, '.copilot/update-metrics.json')
         output_file.parent.mkdir(parents=True, exist_ok=True)
         
@@ -268,6 +270,7 @@ def main():
     parser = argparse.ArgumentParser(description='智能更新觸發系統')
     parser.add_argument('--root', default='.', help='專案根目錄')
     parser.add_argument('--config', help='配置檔案路徑')
+    parser.add_argument('--depth', type=int, default=8, help='授權掃描深度上限')
     parser.add_argument('--check', action='store_true', help='僅檢查是否需要更新')
     parser.add_argument('--force', action='store_true', help='強制觸發更新')
     parser.add_argument('--save-metrics', action='store_true', help='儲存監控指標')
@@ -276,7 +279,7 @@ def main():
     
     try:
         # 創建更新觸發器
-        updater = SmartUpdater(root_path=args.root, config_path=args.config)
+        updater = SmartUpdater(root_path=args.root, config_path=args.config, max_depth=args.depth)
         
         if args.check:
             # 僅檢查
