@@ -8,12 +8,14 @@ on:
       - 'package.json'
       - 'tsconfig.json'
       - 'jest.config.js'
+      - '.github/workflows/webgpu-neural-network-ci.yml'
   pull_request:
     paths:
       - 'src/**'
       - 'package.json'
       - 'tsconfig.json'
       - 'jest.config.js'
+      - '.github/workflows/webgpu-neural-network-ci.yml'
 
 jobs:
   lint:
