@@ -4,6 +4,7 @@
  * The repository currently permits GitHub-owned and dofaromg-owned actions.
  * This test keeps the WebGPU workflow executable without weakening that policy,
  * while retaining locally generated coverage as a GitHub artifact.
+ * Workflow execution also exercises the current Jest CLI contract.
  */
 
 import { readFileSync } from 'node:fs';
