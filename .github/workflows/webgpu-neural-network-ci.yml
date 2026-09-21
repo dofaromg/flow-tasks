@@ -73,14 +73,9 @@ jobs:
       - name: Run Jest tests
         run: npm test -- --coverage --ci
       
-      - name: Upload coverage reports
-        uses: codecov/codecov-action@v4
-        if: always()
-        with:
-          file: ./coverage/lcov.info
-          flags: unittests
-          name: webgpu-neural-network
-          fail_ci_if_error: false
+      # Coverage remains in the GitHub-owned test-results artifact below.
+      # Do not add third-party actions unless the repository action policy is
+      # explicitly reviewed and updated by the owner.
       
       - name: Archive test results
         if: always()
