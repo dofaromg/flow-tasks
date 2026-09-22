@@ -14,11 +14,12 @@ import yaml
 import subprocess
 import shutil
 import hashlib
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 import tempfile
 import argparse
+import json
 
 
 class RepoSyncManager:
@@ -28,6 +29,73 @@ class RepoSyncManager:
         self.config_path = config_path
         self.config = self._load_config()
         self.repo_root = Path(__file__).parent.parent.absolute()
+        self.receipt = {"schema": "Mrliou_MRL_Sync_Receipt_v1",
+                        "origin_signature": "MrLiouWord",
+                        "tool_role": "engineering_transport",
+                        "rights_transfer": "NOT_GRANTED",
+                        "commercial_release": "NOT_APPROVED_BY_SYNC",
+                        "repositories": [], "files": [], "errors": []}
+        self.source_commit = None
+
+    def _safe_path(self, root: Path, relative: str) -> Path:
+        """Reject traversal, Git metadata and symlinks before copying or staging."""
+        path = Path(relative)
+        if (path.is_absolute() or not path.parts or
+                any(p in {'.', '..', '.git', '.github'} for p in path.parts)):
+            raise ValueError(f"Unsafe sync path: {relative}")
+        candidate = root / path
+        if root.resolve() == self.repo_root.resolve() and (
+                path.as_posix() in {'scripts/sync_external_repos.py',
+                                    'scripts/mrliou_publish_sync.sh', 'repos_sync.yaml'} or
+                any(p.startswith('.env') for p in path.parts)):
+            raise ValueError(f"Protected sync control or environment path: {relative}")
+        if not candidate.resolve().is_relative_to(root.resolve()):
+            raise ValueError(f"Sync path escapes its root: {relative}")
+        if any(p.is_symlink() for p in [candidate, *candidate.parents] if p != root):
+            raise ValueError(f"Symlink sync path: {relative}")
+        return candidate
+
+    def _copy_recorded(self, repo_config: Dict, src: Path, dest: Path,
+                       source_path: str) -> bool:
+        """Preserve source identity and apply the existing conflict policy uniformly."""
+        source_hash = hashlib.sha256(src.read_bytes()).hexdigest()
+        record = {"repository": repo_config['name'], "source_url": repo_config['url'],
+                  "source_branch": repo_config.get('branch', 'main'),
+                  "source_commit": self.source_commit, "source_path": source_path,
+                  "destination": dest.relative_to(self.repo_root).as_posix(),
+                  "source_sha256": source_hash, "size_bytes": src.stat().st_size}
+        self.receipt['files'].append(record)
+        if dest.exists():
+            destination_hash = hashlib.sha256(dest.read_bytes()).hexdigest()
+            record['destination_sha256'] = destination_hash
+            if destination_hash == source_hash:
+                record['status'] = 'unchanged'
+                return True
+            strategy = self.config.get('settings', {}).get('conflict_strategy', 'skip')
+            if strategy == 'skip':
+                record['status'] = 'skipped_conflict'
+                return True
+            if strategy == 'prompt' and input(f"Overwrite {dest}? (y/n): ").lower() != 'y':
+                record['status'] = 'skipped_conflict'
+                return True
+            if strategy not in {'overwrite', 'prompt'}:
+                raise ValueError(f"Unknown conflict strategy: {strategy}")
+            self._create_backup(dest)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dest)
+        record['destination_sha256'] = hashlib.sha256(dest.read_bytes()).hexdigest()
+        record['status'] = ('copied' if record['destination_sha256'] == source_hash
+                            else 'integrity_failed')
+        return record['status'] == 'copied'
+
+    def write_receipt(self, path: str, success: bool) -> None:
+        """Write a run-local receipt; publishing never treats it as a rights grant."""
+        self.receipt['success'] = success
+        self.receipt['observed_at_utc'] = datetime.now(timezone.utc).isoformat()
+        target = Path(path)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(self.receipt, ensure_ascii=False, indent=2) + '\n',
+                          encoding='utf-8')
         
     def _load_config(self) -> Dict:
         """Load configuration file / 載入配置檔案"""
@@ -130,6 +198,14 @@ class RepoSyncManager:
         
         print("✅ 複製成功")
         print("✅ Clone successful")
+        ok, commit = self._run_command(['git', 'rev-parse', 'HEAD'], cwd=str(temp_dir))
+        if not ok:
+            return False
+        self.source_commit = commit.strip()
+        self.receipt['repositories'].append({
+            'name': repo_config['name'], 'url': url, 'branch': branch,
+            'commit': self.source_commit, 'role': 'source_material',
+            'license_status': 'UNRESOLVED_NOT_INFERRED_FROM_ACCESS'})
         return True
     
     def _sync_files(self, repo_config: Dict, temp_dir: Path) -> bool:
@@ -138,44 +214,22 @@ class RepoSyncManager:
         if not files:
             return True
             
-        settings = self.config.get('settings', {})
-        conflict_strategy = settings.get('conflict_strategy', 'skip')
+        success = True
         
         for file_config in files:
-            src = temp_dir / file_config['src']
-            dest = self.repo_root / file_config['dest']
+            src = self._safe_path(temp_dir, file_config['src'])
+            dest = self._safe_path(self.repo_root, file_config['dest'])
             
-            if not src.exists():
+            if not src.is_file():
                 print(f"⚠️  來源檔案不存在: {src}")
                 print(f"⚠️  Source file not found: {src}")
+                self.receipt['errors'].append(f"Missing source: {file_config['src']}")
+                success = False
                 continue
             
-            # Handle conflicts / 處理衝突
-            if dest.exists():
-                if conflict_strategy == 'skip':
-                    print(f"⏭️  跳過已存在的檔案: {dest}")
-                    print(f"⏭️  Skipping existing file: {dest}")
-                    continue
-                elif conflict_strategy == 'prompt':
-                    response = input(f"檔案已存在: {dest}. 覆寫? (y/n): ")
-                    if response.lower() != 'y':
-                        continue
-                # 'overwrite' strategy continues
-                
-                self._create_backup(dest)
-            
-            # Create destination directory / 建立目標目錄
-            dest.parent.mkdir(parents=True, exist_ok=True)
-            
-            # Copy file / 複製檔案
-            shutil.copy2(src, dest)
-            print(f"✅ 已同步: {file_config['src']} -> {file_config['dest']}")
-            print(f"✅ Synced: {file_config['src']} -> {file_config['dest']}")
-            
-            # Verify integrity / 驗證完整性
-            self._verify_file_integrity(dest)
+            success = self._copy_recorded(repo_config, src, dest, file_config['src']) and success
         
-        return True
+        return success
     
     def _sync_directories(self, repo_config: Dict, temp_dir: Path) -> bool:
         """Sync directories / 同步目錄"""
@@ -184,14 +238,17 @@ class RepoSyncManager:
             return True
             
         exclude_patterns = self.config.get('exclude_patterns', [])
+        success = True
         
         for dir_config in directories:
-            src = temp_dir / dir_config['src']
-            dest = self.repo_root / dir_config['dest']
+            src = self._safe_path(temp_dir, dir_config['src'])
+            dest = self._safe_path(self.repo_root, dir_config['dest'])
             
-            if not src.exists():
+            if not src.is_dir():
                 print(f"⚠️  來源目錄不存在: {src}")
                 print(f"⚠️  Source directory not found: {src}")
+                self.receipt['errors'].append(f"Missing directory: {dir_config['src']}")
+                success = False
                 continue
             
             # Additional exclude patterns for this directory
@@ -208,16 +265,19 @@ class RepoSyncManager:
             files_to_copy = []
             dirs_to_create = set()
             
-            for item in src.rglob('*'):
+            for item in sorted(src.rglob('*')):
+                if item.is_symlink():
+                    raise ValueError(f"Symlink in source directory: {item.relative_to(src)}")
                 if item.is_file():
                     rel_path = item.relative_to(src)
                     
                     # Check exclusions
-                    if self._should_exclude(str(rel_path), all_excludes):
+                    if (self._should_exclude(str(rel_path), all_excludes) or
+                            any(self._should_exclude(p, all_excludes) for p in rel_path.parts)):
                         print(f"⏭️  排除: {rel_path}")
                         continue
                     
-                    dest_file = dest / rel_path
+                    dest_file = self._safe_path(self.repo_root, str(Path(dir_config['dest']) / rel_path))
                     files_to_copy.append((item, dest_file, rel_path))
                     # Collect unique parent directories
                     dirs_to_create.add(dest_file.parent)
@@ -228,10 +288,10 @@ class RepoSyncManager:
             
             # Copy all files
             for src_file, dest_file, rel_path in files_to_copy:
-                shutil.copy2(src_file, dest_file)
-                print(f"  ✅ {rel_path}")
+                success = self._copy_recorded(repo_config, src_file, dest_file,
+                                             str(Path(dir_config['src']) / rel_path)) and success
         
-        return True
+        return success
     
     def _add_submodule(self, repo_config: Dict) -> bool:
         """Add repository as Git submodule / 將倉庫加入為 Git 子模組"""
@@ -265,11 +325,11 @@ class RepoSyncManager:
         print("✅ Submodule added successfully")
         return True
     
-    def _run_post_sync_commands(self) -> None:
+    def _run_post_sync_commands(self) -> bool:
         """Run post-sync commands / 執行同步後命令"""
         commands = self.config.get('settings', {}).get('post_sync_commands', [])
         if not commands:
-            return
+            return True
         
         print("\n🔧 正在執行同步後命令...")
         print("🔧 Running post-sync commands...")
@@ -283,6 +343,9 @@ class RepoSyncManager:
                     print(output)
             else:
                 print(f"❌ 失敗: {output}")
+                self.receipt['errors'].append('Post-sync command failed')
+                return False
+        return True
     
     def sync(self, repo_name: Optional[str] = None) -> bool:
         """Main synchronization method / 主要同步方法"""
@@ -301,7 +364,8 @@ class RepoSyncManager:
                 print(f"❌ Repository not found: {repo_name}")
                 return False
         
-        # Process each repository
+        # Disabled sources are not attempted; one success cannot hide another failure.
+        enabled_count = sum(bool(r.get('enabled', True)) for r in repositories)
         success_count = 0
         for repo_config in repositories:
             name = repo_config.get('name', 'unnamed')
@@ -321,6 +385,8 @@ class RepoSyncManager:
             if repo_config.get('submodule', False):
                 if self._add_submodule(repo_config):
                     success_count += 1
+                else:
+                    self.receipt['errors'].append(f"Submodule failed: {name}")
                 continue
             
             # Clone to temporary directory
@@ -328,6 +394,7 @@ class RepoSyncManager:
                 temp_path = Path(temp_dir)
                 
                 if not self._clone_repo(repo_config, temp_path):
+                    self.receipt['errors'].append(f"Source clone failed: {name}")
                     continue
                 
                 # Sync files and directories
@@ -340,8 +407,9 @@ class RepoSyncManager:
                     print(f"✅ Repository {name} synced successfully")
         
         # Run post-sync commands
-        if success_count > 0:
-            self._run_post_sync_commands()
+        commands_ok = True
+        if enabled_count > 0 and success_count == enabled_count:
+            commands_ok = self._run_post_sync_commands()
         
         # Summary
         print(f"\n{'='*60}")
@@ -352,7 +420,7 @@ class RepoSyncManager:
         print(f"📦 總計: {len(repositories)}")
         print(f"📦 Total: {len(repositories)}")
         
-        return success_count > 0
+        return success_count == enabled_count and commands_ok
 
 
 def main():
@@ -375,6 +443,7 @@ def main():
         help='列出所有配置的倉庫 / List all configured repositories'
     )
     
+    parser.add_argument('--report', help='Run-local JSON provenance receipt path')
     args = parser.parse_args()
     
     # Load manager
@@ -410,6 +479,7 @@ def main():
         return
     
     # Run synchronization
+    success = False
     try:
         success = manager.sync(args.repo)
         sys.exit(0 if success else 1)
@@ -419,10 +489,14 @@ def main():
         sys.exit(1)
     except Exception as e:
         print(f"\n❌ 同步失敗: {e}")
+        manager.receipt['errors'].append(str(e))
         print(f"❌ Sync failed: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
+    finally:
+        if args.report:
+            manager.write_receipt(args.report, success)
 
 
 if __name__ == '__main__':

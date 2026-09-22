@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "origin_signature": "MrLiouWord",
+  "policy": "append_only_original_evidence_preservation",
+  "canonical_authority": "MRL",
+  "rules": {
+    "preserve_original_observation": true,
+    "preserve_original_name": true,
+    "preserve_source_name": true,
+    "preserve_source_ref": true,
+    "preserve_observed_at": true,
+    "preserve_before_hash": true,
+    "preserve_after_hash": true,
+    "preserve_actor_when_observable": true,
+    "external_alias_may_replace_canonical": false,
+    "external_write_may_overwrite_history": false,
+    "history_mutation_mode": "append_only",
+    "tamper_detection": "sha256_hash_chain",
+    "unknown_actor_policy": "record_unknown_do_not_infer",
+    "unknown_cause_policy": "record_unknown_do_not_infer"
+  },
+  "required_evidence_fields": [
+    "record_id",
+    "observed_at",
+    "source_type",
+    "source_name",
+    "source_ref",
+    "actor",
+    "canonical_name",
+    "external_name",
+    "event_type",
+    "before_hash",
+    "after_hash",
+    "payload_hash",
+    "previous_record_hash",
+    "origin_signature",
+    "evidence_status",
+    "inference_status"
+  ]
+}

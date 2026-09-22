@@ -1,0 +1,38 @@
+version: 1
+origin_signature: MrLiouWord
+canonical_name: Mrliou_Universal_Modular_Generation_Support_v1
+status: active
+
+layers:
+  - id: primitive_schema
+    role: minimal typed unit contract
+    outputs: [schema, state, attributes, provenance]
+  - id: hyper_relation
+    role: higher_order_relation_contract
+    depends_on: [primitive_schema]
+  - id: composition_algebra
+    role: compose_nest_replace_reuse
+    depends_on: [primitive_schema, hyper_relation]
+  - id: scale_domain_transformer
+    role: scale_domain_runtime_environment_translation
+    depends_on: [composition_algebra]
+  - id: delta_optimizer
+    role: observe_detect_refine_store
+    depends_on: [scale_domain_transformer]
+  - id: evidence
+    role: verification_and_provenance
+    depends_on: [primitive_schema, hyper_relation, composition_algebra, scale_domain_transformer, delta_optimizer]
+
+domains:
+  notion:
+    role: canonical_documentation_and_mapping
+  github:
+    role: executable_contracts_tests_and_commit_evidence
+  google_drive:
+    role: artifacts_research_packages_and_evidence
+  dropbox:
+    role: mirror_archive_support
+    state: pending_explicit_mutation_confirmation
+
+evidence_states: [KNOWN, ESTIMATED, UNCERTAIN, UNVERIFIED]
+mapping_states: [MATCH, PARTIAL, CONFLICT, NEW, UNVERIFIED]

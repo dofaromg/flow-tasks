@@ -20,6 +20,7 @@ layer: L3 LAW + L7 LOOP
 """
 from __future__ import annotations
 
+import copy
 import json
 import pathlib
 import re
@@ -89,6 +90,46 @@ def is_mrl_native_name(name: str) -> bool:
     )
 
 
+def _display_parameter_path(path: pathlib.Path) -> str:
+    """Keep repository paths compact while preserving external override paths."""
+    resolved = pathlib.Path(path).resolve()
+    try:
+        return str(resolved.relative_to(_ROOT.resolve()))
+    except ValueError:
+        return str(resolved)
+
+
+def build_mrl_world_model_top_view(
+    source_name: str,
+    canonical_name: str,
+    canonical_role: str,
+    *,
+    origin_signature: str = ORIGIN_SIGNATURE,
+    rootlaw_path: pathlib.Path = _ROOTLAW,
+    identity_registry_path: pathlib.Path = _IDENTITY_MAP,
+) -> Dict[str, Any]:
+    """Expose source and canonical product as linked, non-replacing blocks."""
+    return {
+        "world_model": "MRL",
+        "root_authority": "Mr.liou",
+        "origin_signature": origin_signature,
+        "architecture": "dual_internal_container_parallel_projection",
+        "source_container_ref": "source_block",
+        "product_container_ref": "canonical_block",
+        "link_ref": "source_to_product_link",
+        "source_name": source_name,
+        "canonical_name": canonical_name,
+        "canonical_role": canonical_role,
+        "parameter_sources": {
+            "rootlaw": _display_parameter_path(rootlaw_path),
+            "identity_registry": _display_parameter_path(identity_registry_path),
+            "native_identity_snapshot": "module_load",
+            "environment_override": False,
+            "rootlaw_override": pathlib.Path(rootlaw_path).resolve() != _ROOTLAW.resolve(),
+        },
+    }
+
+
 # ─── rl_12 命名回收：已分類外部名 → MRL_<描述> canonical ─────────────────────────
 def reclaim_name(external_name: str) -> str:
     """
@@ -125,15 +166,18 @@ class MRL_FlowAgentLawEngine:
     def __init__(self, *, chronicle_path: pathlib.Path = _CHRONICLE,
                  rootlaw_path: pathlib.Path = _ROOTLAW) -> None:
         self.origin_signature = ORIGIN_SIGNATURE
-        self.rootlaw = load_rootlaw(rootlaw_path)
+        self.rootlaw_path = pathlib.Path(rootlaw_path)
+        self.rootlaw = load_rootlaw(self.rootlaw_path)
         self.chronicle_path = chronicle_path
         self._error_counter: Dict[str, int] = {}   # rl_08 三振計數
         self._events: List[Dict[str, Any]] = []
 
     # rl_10 事件編年：每一事件寫入編年（粒子地球儀 / 人類歷史維基映射）
     def chronicle(self, kind: str, detail: Dict[str, Any]) -> Dict[str, Any]:
+        # Store an independent audit snapshot. Runtime results stay JSON-compatible,
+        # while later caller mutation cannot rewrite the in-memory/file chronicle.
         ev = {"ts_ms": int(time.time() * 1000), "origin_signature": ORIGIN_SIGNATURE,
-              "kind": kind, "detail": detail}
+              "kind": kind, "detail": copy.deepcopy(detail)}
         self._events.append(ev)
         try:
             self.chronicle_path.parent.mkdir(parents=True, exist_ok=True)
@@ -159,6 +203,29 @@ class MRL_FlowAgentLawEngine:
             native = is_mrl_native_name(name) if name else False
             result["reclaimed"] = reclaim_name(name) if name else None
             result["as"] = "mrl_native_product" if native else "external_material"
+            result["source_block"] = {
+                "name": name,
+                "role": "material",
+                "state": "source_ingested",
+                "immutable": True,
+            }
+            result["canonical_block"] = {
+                "name": result["reclaimed"],
+                "role": result["as"],
+                "state": "canonical_projection" if native else "source_projection",
+            }
+            result["source_to_product_link"] = {
+                "type": "source_to_canonical_projection",
+                "gate": "MRL_ProductGenerationGate",
+                "source_name": name,
+                "canonical_name": result["reclaimed"],
+                "preserve_source": True,
+            }
+            result["MRL_world_model_top_view"] = build_mrl_world_model_top_view(
+                name, result["reclaimed"], result["as"],
+                origin_signature=self.origin_signature,
+                rootlaw_path=self.rootlaw_path,
+            )
         else:
             # 輸出帶母體源頭簽章(rl_11)
             result["origin_signature"] = ORIGIN_SIGNATURE

@@ -1,0 +1,55 @@
+name: MRL AI Mother Autonomous Runtime
+
+on:
+  pull_request:
+    paths:
+      - "MRL_Mother/MRL_MotherModel/**"
+      - ".github/workflows/mrl-ai-mother-autonomous-runtime.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "MRL_Mother/MRL_MotherModel/**"
+      - ".github/workflows/mrl-ai-mother-autonomous-runtime.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mrl-ai-mother-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-autonomous-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify parent MotherModel
+        run: python MRL_Mother/MRL_MotherModel/scripts/mrl_mothermodel_verify.py
+
+      - name: Verify package coverage and SHA-256
+        run: >-
+          python
+          MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/scripts/MRL_verify_package_v1.py
+
+      - name: Compile autonomous runtime
+        working-directory: MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1
+        run: python -m py_compile runtime/*.py scripts/MRL_verify_package_v1.py tests/*.py
+
+      - name: Test local-only runtime contract
+        run: >-
+          python -m unittest discover
+          -s MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/tests
+          -v
+
+      - name: Verify MRL static governance
+        run: python scripts/validate_mrl_governance.py
+

@@ -1,0 +1,61 @@
+{
+  "origin_signature": "MrLiouWord",
+  "base": "86ec74f928bec49fa9ccb505ba9e9f00ad067692",
+  "expected_file_count": 10,
+  "payload_count": 9,
+  "files": [
+    {
+      "path": "scripts/update-neural-map.js",
+      "size": 6280,
+      "sha256": "aba88b293a89cc08c5b73868e99a024844d15b17257431d2772c37e39ef722cb"
+    },
+    {
+      "path": "scripts/generate-mermaid.js",
+      "size": 5071,
+      "sha256": "d9c735877e4b78378eaa281500a6a5a4097eb45187044db4c7ddce13f332e365"
+    },
+    {
+      "path": "scripts/test-naming-authority.cjs",
+      "size": 1733,
+      "sha256": "69ce5b604fd15eef0437345c70dcece79d9957f7a89acd0c5970bd72f6637e73"
+    },
+    {
+      "path": "src/neural-links/neural-index.ts",
+      "size": 9903,
+      "sha256": "4b5011e6e5ed77af857b78e8c016778d7e1324ba8117014b783b3f79ac29d119"
+    },
+    {
+      "path": ".github/workflows/neural-sync.yml",
+      "size": 5406,
+      "sha256": "eef41ceca2065cf78a649b96add45a41f96a2a60bf965e0ccdce9970f0fdb9e3"
+    },
+    {
+      "path": "neural-links/branch-map.json",
+      "size": 68783,
+      "sha256": "1fa558e54344cb78aeef5f3df101a397bda623240ee5a8cdb260e19282d23105"
+    },
+    {
+      "path": "neural-links/synaptic-graph.mermaid",
+      "size": 20788,
+      "sha256": "97df7ed3604dd6f05f1525be4951880967cf0e34d582b09d7863acdfda611939"
+    },
+    {
+      "path": "docs/Mrliou_MRL_Naming_Repair_20260908_v1.md",
+      "size": 4241,
+      "sha256": "7d994179bfff1b471457e6a0118f6f53150dd597c11c685ed3fd26d4b21944e2"
+    },
+    {
+      "path": "src/neural-links/__tests__/neural-index.test.ts",
+      "size": 12216,
+      "sha256": "53f6c208506c04c63072c9cb2e05fa9e64f124e9b4cfbc1d6499431aa28844b6"
+    }
+  ],
+  "missing": [],
+  "extra": [],
+  "mismatch": [],
+  "payload_coverage": "100%",
+  "remote_checks": "PENDING",
+  "overall_request": "OPEN",
+  "hash_scope": "commit containing this audit; later generated topology is a separate snapshot",
+  "reviewed_head": "cb1ed4083df33159bb14d58594efc54d9e2a9757"
+}

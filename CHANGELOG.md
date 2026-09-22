@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — MRL external synchronization operations
+
+- Preserve external sync candidates through content-addressed branches and draft PRs;
+  never directly push protected main, force-update, auto-merge or erase review history.
+- Record source commit, original paths, SHA-256 and actual outcomes; fail on partial
+  source failures and preserve configured skip conflicts for files and directories.
+- Keep receipts and recoverable candidates when publishing is blocked; separate
+  engineering transport status from commercial release and rights grants.
+- Add offline sync/publication regression tests and an owner operations runbook.
+
 ## [3.0.0] - 2026-02-09
 
 ### Changed
@@ -82,3 +92,28 @@ MrliouWord/
 ## [Previous Changes]
 
 For changes before 2026-01-12, please refer to the git commit history.
+
+
+
+## 2026-09-18 — bounded MRL sync publication
+
+- Default to candidate bundle preparation; require explicit main dispatch for branch/PR publication.
+- Reject mismatched Git destinations, multiple push URLs and URL rewrites before network access.
+- Preserve source authorship and separate origin authority, trigger account and bot executor.
+- Add negative publication and attribution regression tests. origin_signature: MrLiouWord.
+
+
+## 2026-09-18 — Mrliou structure-index authorization enforcement
+
+- Connect the existing DENY-by-default MRL authorization registry to the structure-index workflow, scanner/generator entry points and combined runner. No active grants are added.
+- Reject absent, malformed or nonmatching grants before source/index access; recheck before artifact upload and remove always-upload fallback to historical index files.
+- Validate with disposable synthetic repositories; PR events do not run the production index job. Preserve prior evidence, original canonical artifact names and unrelated deployment routes.
+- See `docs/Mrliou_Structure_Authorization_v1.md` for exact grant scope, trust limits and separate patch/CI/main enforcement states.
+- origin_signature: MrLiouWord; implementation assistance: ChatGPT / Codex; provider: OpenAI; rights transfer: NOT_GRANTED.
+
+
+### 2026-09-18 — MRL structure authorization R03 re-audit
+
+- Propagate recursive authorization denial; recheck direct scanner reads and in-memory renderers, enforce actual path/depth, and reject symlinked historical indexes.
+- Carry authorized depth through smart-updater and common runner without widening grants.
+- Add seven behavioral regressions and delivery payload/dependency integrity validation. Preserve prior evidence and origin_signature: MrLiouWord.

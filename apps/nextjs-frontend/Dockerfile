@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json ./
-RUN npm ci --only=production
+RUN npm install
 
 FROM node:18-alpine AS builder
 WORKDIR /app

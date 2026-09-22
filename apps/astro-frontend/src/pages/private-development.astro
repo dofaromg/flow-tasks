@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="私人開發指南 - MRLiou">
+  <main>
+    <a class="back" href="/">&larr; 返回首頁</a>
+    <h1>🔐 私人開發指南</h1>
+    <p class="lead">MRLiou 品牌私人開發與觀測環境完整指南。</p>
+    <section>
+      <h2>性質</h2>
+      <p>本環境為 Mr.liou 私人開發與觀測用途，不對外公開。所有內容 © 2025 Mr.liou，All Rights Reserved。</p>
+    </section>
+    <section>
+      <h2>架構層次</h2>
+      <ol>
+        <li>邊緣層：Cloudflare Workers（驗證 / 鏡像 / 轉譯）。</li>
+        <li>母體 Runtime：DL580（權威狀態 / 簽章 / PostgreSQL / NAS）。</li>
+        <li>證據層：Notion / GitHub / Drive（provenance 與歷史）。</li>
+      </ol>
+    </section>
+    <section>
+      <h2>治理</h2>
+      <p>受 rootlaw 規範：不刪根、不刪檔、只增不減；canonical 認可屬 ROOT (Mr.liou)。</p>
+    </section>
+    <p class="sig">origin_signature: MrLiouWord</p>
+  </main>
+</Layout>
+<style>
+  main { margin: auto; padding: 1rem; width: 800px; max-width: calc(100% - 2rem); color: white; font-size: 18px; line-height: 1.6; }
+  h1 { font-size: 3rem; margin-bottom: 0.5em; }
+  .lead { color: rgb(var(--accent-light)); }
+  section { margin: 1.5rem 0; padding: 1.25rem; background: rgba(var(--accent-dark), 40%); border-radius: 8px; }
+  .back { color: rgb(var(--accent-light)); text-decoration: none; }
+  .sig { color: #888; font-size: 0.85em; margin-top: 2rem; }
+</style>
