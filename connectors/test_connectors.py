@@ -16,6 +16,7 @@ from .google_drive_connector import GoogleDriveConnector
 from .huggingface_connector import HuggingFaceConnector
 from .vercel_connector import VercelConnector
 from .icloud_connector import ICloudConnector
+from .connector_manager import ConnectorManager
 
 
 class TestBaseConnectorSharedMethods:
@@ -230,6 +231,73 @@ class TestICloudConnector:
         connector = ICloudConnector(config)
         guidelines = connector.get_security_guidelines()
         assert "icloud_specific" in guidelines
+
+
+class TestConnectorManager:
+    """Test orchestration across all configured cloud spaces."""
+
+    def test_loads_auth_types_and_icloud_credentials_from_environment(
+        self, tmp_path, monkeypatch
+    ):
+        config_path = tmp_path / "connectors.yaml"
+        config_path.write_text(
+            """
+version: '1.0'
+connectors:
+  github:
+    enabled: true
+    auth_type: api_key
+  icloud:
+    enabled: true
+    auth_type: basic_auth
+global:
+  connection_timeout: 12
+  retry_attempts: 2
+""",
+            encoding="utf-8",
+        )
+        monkeypatch.setenv("ICLOUD_USERNAME", "cloud@example.com")
+        monkeypatch.setenv("ICLOUD_APP_PASSWORD", "app-password")
+
+        manager = ConnectorManager(str(config_path))
+
+        assert manager.connectors["github"].config.auth_type.value == "api_key"
+        assert manager.connectors["github"].config.timeout == 12
+        assert manager.connectors["icloud"].config.credentials == {
+            "username": "cloud@example.com",
+            "app_password": "app-password",
+        }
+
+    def test_connect_all_only_attempts_enabled_connectors(self, tmp_path):
+        manager = ConnectorManager(str(tmp_path / "connectors.yaml"))
+        github = manager.connectors["github"]
+        github.config.enabled = True
+        github.authenticate = Mock(return_value=False)
+
+        results = manager.connect_all()
+
+        github.authenticate.assert_called_once_with()
+        assert "skipped" not in results["github"]
+        assert results["notion"]["skipped"] is True
+
+    def test_sync_all_runs_only_sync_enabled_connectors(self, tmp_path):
+        manager = ConnectorManager(str(tmp_path / "connectors.yaml"))
+        github = manager.connectors["github"]
+        github.config.enabled = True
+        github.config.sync_enabled = True
+        github.sync_data = Mock(return_value={"success": True, "direction": "push"})
+
+        results = manager.sync_all("push")
+
+        github.sync_data.assert_called_once_with("push")
+        assert results["github"]["success"] is True
+        assert results["notion"]["reason"] == "disabled"
+
+    def test_sync_all_rejects_unknown_direction(self, tmp_path):
+        manager = ConnectorManager(str(tmp_path / "connectors.yaml"))
+
+        with pytest.raises(ValueError, match="Unsupported sync direction"):
+            manager.sync_all("sideways")
 
 
 class TestDefaultSyncData:

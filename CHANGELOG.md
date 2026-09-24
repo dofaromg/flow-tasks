@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — Multi-cloud connector orchestration
+
+- Add one-command authentication checks and synchronization across all eight
+  cloud connector types, with strict CI exit behavior and JSON output.
+- Add a scheduled/manual GitHub Actions connector audit backed only by secrets.
+- Correctly load typed authentication settings and iCloud username/app-password
+  credentials from the environment.
+
 ### Fixed — MRL external synchronization operations
 
 - Preserve external sync candidates through content-addressed branches and draft PRs;

@@ -6,6 +6,42 @@
 
 Multi-cloud space synchronization system with particle globe memory integration for intelligent sync across cloud environments and channel upgrades.
 
+## 連接所有雲端服務 / Connect Every Cloud Service
+
+`config/connectors.yaml` is the single inventory for GitHub, Notion, Dropbox,
+Google Drive, Vercel, iCloud, GitLab, and Hugging Face. Enable only the services
+you intend to use, set `sync_enabled: true` when data synchronization is wanted,
+and inject credentials through environment variables—never commit tokens.
+
+```bash
+# Verify authentication for every enabled service
+python -m connectors.connector_manager --connect-all --strict
+
+# Audit all eight inventory entries, including disabled ones
+python -m connectors.connector_manager --connect-all --include-disabled --strict
+
+# Run synchronization for every enabled + sync-enabled service
+python -m connectors.connector_manager --sync-all --direction pull --strict
+
+# Produce JSON suitable for automation and audit logs
+python -m connectors.connector_manager --connect-all --json
+```
+
+| Service | Environment variables |
+|---|---|
+| GitHub | `GITHUB_TOKEN` |
+| Notion | `NOTION_TOKEN` |
+| Dropbox | `DROPBOX_TOKEN` |
+| Google Drive | `GOOGLE_DRIVE_TOKEN` |
+| Vercel | `VERCEL_TOKEN` |
+| iCloud | `ICLOUD_USERNAME`, `ICLOUD_APP_PASSWORD` |
+| GitLab | `GITLAB_TOKEN` |
+| Hugging Face | `HUGGINGFACE_TOKEN` |
+
+The command skips disabled services and reports them explicitly. With `--strict`,
+an attempted connection or sync failure returns exit code 1, allowing CI/CD to
+block a rollout rather than claiming that disconnected cloud spaces succeeded.
+
 ## 功能特性 / Features
 
 ### 核心功能 / Core Features
