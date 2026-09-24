@@ -13,7 +13,7 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime
 import json
 
-from .base_connector import BaseConnector, ConnectorStatus, ConnectorConfig
+from .base_connector import AuthType, BaseConnector, ConnectorStatus, ConnectorConfig
 from .github_connector import GitHubConnector
 from .notion_connector import NotionConnector
 from .dropbox_connector import DropboxConnector
@@ -88,12 +88,25 @@ class ConnectorManager:
             credentials = service_config.get("credentials", {})
             self._load_env_credentials(service_name, credentials)
             
+            global_config = self.config.get("global", {})
+            auth_type = service_config.get("auth_type", "api_key")
+            try:
+                auth_type = AuthType(auth_type)
+            except ValueError:
+                auth_type = AuthType.CUSTOM
+
             config = ConnectorConfig(
                 enabled=service_config.get("enabled", False),
-                auth_type=service_config.get("auth_type", "api_key"),
+                auth_type=auth_type,
                 credentials=credentials,
                 sync_enabled=service_config.get("sync_enabled", False),
                 agent_mode=service_config.get("agent_mode", False),
+                timeout=service_config.get(
+                    "timeout", global_config.get("connection_timeout", 30)
+                ),
+                retry_attempts=service_config.get(
+                    "retry_attempts", global_config.get("retry_attempts", 3)
+                ),
                 custom_settings=service_config.get("settings", {})
             )
             
@@ -102,19 +115,69 @@ class ConnectorManager:
     def _load_env_credentials(self, service_name: str, credentials: Dict):
         """Load credentials from environment variables / 從環境變數載入憑證"""
         env_var_map = {
-            "github": "GITHUB_TOKEN",
-            "notion": "NOTION_TOKEN",
-            "dropbox": "DROPBOX_TOKEN",
-            "google_drive": "GOOGLE_DRIVE_TOKEN",
-            "vercel": "VERCEL_TOKEN",
-            "icloud": "ICLOUD_TOKEN",
-            "gitlab": "GITLAB_TOKEN",
-            "huggingface": "HUGGINGFACE_TOKEN"
+            "github": {"token": "GITHUB_TOKEN"},
+            "notion": {"token": "NOTION_TOKEN"},
+            "dropbox": {"token": "DROPBOX_TOKEN"},
+            "google_drive": {"token": "GOOGLE_DRIVE_TOKEN"},
+            "vercel": {"token": "VERCEL_TOKEN"},
+            "icloud": {
+                "app_password": "ICLOUD_APP_PASSWORD",
+                "username": "ICLOUD_USERNAME",
+            },
+            "gitlab": {"token": "GITLAB_TOKEN"},
+            "huggingface": {"token": "HUGGINGFACE_TOKEN"},
         }
-        
-        env_var = env_var_map.get(service_name)
-        if env_var and os.getenv(env_var):
-            credentials["token"] = os.getenv(env_var)
+
+        for credential_key, env_var in env_var_map.get(service_name, {}).items():
+            if os.getenv(env_var):
+                credentials[credential_key] = os.environ[env_var]
+
+    def connect_all(self, include_disabled: bool = False) -> Dict[str, Dict[str, Any]]:
+        """Authenticate and verify every configured cloud service."""
+        results = {}
+        for service_name, connector in self.connectors.items():
+            if not connector.config.enabled and not include_disabled:
+                results[service_name] = {
+                    **connector.get_status_report(),
+                    "skipped": True,
+                    "reason": "disabled",
+                }
+                continue
+
+            try:
+                connector.authenticate()
+            except Exception as exc:
+                connector._handle_connection_error(str(exc))
+            results[service_name] = connector.get_status_report()
+        return results
+
+    def sync_all(self, direction: Optional[str] = None) -> Dict[str, Dict[str, Any]]:
+        """Synchronize every enabled connector marked for synchronization."""
+        direction = direction or self.config.get("sync", {}).get(
+            "default_direction", "pull"
+        )
+        if direction not in {"pull", "push", "bidirectional"}:
+            raise ValueError(f"Unsupported sync direction: {direction}")
+
+        results = {}
+        for service_name, connector in self.connectors.items():
+            if not connector.config.enabled or not connector.config.sync_enabled:
+                results[service_name] = {
+                    "success": True,
+                    "skipped": True,
+                    "reason": "disabled" if not connector.config.enabled else "sync_disabled",
+                    "direction": direction,
+                }
+                continue
+            try:
+                results[service_name] = connector.sync_data(direction)
+            except Exception as exc:
+                results[service_name] = {
+                    "success": False,
+                    "error": str(exc),
+                    "direction": direction,
+                }
+        return results
     
     def check_all_connections(self) -> Dict[str, Dict[str, Any]]:
         """
@@ -421,14 +484,24 @@ def main():
     
     parser = argparse.ArgumentParser(description="Cloud Connector Manager / 雲端連接器管理器")
     parser.add_argument("--check-all", action="store_true", help="Check all connections")
+    parser.add_argument("--connect-all", action="store_true", help="Authenticate and verify all enabled services")
+    parser.add_argument("--sync-all", action="store_true", help="Synchronize all enabled services")
+    parser.add_argument("--direction", choices=("pull", "push", "bidirectional"))
+    parser.add_argument("--include-disabled", action="store_true", help="Check disabled services too")
+    parser.add_argument("--strict", action="store_true", help="Exit non-zero when an attempted operation fails")
+    parser.add_argument("--json", action="store_true", help="Print machine-readable results")
+    parser.add_argument("--config", default="config/connectors.yaml", help="Connector configuration path")
     parser.add_argument("--generate-report", action="store_true", help="Generate comprehensive report")
     parser.add_argument("--service", help="Check specific service")
     
     args = parser.parse_args()
     
-    manager = ConnectorManager()
+    manager = ConnectorManager(args.config)
+    operation_results = None
     
-    if args.generate_report or not any([args.check_all, args.service]):
+    if args.generate_report or not any([
+        args.check_all, args.connect_all, args.sync_all, args.service
+    ]):
         print("Generating comprehensive report...")
         report_path = manager.generate_comprehensive_report()
         print(f"✅ Report generated: {report_path}")
@@ -439,6 +512,37 @@ def main():
         for service, status in results.items():
             icon = manager._status_icon(status.get('status', 'unknown'))
             print(f"{icon} {service}: {status.get('status', 'N/A')}")
+
+    if args.connect_all:
+        operation_results = manager.connect_all(args.include_disabled)
+
+    if args.sync_all:
+        operation_results = manager.sync_all(args.direction)
+
+    if operation_results is not None:
+        if args.json:
+            print(json.dumps(operation_results, indent=2, ensure_ascii=False))
+        else:
+            for service, result in operation_results.items():
+                state = "skipped" if result.get("skipped") else result.get(
+                    "status", "success" if result.get("success") else "failed"
+                )
+                print(f"{service}: {state}")
+
+        attempted = [
+            result for result in operation_results.values()
+            if not result.get("skipped")
+        ]
+        failures = [
+            result for result in attempted
+            if (
+                result.get("status")
+                not in (None, ConnectorStatus.CONNECTED.value)
+                or result.get("success") is False
+            )
+        ]
+        if args.strict and failures:
+            raise SystemExit(1)
     
     if args.service:
         connector = manager.get_connector(args.service)
