@@ -34,7 +34,7 @@ The automatic `secrets.GITHUB_TOKEN` used by checkout is not `secrets.CLOUD_GITH
 
 Neither this job nor the original workflow selects a GitHub `environment`. Credentials stored only in an Environment are unavailable to it. Secrets in another repository, another account, Dependabot settings, or a local `.env` are not automatically provided to this scheduled Actions run. An organization secret must grant the running repository access.
 
-The available repository connector does not expose secrets/variables administration metadata. Empty effective values establish that this run received no credentials; they do **not** distinguish absent settings, another name, another repository, or inaccessible Environment/organization scope. No secret values were requested or retrieved. No environment name is invented by this patch.
+Authenticated, read-only inspection of the running repository's Actions settings on 2026-09-26 confirmed that none of the nine required secret names is present in Repository secrets. The page also reports no Environment secrets. The Variables tab contains none of these credential names and reports no Environment variables. This confirms missing configuration in the visible execution scope, not a spelling error in the YAML-to-Python mapping. Whether credentials exist elsewhere was not inspected or assumed. Only names and empty-state notices were read; no secret values were requested or retrieved. No environment name is invented by this patch.
 
 Settings: https://github.com/dofaromg/flow-tasks/settings/secrets/actions
 
