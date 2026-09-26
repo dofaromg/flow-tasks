@@ -23,7 +23,8 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Verify enabled cloud connectors
+      # --include-disabled intentionally audits all eight declared services.
+      - name: Verify all declared cloud connectors
         env:
           GITHUB_TOKEN: ${{ secrets.CLOUD_GITHUB_TOKEN }}
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
@@ -34,7 +35,23 @@ jobs:
           ICLOUD_APP_PASSWORD: ${{ secrets.ICLOUD_APP_PASSWORD }}
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
           HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-        run: python -m connectors.connector_manager --connect-all --include-disabled --strict --json
+        run: |
+          set -euo pipefail
+          missing=0
+          credentials=(GITHUB_TOKEN NOTION_TOKEN DROPBOX_TOKEN GOOGLE_DRIVE_TOKEN VERCEL_TOKEN ICLOUD_USERNAME ICLOUD_APP_PASSWORD GITLAB_TOKEN HUGGINGFACE_TOKEN)
+          for variable in "${credentials[@]}"; do
+            secret_name="$variable"
+            if [ "$variable" = GITHUB_TOKEN ]; then secret_name=CLOUD_GITHUB_TOKEN; fi
+            if [ -z "${!variable:-}" ]; then
+              echo "::error::Missing Actions secret $secret_name (environment variable $variable); check its name and repository/organization scope."
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo "::error::Cloud connector configuration is incomplete; no connector authentication was attempted. This job does not select a GitHub Environment."
+            exit 1
+          fi
+          python -m connectors.connector_manager --connect-all --include-disabled --strict --json
       - name: Synchronize enabled cloud connectors
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.sync }}
         env:
