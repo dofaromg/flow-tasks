@@ -133,10 +133,15 @@ class ConnectorManager:
                 credentials[credential_key] = os.environ[env_var]
 
     def connect_all(self, include_disabled: bool = False) -> Dict[str, Dict[str, Any]]:
-        """Authenticate and verify every configured cloud service."""
+        """Authenticate enabled services and report disabled services as skipped.
+
+        ``include_disabled`` is retained for caller compatibility. The inventory
+        already includes disabled services by default; neither value authorizes
+        authentication of a disabled service.
+        """
         results = {}
         for service_name, connector in self.connectors.items():
-            if not connector.config.enabled and not include_disabled:
+            if not connector.config.enabled:
                 results[service_name] = {
                     **connector.get_status_report(),
                     "skipped": True,
@@ -487,7 +492,10 @@ def main():
     parser.add_argument("--connect-all", action="store_true", help="Authenticate and verify all enabled services")
     parser.add_argument("--sync-all", action="store_true", help="Synchronize all enabled services")
     parser.add_argument("--direction", choices=("pull", "push", "bidirectional"))
-    parser.add_argument("--include-disabled", action="store_true", help="Check disabled services too")
+    parser.add_argument(
+        "--include-disabled", action="store_true",
+        help="Include disabled services as skipped without authenticating (already included by default)",
+    )
     parser.add_argument("--strict", action="store_true", help="Exit non-zero when an attempted operation fails")
     parser.add_argument("--json", action="store_true", help="Print machine-readable results")
     parser.add_argument("--config", default="config/connectors.yaml", help="Connector configuration path")
