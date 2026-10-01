@@ -395,7 +395,7 @@ class Vault:
 # HTTP API
 # -------------------------
 
-_TERMINAL_ALLOWED_COMMANDS = {"ls": "ls", "cat": "cat", "echo": "echo", "pwd": "pwd"}
+_TERMINAL_ALLOWED_PREFIXES = ("ls", "cat", "echo", "pwd")
 
 _SHELL_METACHAR_RE = re.compile(r"[;&|`$<>\\!]")
 
@@ -520,15 +520,13 @@ def make_handler(vault: Vault, tracer: Tracer, steering: SteeringStore):
 
                 if u.path == "/terminal/exec":
                     cmd = data.get("cmd", "")
-                    if not isinstance(cmd, str) or _SHELL_METACHAR_RE.search(cmd):
+                    if not any(cmd.startswith(x) for x in _TERMINAL_ALLOWED_PREFIXES):
                         return self._send(403, {"ok": False, "error": "command_not_allowed"})
-                    args_list = cmd.split()
-                    executable = _TERMINAL_ALLOWED_COMMANDS.get(args_list[0]) if args_list else None
-                    if executable is None:
+                    if _SHELL_METACHAR_RE.search(cmd):
                         return self._send(403, {"ok": False, "error": "command_not_allowed"})
                     try:
-                        # Select the executable from fixed values; a prefix is not an allowlist.
-                        result = subprocess.check_output([executable, *args_list[1:]], shell=False, text=True, timeout=10)
+                        args_list = cmd.split()
+                        result = subprocess.check_output(args_list, shell=False, text=True, timeout=10)
                         tracer.emit("terminal_exec", {"cmd": cmd, "steering_hash": sp_hash})
                         return self._send(200, {"ok": True, "output": result})
                     except subprocess.TimeoutExpired:

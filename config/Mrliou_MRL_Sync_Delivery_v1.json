@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 6572,
-      "sha256": "0da567877b10607a5a2c10c9888721fd4531625fcd1715c6a517bd19a5287629",
+      "size_bytes": 6146,
+      "sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -152,23 +152,6 @@
       },
       "current_size_bytes": 6146,
       "current_sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953",
-      "origin_signature": "MrLiouWord"
-    },
-    {
-      "source_commit": "0b3dc10176417a49714d70e8e6cc748b6f381471",
-      "change_branch": "Mrliou/fix-terminal-command-integrity-20261001",
-      "reason": "Add terminal executable allowlist repair history; preserve all previous CHANGELOG content and integrity evidence.",
-      "previous_entry": {
-        "path": "CHANGELOG.md",
-        "role": "additive_history",
-        "size_bytes": 6146,
-        "sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953",
-        "dependencies": [
-          "docs/Mrliou_MRL_Sync_Operations_v1.md"
-        ]
-      },
-      "current_size_bytes": 6572,
-      "current_sha256": "0da567877b10607a5a2c10c9888721fd4531625fcd1715c6a517bd19a5287629",
       "origin_signature": "MrLiouWord"
     }
   ]

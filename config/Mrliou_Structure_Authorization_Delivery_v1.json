@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 6572,
-      "sha256": "0da567877b10607a5a2c10c9888721fd4531625fcd1715c6a517bd19a5287629"
+      "size_bytes": 6146,
+      "sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 6314,
-      "sha256": "87c47f8bc5be2a59484cc5caa099bce4f17de998b93e02e86edc0a57ef363729"
+      "size_bytes": 5560,
+      "sha256": "0f76e27a8edd94f5ada5a5ed533c030426eb4800bc5662db8f89370727022886"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -265,36 +265,6 @@
           "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
           "size_bytes": 5560,
           "sha256": "0f76e27a8edd94f5ada5a5ed533c030426eb4800bc5662db8f89370727022886"
-        }
-      ],
-      "origin_signature": "MrLiouWord"
-    },
-    {
-      "source_commit": "0b3dc10176417a49714d70e8e6cc748b6f381471",
-      "change_branch": "Mrliou/fix-terminal-command-integrity-20261001",
-      "reason": "Synchronize additive terminal repair CHANGELOG evidence and dependent sync manifest; integrity assertions remain unchanged.",
-      "previous_entries": [
-        {
-          "path": "CHANGELOG.md",
-          "size_bytes": 6146,
-          "sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953"
-        },
-        {
-          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-          "size_bytes": 5560,
-          "sha256": "0f76e27a8edd94f5ada5a5ed533c030426eb4800bc5662db8f89370727022886"
-        }
-      ],
-      "current_entries": [
-        {
-          "path": "CHANGELOG.md",
-          "size_bytes": 6572,
-          "sha256": "0da567877b10607a5a2c10c9888721fd4531625fcd1715c6a517bd19a5287629"
-        },
-        {
-          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-          "size_bytes": 6314,
-          "sha256": "87c47f8bc5be2a59484cc5caa099bce4f17de998b93e02e86edc0a57ef363729"
         }
       ],
       "origin_signature": "MrLiouWord"
