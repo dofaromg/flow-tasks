@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — MRL terminal executable allowlist
+
+- Match the complete executable name for `/terminal/exec` in the active FlowCore
+  runtime; reject unapproved prefix matches and non-string input.
+- Preserve `ls`, `cat`, `echo`, `pwd`, human-token checks, shell-free execution,
+  timeout responses, existing routes and `origin_signature: MrLiouWord`.
+- Add HTTP-handler regression coverage and synchronize delivery checksums.
+
 ### Added — Multi-cloud connector orchestration
 
 - Add one-command authentication checks and synchronization across all eight
