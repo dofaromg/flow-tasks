@@ -18,6 +18,11 @@ on:
       - '**/README.md'
       - 'MrLiou_AI_SuperComputer/**'
       - 'particle_core/**'
+      - '.github/workflows/structure-indexer.yml'
+      - 'config/MRL_AUTHORIZATION_REGISTRY_v1.json'
+      - 'config/Mrliou_Structure_Authorization_Delivery_v1.json'
+      - 'config/Mrliou_MRL_Sync_Delivery_v1.json'
+      - 'CHANGELOG.md'
 
   # Validate the global-world observer itself before it reaches protected main;
   # observing parallel PR worlds never grants them merged-world authority.
@@ -29,6 +34,9 @@ on:
       - '.copilot/triggers/**'
       - '.copilot/Mrliou_structure_authorization.py'
       - 'config/MRL_AUTHORIZATION_REGISTRY_v1.json'
+      - 'config/Mrliou_Structure_Authorization_Delivery_v1.json'
+      - 'config/Mrliou_MRL_Sync_Delivery_v1.json'
+      - 'CHANGELOG.md'
       - 'tests/test_Mrliou_structure_authorization.py'
       - 'run_structure_index.py'
   

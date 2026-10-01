@@ -29,10 +29,67 @@
     "evidence_reference",
     "rollback"
   ],
-  "active_grants": [],
+  "active_grants": [
+    {
+      "record_id": "MRL-STRUCTURE-INDEX-RESTORE-20261001",
+      "grantee": {
+        "actor": "dofaromg",
+        "triggering_actor": "dofaromg"
+      },
+      "scope": {
+        "repository": "dofaromg/flow-tasks",
+        "assets": [
+          "."
+        ],
+        "max_depth": 8,
+        "destination": "github-actions-artifact:dofaromg/flow-tasks",
+        "events": [
+          "push",
+          "schedule",
+          "workflow_dispatch",
+          "issue_comment"
+        ],
+        "ref": "refs/heads/main"
+      },
+      "actions": [
+        "structure.scan",
+        "structure.generate",
+        "structure.upload"
+      ],
+      "issued_by": "MrLiouWord",
+      "issued_at": "2026-10-01T10:44:30Z",
+      "expires_at": "2027-10-01T10:44:30Z",
+      "evidence_reference": "Owner explicitly requested completing AI structure-index mainline recovery in the current ChatGPT task at 2026-10-01T18:44:30+08:00; delivery repair: https://github.com/dofaromg/flow-tasks/pull/658. Additive issuance evidence is recorded in operating_grant_history.",
+      "rollback": "Through a reviewed follow-up commit, set status=revoked for MRL-STRUCTURE-INDEX-RESTORE-20261001; preserve the record and history. The existing guard rechecks before scan, generation and upload.",
+      "status": "active",
+      "prohibited_actions": [],
+      "purpose": "structure-index",
+      "environment": "github-actions"
+    }
+  ],
   "current_status": {
-    "decision": "DENY",
-    "reason": "NO_RECORDED_GRANT",
-    "checked_at": "2026-07-29"
-  }
+    "decision": "GRANT_RECORDED",
+    "reason": "EXPLICIT_OWNER_RECOVERY_INSTRUCTION",
+    "checked_at": "2026-10-01T18:44:30+08:00",
+    "runtime_verification": "PENDING_MAIN_WORKFLOW_RUN"
+  },
+  "operating_grant_history": [
+    {
+      "record_id": "MRL-STRUCTURE-INDEX-RESTORE-20261001",
+      "origin_signature": "MrLiouWord",
+      "canonical_authority": "Mr.liou",
+      "request_received_at": "2026-10-01T18:44:30+08:00",
+      "authorization_source": "Explicit owner instruction to complete restoration after PR #658 was delivered; this issuance does not derive from repository access, agent role, silence or restoration alone.",
+      "previous_current_status": {
+        "decision": "DENY",
+        "reason": "NO_RECORDED_GRANT",
+        "checked_at": "2026-07-29"
+      },
+      "scope_basis": "Restore only the existing structure-indexer workflow on main, exact owner actor and triggering actor, depth 8, and its existing same-repository GitHub Actions artifact destination. No local grant, other repository, arbitrary destination, rights transfer or service route change.",
+      "expiry_basis": "A one-year operational expiry is selected for this restoration because the existing consumer requires an explicit expiry. The owner did not specify a duration. This is an implementation default, not a claim of an owner-specified term.",
+      "expires_at": "2027-10-01T10:44:30Z",
+      "revocation": "Retain evidence and mark the active grant revoked through the normal repository change process.",
+      "rights_transfer": "NOT_GRANTED"
+    }
+  ]
 }
