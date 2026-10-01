@@ -89,7 +89,22 @@
       "expiry_basis": "A one-year operational expiry is selected for this restoration because the existing consumer requires an explicit expiry. The owner did not specify a duration. This is an implementation default, not a claim of an owner-specified term.",
       "expires_at": "2027-10-01T10:44:30Z",
       "revocation": "Retain evidence and mark the active grant revoked through the normal repository change process.",
-      "rights_transfer": "NOT_GRANTED"
+      "rights_transfer": "NOT_GRANTED",
+      "governance_dependency_update": {
+        "base_commit": "d6ddc0b7d9c8ab8e58ab678b9c5efacdc24b1e87",
+        "reason": "The existing governance contract hard-coded an empty live grant list. Replace that historical-state assertion with exact owner-grant scope assertions; retain the implicit-authorization DENY assertions and all 44 authorization regressions. Refresh only the two affected governance SHA entries.",
+        "previous_sha256_entries": [
+          {
+            "path": "config/MRL_AUTHORIZATION_REGISTRY_v1.json",
+            "sha256": "b6304eb80f66876841406dd21213d89a67c725790072a218a4290217db625897"
+          },
+          {
+            "path": "MRL_Mother/tests_mrl_ai_system/test_MRL_governance_contracts.py",
+            "sha256": "578d89c1071f1232164ce009a3feb9299ecb37ce43a60affd4c7f329e2e16c77"
+          }
+        ],
+        "previous_sha256sums_sha256": "ca83cb8ab242b450fcd1eec5079b6c059d3b53d300a357d2a370ceaaff8d5090"
+      }
     }
   ]
 }
