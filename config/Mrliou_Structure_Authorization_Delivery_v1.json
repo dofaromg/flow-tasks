@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 5750,
-      "sha256": "a3f7d6f537275e1ed11b1e7aed6d80c8dbbfbb25b3a7de1b1c7fab99fc9bbe8d"
+      "size_bytes": 6146,
+      "sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 4496,
-      "sha256": "b0d632785fa550a5d0cc5cb4b66b12888edd7fe7aae52c1f4c1d587792bcdcfa"
+      "size_bytes": 5560,
+      "sha256": "0f76e27a8edd94f5ada5a5ed533c030426eb4800bc5662db8f89370727022886"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -232,6 +232,42 @@
           }
         ]
       }
+    }
+  ],
+  "additive_integrity_history": [
+    {
+      "source_commit": "d43e53dee1012571915754afdfeff66c96c19615",
+      "change_commit": "c4797c441ba6a12768258127fe6d0ad70cbf3523",
+      "original_commit": "71ab347b2ffad4be0680c3a07d47edf4faef9d5f",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/655",
+      "merged_by": "dofaromg",
+      "merged_at": "2026-09-24T01:18:42Z",
+      "reason": "PR #655 inserts 8 lines (396 bytes) for multi-cloud connector orchestration; all prior CHANGELOG bytes remain unchanged. Refresh live checksums without changing payload code, tests, authorization policy or routes.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 5750,
+          "sha256": "a3f7d6f537275e1ed11b1e7aed6d80c8dbbfbb25b3a7de1b1c7fab99fc9bbe8d"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 4496,
+          "sha256": "b0d632785fa550a5d0cc5cb4b66b12888edd7fe7aae52c1f4c1d587792bcdcfa"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 6146,
+          "sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 5560,
+          "sha256": "0f76e27a8edd94f5ada5a5ed533c030426eb4800bc5662db8f89370727022886"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
     }
   ]
 }
