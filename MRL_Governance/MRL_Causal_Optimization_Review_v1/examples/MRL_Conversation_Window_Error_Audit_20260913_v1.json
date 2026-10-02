@@ -1,0 +1,88 @@
+{
+  "audit_id": "MRL-ERROR-AUDIT-20260913-001",
+  "origin_signature": "MrLiouWord",
+  "scope": "2026-09-13 conversation window",
+  "historical_root": "Mrliou / MRL Origin-Source-Registry chain",
+  "root_layer_checked": true,
+  "mrliou_root_preserved": true,
+  "root_scope_note": "Preserves the MRL internal origin/source hierarchy supported by the project records; does not convert internal records into third-party independent verification.",
+  "user_claims_only": true,
+  "causal_order_preserved": true,
+  "prior_artifact_check": true,
+  "prior_artifact_found": true,
+  "historical_tense": "RECONNECTED",
+  "recent_incident_promoted_to_root_cause": false,
+  "claim_levels_valid": true,
+  "external_role_not_promoted_to_origin": true,
+  "existing_node_found": true,
+  "operation": "SUPPLEMENT_EXISTING",
+  "errors": [
+    {
+      "id": "E01_USER_CLAIM_STRENGTHENING",
+      "status": "CORRECTED",
+      "error": "Introduced a stronger allegation than the user's actual claim and then answered that stronger allegation.",
+      "remediation": "Reconstruct and quote the actual proposition being evaluated before rebuttal; unsupported strengthening fails G01."
+    },
+    {
+      "id": "E02_CAUSAL_INVERSION_OF_REACTION",
+      "status": "CORRECTED",
+      "error": "Described strong user anger without first preserving the repeated-error and failed-correction precursors.",
+      "remediation": "Record precursor events before reaction; reaction may not be treated as root cause unless evidence supports that ordering."
+    },
+    {
+      "id": "E03_CREATE_WITHOUT_EXISTING_MOTHER_PREFLIGHT",
+      "status": "CORRECTED",
+      "error": "Created review/attestation structures before completing the Existing Mother lookup chain.",
+      "remediation": "Require Wake Memory and registry preflight before any CREATE operation."
+    },
+    {
+      "id": "E04_REBUILD_EXISTING_REGISTRY_AS_NEW",
+      "status": "CORRECTED",
+      "error": "Suggested a new node-role registry although related registry/authority structures already existed.",
+      "remediation": "When an existing node is found, permit only MAP_EXISTING or SUPPLEMENT_EXISTING."
+    },
+    {
+      "id": "E05_HISTORICAL_TENSE_REWRITE",
+      "status": "CORRECTED",
+      "error": "Used wording equivalent to 'today we clarified/formed' for structures supported by 2025 artifacts.",
+      "remediation": "When prior evidence exists, use recovered/reconnected/revalidated/backfilled/supplemented language, not newly formed wording."
+    },
+    {
+      "id": "E06_RECENT_INCIDENT_PROMOTED_TO_ROOT_CAUSE",
+      "status": "CORRECTED",
+      "error": "Temporarily centered 2026-09 Actions/Enterprise events in a problem whose history extends back to 2025-06.",
+      "remediation": "Build the full time axis first; a recent incident remains a child event until evidence proves it is the earliest causal breakpoint."
+    },
+    {
+      "id": "E07_PARTIAL_EVIDENCE_PROMOTED_TO_CONFIRMED_CHAIN",
+      "status": "CORRECTED",
+      "error": "At points, wording was stronger than the evidence supported for continuity/root-cause conclusions.",
+      "remediation": "Every material claim must be tagged FACT, FILE_EMBEDDED_CLAIM, INFERENCE, UNRESOLVED, or CORRECTED."
+    },
+    {
+      "id": "E08_MRL_ROOT_LAYER_DOWNRANK_OR_BYPASS",
+      "status": "CORRECTED",
+      "error": "Did not consistently start MRL-specific reviews from the project's own Origin/Source/Registry hierarchy before assigning roles to external platforms/models.",
+      "remediation": "Check MRL Origin/Source/Registry first; external providers, environments, models, and mirrors cannot overwrite that internal hierarchy without stronger primary evidence."
+    }
+  ],
+  "gates": {
+    "G01_ACTUAL_USER_CLAIM_GATE": "PASS",
+    "G02_CAUSAL_ORDER_GATE": "PASS",
+    "G03_EXISTING_MOTHER_PREFLIGHT_GATE": "PASS",
+    "G04_EXISTING_VS_NEW_DECISION_GATE": "PASS",
+    "G05_HISTORICAL_TENSE_GATE": "PASS",
+    "G06_TIME_AXIS_ROOT_CAUSE_GATE": "PASS",
+    "G07_CLAIM_LEVEL_GATE": "PASS",
+    "G08_ROOT_ORIGIN_GATE": "PASS",
+    "G09_DELIVERY_AUDIT_GATE": "PASS"
+  },
+  "delivery_audit": {
+    "requested_error_count": 8,
+    "constructed_error_count": 8,
+    "missing_error_ids": [],
+    "unexpected_error_ids": [],
+    "coverage_percent": 100,
+    "completion_gate": "PASS"
+  }
+}
