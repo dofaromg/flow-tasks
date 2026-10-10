@@ -80,7 +80,7 @@ connectors:
     agent_mode: false
     credentials:
       # Requires app-specific password from Apple ID
-      # Set via environment variable: ICLOUD_TOKEN
+      # Set via environment variables: ICLOUD_USERNAME and ICLOUD_APP_PASSWORD
       app_password: ""
       username: ""
     settings:

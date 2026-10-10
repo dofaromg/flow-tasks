@@ -1,0 +1,17 @@
+[project]
+name = "mrliou-apiworks-public-control-plane-v1"
+version = "1.0.0"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.141.1",
+]
+
+[dependency-groups]
+dev = [
+    "httpx[socks]>=0.28.1",
+    "pytest>=8.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

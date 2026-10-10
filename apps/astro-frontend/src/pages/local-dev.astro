@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="本地開發環境 - MRLiou">
+  <main>
+    <a class="back" href="/">&larr; 返回首頁</a>
+    <h1>🐳 本地開發環境</h1>
+    <p class="lead">Docker Compose 私人開發配置概覽。</p>
+    <section>
+      <h2>服務組成</h2>
+      <ul>
+        <li><code>module-a</code>：MRL 粒子計算服務 (Flask, :8080)。</li>
+        <li><code>orchestrator</code>：多步管線協調 (Flask, :8081)。</li>
+        <li><code>astro-frontend</code>：靜態前端 (nginx)。</li>
+      </ul>
+    </section>
+    <section>
+      <h2>啟動</h2>
+      <p>於各服務目錄 <code>python app.py</code>，或以容器編排整體啟動；前端 <code>npm run dev</code>。</p>
+    </section>
+    <p class="sig">origin_signature: MrLiouWord</p>
+  </main>
+</Layout>
+<style>
+  main { margin: auto; padding: 1rem; width: 800px; max-width: calc(100% - 2rem); color: white; font-size: 18px; line-height: 1.6; }
+  h1 { font-size: 3rem; margin-bottom: 0.5em; }
+  .lead { color: rgb(var(--accent-light)); }
+  section { margin: 1.5rem 0; padding: 1.25rem; background: rgba(var(--accent-dark), 40%); border-radius: 8px; }
+  code { background: rgba(var(--accent-light), 12%); border-radius: 4px; padding: 0.15em 0.4em; }
+  .back { color: rgb(var(--accent-light)); text-decoration: none; }
+  .sig { color: #888; font-size: 0.85em; margin-top: 2rem; }
+</style>

@@ -37,6 +37,8 @@ node_modules/
 # Next.js build output
 .next/
 out/
+.open-next/
+.wrangler/
 
 # Astro build output
 .astro/

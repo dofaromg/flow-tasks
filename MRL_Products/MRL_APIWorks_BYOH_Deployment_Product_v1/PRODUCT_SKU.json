@@ -1,0 +1,29 @@
+{
+  "schema": "MRL_Product_SKU_v1",
+  "sku": "MRL-APIWORKS-BYOH-DEPLOY-V1",
+  "canonical_id": "MRL_APIWorks_BYOH_Deployment_Product_v1",
+  "origin_signature": "MrLiouWord",
+  "offering_type": "SOFTWARE_DEPLOYMENT_AND_ACCEPTANCE_SERVICE",
+  "commercial_model": "CUSTOM_QUOTE_BY_SIGNED_ORDER_FORM",
+  "license_scope": {
+    "customer_organizations": 1,
+    "production_nodes": 1,
+    "transferable": false,
+    "redistribution": false
+  },
+  "included": [
+    "MRL_APIWorks_RUNTIME",
+    "ONE_BYOH_NODE_CONFIGURATION",
+    "REAL_LOCAL_MODEL_ACCEPTANCE",
+    "MEMORY_EVIDENCE_PASSPORT_CHAIN",
+    "THIRTY_DAY_INSTALLATION_STABILIZATION"
+  ],
+  "excluded": [
+    "HARDWARE",
+    "THIRD_PARTY_MODEL_WEIGHTS",
+    "PUBLIC_MANAGED_HOSTING",
+    "PAYMENT_PROCESSING",
+    "MULTI_NODE_HIGH_AVAILABILITY"
+  ]
+}
+

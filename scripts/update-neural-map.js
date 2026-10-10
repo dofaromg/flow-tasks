@@ -16,7 +16,7 @@ function toMRLNodeId(sourceIdentity) {
     if (!suffix) {
       throw new Error('MRL naming requires content after the Mrliou_MRL_ prefix');
     }
-    return `${MRL_NAMING_PREFIX}Mrliou_${suffix}`;
+    return trimmed;
   }
 
   if (/^MRL_/i.test(trimmed)) {
