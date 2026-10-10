@@ -1,0 +1,47 @@
+name: Module-A Container Smoke
+
+on:
+  pull_request:
+    paths:
+      - 'apps/module-a/**'
+      - 'apps/common/**'
+      - '.github/workflows/ci-build.yml'
+      - '.github/workflows/module-a-container-smoke.yml'
+      - 'scripts/verify_module_a_container.py'
+      - 'tests/test_module_a_runtime.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  container-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact proposed head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Test with real Flask
+        run: |
+          set -o pipefail
+          mkdir -p evidence
+          python -m pip install -r apps/module-a/requirements.txt pytest
+          python -m pip freeze > evidence/python-packages.txt
+          python -m pytest -v tests/test_module_a_runtime.py --junitxml=evidence/flask.xml 2>&1 | tee evidence/flask.log
+      - name: Build, start and test HTTP without publishing
+        run: python scripts/verify_module_a_container.py --report evidence/container.json
+      - name: Preserve complete validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: module-a-container-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/
+          if-no-files-found: error
+          retention-days: 30
