@@ -78,3 +78,21 @@ hash; this scoped note records the change without unrelated manifest rewrites.
 Rollback the follow-up commit(s) only; preserve PR #664 and its FlowGate fixes.
 File-delivery completeness, runtime tests, container tests and deployment status
 are separate results. Owner retains final review and merge decisions.
+
+## Cloud container acceptance — 2026-10-11 06:35 Asia/Taipei
+
+GitHub run [38091950000](https://github.com/dofaromg/flow-tasks/actions/runs/38091950000)
+tested exact source commit `f870606e274a5d74a4d8fa42648602da926762ad`.
+Real Flask 3.1.3 / Python 3.10.22: **20/20 PASS**. Docker 28.0.4:
+**build PASS, container startup PASS, 16 HTTP checks PASS**. All five imported
+runtime source/requirements files matched their repository SHA-256 values.
+Container image ID:
+`sha256:bb955c08eab39634906a588a8bbda6d176a0efdfe540bbfaab02457a8fc9768c`.
+
+The adjacent JSON now appends the complete four-file cloud artifact contents
+(container report, pytest log, JUnit XML and installed packages), verified against
+the ZIP digest `b1f1f3b24aa67400a843b95db139443fd14cce4be27cc2c61cd14af4d8d72e79`.
+This keeps the full evidence in Git after the Actions artifact expires.
+The subsequent evidence-only commit changes this note and JSON; runtime, Docker,
+workflow and test bytes remain identical to the tested source commit.
+**Production deployment acceptance remains NOT PERFORMED.**
