@@ -8,12 +8,14 @@ on:
       - 'package.json'
       - 'tsconfig.json'
       - 'jest.config.js'
+      - '.github/workflows/webgpu-neural-network-ci.yml'
   pull_request:
     paths:
       - 'src/**'
       - 'package.json'
       - 'tsconfig.json'
       - 'jest.config.js'
+      - '.github/workflows/webgpu-neural-network-ci.yml'
 
 jobs:
   lint:
@@ -73,14 +75,9 @@ jobs:
       - name: Run Jest tests
         run: npm test -- --coverage --ci
       
-      - name: Upload coverage reports
-        uses: codecov/codecov-action@v4
-        if: always()
-        with:
-          file: ./coverage/lcov.info
-          flags: unittests
-          name: webgpu-neural-network
-          fail_ci_if_error: false
+      # Coverage remains in the GitHub-owned test-results artifact below.
+      # Do not add third-party actions unless the repository action policy is
+      # explicitly reviewed and updated by the owner.
       
       - name: Archive test results
         if: always()
@@ -157,10 +154,10 @@ jobs:
         run: npm ci
       
       - name: Run integration tests
-        run: npm test -- --testPathPattern=integration.test.ts
+        run: npm test -- --testPathPatterns=integration.test.ts
       
-      - name: Generate summary
-        if: always()
+      - name: Generate success summary
+        if: success()
         run: |
           echo "## WebGPU Neural Network Integration Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY

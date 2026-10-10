@@ -1,0 +1,14 @@
+README.md
+MANIFEST.json
+PRODUCT_SKU.json
+SHA256SUMS.txt
+EXPECTED_FILE_LIST.txt
+docs/MRL_PRODUCT_SPEC_v1.md
+docs/MRL_DELIVERY_ACCEPTANCE_v1.md
+docs/MRL_SUPPORT_SCOPE_v1.md
+docs/MRL_ORDER_FORM_v1.md
+docs/MRL_DATA_BOUNDARY_v1.md
+scripts/MRL_build_product_bundle_v1.py
+scripts/MRL_verify_product_source_v1.py
+tests/test_product_bundle.py
+

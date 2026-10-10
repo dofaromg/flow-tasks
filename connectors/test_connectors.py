@@ -3,6 +3,11 @@ Tests for refactored connectors
 連接器重構測試
 """
 
+import json
+from pathlib import Path
+import subprocess
+import sys
+
 import pytest
 from unittest.mock import Mock, patch, MagicMock
 import requests
@@ -16,6 +21,7 @@ from .google_drive_connector import GoogleDriveConnector
 from .huggingface_connector import HuggingFaceConnector
 from .vercel_connector import VercelConnector
 from .icloud_connector import ICloudConnector
+from .connector_manager import ConnectorManager, main
 
 
 class TestBaseConnectorSharedMethods:
@@ -230,6 +236,200 @@ class TestICloudConnector:
         connector = ICloudConnector(config)
         guidelines = connector.get_security_guidelines()
         assert "icloud_specific" in guidelines
+
+
+class TestConnectorManager:
+    """Test orchestration across all configured cloud spaces."""
+
+    def test_loads_auth_types_and_icloud_credentials_from_environment(
+        self, tmp_path, monkeypatch
+    ):
+        config_path = tmp_path / "connectors.yaml"
+        config_path.write_text(
+            """
+version: '1.0'
+connectors:
+  github:
+    enabled: true
+    auth_type: api_key
+  icloud:
+    enabled: true
+    auth_type: basic_auth
+global:
+  connection_timeout: 12
+  retry_attempts: 2
+""",
+            encoding="utf-8",
+        )
+        monkeypatch.setenv("ICLOUD_USERNAME", "cloud@example.com")
+        monkeypatch.setenv("ICLOUD_APP_PASSWORD", "app-password")
+
+        manager = ConnectorManager(str(config_path))
+
+        assert manager.connectors["github"].config.auth_type.value == "api_key"
+        assert manager.connectors["github"].config.timeout == 12
+        assert manager.connectors["icloud"].config.credentials == {
+            "username": "cloud@example.com",
+            "app_password": "app-password",
+        }
+
+    @pytest.mark.parametrize("include_disabled", [False, True])
+    def test_connect_all_only_attempts_enabled_connectors(
+        self, tmp_path, include_disabled
+    ):
+        manager = ConnectorManager(str(tmp_path / "connectors.yaml"))
+        for connector in manager.connectors.values():
+            connector.authenticate = Mock(return_value=False)
+        github = manager.connectors["github"]
+        github.config.enabled = True
+
+        results = manager.connect_all(include_disabled=include_disabled)
+
+        github.authenticate.assert_called_once_with()
+        assert "skipped" not in results["github"]
+        assert set(results) == set(manager.SUPPORTED_SERVICES)
+        for service, connector in manager.connectors.items():
+            if service != "github":
+                connector.authenticate.assert_not_called()
+                assert results[service]["skipped"] is True
+                assert results[service]["reason"] == "disabled"
+
+    def test_sync_all_runs_only_sync_enabled_connectors(self, tmp_path):
+        manager = ConnectorManager(str(tmp_path / "connectors.yaml"))
+        github = manager.connectors["github"]
+        github.config.enabled = True
+        github.config.sync_enabled = True
+        github.sync_data = Mock(return_value={"success": True, "direction": "push"})
+
+        results = manager.sync_all("push")
+
+        github.sync_data.assert_called_once_with("push")
+        assert results["github"]["success"] is True
+        assert results["notion"]["reason"] == "disabled"
+
+    def test_sync_all_rejects_unknown_direction(self, tmp_path):
+        manager = ConnectorManager(str(tmp_path / "connectors.yaml"))
+
+        with pytest.raises(ValueError, match="Unsupported sync direction"):
+            manager.sync_all("sideways")
+
+
+class TestConnectorAudit:
+    """Audit inventory must not activate disabled cloud services."""
+
+    @pytest.fixture
+    def manager(self, tmp_path):
+        # Keep audit tests independent of any real credentials in the environment.
+        with patch.object(ConnectorManager, "_load_env_credentials"):
+            return ConnectorManager(str(tmp_path / "connectors.yaml"))
+
+    @pytest.mark.parametrize("include_disabled", [False, True])
+    @pytest.mark.parametrize("configured", [False, True])
+    def test_disabled_inventory_preserves_status_without_authentication(
+        self, manager, include_disabled, configured
+    ):
+        expected = {}
+        for service, connector in manager.connectors.items():
+            if configured:
+                connector.config.credentials = {
+                    connector.credential_key: "test-token",
+                    "username": "test@example.com",
+                }
+            connector.health.status = ConnectorStatus.ERROR
+            connector.health.error_message = "Previous check failed"
+            connector.authenticate = Mock()
+            expected[service] = {
+                **connector.get_status_report(),
+                "skipped": True,
+                "reason": "disabled",
+            }
+
+        results = manager.connect_all(include_disabled=include_disabled)
+
+        assert results == expected
+        for connector in manager.connectors.values():
+            connector.authenticate.assert_not_called()
+
+    @pytest.mark.parametrize("enabled, expected_exit", [(False, 0), (True, 1)])
+    def test_audit_command_without_credentials(self, tmp_path, enabled, expected_exit):
+        config_path = tmp_path / "connectors.yaml"
+        config_path.write_text(
+            f"connectors:\n  github:\n    enabled: {str(enabled).lower()}\n",
+            encoding="utf-8",
+        )
+        result = subprocess.run(
+            [
+                sys.executable, "-m", "connectors.connector_manager",
+                "--connect-all", "--include-disabled", "--strict", "--json",
+                "--config", str(config_path),
+            ],
+            cwd=Path(__file__).resolve().parents[1],
+            env={},
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+
+        assert result.returncode == expected_exit
+        inventory = json.loads(result.stdout)
+        assert set(inventory) == set(ConnectorManager.SUPPORTED_SERVICES)
+        for service, report in inventory.items():
+            assert report["status"] == "not_configured"
+            if service == "github" and enabled:
+                assert report["enabled"] is True
+                assert not report.get("skipped")
+            else:
+                assert report["enabled"] is False
+                assert report["skipped"] is True
+                assert report["reason"] == "disabled"
+
+    @pytest.mark.parametrize("strict", [False, True])
+    @pytest.mark.parametrize("outcome", ["connected", "unauthorized", "timeout", "exception"])
+    def test_enabled_verification_controls_exit_status(
+        self, manager, monkeypatch, capsys, strict, outcome
+    ):
+        github = manager.connectors["github"]
+        github.config.enabled = True
+        github.config.credentials = {"token": "test-token"}
+        argv = ["connector_manager", "--connect-all", "--include-disabled", "--json"]
+        if strict:
+            argv.append("--strict")
+        monkeypatch.setattr(sys, "argv", argv)
+
+        response = Mock(status_code=200 if outcome == "connected" else 401)
+        response.text = '{"login": "testuser"}'
+        response.json.return_value = {"login": "testuser"}
+        response.headers = {}
+        if outcome == "exception":
+            github.authenticate = Mock(side_effect=RuntimeError("Test auth error"))
+        with (
+            patch("connectors.connector_manager.ConnectorManager", return_value=manager),
+            patch("connectors.base_connector.requests.request", return_value=response) as request,
+        ):
+            if outcome == "timeout":
+                request.side_effect = requests.exceptions.Timeout()
+            if strict and outcome != "connected":
+                with pytest.raises(SystemExit) as exc:
+                    main()
+                assert exc.value.code == 1
+            else:
+                main()
+            if outcome == "exception":
+                github.authenticate.assert_called_once_with()
+                request.assert_not_called()
+            else:
+                request.assert_called_once()
+
+        inventory = json.loads(capsys.readouterr().out)
+        assert set(inventory) == set(manager.SUPPORTED_SERVICES)
+        assert inventory["github"]["status"] == (
+            "connected" if outcome == "connected" else "error"
+        )
+        assert not inventory["github"].get("skipped")
+        assert all(
+            report.get("skipped")
+            for service, report in inventory.items() if service != "github"
+        )
 
 
 class TestDefaultSyncData:

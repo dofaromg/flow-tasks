@@ -12,6 +12,7 @@ from pathlib import Path
 copilot_dir = Path(__file__).parent / '.copilot'
 sys.path.insert(0, str(copilot_dir))
 
+from Mrliou_structure_authorization import authorize, exact_path
 from scanner.structure_scanner import StructureScanner
 from generator.emoji_indexer import EmojiIndexer
 from triggers.smart_updater import SmartUpdater
@@ -31,10 +32,12 @@ def run_full_scan(root_path: str = '.', max_depth: int = 8, check_triggers: bool
     print("=" * 60)
     print()
     
+    authorize({'structure.scan', 'structure.generate'}, max_depth)
+    exact_path(root_path, '.')
     # 檢查是否需要更新（如果啟用）
     if check_triggers:
         print("🔍 檢查更新觸發條件...")
-        updater = SmartUpdater(root_path=root_path)
+        updater = SmartUpdater(root_path=root_path, max_depth=max_depth)
         should_trigger, reasons = updater.should_trigger_update()
         
         if not should_trigger:
@@ -62,7 +65,7 @@ def run_full_scan(root_path: str = '.', max_depth: int = 8, check_triggers: bool
     print("=" * 60)
     print()
     
-    indexer = EmojiIndexer(scan_data=scan_results)
+    indexer = EmojiIndexer(scan_data=scan_results, max_depth=max_depth)
     indexer.generate_all(base_dir=root_path)
     
     # 完成

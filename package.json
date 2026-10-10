@@ -13,7 +13,9 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "build:cloudflare": "opennextjs-cloudflare build",
+    "check:cloudflare": "wrangler deploy --dry-run"
   },
   "dependencies": {
     "@flags-sdk/growthbook": "0.2.0",
@@ -22,11 +24,12 @@
     "flags": "^4.0.0",
     "mongodb": "^7.2.0",
     "nanoid": "5.1.2",
-    "next": "^15.5.14",
+    "next": "^15.5.24",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "1.20.6",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.8",
@@ -40,6 +43,7 @@
     "jest-environment-jsdom": "^30.2.0",
     "puppeteer": "^25.1.0",
     "ts-jest": "^29.4.6",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wrangler": "4.130.0"
   }
 }

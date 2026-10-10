@@ -8,6 +8,15 @@ export function toMRLNodeId(sourceIdentity: string): string {
   }
 
   const trimmed = sourceIdentity.trim();
+  const ownedPrefix = 'Mrliou_MRL_';
+  if (trimmed.toLowerCase().startsWith(ownedPrefix.toLowerCase())) {
+    const suffix = trimmed.slice(ownedPrefix.length);
+    if (!suffix) {
+      throw new Error('MRL naming requires content after the Mrliou_MRL_ prefix');
+    }
+    return trimmed;
+  }
+
   if (/^MRL_/i.test(trimmed)) {
     const suffix = trimmed.slice(MRL_NAMING_PREFIX.length);
     if (!suffix) {

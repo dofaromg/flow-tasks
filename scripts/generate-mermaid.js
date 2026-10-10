@@ -18,13 +18,17 @@ function validateMRLNaming(data) {
   const ids = new Set();
   const mermaidIds = new Map();
   nodes.forEach(node => {
-    if (typeof node.id !== 'string' || !node.id.startsWith('MRL_')) {
-      throw new Error(`MRL naming violation: node id "${node.id}" must start with MRL_`);
+    if (typeof node.id !== 'string' || !(/^(MRL_|Mrliou_MRL_)/i.test(node.id))) {
+      throw new Error(`MRL naming violation: node id "${node.id}" must use MRL_ or preserve Mrliou_MRL_`);
     }
     if (typeof node.source_branch !== 'string' || !node.source_branch) {
       throw new Error(`MRL provenance violation: node "${node.id}" is missing source_branch`);
     }
 
+    // Independent authority invariant: do not let a shared normalizer bless a rename.
+    if (/^Mrliou_MRL_/i.test(node.source_branch) && node.id !== node.source_branch) {
+      throw new Error(`MRL authority violation: preserve source name "${node.source_branch}" exactly`);
+    }
     const expectedId = toMRLNodeId(node.source_branch);
     if (node.id !== expectedId) {
       throw new Error(`MRL provenance violation: node "${node.id}" does not match source_branch "${node.source_branch}" (expected "${expectedId}")`);

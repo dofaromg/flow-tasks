@@ -1,0 +1,60 @@
+name: MRL APIWorks Commercial Closure Pack
+
+on:
+  pull_request:
+    paths:
+      - "MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/**"
+      - ".github/workflows/mrl-apiworks-commercial-closure.yml"
+      - ".github/workflows/mrl-apiworks-production-delivery.yml"
+  push:
+    branches: [main]
+    paths:
+      - "MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/**"
+      - ".github/workflows/mrl-apiworks-commercial-closure.yml"
+      - ".github/workflows/mrl-apiworks-production-delivery.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-commercial-closure-pack:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify package integrity
+        run: python MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/scripts/MRL_verify_commercial_closure_pack_v1.py
+      - name: Run package tests
+        run: python -m unittest discover -s MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/tests -v
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install locked browser dependency
+        run: npm ci
+      - name: Install Traditional Chinese rendering font
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes fonts-noto-cjk
+      - name: Build evidence entry from checked-out commit
+        run: |
+          python MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/scripts/Mrliou_MRL_build_evidence_entry_v1.py \
+            --output "${RUNNER_TEMP}/Mrliou_MRL_APIWorks_Evidence_Entry"
+      - name: Render desktop and mobile browser evidence
+        run: |
+          node MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/scripts/Mrliou_MRL_browser_acceptance_v1.mjs \
+            --input "${RUNNER_TEMP}/Mrliou_MRL_APIWorks_Evidence_Entry" \
+            --output "${RUNNER_TEMP}/Mrliou_MRL_APIWorks_Browser_Evidence"
+      - name: Independently verify browser evidence
+        run: |
+          node MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/scripts/Mrliou_MRL_browser_acceptance_v1.mjs \
+            --verify-only "${RUNNER_TEMP}/Mrliou_MRL_APIWorks_Browser_Evidence"
+      - name: Upload browser acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mrliou_MRL_APIWorks_Browser_Evidence
+          path: ${{ runner.temp }}/Mrliou_MRL_APIWorks_Browser_Evidence
+          if-no-files-found: error
+          retention-days: 30

@@ -14,11 +14,14 @@ describe('BranchNeuralSystem', () => {
     it('adds the MRL_ prefix and preserves the exact source identity', () => {
       expect(toMRLNodeId('feature/example')).toBe('MRL_feature/example');
       expect(toMRLNodeId('mrl_existing')).toBe('MRL_existing');
+      expect(toMRLNodeId('Mrliou_MRL_SourceToProduct_ParallelLink_v1'))
+        .toBe('Mrliou_MRL_SourceToProduct_ParallelLink_v1');
     });
 
     it('rejects an empty canonical identity', () => {
       expect(() => toMRLNodeId('')).toThrow('non-empty source identity');
       expect(() => toMRLNodeId('MRL_')).toThrow('content after the MRL_ prefix');
+      expect(() => toMRLNodeId('Mrliou_MRL_')).toThrow('content after the Mrliou_MRL_ prefix');
     });
   });
 
