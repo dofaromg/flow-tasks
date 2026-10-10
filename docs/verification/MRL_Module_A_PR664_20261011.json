@@ -1,0 +1,280 @@
+{
+  "origin_signature": "MrLiouWord",
+  "source_parent": "d9acaa56fecb4593484a87c17b7384c3bf44f4fb",
+  "checked_at": "2026-10-10T22:33:16.201558+00:00",
+  "Expected_File_List": [
+    ".github/workflows/ci-build.yml",
+    ".github/workflows/module-a-container-smoke.yml",
+    "apps/module-a/Dockerfile",
+    "apps/module-a/app.py",
+    "tests/test_module_a_runtime.py",
+    "scripts/verify_module_a_container.py",
+    "docs/verification/MRL_Module_A_PR664_20261011.md",
+    "docs/verification/MRL_Module_A_PR664_20261011.json"
+  ],
+  "commands": [
+    {
+      "command": [
+        "/workspace/scratch/64c2b0161608/module-a-venv/bin/python",
+        "-m",
+        "pip",
+        "freeze"
+      ],
+      "cwd": "/workspace/scratch/64c2b0161608/flow-tasks",
+      "exit_code": 0,
+      "stdout": "blinker==1.9.0\nclick==8.5.0\nFlask==3.0.3\ngunicorn==26.2.0\niniconfig==2.3.1\nitsdangerous==2.2.0\nJinja2==3.1.6\nMarkupSafe==3.0.4\npackaging==26.3\npluggy==1.6.0\npytest==8.3.5\nWerkzeug==3.1.9\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/scratch/64c2b0161608/module-a-venv/bin/python",
+        "-m",
+        "pytest",
+        "-v",
+        "--color=no",
+        "--tb=short",
+        "tests/test_module_a_runtime.py"
+      ],
+      "cwd": "/tmp/module-a-baseline-tjl5x_0z",
+      "exit_code": 1,
+      "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.12.14, pytest-8.3.5, pluggy-1.6.0 -- /workspace/scratch/64c2b0161608/module-a-venv/bin/python\ncachedir: .pytest_cache\nrootdir: /tmp/module-a-baseline-tjl5x_0z\ncollecting ... collected 20 items\n\ntests/test_module_a_runtime.py::test_real_flask_and_unique_routes PASSED [  5%]\ntests/test_module_a_runtime.py::test_health_and_info PASSED              [ 10%]\ntests/test_module_a_runtime.py::test_info_hides_database_credentials PASSED [ 15%]\ntests/test_module_a_runtime.py::test_compute[MRL MRL \\u4e16\\u754c-3-2] PASSED [ 20%]\ntests/test_module_a_runtime.py::test_compute[-0-0] PASSED                [ 25%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[{}] PASSED [ 30%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[{\"text\":null}] PASSED [ 35%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[{\"text\":123}] PASSED [ 40%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[{\"text\":[]}] PASSED [ 45%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[{\"text\":{}}] PASSED [ 50%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[null] PASSED [ 55%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[[]] PASSED [ 60%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[[\"private-input\"]] FAILED [ 65%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[\"private-input\"] FAILED [ 70%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[42] FAILED [ 75%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[true] FAILED [ 80%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[{\"text\":] PASSED [ 85%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[] PASSED [ 90%]\ntests/test_module_a_runtime.py::test_non_json_input_is_generic_400 PASSED [ 95%]\ntests/test_module_a_runtime.py::test_unexpected_error_is_logged_but_not_returned PASSED [100%]\n\n=================================== FAILURES ===================================\n_____________ test_invalid_input_is_generic_400[[\"private-input\"]] _____________\ntests/test_module_a_runtime.py:83: in test_invalid_input_is_generic_400\n    response = module.app.test_client().post(\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:1171: in post\n    return self.open(*args, **kw)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/testing.py:235: in open\n    response = super().open(\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:1120: in open\n    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:992: in run_wsgi_app\n    rv = run_wsgi_app(self.application, environ, buffered=buffered)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:1268: in run_wsgi_app\n    app_rv = app(environ, start_response)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:1498: in __call__\n    return self.wsgi_app(environ, start_response)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:1476: in wsgi_app\n    response = self.handle_exception(e)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:1473: in wsgi_app\n    response = self.full_dispatch_request()\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:882: in full_dispatch_request\n    rv = self.handle_user_exception(e)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:880: in full_dispatch_request\n    rv = self.dispatch_request()\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:865: in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\napps/module-a/app.py:28: in compute\n    result = core.compute_particle(data.get('text'))\nE   AttributeError: 'list' object has no attribute 'get'\n______________ test_invalid_input_is_generic_400[\"private-input\"] ______________\ntests/test_module_a_runtime.py:83: in test_invalid_input_is_generic_400\n    response = module.app.test_client().post(\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:1171: in post\n    return self.open(*args, **kw)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/testing.py:235: in open\n    response = super().open(\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:1120: in open\n    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:992: in run_wsgi_app\n    rv = run_wsgi_app(self.application, environ, buffered=buffered)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:1268: in run_wsgi_app\n    app_rv = app(environ, start_response)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:1498: in __call__\n    return self.wsgi_app(environ, start_response)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:1476: in wsgi_app\n    response = self.handle_exception(e)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:1473: in wsgi_app\n    response = self.full_dispatch_request()\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:882: in full_dispatch_request\n    rv = self.handle_user_exception(e)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:880: in full_dispatch_request\n    rv = self.dispatch_request()\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:865: in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\napps/module-a/app.py:28: in compute\n    result = core.compute_particle(data.get('text'))\nE   AttributeError: 'str' object has no attribute 'get'\n____________________ test_invalid_input_is_generic_400[42] _____________________\ntests/test_module_a_runtime.py:83: in test_invalid_input_is_generic_400\n    response = module.app.test_client().post(\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:1171: in post\n    return self.open(*args, **kw)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/testing.py:235: in open\n    response = super().open(\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:1120: in open\n    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:992: in run_wsgi_app\n    rv = run_wsgi_app(self.application, environ, buffered=buffered)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:1268: in run_wsgi_app\n    app_rv = app(environ, start_response)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:1498: in __call__\n    return self.wsgi_app(environ, start_response)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:1476: in wsgi_app\n    response = self.handle_exception(e)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:1473: in wsgi_app\n    response = self.full_dispatch_request()\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:882: in full_dispatch_request\n    rv = self.handle_user_exception(e)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:880: in full_dispatch_request\n    rv = self.dispatch_request()\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:865: in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\napps/module-a/app.py:28: in compute\n    result = core.compute_particle(data.get('text'))\nE   AttributeError: 'int' object has no attribute 'get'\n___________________ test_invalid_input_is_generic_400[true] ____________________\ntests/test_module_a_runtime.py:83: in test_invalid_input_is_generic_400\n    response = module.app.test_client().post(\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:1171: in post\n    return self.open(*args, **kw)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/testing.py:235: in open\n    response = super().open(\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:1120: in open\n    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:992: in run_wsgi_app\n    rv = run_wsgi_app(self.application, environ, buffered=buffered)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/werkzeug/test.py:1268: in run_wsgi_app\n    app_rv = app(environ, start_response)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:1498: in __call__\n    return self.wsgi_app(environ, start_response)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:1476: in wsgi_app\n    response = self.handle_exception(e)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:1473: in wsgi_app\n    response = self.full_dispatch_request()\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:882: in full_dispatch_request\n    rv = self.handle_user_exception(e)\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:880: in full_dispatch_request\n    rv = self.dispatch_request()\n/workspace/scratch/64c2b0161608/module-a-venv/lib/python3.12/site-packages/flask/app.py:865: in dispatch_request\n    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]\napps/module-a/app.py:28: in compute\n    result = core.compute_particle(data.get('text'))\nE   AttributeError: 'bool' object has no attribute 'get'\n=========================== short test summary info ============================\nFAILED tests/test_module_a_runtime.py::test_invalid_input_is_generic_400[[\"private-input\"]]\nFAILED tests/test_module_a_runtime.py::test_invalid_input_is_generic_400[\"private-input\"]\nFAILED tests/test_module_a_runtime.py::test_invalid_input_is_generic_400[42]\nFAILED tests/test_module_a_runtime.py::test_invalid_input_is_generic_400[true]\n========================= 4 failed, 16 passed in 0.36s =========================\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/scratch/64c2b0161608/module-a-venv/bin/python",
+        "-m",
+        "pytest",
+        "-v",
+        "--color=no",
+        "tests/test_module_a_runtime.py"
+      ],
+      "cwd": "/workspace/scratch/64c2b0161608/flow-tasks",
+      "exit_code": 0,
+      "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.12.14, pytest-8.3.5, pluggy-1.6.0 -- /workspace/scratch/64c2b0161608/module-a-venv/bin/python\ncachedir: .pytest_cache\nrootdir: /workspace/scratch/64c2b0161608/flow-tasks\nconfigfile: pytest.ini\ncollecting ... collected 20 items\n\ntests/test_module_a_runtime.py::test_real_flask_and_unique_routes PASSED [  5%]\ntests/test_module_a_runtime.py::test_health_and_info PASSED              [ 10%]\ntests/test_module_a_runtime.py::test_info_hides_database_credentials PASSED [ 15%]\ntests/test_module_a_runtime.py::test_compute[MRL MRL \\u4e16\\u754c-3-2] PASSED [ 20%]\ntests/test_module_a_runtime.py::test_compute[-0-0] PASSED                [ 25%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[{}] PASSED [ 30%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[{\"text\":null}] PASSED [ 35%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[{\"text\":123}] PASSED [ 40%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[{\"text\":[]}] PASSED [ 45%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[{\"text\":{}}] PASSED [ 50%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[null] PASSED [ 55%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[[]] PASSED [ 60%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[[\"private-input\"]] PASSED [ 65%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[\"private-input\"] PASSED [ 70%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[42] PASSED [ 75%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[true] PASSED [ 80%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[{\"text\":] PASSED [ 85%]\ntests/test_module_a_runtime.py::test_invalid_input_is_generic_400[] PASSED [ 90%]\ntests/test_module_a_runtime.py::test_non_json_input_is_generic_400 PASSED [ 95%]\ntests/test_module_a_runtime.py::test_unexpected_error_is_logged_but_not_returned PASSED [100%]\n\n============================== 20 passed in 0.18s ==============================\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/scratch/64c2b0161608/module-a-venv/bin/python",
+        "-m",
+        "py_compile",
+        "apps/module-a/app.py",
+        "scripts/verify_module_a_container.py",
+        "tests/test_module_a_runtime.py"
+      ],
+      "cwd": "/workspace/scratch/64c2b0161608/flow-tasks",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/scratch/64c2b0161608/module-a-venv/bin/python",
+        "scripts/verify_module_a_container.py",
+        "--report",
+        "/tmp/module-a-docker-evidence-i30fb9n6/container.json"
+      ],
+      "cwd": "/workspace/scratch/64c2b0161608/flow-tasks",
+      "exit_code": 2,
+      "stdout": "{\"command\": [\"git\", \"rev-parse\", \"HEAD\"], \"exit_code\": 0, \"stdout\": \"d9acaa56fecb4593484a87c17b7384c3bf44f4fb\\n\", \"stderr\": \"\"}\n{\"command\": [\"git\", \"status\", \"--short\"], \"exit_code\": 0, \"stdout\": \" M .github/workflows/ci-build.yml\\n M apps/module-a/Dockerfile\\n M apps/module-a/app.py\\n?? .github/workflows/module-a-container-smoke.yml\\n?? docs/verification/\\n?? scripts/verify_module_a_container.py\\n?? tests/test_module_a_runtime.py\\n\", \"stderr\": \"\"}\n{\"build\": \"UNVERIFIED\", \"container_start\": \"NOT_RUN\", \"http\": \"NOT_RUN\", \"deployment\": \"NOT_PERFORMED\", \"exit_code\": 2}\n",
+      "stderr": ""
+    }
+  ],
+  "baseline_regression": {
+    "exit_code": 1,
+    "expected": "4 failing non-object JSON cases, 16 passing",
+    "source": "d9acaa56fecb4593484a87c17b7384c3bf44f4fb"
+  },
+  "real_flask": "PASS_20_OF_20",
+  "local_container": {
+    "started_at": "2026-10-10T22:33:17.404366+00:00",
+    "origin_signature": "MrLiouWord",
+    "build": "UNVERIFIED",
+    "container_start": "NOT_RUN",
+    "http": "NOT_RUN",
+    "deployment": "NOT_PERFORMED",
+    "commands": [
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "exit_code": 0,
+        "stdout": "d9acaa56fecb4593484a87c17b7384c3bf44f4fb\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "status",
+          "--short"
+        ],
+        "exit_code": 0,
+        "stdout": " M .github/workflows/ci-build.yml\n M apps/module-a/Dockerfile\n M apps/module-a/app.py\n?? .github/workflows/module-a-container-smoke.yml\n?? docs/verification/\n?? scripts/verify_module_a_container.py\n?? tests/test_module_a_runtime.py\n",
+        "stderr": ""
+      }
+    ],
+    "http_checks": [],
+    "source_commit": "d9acaa56fecb4593484a87c17b7384c3bf44f4fb",
+    "working_tree": " M .github/workflows/ci-build.yml\n M apps/module-a/Dockerfile\n M apps/module-a/app.py\n?? .github/workflows/module-a-container-smoke.yml\n?? docs/verification/\n?? scripts/verify_module_a_container.py\n?? tests/test_module_a_runtime.py\n",
+    "source_sha256": {
+      "apps/module-a/Dockerfile": "cdaa422505bc3db044adcf277324e62a807958e850f55fd315454be482b3592d",
+      "apps/module-a/app.py": "d76356405392b56dfb3b3c01a68202ea0ec87f598df82c97c16ad7072bf32969",
+      "apps/module-a/core.py": "ab61c8ec5bfc7659f9ebf34b53f8131d672e8ab464416356b02f262ff40b77d3",
+      "apps/module-a/requirements.txt": "968aa7017c73e16efbd0ea0b96315f160330a4e6e8107e23046966d8e31fe670",
+      "apps/common/__init__.py": "ec51ced5a1568b298a7d27626a75d3d2dca16bdf18e581625e6dbc8f369f7e7c",
+      "apps/common/flask_utils.py": "01530c8d2c6bde1134629b743ba10926ec7d72a1a414c945ad807e50c78f1102"
+    },
+    "reason": "Docker CLI is not installed; no Docker build or container ran.",
+    "finished_at": "2026-10-10T22:33:17.423178+00:00",
+    "exit_code": 2
+  },
+  "local_http": {
+    "status": "PASS",
+    "mode": "actual python app.py subprocess / loopback HTTP (not Docker)",
+    "checks": [
+      {
+        "method": "GET",
+        "path": "/health",
+        "request_body": null,
+        "status": 200,
+        "response_body": "{\"status\":\"healthy\"}\n"
+      },
+      {
+        "method": "GET",
+        "path": "/info",
+        "request_body": null,
+        "status": 200,
+        "response_body": "{\"capabilities\":[\"compute_particle\",\"tokenize\",\"simhash64\",\"particle_score\"],\"environment\":\"http-smoke\",\"origin_signature\":\"MrLiouWord\",\"service\":\"module-a\",\"version\":\"2.0.0\"}\n"
+      },
+      {
+        "method": "POST",
+        "path": "/compute",
+        "request_body": "{\"text\":\"MRL MRL 世界\"}",
+        "status": 200,
+        "response_body": "{\"ok\":true,\"result\":{\"char_count\":10,\"origin_signature\":\"MrLiouWord\",\"particle_score\":1.333333,\"sha256\":\"95dd263eab9fca9bbd2adbe8b67686690906d289f5ee2b8b1b14c43083085eea\",\"simhash64\":\"5b12fcbdbc16c022\",\"token_count\":3,\"unique_tokens\":2}}\n"
+      },
+      {
+        "method": "POST",
+        "path": "/compute",
+        "request_body": "[\"private-input\"]",
+        "status": 400,
+        "response_body": "{\"error\":\"invalid_input\",\"ok\":false}\n"
+      },
+      {
+        "method": "POST",
+        "path": "/compute",
+        "request_body": "\"private-input\"",
+        "status": 400,
+        "response_body": "{\"error\":\"invalid_input\",\"ok\":false}\n"
+      },
+      {
+        "method": "POST",
+        "path": "/compute",
+        "request_body": "{\"text\":123}",
+        "status": 400,
+        "response_body": "{\"error\":\"invalid_input\",\"ok\":false}\n"
+      },
+      {
+        "method": "POST",
+        "path": "/compute",
+        "request_body": "{\"text\":",
+        "status": 400,
+        "response_body": "{\"error\":\"invalid_input\",\"ok\":false}\n"
+      }
+    ]
+  },
+  "local_server": {
+    "command": [
+      "/workspace/scratch/64c2b0161608/module-a-venv/bin/python",
+      "app.py"
+    ],
+    "stdout": " * Serving Flask app 'app'\n * Debug mode: off\n",
+    "stderr": "INFO:__main__:Starting module-a on port 41343\nINFO:werkzeug:\u001b[31m\u001b[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.\u001b[0m\n * Running on all addresses (0.0.0.0)\n * Running on http://127.0.0.1:41343\n * Running on http://127.0.0.1:41343\nINFO:werkzeug:\u001b[33mPress CTRL+C to quit\u001b[0m\nINFO:werkzeug:127.0.0.1 - - [10/Oct/2026 15:33:17] \"GET /health HTTP/1.1\" 200 -\nINFO:werkzeug:127.0.0.1 - - [10/Oct/2026 15:33:17] \"GET /health HTTP/1.1\" 200 -\nINFO:werkzeug:127.0.0.1 - - [10/Oct/2026 15:33:17] \"GET /info HTTP/1.1\" 200 -\nINFO:__main__:computed particle: tokens=3\nINFO:werkzeug:127.0.0.1 - - [10/Oct/2026 15:33:17] \"POST /compute HTTP/1.1\" 200 -\nINFO:werkzeug:127.0.0.1 - - [10/Oct/2026 15:33:17] \"\u001b[31m\u001b[1mPOST /compute HTTP/1.1\u001b[0m\" 400 -\nINFO:werkzeug:127.0.0.1 - - [10/Oct/2026 15:33:17] \"\u001b[31m\u001b[1mPOST /compute HTTP/1.1\u001b[0m\" 400 -\nINFO:__main__:compute rejected: text_must_be_string\nINFO:werkzeug:127.0.0.1 - - [10/Oct/2026 15:33:17] \"\u001b[31m\u001b[1mPOST /compute HTTP/1.1\u001b[0m\" 400 -\nINFO:__main__:compute rejected: text_must_be_string\nINFO:werkzeug:127.0.0.1 - - [10/Oct/2026 15:33:17] \"\u001b[31m\u001b[1mPOST /compute HTTP/1.1\u001b[0m\" 400 -\n",
+    "stop": "terminated after tests"
+  },
+  "dependency_tree": {
+    "ci-build/module-a": "apps context -> apps/module-a/Dockerfile",
+    "image": {
+      "/app/module-a/": [
+        "app.py",
+        "core.py",
+        "requirements.txt"
+      ],
+      "/app/common/": [
+        "__init__.py",
+        "flask_utils.py"
+      ],
+      "installed_dependencies": "unchanged apps/module-a/requirements.txt (Flask and gunicorn)"
+    },
+    "runtime": "app.py -> common.flask_utils + core.py -> Python standard library",
+    "verification": "real Flask pytest + Docker verifier -> PR artifact"
+  },
+  "classification": {
+    ".github/workflows/ci-build.yml": "MRL-native runtime/configuration/test/evidence",
+    ".github/workflows/module-a-container-smoke.yml": "MRL-native runtime/configuration/test/evidence",
+    "apps/module-a/Dockerfile": "MRL-native runtime/configuration/test/evidence",
+    "apps/module-a/app.py": "MRL-native runtime/configuration/test/evidence",
+    "tests/test_module_a_runtime.py": "MRL-native runtime/configuration/test/evidence",
+    "scripts/verify_module_a_container.py": "MRL-native runtime/configuration/test/evidence",
+    "docs/verification/MRL_Module_A_PR664_20261011.md": "MRL-native runtime/configuration/test/evidence",
+    "docs/verification/MRL_Module_A_PR664_20261011.json": "MRL-native runtime/configuration/test/evidence"
+  },
+  "file_evidence": [
+    {
+      "path": ".github/workflows/ci-build.yml",
+      "size": 2799,
+      "sha256": "67dc5e0d9846dbface09e9bb0f8af7ee877a610e10009ae0a93b46098d2c9fbf"
+    },
+    {
+      "path": ".github/workflows/module-a-container-smoke.yml",
+      "size": 1572,
+      "sha256": "08b5eee6ee86d8a3a324c0275b83c3f89ec77f9eb6c23d513e6e2514c75e8ff3"
+    },
+    {
+      "path": "apps/module-a/Dockerfile",
+      "size": 607,
+      "sha256": "cdaa422505bc3db044adcf277324e62a807958e850f55fd315454be482b3592d"
+    },
+    {
+      "path": "apps/module-a/app.py",
+      "size": 1766,
+      "sha256": "d76356405392b56dfb3b3c01a68202ea0ec87f598df82c97c16ad7072bf32969"
+    },
+    {
+      "path": "tests/test_module_a_runtime.py",
+      "size": 4269,
+      "sha256": "2035f6535c3716a17f5c0f3f9df31c26a40c7f1429d004624e1e0329b927cee9"
+    },
+    {
+      "path": "scripts/verify_module_a_container.py",
+      "size": 8449,
+      "sha256": "afcc31c81ce0cafa3d63de9f2cb99689c20ff1756d4574db4a156421bdf49dd1"
+    },
+    {
+      "path": "docs/verification/MRL_Module_A_PR664_20261011.md",
+      "size": 4244,
+      "sha256": "c7f9961e938fc1eddf10740bef9c46d84cadda217a59eced16e042b327f38bdf"
+    }
+  ],
+  "self_hash_location": "PR delivery audit; JSON cannot contain its own SHA-256",
+  "package_map": {
+    "type": "git follow-up branch",
+    "zip": "NOT_REQUESTED",
+    "expected_changed_file_count": 8
+  },
+  "delivery_diff": {
+    "Missing": [],
+    "Extra": [],
+    "Mismatch": [],
+    "Coverage": 100,
+    "file_gate": "DELIVERY_PASS"
+  },
+  "stages": {
+    "code_repair": "PASS_LOCAL_REAL_FLASK",
+    "container_start": "UNVERIFIED_NO_LOCAL_DOCKER",
+    "deployment": "NOT_PERFORMED"
+  }
+}
