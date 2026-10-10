@@ -8,14 +8,18 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && npm run build:pages",
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "build:cloudflare": "opennextjs-cloudflare build",
-    "check:cloudflare": "wrangler deploy --dry-run"
+    "check:cloudflare": "wrangler deploy --dry-run",
+    "build:pages": "node MRL_Public/Mrliou_MRL_APIWorks_Pages_v1/scripts/Mrliou_MRL_build_pages_v1.mjs --output out",
+    "verify:pages-source": "node MRL_Public/Mrliou_MRL_APIWorks_Pages_v1/scripts/Mrliou_MRL_verify_pages_source_v1.mjs",
+    "verify:pages": "node MRL_Public/Mrliou_MRL_APIWorks_Pages_v1/scripts/Mrliou_MRL_verify_pages_v1.mjs out",
+    "test:pages": "node --test MRL_Public/Mrliou_MRL_APIWorks_Pages_v1/tests/*.test.mjs"
   },
   "dependencies": {
     "@flags-sdk/growthbook": "0.2.0",

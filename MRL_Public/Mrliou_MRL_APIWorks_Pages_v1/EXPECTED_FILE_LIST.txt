@@ -1,0 +1,14 @@
+EXPECTED_FILE_LIST.txt
+Mrliou_MRL_Dual_Target_Change_Expected_File_List.txt
+README.md
+docs/Mrliou_MRL_Dual_Target_Deployment_v1.md
+scripts/Mrliou_MRL_build_pages_v1.mjs
+scripts/Mrliou_MRL_verify_pages_v1.mjs
+scripts/Mrliou_MRL_verify_pages_source_v1.mjs
+src/404.html
+src/_headers
+src/_redirects
+src/app.js
+src/index.html
+src/styles.css
+tests/pages_static.test.mjs
