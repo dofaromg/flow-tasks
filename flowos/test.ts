@@ -75,6 +75,27 @@ async function runTests() {
     console.error('✗ GateEngine test failed');
   }
 
+  // Test FlowGate deny-overrides: an earlier allow must not skip a later deny
+  const orderedGate = new FlowGate();
+  orderedGate.register(() => ({ allowed: true, reason: 'Early allow' }));
+  orderedGate.register((payload) => (payload.blocked ? { allowed: false, reason: 'Late deny' } : null));
+
+  const lateDenyDecision = orderedGate.evaluate({ blocked: true });
+  const earlyAllowDecision = orderedGate.evaluate({ test: true });
+  const defaultDecision = new FlowGate().evaluate({ test: true });
+
+  if (
+    !lateDenyDecision.allowed &&
+    lateDenyDecision.reason === 'Late deny' &&
+    earlyAllowDecision.allowed &&
+    earlyAllowDecision.reason === 'Early allow' &&
+    defaultDecision.allowed
+  ) {
+    console.log('✓ FlowGate deny-overrides working');
+  } else {
+    console.error('✗ FlowGate deny-overrides test failed');
+  }
+
   console.log(`\nFlowOS Neural Link System v${FLOWOS_VERSION} - Tests Complete`);
   console.log('Philosophy: 怎麼過去，就怎麼回來');
 }
