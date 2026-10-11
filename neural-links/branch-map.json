@@ -7,7 +7,7 @@
     "source_identity_field": "source_branch",
     "source_identity_mutated": false
   },
-  "updated_at": "2026-09-28T16:52:37.239Z",
+  "updated_at": "2026-10-11T05:10:54.206Z",
   "neural_network": {
     "nodes": [
       {
@@ -19,18 +19,6 @@
         "frequency_hz": 164.88,
         "status": "active",
         "energy": 1
-      },
-      {
-        "id": "MRL_System_Integration_v1",
-        "source_branch": "MRL_System_Integration_v1",
-        "naming_authority": "MRL",
-        "type": "experimental",
-        "layer": "L3",
-        "parent": "MRL_main",
-        "status": "active",
-        "energy": 0.7,
-        "merged_pr": 614,
-        "created_at": "2026-07-25T04:39:40Z"
       },
       {
         "id": "MRL_231",
@@ -121,6 +109,19 @@
         "created_at": "2026-08-28T08:10:03Z"
       },
       {
+        "id": "MRL_Legacy_Recovery_SubPR225_v1",
+        "source_branch": "MRL_Legacy_Recovery_SubPR225_v1",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "merged",
+        "energy": 0.95,
+        "merged_pr": 664,
+        "created_at": "2026-10-10T18:21:59Z",
+        "merged_at": "2026-10-11T05:10:37Z"
+      },
+      {
         "id": "MRL_Module_Implementation_v1",
         "source_branch": "MRL_Module_Implementation_v1",
         "naming_authority": "MRL",
@@ -132,6 +133,18 @@
         "merged_pr": 631,
         "created_at": "2026-08-27T08:57:48Z",
         "merged_at": "2026-08-27T19:04:30Z"
+      },
+      {
+        "id": "MRL_Origin_614_Outcome_Note_v1",
+        "source_branch": "MRL_Origin_614_Outcome_Note_v1",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7,
+        "merged_pr": 663,
+        "created_at": "2026-10-10T14:48:19Z"
       },
       {
         "id": "MRL_Outer_Automation_Fix_v1",
@@ -159,6 +172,19 @@
         "merged_at": "2026-08-06T11:51:58Z"
       },
       {
+        "id": "MRL_System_Integration_v1",
+        "source_branch": "MRL_System_Integration_v1",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "merged",
+        "energy": 0.95,
+        "merged_pr": 614,
+        "created_at": "2026-07-25T04:39:40Z",
+        "merged_at": "2026-10-10T12:35:21Z"
+      },
+      {
         "id": "MRL_auto-expansion-naming-prefix-v1",
         "source_branch": "MRL_auto-expansion-naming-prefix-v1",
         "naming_authority": "MRL",
@@ -170,6 +196,19 @@
         "merged_pr": 627,
         "created_at": "2026-08-27T02:19:49Z",
         "merged_at": "2026-08-27T03:12:10Z"
+      },
+      {
+        "id": "MRL_fix/cloud-connector-audit-skipped-20261001",
+        "source_branch": "MRL_fix/cloud-connector-audit-skipped-20261001",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "merged",
+        "energy": 0.95,
+        "merged_pr": 657,
+        "created_at": "2026-09-30T16:11:34Z",
+        "merged_at": "2026-10-10T10:26:31Z"
       },
       {
         "id": "MRL_historical_extension_recovery_v1",
@@ -204,6 +243,69 @@
         "energy": 0.7,
         "merged_pr": 615,
         "created_at": "2026-07-27T09:18:16Z"
+      },
+      {
+        "id": "MRL_Mrliou/fix-byoh-product-bundle-gate-20261009",
+        "source_branch": "Mrliou/fix-byoh-product-bundle-gate-20261009",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "merged",
+        "energy": 0.95,
+        "merged_pr": 661,
+        "created_at": "2026-10-08T16:45:45Z",
+        "merged_at": "2026-10-10T10:30:30Z"
+      },
+      {
+        "id": "MRL_Mrliou/fix-module-a-container-pr664-20261011",
+        "source_branch": "Mrliou/fix-module-a-container-pr664-20261011",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7,
+        "merged_pr": 665,
+        "created_at": "2026-10-10T22:34:40Z"
+      },
+      {
+        "id": "MRL_Mrliou/fix-structure-delivery-20261001",
+        "source_branch": "Mrliou/fix-structure-delivery-20261001",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "merged",
+        "energy": 0.95,
+        "merged_pr": 658,
+        "created_at": "2026-10-01T10:40:55Z",
+        "merged_at": "2026-10-01T10:46:18Z"
+      },
+      {
+        "id": "MRL_Mrliou/fix-terminal-command-integrity-20261001",
+        "source_branch": "Mrliou/fix-terminal-command-integrity-20261001",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7,
+        "merged_pr": 660,
+        "created_at": "2026-10-01T12:33:35Z"
+      },
+      {
+        "id": "MRL_Mrliou/restore-structure-index-20261001",
+        "source_branch": "Mrliou/restore-structure-index-20261001",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "merged",
+        "energy": 0.95,
+        "merged_pr": 659,
+        "created_at": "2026-10-01T10:49:29Z",
+        "merged_at": "2026-10-01T10:53:37Z"
       },
       {
         "id": "MRL_Mrliou/structure-authorization-reaudit-20260918-r03",
@@ -245,7 +347,7 @@
         "merged_at": "2026-09-15T05:17:04Z"
       },
       {
-        "id": "MRL_Mrliou_BYOH_633_Mainline_20260908",
+        "id": "Mrliou_MRL_BYOH_633_Mainline_20260908",
         "source_branch": "Mrliou_MRL_BYOH_633_Mainline_20260908",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -257,7 +359,7 @@
         "created_at": "2026-09-08T17:26:10Z"
       },
       {
-        "id": "MRL_Mrliou_BYOH_Mainline_Integration_20260908_v1",
+        "id": "Mrliou_MRL_BYOH_Mainline_Integration_20260908_v1",
         "source_branch": "Mrliou_MRL_BYOH_Mainline_Integration_20260908_v1",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -270,7 +372,7 @@
         "merged_at": "2026-09-08T17:24:57Z"
       },
       {
-        "id": "MRL_Mrliou_Cloudflare_Entry_20260909",
+        "id": "Mrliou_MRL_Cloudflare_Entry_20260909",
         "source_branch": "Mrliou_MRL_Cloudflare_Entry_20260909",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -283,7 +385,7 @@
         "merged_at": "2026-09-09T07:34:03Z"
       },
       {
-        "id": "MRL_Mrliou_Naming_Repair_20260908_v1",
+        "id": "Mrliou_MRL_Naming_Repair_20260908_v1",
         "source_branch": "Mrliou_MRL_Naming_Repair_20260908_v1",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -296,7 +398,7 @@
         "merged_at": "2026-09-08T17:15:47Z"
       },
       {
-        "id": "MRL_Mrliou_OuterAutomation_ProtectedBridge_v1",
+        "id": "Mrliou_MRL_OuterAutomation_ProtectedBridge_v1",
         "source_branch": "Mrliou_MRL_OuterAutomation_ProtectedBridge_v1",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -309,7 +411,7 @@
         "merged_at": "2026-08-27T04:26:32Z"
       },
       {
-        "id": "MRL_Mrliou_SourceToProduct_ParallelLink_v1",
+        "id": "Mrliou_MRL_SourceToProduct_ParallelLink_v1",
         "source_branch": "Mrliou_MRL_SourceToProduct_ParallelLink_v1",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -322,7 +424,7 @@
         "merged_at": "2026-08-27T04:04:10Z"
       },
       {
-        "id": "MRL_Mrliou_external_sync/ba73806676b4-148dba5ce171",
+        "id": "Mrliou_MRL_external_sync/ba73806676b4-148dba5ce171",
         "source_branch": "Mrliou_MRL_external_sync/ba73806676b4-148dba5ce171",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -335,7 +437,17 @@
         "merged_at": "2026-09-07T08:35:56Z"
       },
       {
-        "id": "MRL_Mrliou_neural_sync/0b92d6c0e3eb-34976921701",
+        "id": "Mrliou_MRL_neural_sync/0b3dc1017641-36851948949",
+        "source_branch": "Mrliou_MRL_neural_sync/0b3dc1017641-36851948949",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7
+      },
+      {
+        "id": "Mrliou_MRL_neural_sync/0b92d6c0e3eb-34976921701",
         "source_branch": "Mrliou_MRL_neural_sync/0b92d6c0e3eb-34976921701",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -345,7 +457,7 @@
         "energy": 0.7
       },
       {
-        "id": "MRL_Mrliou_neural_sync/10248fd51138-34975285661",
+        "id": "Mrliou_MRL_neural_sync/10248fd51138-34975285661",
         "source_branch": "Mrliou_MRL_neural_sync/10248fd51138-34975285661",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -355,7 +467,7 @@
         "energy": 0.7
       },
       {
-        "id": "MRL_Mrliou_neural_sync/17d3e2e35711-34256954722",
+        "id": "Mrliou_MRL_neural_sync/17d3e2e35711-34256954722",
         "source_branch": "Mrliou_MRL_neural_sync/17d3e2e35711-34256954722",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -368,7 +480,7 @@
         "merged_at": "2026-09-08T17:27:02Z"
       },
       {
-        "id": "MRL_Mrliou_neural_sync/51ced55850de-35070531704",
+        "id": "Mrliou_MRL_neural_sync/51ced55850de-35070531704",
         "source_branch": "Mrliou_MRL_neural_sync/51ced55850de-35070531704",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -378,7 +490,7 @@
         "energy": 0.7
       },
       {
-        "id": "MRL_Mrliou_neural_sync/5b8ec5fb610e-34932121251",
+        "id": "Mrliou_MRL_neural_sync/5b8ec5fb610e-34932121251",
         "source_branch": "Mrliou_MRL_neural_sync/5b8ec5fb610e-34932121251",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -388,7 +500,7 @@
         "energy": 0.7
       },
       {
-        "id": "MRL_Mrliou_neural_sync/5da46c168a6e-35069164303",
+        "id": "Mrliou_MRL_neural_sync/5da46c168a6e-35069164303",
         "source_branch": "Mrliou_MRL_neural_sync/5da46c168a6e-35069164303",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -398,7 +510,7 @@
         "energy": 0.7
       },
       {
-        "id": "MRL_Mrliou_neural_sync/848f5d62aa80-35292425260",
+        "id": "Mrliou_MRL_neural_sync/848f5d62aa80-35292425260",
         "source_branch": "Mrliou_MRL_neural_sync/848f5d62aa80-35292425260",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -408,7 +520,27 @@
         "energy": 0.7
       },
       {
-        "id": "MRL_Mrliou_neural_sync/bc648a2dedec-34324512598",
+        "id": "Mrliou_MRL_neural_sync/8a5f548ab8f0-38045021126",
+        "source_branch": "Mrliou_MRL_neural_sync/8a5f548ab8f0-38045021126",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7
+      },
+      {
+        "id": "Mrliou_MRL_neural_sync/98900854fe58-38044909530",
+        "source_branch": "Mrliou_MRL_neural_sync/98900854fe58-38044909530",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7
+      },
+      {
+        "id": "Mrliou_MRL_neural_sync/bc648a2dedec-34324512598",
         "source_branch": "Mrliou_MRL_neural_sync/bc648a2dedec-34324512598",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -418,7 +550,27 @@
         "energy": 0.7
       },
       {
-        "id": "MRL_Mrliou_neural_sync/c4797c441ba6-35942353110",
+        "id": "Mrliou_MRL_neural_sync/bcef9f1342d9-38045263374",
+        "source_branch": "Mrliou_MRL_neural_sync/bcef9f1342d9-38045263374",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7
+      },
+      {
+        "id": "Mrliou_MRL_neural_sync/c28f1187b675-38045142025",
+        "source_branch": "Mrliou_MRL_neural_sync/c28f1187b675-38045142025",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7
+      },
+      {
+        "id": "Mrliou_MRL_neural_sync/c4797c441ba6-35942353110",
         "source_branch": "Mrliou_MRL_neural_sync/c4797c441ba6-35942353110",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -428,7 +580,17 @@
         "energy": 0.7
       },
       {
-        "id": "MRL_Mrliou_neural_sync/d3bbf2ebcc81-34978699795",
+        "id": "Mrliou_MRL_neural_sync/cb73e661a02e-38052512259",
+        "source_branch": "Mrliou_MRL_neural_sync/cb73e661a02e-38052512259",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7
+      },
+      {
+        "id": "Mrliou_MRL_neural_sync/d3bbf2ebcc81-34978699795",
         "source_branch": "Mrliou_MRL_neural_sync/d3bbf2ebcc81-34978699795",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -438,7 +600,7 @@
         "energy": 0.7
       },
       {
-        "id": "MRL_Mrliou_neural_sync/d43e53dee101-35306164636",
+        "id": "Mrliou_MRL_neural_sync/d43e53dee101-35306164636",
         "source_branch": "Mrliou_MRL_neural_sync/d43e53dee101-35306164636",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -448,7 +610,17 @@
         "energy": 0.7
       },
       {
-        "id": "MRL_Mrliou_neural_sync/dfadd64d5f6d-35304693932",
+        "id": "Mrliou_MRL_neural_sync/d6ddc0b7d9c8-36851202738",
+        "source_branch": "Mrliou_MRL_neural_sync/d6ddc0b7d9c8-36851202738",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7
+      },
+      {
+        "id": "Mrliou_MRL_neural_sync/dfadd64d5f6d-35304693932",
         "source_branch": "Mrliou_MRL_neural_sync/dfadd64d5f6d-35304693932",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -458,7 +630,7 @@
         "energy": 0.7
       },
       {
-        "id": "MRL_Mrliou_sync_operations_20260907_v1",
+        "id": "Mrliou_MRL_sync_operations_20260907_v1",
         "source_branch": "Mrliou_MRL_sync_operations_20260907_v1",
         "naming_authority": "MRL",
         "type": "experimental",
@@ -469,6 +641,19 @@
         "merged_pr": 635,
         "created_at": "2026-09-07T07:22:38Z",
         "merged_at": "2026-09-07T08:14:16Z"
+      },
+      {
+        "id": "MRL_Mrliou_PR614_Scope_Restore_20260929_v1",
+        "source_branch": "Mrliou_PR614_Scope_Restore_20260929_v1",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "merged",
+        "energy": 0.95,
+        "merged_pr": 656,
+        "created_at": "2026-09-29T08:51:01Z",
+        "merged_at": "2026-10-10T10:28:30Z"
       },
       {
         "id": "MRL_Mrliou_fix/cloud-connector-config-20260926",
@@ -526,6 +711,16 @@
         "energy": 0.7
       },
       {
+        "id": "MRL_claude/76d70e5b66a9cf5fa623a155f72d1475a364548d",
+        "source_branch": "claude/76d70e5b66a9cf5fa623a155f72d1475a364548d",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7
+      },
+      {
         "id": "MRL_claude/MRL_Branch_OfficialWebsite_Platform_Launch_v1-01VTkQZge74QPvPJJGWjg3v9",
         "source_branch": "claude/MRL_Branch_OfficialWebsite_Platform_Launch_v1-01VTkQZge74QPvPJJGWjg3v9",
         "naming_authority": "MRL",
@@ -541,6 +736,16 @@
       {
         "id": "MRL_claude/add-claude-md-01VTkQZge74QPvPJJGWjg3v9",
         "source_branch": "claude/add-claude-md-01VTkQZge74QPvPJJGWjg3v9",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7
+      },
+      {
+        "id": "MRL_claude/reference-commit-76d70e5b66a9cf5fa623a155f72d1475a",
+        "source_branch": "claude/reference-commit-76d70e5b66a9cf5fa623a155f72d1475a",
         "naming_authority": "MRL",
         "type": "experimental",
         "layer": "L3",
@@ -1461,6 +1666,18 @@
         "energy": 0.7
       },
       {
+        "id": "MRL_cursor/mrl-neural-map-identity-ffdc",
+        "source_branch": "cursor/mrl-neural-map-identity-ffdc",
+        "naming_authority": "MRL",
+        "type": "experimental",
+        "layer": "L3",
+        "parent": "MRL_main",
+        "status": "active",
+        "energy": 0.7,
+        "merged_pr": 662,
+        "created_at": "2026-10-10T12:37:29Z"
+      },
+      {
         "id": "MRL_dofaromg/issue53",
         "source_branch": "dofaromg/issue53",
         "naming_authority": "MRL",
@@ -1502,10 +1719,11 @@
         "type": "experimental",
         "layer": "L3",
         "parent": "MRL_main",
-        "status": "active",
-        "energy": 0.7,
+        "status": "merged",
+        "energy": 0.95,
         "merged_pr": 650,
-        "created_at": "2026-09-16T14:25:36Z"
+        "created_at": "2026-09-16T14:25:36Z",
+        "merged_at": "2026-10-10T10:25:42Z"
       },
       {
         "id": "MRL_fix/mrl-apiworks-browser-acceptance-v1-20260916",
@@ -1553,10 +1771,11 @@
         "type": "hotfix",
         "layer": "L4",
         "parent": "MRL_main",
-        "status": "active",
-        "energy": 0.7,
+        "status": "merged",
+        "energy": 0.95,
         "merged_pr": 654,
-        "created_at": "2026-09-21T05:17:33Z"
+        "created_at": "2026-09-21T05:17:33Z",
+        "merged_at": "2026-10-10T10:32:31Z"
       },
       {
         "id": "MRL_fix/neural-sync-no-feature-writeback-v1",
@@ -1745,14 +1964,6 @@
     "synapses": [
       {
         "from": "MRL_main",
-        "to": "MRL_System_Integration_v1",
-        "type": "influence",
-        "weight": 0.5,
-        "pr_number": 614,
-        "timestamp": "2026-07-25T04:39:40Z"
-      },
-      {
-        "from": "MRL_main",
         "to": "MRL_231",
         "type": "merge",
         "weight": 0.95,
@@ -1809,11 +2020,27 @@
       },
       {
         "from": "MRL_main",
+        "to": "MRL_Legacy_Recovery_SubPR225_v1",
+        "type": "merge",
+        "weight": 0.95,
+        "pr_number": 664,
+        "timestamp": "2026-10-11T05:10:37Z"
+      },
+      {
+        "from": "MRL_main",
         "to": "MRL_Module_Implementation_v1",
         "type": "merge",
         "weight": 0.95,
         "pr_number": 631,
         "timestamp": "2026-08-27T19:04:30Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "MRL_Origin_614_Outcome_Note_v1",
+        "type": "influence",
+        "weight": 0.5,
+        "pr_number": 663,
+        "timestamp": "2026-10-10T14:48:19Z"
       },
       {
         "from": "MRL_main",
@@ -1833,11 +2060,27 @@
       },
       {
         "from": "MRL_main",
+        "to": "MRL_System_Integration_v1",
+        "type": "merge",
+        "weight": 0.95,
+        "pr_number": 614,
+        "timestamp": "2026-10-10T12:35:21Z"
+      },
+      {
+        "from": "MRL_main",
         "to": "MRL_auto-expansion-naming-prefix-v1",
         "type": "merge",
         "weight": 0.95,
         "pr_number": 627,
         "timestamp": "2026-08-27T03:12:10Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "MRL_fix/cloud-connector-audit-skipped-20261001",
+        "type": "merge",
+        "weight": 0.95,
+        "pr_number": 657,
+        "timestamp": "2026-10-10T10:26:31Z"
       },
       {
         "from": "MRL_main",
@@ -1861,6 +2104,46 @@
         "weight": 0.5,
         "pr_number": 615,
         "timestamp": "2026-07-27T09:18:16Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "MRL_Mrliou/fix-byoh-product-bundle-gate-20261009",
+        "type": "merge",
+        "weight": 0.95,
+        "pr_number": 661,
+        "timestamp": "2026-10-10T10:30:30Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "MRL_Mrliou/fix-module-a-container-pr664-20261011",
+        "type": "influence",
+        "weight": 0.5,
+        "pr_number": 665,
+        "timestamp": "2026-10-10T22:34:40Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "MRL_Mrliou/fix-structure-delivery-20261001",
+        "type": "merge",
+        "weight": 0.95,
+        "pr_number": 658,
+        "timestamp": "2026-10-01T10:46:18Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "MRL_Mrliou/fix-terminal-command-integrity-20261001",
+        "type": "influence",
+        "weight": 0.5,
+        "pr_number": 660,
+        "timestamp": "2026-10-01T12:33:35Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "MRL_Mrliou/restore-structure-index-20261001",
+        "type": "merge",
+        "weight": 0.95,
+        "pr_number": 659,
+        "timestamp": "2026-10-01T10:53:37Z"
       },
       {
         "from": "MRL_main",
@@ -1888,7 +2171,7 @@
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_BYOH_633_Mainline_20260908",
+        "to": "Mrliou_MRL_BYOH_633_Mainline_20260908",
         "type": "influence",
         "weight": 0.5,
         "pr_number": 639,
@@ -1896,7 +2179,7 @@
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_BYOH_Mainline_Integration_20260908_v1",
+        "to": "Mrliou_MRL_BYOH_Mainline_Integration_20260908_v1",
         "type": "merge",
         "weight": 0.95,
         "pr_number": 638,
@@ -1904,7 +2187,7 @@
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_Cloudflare_Entry_20260909",
+        "to": "Mrliou_MRL_Cloudflare_Entry_20260909",
         "type": "merge",
         "weight": 0.95,
         "pr_number": 641,
@@ -1912,7 +2195,7 @@
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_Naming_Repair_20260908_v1",
+        "to": "Mrliou_MRL_Naming_Repair_20260908_v1",
         "type": "merge",
         "weight": 0.95,
         "pr_number": 637,
@@ -1920,7 +2203,7 @@
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_OuterAutomation_ProtectedBridge_v1",
+        "to": "Mrliou_MRL_OuterAutomation_ProtectedBridge_v1",
         "type": "merge",
         "weight": 0.95,
         "pr_number": 629,
@@ -1928,7 +2211,7 @@
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_SourceToProduct_ParallelLink_v1",
+        "to": "Mrliou_MRL_SourceToProduct_ParallelLink_v1",
         "type": "merge",
         "weight": 0.95,
         "pr_number": 628,
@@ -1936,7 +2219,7 @@
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_external_sync/ba73806676b4-148dba5ce171",
+        "to": "Mrliou_MRL_external_sync/ba73806676b4-148dba5ce171",
         "type": "merge",
         "weight": 0.95,
         "pr_number": 636,
@@ -1944,21 +2227,28 @@
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_neural_sync/0b92d6c0e3eb-34976921701",
+        "to": "Mrliou_MRL_neural_sync/0b3dc1017641-36851948949",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-09-28T16:52:37.239Z"
+        "timestamp": "2026-10-11T05:10:54.206Z"
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_neural_sync/10248fd51138-34975285661",
+        "to": "Mrliou_MRL_neural_sync/0b92d6c0e3eb-34976921701",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-09-28T16:52:37.239Z"
+        "timestamp": "2026-10-11T05:10:54.206Z"
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_neural_sync/17d3e2e35711-34256954722",
+        "to": "Mrliou_MRL_neural_sync/10248fd51138-34975285661",
+        "type": "influence",
+        "weight": 0.5,
+        "timestamp": "2026-10-11T05:10:54.206Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "Mrliou_MRL_neural_sync/17d3e2e35711-34256954722",
         "type": "merge",
         "weight": 0.95,
         "pr_number": 640,
@@ -1966,74 +2256,124 @@
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_neural_sync/51ced55850de-35070531704",
+        "to": "Mrliou_MRL_neural_sync/51ced55850de-35070531704",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-09-28T16:52:37.239Z"
+        "timestamp": "2026-10-11T05:10:54.206Z"
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_neural_sync/5b8ec5fb610e-34932121251",
+        "to": "Mrliou_MRL_neural_sync/5b8ec5fb610e-34932121251",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-09-28T16:52:37.239Z"
+        "timestamp": "2026-10-11T05:10:54.206Z"
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_neural_sync/5da46c168a6e-35069164303",
+        "to": "Mrliou_MRL_neural_sync/5da46c168a6e-35069164303",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-09-28T16:52:37.239Z"
+        "timestamp": "2026-10-11T05:10:54.206Z"
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_neural_sync/848f5d62aa80-35292425260",
+        "to": "Mrliou_MRL_neural_sync/848f5d62aa80-35292425260",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-09-28T16:52:37.239Z"
+        "timestamp": "2026-10-11T05:10:54.206Z"
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_neural_sync/bc648a2dedec-34324512598",
+        "to": "Mrliou_MRL_neural_sync/8a5f548ab8f0-38045021126",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-09-10T10:58:29.746Z"
+        "timestamp": "2026-10-11T05:10:54.206Z"
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_neural_sync/c4797c441ba6-35942353110",
+        "to": "Mrliou_MRL_neural_sync/98900854fe58-38044909530",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-09-28T16:52:37.239Z"
+        "timestamp": "2026-10-11T05:10:54.206Z"
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_neural_sync/d3bbf2ebcc81-34978699795",
+        "to": "Mrliou_MRL_neural_sync/bc648a2dedec-34324512598",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-09-28T16:52:37.239Z"
+        "timestamp": "2026-10-11T05:10:54.206Z"
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_neural_sync/d43e53dee101-35306164636",
+        "to": "Mrliou_MRL_neural_sync/bcef9f1342d9-38045263374",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-09-28T16:52:37.239Z"
+        "timestamp": "2026-10-11T05:10:54.206Z"
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_neural_sync/dfadd64d5f6d-35304693932",
+        "to": "Mrliou_MRL_neural_sync/c28f1187b675-38045142025",
         "type": "influence",
         "weight": 0.5,
-        "timestamp": "2026-09-28T16:52:37.239Z"
+        "timestamp": "2026-10-11T05:10:54.206Z"
       },
       {
         "from": "MRL_main",
-        "to": "MRL_Mrliou_sync_operations_20260907_v1",
+        "to": "Mrliou_MRL_neural_sync/c4797c441ba6-35942353110",
+        "type": "influence",
+        "weight": 0.5,
+        "timestamp": "2026-10-11T05:10:54.206Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "Mrliou_MRL_neural_sync/cb73e661a02e-38052512259",
+        "type": "influence",
+        "weight": 0.5,
+        "timestamp": "2026-10-11T05:10:54.206Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "Mrliou_MRL_neural_sync/d3bbf2ebcc81-34978699795",
+        "type": "influence",
+        "weight": 0.5,
+        "timestamp": "2026-10-11T05:10:54.206Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "Mrliou_MRL_neural_sync/d43e53dee101-35306164636",
+        "type": "influence",
+        "weight": 0.5,
+        "timestamp": "2026-10-11T05:10:54.206Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "Mrliou_MRL_neural_sync/d6ddc0b7d9c8-36851202738",
+        "type": "influence",
+        "weight": 0.5,
+        "timestamp": "2026-10-11T05:10:54.206Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "Mrliou_MRL_neural_sync/dfadd64d5f6d-35304693932",
+        "type": "influence",
+        "weight": 0.5,
+        "timestamp": "2026-10-11T05:10:54.206Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "Mrliou_MRL_sync_operations_20260907_v1",
         "type": "merge",
         "weight": 0.95,
         "pr_number": 635,
         "timestamp": "2026-09-07T08:14:16Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "MRL_Mrliou_PR614_Scope_Restore_20260929_v1",
+        "type": "merge",
+        "weight": 0.95,
+        "pr_number": 656,
+        "timestamp": "2026-10-10T10:28:30Z"
       },
       {
         "from": "MRL_main",
@@ -2074,6 +2414,13 @@
       },
       {
         "from": "MRL_main",
+        "to": "MRL_claude/76d70e5b66a9cf5fa623a155f72d1475a364548d",
+        "type": "influence",
+        "weight": 0.5,
+        "timestamp": "2026-10-11T05:10:54.206Z"
+      },
+      {
+        "from": "MRL_main",
         "to": "MRL_claude/MRL_Branch_OfficialWebsite_Platform_Launch_v1-01VTkQZge74QPvPJJGWjg3v9",
         "type": "merge",
         "weight": 0.95,
@@ -2086,6 +2433,13 @@
         "type": "influence",
         "weight": 0.5,
         "timestamp": "2026-08-27T03:28:22.636Z"
+      },
+      {
+        "from": "MRL_main",
+        "to": "MRL_claude/reference-commit-76d70e5b66a9cf5fa623a155f72d1475a",
+        "type": "influence",
+        "weight": 0.5,
+        "timestamp": "2026-10-11T05:10:54.206Z"
       },
       {
         "from": "MRL_main",
@@ -2694,6 +3048,14 @@
       },
       {
         "from": "MRL_main",
+        "to": "MRL_cursor/mrl-neural-map-identity-ffdc",
+        "type": "influence",
+        "weight": 0.5,
+        "pr_number": 662,
+        "timestamp": "2026-10-10T12:37:29Z"
+      },
+      {
+        "from": "MRL_main",
         "to": "MRL_dofaromg/issue53",
         "type": "influence",
         "weight": 0.5,
@@ -2718,10 +3080,10 @@
       {
         "from": "MRL_main",
         "to": "MRL_feat/mrliou-mrl-dual-target-pages-v1",
-        "type": "influence",
-        "weight": 0.5,
+        "type": "merge",
+        "weight": 0.95,
         "pr_number": 650,
-        "timestamp": "2026-09-16T14:25:36Z"
+        "timestamp": "2026-10-10T10:25:42Z"
       },
       {
         "from": "MRL_main",
@@ -2750,10 +3112,10 @@
       {
         "from": "MRL_main",
         "to": "MRL_fix/mrl-webgpu-ci-allowed-actions-v1-20260921",
-        "type": "influence",
-        "weight": 0.5,
+        "type": "merge",
+        "weight": 0.95,
         "pr_number": 654,
-        "timestamp": "2026-09-21T05:17:33Z"
+        "timestamp": "2026-10-10T10:32:31Z"
       },
       {
         "from": "MRL_main",
