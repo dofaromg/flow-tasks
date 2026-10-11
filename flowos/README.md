@@ -172,6 +172,19 @@ compatibility_flags = ["nodejs_compat"]
 - `VERSION`: FlowOS version identifier
 - `ORIGIN`: Origin identifier (e.g., "MrLiouWord")
 
+## Traffic Gate
+
+- `FlowGate.evaluate()` (and `GateEngine`) use deny-overrides: checks run in
+  registration order, an explicit deny (`allowed: false`) is returned
+  immediately, and an allow does not end evaluation — the first allow is
+  returned only if no later check denies. With no decision at all, the default
+  is allow.
+- `/gate/*` needs a `GATE_ENGINE` Durable Object binding. The `wrangler.toml`
+  above declares none, so the edge worker answers
+  `501 {"error": "GATE_ENGINE_NOT_CONFIGURED"}` until one is added.
+- `/gate/*` is routed before the `MASTER_KEY` check, so it is not
+  authenticated.
+
 ## Philosophy
 
 FlowOS follows the MrLiouWord principle: **"怎麼過去，就怎麼回來"** (How it went, so it shall return)

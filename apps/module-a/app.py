@@ -20,12 +20,6 @@ def index():
                     'origin_signature': 'MrLiouWord'})
 
 
-@app.route('/info')
-def info():
-    """Capabilities — consumed by the orchestrator."""
-    return jsonify(core.capabilities())
-
-
 @app.route('/compute', methods=['POST'])
 def compute():
     """Real particle compute over a text payload."""
@@ -40,8 +34,17 @@ def compute():
     return jsonify({'ok': True, 'result': result})
 
 
-# Add standard health check endpoints
-add_health_endpoints(app, service_name=MODULE_NAME, version='2.0.0')
+# Add standard health check endpoints; /info also carries module capabilities
+# (registered once here — a second @app.route('/info') would collide on endpoint 'info')
+add_health_endpoints(
+    app,
+    service_name=MODULE_NAME,
+    version='2.0.0',
+    extra_info={
+        'capabilities': core.capabilities()['capabilities'],
+        'origin_signature': 'MrLiouWord',
+    },
+)
 
 if __name__ == '__main__':
     port = get_port(8080)

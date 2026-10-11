@@ -25,7 +25,7 @@ export interface Env {
   GATE_CONFIG: KVNamespace;
   DB: D1Database;
   PARTICLES: R2Bucket;
-  GATE_ENGINE: DurableObjectNamespace;
+  GATE_ENGINE?: DurableObjectNamespace;
 
   // Secrets & Vars
   MASTER_KEY: string;
@@ -62,6 +62,10 @@ export default {
 
       // Traffic Gate
       if (path.startsWith('/gate/')) {
+        // wrangler.toml declares no Durable Object binding yet; answer explicitly instead of throwing
+        if (!env.GATE_ENGINE) {
+          return json({ error: 'GATE_ENGINE_NOT_CONFIGURED', origin: env.ORIGIN }, 501);
+        }
         const id = env.GATE_ENGINE.idFromName('global-gate');
         const gateStub = env.GATE_ENGINE.get(id);
         const payload = await safeJson(request);
