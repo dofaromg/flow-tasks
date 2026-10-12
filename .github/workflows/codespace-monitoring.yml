@@ -21,22 +21,28 @@ jobs:
         run: |
           type -p gh > /dev/null || (echo "GitHub CLI not found" && exit 1)
       
-      - name: Authenticate GitHub CLI
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "$GH_TOKEN" | gh auth login --with-token
-      
+      # gh reads GH_TOKEN directly; `gh auth login --with-token` refuses to run
+      # while GH_TOKEN is set, which made every scheduled run fail here.
       - name: Check Codespace Status
         id: check
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Listing codespaces (GET /user/codespaces) needs a user token with the
+          # codespace scope; the built-in GITHUB_TOKEN cannot list them.
+          GH_TOKEN: ${{ secrets.CODESPACES_TOKEN }}
         run: |
           echo "Checking codespace status..."
-          
-          # Get codespaces
-          CODESPACES=$(gh codespace list --json name,repository,state,lastUsedAt 2>/dev/null || echo "[]")
-          
+
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::warning title=Codespace monitoring skipped::Repository secret CODESPACES_TOKEN is not set. GITHUB_TOKEN cannot list codespaces; add a token with the codespace scope to enable this check."
+            exit 0
+          fi
+
+          # Get codespaces; a failed listing must not be reported as "no codespaces"
+          if ! CODESPACES=$(gh codespace list --json name,repository,state,lastUsedAt); then
+            echo "::error title=Codespace listing failed::gh codespace list failed. Check that CODESPACES_TOKEN is valid and has the codespace scope."
+            exit 1
+          fi
+
           if [ "$CODESPACES" = "[]" ]; then
             echo "No codespaces found."
             echo "has_warnings=false" >> $GITHUB_OUTPUT
@@ -162,6 +168,10 @@ jobs:
           *This issue will be automatically closed if no codespaces require attention in the next monitoring cycle.*
           EOF
           
+          # The labels must exist before `gh issue create --label` can use them
+          gh label create codespace --color "0E8A16" --description "Codespace retention monitoring" 2>/dev/null || true
+          gh label create maintenance --color "FBCA04" --description "Repository maintenance" 2>/dev/null || true
+
           # Create or update issue
           gh issue create \
             --title "⚠️ Codespace Retention Warning - Action Required" \
