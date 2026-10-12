@@ -1,0 +1,31 @@
+{
+  "dateTaipei": "2026-10-13",
+  "environment": "macOS ARM64; Node tests use temporary storage and local port 3050",
+  "powershell": "7.4.6 parser and mocked common function checks PASS; Windows PowerShell 5.1 runtime NOT_RUN",
+  "nodeTests": {
+    "passed": 4,
+    "failed": 0,
+    "cases": [
+      "health identity and upload preservation",
+      "missing Python terminal failure",
+      "zero exit without runner report fails",
+      "wrong port rejected"
+    ]
+  },
+  "pythonTests": {
+    "passed": 3,
+    "failed": 0,
+    "cases": [
+      "COLMAP missing independent failure",
+      "adapter mismatch fails",
+      "missing output evidence fails"
+    ]
+  },
+  "backendLint": "PASS node --check server.js",
+  "backendBuild": "PASS syntax check (unbundled Node server)",
+  "pythonCompile": "PASS",
+  "realWindowsTaskRegistration": "NOT_RUN",
+  "realDL580Health": "NOT_RUN",
+  "realRebootRecovery": "NOT_RUN",
+  "actualReconstruction": "NOT_RUN"
+}
