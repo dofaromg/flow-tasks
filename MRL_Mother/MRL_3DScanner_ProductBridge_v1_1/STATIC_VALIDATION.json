@@ -3,13 +3,14 @@
   "environment": "macOS ARM64; Node tests use temporary storage and local port 3050",
   "powershell": "7.4.6 parser and mocked common function checks PASS; Windows PowerShell 5.1 runtime NOT_RUN",
   "nodeTests": {
-    "passed": 4,
+    "passed": 5,
     "failed": 0,
     "cases": [
       "health identity and upload preservation",
       "missing Python terminal failure",
       "zero exit without runner report fails",
-      "wrong port rejected"
+      "wrong port rejected",
+      "real image runner COLMAP failure independent of successful health/upload"
     ]
   },
   "pythonTests": {
