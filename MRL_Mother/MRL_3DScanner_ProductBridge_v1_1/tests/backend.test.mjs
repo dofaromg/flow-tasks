@@ -21,7 +21,7 @@ async function start(kind) {
     await fs.mkdir(path.join(root, 'storage/jobs'), {recursive:true});
     await fs.writeFile(path.join(root, 'storage/jobs/old.json'), JSON.stringify({jobId:'old',status:'running'}));
   }
-  const child = spawn(process.execPath, [path.join(root, 'server.js')], {cwd:root, env:{...process.env, MRL_BRIDGE_INSTANCE:'test', MRL_3D_BRIDGE_PORT:'3050', MRL_BRIDGE_PYTHON:kind==='missing-python'?path.join(root,'absent-python'):python}, stdio:['ignore','pipe','pipe']});
+  const child = spawn(process.execPath, [path.join(root, 'server.js')], {cwd:root, env:{...process.env, MRL_BRIDGE_INSTANCE:'test', ...(kind==='missing-colmap'?{PATH:'/usr/bin:/bin'}:{}), MRL_3D_BRIDGE_PORT:'3050', MRL_BRIDGE_PYTHON:kind==='missing-python'?path.join(root,'absent-python'):python}, stdio:['ignore','pipe','pipe']});
   let logs=''; child.stderr.on('data', d => logs += d);
   for (let i=0;i<100;i++) {
     if (child.exitCode !== null) throw new Error(logs);
@@ -59,4 +59,12 @@ test('exit zero without runner report is failure',async()=>{
 });
 test('wrong port configuration is rejected',async()=>{
  const c=spawn(process.execPath,[path.join(source,'server.js')],{env:{...process.env,MRL_3D_BRIDGE_PORT:'3051'}});let err='';c.stderr.on('data',d=>err+=d);const code=await new Promise(r=>c.on('exit',r));assert.notEqual(code,0);assert.match(err,/requires port 3050/);
+});
+
+test('image upload passes while real runner fails independently for missing COLMAP',async()=>{
+ const s=await start('missing-colmap');try {
+   const u=await upload('missing_colmap','photo fixture','photo.jpg');assert.equal(u.status,200);assert.equal((await u.json()).uploaded,1);
+   const j=await job('missing_colmap');assert.equal(j.status,'failed');assert.equal(j.exitCode,3);assert.match(j.message,/COLMAP_NOT_FOUND/);assert.equal(j.report.status,'failed');
+   const h=await (await fetch(base+'/api/health')).json();assert.equal(h.ok,true);
+ }finally{await stop(s);}
 });
