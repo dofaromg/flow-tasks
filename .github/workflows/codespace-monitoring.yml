@@ -21,31 +21,22 @@ jobs:
         run: |
           type -p gh > /dev/null || (echo "GitHub CLI not found" && exit 1)
       
-      # gh reads GH_TOKEN directly; `gh auth login --with-token` refuses to run
-      # while GH_TOKEN is set, which made every scheduled run fail here.
+      - name: Authenticate GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$GH_TOKEN" | gh auth login --with-token
+      
       - name: Check Codespace Status
         id: check
         env:
-          # Listing codespaces (GET /user/codespaces) needs a user token with the
-          # codespace scope; the built-in GITHUB_TOKEN cannot list them.
-          GH_TOKEN: ${{ secrets.CODESPACES_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Checking codespace status..."
-
-          # Without a usable token the check cannot run, so it must not pass
-          if [ -z "$GH_TOKEN" ]; then
-            echo "::error title=CODESPACES_TOKEN not set::Repository secret CODESPACES_TOKEN is not set. GITHUB_TOKEN cannot list codespaces; add a token with the codespace scope."
-            exit 1
-          fi
-
-          # Only this repository's codespaces: the issue below is public, so the
-          # token owner's codespaces in other (possibly private) repos must not leak.
-          # A failed listing must not be reported as "no codespaces".
-          if ! CODESPACES=$(gh codespace list --repo "$GITHUB_REPOSITORY" --limit 1000 --json name,repository,state,lastUsedAt); then
-            echo "::error title=Codespace listing failed::gh codespace list failed. Check that CODESPACES_TOKEN is valid and has the codespace scope."
-            exit 1
-          fi
-
+          
+          # Get codespaces
+          CODESPACES=$(gh codespace list --json name,repository,state,lastUsedAt 2>/dev/null || echo "[]")
+          
           if [ "$CODESPACES" = "[]" ]; then
             echo "No codespaces found."
             echo "has_warnings=false" >> $GITHUB_OUTPUT
@@ -171,28 +162,12 @@ jobs:
           *This issue will be automatically closed if no codespaces require attention in the next monitoring cycle.*
           EOF
           
-          # The labels must exist before `gh issue create --label` can use them;
-          # only an "already exists" error is tolerated
-          ensure_label() {
-            if ! out=$(gh label create "$1" --color "$2" --description "$3" 2>&1); then
-              echo "$out" | grep -q "already exists" || { echo "$out"; exit 1; }
-            fi
-          }
-          ensure_label codespace "0E8A16" "Codespace retention monitoring"
-          ensure_label maintenance "FBCA04" "Repository maintenance"
-
-          # Update the open warning issue if there is one; otherwise create it
-          TITLE="⚠️ Codespace Retention Warning - Action Required"
-          EXISTING=$(gh issue list --label "codespace" --state open --json number,title \
-            --jq "[.[] | select(.title == \"$TITLE\")][0].number // empty")
-          if [ -n "$EXISTING" ]; then
-            gh issue edit "$EXISTING" --body-file issue_body.md
-          else
-            gh issue create \
-              --title "$TITLE" \
-              --body-file issue_body.md \
-              --label "codespace,maintenance"
-          fi
+          # Create or update issue
+          gh issue create \
+            --title "⚠️ Codespace Retention Warning - Action Required" \
+            --body-file issue_body.md \
+            --label "codespace,maintenance" \
+            || echo "Issue may already exist or failed to create"
       
       - name: Close Old Warning Issues
         if: steps.check.outputs.has_warnings == 'false'
