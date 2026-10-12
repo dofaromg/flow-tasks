@@ -32,13 +32,16 @@ jobs:
         run: |
           echo "Checking codespace status..."
 
+          # Without a usable token the check cannot run, so it must not pass
           if [ -z "$GH_TOKEN" ]; then
-            echo "::warning title=Codespace monitoring skipped::Repository secret CODESPACES_TOKEN is not set. GITHUB_TOKEN cannot list codespaces; add a token with the codespace scope to enable this check."
-            exit 0
+            echo "::error title=CODESPACES_TOKEN not set::Repository secret CODESPACES_TOKEN is not set. GITHUB_TOKEN cannot list codespaces; add a token with the codespace scope."
+            exit 1
           fi
 
-          # Get codespaces; a failed listing must not be reported as "no codespaces"
-          if ! CODESPACES=$(gh codespace list --json name,repository,state,lastUsedAt); then
+          # Only this repository's codespaces: the issue below is public, so the
+          # token owner's codespaces in other (possibly private) repos must not leak.
+          # A failed listing must not be reported as "no codespaces".
+          if ! CODESPACES=$(gh codespace list --repo "$GITHUB_REPOSITORY" --limit 1000 --json name,repository,state,lastUsedAt); then
             echo "::error title=Codespace listing failed::gh codespace list failed. Check that CODESPACES_TOKEN is valid and has the codespace scope."
             exit 1
           fi
@@ -168,16 +171,28 @@ jobs:
           *This issue will be automatically closed if no codespaces require attention in the next monitoring cycle.*
           EOF
           
-          # The labels must exist before `gh issue create --label` can use them
-          gh label create codespace --color "0E8A16" --description "Codespace retention monitoring" 2>/dev/null || true
-          gh label create maintenance --color "FBCA04" --description "Repository maintenance" 2>/dev/null || true
+          # The labels must exist before `gh issue create --label` can use them;
+          # only an "already exists" error is tolerated
+          ensure_label() {
+            if ! out=$(gh label create "$1" --color "$2" --description "$3" 2>&1); then
+              echo "$out" | grep -q "already exists" || { echo "$out"; exit 1; }
+            fi
+          }
+          ensure_label codespace "0E8A16" "Codespace retention monitoring"
+          ensure_label maintenance "FBCA04" "Repository maintenance"
 
-          # Create or update issue
-          gh issue create \
-            --title "⚠️ Codespace Retention Warning - Action Required" \
-            --body-file issue_body.md \
-            --label "codespace,maintenance" \
-            || echo "Issue may already exist or failed to create"
+          # Update the open warning issue if there is one; otherwise create it
+          TITLE="⚠️ Codespace Retention Warning - Action Required"
+          EXISTING=$(gh issue list --label "codespace" --state open --json number,title \
+            --jq "[.[] | select(.title == \"$TITLE\")][0].number // empty")
+          if [ -n "$EXISTING" ]; then
+            gh issue edit "$EXISTING" --body-file issue_body.md
+          else
+            gh issue create \
+              --title "$TITLE" \
+              --body-file issue_body.md \
+              --label "codespace,maintenance"
+          fi
       
       - name: Close Old Warning Issues
         if: steps.check.outputs.has_warnings == 'false'
