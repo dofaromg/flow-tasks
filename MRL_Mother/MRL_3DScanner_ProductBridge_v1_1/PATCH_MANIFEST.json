@@ -29,7 +29,7 @@
     {
       "path": "docs/04_WINDOWS_STARTUP_RUNBOOK.md",
       "before": null,
-      "after": "DB614A653D3AFDCD409258DE820E5609B1CB81BC976FBFBDC2308E4E7DC99C0A"
+      "after": "A0D0C1F4F81910339B7D8411DD58FF0D02FB048E606064CC3ED64B5AC4A46D54"
     },
     {
       "path": "scripts/MRL_acceptance_check_bridge.ps1",
@@ -39,7 +39,7 @@
     {
       "path": "scripts/MRL_apply_patch.ps1",
       "before": null,
-      "after": "CE6F64C94571C42DBF7E6AA9B54E0F9333F47468FC07E2EB92F815CAF7970A32"
+      "after": "CB5160A239D7A969D490858CACF8AD652E59C176DBAA9635B4CAE43A93F1B0C9"
     },
     {
       "path": "scripts/MRL_bridge_common.ps1",
@@ -59,7 +59,7 @@
     {
       "path": "scripts/MRL_register_bridge.ps1",
       "before": null,
-      "after": "A4A49FB92B77B50B5E551F69EBD8EA5FBE2342CC2889116F9FB6B11B7E20F530"
+      "after": "EEA8CED27AA8F8E01FAF78DEFDCB174749E1E4A123B6B37D536D08A914E73C3C"
     },
     {
       "path": "scripts/MRL_remove_bridge.ps1",

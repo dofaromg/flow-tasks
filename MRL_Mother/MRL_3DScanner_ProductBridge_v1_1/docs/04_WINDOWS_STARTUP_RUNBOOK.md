@@ -26,6 +26,9 @@ service/version/port、安裝 instance、PID、CreationDate、執行檔與監聽
 安全停止先禁用排程、寫 stop.request，等待監督程式停止；必要時只停止
 符合完整身分的 Node 程序樹。移除僅移除本安裝排程，保留所有資料與回執。
 SYSTEM 執行前拒絕 Everyone／Authenticated Users／Users 的廣泛寫入 ACL。
+檢查範圍包含部署根目錄、scripts、backend、node.exe 與 python.exe 所在目錄，
+以及 `-DependencyPath` 的每一個目錄（它們會被放到 SYSTEM 的 PATH 前面）；
+寫入、附加、刪除、變更權限、取得擁有權與 GenericWrite／GenericAll 都視為廣泛寫入。
 部署程式碼、Node、Python 及所有依賴目錄須只允許受信管理者修改；本次不
 自動修改既有 ACL、開防火牆或其他排程。
 

@@ -7,7 +7,15 @@ if ($TargetRoot -notmatch '^D:\\' -or -not (Test-Path (Join-Path $TargetRoot 'ba
 if (@(Get-NetTCPConnection -LocalPort 3050 -State Listen -ErrorAction SilentlyContinue).Count) { throw 'Stop the identified existing bridge before applying patch; port 3050 is occupied' }
 $task=Get-ScheduledTask -TaskPath '\MRL\' -TaskName 'MRL_3DScanner_ProductBridge' -ErrorAction SilentlyContinue
 if ($task -and ($task.State -ne 'Disabled')) { throw 'Disable and stop existing managed task before source patching' }
-$live=@(Get-CimInstance Win32_Process | Where-Object { $_.Name -match '^(node|powershell).*' -and $_.CommandLine -like ('*' + $TargetRoot + '*') })
+# This installer and the shells that launched it carry -TargetRoot on their command
+# line but are not the bridge; exclude them or the check always matches itself.
+$self=@($PID); $cur=$PID
+for ($i=0; $i -lt 8; $i++) {
+    $parent=(Get-CimInstance Win32_Process -Filter "ProcessId=$cur" -ErrorAction SilentlyContinue).ParentProcessId
+    if (-not $parent -or $self -contains $parent) { break }
+    $self+=$parent; $cur=$parent
+}
+$live=@(Get-CimInstance Win32_Process | Where-Object { $self -notcontains $_.ProcessId -and $_.Name -match '^(node|powershell).*' -and $_.CommandLine -like ('*' + $TargetRoot + '*') })
 if ($live.Count) { throw 'Existing bridge-related process still present; finish safe shutdown before patching' }
 $patchRoot=Split-Path $PSScriptRoot -Parent
 $manifest=Get-Content (Join-Path $patchRoot 'PATCH_MANIFEST.json') -Raw | ConvertFrom-Json
