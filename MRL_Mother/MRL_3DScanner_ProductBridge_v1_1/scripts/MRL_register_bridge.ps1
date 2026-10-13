@@ -11,10 +11,15 @@ $backend = Join-Path $root 'backend\MRL_3D_Reconstruction_Server'
 $entry = Join-Path $backend 'server.js'
 if (-not (Test-Path $entry) -or -not (Test-Path (Join-Path $backend 'node_modules'))) { throw 'Install existing backend dependencies first' }
 # SYSTEM must not execute code writable by broad unprivileged groups.
-foreach ($dir in @($root, (Join-Path $root 'scripts'), $backend, (Split-Path $node), (Split-Path $python))) {
+# DependencyPath is prepended to SYSTEM's PATH and the runner resolves colmap/mrl3d through it.
+$dependencyDirs = @($DependencyPath -split ';' | Where-Object { $_.Trim() } | ForEach-Object { (Resolve-Path $_.Trim()).Path })
+# Write/append data, write (extended) attributes, delete child, delete, change permissions,
+# take ownership, generic write and generic all: any of these lets the group alter or take over code.
+$writeRights = 0x500D0156
+foreach ($dir in @($root, (Join-Path $root 'scripts'), $backend, (Split-Path $node), (Split-Path $python)) + $dependencyDirs) {
     foreach ($ace in (Get-Acl $dir).Access) {
         $sid = $ace.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value
-        if ($sid -in @('S-1-1-0','S-1-5-11','S-1-5-32-545') -and $ace.AccessControlType -eq 'Allow' -and ([int]$ace.FileSystemRights -band 278)) { throw "Broad write access on $dir; protect deployment ACL before SYSTEM registration" }
+        if ($sid -in @('S-1-1-0','S-1-5-11','S-1-5-32-545') -and $ace.AccessControlType -eq 'Allow' -and ([int]$ace.FileSystemRights -band $writeRights)) { throw "Broad write access on $dir; protect deployment ACL before SYSTEM registration" }
     }
 }
 $task = Get-BridgeTask; Assert-TaskOwner $task $root

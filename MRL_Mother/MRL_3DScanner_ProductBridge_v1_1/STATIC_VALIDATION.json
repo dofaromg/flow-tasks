@@ -28,5 +28,16 @@
   "realWindowsTaskRegistration": "NOT_RUN",
   "realDL580Health": "NOT_RUN",
   "realRebootRecovery": "NOT_RUN",
-  "actualReconstruction": "NOT_RUN"
+  "actualReconstruction": "NOT_RUN",
+  "reviewFixes": {
+    "date": "2026-10-13",
+    "changes": [
+      "MRL_apply_patch.ps1: exclude the installer process and its launching shells from the live-bridge check (the documented powershell.exe -File ... -TargetRoot invocation matched itself and always aborted)",
+      "MRL_register_bridge.ps1: ACL check also covers every -DependencyPath directory (prepended to SYSTEM PATH; runner resolves colmap/mrl3d through it)",
+      "MRL_register_bridge.ps1: broad-write rights mask 278 -> 0x500D0156 (adds delete, delete child, change permissions, take ownership, generic write/all)"
+    ],
+    "powershellParser": "NOT_RUN (no PowerShell available in the review environment)",
+    "windowsRuntime": "NOT_RUN",
+    "manifestHashes": "recomputed for the three changed files"
+  }
 }
