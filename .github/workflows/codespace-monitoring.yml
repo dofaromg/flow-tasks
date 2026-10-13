@@ -5,6 +5,9 @@ on:
     paths:
       - '.github/workflows/codespace-monitoring.yml'
       - 'tests/test_codespace_monitoring.py'
+      - 'CHANGELOG.md'
+      - 'config/Mrliou_MRL_Sync_Delivery_v1.json'
+      - 'config/Mrliou_Structure_Authorization_Delivery_v1.json'
   schedule:
     # Run every Monday at 9:00 AM UTC
     - cron: '0 9 * * 1'
