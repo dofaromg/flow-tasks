@@ -1,14 +1,39 @@
 name: Codespace Monitoring
 
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/codespace-monitoring.yml'
+      - 'tests/test_codespace_monitoring.py'
   schedule:
     # Run every Monday at 9:00 AM UTC
     - cron: '0 9 * * 1'
   workflow_dispatch: # Allow manual trigger
 
 jobs:
-  monitor-codespaces:
+  regression:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check pyyaml
+      - run: python -m unittest discover -s tests -p test_codespace_monitoring.py -v
+
+  monitor-codespaces:
+    if: github.event_name != 'pull_request'
+    needs: regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: codespace-monitoring-${{ github.repository }}
+      cancel-in-progress: false
     permissions:
       issues: write
       contents: read
@@ -21,22 +46,43 @@ jobs:
         run: |
           type -p gh > /dev/null || (echo "GitHub CLI not found" && exit 1)
       
-      - name: Authenticate GitHub CLI
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "$GH_TOKEN" | gh auth login --with-token
-      
+      # gh reads GH_TOKEN directly; `gh auth login --with-token` refuses to run
+      # while GH_TOKEN is set, which made every scheduled run fail here.
       - name: Check Codespace Status
         id: check
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Fine-grained PAT: Codespaces repository permission (read) on this repo.
+          # Classic PAT / OAuth token: codespace scope. GITHUB_TOKEN is unsuitable.
+          GH_TOKEN: ${{ secrets.CODESPACES_TOKEN }}
         run: |
           echo "Checking codespace status..."
-          
-          # Get codespaces
-          CODESPACES=$(gh codespace list --json name,repository,state,lastUsedAt 2>/dev/null || echo "[]")
-          
+
+          # Without a usable token the check cannot run, so it must not pass
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error title=CODESPACES_TOKEN not set::CODESPACES_TOKEN is unavailable. Configure a fine-grained PAT with Codespaces read on this repository, or a classic PAT with codespace scope."
+            exit 1
+          fi
+
+          # Only this repository's codespaces: the issue below is public, so the
+          # token owner's codespaces in other (possibly private) repos must not leak.
+          # A failed listing must not be reported as "no codespaces".
+          if ! CODESPACES=$(gh codespace list --repo "$GITHUB_REPOSITORY" --limit 1000 --json name,repository,state,lastUsedAt); then
+            echo "::error title=Codespace listing failed::gh codespace list failed. Check token validity, Codespaces read permission and repository access."
+            exit 1
+          fi
+
+          # Reject malformed responses before publishing a successful output.
+          if ! echo "$CODESPACES" | jq -e 'type == "array" and all(.[]; type == "object" and (.name | type == "string" and length > 0) and (.lastUsedAt | type == "string" and length > 0))' > /dev/null; then
+            echo "::error::Invalid Codespaces response; monitoring is incomplete."
+            exit 1
+          fi
+          TOTAL=$(echo "$CODESPACES" | jq 'length')
+          if [ "$TOTAL" -ge 1000 ]; then
+            echo "::error::Codespaces listing reached the limit; completeness is not established."
+            exit 1
+          fi
+          echo "$CODESPACES" | jq -r '.[] | @json' > codespace_rows.jsonl
+
           if [ "$CODESPACES" = "[]" ]; then
             echo "No codespaces found."
             echo "has_warnings=false" >> $GITHUB_OUTPUT
@@ -72,7 +118,7 @@ jobs:
                 fi
               fi
             fi
-          done < <(echo "$CODESPACES" | jq -r '.[] | @json')
+          done < codespace_rows.jsonl
           
           WARNING_COUNT=$(wc -l < warnings.txt | tr -d ' ')
           
@@ -162,12 +208,30 @@ jobs:
           *This issue will be automatically closed if no codespaces require attention in the next monitoring cycle.*
           EOF
           
-          # Create or update issue
-          gh issue create \
-            --title "⚠️ Codespace Retention Warning - Action Required" \
-            --body-file issue_body.md \
-            --label "codespace,maintenance" \
-            || echo "Issue may already exist or failed to create"
+          # The labels must exist before `gh issue create --label` can use them;
+          # only an "already exists" error is tolerated
+          ensure_label() {
+            if ! out=$(gh label create "$1" --repo "$GITHUB_REPOSITORY" --color "$2" --description "$3" 2>&1); then
+              # Confirm existence; do not trust an arbitrary error substring.
+              gh api "repos/$GITHUB_REPOSITORY/labels/$1" --silent || { echo "::error::Required label unavailable: $1"; exit 1; }
+            fi
+          }
+          ensure_label codespace "0E8A16" "Codespace retention monitoring"
+          ensure_label maintenance "FBCA04" "Repository maintenance"
+
+          # Update the open warning issue if there is one; otherwise create it
+          TITLE="⚠️ Codespace Retention Warning - Action Required"
+          EXISTING=$(gh issue list --repo "$GITHUB_REPOSITORY" --label "codespace" --state open --limit 1000 --json number,title \
+            --jq "[.[] | select(.title == \"$TITLE\")][0].number // empty")
+          if [ -n "$EXISTING" ]; then
+            gh issue edit "$EXISTING" --repo "$GITHUB_REPOSITORY" --body-file issue_body.md
+          else
+            gh issue create \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "$TITLE" \
+              --body-file issue_body.md \
+              --label "codespace,maintenance"
+          fi
       
       - name: Close Old Warning Issues
         if: steps.check.outputs.has_warnings == 'false'
@@ -175,10 +239,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Find and close old codespace warning issues
-          OPEN_ISSUES=$(gh issue list --label "codespace" --state open --json number,title --jq '.[] | select(.title | contains("Codespace Retention Warning")) | .number')
+          OPEN_ISSUES=$(gh issue list --repo "$GITHUB_REPOSITORY" --label "codespace" --state open --limit 1000 --json number,title --jq '.[] | select(.title == "⚠️ Codespace Retention Warning - Action Required") | .number')
           
           if [ -n "$OPEN_ISSUES" ]; then
             for issue in $OPEN_ISSUES; do
-              gh issue close $issue --comment "All codespaces are now active. Closing this warning issue."
+              gh issue close "$issue" --repo "$GITHUB_REPOSITORY" --comment "No codespaces require attention under the 30-day estimate in this monitoring cycle."
             done
           fi
