@@ -21,7 +21,7 @@ async function start(kind) {
     await fs.mkdir(path.join(root, 'storage/jobs'), {recursive:true});
     await fs.writeFile(path.join(root, 'storage/jobs/old.json'), JSON.stringify({jobId:'old',status:'running'}));
   }
-  const child = spawn(process.execPath, [path.join(root, 'server.js')], {cwd:root, env:{...process.env, MRL_BRIDGE_INSTANCE:'test', ...(kind==='missing-colmap'?{PATH:'/usr/bin:/bin'}:{}), MRL_3D_BRIDGE_PORT:'3050', MRL_BRIDGE_PYTHON:kind==='missing-python'?path.join(root,'absent-python'):python}, stdio:['ignore','pipe','pipe']});
+  const child = spawn(process.execPath, [path.join(root, 'server.js')], {cwd:root, env:{...process.env, MRL_BRIDGE_BIND:'127.0.0.1', MRL_BRIDGE_INSTANCE:'test', ...(kind==='missing-colmap'?{PATH:'/usr/bin:/bin'}:{}), MRL_3D_BRIDGE_PORT:'3050', MRL_BRIDGE_PYTHON:kind==='missing-python'?path.join(root,'absent-python'):python}, stdio:['ignore','pipe','pipe']});
   let logs=''; child.stderr.on('data', d => logs += d);
   for (let i=0;i<100;i++) {
     if (child.exitCode !== null) throw new Error(logs);
@@ -67,4 +67,20 @@ test('image upload passes while real runner fails independently for missing COLM
    const j=await job('missing_colmap');assert.equal(j.status,'failed');assert.equal(j.exitCode,3);assert.match(j.message,/COLMAP_NOT_FOUND/);assert.equal(j.report.status,'failed');
    const h=await (await fetch(base+'/api/health')).json();assert.equal(h.ok,true);
  }finally{await stop(s);}
+});
+
+test('all-interface bind is rejected; only explicit addresses are allowed',async()=>{
+ for (const bind of ['0.0.0.0','::','100.78.70.78,0.0.0.0']) {
+   const c=spawn(process.execPath,[path.join(source,'server.js')],{env:{...process.env,MRL_3D_BRIDGE_PORT:'3050',MRL_BRIDGE_BIND:bind}});let err='';c.stderr.on('data',d=>err+=d);const code=await new Promise(r=>c.on('exit',r));assert.notEqual(code,0);assert.match(err,/never all interfaces/);
+ }
+});
+
+test('unavailable bind address exits instead of falling back to other interfaces',async()=>{
+ // Storage is created before listening, so run from a temporary copy.
+ const root=await fs.mkdtemp(path.join(os.tmpdir(),'mrl-bridge-bind-'));
+ try {
+   await fs.cp(source,root,{recursive:true,filter:p=>!p.includes('node_modules')&&!p.includes('storage')});
+   await fs.symlink(path.join(source,'node_modules'),path.join(root,'node_modules'),'dir');
+   const c=spawn(process.execPath,[path.join(root,'server.js')],{cwd:root,env:{...process.env,MRL_3D_BRIDGE_PORT:'3050',MRL_BRIDGE_BIND:'192.0.2.1'}});let err='';c.stderr.on('data',d=>err+=d);const code=await new Promise(r=>c.on('exit',r));assert.equal(code,1);assert.match(err,/listen 192\.0\.2\.1:3050 failed: EADDRNOTAVAIL/);
+ } finally {await fs.rm(root,{recursive:true,force:true});}
 });

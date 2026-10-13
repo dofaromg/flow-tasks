@@ -21,6 +21,13 @@ IgnoreNew、無三天執行上限。監督程式用全域 mutex 防重複，Node
 server.js 與工作目錄，固定 3050、stdout/stderr 分檔。Node 退出後十秒重啟；
 啟動寬限 60 秒後連續三次健康失敗才停止自己的程序樹並恢復。
 
+入口與出口只走 DL580 的 Tailscale 位址 `100.78.70.78`（ROOT 定義）。Node 只監聽
+`100.78.70.78:3050` 與 `127.0.0.1:3050`（本機健康檢查用），拒絕 0.0.0.0／::；
+任一位址綁定失敗就退出，不改綁其他網卡。開機時若 Tailscale 位址尚未出現，
+監督程式記錄 `WAIT_BIND_ADDRESS` 並等待，不啟動 Node；位址出現後記錄
+`BIND_ADDRESS_READY`。回執的 `listenAddresses` 保存實際監聽位址。非 DL580 的
+測試環境須明確設定 `MRL_BRIDGE_BIND=127.0.0.1`，否則會因沒有該位址而拒絕啟動。
+
 若 3050 被其他程序占用，拒絕啟動，絕不以埠號殺程序。健康檢查同時比对
 service/version/port、安裝 instance、PID、CreationDate、執行檔與監聽 PID。
 安全停止先禁用排程、寫 stop.request，等待監督程式停止；必要時只停止
@@ -103,6 +110,13 @@ if ($LASTEXITCODE -ne 0) { throw 'Health failed' }
 ACL 失敗時先保存 `Get-Acl`／`icacls` 輸出，再由管理員依既有帳號權限規劃
 修正。不要用 Everyone FullControl 解決安裝問題。註冊不依赖使用者 PATH。
 
+確認入口只在 Tailscale 位址：監聽清單只能有 `100.78.70.78` 與 `127.0.0.1`。
+
+```powershell
+Invoke-RestMethod 'http://100.78.70.78:3050/api/health'
+Get-NetTCPConnection -LocalPort 3050 -State Listen | Select-Object LocalAddress,OwningProcess
+```
+
 ## 2. 分別驗收健康、上傳、3D 功能
 
 ```powershell
@@ -125,6 +139,9 @@ MRL、Python 或 runner 報告亦為失敗。無報告的 exit 0、adapter 不�
 iOS 端還須另取實際裝置上傳回執：在既有 App 設定目前 DL580 位址與 3050，
 上傳新掃描，核對 scan ID／檔案數／DL580 manifest，再發起工作並保存最終
 job/report。localhost 驗收不證明 iPhone 網路、權限或 App 操作已成功。
+App 位址須設為 `100.78.70.78:3050`（或 MagicDNS
+`win-pbvui7vk2a6.tail7de813.ts.net:3050`），iPhone 必須連上同一個 Tailscale；
+區網 IP 等其他位址不再能連到 bridge。
 
 ## 3. 主機重開機恢復回執
 

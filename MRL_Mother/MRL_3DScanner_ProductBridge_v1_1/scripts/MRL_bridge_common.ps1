@@ -3,6 +3,8 @@ $ErrorActionPreference = 'Stop'
 $script:TaskName = 'MRL_3DScanner_ProductBridge'
 $script:TaskPath = '\MRL\'
 $script:OwnerTag = 'MRL-Bridge-Startup-v1'
+# ROOT: enter and leave only through DL580's Tailscale address; loopback is for on-host health checks.
+$script:BindAddresses = @('100.78.70.78','127.0.0.1')
 function Get-BridgeRoot { (Resolve-Path (Join-Path $PSScriptRoot '..')).Path }
 function Get-BridgeConfig {
     $c = Get-Content (Join-Path (Get-BridgeRoot) '.bridge\config.json') -Raw | ConvertFrom-Json
@@ -52,7 +54,7 @@ function Write-BridgeReceipt($operation, $extra) {
     $info = if ($task) { Get-ScheduledTaskInfo -TaskPath $script:TaskPath -TaskName $script:TaskName } else { $null }
     $health = $null; $healthError = $null
     try { $health = Get-BridgeHealth (Get-BridgeConfig) } catch { $healthError = $_.Exception.Message }
-    $receipt = [ordered]@{ operation=$operation; time=(Get-Date).ToUniversalTime().ToString('o'); host=$env:COMPUTERNAME; root=$root; bootTime=(Get-CimInstance Win32_OperatingSystem).LastBootUpTime.ToUniversalTime().ToString('o'); taskState=$(if($task){[string]$task.State}else{'Absent'}); lastTaskResult=$(if($info){$info.LastTaskResult}else{$null}); lastTaskRunTime=$(if($info){$info.LastRunTime.ToUniversalTime().ToString('o')}else{$null}); listeners=@(Get-BridgeListeners); health=$health; healthError=$healthError; extra=$extra; hashes=@(Get-ChildItem (Join-Path $root 'scripts') -Filter '*.ps1' | Get-FileHash -Algorithm SHA256 | Select-Object Path,Hash) }
+    $receipt = [ordered]@{ operation=$operation; time=(Get-Date).ToUniversalTime().ToString('o'); host=$env:COMPUTERNAME; root=$root; bootTime=(Get-CimInstance Win32_OperatingSystem).LastBootUpTime.ToUniversalTime().ToString('o'); taskState=$(if($task){[string]$task.State}else{'Absent'}); lastTaskResult=$(if($info){$info.LastTaskResult}else{$null}); lastTaskRunTime=$(if($info){$info.LastRunTime.ToUniversalTime().ToString('o')}else{$null}); listeners=@(Get-BridgeListeners); listenAddresses=@(Get-NetTCPConnection -LocalPort 3050 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { [string]$_.LocalAddress }); health=$health; healthError=$healthError; extra=$extra; hashes=@(Get-ChildItem (Join-Path $root 'scripts') -Filter '*.ps1' | Get-FileHash -Algorithm SHA256 | Select-Object Path,Hash) }
     $name = (Get-Date -Format 'yyyyMMdd_HHmmss_fff') + '_' + $operation + '_' + [guid]::NewGuid().ToString('N') + '.json'
     $file = Join-Path $dir $name
     Write-BridgeJson $file $receipt

@@ -39,5 +39,19 @@
     "powershellParser": "NOT_RUN (no PowerShell available in the review environment)",
     "windowsRuntime": "NOT_RUN",
     "manifestHashes": "recomputed for the three changed files"
+  },
+  "tailscaleOnlyEntry": {
+    "date": "2026-10-13",
+    "rootDefinition": "MRL world entry and exit only through DL580 Tailscale address 100.78.70.78",
+    "changes": [
+      "server.js: listen only on MRL_BRIDGE_BIND (default 100.78.70.78,127.0.0.1); reject 0.0.0.0/::; exit on bind failure with no fallback",
+      "MRL_run_bridge.ps1: wait for the Tailscale address before starting Node (WAIT_BIND_ADDRESS / BIND_ADDRESS_READY)",
+      "MRL_bridge_common.ps1: BindAddresses constant; receipts record listenAddresses",
+      "tests/backend.test.mjs: tests bind loopback; new wildcard-rejection and unavailable-address tests"
+    ],
+    "nodeBindTests": "PASS on Node 22 with stub npm dependencies (registry blocked): wrong port, wildcard rejection, unavailable address; default bind exits 1 with EADDRNOTAVAIL off DL580; loopback-only listener refuses non-loopback address",
+    "fullBackendTests": "NOT_RUN (npm registry blocked; upload/job tests need real express/multer)",
+    "powershellParser": "NOT_RUN (no PowerShell available in the review environment)",
+    "dl580TailscaleListen": "NOT_RUN"
   }
 }
