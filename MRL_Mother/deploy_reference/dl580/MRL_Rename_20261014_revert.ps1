@@ -4,11 +4,13 @@ MRL_Rename_20261014_revert.ps1   origin_signature: MrLiouWord
 
 ROOT 2026-10-14: every name changed by D:\MRL_Mother\MRL_Rename_20261014.log goes back.
 The script reads that log on DL580 and reverses it:
-  1. RENAMED paths     -> original names, newest first (a folder before the files inside it)
-  2. REFFIXED files    -> original references (MRL_DL580 -> MRL_CLAUDE_DL580), backup first
+  1. REFFIXED files    -> original references (MRL_DL580 -> MRL_CLAUDE_DL580), backup first;
+                          done first, while the logged paths are still the current ones
+  2. RENAMED paths     -> original names, newest first (a folder before the files inside it)
   3. PGDB databases    -> original database names (needs psql; prompts for the password)
 Nothing is deleted or overwritten. A path whose original name is already taken is reported
-as CONFLICT and left alone. Every action is written to a receipt beside the log.
+as CONFLICT and left alone. If any action record in the log cannot be read, nothing is
+changed. Every action is written to a receipt beside the log.
 Exit 0 only when every original name is back.
 #>
 [CmdletBinding()]
@@ -47,26 +49,71 @@ if ($busy.Count) {
 $pairs = New-Object System.Collections.ArrayList
 $refFixed = New-Object System.Collections.ArrayList
 $dbPairs = New-Object System.Collections.ArrayList
+$unparsed = New-Object System.Collections.ArrayList
+$open = $null
+$lineNo = 0
 foreach ($line in (Get-Content -LiteralPath $LogPath)) {
-    if ($line -match '^RENAMED\s+([A-Za-z]:\\.+?)\s+([A-Za-z]:\\.+?)\s*$') { [void]$pairs.Add(@($Matches[1], $Matches[2])) }
-    elseif ($line -match '^RENAMED\s+([A-Za-z]:\\.+?)\s*$') { [void]$pairs.Add(@($Matches[1], $null)) }
-    elseif ($line -match '^REFFIXED\s+([A-Za-z]:\\.+?)\s+(\d+)\s*$') { [void]$refFixed.Add(@($Matches[1], [int]$Matches[2])) }
-    elseif ($line -match '^PGDB\s+([a-z_][a-z0-9_]*)\s+([a-z_][a-z0-9_]*)\s+ALTER DATABASE\s*$') { [void]$dbPairs.Add(@($Matches[1], $Matches[2])) }
+    $lineNo++
+    $t = "$line".Trim()
+    if (-not $t) { continue }
+    # A console copy of the log can wrap a record onto the next line or drop the tab
+    # between its two paths; a drive letter only ever starts a path.
+    if ($open -eq 'RENAMED' -and $t -match '^[A-Za-z]:\\') { $pairs[$pairs.Count - 1][1] = $t; $open = $null; continue }
+    if ($open -eq 'REFFIXED' -and $t -match '^\d+$') { $refFixed[$refFixed.Count - 1][1] = [int]$t; $open = $null; continue }
+    if ($open -eq 'SKIP' -and $t -match '^[A-Za-z]:\\') { $open = $null; continue }
+    $open = $null
+    if ($t -match '^RENAMED\s+([A-Za-z]:\\.+?)\s*([A-Za-z]:\\.+)$') { [void]$pairs.Add(@($Matches[1], $Matches[2])) }
+    elseif ($t -match '^RENAMED\s+([A-Za-z]:\\.+)$') { [void]$pairs.Add(@($Matches[1], $null)); $open = 'RENAMED' }
+    elseif ($t -match '^REFFIXED\s+([A-Za-z]:\\.+?)\s+(\d+)$') { [void]$refFixed.Add(@($Matches[1], [int]$Matches[2])) }
+    elseif ($t -match '^REFFIXED\s+([A-Za-z]:\\.+)$') { [void]$refFixed.Add(@($Matches[1], $null)); $open = 'REFFIXED' }
+    elseif ($t -match '^PGDB\s+([a-z_][a-z0-9_]*)\s+([a-z_][a-z0-9_]*)\s+ALTER DATABASE$') { [void]$dbPairs.Add(@($Matches[1], $Matches[2])) }
+    elseif ($t -match '^SKIP_EXISTS\s') { if ($t -notmatch '^SKIP_EXISTS\s+[A-Za-z]:\\.+?\s*[A-Za-z]:\\') { $open = 'SKIP' } }
+    elseif ($t -match '^(RENAMED|REFFIXED|PGDB)\b' -or $t -match '^[A-Za-z]:\\') { [void]$unparsed.Add("line $lineNo`t$t") }
 }
-Note 'PARSED' "renamed=$($pairs.Count) reffixed=$($refFixed.Count) databases=$($dbPairs.Count)"
 
-# A RENAMED line without a target takes the target this log gives the same name elsewhere.
+# A RENAMED record without a target takes the target this log gives the same name elsewhere.
 $leafMap = @{}
 foreach ($p in $pairs) { if ($p[1]) { $leafMap[[IO.Path]::GetFileName($p[0])] = [IO.Path]::GetFileName($p[1]) } }
+foreach ($p in $pairs) {
+    if ($p[1]) { continue }
+    $leaf = [IO.Path]::GetFileName($p[0])
+    if ($leafMap.ContainsKey($leaf)) {
+        $p[1] = [IO.Path]::Combine([IO.Path]::GetDirectoryName($p[0]), $leafMap[$leaf])
+        Note 'INFERRED' "$($p[0])`t$($p[1])"
+    } else { [void]$unparsed.Add("no target`t$($p[0])") }
+}
+foreach ($r in $refFixed) { if ($null -eq $r[1]) { [void]$unparsed.Add("no count`t$($r[0])") } }
+Note 'PARSED' "renamed=$($pairs.Count) reffixed=$($refFixed.Count) databases=$($dbPairs.Count)"
+if ($pairs.Count + $refFixed.Count + $dbPairs.Count -eq 0) { [void]$unparsed.Add('no RENAMED, REFFIXED or PGDB record found') }
+if ($unparsed.Count) {
+    foreach ($u in $unparsed) { Note 'UNPARSED' $u }
+    Note 'ABORT' 'nothing changed; the log could not be read completely'
+    exit 1
+}
+
+# Byte-level edit keeps each file's encoding (UTF-8, ANSI or UTF-16) exactly as it was.
+$latin1 = [Text.Encoding]::GetEncoding(28591)
+foreach ($r in $refFixed) {
+    $file = $r[0]; $n = $r[1]
+    try {
+        if (-not (Test-Path -LiteralPath $file)) { Note 'REF_MISSING' $file; continue }
+        $bytes = [IO.File]::ReadAllBytes($file)
+        $enc = $latin1
+        if ($bytes.Length -ge 2 -and $bytes[0] -eq 0xFF -and $bytes[1] -eq 0xFE) { $enc = [Text.Encoding]::Unicode }
+        $text = $enc.GetString($bytes)
+        $found = [regex]::Matches($text, 'MRL_DL580').Count
+        if ($found -eq 0 -and [regex]::Matches($text, 'MRL_CLAUDE_DL580').Count -ge $n) { Note 'REF_ALREADY' $file; continue }
+        if ($found -ne $n) { Note 'REF_CHECK' "$file`tfound=$found expected=$n left unchanged"; continue }
+        $save = [IO.Path]::Combine($backup, ($file -replace ':', ''))
+        [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($save))
+        [IO.File]::Copy($file, $save, $false)
+        [IO.File]::WriteAllBytes($file, $enc.GetBytes($text.Replace('MRL_DL580', 'MRL_CLAUDE_DL580')))
+        Note 'REF_RESTORED' "$file`t$n backup=$save"
+    } catch { Note 'REF_FAILED' "$file`t$($_.Exception.Message)" }
+}
 
 for ($i = $pairs.Count - 1; $i -ge 0; $i--) {
     $old = $pairs[$i][0]; $new = $pairs[$i][1]
-    if (-not $new) {
-        $leaf = [IO.Path]::GetFileName($old)
-        if (-not $leafMap.ContainsKey($leaf)) { Note 'UNRESOLVED' $old; continue }
-        $new = [IO.Path]::Combine([IO.Path]::GetDirectoryName($old), $leafMap[$leaf])
-        Note 'INFERRED' "$old`t$new"
-    }
     if ([IO.Path]::GetDirectoryName($old) -ne [IO.Path]::GetDirectoryName($new)) { Note 'SKIP_PARENT_DIFFERS' "$new`t$old"; continue }
     $hasOld = Test-Path -LiteralPath $old
     $hasNew = Test-Path -LiteralPath $new
@@ -79,25 +126,6 @@ for ($i = $pairs.Count - 1; $i -ge 0; $i--) {
     } catch { Note 'FAILED' "$new`t$($_.Exception.Message)" }
 }
 
-# Byte-level edit keeps each file's encoding (UTF-8, ANSI or UTF-16) exactly as it was.
-$latin1 = [Text.Encoding]::GetEncoding(28591)
-foreach ($r in $refFixed) {
-    $file = $r[0]; $n = $r[1]
-    if (-not (Test-Path -LiteralPath $file)) { Note 'REF_MISSING' $file; continue }
-    $bytes = [IO.File]::ReadAllBytes($file)
-    $enc = $latin1
-    if ($bytes.Length -ge 2 -and $bytes[0] -eq 0xFF -and $bytes[1] -eq 0xFE) { $enc = [Text.Encoding]::Unicode }
-    $text = $enc.GetString($bytes)
-    $found = [regex]::Matches($text, 'MRL_DL580').Count
-    if ($found -eq 0 -and [regex]::Matches($text, 'MRL_CLAUDE_DL580').Count -ge $n) { Note 'REF_ALREADY' $file; continue }
-    if ($found -ne $n) { Note 'REF_CHECK' "$file`tfound=$found expected=$n left unchanged"; continue }
-    $save = [IO.Path]::Combine($backup, ($file -replace ':', ''))
-    [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($save))
-    [IO.File]::Copy($file, $save, $false)
-    [IO.File]::WriteAllBytes($file, $enc.GetBytes($text.Replace('MRL_DL580', 'MRL_CLAUDE_DL580')))
-    Note 'REF_RESTORED' "$file`t$n backup=$save"
-}
-
 if ($dbPairs.Count) {
     if (-not (Test-Path -LiteralPath $PsqlPath)) { Note 'DB_FAILED' "psql not found: $PsqlPath" }
     else {
@@ -105,7 +133,9 @@ if ($dbPairs.Count) {
         $names = @()
         foreach ($d in $dbPairs) {
             $o = $d[0]; $n = $d[1]; $names += "'$o'", "'$n'"
-            $sql += "SELECT CASE WHEN EXISTS (SELECT 1 FROM pg_database WHERE datname = '$o') THEN 'DB_ALREADY $o'" +
+            $sql += "SELECT CASE WHEN EXISTS (SELECT 1 FROM pg_database WHERE datname = '$o')" +
+                " AND EXISTS (SELECT 1 FROM pg_database WHERE datname = '$n') THEN 'DB_CONFLICT $n $o'" +
+                " WHEN EXISTS (SELECT 1 FROM pg_database WHERE datname = '$o') THEN 'DB_ALREADY $o'" +
                 " WHEN NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = '$n') THEN 'DB_MISSING $n'" +
                 " WHEN EXISTS (SELECT 1 FROM pg_stat_activity WHERE datname = '$n') THEN 'DB_BUSY $n'" +
                 " ELSE 'DB_RENAMING $n -> $o' END;`n"
@@ -138,6 +168,7 @@ $left = 0
 foreach ($p in $pairs) { if (-not (Test-Path -LiteralPath $p[0])) { $left++; Note 'NOT_BACK' $p[0] } }
 Note 'SUMMARY' ((($counts.GetEnumerator() | Sort-Object Name | ForEach-Object { "$($_.Name)=$($_.Value)" }) -join ' '))
 Note 'DONE' "$((Get-Date).ToString('o')) original_names_missing=$left receipt=$receipt"
-$bad = 'CONFLICT', 'FAILED', 'MISSING', 'UNRESOLVED', 'SKIP_PARENT_DIFFERS', 'REF_CHECK', 'REF_MISSING', 'DB_FAILED', 'DB_MISSING', 'DB_BUSY'
+$bad = 'CONFLICT', 'FAILED', 'MISSING', 'SKIP_PARENT_DIFFERS', 'REF_CHECK', 'REF_MISSING', 'REF_FAILED',
+    'DB_FAILED', 'DB_MISSING', 'DB_BUSY', 'DB_CONFLICT'
 if ($left -or @($bad | Where-Object { $counts[$_] }).Count) { exit 1 }
 exit 0
