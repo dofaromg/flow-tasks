@@ -24,12 +24,12 @@
     {
       "path": "backend/MRL_3D_Reconstruction_Server/server.js",
       "before": "C36AA38A00018CB922831467E7C87B482F46880268D30E26E55A3B1366355DDC",
-      "after": "7008210450935BF6DCCBA641B3765600BA1F0E7CF5D24B406D34E4A8CA77F57B"
+      "after": "6AD1900E0E70DB4644D7E1F03D6EFC34451F9535E583AC3E2EA9F6DB4592861C"
     },
     {
       "path": "docs/04_WINDOWS_STARTUP_RUNBOOK.md",
       "before": null,
-      "after": "A0D0C1F4F81910339B7D8411DD58FF0D02FB048E606064CC3ED64B5AC4A46D54"
+      "after": "A425151A8C30B345EB242D48A30874F643247628D0D37E2ED037852FBA692ADD"
     },
     {
       "path": "scripts/MRL_acceptance_check_bridge.ps1",
@@ -44,7 +44,7 @@
     {
       "path": "scripts/MRL_bridge_common.ps1",
       "before": null,
-      "after": "09127F6F365AAC926CDCA81E20B027B4540CD1472A2046EAE4C78D2CC2A4E6CF"
+      "after": "CDE4478739AC73211E70A3F70DD5225435ACF1FAA8D8A31D0EE2EF557F3E62B0"
     },
     {
       "path": "scripts/MRL_health_bridge.ps1",
@@ -69,7 +69,7 @@
     {
       "path": "scripts/MRL_run_bridge.ps1",
       "before": null,
-      "after": "70A6461BDAFE58ADFCF4EE13BCD1070C2EADA94160B773A835E6E97260062879"
+      "after": "A1BAB156523193BACFB34CAD4050A89C4C0CB45821CEC3AFC6D3B1C2DA00DB2E"
     },
     {
       "path": "scripts/MRL_start_bridge.ps1",
@@ -89,7 +89,7 @@
     {
       "path": "tests/backend.test.mjs",
       "before": null,
-      "after": "12F935EE2FBB39E9548845BD38CC73D3C42B4051641A17AAFBC47ED391508A05"
+      "after": "CD93D1647090A306F28100F00344EB459C78D760E37336771F094592AA3C5F75"
     },
     {
       "path": "tests/common.test.ps1",

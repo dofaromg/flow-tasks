@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
 import fs from 'fs-extra';
+import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,6 +13,10 @@ const __dirname = path.dirname(__filename);
 const ROOT = __dirname;
 const PORT = Number(process.env.MRL_3D_BRIDGE_PORT || 3050);
 if (PORT !== 3050) throw new Error('MRL bridge requires port 3050');
+// ROOT: the MRL world is entered and left only through DL580's Tailscale address.
+// Loopback stays for on-host health checks; never listen on all interfaces.
+const BIND = (process.env.MRL_BRIDGE_BIND || '100.78.70.78,127.0.0.1').split(',').map(h => h.trim()).filter(Boolean);
+if (!BIND.length || BIND.some(h => ['0.0.0.0', '::', '[::]', '*'].includes(h))) throw new Error('MRL bridge must bind explicit addresses, never all interfaces');
 const STORAGE = path.join(ROOT, 'storage');
 const UPLOADS = path.join(STORAGE, 'uploads');
 const JOBS = path.join(STORAGE, 'jobs');
@@ -209,4 +214,9 @@ app.use((err, req, res, next) => {
   if (res.headersSent) return next(err);
   res.status(500).json({ ok: false, error: 'request failed' });
 });
-app.listen(PORT, () => console.log(`MRL 3D Reconstruction Server running on ${PORT}`));
+// A missing address (e.g. Tailscale not up yet) exits so the supervisor retries; no fallback to other interfaces.
+for (const host of BIND) {
+  http.createServer(app)
+    .on('error', err => { console.error(`listen ${host}:${PORT} failed: ${err.code || err.message}`); process.exit(1); })
+    .listen(PORT, host, () => console.log(`MRL 3D Reconstruction Server running on ${host}:${PORT}`));
+}

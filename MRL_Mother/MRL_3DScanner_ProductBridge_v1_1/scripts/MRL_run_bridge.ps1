@@ -11,10 +11,18 @@ $stop = Join-Path $state 'stop.request'
 function Log($text) { "[$((Get-Date).ToUniversalTime().ToString('o'))] $text" | Add-Content (Join-Path $logs ('supervisor_' + (Get-Date -Format 'yyyyMMdd') + '.log')) -Encoding UTF8 }
 try {
     $env:MRL_3D_BRIDGE_PORT = '3050'; $env:MRL_BRIDGE_INSTANCE = $c.instance; $env:MRL_BRIDGE_PYTHON = $c.python
+    $env:MRL_BRIDGE_BIND = $script:BindAddresses -join ','
+    $tailnet = @($script:BindAddresses | Where-Object { $_ -ne '127.0.0.1' }); $waiting = $false
     $env:PATH = (Split-Path $c.python) + ';' + $c.dependencyPath + ';' + $env:PATH
     # Only recover a surviving child recorded by this installation.
     Stop-OwnedNode $c
     while (-not (Test-Path $stop)) {
+        # At boot Tailscale may come up after this task; wait for its address instead of restarting Node in a loop.
+        if (@($tailnet | Where-Object { -not (Get-NetIPAddress -IPAddress $_ -ErrorAction SilentlyContinue) }).Count) {
+            if (-not $waiting) { Log "WAIT_BIND_ADDRESS $($tailnet -join ',')"; $waiting = $true }
+            Start-Sleep -Seconds 10; continue
+        }
+        if ($waiting) { Log "BIND_ADDRESS_READY $($tailnet -join ',')"; $waiting = $false }
         if (@(Get-BridgeListeners).Count) { Log 'PORT_CONFLICT: refusing to start or terminate foreign listener'; exit 2 }
         $stamp = (Get-Date -Format 'yyyyMMdd_HHmmss_fff') + '_' + [guid]::NewGuid().ToString('N')
         $child = Start-Process -FilePath $c.node -ArgumentList ('"' + $c.entry + '"') -WorkingDirectory (Split-Path $c.entry) -RedirectStandardOutput (Join-Path $logs "$stamp.stdout.log") -RedirectStandardError (Join-Path $logs "$stamp.stderr.log") -WindowStyle Hidden -PassThru
