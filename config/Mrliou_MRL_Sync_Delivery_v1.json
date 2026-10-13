@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 6146,
-      "sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953",
+      "size_bytes": 7131,
+      "sha256": "e3e438f7f4c2ce7e30bd45cdc636b414a95dc0914a0c9e3c06aa713951cc7a96",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -152,6 +152,23 @@
       },
       "current_size_bytes": 6146,
       "current_sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "780f541c6d0ba96d876f137c847b237ef40fc93e",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
+      "reason": "PR #667 restores Codespace Monitoring and appends a CHANGELOG entry. Refresh only the live checksum; preserve the preceding entry and all sync payloads.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "role": "additive_history",
+        "size_bytes": 6146,
+        "sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953",
+        "dependencies": [
+          "docs/Mrliou_MRL_Sync_Operations_v1.md"
+        ]
+      },
+      "current_size_bytes": 7131,
+      "current_sha256": "e3e438f7f4c2ce7e30bd45cdc636b414a95dc0914a0c9e3c06aa713951cc7a96",
       "origin_signature": "MrLiouWord"
     }
   ]
