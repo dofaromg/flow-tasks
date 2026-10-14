@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 6146,
-      "sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953",
+      "size_bytes": 7123,
+      "sha256": "81e444c3bde63b8b5a1bfc5b51d81a507d1f7785bf422f1ab2adf4514b4ffcda",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -152,6 +152,24 @@
       },
       "current_size_bytes": 6146,
       "current_sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "a459a758ccc920d3d762b079867c977ae15299e5",
+      "change_commit": "11bb2f68d6c7222e2f79e247dea678390108b9c4",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/669",
+      "reason": "PR #669 adds evidence-only DL580 preflight to CHANGELOG.md; preserve prior evidence and refresh live payload integrity.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "role": "additive_history",
+        "size_bytes": 6146,
+        "sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953",
+        "dependencies": [
+          "docs/Mrliou_MRL_Sync_Operations_v1.md"
+        ]
+      },
+      "current_size_bytes": 7123,
+      "current_sha256": "81e444c3bde63b8b5a1bfc5b51d81a507d1f7785bf422f1ab2adf4514b4ffcda",
       "origin_signature": "MrLiouWord"
     }
   ]
