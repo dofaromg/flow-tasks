@@ -73,18 +73,22 @@ foreach ($line in ([IO.File]::ReadAllLines($LogPath, $logEncoding))) {
     if (-not $t) { continue }
     # A console copy of the log can wrap a record onto the next line or drop the tab
     # between its two paths; a drive letter only ever starts a path.
-    if ($open -eq 'RENAMED' -and $t -match '^[A-Za-z]:\\') { $pairs[$pairs.Count - 1][1] = $t; $open = $null; continue }
-    if ($open -eq 'REFFIXED' -and $t -match '^\d+$') { $refFixed[$refFixed.Count - 1][1] = [int]$t; $open = $null; continue }
-    if ($open -eq 'SKIP' -and $t -match '^[A-Za-z]:\\') { $open = $null; continue }
+    if ($open -eq 'RENAMED' -and $t -cmatch '^[A-Za-z]:\\') { $pairs[$pairs.Count - 1][1] = $t; $open = $null; continue }
+    if ($open -eq 'REFFIXED' -and $t -cmatch '^\d+$') { $refFixed[$refFixed.Count - 1][1] = [int]$t; $open = $null; continue }
+    if ($open -eq 'SKIP' -and $t -cmatch '^[A-Za-z]:\\') { $open = $null; continue }
+    if ($open -eq 'SKIP') { [void]$unparsed.Add("missing SKIP_EXISTS continuation before line $lineNo") }
     $open = $null
-    if ($t -match '^RENAMED\s+([A-Za-z]:\\.+?)\s*([A-Za-z]:\\.+)$') { [void]$pairs.Add(@($Matches[1], $Matches[2])) }
-    elseif ($t -match '^RENAMED\s+([A-Za-z]:\\.+)$') { [void]$pairs.Add(@($Matches[1], $null)); $open = 'RENAMED' }
-    elseif ($t -match '^REFFIXED\s+([A-Za-z]:\\.+?)\s+(\d+)$') { [void]$refFixed.Add(@($Matches[1], [int]$Matches[2])) }
-    elseif ($t -match '^REFFIXED\s+([A-Za-z]:\\.+)$') { [void]$refFixed.Add(@($Matches[1], $null)); $open = 'REFFIXED' }
-    elseif ($t -match '^PGDB\s+([a-z_][a-z0-9_]*)\s+([a-z_][a-z0-9_]*)\s+ALTER DATABASE$') { [void]$dbPairs.Add(@($Matches[1], $Matches[2])) }
-    elseif ($t -match '^SKIP_EXISTS\s') { if ($t -notmatch '^SKIP_EXISTS\s+[A-Za-z]:\\.+?\s*[A-Za-z]:\\') { $open = 'SKIP' } }
-    elseif ($t -match '^(RENAMED|REFFIXED|PGDB)\b' -or $t -match '^[A-Za-z]:\\') { [void]$unparsed.Add("line $lineNo`t$t") }
+    if ($t -cmatch '^RENAMED\s+([A-Za-z]:\\.+?)\s*([A-Za-z]:\\.+)$') { [void]$pairs.Add(@($Matches[1], $Matches[2])) }
+    elseif ($t -cmatch '^RENAMED\s+([A-Za-z]:\\.+)$') { [void]$pairs.Add(@($Matches[1], $null)); $open = 'RENAMED' }
+    elseif ($t -cmatch '^REFFIXED\s+([A-Za-z]:\\.+?)\s+(\d+)$') { [void]$refFixed.Add(@($Matches[1], [int]$Matches[2])) }
+    elseif ($t -cmatch '^REFFIXED\s+([A-Za-z]:\\.+)$') { [void]$refFixed.Add(@($Matches[1], $null)); $open = 'REFFIXED' }
+    elseif ($t -cmatch '^PGDB\s+([a-z_][a-z0-9_]*)\s+([a-z_][a-z0-9_]*)\s+ALTER DATABASE$') { [void]$dbPairs.Add(@($Matches[1], $Matches[2])) }
+    elseif ($t -cmatch '^SKIP_EXISTS\s+([A-Za-z]:\\.+?)\s*([A-Za-z]:\\.+)$') { }
+    elseif ($t -cmatch '^SKIP_EXISTS\s+([A-Za-z]:\\.+)$') { $open = 'SKIP' }
+    elseif ($t -cmatch '^(start|REFS_START|REF|done2|PHASE2_START)(?:\s|$)') { }
+    else { [void]$unparsed.Add("line $lineNo`t$t") }
 }
+if ($open -eq 'SKIP') { [void]$unparsed.Add('missing SKIP_EXISTS continuation at end of log') }
 
 # Do not infer a missing target from another folder with the same leaf name.
 # A console transcript is insufficient authority for any unresolved mapping.
