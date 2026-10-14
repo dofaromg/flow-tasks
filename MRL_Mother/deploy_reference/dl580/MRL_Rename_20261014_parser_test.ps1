@@ -3,7 +3,7 @@
 # Synthetic parser regressions only. No DL580 credentials, data, or network.
 param([string]$SourcePath = (Join-Path $PSScriptRoot 'MRL_Rename_20261014_revert.ps1'))
 $ErrorActionPreference = 'Stop'
-$source = [IO.File]::ReadAllText($SourcePath)
+$source = [IO.File]::ReadAllText($SourcePath).Replace([Environment]::NewLine, [string][char]10)
 $tokens = $null; $errors = $null
 $null = [Management.Automation.Language.Parser]::ParseInput($source, [ref]$tokens, [ref]$errors)
 if ($errors.Count) { throw ($errors | Out-String) }
