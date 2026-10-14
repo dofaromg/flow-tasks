@@ -1,0 +1,20 @@
+name: MRL DL580 rename parser regression
+on:
+  pull_request:
+    paths:
+      - 'MRL_Mother/deploy_reference/dl580/MRL_Rename_20261014_revert.ps1'
+      - 'MRL_Mother/deploy_reference/dl580/MRL_Rename_20261014_parser_test.ps1'
+      - '.github/workflows/mrl-dl580-rename-parser.yml'
+permissions:
+  contents: read
+jobs:
+  synthetic-powershell-51:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Parse production script and exercise synthetic log records
+        shell: powershell
+        run: '& ./MRL_Mother/deploy_reference/dl580/MRL_Rename_20261014_parser_test.ps1'
