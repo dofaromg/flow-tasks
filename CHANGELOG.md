@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — DL580 naming restoration preflight (2026-10-14)
+
+- PR #669 now defaults to evidence-only preflight on DL580 D:, with unique receipts,
+  log/file SHA-256, original timestamps, reference counts and read-only database catalog checks.
+- Preserve the a459a758 user-requested revert in Git history; add fail-closed parsing,
+  reference-before-path ordering, reference I/O failure handling and database conflict handling
+  from 8386e5b for review. Do not infer missing targets from same-leaf folders.
+- Hold all restoration, including explicit -Apply, until the actual rename log,
+  authoritative per-item names, original reference bytes and database/application settings
+  have been reconciled. Preflight exit 3 is HOLD, never a restoration PASS.
+- PowerShell/DL580 execution remains NOT_RUN in this repair session; source inspection
+  and readback do not establish local deployment or runtime acceptance.
+- origin_signature: MrLiouWord; canonical_authority: Mr.liou.
+
 ### Added — Multi-cloud connector orchestration
 
 - Add one-command authentication checks and synchronization across all eight
