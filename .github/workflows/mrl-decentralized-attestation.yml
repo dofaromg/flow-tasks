@@ -1,0 +1,37 @@
+name: MRL Decentralized Attestation Protocol
+
+on:
+  pull_request:
+    paths:
+      - "MRL_Governance/MRL_Causal_Optimization_Review_v1/**"
+      - ".github/workflows/mrl-decentralized-attestation.yml"
+  push:
+    branches: [main]
+    paths:
+      - "MRL_Governance/MRL_Causal_Optimization_Review_v1/**"
+      - ".github/workflows/mrl-decentralized-attestation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-attestation-protocol:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run attestation aggregation tests
+        run: python -m unittest MRL_Governance/MRL_Causal_Optimization_Review_v1/tests/test_MRL_aggregate_attestations_v1.py -v
+      - name: Preserve protocol boundary
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          forbidden = ["MemoryVault", "SelfMemory topology", "Mother topology"]
+          text = Path("MRL_Governance/MRL_Causal_Optimization_Review_v1/schema/MRL_Node_Attestation_v1.schema.json").read_text(encoding="utf-8")
+          hits = [x for x in forbidden if x in text]
+          if hits:
+              raise SystemExit(f"private topology leaked into public protocol: {hits}")
+          print("protocol boundary PASS")
+          PY
