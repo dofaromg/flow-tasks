@@ -1,0 +1,17 @@
+{
+  "sourceCommit": "1b10f5605ec5542f2271315e38d8302c3f1d387a",
+  "sourceTree": "cf1aab2cda35a731c6d58f942833e94346b3c4af",
+  "githubRoot": "https://github.com/dofaromg/flow-tasks/tree/1b10f5605ec5542f2271315e38d8302c3f1d387a/MRL_Mother/MRL_3DScanner_ProductBridge_v1_1",
+  "driveRoot": "https://drive.google.com/drive/folders/16vtumfRomX1bs9VxGIKE_8J4jvl3tTiL",
+  "driveProductFolder": "1YB0jRvDphv00gH0mgf6KAL-DqTSsqq7B",
+  "driveStartScript": "1QDkv9yvpZ8UiJm9HDjSEAXQumFlY4RVn",
+  "driveStartScriptReturnedBytes": 0,
+  "driveContentParity": "UNVERIFIED",
+  "dl580Access": "UNAVAILABLE: no configured SSH alias; Tailscale preferences failed to load",
+  "actualDPath": "UNVERIFIED",
+  "originalPackagesAndManifests": "UNCHANGED",
+  "deployment": "NOT_RUN",
+  "rebootRecovery": "NOT_RUN",
+  "iOSDeviceUpload": "NOT_RUN",
+  "successfulPhotoReconstruction": "NOT_RUN"
+}

@@ -1,0 +1,105 @@
+{
+  "source": "1b10f5605ec5542f2271315e38d8302c3f1d387a",
+  "files": [
+    {
+      "path": "README.md",
+      "before": "CDE071E231A9FB157D472E849F2D351680599B360870CA757EAD4E353C5BA08F",
+      "after": "3D9F8A375A4D077FA3C19E44D785078A2D592421C42707C16B031C76C1A3BA8C"
+    },
+    {
+      "path": "backend/MRL_3D_Reconstruction_Server/package-lock.json",
+      "before": null,
+      "after": "464AEBC87003CE84C441C619B8B80B6131B69F6890BB8CA52E342FCB7BE57C39"
+    },
+    {
+      "path": "backend/MRL_3D_Reconstruction_Server/package.json",
+      "before": "AED37D62AFE08D917F7B2EDBBFDC2C16B877D5B3A42D7039EA02E428D45FB7AB",
+      "after": "95CBF14E60482B5142775CB51EFAE135E7F7C53EF524E99402796ED30BA3FE8B"
+    },
+    {
+      "path": "backend/MRL_3D_Reconstruction_Server/python/mrl3d_job_runner.py",
+      "before": "E4FCA244AE4988BBD7AA6FD1780C836DBDA06EC7208C25689046D11C109AF91D",
+      "after": "142816B13945DFB30B1FFFFA0DF1BCB7C1CB33CA1E3F05B0CDEC68E9C1381690"
+    },
+    {
+      "path": "backend/MRL_3D_Reconstruction_Server/server.js",
+      "before": "C36AA38A00018CB922831467E7C87B482F46880268D30E26E55A3B1366355DDC",
+      "after": "6AD1900E0E70DB4644D7E1F03D6EFC34451F9535E583AC3E2EA9F6DB4592861C"
+    },
+    {
+      "path": "docs/04_WINDOWS_STARTUP_RUNBOOK.md",
+      "before": null,
+      "after": "A425151A8C30B345EB242D48A30874F643247628D0D37E2ED037852FBA692ADD"
+    },
+    {
+      "path": "scripts/MRL_acceptance_check_bridge.ps1",
+      "before": "02B8B82E16E791AD6681AA7AEF1CFC502956D0E7C512F2B8913DE465FDE455BA",
+      "after": "6F1BFE02582739C174A85DB23573B9638DFF4B31052916CA4AEFA380AE99F3DF"
+    },
+    {
+      "path": "scripts/MRL_apply_patch.ps1",
+      "before": null,
+      "after": "CB5160A239D7A969D490858CACF8AD652E59C176DBAA9635B4CAE43A93F1B0C9"
+    },
+    {
+      "path": "scripts/MRL_bridge_common.ps1",
+      "before": null,
+      "after": "CDE4478739AC73211E70A3F70DD5225435ACF1FAA8D8A31D0EE2EF557F3E62B0"
+    },
+    {
+      "path": "scripts/MRL_health_bridge.ps1",
+      "before": null,
+      "after": "4A36B40E427D4C2B8001488E1683556CFC5C4416CE4342D04C32E5E5E94F991A"
+    },
+    {
+      "path": "scripts/MRL_install_bridge.ps1",
+      "before": "D7184FDBC1B088A7146BAE7B12442F730F86F32C1EF285BFA8DFC68EFFB83295",
+      "after": "C481ABBB5C16224B0B8333D412B687CAB34753CD0F58C495ACF8DF2CF045E331"
+    },
+    {
+      "path": "scripts/MRL_register_bridge.ps1",
+      "before": null,
+      "after": "EEA8CED27AA8F8E01FAF78DEFDCB174749E1E4A123B6B37D536D08A914E73C3C"
+    },
+    {
+      "path": "scripts/MRL_remove_bridge.ps1",
+      "before": null,
+      "after": "6490A152FB5818D5826E7A3A481C3F44BB0C0BCC548F93C435C30C55E6D4D709"
+    },
+    {
+      "path": "scripts/MRL_run_bridge.ps1",
+      "before": null,
+      "after": "A1BAB156523193BACFB34CAD4050A89C4C0CB45821CEC3AFC6D3B1C2DA00DB2E"
+    },
+    {
+      "path": "scripts/MRL_start_bridge.ps1",
+      "before": "4775259EDCA6F949517301D1CD250A6B4B1379200746F1FDB5A6D06DEAD4B14C",
+      "after": "9E0E63A9C8A91A0D64824CE6D6612BA204036628D11D994E0717072535382CD5"
+    },
+    {
+      "path": "scripts/MRL_status_bridge.ps1",
+      "before": null,
+      "after": "1F74EB16C533662935F4EA0098732E1C689C04DB8D8621C646B3AE2710B13DB9"
+    },
+    {
+      "path": "scripts/MRL_stop_bridge.ps1",
+      "before": "CE73BB3720E7928BD027EA596994D9280135100C7FE0DD8F4A09B834A3ECEE6C",
+      "after": "2EEFE7580E7B942A62FAB2608BA29BDFF18B4F7C666B2DDDB515C87C96BE808F"
+    },
+    {
+      "path": "tests/backend.test.mjs",
+      "before": null,
+      "after": "CD93D1647090A306F28100F00344EB459C78D760E37336771F094592AA3C5F75"
+    },
+    {
+      "path": "tests/common.test.ps1",
+      "before": null,
+      "after": "A79EECE762FFBF959C6CB668E9125FC079FF2447195C83DC08BBDDBE62F96961"
+    },
+    {
+      "path": "tests/test_runner.py",
+      "before": null,
+      "after": "150DD6BDBB913923343D185944B8ADF3C52C5CDD24E80127AF8CFB04A29377F9"
+    }
+  ]
+}

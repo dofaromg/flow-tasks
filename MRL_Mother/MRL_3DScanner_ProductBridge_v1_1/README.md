@@ -49,3 +49,13 @@ scope: iOS capture app + DL580 reconstruction bridge + existing product-grade MR
 - runner 會驗證 mrl3d 回傳 adapter，不符合預期即 failed，不偽裝 completed。
 - backend job message 讀取 `MRL_JOB_REPORT.json` reason，並把 report 鏡像寫入 `storage/reports`。
 - PowerShell acceptance 改用實際 cube.obj mesh 檔，並輪詢 job 結果。
+
+## Windows Server 2019 startup repair
+
+Use the existing D: installation, not a new product directory. See
+[Windows startup and acceptance runbook](docs/04_WINDOWS_STARTUP_RUNBOOK.md).
+Registration uses Task Scheduler with a noninteractive supervisor, process identity
+checks and separate upload/reconstruction/reboot receipts. Original included
+packages, original checksums and manifest remain unchanged; repair hashes are in
+`PATCH_MANIFEST.json`. No DL580 deployment or successful photo reconstruction is
+claimed by this source patch.

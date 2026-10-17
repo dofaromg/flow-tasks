@@ -116,6 +116,21 @@ def run_mrl3d(mrl_cmd, cfg, out, mode, expected_adapter, ok_reason, fail_reason,
     if expected_adapter and adapter != expected_adapter:
         make_report(out, 'failed', mode, f'MRL3D_ADAPTER_MISMATCH expected={expected_adapter} got={adapter}', details)
         return 10
+    expected_out = Path(out) / 'mrl3d_output'
+    required = ['metrics.json', 'scene_meta.json', 'cameras.json', 'RUN_REPORT.md']
+    if not parsed or not parsed.get('output_dir') or Path(parsed['output_dir']).resolve() != expected_out.resolve() or any(not (expected_out / name).is_file() or (expected_out / name).stat().st_size == 0 for name in required):
+        make_report(out, 'failed', mode, 'MRL3D_OUTPUT_EVIDENCE_MISSING', details)
+        return 11
+    try:
+        meta = json.loads((expected_out / 'scene_meta.json').read_text(encoding='utf-8'))
+        metrics = json.loads((expected_out / 'metrics.json').read_text(encoding='utf-8'))
+        if meta.get('adapter') != expected_adapter or not isinstance(metrics, dict):
+            raise ValueError('output evidence mismatch')
+    except (ValueError, OSError) as exc:
+        details['evidence_error'] = str(exc)
+        make_report(out, 'failed', mode, 'MRL3D_OUTPUT_EVIDENCE_INVALID', details)
+        return 12
+    details['scope'] = {'mesh': 'mesh analysis', 'video': 'video diagnostics', 'colmap': 'COLMAP sparse reconstruction and analysis'}.get(expected_adapter)
     make_report(out, 'completed', mode, ok_reason, details)
     return 0
 
@@ -145,6 +160,10 @@ def main():
     details={"scan_dir":str(scan),"images":len(images),"videos":len(videos),"meshes":len(meshes)}
 
     mrl_cmd = mrl3d_command()
+    details['dependencies'] = {'mrl3d': bool(mrl_cmd), 'colmap': bool(which('colmap'))}
+    if images and not meshes and not videos and not details['dependencies']['colmap']:
+        make_report(out, 'failed', 'images', 'COLMAP_NOT_FOUND: image reconstruction requires COLMAP on DL580', details)
+        return 3
     if not mrl_cmd:
         make_report(out,'failed',args.mode,'MRL3D_PACKAGE_NOT_FOUND: install included mrl3d package first',details)
         return 2
