@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'MRL_Bridge/**'
+      - 'Dockerfile.mrl'
       - 'connectors/**'
       - 'MRL_Mother/09_workflow/MRL_Mobius_Closure_Engine_v1.py'
       - 'scripts/MRL_install_bridge_translation_center.ps1'
@@ -12,6 +13,7 @@ on:
     branches: [main]
     paths:
       - 'MRL_Bridge/**'
+      - 'Dockerfile.mrl'
       - 'connectors/**'
       - 'MRL_Mother/09_workflow/MRL_Mobius_Closure_Engine_v1.py'
       - '.github/workflows/MRL_Bridge_Translation_Center.yml'
@@ -45,5 +47,14 @@ jobs:
         run: |
           $tokens = $null
           $errors = $null
-          [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $pwd 'scripts/MRL_install_bridge_translation_center.ps1'), [ref]$tokens, [ref]$errors) | Out-Null
+          $ast = [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $pwd 'scripts/MRL_install_bridge_translation_center.ps1'), [ref]$tokens, [ref]$errors)
           if ($errors.Count) { $errors | Format-List; exit 1 }
+          $functionAst = $ast.Find({ param($node) $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Get-MRLNormalizedHash' }, $true)
+          . ([scriptblock]::Create($functionAst.Extent.Text))
+          $lf = Join-Path $env:RUNNER_TEMP 'MRL-checkout-LF.py'
+          $crlf = Join-Path $env:RUNNER_TEMP 'MRL-checkout-CRLF.py'
+          [IO.File]::WriteAllBytes($lf, [Text.Encoding]::UTF8.GetBytes(([char]0xFEFF) + "MRL`ncode`n"))
+          [IO.File]::WriteAllBytes($crlf, [Text.Encoding]::UTF8.GetBytes(([char]0xFEFF) + "MRL`r`ncode`r`n"))
+          if ((Get-MRLNormalizedHash $lf) -ne (Get-MRLNormalizedHash $crlf)) { throw 'LF/CRLF equivalent checkout verification failed' }
+          [IO.File]::AppendAllText($crlf, 'different-content')
+          if ((Get-MRLNormalizedHash $lf) -eq (Get-MRLNormalizedHash $crlf)) { throw 'Content change was not detected' }

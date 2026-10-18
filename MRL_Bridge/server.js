@@ -53,6 +53,7 @@ const mrlTranslationCenter = new TranslationCenter(path.join(
 app.use(mrlTranslationCenter.middleware());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.text({ limit: '10mb' }));
+app.use(mrlTranslationCenter.admission());
 app.disable('x-powered-by');
 
 // ─────────────────────────────────────────────

@@ -3,12 +3,22 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)][string]$RuntimeRoot,
-    [Parameter(Mandatory=$true)][string]$ServiceName,
+    [string]$ServiceName = 'MRL_Bridge',
+    [ValidateRange(1,65535)][int]$BridgePort = 7800,
+    [string]$NodePath = 'D:\MrlToolchain\node\node.exe',
     [string]$BridgeDirectory = 'D:\mrl\bridge',
     [string]$SourceRoot = (Split-Path $PSScriptRoot -Parent),
     [string]$ExpectedComputerName = 'WIN-PBVUI7VK2A6'
 )
 $ErrorActionPreference = 'Stop'
+function Get-MRLNormalizedHash([string]$FilePath) {
+    # Normalize only checkout line endings. Preserve BOM and all payload bytes otherwise.
+    $text = [Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes($FilePath)).Replace("`r`n", "`n")
+    $hash = [Security.Cryptography.SHA256]::Create()
+    try {
+        return ([BitConverter]::ToString($hash.ComputeHash([Text.Encoding]::UTF8.GetBytes($text)))).Replace('-', '').ToLowerInvariant()
+    } finally { $hash.Dispose() }
+}
 if ($env:COMPUTERNAME -ne $ExpectedComputerName) { throw 'MRL deployment target identity mismatch' }
 foreach ($location in @($RuntimeRoot, $BridgeDirectory)) {
     if ([IO.Path]::GetPathRoot([IO.Path]::GetFullPath($location)) -ne 'D:\') {
@@ -29,7 +39,7 @@ $plan = @()
 foreach ($entry in $audit.files) {
     if (($runtimeFiles -notcontains $entry.path) -and ($bridgeFiles -notcontains $entry.path)) { continue }
     $source = Join-Path $SourceRoot $entry.path
-    if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.sha256) {
+    if ((Get-MRLNormalizedHash $source) -ne $entry.sha256_lf) {
         throw "MRL source checksum mismatch: $($entry.path)"
     }
     if ($bridgeFiles -contains $entry.path) {
@@ -37,17 +47,19 @@ foreach ($entry in $audit.files) {
     } else { $target = Join-Path $RuntimeRoot $entry.path }
     $existed = Test-Path -LiteralPath $target
     if ($existed) {
-        $actual = (Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash.ToLowerInvariant()
-        if (($actual -ne $entry.sha256) -and ($actual -ne $entry.before_sha256)) {
+        $actual = Get-MRLNormalizedHash $target
+        if (($actual -ne $entry.sha256_lf) -and ($actual -ne $entry.before_sha256_lf)) {
             throw "MRL local version differs; preserve it and reconcile before installation: $target"
         }
     } elseif ($entry.before_sha256) { throw "Expected existing module missing: $target" }
-    $plan += [PSCustomObject]@{ Source=$source; Target=$target; Existed=$existed; Sha256=$entry.sha256 }
+    $plan += [PSCustomObject]@{ Source=$source; Target=$target; Existed=$existed; Sha256LF=$entry.sha256_lf }
 }
 if ($plan.Count -ne 5) { throw 'MRL deployment inventory incomplete' }
-& node --check (Join-Path $SourceRoot 'MRL_Bridge/server.js')
+$nodeVersion = & $NodePath --version
+if ($LASTEXITCODE -ne 0 -or [int]($nodeVersion.TrimStart('v').Split('.')[0]) -lt 24) { throw 'MRL center requires Node.js 24 or later' }
+& $NodePath --check (Join-Path $SourceRoot 'MRL_Bridge/server.js')
 if ($LASTEXITCODE -ne 0) { throw 'MRL Bridge syntax check failed' }
-& node --test (Join-Path $SourceRoot 'MRL_Bridge/test_mrl_bridge_translation_center.cjs')
+& $NodePath --test (Join-Path $SourceRoot 'MRL_Bridge/test_mrl_bridge_translation_center.cjs')
 if ($LASTEXITCODE -ne 0) { throw 'MRL HTTP acceptance tests failed' }
 $backup = Join-Path $BridgeDirectory ('MRL_translation_backup_' + (Get-Date -Format 'yyyyMMdd_HHmmss_fff'))
 New-Item -ItemType Directory -Path $backup | Out-Null
@@ -61,7 +73,7 @@ try {
     foreach ($item in $plan) {
         New-Item -ItemType Directory -Force -Path (Split-Path $item.Target -Parent) | Out-Null
         Copy-Item -LiteralPath $item.Source -Destination $item.Target -Force
-        if ((Get-FileHash -LiteralPath $item.Target -Algorithm SHA256).Hash.ToLowerInvariant() -ne $item.Sha256) {
+        if ((Get-MRLNormalizedHash $item.Target) -ne $item.Sha256LF) {
             throw 'MRL installed file checksum mismatch'
         }
     }
@@ -69,7 +81,7 @@ try {
     $verified = $false
     for ($attempt=0; $attempt -lt 15; $attempt++) {
         try {
-            $response = Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:7800/version' -TimeoutSec 3
+            $response = Invoke-WebRequest -UseBasicParsing -Uri "http://127.0.0.1:$BridgePort/version" -TimeoutSec 3
             $version = $response.Content | ConvertFrom-Json
             if (($response.Headers['X-MRL-Affiliation'] -eq 'MRL') -and
                 ($version.bridge_translation.schema -eq 'MRL.BridgeTranslationCenter.v1')) { $verified = $true; break }
