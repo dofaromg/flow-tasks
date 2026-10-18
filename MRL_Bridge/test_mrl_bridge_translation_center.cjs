@@ -11,14 +11,12 @@ const { TranslationCenter } = require('./mrl_bridge_translation_center.cjs');
 
 async function running(center, callback) {
   const middleware = center.middleware();
-  const server = http.createServer((req, res) => middleware(req, res, () => {
-    req.resume();
-    req.once('end', () => {
+  const admission = center.admission();
+  const server = http.createServer((req, res) => middleware(req, res, () => admission(req, res, () => {
       res.statusCode = req.url.startsWith('/denied') ? 401 : 200;
       res.write('MRL:');
       res.end(Buffer.from([0, 255]));
-    });
-  }));
+  })));
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   try { await callback(server.address().port); }
   finally { await new Promise(resolve => server.close(resolve)); }
@@ -79,5 +77,20 @@ test('audit storage failure prevents unrecorded dispatch', async () => {
     assert.equal(result.status, 503);
     assert.equal(result.headers['x-mrl-affiliation'], 'MRL');
     assert.equal(center.lastError, 'AUDIT_APPEND_FAILED');
+  });
+});
+
+test('body append failure after admission record blocks downstream operation', async () => {
+  const center = new TranslationCenter();
+  const label = center.label.bind(center);
+  center.label = (...args) => {
+    if (args[2].status === 'received') throw new Error('disk full after started');
+    return label(...args);
+  };
+  await running(center, async port => {
+    const result = await request(port, '/ok', Buffer.from('sensitive operation'));
+    assert.equal(result.status, 503);
+    assert.equal(result.body.includes(Buffer.from('MRL:')), false);
+    assert.equal(center.recent.some(r => r.status === 'received'), false);
   });
 });

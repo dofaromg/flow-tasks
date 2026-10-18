@@ -66,27 +66,32 @@ class MobiusClosureEngine:
     def hat_H(self, r: Any) -> Any:
         trace_id = str(uuid4())
         outgoing = self.bridge_center.label(
-            r, source_ref="MRL.Mobius.R", destination_ref="MRL.Mobius.A",
+            self._bridge_payload(r), source_ref="MRL.Mobius.R", destination_ref="MRL.Mobius.A",
             trace_id=trace_id,
         )
         a = self._bridge_call(self.route, r, trace_id, outgoing)
         routed = self.bridge_center.label(
-            a, source_ref="MRL.Mobius.route", destination_ref="MRL.Mobius.collapse",
+            self._bridge_payload(a), source_ref="MRL.Mobius.route", destination_ref="MRL.Mobius.collapse",
             direction="internal", trace_id=trace_id, parent_ref=outgoing["event_id"],
         )
         a2 = self._bridge_call(self.collapse, a, trace_id, routed)
         collapsed = self.bridge_center.label(
-            a2, source_ref="MRL.Mobius.collapse", destination_ref="MRL.Mobius.lift",
+            self._bridge_payload(a2), source_ref="MRL.Mobius.collapse", destination_ref="MRL.Mobius.lift",
             direction="internal", trace_id=trace_id, parent_ref=routed["event_id"],
         )
         r2 = self._bridge_call(self.lift, a2, trace_id, collapsed)
         self.bridge_center.label(
-            r2, source_ref="MRL.Mobius.A", destination_ref="MRL.Mobius.R",
+            self._bridge_payload(r2), source_ref="MRL.Mobius.A", destination_ref="MRL.Mobius.R",
             direction="external_to_mrl", trace_id=trace_id,
             parent_ref=collapsed["event_id"],
         )
         self.log.append({"r": r, "a": a, "a_collapsed": a2, "r_back": r2})
         return r2
+
+    @staticmethod
+    def _bridge_payload(value):
+        """Use the historical engine's Any-state fingerprint representation."""
+        return json.dumps(value, sort_keys=True, ensure_ascii=False, default=str).encode("utf-8")
 
     def _bridge_call(self, operation, value, trace_id, parent):
         """Preserve failed boundary evidence and propagate the original error."""
