@@ -51,6 +51,7 @@ class ConnectorConfig:
     timeout: int = 30
     retry_attempts: int = 3
     custom_settings: Dict[str, Any] = field(default_factory=dict)
+    allow_redirects: bool = True
 
 
 @dataclass
@@ -290,7 +291,7 @@ class BaseConnector(ABC):
             response = requests.request(
                 method=method, url=url, headers=request_headers, params=params,
                 json=json_data, timeout=self.config.timeout,
-                allow_redirects=False,
+                allow_redirects=self.config.allow_redirects,
             )
         except Exception:
             self.last_mrl_bridge_receipt = self.mrl_bridge_center.label(
@@ -299,17 +300,19 @@ class BaseConnector(ABC):
                 parent_ref=outgoing["event_id"], status="transport_error",
             )
             raise
-        content = response.content
-        if not isinstance(content, bytes):
-            # Test doubles may omit content. No hash of an invented body.
-            raise TypeError("MRL bridge requires response.content bytes")
-        self.last_mrl_bridge_receipt = self.mrl_bridge_center.label(
-            content, source_ref=self.service_name, destination_ref="MRL.connector",
-            direction="external_to_mrl", trace_id=outgoing["trace_id"],
-            parent_ref=outgoing["event_id"], status="received",
-            http_status=response.status_code,
-            peer_trace_id=response.headers.get("X-MRL-Trace-Id"),
-        )
+        parent_ref = outgoing["event_id"]
+        history = response.history if isinstance(response.history, list) else []
+        for hop in history + [response]:
+            content = hop.content
+            if not isinstance(content, bytes):
+                raise TypeError("MRL bridge requires response.content bytes")
+            self.last_mrl_bridge_receipt = self.mrl_bridge_center.label(
+                content, source_ref=self.service_name, destination_ref="MRL.connector",
+                direction="external_to_mrl", trace_id=outgoing["trace_id"],
+                parent_ref=parent_ref, status="received", http_status=hop.status_code,
+                peer_trace_id=hop.headers.get("X-MRL-Trace-Id"),
+            )
+            parent_ref = self.last_mrl_bridge_receipt["event_id"]
         
         latency = (time.time() - start_time) * 1000
         self.health.latency_ms = latency

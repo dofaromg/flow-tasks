@@ -9,6 +9,43 @@ from MRL_Bridge.translation_center import TranslationCenter
 
 
 class ConnectorBoundaryTests(unittest.TestCase):
+    def test_redirect_compatibility_and_hop_receipts(self):
+        observed = []
+        class Receiver(BaseHTTPRequestHandler):
+            def do_GET(self):
+                observed.append(dict(self.headers))
+                if self.path == '/redirect':
+                    self.send_response(302)
+                    self.send_header('Location', '/final')
+                    self.end_headers()
+                else:
+                    self.send_response(200)
+                    self.end_headers()
+                    self.wfile.write(b'original response')
+            def log_message(self, *args):
+                pass
+        server = ThreadingHTTPServer(('127.0.0.1', 0), Receiver)
+        thread = Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            connector = GitHubConnector(ConnectorConfig())
+            connector.mrl_bridge_center = TranslationCenter()
+            url = f'http://127.0.0.1:{server.server_port}/redirect'
+            response = connector._make_request('GET', url)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.content, b'original response')
+            self.assertEqual(len(observed), 2)
+            self.assertTrue(all(h['X-MRL-Affiliation'] == 'MRL' for h in observed))
+            records = list(connector.mrl_bridge_center.records)
+            self.assertEqual([r['http_status'] for r in records], [None, 302, 200])
+            self.assertEqual(records[2]['parent_ref'], records[1]['event_id'])
+            connector.config.allow_redirects = False
+            self.assertEqual(connector._make_request('GET', url).status_code, 302)
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join()
+
     def test_request_and_response_tagged_without_modifying_payload(self):
         observed = []
         class Receiver(BaseHTTPRequestHandler):

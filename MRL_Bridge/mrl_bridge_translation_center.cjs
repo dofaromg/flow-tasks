@@ -3,6 +3,28 @@
 const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
+const { StringDecoder } = require('node:string_decoder');
+
+function* ledgerLines(ledgerPath) {
+  const descriptor = fs.openSync(ledgerPath, 'r');
+  const buffer = Buffer.alloc(64 * 1024);
+  const decoder = new StringDecoder('utf8');
+  let pending = '';
+  try {
+    let count;
+    while ((count = fs.readSync(descriptor, buffer, 0, buffer.length, null)) > 0) {
+      pending += decoder.write(buffer.subarray(0, count));
+      let newline;
+      while ((newline = pending.indexOf('\n')) !== -1) {
+        const line = pending.slice(0, newline);
+        pending = pending.slice(newline + 1);
+        if (line) yield line;
+      }
+    }
+    pending += decoder.end();
+    if (pending) yield pending;
+  } finally { fs.closeSync(descriptor); }
+}
 
 function canonical(value) {
   if (Array.isArray(value)) return '[' + value.map(canonical).join(',') + ']';
@@ -25,7 +47,7 @@ class TranslationCenter {
     this.recent = [];
     this.lastError = null;
     if (ledgerPath && fs.existsSync(ledgerPath)) {
-      for (const line of fs.readFileSync(ledgerPath, 'utf8').split('\n').filter(Boolean)) {
+      for (const line of ledgerLines(ledgerPath)) {
         const record = JSON.parse(line);
         const digest = record.record_sha256;
         delete record.record_sha256;
@@ -57,7 +79,11 @@ class TranslationCenter {
     record.record_sha256 = hash(canonical(record));
     if (this.ledgerPath) {
       fs.mkdirSync(path.dirname(this.ledgerPath), { recursive: true });
-      fs.appendFileSync(this.ledgerPath, JSON.stringify(record) + '\n', { encoding: 'utf8', flush: true });
+      const descriptor = fs.openSync(this.ledgerPath, 'a');
+      try {
+        fs.writeFileSync(descriptor, JSON.stringify(record) + '\n', 'utf8');
+        fs.fsyncSync(descriptor);
+      } finally { fs.closeSync(descriptor); }
     }
     this.sequence++;
     this.previous = record.record_sha256;
@@ -125,6 +151,7 @@ class TranslationCenter {
           direction: 'external_to_mrl', status: 'received',
         });
         req.mrlBridge.inbound_state = inbound ? 'recorded' : 'failed';
+        req.mrlBridge.inbound_event_id = inbound ? inbound.event_id : null;
       });
       const capture = (chunk, encoding) => {
         if (chunk === undefined || chunk === null || typeof chunk === 'function') return;
@@ -139,7 +166,7 @@ class TranslationCenter {
         if (recorded) return;
         recorded = true;
         safeRecord(output.digest('hex'), outputSize, {
-          trace_id: traceId, parent_ref: inbound ? inbound.event_id : reserve.event_id,
+          trace_id: traceId, parent_ref: req.mrlBridge.last_event_id || (inbound ? inbound.event_id : reserve.event_id),
           source_ref: 'MRL_Bridge', destination_ref: 'external',
           direction: 'mrl_to_external', status, http_status: res.statusCode,
         });

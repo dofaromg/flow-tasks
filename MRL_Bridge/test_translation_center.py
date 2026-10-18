@@ -3,6 +3,7 @@ import hashlib
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 from concurrent.futures import ThreadPoolExecutor
 
 from MRL_Bridge.translation_center import TranslationCenter
@@ -43,7 +44,8 @@ class CenterTests(unittest.TestCase):
             center = TranslationCenter(path)
             with ThreadPoolExecutor(max_workers=8) as pool:
                 list(pool.map(lambda n: self.label(center, {"n": n}), range(40)))
-            reopened = TranslationCenter(path)
+            with patch.object(Path, "read_text", side_effect=AssertionError("whole-ledger read")):
+                reopened = TranslationCenter(path)
             self.assertEqual(len(reopened.records), 40)
             last = self.label(reopened, b"new")
             self.assertEqual(last["sequence"], 40)
@@ -120,6 +122,18 @@ class CenterTests(unittest.TestCase):
                 engine.bridge_center = center
                 self.assertEqual(engine.classify(value)["verdict"], "REAL")
                 self.assertEqual(center.records[0]["payload_sha256"], _hash(value))
+
+    def test_mobius_library_import_does_not_change_sys_path(self):
+        import importlib.util
+        import sys
+        root = Path(__file__).resolve().parents[1]
+        workflow = root / "MRL_Mother" / "09_workflow"
+        paths = [str(workflow)] + [p for p in sys.path if Path(p or '.').resolve() != root]
+        with patch.object(sys, "path", paths):
+            original_paths = list(sys.path)
+            spec = importlib.util.spec_from_file_location("MRL_mobius_import_probe", workflow / "MRL_Mobius_Closure_Engine_v1.py")
+            spec.loader.exec_module(importlib.util.module_from_spec(spec))
+            self.assertEqual(sys.path, original_paths)
 
 
 if __name__ == "__main__":

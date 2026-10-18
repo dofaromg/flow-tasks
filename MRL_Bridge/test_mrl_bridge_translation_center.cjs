@@ -9,10 +9,11 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { TranslationCenter } = require('./mrl_bridge_translation_center.cjs');
 
-async function running(center, callback) {
+async function running(center, callback, handler) {
   const middleware = center.middleware();
   const admission = center.admission();
   const server = http.createServer((req, res) => middleware(req, res, () => admission(req, res, () => {
+      if (handler) return handler(req, res);
       res.statusCode = req.url.startsWith('/denied') ? 401 : 200;
       res.write('MRL:');
       res.end(Buffer.from([0, 255]));
@@ -135,4 +136,49 @@ test('slow unfinished body times out without dispatch', async () => {
     assert.equal(center.recent.some(r => r.status === 'body_timeout'), true);
     assert.equal(center.recent.some(r => r.status === 'received'), false);
   });
+});
+
+test('artifact action links inbound, tag and outbound events', async () => {
+  const center = new TranslationCenter();
+  await running(center, async port => {
+    const result = await request(port, '/artifact', Buffer.from('{}'));
+    assert.equal(result.status, 200);
+    const records = center.recent;
+    assert.equal(records.length, 4);
+    assert.equal(records[2].parent_ref, records[1].event_id);
+    assert.equal(records[3].parent_ref, records[2].event_id);
+  }, (req, res) => {
+    const bytes = Buffer.from('original code');
+    const record = center.label(crypto.createHash('sha256').update(bytes).digest('hex'), bytes.length, {
+      trace_id: req.mrlBridge.trace_id, parent_ref: req.mrlBridge.inbound_event_id,
+      source_ref: 'authenticated-bridge-input', destination_ref: 'MRL.artifact-envelope',
+      direction: 'internal', status: 'tagged',
+    });
+    req.mrlBridge.last_event_id = record.event_id;
+    res.end('tagged');
+  });
+});
+
+test('ledger replay streams across UTF-8 chunks and each append fsyncs', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'MRL-stream-'));
+  const ledger = path.join(dir, 'ledger.jsonl');
+  const readFile = fs.readFileSync;
+  const fsync = fs.fsyncSync;
+  let syncCount = 0;
+  try {
+    fs.fsyncSync = function(fd) { syncCount++; return fsync(fd); };
+    const center = new TranslationCenter(ledger);
+    for (let n = 0; n < 150; n++) center.label('0'.repeat(64), 0, {
+      trace_id: crypto.randomUUID(), source_ref: 'MRL來源', destination_ref: 'MRL目的',
+      direction: 'internal', status: 'observed',
+    });
+    assert.equal(syncCount, 150);
+    assert.ok(fs.statSync(ledger).size > 64 * 1024);
+    fs.readFileSync = () => { throw new Error('Whole-ledger read is forbidden'); };
+    assert.equal(new TranslationCenter(ledger).sequence, 150);
+  } finally {
+    fs.readFileSync = readFile;
+    fs.fsyncSync = fsync;
+    fs.rmSync(dir, { recursive: true });
+  }
 });

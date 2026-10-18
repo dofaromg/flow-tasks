@@ -32,9 +32,10 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from MRL_utils import ORIGIN_SIGNATURE
 # Keep the historical CLI usable from any working directory (stdlib-only center).
-_repository_root = str(Path(__file__).resolve().parents[2])
-if _repository_root not in sys.path:
-    sys.path.insert(0, _repository_root)
+if __name__ == "__main__":
+    _repository_root = str(Path(__file__).resolve().parents[2])
+    if _repository_root not in sys.path:
+        sys.path.insert(0, _repository_root)
 from MRL_Bridge.translation_center import TranslationCenter
 def _hash(x: Any) -> str:
     """φ:狀態 → 指紋(用於 ≈ 等價判定,§46 hash 版)。"""
