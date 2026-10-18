@@ -3,7 +3,7 @@
   "environment": "Linux x64; Node 18.20.8 and PowerShell 7.6.6; Node tests use temporary storage and local port 3050",
   "powershell": "7.6.6 parser and mocked common function checks PASS; Windows PowerShell 5.1 runtime NOT_RUN",
   "nodeTests": {
-    "passed": 8,
+    "passed": 9,
     "failed": 0,
     "cases": [
       "health identity and upload preservation",
@@ -13,7 +13,8 @@
       "real image runner COLMAP failure independent of successful health/upload",
       "wildcard bind rejected",
       "unavailable bind address fails closed",
-      "listener conflict does not alter interrupted-job state"
+      "listener conflict does not alter interrupted-job state",
+      "scan-list endpoint rate-limits repeated reads"
     ]
   },
   "pythonTests": {
@@ -47,13 +48,14 @@
     "date": "2026-10-18",
     "changes": [
       "server.js: remove filesystem paths from upload and scan API responses; defer interrupted-job mutation until all listeners bind",
+      "server.js: rate-limit filesystem-backed scan listing per client",
       "MRL_bridge_common.ps1 and MRL_run_bridge.ps1: reject scheduled-task definition drift and contain Node descendants in a kill-on-close Job Object; release the supervisor mutex even if process cleanup fails",
       "MRL_register_bridge.ps1: resolve dependency paths and inspect ACLs on nested executable/dependency directories and loaded files",
       "MRL_apply_patch.ps1: report completed preflight accurately; startup docs register the task before starting it",
       "iOS upload response model no longer requires the removed server-local manifestPath field",
       "backend and Python tests: startup deadline, listener-conflict regression, privacy assertions, and readable runner test setup"
     ],
-    "nodeTests": "PASS: 8 tests",
+    "nodeTests": "PASS: 9 tests",
     "pythonTests": "PASS: 3 tests",
     "powershell": "PASS: PowerShell 7.6.6 parser and mocked process/task-ownership checks",
     "windowsPowerShell51": "NOT_RUN",

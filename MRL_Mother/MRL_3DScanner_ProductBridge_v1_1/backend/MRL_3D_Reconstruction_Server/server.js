@@ -51,6 +51,33 @@ function jobPath(id) { return path.join(JOBS, `${id}.json`); }
 function scanDir(scanId) { return path.join(UPLOADS, scanId); }
 async function readJson(p, fallback) { try { return await fs.readJson(p); } catch { return fallback; } }
 async function writeJson(p, data) { await fs.ensureDir(path.dirname(p)); await fs.writeJson(p, data, { spaces: 2 }); }
+const scanListRequests = new Map();
+const scanListWindowMs = 60_000;
+const scanListMaxRequests = 60;
+
+function limitScanList(req, res, next) {
+  const address = req.socket.remoteAddress || 'unknown';
+  const timestamp = Date.now();
+  let bucket = scanListRequests.get(address);
+  if (!bucket || timestamp - bucket.startedAt >= scanListWindowMs) {
+    if (scanListRequests.size >= 1024) {
+      for (const [key, value] of scanListRequests) {
+        if (timestamp - value.startedAt >= scanListWindowMs) scanListRequests.delete(key);
+      }
+      if (scanListRequests.size >= 1024) {
+        return res.status(429).json({ ok: false, error: 'too many clients' });
+      }
+    }
+    bucket = { startedAt: timestamp, count: 0 };
+    scanListRequests.set(address, bucket);
+  }
+  if (bucket.count >= scanListMaxRequests) {
+    res.set('Retry-After', String(Math.ceil((bucket.startedAt + scanListWindowMs - timestamp) / 1000)));
+    return res.status(429).json({ ok: false, error: 'scan list rate limit exceeded' });
+  }
+  bucket.count++;
+  next();
+}
 
 async function appendLog(line) {
   await fs.appendFile(path.join(LOGS, 'runtime.log'), `[${now()}] ${line}\n`, 'utf8');
@@ -60,7 +87,7 @@ app.get('/api/health', asyncRoute(async (req, res) => {
   res.json({ ok: true, service: 'MRL_3D_Reconstruction_Server', version: '1.0.0', port: PORT, pid: process.pid, instance: process.env.MRL_BRIDGE_INSTANCE || null, time: now() });
 }));
 
-app.get('/api/scans', asyncRoute(async (req, res) => {
+app.get('/api/scans', limitScanList, asyncRoute(async (req, res) => {
   const items = [];
   if (await fs.pathExists(UPLOADS)) {
     for (const name of await fs.readdir(UPLOADS)) {

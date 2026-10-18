@@ -108,3 +108,17 @@ test('listener conflict does not mark queued jobs interrupted',async()=>{
     await stop(s);
   }
 });
+
+test('scan listing is rate-limited per client',async()=>{
+  const s=await start('none');
+  try {
+    for (let i=0;i<60;i++) {
+      assert.equal((await fetch(base+'/api/scans')).status,200);
+    }
+    const limited=await fetch(base+'/api/scans');
+    assert.equal(limited.status,429);
+    assert.ok(Number(limited.headers.get('retry-after'))>0);
+  } finally {
+    await stop(s);
+  }
+});
