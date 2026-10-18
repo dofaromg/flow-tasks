@@ -15,81 +15,114 @@
     "scripts/MRL_install_bridge_translation_center.ps1",
     ".github/workflows/MRL_Bridge_Translation_Center.yml",
     "docs/MRL_Bridge_Translation_Center_v1.md",
+    "Dockerfile.mrl",
     "docs/MRL_Bridge_Translation_Center_v1.audit.json"
   ],
-  "expected_count": 13,
+  "expected_count": 14,
   "files": [
     {
       "path": "MRL_Bridge/translation_center.py",
       "size": 5749,
       "sha256": "dd863f2d073f064a9c3897d582aa0d502b7c407c21d028e1ef6558d95cd4b00d",
-      "before_sha256": null
+      "sha256_lf": "dd863f2d073f064a9c3897d582aa0d502b7c407c21d028e1ef6558d95cd4b00d",
+      "before_sha256": null,
+      "before_sha256_lf": null
     },
     {
       "path": "MRL_Bridge/mrl_bridge_translation_center.cjs",
-      "size": 5776,
-      "sha256": "581cf85977f2872be95bc5a5ff26354cac921d45939c60cc496b964b13b49578",
-      "before_sha256": null
+      "size": 6395,
+      "sha256": "474460de2db044ebd1754bef6bcaace87742a5e9523a10ee8143ce7e3f8a8d50",
+      "sha256_lf": "474460de2db044ebd1754bef6bcaace87742a5e9523a10ee8143ce7e3f8a8d50",
+      "before_sha256": null,
+      "before_sha256_lf": null
     },
     {
       "path": "MRL_Bridge/server.js",
-      "size": 33293,
-      "sha256": "519610b911b2666ed1d3a0d95bbe37cb689e7241460b22f7f33d91d341320833",
-      "before_sha256": "d3630f0e871132ab5f3f2241a40af26a787bc5f844d1d9cad9515facb153c06b"
+      "size": 33336,
+      "sha256": "95b8cde693194b81854a81b7dd88bdd94dad97c03bc257b24147473c3388394d",
+      "sha256_lf": "95b8cde693194b81854a81b7dd88bdd94dad97c03bc257b24147473c3388394d",
+      "before_sha256": "d3630f0e871132ab5f3f2241a40af26a787bc5f844d1d9cad9515facb153c06b",
+      "before_sha256_lf": "d3630f0e871132ab5f3f2241a40af26a787bc5f844d1d9cad9515facb153c06b"
     },
     {
       "path": "MRL_Bridge/test_translation_center.py",
-      "size": 5456,
-      "sha256": "6cca80eeccedefa13ee37eeada78b5e6064e19a806f5a6a1888b98ca8e5e3b4c",
-      "before_sha256": null
+      "size": 6248,
+      "sha256": "9a3045498d40a42b9e8e37800a53eb1e8344f643b813bb565017c61b147de2b2",
+      "sha256_lf": "9a3045498d40a42b9e8e37800a53eb1e8344f643b813bb565017c61b147de2b2",
+      "before_sha256": null,
+      "before_sha256_lf": null
     },
     {
       "path": "MRL_Bridge/test_mrl_bridge_translation_center.cjs",
-      "size": 3799,
-      "sha256": "64bd6c3496c85b059c81f2bee39ac80ec6a09c1ed3cc6d823847a61071f155be",
-      "before_sha256": null
+      "size": 4452,
+      "sha256": "8ac15c74493771e2fdc04b0822602727e966521ec1f16683f8bf8faa9a001c7e",
+      "sha256_lf": "8ac15c74493771e2fdc04b0822602727e966521ec1f16683f8bf8faa9a001c7e",
+      "before_sha256": null,
+      "before_sha256_lf": null
     },
     {
       "path": "connectors/base_connector.py",
       "size": 16038,
       "sha256": "e7d8880b4038cf5719f35a43706c143b57d4ee6a2c84172b5c034baf246004dc",
-      "before_sha256": "490b8dd3ccc069c9c76d3de11ff422c78f77a674b18b4e710babd39337e65997"
+      "sha256_lf": "e7d8880b4038cf5719f35a43706c143b57d4ee6a2c84172b5c034baf246004dc",
+      "before_sha256": "490b8dd3ccc069c9c76d3de11ff422c78f77a674b18b4e710babd39337e65997",
+      "before_sha256_lf": "490b8dd3ccc069c9c76d3de11ff422c78f77a674b18b4e710babd39337e65997"
     },
     {
       "path": "connectors/test_connectors.py",
       "size": 18463,
       "sha256": "6d449dad0e9ec30f411b3f36ae90b86e8cea122e7d69627e85e65fed67992082",
-      "before_sha256": "6377772f4b53359150a011bd9384154cb93739442436402109bde3427ec11723"
+      "sha256_lf": "6d449dad0e9ec30f411b3f36ae90b86e8cea122e7d69627e85e65fed67992082",
+      "before_sha256": "6377772f4b53359150a011bd9384154cb93739442436402109bde3427ec11723",
+      "before_sha256_lf": "6377772f4b53359150a011bd9384154cb93739442436402109bde3427ec11723"
     },
     {
       "path": "connectors/test_mrl_translation_center.py",
       "size": 2055,
       "sha256": "07263d18987129ee7a580c622ee002c95fae3595e4867e7bcbfc8a02486e486c",
-      "before_sha256": null
+      "sha256_lf": "07263d18987129ee7a580c622ee002c95fae3595e4867e7bcbfc8a02486e486c",
+      "before_sha256": null,
+      "before_sha256_lf": null
     },
     {
       "path": "MRL_Mother/09_workflow/MRL_Mobius_Closure_Engine_v1.py",
-      "size": 8686,
-      "sha256": "f6fcb4c48cb6592ccc6cc7b4a22a50933d35fc03d0ab5c787308023f16505889",
-      "before_sha256": "8f33f0c3b411816389fb101280fef8bc92491d7cc0ae6076916f65f956b1a2ad"
+      "size": 9003,
+      "sha256": "8ad2d271ce45212e6609ac985f838163f647cd04cfbdd9afc9e6235e5bbf2562",
+      "sha256_lf": "8ad2d271ce45212e6609ac985f838163f647cd04cfbdd9afc9e6235e5bbf2562",
+      "before_sha256": "8f33f0c3b411816389fb101280fef8bc92491d7cc0ae6076916f65f956b1a2ad",
+      "before_sha256_lf": "8f33f0c3b411816389fb101280fef8bc92491d7cc0ae6076916f65f956b1a2ad"
     },
     {
       "path": "scripts/MRL_install_bridge_translation_center.ps1",
-      "size": 5313,
-      "sha256": "53a9ca7870733a176d8f8f09cb21c2ec0617ca3a8dc3e654818036cc6d3ac361",
-      "before_sha256": null
+      "size": 5956,
+      "sha256": "7539fd824c371b626833abfcafaf88b4ef0f892e62a127834d3e2fe37c352300",
+      "sha256_lf": "7539fd824c371b626833abfcafaf88b4ef0f892e62a127834d3e2fe37c352300",
+      "before_sha256": null,
+      "before_sha256_lf": null
     },
     {
       "path": ".github/workflows/MRL_Bridge_Translation_Center.yml",
-      "size": 1829,
-      "sha256": "1565e2875a9fcc415e8e371ced75353447b4035fcc5b73576f071ce297d24cde",
-      "before_sha256": null
+      "size": 2780,
+      "sha256": "3ca68dbb26718153bc44374662092a6a0692bc5eeadfed102b86bbd870e69ab8",
+      "sha256_lf": "3ca68dbb26718153bc44374662092a6a0692bc5eeadfed102b86bbd870e69ab8",
+      "before_sha256": null,
+      "before_sha256_lf": null
     },
     {
       "path": "docs/MRL_Bridge_Translation_Center_v1.md",
-      "size": 6342,
-      "sha256": "9bbf0a40c85fbd82e4552f9fc88abcaa6287ef0eb7e0a19791ee75e449d689e8",
-      "before_sha256": null
+      "size": 7346,
+      "sha256": "41c81b434e57e2a39b37e81dd3a0bdb7e7378acb98ccfdca0b43897a7cb3231d",
+      "sha256_lf": "41c81b434e57e2a39b37e81dd3a0bdb7e7378acb98ccfdca0b43897a7cb3231d",
+      "before_sha256": null,
+      "before_sha256_lf": null
+    },
+    {
+      "path": "Dockerfile.mrl",
+      "size": 2440,
+      "sha256": "179956aa941928c4f75ddf0811f8d69cdccc386b80afadd40b06422eeb636f1f",
+      "sha256_lf": "179956aa941928c4f75ddf0811f8d69cdccc386b80afadd40b06422eeb636f1f",
+      "before_sha256": "aaedc9a5bd8203ef5df4bbee0b656a1358ea8ff64fbb677a88d389cd93c20a4c",
+      "before_sha256_lf": "aaedc9a5bd8203ef5df4bbee0b656a1358ea8ff64fbb677a88d389cd93c20a4c"
     }
   ],
   "missing": [],
@@ -115,6 +148,10 @@
       "docs/MRL_Bridge_Translation_Center_v1.audit.json",
       "existing DL580 Windows service",
       "Node.js 24"
+    ],
+    "Dockerfile.mrl": [
+      "connectors/",
+      "MRL_Bridge/translation_center.py"
     ]
   },
   "package_map": {
@@ -123,8 +160,10 @@
     "workflow_files": 1,
     "installer_files": 1,
     "documentation_files": 1,
-    "audit_files": 1
+    "audit_files": 1,
+    "container_definition_files": 1
   },
   "zip_required": false,
-  "audit_self_hash": "Git blob SHA on readback; excluded from own checksums"
+  "audit_self_hash": "Git blob SHA on readback; excluded from own checksums",
+  "text_hash_normalization": "UTF-8 bytes; CRLF -> LF only; BOM preserved; raw repository hashes retained separately"
 }

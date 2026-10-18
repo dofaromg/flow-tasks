@@ -93,6 +93,7 @@ class TranslationCenter {
           source_ref: 'external', destination_ref: 'MRL_Bridge',
           direction: 'external_to_mrl', status: 'received',
         });
+        req.mrlBridge.inbound_state = inbound ? 'recorded' : 'failed';
       });
       const capture = (chunk, encoding) => {
         if (chunk === undefined || chunk === null || typeof chunk === 'function') return;
@@ -115,6 +116,20 @@ class TranslationCenter {
       res.once('finish', () => finish('sent'));
       res.once('close', () => finish('connection_closed'));
       next();
+    };
+  }
+
+  // Place after body parsers and before every route/auth gate. Parser listeners
+  // still see the original stream; sensitive operations wait for durable input.
+  admission() {
+    return (req, res, next) => {
+      const admit = () => {
+        if (req.mrlBridge && req.mrlBridge.inbound_state === 'recorded') return next();
+        if (!res.headersSent) { res.statusCode = 503; res.end('MRL bridge inbound audit unavailable'); }
+      };
+      if (req.readableEnded) return admit();
+      req.once('end', admit);
+      req.resume();
     };
   }
 }

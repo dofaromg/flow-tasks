@@ -108,6 +108,19 @@ class CenterTests(unittest.TestCase):
         self.assertEqual(center.records[-1]["status"], "operation_error")
         self.assertEqual(engine.log, [])
 
+    def test_non_json_mobius_states_keep_historical_behavior(self):
+        import sys
+        from datetime import datetime, timezone
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "MRL_Mother" / "09_workflow"))
+        from MRL_Mobius_Closure_Engine_v1 import MobiusClosureEngine, _hash
+        for value in ({1, 2}, datetime(2026, 10, 19, tzinfo=timezone.utc), object()):
+            with self.subTest(value=type(value).__name__):
+                center = TranslationCenter()
+                engine = MobiusClosureEngine(lambda r: r, lambda a: a, lambda a: a)
+                engine.bridge_center = center
+                self.assertEqual(engine.classify(value)["verdict"], "REAL")
+                self.assertEqual(center.records[0]["payload_sha256"], _hash(value))
+
 
 if __name__ == "__main__":
     unittest.main()
