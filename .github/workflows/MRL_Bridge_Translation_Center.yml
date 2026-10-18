@@ -1,0 +1,49 @@
+name: MRL Bridge Translation Center
+on:
+  pull_request:
+    paths:
+      - 'MRL_Bridge/**'
+      - 'connectors/**'
+      - 'MRL_Mother/09_workflow/MRL_Mobius_Closure_Engine_v1.py'
+      - 'scripts/MRL_install_bridge_translation_center.ps1'
+      - 'docs/MRL_Bridge_Translation_Center_v1*'
+      - '.github/workflows/MRL_Bridge_Translation_Center.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'MRL_Bridge/**'
+      - 'connectors/**'
+      - 'MRL_Mother/09_workflow/MRL_Mobius_Closure_Engine_v1.py'
+      - '.github/workflows/MRL_Bridge_Translation_Center.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  boundary-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: python -m pip install requests PyYAML pytest
+      - run: python -m pytest -q MRL_Bridge/test_translation_center.py connectors/test_connectors.py connectors/test_mrl_translation_center.py MRL_Mother/tests_mrl_ai_system/test_MRL_mobius_closure_engine.py
+      - run: node --test MRL_Bridge/test_mrl_bridge_translation_center.cjs
+      - run: node --check MRL_Bridge/server.js
+      - run: npm ci --ignore-scripts
+      - run: npm run lint
+      - run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+      - name: PowerShell deployment script syntax
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $pwd 'scripts/MRL_install_bridge_translation_center.ps1'), [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count) { $errors | Format-List; exit 1 }
