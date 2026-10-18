@@ -40,17 +40,18 @@ class TranslationCenter:
         self._sequence = 0
         self._previous = "GENESIS"
         if self.path and self.path.exists():
-            for line in self.path.read_text(encoding="utf-8").splitlines():
-                record = json.loads(line)
-                digest = record.pop("record_sha256")
-                if (record["sequence"] != self._sequence
-                        or record["previous_sha256"] != self._previous
-                        or sha256(canonical(record).encode()).hexdigest() != digest):
-                    raise ValueError("MRL bridge ledger integrity failure")
-                record["record_sha256"] = digest
-                self.records.append(record)
-                self._previous = digest
-                self._sequence += 1
+            with self.path.open("r", encoding="utf-8") as ledger:
+                for line in ledger:
+                    record = json.loads(line)
+                    digest = record.pop("record_sha256")
+                    if (record["sequence"] != self._sequence
+                            or record["previous_sha256"] != self._previous
+                            or sha256(canonical(record).encode()).hexdigest() != digest):
+                        raise ValueError("MRL bridge ledger integrity failure")
+                    record["record_sha256"] = digest
+                    self.records.append(record)
+                    self._previous = digest
+                    self._sequence += 1
 
     @classmethod
     def from_environment(cls, component):

@@ -338,11 +338,13 @@ app.post('/MRL_bridge_translation/tag', auth, (req, res) => {
   const record = mrlTranslationCenter.label(
     crypto.createHash('sha256').update(bytes).digest('hex'), bytes.length, {
       trace_id: req.mrlBridge.trace_id, source_ref: 'authenticated-bridge-input',
+      parent_ref: req.mrlBridge.inbound_event_id,
       destination_ref: 'MRL.artifact-envelope', direction: 'internal', status: 'tagged',
       payload_origin_signature: payload && typeof payload.origin_signature === 'string'
         ? payload.origin_signature : null,
     }
   );
+  req.mrlBridge.last_event_id = record.event_id;
   res.json({ payload, mrl_bridge: record });
 });
 
