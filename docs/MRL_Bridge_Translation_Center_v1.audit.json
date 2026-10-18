@@ -33,14 +33,14 @@
     },
     {
       "path": "MRL_Bridge/server.js",
-      "size": 33050,
-      "sha256": "7e609fcce56f9f9d3963db0eb897c5fe1d2fbb015af28af53d6717c1584e8bf8",
+      "size": 33293,
+      "sha256": "519610b911b2666ed1d3a0d95bbe37cb689e7241460b22f7f33d91d341320833",
       "before_sha256": "d3630f0e871132ab5f3f2241a40af26a787bc5f844d1d9cad9515facb153c06b"
     },
     {
       "path": "MRL_Bridge/test_translation_center.py",
-      "size": 5490,
-      "sha256": "57b2abe598c4cbc183033208de2a0815f3ff31ec88312fb3c6315df66ca9af23",
+      "size": 5456,
+      "sha256": "6cca80eeccedefa13ee37eeada78b5e6064e19a806f5a6a1888b98ca8e5e3b4c",
       "before_sha256": null
     },
     {
