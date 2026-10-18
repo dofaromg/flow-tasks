@@ -5,6 +5,7 @@ on:
       - 'package*.json'
       - 'wrangler.jsonc'
       - 'open-next.config.ts'
+      - 'scripts/Mrliou_MRL_opennext_build.mjs'
       - 'next.config.mjs'
       - 'pages/**'
       - 'lib/**'

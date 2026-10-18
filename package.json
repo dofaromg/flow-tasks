@@ -9,12 +9,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "node scripts/Mrliou_MRL_opennext_build.mjs --postbuild",
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "build:cloudflare": "opennextjs-cloudflare build",
+    "build:cloudflare": "node scripts/Mrliou_MRL_opennext_build.mjs",
     "check:cloudflare": "wrangler deploy --dry-run"
   },
   "dependencies": {
