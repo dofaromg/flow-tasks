@@ -7,6 +7,7 @@ import hashlib
 import json
 import shutil
 import subprocess
+import sys
 import tempfile
 import zipfile
 from pathlib import Path
@@ -44,7 +45,12 @@ def files_under(root: Path) -> list[Path]:
 def main() -> int:
     """Verify source packages and create a repository-shaped customer bundle."""
     subprocess.run(
-        ["python", str(RUNTIME_ROOT / "scripts" / "MRL_verify_package_v1.py")],
+        [sys.executable, str(PRODUCT_ROOT / "scripts" / "MRL_verify_product_source_v1.py")],
+        cwd=PRODUCT_ROOT,
+        check=True,
+    )
+    subprocess.run(
+        [sys.executable, str(RUNTIME_ROOT / "scripts" / "MRL_verify_package_v1.py")],
         cwd=RUNTIME_ROOT,
         check=True,
     )
@@ -88,6 +94,19 @@ def main() -> int:
         with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as archive:
             for path in files_under(stage):
                 archive.write(path, path.relative_to(stage.parent).as_posix())
+        # Read the persisted ZIP before asserting PASS, including the manifest.
+        prefix = f"{BUNDLE_ROOT_NAME}/"
+        expected_names = {prefix + item["path"] for item in entries} | {prefix + MANIFEST_NAME}
+        with zipfile.ZipFile(output) as archive:
+            names = archive.namelist()
+            if len(names) != len(set(names)) or set(names) != expected_names:
+                raise ValueError("customer ZIP file coverage mismatch")
+            if archive.read(prefix + MANIFEST_NAME) != (stage / MANIFEST_NAME).read_bytes():
+                raise ValueError("customer ZIP manifest mismatch")
+            for item in entries:
+                data = archive.read(prefix + item["path"])
+                if len(data) != item["size"] or hashlib.sha256(data).hexdigest() != item["sha256"]:
+                    raise ValueError("customer ZIP content mismatch: " + item["path"])
     print(json.dumps({"delivery_gate": "PRODUCT_BUNDLE_DELIVERY_PASS", "path": str(output), "sha256": sha256(output)}, ensure_ascii=False))
     return 0
 
