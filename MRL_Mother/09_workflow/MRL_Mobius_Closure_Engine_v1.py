@@ -25,9 +25,17 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
+from pathlib import Path
+from uuid import uuid4
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from MRL_utils import ORIGIN_SIGNATURE
+# Keep the historical CLI usable from any working directory (stdlib-only center).
+_repository_root = str(Path(__file__).resolve().parents[2])
+if _repository_root not in sys.path:
+    sys.path.insert(0, _repository_root)
+from MRL_Bridge.translation_center import TranslationCenter
 def _hash(x: Any) -> str:
     """φ:狀態 → 指紋(用於 ≈ 等價判定,§46 hash 版)。"""
     return hashlib.sha256(json.dumps(x, sort_keys=True, ensure_ascii=False, default=str)
@@ -51,14 +59,46 @@ class MobiusClosureEngine:
         self.lift = lift            # λ : A → R
         self.authority = authority  # O(源頭)
         self.log: List[Dict[str, Any]] = []
+        self.bridge_center = TranslationCenter.from_environment("mobius")
+        self.bridge_receipts = self.bridge_center.records
 
     # Ĥ = λ ∘ H ∘ ρ (§16 induced operator on R)
     def hat_H(self, r: Any) -> Any:
-        a = self.route(r)           # 進 A(route)
-        a2 = self.collapse(a)       # 在 A 坍縮(collapse,可不可逆)
-        r2 = self.lift(a2)          # 回 R(lift)
+        trace_id = str(uuid4())
+        outgoing = self.bridge_center.label(
+            r, source_ref="MRL.Mobius.R", destination_ref="MRL.Mobius.A",
+            trace_id=trace_id,
+        )
+        a = self._bridge_call(self.route, r, trace_id, outgoing)
+        routed = self.bridge_center.label(
+            a, source_ref="MRL.Mobius.route", destination_ref="MRL.Mobius.collapse",
+            direction="internal", trace_id=trace_id, parent_ref=outgoing["event_id"],
+        )
+        a2 = self._bridge_call(self.collapse, a, trace_id, routed)
+        collapsed = self.bridge_center.label(
+            a2, source_ref="MRL.Mobius.collapse", destination_ref="MRL.Mobius.lift",
+            direction="internal", trace_id=trace_id, parent_ref=routed["event_id"],
+        )
+        r2 = self._bridge_call(self.lift, a2, trace_id, collapsed)
+        self.bridge_center.label(
+            r2, source_ref="MRL.Mobius.A", destination_ref="MRL.Mobius.R",
+            direction="external_to_mrl", trace_id=trace_id,
+            parent_ref=collapsed["event_id"],
+        )
         self.log.append({"r": r, "a": a, "a_collapsed": a2, "r_back": r2})
         return r2
+
+    def _bridge_call(self, operation, value, trace_id, parent):
+        """Preserve failed boundary evidence and propagate the original error."""
+        try:
+            return operation(value)
+        except Exception:
+            self.bridge_center.label(
+                b"", source_ref=parent["destination_ref"],
+                destination_ref="MRL.Mobius.R", direction="external_to_mrl",
+                trace_id=trace_id, parent_ref=parent["event_id"], status="operation_error",
+            )
+            raise
 
     # RT = Ĥ(§5/§33 roundtrip on R)
     def roundtrip(self, r: Any) -> Any:
@@ -158,3 +198,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

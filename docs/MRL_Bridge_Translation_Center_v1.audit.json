@@ -1,0 +1,130 @@
+{
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "base_commit": "2e8da85a68619e509094e283883f1c9024f55edc",
+  "expected_files": [
+    "MRL_Bridge/translation_center.py",
+    "MRL_Bridge/mrl_bridge_translation_center.cjs",
+    "MRL_Bridge/server.js",
+    "MRL_Bridge/test_translation_center.py",
+    "MRL_Bridge/test_mrl_bridge_translation_center.cjs",
+    "connectors/base_connector.py",
+    "connectors/test_connectors.py",
+    "connectors/test_mrl_translation_center.py",
+    "MRL_Mother/09_workflow/MRL_Mobius_Closure_Engine_v1.py",
+    "scripts/MRL_install_bridge_translation_center.ps1",
+    ".github/workflows/MRL_Bridge_Translation_Center.yml",
+    "docs/MRL_Bridge_Translation_Center_v1.md",
+    "docs/MRL_Bridge_Translation_Center_v1.audit.json"
+  ],
+  "expected_count": 13,
+  "files": [
+    {
+      "path": "MRL_Bridge/translation_center.py",
+      "size": 5749,
+      "sha256": "dd863f2d073f064a9c3897d582aa0d502b7c407c21d028e1ef6558d95cd4b00d",
+      "before_sha256": null
+    },
+    {
+      "path": "MRL_Bridge/mrl_bridge_translation_center.cjs",
+      "size": 5776,
+      "sha256": "581cf85977f2872be95bc5a5ff26354cac921d45939c60cc496b964b13b49578",
+      "before_sha256": null
+    },
+    {
+      "path": "MRL_Bridge/server.js",
+      "size": 33050,
+      "sha256": "7e609fcce56f9f9d3963db0eb897c5fe1d2fbb015af28af53d6717c1584e8bf8",
+      "before_sha256": "d3630f0e871132ab5f3f2241a40af26a787bc5f844d1d9cad9515facb153c06b"
+    },
+    {
+      "path": "MRL_Bridge/test_translation_center.py",
+      "size": 5490,
+      "sha256": "57b2abe598c4cbc183033208de2a0815f3ff31ec88312fb3c6315df66ca9af23",
+      "before_sha256": null
+    },
+    {
+      "path": "MRL_Bridge/test_mrl_bridge_translation_center.cjs",
+      "size": 3799,
+      "sha256": "64bd6c3496c85b059c81f2bee39ac80ec6a09c1ed3cc6d823847a61071f155be",
+      "before_sha256": null
+    },
+    {
+      "path": "connectors/base_connector.py",
+      "size": 16038,
+      "sha256": "e7d8880b4038cf5719f35a43706c143b57d4ee6a2c84172b5c034baf246004dc",
+      "before_sha256": "490b8dd3ccc069c9c76d3de11ff422c78f77a674b18b4e710babd39337e65997"
+    },
+    {
+      "path": "connectors/test_connectors.py",
+      "size": 18463,
+      "sha256": "6d449dad0e9ec30f411b3f36ae90b86e8cea122e7d69627e85e65fed67992082",
+      "before_sha256": "6377772f4b53359150a011bd9384154cb93739442436402109bde3427ec11723"
+    },
+    {
+      "path": "connectors/test_mrl_translation_center.py",
+      "size": 2055,
+      "sha256": "07263d18987129ee7a580c622ee002c95fae3595e4867e7bcbfc8a02486e486c",
+      "before_sha256": null
+    },
+    {
+      "path": "MRL_Mother/09_workflow/MRL_Mobius_Closure_Engine_v1.py",
+      "size": 8686,
+      "sha256": "f6fcb4c48cb6592ccc6cc7b4a22a50933d35fc03d0ab5c787308023f16505889",
+      "before_sha256": "8f33f0c3b411816389fb101280fef8bc92491d7cc0ae6076916f65f956b1a2ad"
+    },
+    {
+      "path": "scripts/MRL_install_bridge_translation_center.ps1",
+      "size": 5313,
+      "sha256": "53a9ca7870733a176d8f8f09cb21c2ec0617ca3a8dc3e654818036cc6d3ac361",
+      "before_sha256": null
+    },
+    {
+      "path": ".github/workflows/MRL_Bridge_Translation_Center.yml",
+      "size": 1829,
+      "sha256": "1565e2875a9fcc415e8e371ced75353447b4035fcc5b73576f071ce297d24cde",
+      "before_sha256": null
+    },
+    {
+      "path": "docs/MRL_Bridge_Translation_Center_v1.md",
+      "size": 6342,
+      "sha256": "9bbf0a40c85fbd82e4552f9fc88abcaa6287ef0eb7e0a19791ee75e449d689e8",
+      "before_sha256": null
+    }
+  ],
+  "missing": [],
+  "extra": [],
+  "mismatch": [],
+  "coverage": "100% source inventory; deployment gate OPEN",
+  "dependencies": {
+    "connectors/base_connector.py": [
+      "MRL_Bridge/translation_center.py",
+      "requests"
+    ],
+    "MRL_Bridge/server.js": [
+      "MRL_Bridge/mrl_bridge_translation_center.cjs",
+      "express",
+      "pg",
+      "ioredis"
+    ],
+    "MRL_Mother/09_workflow/MRL_Mobius_Closure_Engine_v1.py": [
+      "MRL_Bridge/translation_center.py",
+      "MRL_Mother/09_workflow/MRL_utils.py"
+    ],
+    "scripts/MRL_install_bridge_translation_center.ps1": [
+      "docs/MRL_Bridge_Translation_Center_v1.audit.json",
+      "existing DL580 Windows service",
+      "Node.js 24"
+    ]
+  },
+  "package_map": {
+    "runtime_files": 5,
+    "test_files": 4,
+    "workflow_files": 1,
+    "installer_files": 1,
+    "documentation_files": 1,
+    "audit_files": 1
+  },
+  "zip_required": false,
+  "audit_self_hash": "Git blob SHA on readback; excluded from own checksums"
+}
