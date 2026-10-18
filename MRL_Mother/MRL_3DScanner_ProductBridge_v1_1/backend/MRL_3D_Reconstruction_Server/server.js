@@ -35,6 +35,11 @@ await fs.ensureDir(TMP);
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '20mb' }));
+let backendReady = false;
+app.use((req, res, next) => {
+  if (!backendReady) return res.status(503).json({ ok: false, error: 'backend initializing' });
+  next();
+});
 
 function asyncRoute(handler) {
   return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
@@ -60,7 +65,10 @@ app.get('/api/scans', asyncRoute(async (req, res) => {
   if (await fs.pathExists(UPLOADS)) {
     for (const name of await fs.readdir(UPLOADS)) {
       const manifest = path.join(UPLOADS, name, 'manifest.json');
-      if (await fs.pathExists(manifest)) items.push(await fs.readJson(manifest));
+      if (await fs.pathExists(manifest)) {
+        const item = await fs.readJson(manifest);
+        items.push({ ...item, files: (item.files || []).map(({ path: _path, ...file }) => file) });
+      }
     }
   }
   res.json({ ok: true, scans: items });
@@ -90,12 +98,12 @@ app.post('/api/scans/upload', upload.array('files', 500), asyncRoute(async (req,
     const target = path.join(dir, safe || file.filename);
     await fs.move(file.path, target, { overwrite: true });
     const stat = await fs.stat(target);
-    files.push({ originalName: file.originalname, filename: path.basename(target), size: stat.size, path: target });
+    files.push({ originalName: file.originalname, filename: path.basename(target), size: stat.size });
   }
   const manifest = { scanId, scanName, uploaded: files.length, files, createdAt: now(), status: 'uploaded' };
   await writeJson(path.join(dir, 'manifest.json'), manifest);
   await appendLog(`upload scan=${scanId} files=${files.length}`);
-  res.json({ ok: true, scanId, uploaded: files.length, manifestPath: path.join(dir, 'manifest.json') });
+  res.json({ ok: true, scanId, uploaded: files.length });
 }));
 
 app.post('/api/reconstruction/jobs', asyncRoute(async (req, res) => {
@@ -199,24 +207,55 @@ async function listFiles(dir) {
   return files;
 }
 
-// A reboot must not leave old jobs reporting running forever. Preserve all data.
-for (const name of await fs.readdir(JOBS)) {
-  if (!name.endsWith('.json')) continue;
-  const p = path.join(JOBS, name);
-  const job = await readJson(p, null);
-  if (job && ['queued', 'running'].includes(job.status)) {
-    job.status = 'failed'; job.message = 'INTERRUPTED_BY_BACKEND_RESTART'; job.updatedAt = now();
-    await writeJson(p, job);
-  }
-}
 app.use((err, req, res, next) => {
   appendLog(`request failed: ${err.message}`).catch(console.error);
   if (res.headersSent) return next(err);
   res.status(500).json({ ok: false, error: 'request failed' });
 });
-// A missing address (e.g. Tailscale not up yet) exits so the supervisor retries; no fallback to other interfaces.
-for (const host of BIND) {
-  http.createServer(app)
-    .on('error', err => { console.error(`listen ${host}:${PORT} failed: ${err.code || err.message}`); process.exit(1); })
-    .listen(PORT, host, () => console.log(`MRL 3D Reconstruction Server running on ${host}:${PORT}`));
+
+async function markInterruptedJobs() {
+  for (const name of await fs.readdir(JOBS)) {
+    if (!name.endsWith('.json')) continue;
+    const p = path.join(JOBS, name);
+    const job = await readJson(p, null);
+    if (job && ['queued', 'running'].includes(job.status)) {
+      job.status = 'failed'; job.message = 'INTERRUPTED_BY_BACKEND_RESTART'; job.updatedAt = now();
+      await writeJson(p, job);
+    }
+  }
+}
+
+// Acquire every configured listener before changing jobs from an earlier backend.
+const servers = BIND.map(() => http.createServer(app));
+const listenResults = await Promise.allSettled(servers.map((server, index) => new Promise((resolve, reject) => {
+  const host = BIND[index];
+  const onError = err => reject(new Error(`listen ${host}:${PORT} failed: ${err.code || err.message}`));
+  server.once('error', onError);
+  server.listen(PORT, host, () => {
+    server.off('error', onError);
+    console.log(`MRL 3D Reconstruction Server running on ${host}:${PORT}`);
+    resolve();
+  });
+})));
+const listenFailure = listenResults.find(result => result.status === 'rejected');
+if (listenFailure) {
+  await Promise.all(servers.filter(server => server.listening).map(server => new Promise(resolve => server.close(resolve))));
+  console.error(listenFailure.reason.message);
+  process.exit(1);
+}
+for (const server of servers) {
+  server.on('error', err => {
+    console.error(`bridge listener failed: ${err.code || err.message}`);
+    process.exit(1);
+  });
+}
+try {
+  await markInterruptedJobs();
+  backendReady = true;
+} catch (err) {
+  await Promise.all(servers.map(server => new Promise(resolve => {
+    if (server.listening) server.close(resolve);
+    else resolve();
+  })));
+  throw err;
 }

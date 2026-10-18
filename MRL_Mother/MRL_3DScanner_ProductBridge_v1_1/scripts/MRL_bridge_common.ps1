@@ -5,6 +5,97 @@ $script:TaskPath = '\MRL\'
 $script:OwnerTag = 'MRL-Bridge-Startup-v1'
 # ROOT: enter and leave only through DL580's Tailscale address; loopback is for on-host health checks.
 $script:BindAddresses = @('100.78.70.78','127.0.0.1')
+if (-not ('MRLBridgeProcessJob' -as [type])) {
+    Add-Type -TypeDefinition @'
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
+public static class MRLBridgeProcessJob
+{
+    [StructLayout(LayoutKind.Sequential)]
+    private struct BasicLimitInformation
+    {
+        public long PerProcessUserTimeLimit;
+        public long PerJobUserTimeLimit;
+        public uint LimitFlags;
+        public UIntPtr MinimumWorkingSetSize;
+        public UIntPtr MaximumWorkingSetSize;
+        public uint ActiveProcessLimit;
+        public UIntPtr Affinity;
+        public uint PriorityClass;
+        public uint SchedulingClass;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct IoCounters
+    {
+        public ulong ReadOperationCount;
+        public ulong WriteOperationCount;
+        public ulong OtherOperationCount;
+        public ulong ReadTransferCount;
+        public ulong WriteTransferCount;
+        public ulong OtherTransferCount;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct ExtendedLimitInformation
+    {
+        public BasicLimitInformation BasicLimitInformation;
+        public IoCounters IoInfo;
+        public UIntPtr ProcessMemoryLimit;
+        public UIntPtr JobMemoryLimit;
+        public UIntPtr PeakProcessMemoryUsed;
+        public UIntPtr PeakJobMemoryUsed;
+    }
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    private static extern IntPtr CreateJobObject(IntPtr attributes, string name);
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern bool SetInformationJobObject(IntPtr job, int infoClass, ref ExtendedLimitInformation info, uint length);
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern IntPtr OpenProcess(uint access, bool inheritHandle, uint processId);
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern bool AssignProcessToJobObject(IntPtr job, IntPtr process);
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern bool CloseHandle(IntPtr handle);
+
+    public static IntPtr Create()
+    {
+        IntPtr job = CreateJobObject(IntPtr.Zero, null);
+        if (job == IntPtr.Zero) throw new Win32Exception(Marshal.GetLastWin32Error());
+        ExtendedLimitInformation info = new ExtendedLimitInformation();
+        info.BasicLimitInformation.LimitFlags = 0x2000;
+        if (!SetInformationJobObject(job, 9, ref info, (uint)Marshal.SizeOf(typeof(ExtendedLimitInformation))))
+        {
+            int error = Marshal.GetLastWin32Error();
+            CloseHandle(job);
+            throw new Win32Exception(error);
+        }
+        return job;
+    }
+
+    public static void Assign(IntPtr job, int processId)
+    {
+        IntPtr process = OpenProcess(0x0100 | 0x0001, false, (uint)processId);
+        if (process == IntPtr.Zero) throw new Win32Exception(Marshal.GetLastWin32Error());
+        try
+        {
+            if (!AssignProcessToJobObject(job, process))
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+        }
+        finally { CloseHandle(process); }
+    }
+
+    public static void Close(IntPtr job)
+    {
+        if (job != IntPtr.Zero && !CloseHandle(job))
+            throw new Win32Exception(Marshal.GetLastWin32Error());
+    }
+}
+'@
+}
 function Get-BridgeRoot { (Resolve-Path (Join-Path $PSScriptRoot '..')).Path }
 function Get-BridgeConfig {
     $c = Get-Content (Join-Path (Get-BridgeRoot) '.bridge\config.json') -Raw | ConvertFrom-Json
@@ -20,9 +111,33 @@ function Assert-TaskOwner($task, $root) {
     if ($task -and $task.Description -ne "$script:OwnerTag|$root") { throw 'Task belongs to another install; refusing mutation' }
     if ($task) {
         $expected = '-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "' + (Join-Path $root 'scripts\MRL_run_bridge.ps1') + '"'
-        if (@($task.Actions).Count -ne 1 -or $task.Actions[0].Arguments -ne $expected -or $task.Actions[0].Execute -ne (Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe')) { throw 'Task action changed; refusing mutation' }
+        if (@($task.Actions).Count -ne 1 -or
+            $task.Actions[0].Arguments -ne $expected -or
+            $task.Actions[0].Execute -ne (Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe') -or
+            $task.Actions[0].WorkingDirectory -ne (Join-Path $root 'backend\MRL_3D_Reconstruction_Server')) {
+            throw 'Task action changed; refusing mutation'
+        }
+        $boot = @($task.Triggers | Where-Object { $_.CimClass.CimClassName -eq 'MSFT_TaskBootTrigger' })
+        $repeat = @($task.Triggers | Where-Object { $_.CimClass.CimClassName -eq 'MSFT_TaskTimeTrigger' })
+        $settings = $task.Settings
+        $principal = $task.Principal
+        if (@($task.Triggers).Count -ne 2 -or $boot.Count -ne 1 -or $repeat.Count -ne 1 -or
+            -not $boot[0].Enabled -or $boot[0].Delay -ne 'PT30S' -or
+            -not $repeat[0].Enabled -or $repeat[0].Repetition.Interval -ne 'PT1M' -or
+            $principal.UserId -notin @('SYSTEM','NT AUTHORITY\SYSTEM','S-1-5-18') -or
+            $principal.LogonType -ne 'ServiceAccount' -or $principal.RunLevel -ne 'Highest' -or
+            $settings.MultipleInstances -ne 'IgnoreNew' -or
+            $settings.ExecutionTimeLimit -ne 'PT0S' -or
+            -not $settings.StartWhenAvailable -or
+            $settings.RestartCount -ne 3 -or $settings.RestartInterval -ne 'PT1M' -or
+            $settings.DisallowStartIfOnBatteries -or $settings.StopIfGoingOnBatteries) {
+            throw 'Task recovery definition changed; refusing mutation'
+        }
     }
 }
+function New-BridgeProcessJob { [MRLBridgeProcessJob]::Create() }
+function Add-BridgeProcessToJob($job, $processId) { [MRLBridgeProcessJob]::Assign($job, $processId) }
+function Close-BridgeProcessJob($job) { if ($job -and $job -ne [IntPtr]::Zero) { [MRLBridgeProcessJob]::Close($job) } }
 function Get-BridgeListeners { @(Get-NetTCPConnection -LocalPort 3050 -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique) }
 function Test-BridgeProcess($record, $c) {
     if (-not $record) { return $false }
