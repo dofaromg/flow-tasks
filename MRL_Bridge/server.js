@@ -16,6 +16,7 @@ const path = require('path');
 const os = require('os');
 const { execSync } = require('child_process');
 const crypto = require('crypto');
+const { TranslationCenter } = require('./mrl_bridge_translation_center.cjs');
 const { Pool } = require('pg');
 const Redis = require('ioredis');
 
@@ -44,8 +45,15 @@ const stats = { total: 0, success: 0, error: 0, blocked: 0 };
 if (!fs.existsSync(LOG_DIR)) fs.mkdirSync(LOG_DIR, { recursive: true });
 
 const app = express();
+const mrlTranslationCenter = new TranslationCenter(path.join(
+  process.env.MRL_TRANSLATION_LEDGER_DIR || LOG_DIR,
+  `MRL_bridge_translation-${process.pid}.jsonl`
+));
+// Run before body parsing, authentication and rate limits: all HTTP traffic is tagged.
+app.use(mrlTranslationCenter.middleware());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.text({ limit: '10mb' }));
+app.use(mrlTranslationCenter.admission());
 app.disable('x-powered-by');
 
 // ─────────────────────────────────────────────
@@ -124,7 +132,8 @@ setInterval(rotateLogs, 6 * 60 * 60 * 1000);
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type,x-api-key');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,x-api-key,X-MRL-Trace-Id,X-MRL-Event-Id,X-MRL-Bridge-Center,X-MRL-Affiliation');
+  res.header('Access-Control-Expose-Headers', 'X-MRL-Trace-Id,X-MRL-Bridge-Center,X-MRL-Affiliation,X-MRL-Bridge-Version');
   res.header('X-MRL-Bridge-Version', VERSION);
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   stats.total++;
@@ -299,12 +308,44 @@ app.get('/version', (req, res) => {
     platform: process.platform,
     arch: process.arch,
     hostname: os.hostname(),
+    bridge_translation: {
+      name: 'MRL橋接轉譯中心',
+      schema: 'MRL.BridgeTranslationCenter.v1',
+      status_endpoint: '/MRL_bridge_translation/status',
+      artifact_endpoint: '/MRL_bridge_translation/tag',
+    },
     endpoints: {
       public: ['GET /health', 'GET /version'],
       get: ['GET /pg', 'GET /ls', 'GET /cat', 'GET /run', 'GET /redis-cmd', 'GET /sysinfo', 'GET /write', 'GET /audit', 'GET /tables'],
       post: ['POST /file/write', 'POST /file/read', 'POST /file/list', 'POST /exec', 'POST /pg/query', 'POST /redis'],
     },
   });
+});
+
+app.get('/MRL_bridge_translation/status', auth, (req, res) => {
+  res.status(mrlTranslationCenter.lastError ? 503 : 200).json({ bridge_center: 'MRL橋接轉譯中心', mrl_affiliation: 'MRL',
+    origin_signature: ORIGIN, records_written: mrlTranslationCenter.sequence,
+    storage: 'append-only-file', audit_error: mrlTranslationCenter.lastError });
+});
+
+// Existing authentication protects artifact labeling; no new proxy or execution permission.
+app.post('/MRL_bridge_translation/tag', auth, (req, res) => {
+  if (!req.body || !Object.prototype.hasOwnProperty.call(req.body, 'payload')) {
+    return fail(res, 400, 'payload is required');
+  }
+  const payload = req.body.payload;
+  const bytes = Buffer.from(JSON.stringify(payload));
+  const record = mrlTranslationCenter.label(
+    crypto.createHash('sha256').update(bytes).digest('hex'), bytes.length, {
+      trace_id: req.mrlBridge.trace_id, source_ref: 'authenticated-bridge-input',
+      parent_ref: req.mrlBridge.inbound_event_id,
+      destination_ref: 'MRL.artifact-envelope', direction: 'internal', status: 'tagged',
+      payload_origin_signature: payload && typeof payload.origin_signature === 'string'
+        ? payload.origin_signature : null,
+    }
+  );
+  req.mrlBridge.last_event_id = record.event_id;
+  res.json({ payload, mrl_bridge: record });
 });
 
 // ═════════════════════════════════════════════
@@ -700,6 +741,7 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, _next) => {
+  if (res.headersSent) return _next(err);
   log('UNHANDLED_ERROR', err.message, req);
   stats.error++;
   res.status(500).json({ ok: false, error: 'internal server error', _v: VERSION });
@@ -799,5 +841,6 @@ process.on('unhandledRejection', (reason) => {
 
 // 啟動
 boot();
+
 
 

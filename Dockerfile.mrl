@@ -23,6 +23,8 @@ COPY particle_core/ ./particle_core/
 COPY MrLiou_AI_SuperComputer/ ./MrLiou_AI_SuperComputer/
 COPY core/ ./core/
 COPY connectors/ ./connectors/
+# origin_signature: MrLiouWord — shared boundary label dependency.
+COPY MRL_Bridge/translation_center.py ./MRL_Bridge/translation_center.py
 COPY adapters/ ./adapters/
 COPY flowcore_loop.py ./
 COPY flowcore_naming.py ./
@@ -58,3 +60,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 ENTRYPOINT ["python"]
 CMD ["flowcore_loop.py"]
+
