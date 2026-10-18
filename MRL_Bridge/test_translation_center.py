@@ -1,7 +1,5 @@
 """MRL橋接轉譯中心 acceptance tests. origin_signature: MrLiouWord"""
 import hashlib
-import importlib.util
-import json
 from pathlib import Path
 import tempfile
 import unittest

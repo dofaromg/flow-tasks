@@ -131,7 +131,8 @@ setInterval(rotateLogs, 6 * 60 * 60 * 1000);
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type,x-api-key');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,x-api-key,X-MRL-Trace-Id,X-MRL-Event-Id,X-MRL-Bridge-Center,X-MRL-Affiliation');
+  res.header('Access-Control-Expose-Headers', 'X-MRL-Trace-Id,X-MRL-Bridge-Center,X-MRL-Affiliation,X-MRL-Bridge-Version');
   res.header('X-MRL-Bridge-Version', VERSION);
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   stats.total++;
@@ -321,7 +322,7 @@ app.get('/version', (req, res) => {
 });
 
 app.get('/MRL_bridge_translation/status', auth, (req, res) => {
-  res.json({ bridge_center: 'MRL橋接轉譯中心', mrl_affiliation: 'MRL',
+  res.status(mrlTranslationCenter.lastError ? 503 : 200).json({ bridge_center: 'MRL橋接轉譯中心', mrl_affiliation: 'MRL',
     origin_signature: ORIGIN, records_written: mrlTranslationCenter.sequence,
     storage: 'append-only-file', audit_error: mrlTranslationCenter.lastError });
 });
