@@ -32,7 +32,7 @@ $backup=Join-Path $TargetRoot ('.bridge\backups\' + (Get-Date -Format 'yyyyMMdd_
 New-Item -ItemType Directory $backup -Force | Out-Null
 $applied=@()
 $receiptFile=Join-Path $backup 'apply-receipt.json'
-$receipt=@{time=(Get-Date -Format o); target=$TargetRoot; backup=$backup; applied=@(); source=$manifest.source; status='applying'; realDeploymentVerified=$false}
+$receipt=@{time=(Get-Date -Format o); target=$TargetRoot; backup=$backup; applied=@(); source=$manifest.source; status='applying'; preflightPassed=$true}
 $receipt | ConvertTo-Json -Depth 8 | Set-Content $receiptFile -Encoding UTF8
 try {
 foreach ($f in $manifest.files) {

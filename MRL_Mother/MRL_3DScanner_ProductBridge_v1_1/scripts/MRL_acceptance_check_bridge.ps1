@@ -80,10 +80,11 @@ try {
         if (-not $response.IsSuccessStatusCode) { throw "Upload HTTP $([int]$response.StatusCode): $text" }
         $u=$text | ConvertFrom-Json
         if ($u.ok -ne $true -or $u.scanId -ne $id -or $u.uploaded -ne $files.Count) { throw 'Upload count/ID mismatch' }
-        $saved=Get-Content $u.manifestPath -Raw | ConvertFrom-Json
+        $scanDir=Join-Path (Join-Path $c.root 'backend\MRL_3D_Reconstruction_Server\storage\uploads') $id
+        $saved=Get-Content (Join-Path $scanDir 'manifest.json') -Raw | ConvertFrom-Json
         if ($saved.uploaded -ne $files.Count) { throw 'Stored manifest mismatch' }
         foreach ($f in $files) {
-            $target=Join-Path (Split-Path $u.manifestPath) ($f.Name -replace '[^a-zA-Z0-9._-]','_')
+            $target=Join-Path $scanDir ($f.Name -replace '[^a-zA-Z0-9._-]','_')
             if ((Get-FileHash $target).Hash -ne (Get-FileHash $f.FullName).Hash) { throw 'Stored upload hash mismatch' }
         }
         $result.upload='PASS'
