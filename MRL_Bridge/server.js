@@ -739,6 +739,7 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, _next) => {
+  if (res.headersSent) return _next(err);
   log('UNHANDLED_ERROR', err.message, req);
   stats.error++;
   res.status(500).json({ ok: false, error: 'internal server error', _v: VERSION });

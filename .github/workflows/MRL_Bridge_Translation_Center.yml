@@ -51,6 +51,8 @@ jobs:
           if ($errors.Count) { $errors | Format-List; exit 1 }
           $functionAst = $ast.Find({ param($node) $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Get-MRLNormalizedHash' }, $true)
           . ([scriptblock]::Create($functionAst.Extent.Text))
+          $upgradeFunction = $ast.Find({ param($node) $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Test-MRLAcceptedHash' }, $true)
+          . ([scriptblock]::Create($upgradeFunction.Extent.Text))
           $lf = Join-Path $env:RUNNER_TEMP 'MRL-checkout-LF.py'
           $crlf = Join-Path $env:RUNNER_TEMP 'MRL-checkout-CRLF.py'
           [IO.File]::WriteAllBytes($lf, [Text.Encoding]::UTF8.GetBytes(([char]0xFEFF) + "MRL`ncode`n"))
@@ -58,3 +60,10 @@ jobs:
           if ((Get-MRLNormalizedHash $lf) -ne (Get-MRLNormalizedHash $crlf)) { throw 'LF/CRLF equivalent checkout verification failed' }
           [IO.File]::AppendAllText($crlf, 'different-content')
           if ((Get-MRLNormalizedHash $lf) -eq (Get-MRLNormalizedHash $crlf)) { throw 'Content change was not detected' }
+          $audit = Get-Content 'docs/MRL_Bridge_Translation_Center_v1.audit.json' -Raw | ConvertFrom-Json
+          foreach ($entry in $audit.files) {
+            foreach ($prior in $entry.accepted_upgrade_sources) {
+              if (-not (Test-MRLAcceptedHash $entry $prior.sha256_lf)) { throw 'Known prior deployment was rejected' }
+            }
+            if (Test-MRLAcceptedHash $entry ('0' * 64)) { throw 'Unrecognized deployment hash was accepted' }
+          }

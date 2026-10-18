@@ -19,6 +19,13 @@ function Get-MRLNormalizedHash([string]$FilePath) {
         return ([BitConverter]::ToString($hash.ComputeHash([Text.Encoding]::UTF8.GetBytes($text)))).Replace('-', '').ToLowerInvariant()
     } finally { $hash.Dispose() }
 }
+function Test-MRLAcceptedHash($Entry, [string]$Actual) {
+    if (($Actual -eq $Entry.sha256_lf) -or ($Actual -eq $Entry.before_sha256_lf)) { return $true }
+    foreach ($prior in $Entry.accepted_upgrade_sources) {
+        if ($Actual -eq $prior.sha256_lf) { return $true }
+    }
+    return $false
+}
 if ($env:COMPUTERNAME -ne $ExpectedComputerName) { throw 'MRL deployment target identity mismatch' }
 foreach ($location in @($RuntimeRoot, $BridgeDirectory)) {
     if ([IO.Path]::GetPathRoot([IO.Path]::GetFullPath($location)) -ne 'D:\') {
@@ -48,7 +55,7 @@ foreach ($entry in $audit.files) {
     $existed = Test-Path -LiteralPath $target
     if ($existed) {
         $actual = Get-MRLNormalizedHash $target
-        if (($actual -ne $entry.sha256_lf) -and ($actual -ne $entry.before_sha256_lf)) {
+        if (-not (Test-MRLAcceptedHash $entry $actual)) {
             throw "MRL local version differs; preserve it and reconcile before installation: $target"
         }
     } elseif ($entry.before_sha256) { throw "Expected existing module missing: $target" }

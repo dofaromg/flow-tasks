@@ -15,6 +15,8 @@ Owner definition, 2026-10-19 Asia/Taipei: MRL 系統輸出 → MRL橋接轉譯�
 
 No system-wide packet interception is installed. Traffic bypassing these entry points, other processes, or code modules never submitted to the center is not yet covered. Stored historical assets are not mass-rewritten or retroactively re-signed. Further adapters must call the same center at their boundaries; registry metadata is not evidence that a runtime was reloaded.
 
+All Node HTTP body types, including binary/chunked bodies skipped by Express parsers, are bounded before route dispatch: 10 MiB maximum and a 30-second completed-body deadline. Oversize/timeout receipts are labeled explicitly (413/408), downstream operations remain blocked, and the connection closes. Tests use smaller limits to exercise both declared-length and chunked paths and a never-finished body.
+
 ## Metadata contract
 
 `schema=MRL.BridgeTranslationCenter.v1`, `bridge_center=MRL橋接轉譯中心`, `mrl_affiliation=MRL`, `canonical_authority=Mr.liou`, `origin_signature=MrLiouWord`, `trace_id`, `event_id`, `parent_ref`, `source_ref`, `destination_ref`, `direction`, timestamp, `payload_sha256`, `payload_size`, `hash_scope`, status, `previous_sha256`, `record_sha256`.
@@ -36,6 +38,8 @@ Local stdlib acceptance: `python -m unittest MRL_Bridge.test_translation_center 
 `scripts/MRL_install_bridge_translation_center.ps1` accepts the existing runtime checkout directory, Windows service name (existing install default `MRL_Bridge`), and `BridgePort` (default 7800; specify the service's actual configured port). It uses the existing install's Node path `D:\MrlToolchain\node\node.exe`, overrideable with `NodePath`, and requires Node 24+. It verifies DL580 identity, D: paths, expected pre-update hashes, source hashes and HTTP tests before stopping that service. Text checksums normalize CRLF to LF while preserving UTF-8 BOM and all other characters, allowing Windows checkouts without hiding content changes; raw repository SHA-256 remains recorded separately. It preserves exact-byte backups, installs five runtime files, restarts the existing service and verifies localhost `/version` label headers on the selected port. A failure restores backups. It does not install a service, change ports or discover credentials. The receipt distinguishes live Node HTTP from installed Python files; running Python processes still need their owner-managed reload. Start Python runtimes with the repository root on `PYTHONPATH` and `MRL_TRANSLATION_LEDGER_DIR` set to a D: evidence directory.
 
 The authoring environment cannot access `https://bridge.mrliouword.com/health` (network policy rejects the URL). No DL580 deployment is claimed without the installer's real receipt. A source merge or unrelated Workers build cannot close this gate.
+
+Upgrades accept only the new artifact, the recorded pre-feature baseline, or explicit `accepted_upgrade_sources` hashes from known #671/#672 main revisions. Each accepted hash retains its source commit. This supports an existing v1 installation without accepting arbitrary locally modified code; all previous installed bytes are backed up unchanged.
 
 ## Delivery audit
 
