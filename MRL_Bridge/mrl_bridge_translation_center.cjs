@@ -14,7 +14,11 @@ function canonical(value) {
 const hash = value => crypto.createHash('sha256').update(value).digest('hex');
 
 class TranslationCenter {
-  constructor(ledgerPath) {
+  constructor(ledgerPath, { maxBodyBytes = 10 * 1024 * 1024, bodyTimeoutMs = 30000 } = {}) {
+    if (!Number.isSafeInteger(maxBodyBytes) || maxBodyBytes < 1 ||
+        !Number.isSafeInteger(bodyTimeoutMs) || bodyTimeoutMs < 1) throw new RangeError('Invalid MRL transport limits');
+    this.maxBodyBytes = maxBodyBytes;
+    this.bodyTimeoutMs = bodyTimeoutMs;
     this.ledgerPath = ledgerPath;
     this.previous = 'GENESIS';
     this.sequence = 0;
@@ -69,7 +73,7 @@ class TranslationCenter {
       const traceId = crypto.randomUUID();
       const input = crypto.createHash('sha256');
       const output = crypto.createHash('sha256');
-      let inputSize = 0, outputSize = 0, inbound = null, recorded = false;
+      let inputSize = 0, outputSize = 0, inbound = null, recorded = false, rejected = false;
       const safeRecord = (...args) => {
         try { return this.label(...args); }
         catch (error) { this.lastError = error.code || 'AUDIT_APPEND_FAILED'; return null; }
@@ -86,8 +90,35 @@ class TranslationCenter {
       res.setHeader('X-MRL-Trace-Id', traceId);
       req.mrlBridge = { trace_id: traceId, bridge_center: 'MRL橋接轉譯中心' };
       if (!reserve) { res.statusCode = 503; res.end('MRL bridge audit unavailable'); return; }
-      req.on('data', chunk => { input.update(chunk); inputSize += chunk.length; });
+      const rejectInput = (code, status) => {
+        if (rejected || req.readableEnded) return;
+        rejected = true;
+        req.mrlBridge.inbound_state = 'rejected';
+        inbound = safeRecord(input.copy().digest('hex'), inputSize, {
+          trace_id: traceId, parent_ref: reserve.event_id, source_ref: 'external',
+          destination_ref: 'MRL_Bridge', direction: 'external_to_mrl', status,
+        });
+        req.pause();
+        if (!res.headersSent) {
+          res.statusCode = code;
+          res.setHeader('Connection', 'close');
+          res.once('finish', () => req.destroy());
+          res.end('MRL bridge request rejected: ' + status);
+        } else req.destroy();
+      };
+      const deadline = setTimeout(() => rejectInput(408, 'body_timeout'), this.bodyTimeoutMs);
+      deadline.unref();
+      const clearDeadline = () => clearTimeout(deadline);
+      req.once('aborted', clearDeadline);
+      res.once('close', clearDeadline);
+      req.on('data', chunk => {
+        if (rejected) return;
+        input.update(chunk); inputSize += chunk.length;
+        if (inputSize > this.maxBodyBytes) rejectInput(413, 'body_limit_exceeded');
+      });
       req.once('end', () => {
+        clearDeadline();
+        if (rejected) return;
         inbound = safeRecord(input.digest('hex'), inputSize, {
           trace_id: traceId, parent_ref: reserve.event_id,
           source_ref: 'external', destination_ref: 'MRL_Bridge',
@@ -115,6 +146,10 @@ class TranslationCenter {
       };
       res.once('finish', () => finish('sent'));
       res.once('close', () => finish('connection_closed'));
+      if (Number(req.headers['content-length']) > this.maxBodyBytes) {
+        rejectInput(413, 'body_limit_exceeded');
+        return;
+      }
       next();
     };
   }

@@ -94,3 +94,45 @@ test('body append failure after admission record blocks downstream operation', a
     assert.equal(center.recent.some(r => r.status === 'received'), false);
   });
 });
+
+test('oversized unparsed binary bodies are rejected before route dispatch', async () => {
+  const center = new TranslationCenter(undefined, { maxBodyBytes: 4 });
+  await running(center, async port => {
+    const result = await request(port, '/ok', Buffer.from('too large'));
+    assert.equal(result.status, 413);
+    assert.equal(result.headers['x-mrl-affiliation'], 'MRL');
+    assert.equal(center.recent.some(r => r.status === 'body_limit_exceeded'), true);
+  });
+});
+
+test('chunked binary input cannot bypass the body limit', async () => {
+  const center = new TranslationCenter(undefined, { maxBodyBytes: 4 });
+  await running(center, async port => {
+    const result = await new Promise((resolve, reject) => {
+      const req = http.request({ host: '127.0.0.1', port, path: '/ok', method: 'POST',
+        headers: { 'Content-Type': 'application/octet-stream' } }, res => {
+        res.resume(); res.on('end', () => resolve(res.statusCode));
+      });
+      req.on('error', reject);
+      req.write('12345'); req.end();
+    });
+    assert.equal(result, 413);
+  });
+});
+
+test('slow unfinished body times out without dispatch', async () => {
+  const center = new TranslationCenter(undefined, { bodyTimeoutMs: 50 });
+  await running(center, async port => {
+    const status = await new Promise((resolve, reject) => {
+      const req = http.request({ host: '127.0.0.1', port, path: '/ok', method: 'POST',
+        headers: { 'Content-Type': 'application/octet-stream' } }, res => {
+        res.resume(); res.on('end', () => resolve(res.statusCode));
+      });
+      req.on('error', reject);
+      req.write('partial');
+    });
+    assert.equal(status, 408);
+    assert.equal(center.recent.some(r => r.status === 'body_timeout'), true);
+    assert.equal(center.recent.some(r => r.status === 'received'), false);
+  });
+});
