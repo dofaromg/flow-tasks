@@ -23,7 +23,7 @@ canonical_authority: Mr.liou
 
 - 主機 `WIN-PBVUI7VK2A6`，管理員 Windows PowerShell 5.1，原有 `MRL_Bridge` 正在運行。
 - 使用已查得的既有 Runtime 根目錄、Bridge 目錄、Node >=24 與 Python 路徑。接線不修改全域 PATH。
-- SourceRoot 是 D: 上已取得本修補 commit 的乾淨 Git checkout；不自動 git pull、reset 或 checkout 既有 Runtime。
+- SourceRoot 是 D: 上已取得本修補 commit 的來源材料目錄及 Git object store；逐檔比對 Git blob，不自動 git pull、reset 或 checkout 既有 Runtime。
 - 現有服務啟動設定已將 Python 的 `PYTHONPATH` 指向 RuntimeRoot，並將 `MRL_TRANSLATION_LEDGER_DIR` 指向 D: 持久化證據目錄。
   驗收接線不猜測、不覆寫服務的啟動設定、環境或憑證。
 - 呼叫驗收器的授權程序須繼承既有 `MRL_BRIDGE_API_KEY`。不把金鑰放入命令列、query、文件、stdout 或 Git。
@@ -46,35 +46,40 @@ Get-NetTCPConnection -State Listen |
 
 ## 執行介面
 
-### Windows 來源取件：保留歷史的 sparse checkout
+### Windows 來源取件：Git object store 與選定檔案 archive
 
-首次 Windows CI 已確認既有歷史路徑 `:mnt:data.txt` 無法在 Windows checkout。
-不得改名或刪除該歷史檔案。驗收 CI 以 non-cone sparse checkout 精確取出本來源清單與 `MRL_utils.py`，並固定測試 PR head SHA。
-原主機同樣只需來源材料，不需要 checkout 全倉庫；以下只在專用的 SourceRoot 來源目錄執行，不能套用到運行中的 RuntimeRoot：
+Windows CI 已確認既有歷史路徑 `:mnt:data.txt` 無法 checkout，且 sparse checkout 也會在建立索引時失敗。
+不得改名、刪除該歷史檔案或關閉 `core.protectNTFS`。驗收 CI 在 Linux 只封裝清單中的來源，再交由 Windows 執行；不傳送 DL580 資料。
+原主機採用無 checkout 的 Git object store，archive 只包含已宣告的來源檔案，完全不建立全倉庫工作索引：
 
 ```powershell
-# SourceRoot 必須是 D: 上尚不存在的來源材料目錄，非服務根目錄。
+# SourceRoot 是 D: 上尚不存在的來源材料目錄，非服務根目錄。
+# SourceCommit 是已核對的本 PR 完整 head SHA。
 if (Test-Path -LiteralPath $SourceRoot) { throw '不得覆寫既有來源或 Runtime' }
-git clone --no-checkout https://github.com/dofaromg/flow-tasks.git $SourceRoot
-if ($LASTEXITCODE -ne 0) { throw '來源鏡像取得失敗' }
-git -C $SourceRoot sparse-checkout init --no-cone
-git -C $SourceRoot sparse-checkout set --no-cone MRL_Bridge/ connectors/ MRL_Mother/09_workflow/ scripts/ docs/ .github/workflows/ Dockerfile.mrl
-if ($LASTEXITCODE -ne 0) { throw '來源範圍設定失敗' }
-git -C $SourceRoot checkout --detach $SourceCommit
-if ($LASTEXITCODE -ne 0) { throw '固定版本來源取件失敗' }
+New-Item -ItemType Directory -Path $SourceRoot | Out-Null
+git clone --bare https://github.com/dofaromg/flow-tasks.git (Join-Path $SourceRoot '.git')
+if ($LASTEXITCODE -ne 0) { throw 'Git object store 取得失敗' }
+$zip = Join-Path $SourceRoot 'MRL_source_material.zip'
+git -C $SourceRoot archive --format=zip "--output=$zip" $SourceCommit -- docs/MRL_Bridge_Translation_Center_v1.audit.json
+if ($LASTEXITCODE -ne 0) { throw '來源清單取得失敗' }
+Expand-Archive -LiteralPath $zip -DestinationPath $SourceRoot
+$audit = Get-Content (Join-Path $SourceRoot 'docs/MRL_Bridge_Translation_Center_v1.audit.json') -Raw | ConvertFrom-Json
+$paths = @($audit.expected_files) + @('MRL_Mother/09_workflow/MRL_utils.py')
+git -C $SourceRoot archive --format=zip "--output=$zip" $SourceCommit -- @paths
+if ($LASTEXITCODE -ne 0) { throw '宣告來源封裝失敗' }
+Expand-Archive -LiteralPath $zip -DestinationPath $SourceRoot -Force
 ```
 
-`SourceCommit` 是本 PR 經核對的完整 head SHA。這是部署材料 checkout，沒有啟動第二套服務。
-若該廣度的目錄內另有 Windows 不支援的歷史路徑，應沿 audit 的逐檔清單縮小**來源取件**範圍，不能修改原始命名。
+來源接線逐檔核對固定 commit 的 Git blob，並由原安裝器再核對 SHA-256；不將來源 object store 啟動為第二套 Runtime。
 
 ### 呼叫既有部署器與分層驗收
 
 以下參數來自原主機的既有設定，不預設任一 Python 服務或部署路徑已經驗證。
-在已取得修補的 SourceRoot 根目錄，使用既有設定變數執行：
+在已取得修補的 SourceRoot 根目錄，使用既有設定變數與固定 SourceCommit 執行：
 
 ```powershell
 & .\scripts\MRL_deploy_accept_bridge_translation_center.ps1 `
-    -RuntimeRoot $RuntimeRoot -SourceRoot (Get-Location).Path `
+    -RuntimeRoot $RuntimeRoot -SourceRoot (Get-Location).Path -SourceCommit $SourceCommit `
     -BridgeDirectory $BridgeDirectory -NodePath $NodePath `
     -BridgePort $BridgePort -NodeLedgerDirectory $NodeLedgerDirectory `
     -PythonPath $PythonPath -PythonLedgerDirectory $PythonLedgerDirectory `
@@ -90,7 +95,7 @@ Task Scheduler／自訂 supervisor 管理的 Python Runtime 目前沒有自動�
 
 ```powershell
 & .\scripts\MRL_deploy_accept_bridge_translation_center.ps1 `
-    -RuntimeRoot $RuntimeRoot -SourceRoot (Get-Location).Path `
+    -RuntimeRoot $RuntimeRoot -SourceRoot (Get-Location).Path -SourceCommit $SourceCommit `
     -BridgeDirectory $BridgeDirectory -NodePath $NodePath `
     -BridgePort $BridgePort -NodeLedgerDirectory $NodeLedgerDirectory `
     -PythonPath $PythonPath -PythonLedgerDirectory $PythonLedgerDirectory `

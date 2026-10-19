@@ -16,36 +16,40 @@ on:
 permissions:
   contents: read
 jobs:
-  regression-only:
-    runs-on: windows-latest
+  source-material:
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /MRL_Bridge/translation_center.py
-            /MRL_Bridge/mrl_bridge_translation_center.cjs
-            /MRL_Bridge/server.js
-            /MRL_Bridge/test_translation_center.py
-            /MRL_Bridge/test_mrl_bridge_translation_center.cjs
-            /connectors/base_connector.py
-            /connectors/test_connectors.py
-            /connectors/test_mrl_translation_center.py
-            /MRL_Mother/09_workflow/MRL_Mobius_Closure_Engine_v1.py
-            /scripts/MRL_install_bridge_translation_center.ps1
-            /.github/workflows/MRL_Bridge_Translation_Center.yml
-            /docs/MRL_Bridge_Translation_Center_v1.md
-            /Dockerfile.mrl
-            /docs/MRL_Bridge_Translation_Center_v1.audit.json
-            /scripts/MRL_accept_bridge_translation_center.py
-            /scripts/MRL_deploy_accept_bridge_translation_center.ps1
-            /scripts/test_MRL_accept_bridge_translation_center.py
-            /docs/MRL_Bridge_Translation_Center_DL580_Acceptance.md
-            /.github/workflows/MRL_Bridge_Translation_Acceptance.yml
-            /MRL_Mother/09_workflow/MRL_utils.py
+      - name: Package only declared source files (no DL580 data)
+        shell: python
+        run: |
+          import json, shutil
+          from pathlib import Path
+          audit = json.loads(Path('docs/MRL_Bridge_Translation_Center_v1.audit.json').read_text(encoding='utf-8'))
+          for name in audit['expected_files'] + ['MRL_Mother/09_workflow/MRL_utils.py']:
+              target = Path('MRL_acceptance_source') / name
+              target.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(name, target)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MRL-acceptance-source-${{ github.event.pull_request.head.sha || github.sha }}
+          path: MRL_acceptance_source/
+          include-hidden-files: true
+          retention-days: 1
+  regression-only:
+    needs: source-material
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      # Windows Git validates even excluded invalid paths when creating its index.
+      # Extract Linux-packaged source material instead; keep NTFS protection on.
+      - uses: actions/download-artifact@v4
+        with:
+          name: MRL-acceptance-source-${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'

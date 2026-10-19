@@ -322,9 +322,9 @@
     },
     {
       "path": "scripts/MRL_deploy_accept_bridge_translation_center.ps1",
-      "size": 7878,
-      "sha256": "d303396d9aeae435a7bd0b9f980d0516c68acc082130f5d8481cb2d926ef0774",
-      "sha256_lf": "d303396d9aeae435a7bd0b9f980d0516c68acc082130f5d8481cb2d926ef0774",
+      "size": 9018,
+      "sha256": "b7d70054757cf140da799cd340108b90ce73edd24e15327fbd3ca44c80e4ae93",
+      "sha256_lf": "b7d70054757cf140da799cd340108b90ce73edd24e15327fbd3ca44c80e4ae93",
       "before_sha256": null,
       "before_sha256_lf": null,
       "accepted_upgrade_sources": []
@@ -340,18 +340,18 @@
     },
     {
       "path": "docs/MRL_Bridge_Translation_Center_DL580_Acceptance.md",
-      "size": 8506,
-      "sha256": "2db9cdea11c03047547bd749b838d64762dea06e4527bd85dc4d5d269225764b",
-      "sha256_lf": "2db9cdea11c03047547bd749b838d64762dea06e4527bd85dc4d5d269225764b",
+      "size": 8991,
+      "sha256": "ca38e94863ca9bbcbe73f9c06d3856defedb9b576f80b38c9f0d64af743ccefd",
+      "sha256_lf": "ca38e94863ca9bbcbe73f9c06d3856defedb9b576f80b38c9f0d64af743ccefd",
       "before_sha256": null,
       "before_sha256_lf": null,
       "accepted_upgrade_sources": []
     },
     {
       "path": ".github/workflows/MRL_Bridge_Translation_Acceptance.yml",
-      "size": 3505,
-      "sha256": "e8fc67f26375a56080bbb253387cd207402e84b410e7ef51112a27b5c3adfd2d",
-      "sha256_lf": "e8fc67f26375a56080bbb253387cd207402e84b410e7ef51112a27b5c3adfd2d",
+      "size": 3533,
+      "sha256": "357308e37dbdd880b4c63630960ab85866a89f7c82622cb00459f5838260fe52",
+      "sha256_lf": "357308e37dbdd880b4c63630960ab85866a89f7c82622cb00459f5838260fe52",
       "before_sha256": null,
       "before_sha256_lf": null,
       "accepted_upgrade_sources": []
@@ -431,6 +431,6 @@
     "live_node_bridge": "NOT_VERIFIED",
     "live_python_runtime": "NOT_VERIFIED",
     "source_tests": "24 Python unittest cases and 9 Node HTTP regressions passed locally; Windows PowerShell 5.1 parser pending CI; pytest runner not installed locally",
-    "windows_checkout_fix": "Preserve historical :mnt:data.txt; exact-head non-cone sparse source checkout; first hosted Windows checkout failed before any tests"
+    "windows_checkout_fix": "Keep :mnt:data.txt and NTFS protection; source material archive avoids Windows Git index; hosted Windows tests use declared Linux-packaged source; DL580 source uses bare Git object store and immutable blob verification"
   }
 }

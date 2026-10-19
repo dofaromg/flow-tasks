@@ -2,6 +2,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)][string]$RuntimeRoot,
+    [Parameter(Mandatory=$true)][ValidatePattern('^[0-9a-f]{40}$')][string]$SourceCommit,
     [Parameter(Mandatory=$true)][string]$PythonPath,
     [Parameter(Mandatory=$true)][string]$PythonLedgerDirectory,
     [string]$SourceRoot = (Split-Path $PSScriptRoot -Parent),
@@ -30,10 +31,25 @@ if ($env:TEMP -notlike 'D:\*' -or $env:TMP -notlike 'D:\*') {
     New-Item -ItemType Directory -Force -Path (Join-Path $EvidenceDirectory 'temp') | Out-Null
     $env:TEMP = Join-Path $EvidenceDirectory 'temp'; $env:TMP = $env:TEMP
 }
-$commit = (& git -C $SourceRoot rev-parse HEAD).Trim()
+$commit = (& git -C $SourceRoot rev-parse $SourceCommit).Trim()
 if ($LASTEXITCODE -ne 0 -or $commit -notmatch '^[0-9a-f]{40}$') { throw 'Source must be an existing versioned checkout' }
-& git -C $SourceRoot diff --quiet HEAD -- MRL_Bridge connectors MRL_Mother/09_workflow scripts docs/MRL_Bridge_Translation_Center_v1.audit.json
-if ($LASTEXITCODE -ne 0) { throw 'Uncommitted deployment source changes' }
+# Check material against immutable Git blobs without populating a Windows index.
+# Historical NTFS-invalid paths remain in Git; never disable core.protectNTFS.
+function Test-MRLSourceBlob([string]$RelativePath) {
+    $target = Join-Path $SourceRoot $RelativePath
+    $text = [Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes($target)).Replace("`r`n", "`n")
+    $bytes = [Text.Encoding]::UTF8.GetBytes($text)
+    $prefix = [Text.Encoding]::ASCII.GetBytes("blob " + $bytes.Length + [char]0)
+    $sha1 = [Security.Cryptography.SHA1]::Create()
+    try { $actual = ([BitConverter]::ToString($sha1.ComputeHash($prefix + $bytes))).Replace('-', '').ToLowerInvariant() }
+    finally { $sha1.Dispose() }
+    $expected = (& git -C $SourceRoot rev-parse ($commit + ':' + $RelativePath)).Trim()
+    if ($LASTEXITCODE -ne 0 -or $expected -ne $actual) { throw 'Source differs from the selected Git commit' }
+}
+Test-MRLSourceBlob 'docs/MRL_Bridge_Translation_Center_v1.audit.json'
+$sourceAudit = Get-Content -LiteralPath (Join-Path $SourceRoot 'docs/MRL_Bridge_Translation_Center_v1.audit.json') -Raw | ConvertFrom-Json
+foreach ($relativePath in $sourceAudit.expected_files) { Test-MRLSourceBlob $relativePath }
+Test-MRLSourceBlob 'MRL_Mother/09_workflow/MRL_utils.py' 
 
 function Get-MRLProcess([int]$Id) {
     Get-CimInstance Win32_Process -Filter "ProcessId=$Id" -ErrorAction Stop
