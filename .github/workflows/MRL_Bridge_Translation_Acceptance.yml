@@ -61,8 +61,26 @@ jobs:
         shell: powershell
         run: |
           $tokens = $null; $errors = $null
-          $null = [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $pwd 'scripts/MRL_deploy_accept_bridge_translation_center.ps1'), [ref]$tokens, [ref]$errors)
+          $ast = [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $pwd 'scripts/MRL_deploy_accept_bridge_translation_center.ps1'), [ref]$tokens, [ref]$errors)
           if ($errors.Count) { $errors | Format-List; exit 1 }
+          $functionAst = $ast.Find({ param($node) $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Test-MRLSourceBlob' }, $true)
+          . ([scriptblock]::Create($functionAst.Extent.Text))
+          $SourceRoot = Join-Path $env:RUNNER_TEMP ('MRL-source-fixture-' + [guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $SourceRoot | Out-Null
+          git init --bare (Join-Path $SourceRoot '.git')
+          if ($LASTEXITCODE -ne 0) { throw 'Fixture object store failed' }
+          $file = Join-Path $SourceRoot 'fixture.txt'
+          [IO.File]::WriteAllBytes($file, [Text.Encoding]::UTF8.GetBytes("MRL`nfixture`n"))
+          $blob = (git -C $SourceRoot hash-object -w --no-filters $file).Trim()
+          $commit = ("100644 blob $blob`tfixture.txt" | git -C $SourceRoot mktree).Trim()
+          if ($LASTEXITCODE -ne 0) { throw 'Fixture tree failed' }
+          Test-MRLSourceBlob 'fixture.txt'
+          [IO.File]::WriteAllBytes($file, [Text.Encoding]::UTF8.GetBytes("MRL`r`nfixture`r`n"))
+          Test-MRLSourceBlob 'fixture.txt'
+          [IO.File]::AppendAllText($file, 'changed')
+          $rejected = $false
+          try { Test-MRLSourceBlob 'fixture.txt' } catch { $rejected = $true }
+          if (-not $rejected) { throw 'Changed source was accepted' }
       - name: Confirm source hashes and expected file coverage
         shell: python
         run: |
