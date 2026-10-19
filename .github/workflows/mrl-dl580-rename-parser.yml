@@ -1,0 +1,35 @@
+name: MRL DL580 rename parser regression
+on:
+  pull_request:
+    paths:
+      - 'MRL_Mother/deploy_reference/dl580/MRL_Rename_20261014_revert.ps1'
+      - 'MRL_Mother/deploy_reference/dl580/MRL_Rename_20261014_parser_test.ps1'
+      - '.github/workflows/mrl-dl580-rename-parser.yml'
+permissions:
+  contents: read
+jobs:
+  synthetic-powershell-51:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - name: Retrieve only the two repository scripts at the event SHA
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const prefix = 'MRL_Mother/deploy_reference/dl580/';
+            fs.mkdirSync('synthetic', {recursive: true});
+            for (const name of ['MRL_Rename_20261014_revert.ps1', 'MRL_Rename_20261014_parser_test.ps1']) {
+              const {data} = await github.rest.repos.getContent({
+                owner: context.repo.owner, repo: context.repo.repo,
+                path: prefix + name, ref: context.sha
+              });
+              if (data.type !== 'file' || data.encoding !== 'base64') throw new Error('Unexpected script content');
+              const bytes = Buffer.from(data.content, 'base64');
+              if (!bytes.length || bytes.length !== data.size) throw new Error('Invalid script size');
+              fs.writeFileSync(path.join('synthetic', name), bytes);
+            }
+      - name: Parse production script and exercise synthetic log records
+        shell: powershell
+        run: '& ./synthetic/MRL_Rename_20261014_parser_test.ps1'
