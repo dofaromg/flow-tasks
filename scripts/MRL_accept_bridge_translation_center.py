@@ -15,7 +15,6 @@ import re
 import time
 import urllib.error
 import urllib.request
-from uuid import uuid4
 
 SCHEMA = "MRL.BridgeTranslationCenter.v1"
 RUNTIME_FILES = (

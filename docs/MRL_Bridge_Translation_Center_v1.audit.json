@@ -313,9 +313,9 @@
     },
     {
       "path": "scripts/MRL_accept_bridge_translation_center.py",
-      "size": 14641,
-      "sha256": "8676d48f0aa1c1a93b4484be535550dbfb0e3f4dcc8257b2f331ae8c0334f60e",
-      "sha256_lf": "8676d48f0aa1c1a93b4484be535550dbfb0e3f4dcc8257b2f331ae8c0334f60e",
+      "size": 14618,
+      "sha256": "a3cd6bc20b036a0c18cd9da101c6701795497e47ef971a883867026897a15b95",
+      "sha256_lf": "a3cd6bc20b036a0c18cd9da101c6701795497e47ef971a883867026897a15b95",
       "before_sha256": null,
       "before_sha256_lf": null,
       "accepted_upgrade_sources": []
@@ -331,9 +331,9 @@
     },
     {
       "path": "scripts/test_MRL_accept_bridge_translation_center.py",
-      "size": 7869,
-      "sha256": "cb8e26512da04b6f306ddb6855fd38388aa892a37d5cb5638023bfb24c6e94d3",
-      "sha256_lf": "cb8e26512da04b6f306ddb6855fd38388aa892a37d5cb5638023bfb24c6e94d3",
+      "size": 7857,
+      "sha256": "95f9503453eb943896e6dc26815704aa3f4183fb69f23dabcb4f6f575695b24c",
+      "sha256_lf": "95f9503453eb943896e6dc26815704aa3f4183fb69f23dabcb4f6f575695b24c",
       "before_sha256": null,
       "before_sha256_lf": null,
       "accepted_upgrade_sources": []
