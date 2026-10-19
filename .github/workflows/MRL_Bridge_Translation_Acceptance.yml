@@ -1,0 +1,48 @@
+name: MRL Bridge Translation Acceptance Regressions
+on:
+  pull_request:
+    paths:
+      - 'scripts/MRL_*bridge_translation_center*'
+      - 'scripts/test_MRL_accept_bridge_translation_center.py'
+      - 'MRL_Bridge/translation_center.py'
+      - '.github/workflows/MRL_Bridge_Translation_Acceptance.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/MRL_*bridge_translation_center*'
+      - 'scripts/test_MRL_accept_bridge_translation_center.py'
+      - 'MRL_Bridge/translation_center.py'
+      - '.github/workflows/MRL_Bridge_Translation_Acceptance.yml'
+permissions:
+  contents: read
+jobs:
+  regression-only:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Acceptance regressions (never DL580 deployment evidence)
+        run: python -m unittest discover -s scripts -p test_MRL_accept_bridge_translation_center.py -v
+      - name: Existing center regressions
+        run: python -m unittest MRL_Bridge.test_translation_center -v
+      - name: Parse deployment adapter in Windows PowerShell 5.1
+        shell: powershell
+        run: |
+          $tokens = $null; $errors = $null
+          $null = [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $pwd 'scripts/MRL_deploy_accept_bridge_translation_center.ps1'), [ref]$tokens, [ref]$errors)
+          if ($errors.Count) { $errors | Format-List; exit 1 }
+      - name: Confirm source hashes and expected file coverage
+        shell: python
+        run: |
+          import hashlib, json
+          from pathlib import Path
+          audit = json.loads(Path('docs/MRL_Bridge_Translation_Center_v1.audit.json').read_text(encoding='utf-8'))
+          expected = set(audit['expected_files'])
+          assert len(expected) == audit['expected_count']
+          assert expected == {e['path'] for e in audit['files']} | {'docs/MRL_Bridge_Translation_Center_v1.audit.json'}
+          for entry in audit['files']:
+              raw = Path(entry['path']).read_bytes().replace(b'\r\n', b'\n')
+              assert hashlib.sha256(raw).hexdigest() == entry['sha256_lf'], entry['path']
