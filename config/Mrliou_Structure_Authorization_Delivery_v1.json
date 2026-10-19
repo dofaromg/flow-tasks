@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 7131,
-      "sha256": "e3e438f7f4c2ce7e30bd45cdc636b414a95dc0914a0c9e3c06aa713951cc7a96"
+      "size_bytes": 8108,
+      "sha256": "d69e16cee3a9750a9bdd02443780b39f83c6fdb11b1a6c3c6038c002e433df62"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 6353,
-      "sha256": "0c4fd557e86b2dcd0ed467845c921b22d229ace5d1c0c2f0cb501159b1f1c2f5"
+      "size_bytes": 8107,
+      "sha256": "13b0af76fed4aab0a0ed34039e185445727fbfadbbe93f1c4107aa597415d486"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -270,6 +270,38 @@
       "origin_signature": "MrLiouWord"
     },
     {
+      "source_commit": "a459a758ccc920d3d762b079867c977ae15299e5",
+      "change_commit": "11bb2f68d6c7222e2f79e247dea678390108b9c4",
+      "sync_change_commit": "75e44d5cb90a78fb900ae2f3492d25a206216eaf",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/669",
+      "reason": "PR #669 additive CHANGELOG and sync manifest integrity update. Historical scope, tests, names and prior checksums retained; this entry is not a new DL580 execution claim.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 6146,
+          "sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 5560,
+          "sha256": "0f76e27a8edd94f5ada5a5ed533c030426eb4800bc5662db8f89370727022886"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 7123,
+          "sha256": "81e444c3bde63b8b5a1bfc5b51d81a507d1f7785bf422f1ab2adf4514b4ffcda"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 6387,
+          "sha256": "158acad39797a40b1179a9e8ea32332af335983acec6a3f4fd518c56f3bb8a6b"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
       "source_commit": "780f541c6d0ba96d876f137c847b237ef40fc93e",
       "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
       "reason": "PR #667 additive CHANGELOG entry requires refreshed live hashes for CHANGELOG and its sync manifest dependency. Preserve all preceding entries, counts, policies and payloads.",
@@ -295,6 +327,37 @@
           "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
           "size_bytes": 6353,
           "sha256": "0c4fd557e86b2dcd0ed467845c921b22d229ace5d1c0c2f0cb501159b1f1c2f5"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "fea30e790dab80b7c43e61c40482bbfb11b64d61",
+      "base_commit": "cc5b00595cab803867ec9ed374902cae04aefcad",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
+      "reason": "Merge main into PR #667 additive CHANGELOG and sync manifest integrity update. Both PR #669 and PR #667 entries retained; the preceding PR #667 branch entry is kept as branch history. No counts, policies, payloads or names changed.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 7123,
+          "sha256": "81e444c3bde63b8b5a1bfc5b51d81a507d1f7785bf422f1ab2adf4514b4ffcda"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 6387,
+          "sha256": "158acad39797a40b1179a9e8ea32332af335983acec6a3f4fd518c56f3bb8a6b"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 8108,
+          "sha256": "d69e16cee3a9750a9bdd02443780b39f83c6fdb11b1a6c3c6038c002e433df62"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 8107,
+          "sha256": "13b0af76fed4aab0a0ed34039e185445727fbfadbbe93f1c4107aa597415d486"
         }
       ],
       "origin_signature": "MrLiouWord"

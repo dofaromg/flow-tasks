@@ -1,11 +1,10 @@
-$ErrorActionPreference = "Stop"
-$root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
-$reportDir = Join-Path $root "acceptance_reports"
-New-Item -ItemType Directory -Force -Path $reportDir | Out-Null
-$report = Join-Path $reportDir ("MRL_acceptance_bridge_" + (Get-Date -Format "yyyyMMdd_HHmmss") + ".md")
-
-function Add-Line($s) { $s | Out-File $report -Append -Encoding utf8; Write-Host $s }
-
+#requires -Version 5.1
+[CmdletBinding()]
+param([ValidateSet('Mesh','Images')][string]$Mode='Mesh', [string]$ImagesDirectory, [ValidateRange(10,7200)][int]$TimeoutSeconds=600, [string]$BeforeRebootReceipt)
+. "$PSScriptRoot\MRL_bridge_common.ps1"
+$c=Get-BridgeConfig
+$result=[ordered]@{health='NOT_RUN'; upload='NOT_RUN'; reconstruction='NOT_RUN'; recovery='NOT_RUN'; mode=$Mode; scanId=$null; jobId=$null; reason=$null}
+function Add-Line($s) { Write-Host $s }
 function New-CubeObj($path) {
 @"
 v -0.5 -0.5 -0.5
@@ -43,51 +42,77 @@ function Invoke-MRLUpload($uri, $filePath, $scanId, $scanName) {
   $content.Add($fileContent, "files", [System.IO.Path]::GetFileName($filePath))
   $response = $client.PostAsync($uri, $content).Result
   $text = $response.Content.ReadAsStringAsync().Result
+  $content.Dispose()
   $client.Dispose()
   if (-not $response.IsSuccessStatusCode) { throw "upload HTTP $([int]$response.StatusCode): $text" }
   return $text | ConvertFrom-Json
 }
 
-Add-Line "# MRL 3DScanner Bridge Acceptance"
-Add-Line "time: $(Get-Date -Format o)"
-Add-Line ""
 
+$work = Join-Path $env:TEMP ('mrl_acceptance_' + [guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory $work | Out-Null
 try {
-  $h = Invoke-RestMethod -Uri "http://localhost:3050/api/health"
-  if ($h.ok -ne $true) { throw "health ok flag false" }
-  Add-Line "health: PASS"
-} catch { Add-Line "health: FAIL $($_.Exception.Message)"; exit 1 }
-
-$tmp = Join-Path $env:TEMP "mrl_bridge_cube.obj"
-New-CubeObj $tmp
-
-try {
-  $r = Invoke-MRLUpload -Uri "http://localhost:3050/api/scans/upload" -FilePath $tmp -ScanId "acceptance_mesh" -ScanName "acceptance_mesh"
-  Add-Line "upload: PASS uploaded=$($r.uploaded)"
-} catch { Add-Line "upload: FAIL $($_.Exception.Message)"; exit 1 }
-
-try {
-  $body = @{ scanId="acceptance_mesh"; mode="auto" } | ConvertTo-Json
-  $j = Invoke-RestMethod -Uri "http://localhost:3050/api/reconstruction/jobs" -Method POST -Body $body -ContentType "application/json"
-  Add-Line "job_create: PASS jobId=$($j.jobId)"
-} catch { Add-Line "job_create: FAIL $($_.Exception.Message)"; exit 1 }
-
-$status = $null
-for ($i = 0; $i -lt 30; $i++) {
-  Start-Sleep -Seconds 2
-  $status = Invoke-RestMethod -Uri "http://localhost:3050/api/reconstruction/jobs/$($j.jobId)"
-  if ($status.status -eq "completed" -or $status.status -eq "failed") { break }
+    $null=Get-BridgeHealth $c; $result.health='PASS'
+    if ($BeforeRebootReceipt) {
+        $before=Get-Content $BeforeRebootReceipt -Raw | ConvertFrom-Json
+        $boot=(Get-CimInstance Win32_OperatingSystem).LastBootUpTime.ToUniversalTime().ToString('o')
+        $task=Get-BridgeTask; Assert-TaskOwner $task $c.root
+        if (-not $task -or $task.State -ne 'Running' -or $before.host -ne $env:COMPUTERNAME -or $before.root -ne $c.root -or -not $before.health -or $before.bootTime -eq $boot) { throw 'Recovery evidence invalid: need a healthy receipt from this host/root before a different boot' }
+        $result.recovery='PASS'; $result.beforeReceipt=$BeforeRebootReceipt
+    }
+    $id='acceptance_' + [guid]::NewGuid().ToString('N'); $result.scanId=$id
+    if ($Mode -eq 'Mesh') {
+        $file=Join-Path $work 'cube.obj'; New-CubeObj $file
+        $files=@(Get-Item $file)
+    } else {
+        if (-not $ImagesDirectory) { throw 'ImagesDirectory required for real image reconstruction acceptance' }
+        $files=@(Get-ChildItem $ImagesDirectory -File | Where-Object { $_.Extension -match '^\.(jpg|jpeg|png|heic)$' })
+        if ($files.Count -lt 3) { throw 'Use at least three real overlapping photos' }
+    }
+    Add-Type -AssemblyName System.Net.Http
+    $client=[System.Net.Http.HttpClient]::new(); $client.Timeout=[TimeSpan]::FromSeconds(120)
+    $content=[System.Net.Http.MultipartFormDataContent]::new()
+    try {
+        $client.DefaultRequestHeaders.Add('X-MRL-Scan-ID',$id)
+        foreach ($f in $files) { $part=[System.Net.Http.ByteArrayContent]::new([IO.File]::ReadAllBytes($f.FullName)); $content.Add($part,'files',$f.Name) }
+        $response=$client.PostAsync('http://127.0.0.1:3050/api/scans/upload',$content).GetAwaiter().GetResult()
+        $text=$response.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+        if (-not $response.IsSuccessStatusCode) { throw "Upload HTTP $([int]$response.StatusCode): $text" }
+        $u=$text | ConvertFrom-Json
+        if ($u.ok -ne $true -or $u.scanId -ne $id -or $u.uploaded -ne $files.Count) { throw 'Upload count/ID mismatch' }
+        $saved=Get-Content $u.manifestPath -Raw | ConvertFrom-Json
+        if ($saved.uploaded -ne $files.Count) { throw 'Stored manifest mismatch' }
+        foreach ($f in $files) {
+            $target=Join-Path (Split-Path $u.manifestPath) ($f.Name -replace '[^a-zA-Z0-9._-]','_')
+            if ((Get-FileHash $target).Hash -ne (Get-FileHash $f.FullName).Hash) { throw 'Stored upload hash mismatch' }
+        }
+        $result.upload='PASS'
+    } finally { $content.Dispose(); $client.Dispose() }
+    $body=@{scanId=$id; mode='auto'} | ConvertTo-Json
+    $j=Invoke-RestMethod 'http://127.0.0.1:3050/api/reconstruction/jobs' -Method Post -Body $body -ContentType 'application/json' -TimeoutSec 10
+    $result.jobId=$j.jobId
+    $deadline=(Get-Date).AddSeconds($TimeoutSeconds)
+    do {
+        Start-Sleep 2
+        $job=Invoke-RestMethod ("http://127.0.0.1:3050/api/reconstruction/jobs/" + $j.jobId) -TimeoutSec 10
+    } while ($job.status -notin @('completed','failed') -and (Get-Date) -lt $deadline)
+    $result.reason=$job.message; $result.job=$job
+    if ($job.status -eq 'completed' -and $job.report.status -eq 'completed') {
+        $result.reconstruction='PASS'
+        $result.reconstructionScope=$(if($Mode -eq 'Mesh'){'mesh adapter smoke test; not photo reconstruction'}else{'COLMAP sparse reconstruction + MRL analysis; not dense mesh/OpenMVS'})
+    } elseif ($job.status -eq 'failed' -and $job.message -like '*COLMAP_NOT_FOUND*') { $result.reconstruction='FAIL_COLMAP_MISSING' }
+    elseif ($job.status -eq 'failed') { $result.reconstruction='FAIL' }
+    else { $result.reconstruction='TIMEOUT' }
+} catch {
+    $result.reason=$_.Exception.Message
+    if ($result.health -ne 'PASS') {$result.health='FAIL'}
+    elseif ($result.upload -ne 'PASS') {$result.upload='FAIL'}
+    else {$result.reconstruction='FAIL'}
+} finally {
+    Write-BridgeReceipt 'acceptance' $result
+    # Only delete this run's temporary fixture. Uploaded scan/job/output evidence remains.
+    Remove-Item $work -Recurse -Force
 }
-
-if ($status.status -eq "completed") {
-  Add-Line "runner: PASS"
-  Add-Line "reason: $($status.message)"
-  Add-Line "created files: $($status.outputFiles -join ', ')"
-  Add-Line "ACCEPTANCE PASS"
-  exit 0
-} else {
-  Add-Line "runner: FAIL status=$($status.status)"
-  Add-Line "failed reason: $($status.message)"
-  Add-Line "created files: $($status.outputFiles -join ', ')"
-  exit 1
-}
+$result | ConvertTo-Json -Depth 12
+if ($result.health -eq 'PASS' -and $result.upload -eq 'PASS' -and $result.reconstruction -eq 'PASS') { exit 0 }
+exit 1

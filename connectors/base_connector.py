@@ -17,6 +17,8 @@ import time
 
 import requests
 
+from MRL_Bridge.translation_center import TranslationCenter
+
 
 class ConnectorStatus(Enum):
     """Connector connection status / 連接器連接狀態"""
@@ -49,6 +51,7 @@ class ConnectorConfig:
     timeout: int = 30
     retry_attempts: int = 3
     custom_settings: Dict[str, Any] = field(default_factory=dict)
+    allow_redirects: bool = True
 
 
 @dataclass
@@ -72,6 +75,8 @@ class BaseConnector(ABC):
     
     def __init__(self, config: ConnectorConfig):
         self.config = config
+        self.mrl_bridge_center = TranslationCenter.from_environment("connector")
+        self.last_mrl_bridge_receipt = None
         self.health = ConnectorHealth(
             status=ConnectorStatus.NOT_CONFIGURED,
             last_check=datetime.now()
@@ -162,7 +167,8 @@ class BaseConnector(ABC):
             "error": self.health.error_message,
             "rate_limit_remaining": self.health.rate_limit_remaining,
             "latency_ms": self.health.latency_ms,
-            "metadata": self.health.metadata
+            "metadata": self.health.metadata,
+            "mrl_bridge": self.last_mrl_bridge_receipt,
         }
     
     def get_security_guidelines(self) -> Dict[str, List[str]]:
@@ -273,14 +279,40 @@ class BaseConnector(ABC):
         if headers:
             request_headers.update(headers)
         
-        response = requests.request(
-            method=method,
-            url=url,
-            headers=request_headers,
-            params=params,
-            json=json_data,
-            timeout=self.config.timeout
+        # origin_signature: MrLiouWord — label every shared HTTP boundary.
+        # URLs, credentials, query values and payload content are never logged.
+        outgoing = self.mrl_bridge_center.label(
+            {"method": method, "url": url, "params": params, "json": json_data},
+            source_ref="MRL.connector",
+            destination_ref=self.service_name, status="dispatching",
         )
+        request_headers.update(self.mrl_bridge_center.headers(outgoing))
+        try:
+            response = requests.request(
+                method=method, url=url, headers=request_headers, params=params,
+                json=json_data, timeout=self.config.timeout,
+                allow_redirects=self.config.allow_redirects,
+            )
+        except Exception:
+            self.last_mrl_bridge_receipt = self.mrl_bridge_center.label(
+                b"", source_ref=self.service_name, destination_ref="MRL.connector",
+                direction="external_to_mrl", trace_id=outgoing["trace_id"],
+                parent_ref=outgoing["event_id"], status="transport_error",
+            )
+            raise
+        parent_ref = outgoing["event_id"]
+        history = response.history if isinstance(response.history, list) else []
+        for hop in history + [response]:
+            content = hop.content
+            if not isinstance(content, bytes):
+                raise TypeError("MRL bridge requires response.content bytes")
+            self.last_mrl_bridge_receipt = self.mrl_bridge_center.label(
+                content, source_ref=self.service_name, destination_ref="MRL.connector",
+                direction="external_to_mrl", trace_id=outgoing["trace_id"],
+                parent_ref=parent_ref, status="received", http_status=hop.status_code,
+                peer_trace_id=hop.headers.get("X-MRL-Trace-Id"),
+            )
+            parent_ref = self.last_mrl_bridge_receipt["event_id"]
         
         latency = (time.time() - start_time) * 1000
         self.health.latency_ms = latency
@@ -438,3 +470,4 @@ class BaseConnector(ABC):
             return self._handle_connection_error("Connection failed")
         except Exception as e:
             return self._handle_connection_error(str(e))
+

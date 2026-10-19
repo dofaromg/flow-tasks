@@ -106,6 +106,7 @@ class TestGitHubConnector:
         """Test check_connection success"""
         mock_response = Mock()
         mock_response.status_code = 200
+        mock_response.content = b"test-response"
         mock_response.text = '{"login": "testuser"}'
         mock_response.json.return_value = {"login": "testuser"}
         mock_response.headers = {"X-RateLimit-Remaining": "5000"}
@@ -124,6 +125,7 @@ class TestGitHubConnector:
         """Test check_connection handles 401"""
         mock_response = Mock()
         mock_response.status_code = 401
+        mock_response.content = b"test-response"
         mock_request.return_value = mock_response
         
         config = ConnectorConfig(credentials={"token": "invalid_token"})
@@ -397,6 +399,7 @@ class TestConnectorAudit:
         monkeypatch.setattr(sys, "argv", argv)
 
         response = Mock(status_code=200 if outcome == "connected" else 401)
+        response.content = b"test-response"
         response.text = '{"login": "testuser"}'
         response.json.return_value = {"login": "testuser"}
         response.headers = {}
@@ -440,6 +443,7 @@ class TestDefaultSyncData:
         """Test sync_data returns success when connected"""
         mock_response = Mock()
         mock_response.status_code = 200
+        mock_response.content = b"test-response"
         mock_response.text = '{"login": "testuser"}'
         mock_response.json.return_value = {"login": "testuser"}
         mock_response.headers = {}
@@ -465,3 +469,4 @@ class TestDefaultSyncData:
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+

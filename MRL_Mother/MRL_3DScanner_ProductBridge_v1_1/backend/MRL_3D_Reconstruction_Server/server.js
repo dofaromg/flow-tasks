@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
 import fs from 'fs-extra';
+import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,6 +11,12 @@ import { spawn } from 'child_process';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT = __dirname;
+const PORT = Number(process.env.MRL_3D_BRIDGE_PORT || 3050);
+if (PORT !== 3050) throw new Error('MRL bridge requires port 3050');
+// ROOT: the MRL world is entered and left only through DL580's Tailscale address.
+// Loopback stays for on-host health checks; never listen on all interfaces.
+const BIND = (process.env.MRL_BRIDGE_BIND || '100.78.70.78,127.0.0.1').split(',').map(h => h.trim()).filter(Boolean);
+if (!BIND.length || BIND.some(h => ['0.0.0.0', '::', '[::]', '*'].includes(h))) throw new Error('MRL bridge must bind explicit addresses, never all interfaces');
 const STORAGE = path.join(ROOT, 'storage');
 const UPLOADS = path.join(STORAGE, 'uploads');
 const JOBS = path.join(STORAGE, 'jobs');
@@ -29,6 +36,9 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '20mb' }));
 
+function asyncRoute(handler) {
+  return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
+}
 const upload = multer({ dest: path.join(STORAGE, 'tmp') });
 
 function now() { return new Date().toISOString(); }
@@ -41,11 +51,11 @@ async function appendLog(line) {
   await fs.appendFile(path.join(LOGS, 'runtime.log'), `[${now()}] ${line}\n`, 'utf8');
 }
 
-app.get('/api/health', async (req, res) => {
-  res.json({ ok: true, service: 'MRL_3D_Reconstruction_Server', version: '1.0.0', port: 3050, time: now() });
-});
+app.get('/api/health', asyncRoute(async (req, res) => {
+  res.json({ ok: true, service: 'MRL_3D_Reconstruction_Server', version: '1.0.0', port: PORT, pid: process.pid, instance: process.env.MRL_BRIDGE_INSTANCE || null, time: now() });
+}));
 
-app.get('/api/scans', async (req, res) => {
+app.get('/api/scans', asyncRoute(async (req, res) => {
   const items = [];
   if (await fs.pathExists(UPLOADS)) {
     for (const name of await fs.readdir(UPLOADS)) {
@@ -54,13 +64,26 @@ app.get('/api/scans', async (req, res) => {
     }
   }
   res.json({ ok: true, scans: items });
-});
+}));
 
-app.post('/api/scans/upload', upload.array('files', 500), async (req, res) => {
+app.post('/api/scans/upload', upload.array('files', 500), asyncRoute(async (req, res) => {
   const scanId = req.header('X-MRL-Scan-ID') || uuidv4();
+  if (!/^[a-zA-Z0-9_-]{1,128}$/.test(scanId)) {
+    await Promise.all((req.files || []).map(f => fs.remove(f.path)));
+    return res.status(400).json({ ok: false, error: 'invalid scanId' });
+  }
+  if (!req.files?.length) return res.status(400).json({ ok: false, error: 'files required' });
+  if (await fs.pathExists(scanDir(scanId))) {
+    await Promise.all(req.files.map(f => fs.remove(f.path)));
+    return res.status(409).json({ ok: false, error: 'scanId already exists; use a new ID' });
+  }
   const scanName = req.header('X-MRL-Scan-Name') || `scan_${scanId}`;
   const dir = scanDir(scanId);
-  await fs.ensureDir(dir);
+  try { await fs.mkdir(dir); } catch (err) {
+    await Promise.all(req.files.map(f => fs.remove(f.path)));
+    if (err.code === 'EEXIST') return res.status(409).json({ ok: false, error: 'scanId already exists' });
+    throw err;
+  }
   const files = [];
   for (const file of req.files || []) {
     const safe = path.basename(file.originalname || file.filename).replace(/[^a-zA-Z0-9._-]/g, '_');
@@ -73,11 +96,11 @@ app.post('/api/scans/upload', upload.array('files', 500), async (req, res) => {
   await writeJson(path.join(dir, 'manifest.json'), manifest);
   await appendLog(`upload scan=${scanId} files=${files.length}`);
   res.json({ ok: true, scanId, uploaded: files.length, manifestPath: path.join(dir, 'manifest.json') });
-});
+}));
 
-app.post('/api/reconstruction/jobs', async (req, res) => {
+app.post('/api/reconstruction/jobs', asyncRoute(async (req, res) => {
   const { scanId, mode = 'auto' } = req.body || {};
-  if (!scanId) return res.status(400).json({ ok: false, error: 'scanId required' });
+  if (typeof scanId !== 'string' || !/^[a-zA-Z0-9_-]{1,128}$/.test(scanId)) return res.status(400).json({ ok: false, error: 'scanId required' });
   const manifest = path.join(scanDir(scanId), 'manifest.json');
   if (!(await fs.pathExists(manifest))) return res.status(404).json({ ok: false, error: 'scan manifest not found' });
   const jobId = uuidv4();
@@ -90,15 +113,17 @@ app.post('/api/reconstruction/jobs', async (req, res) => {
     await writeJson(jobPath(jobId), j);
   });
   res.json({ ok: true, jobId, status: job.status });
-});
+}));
 
-app.get('/api/reconstruction/jobs/:id', async (req, res) => {
+app.get('/api/reconstruction/jobs/:id', asyncRoute(async (req, res) => {
+  if (!/^[a-zA-Z0-9_-]{1,128}$/.test(req.params.id)) return res.status(400).json({ ok: false, error: 'invalid jobId' });
   const job = await readJson(jobPath(req.params.id), null);
   if (!job) return res.status(404).json({ ok: false, error: 'job not found' });
   res.json(job);
-});
+}));
 
-app.get('/api/reconstruction/jobs/:id/files', async (req, res) => {
+app.get('/api/reconstruction/jobs/:id/files', asyncRoute(async (req, res) => {
+  if (!/^[a-zA-Z0-9_-]{1,128}$/.test(req.params.id)) return res.status(400).json({ ok: false, error: 'invalid jobId' });
   const out = path.join(OUTPUTS, req.params.id);
   if (!(await fs.pathExists(out))) return res.json({ ok: true, files: [] });
   const files = [];
@@ -110,7 +135,7 @@ app.get('/api/reconstruction/jobs/:id/files', async (req, res) => {
   }
   await walk(out);
   res.json({ ok: true, files });
-});
+}));
 
 
 async function runJob(jobId) {
@@ -121,13 +146,16 @@ async function runJob(jobId) {
   await fs.ensureDir(out);
   const runner = path.join(ROOT, 'python', 'mrl3d_job_runner.py');
   const args = [runner, '--scan-dir', scanDir(job.scanId), '--output-dir', out, '--mode', job.mode];
-  const py = process.platform === 'win32' ? 'python' : 'python3';
+  const py = process.env.MRL_BRIDGE_PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
   await appendLog(`runner start job=${jobId}`);
   const child = spawn(py, args, { cwd: ROOT });
   let stdout = ''; let stderr = '';
   child.stdout.on('data', d => stdout += d.toString());
   child.stderr.on('data', d => stderr += d.toString());
-  const code = await new Promise(resolve => child.on('close', resolve));
+  const code = await new Promise((resolve, reject) => {
+    child.once('error', reject);
+    child.once('close', resolve);
+  });
   await fs.writeFile(path.join(out, 'runner_stdout.log'), stdout, 'utf8');
   await fs.writeFile(path.join(out, 'runner_stderr.log'), stderr, 'utf8');
 
@@ -143,12 +171,12 @@ async function runJob(jobId) {
 
   job = await fs.readJson(jobPath(jobId));
   job.updatedAt = now();
-  if (code === 0 && (!report || report.status === 'completed')) {
+  if (code === 0 && report?.status === 'completed') {
     job.status = 'completed';
     job.message = report?.reason || 'runner completed';
   } else {
     job.status = 'failed';
-    job.message = report?.reason || stderr || stdout || `runner exit ${code}`;
+    job.message = report?.reason || (!report ? 'RUNNER_REPORT_MISSING' : stderr || stdout || `runner exit ${code}`);
   }
   job.exitCode = code;
   job.report = report || null;
@@ -171,5 +199,24 @@ async function listFiles(dir) {
   return files;
 }
 
-const PORT = process.env.MRL_3D_BRIDGE_PORT || 3050;
-app.listen(PORT, () => console.log(`MRL 3D Reconstruction Server running on ${PORT}`));
+// A reboot must not leave old jobs reporting running forever. Preserve all data.
+for (const name of await fs.readdir(JOBS)) {
+  if (!name.endsWith('.json')) continue;
+  const p = path.join(JOBS, name);
+  const job = await readJson(p, null);
+  if (job && ['queued', 'running'].includes(job.status)) {
+    job.status = 'failed'; job.message = 'INTERRUPTED_BY_BACKEND_RESTART'; job.updatedAt = now();
+    await writeJson(p, job);
+  }
+}
+app.use((err, req, res, next) => {
+  appendLog(`request failed: ${err.message}`).catch(console.error);
+  if (res.headersSent) return next(err);
+  res.status(500).json({ ok: false, error: 'request failed' });
+});
+// A missing address (e.g. Tailscale not up yet) exits so the supervisor retries; no fallback to other interfaces.
+for (const host of BIND) {
+  http.createServer(app)
+    .on('error', err => { console.error(`listen ${host}:${PORT} failed: ${err.code || err.message}`); process.exit(1); })
+    .listen(PORT, host, () => console.log(`MRL 3D Reconstruction Server running on ${host}:${PORT}`));
+}

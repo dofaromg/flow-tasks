@@ -1,0 +1,347 @@
+{
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "base_commit": "2e8da85a68619e509094e283883f1c9024f55edc",
+  "expected_files": [
+    "MRL_Bridge/translation_center.py",
+    "MRL_Bridge/mrl_bridge_translation_center.cjs",
+    "MRL_Bridge/server.js",
+    "MRL_Bridge/test_translation_center.py",
+    "MRL_Bridge/test_mrl_bridge_translation_center.cjs",
+    "connectors/base_connector.py",
+    "connectors/test_connectors.py",
+    "connectors/test_mrl_translation_center.py",
+    "MRL_Mother/09_workflow/MRL_Mobius_Closure_Engine_v1.py",
+    "scripts/MRL_install_bridge_translation_center.ps1",
+    ".github/workflows/MRL_Bridge_Translation_Center.yml",
+    "docs/MRL_Bridge_Translation_Center_v1.md",
+    "Dockerfile.mrl",
+    "docs/MRL_Bridge_Translation_Center_v1.audit.json"
+  ],
+  "expected_count": 14,
+  "files": [
+    {
+      "path": "MRL_Bridge/translation_center.py",
+      "size": 5815,
+      "sha256": "e410ed29a8fcd35b78535750b8a8f843814d5e257afba80cfa53e46567aab00a",
+      "sha256_lf": "e410ed29a8fcd35b78535750b8a8f843814d5e257afba80cfa53e46567aab00a",
+      "before_sha256": null,
+      "before_sha256_lf": null,
+      "accepted_upgrade_sources": [
+        {
+          "commit": "3b39150a28dc736e5aee134b73cbdffc64b8804e",
+          "sha256_lf": "dd863f2d073f064a9c3897d582aa0d502b7c407c21d028e1ef6558d95cd4b00d"
+        },
+        {
+          "commit": "2b6a4d289efcf0c2dad4f5b6dbf213b082f7aa4b",
+          "sha256_lf": "dd863f2d073f064a9c3897d582aa0d502b7c407c21d028e1ef6558d95cd4b00d"
+        },
+        {
+          "commit": "7f32579964ad9e96ba7b4ebe01489c52cf920ea5",
+          "sha256_lf": "dd863f2d073f064a9c3897d582aa0d502b7c407c21d028e1ef6558d95cd4b00d"
+        }
+      ]
+    },
+    {
+      "path": "MRL_Bridge/mrl_bridge_translation_center.cjs",
+      "size": 8960,
+      "sha256": "8840b2f7fc9632592434955f7f65ead09e348730872e11ba7f00a70fc480fa93",
+      "sha256_lf": "8840b2f7fc9632592434955f7f65ead09e348730872e11ba7f00a70fc480fa93",
+      "before_sha256": null,
+      "before_sha256_lf": null,
+      "accepted_upgrade_sources": [
+        {
+          "commit": "3b39150a28dc736e5aee134b73cbdffc64b8804e",
+          "sha256_lf": "581cf85977f2872be95bc5a5ff26354cac921d45939c60cc496b964b13b49578"
+        },
+        {
+          "commit": "2b6a4d289efcf0c2dad4f5b6dbf213b082f7aa4b",
+          "sha256_lf": "474460de2db044ebd1754bef6bcaace87742a5e9523a10ee8143ce7e3f8a8d50"
+        },
+        {
+          "commit": "7f32579964ad9e96ba7b4ebe01489c52cf920ea5",
+          "sha256_lf": "b0fb2005dd562f91fb5b2bae6fc1528ec4a4f0c869fed1179ab10ffca16236bc"
+        }
+      ]
+    },
+    {
+      "path": "MRL_Bridge/server.js",
+      "size": 33477,
+      "sha256": "f41225bd8dc015b3201ef27d0b9703d0bbb11d4aa52a244abfba29977793f4c9",
+      "sha256_lf": "f41225bd8dc015b3201ef27d0b9703d0bbb11d4aa52a244abfba29977793f4c9",
+      "before_sha256": "d3630f0e871132ab5f3f2241a40af26a787bc5f844d1d9cad9515facb153c06b",
+      "before_sha256_lf": "d3630f0e871132ab5f3f2241a40af26a787bc5f844d1d9cad9515facb153c06b",
+      "accepted_upgrade_sources": [
+        {
+          "commit": "3b39150a28dc736e5aee134b73cbdffc64b8804e",
+          "sha256_lf": "519610b911b2666ed1d3a0d95bbe37cb689e7241460b22f7f33d91d341320833"
+        },
+        {
+          "commit": "2b6a4d289efcf0c2dad4f5b6dbf213b082f7aa4b",
+          "sha256_lf": "95b8cde693194b81854a81b7dd88bdd94dad97c03bc257b24147473c3388394d"
+        },
+        {
+          "commit": "7f32579964ad9e96ba7b4ebe01489c52cf920ea5",
+          "sha256_lf": "91842ddae062a8e188c9185ff4b0e7e2b8379bb2164bdc51eed45f519d779328"
+        }
+      ]
+    },
+    {
+      "path": "MRL_Bridge/test_translation_center.py",
+      "size": 7050,
+      "sha256": "e9afc146a23ed06392ee93f93e5d12d9c5fcc57be3e545b704b19dd29b151bf7",
+      "sha256_lf": "e9afc146a23ed06392ee93f93e5d12d9c5fcc57be3e545b704b19dd29b151bf7",
+      "before_sha256": null,
+      "before_sha256_lf": null,
+      "accepted_upgrade_sources": [
+        {
+          "commit": "3b39150a28dc736e5aee134b73cbdffc64b8804e",
+          "sha256_lf": "6cca80eeccedefa13ee37eeada78b5e6064e19a806f5a6a1888b98ca8e5e3b4c"
+        },
+        {
+          "commit": "2b6a4d289efcf0c2dad4f5b6dbf213b082f7aa4b",
+          "sha256_lf": "9a3045498d40a42b9e8e37800a53eb1e8344f643b813bb565017c61b147de2b2"
+        },
+        {
+          "commit": "7f32579964ad9e96ba7b4ebe01489c52cf920ea5",
+          "sha256_lf": "9a3045498d40a42b9e8e37800a53eb1e8344f643b813bb565017c61b147de2b2"
+        }
+      ]
+    },
+    {
+      "path": "MRL_Bridge/test_mrl_bridge_translation_center.cjs",
+      "size": 8265,
+      "sha256": "feda730ed89a7321205d878e7ed6b743046546805f97eeb9b79504eb0b2cf405",
+      "sha256_lf": "feda730ed89a7321205d878e7ed6b743046546805f97eeb9b79504eb0b2cf405",
+      "before_sha256": null,
+      "before_sha256_lf": null,
+      "accepted_upgrade_sources": [
+        {
+          "commit": "3b39150a28dc736e5aee134b73cbdffc64b8804e",
+          "sha256_lf": "64bd6c3496c85b059c81f2bee39ac80ec6a09c1ed3cc6d823847a61071f155be"
+        },
+        {
+          "commit": "2b6a4d289efcf0c2dad4f5b6dbf213b082f7aa4b",
+          "sha256_lf": "8ac15c74493771e2fdc04b0822602727e966521ec1f16683f8bf8faa9a001c7e"
+        },
+        {
+          "commit": "7f32579964ad9e96ba7b4ebe01489c52cf920ea5",
+          "sha256_lf": "5084d19bb5ca8d3ecece7f1391b7a077c9ad64ce908e34d3c653b223dc07addf"
+        }
+      ]
+    },
+    {
+      "path": "connectors/base_connector.py",
+      "size": 16248,
+      "sha256": "e80933bfea895b81e2865891c271956b473f858aa52dc401cfc1602c7244f110",
+      "sha256_lf": "e80933bfea895b81e2865891c271956b473f858aa52dc401cfc1602c7244f110",
+      "before_sha256": "490b8dd3ccc069c9c76d3de11ff422c78f77a674b18b4e710babd39337e65997",
+      "before_sha256_lf": "490b8dd3ccc069c9c76d3de11ff422c78f77a674b18b4e710babd39337e65997",
+      "accepted_upgrade_sources": [
+        {
+          "commit": "3b39150a28dc736e5aee134b73cbdffc64b8804e",
+          "sha256_lf": "e7d8880b4038cf5719f35a43706c143b57d4ee6a2c84172b5c034baf246004dc"
+        },
+        {
+          "commit": "2b6a4d289efcf0c2dad4f5b6dbf213b082f7aa4b",
+          "sha256_lf": "e7d8880b4038cf5719f35a43706c143b57d4ee6a2c84172b5c034baf246004dc"
+        },
+        {
+          "commit": "7f32579964ad9e96ba7b4ebe01489c52cf920ea5",
+          "sha256_lf": "e7d8880b4038cf5719f35a43706c143b57d4ee6a2c84172b5c034baf246004dc"
+        }
+      ]
+    },
+    {
+      "path": "connectors/test_connectors.py",
+      "size": 18463,
+      "sha256": "6d449dad0e9ec30f411b3f36ae90b86e8cea122e7d69627e85e65fed67992082",
+      "sha256_lf": "6d449dad0e9ec30f411b3f36ae90b86e8cea122e7d69627e85e65fed67992082",
+      "before_sha256": "6377772f4b53359150a011bd9384154cb93739442436402109bde3427ec11723",
+      "before_sha256_lf": "6377772f4b53359150a011bd9384154cb93739442436402109bde3427ec11723",
+      "accepted_upgrade_sources": [
+        {
+          "commit": "3b39150a28dc736e5aee134b73cbdffc64b8804e",
+          "sha256_lf": "6d449dad0e9ec30f411b3f36ae90b86e8cea122e7d69627e85e65fed67992082"
+        },
+        {
+          "commit": "2b6a4d289efcf0c2dad4f5b6dbf213b082f7aa4b",
+          "sha256_lf": "6d449dad0e9ec30f411b3f36ae90b86e8cea122e7d69627e85e65fed67992082"
+        },
+        {
+          "commit": "7f32579964ad9e96ba7b4ebe01489c52cf920ea5",
+          "sha256_lf": "6d449dad0e9ec30f411b3f36ae90b86e8cea122e7d69627e85e65fed67992082"
+        }
+      ]
+    },
+    {
+      "path": "connectors/test_mrl_translation_center.py",
+      "size": 3823,
+      "sha256": "76fa4e0ffed663a9ebe64a26811fcd565cad8f201c55320c3eb8be7a42d55aa4",
+      "sha256_lf": "76fa4e0ffed663a9ebe64a26811fcd565cad8f201c55320c3eb8be7a42d55aa4",
+      "before_sha256": null,
+      "before_sha256_lf": null,
+      "accepted_upgrade_sources": [
+        {
+          "commit": "3b39150a28dc736e5aee134b73cbdffc64b8804e",
+          "sha256_lf": "07263d18987129ee7a580c622ee002c95fae3595e4867e7bcbfc8a02486e486c"
+        },
+        {
+          "commit": "2b6a4d289efcf0c2dad4f5b6dbf213b082f7aa4b",
+          "sha256_lf": "07263d18987129ee7a580c622ee002c95fae3595e4867e7bcbfc8a02486e486c"
+        },
+        {
+          "commit": "7f32579964ad9e96ba7b4ebe01489c52cf920ea5",
+          "sha256_lf": "07263d18987129ee7a580c622ee002c95fae3595e4867e7bcbfc8a02486e486c"
+        }
+      ]
+    },
+    {
+      "path": "MRL_Mother/09_workflow/MRL_Mobius_Closure_Engine_v1.py",
+      "size": 9042,
+      "sha256": "c04171f0b8678ac18c48ce38f4a2899f43d298f58241108e3b86de3eb3369b46",
+      "sha256_lf": "c04171f0b8678ac18c48ce38f4a2899f43d298f58241108e3b86de3eb3369b46",
+      "before_sha256": "8f33f0c3b411816389fb101280fef8bc92491d7cc0ae6076916f65f956b1a2ad",
+      "before_sha256_lf": "8f33f0c3b411816389fb101280fef8bc92491d7cc0ae6076916f65f956b1a2ad",
+      "accepted_upgrade_sources": [
+        {
+          "commit": "3b39150a28dc736e5aee134b73cbdffc64b8804e",
+          "sha256_lf": "f6fcb4c48cb6592ccc6cc7b4a22a50933d35fc03d0ab5c787308023f16505889"
+        },
+        {
+          "commit": "2b6a4d289efcf0c2dad4f5b6dbf213b082f7aa4b",
+          "sha256_lf": "8ad2d271ce45212e6609ac985f838163f647cd04cfbdd9afc9e6235e5bbf2562"
+        },
+        {
+          "commit": "7f32579964ad9e96ba7b4ebe01489c52cf920ea5",
+          "sha256_lf": "8ad2d271ce45212e6609ac985f838163f647cd04cfbdd9afc9e6235e5bbf2562"
+        }
+      ]
+    },
+    {
+      "path": "scripts/MRL_install_bridge_translation_center.ps1",
+      "size": 6224,
+      "sha256": "b03d927f1182b8584eaffee1fdf00f8a404a25107e4549f96bda1d967e6b7f25",
+      "sha256_lf": "b03d927f1182b8584eaffee1fdf00f8a404a25107e4549f96bda1d967e6b7f25",
+      "before_sha256": null,
+      "before_sha256_lf": null,
+      "accepted_upgrade_sources": [
+        {
+          "commit": "3b39150a28dc736e5aee134b73cbdffc64b8804e",
+          "sha256_lf": "53a9ca7870733a176d8f8f09cb21c2ec0617ca3a8dc3e654818036cc6d3ac361"
+        },
+        {
+          "commit": "2b6a4d289efcf0c2dad4f5b6dbf213b082f7aa4b",
+          "sha256_lf": "7539fd824c371b626833abfcafaf88b4ef0f892e62a127834d3e2fe37c352300"
+        },
+        {
+          "commit": "7f32579964ad9e96ba7b4ebe01489c52cf920ea5",
+          "sha256_lf": "b03d927f1182b8584eaffee1fdf00f8a404a25107e4549f96bda1d967e6b7f25"
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/MRL_Bridge_Translation_Center.yml",
+      "size": 3497,
+      "sha256": "9dd95f1fc77835898a185842ced258a4fa6487156fcaf333ead05d3b05ae5b47",
+      "sha256_lf": "9dd95f1fc77835898a185842ced258a4fa6487156fcaf333ead05d3b05ae5b47",
+      "before_sha256": null,
+      "before_sha256_lf": null,
+      "accepted_upgrade_sources": [
+        {
+          "commit": "3b39150a28dc736e5aee134b73cbdffc64b8804e",
+          "sha256_lf": "1565e2875a9fcc415e8e371ced75353447b4035fcc5b73576f071ce297d24cde"
+        },
+        {
+          "commit": "2b6a4d289efcf0c2dad4f5b6dbf213b082f7aa4b",
+          "sha256_lf": "3ca68dbb26718153bc44374662092a6a0692bc5eeadfed102b86bbd870e69ab8"
+        },
+        {
+          "commit": "7f32579964ad9e96ba7b4ebe01489c52cf920ea5",
+          "sha256_lf": "9dd95f1fc77835898a185842ced258a4fa6487156fcaf333ead05d3b05ae5b47"
+        }
+      ]
+    },
+    {
+      "path": "docs/MRL_Bridge_Translation_Center_v1.md",
+      "size": 8692,
+      "sha256": "a5f6091191f18defa6554dee4ca64e6db32a3804b8a631feafd81fee97cac203",
+      "sha256_lf": "a5f6091191f18defa6554dee4ca64e6db32a3804b8a631feafd81fee97cac203",
+      "before_sha256": null,
+      "before_sha256_lf": null,
+      "accepted_upgrade_sources": [
+        {
+          "commit": "3b39150a28dc736e5aee134b73cbdffc64b8804e",
+          "sha256_lf": "9bbf0a40c85fbd82e4552f9fc88abcaa6287ef0eb7e0a19791ee75e449d689e8"
+        },
+        {
+          "commit": "2b6a4d289efcf0c2dad4f5b6dbf213b082f7aa4b",
+          "sha256_lf": "41c81b434e57e2a39b37e81dd3a0bdb7e7378acb98ccfdca0b43897a7cb3231d"
+        },
+        {
+          "commit": "7f32579964ad9e96ba7b4ebe01489c52cf920ea5",
+          "sha256_lf": "65858ab8367c34d86b5bf051b4486d191c7806bdd2991e8de5e1dddaae737c8c"
+        }
+      ]
+    },
+    {
+      "path": "Dockerfile.mrl",
+      "size": 2440,
+      "sha256": "179956aa941928c4f75ddf0811f8d69cdccc386b80afadd40b06422eeb636f1f",
+      "sha256_lf": "179956aa941928c4f75ddf0811f8d69cdccc386b80afadd40b06422eeb636f1f",
+      "before_sha256": "aaedc9a5bd8203ef5df4bbee0b656a1358ea8ff64fbb677a88d389cd93c20a4c",
+      "before_sha256_lf": "aaedc9a5bd8203ef5df4bbee0b656a1358ea8ff64fbb677a88d389cd93c20a4c",
+      "accepted_upgrade_sources": [
+        {
+          "commit": "2b6a4d289efcf0c2dad4f5b6dbf213b082f7aa4b",
+          "sha256_lf": "179956aa941928c4f75ddf0811f8d69cdccc386b80afadd40b06422eeb636f1f"
+        },
+        {
+          "commit": "7f32579964ad9e96ba7b4ebe01489c52cf920ea5",
+          "sha256_lf": "179956aa941928c4f75ddf0811f8d69cdccc386b80afadd40b06422eeb636f1f"
+        }
+      ]
+    }
+  ],
+  "missing": [],
+  "extra": [],
+  "mismatch": [],
+  "coverage": "100% source inventory; deployment gate OPEN",
+  "dependencies": {
+    "connectors/base_connector.py": [
+      "MRL_Bridge/translation_center.py",
+      "requests"
+    ],
+    "MRL_Bridge/server.js": [
+      "MRL_Bridge/mrl_bridge_translation_center.cjs",
+      "express",
+      "pg",
+      "ioredis"
+    ],
+    "MRL_Mother/09_workflow/MRL_Mobius_Closure_Engine_v1.py": [
+      "MRL_Bridge/translation_center.py",
+      "MRL_Mother/09_workflow/MRL_utils.py"
+    ],
+    "scripts/MRL_install_bridge_translation_center.ps1": [
+      "docs/MRL_Bridge_Translation_Center_v1.audit.json",
+      "existing DL580 Windows service",
+      "Node.js 24"
+    ],
+    "Dockerfile.mrl": [
+      "connectors/",
+      "MRL_Bridge/translation_center.py"
+    ]
+  },
+  "package_map": {
+    "runtime_files": 5,
+    "test_files": 4,
+    "workflow_files": 1,
+    "installer_files": 1,
+    "documentation_files": 1,
+    "audit_files": 1,
+    "container_definition_files": 1
+  },
+  "zip_required": false,
+  "audit_self_hash": "Git blob SHA on readback; excluded from own checksums",
+  "text_hash_normalization": "UTF-8 bytes; CRLF -> LF only; BOM preserved; raw repository hashes retained separately"
+}
