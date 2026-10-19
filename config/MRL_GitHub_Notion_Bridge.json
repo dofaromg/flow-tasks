@@ -1,0 +1,13 @@
+{
+  "schema": "MRL_GitHub_Notion_Bridge_v1",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "repository": "dofaromg/flow-tasks",
+  "pull_requests": [677],
+  "notion_authority_page": "3ede7f4e-6c55-8064-a840-e3a531cb2aef",
+  "notion_receipt_page": "3e9e7f4e-6c55-80e4-9f3d-c8292dda835a",
+  "parent_module": "MRL_FlowEditBridge_v0.2",
+  "parent_source": "dropbox:/MRL_FlowEditBridge_v0/MRL_FlowEditBridge_v0.2/MRL_Notion/MRL_Edit.py",
+  "operation": "github_read_to_notion_append_and_readback",
+  "notion_definition_direction": "upstream_reference_only"
+}
