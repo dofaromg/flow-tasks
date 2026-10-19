@@ -340,18 +340,18 @@
     },
     {
       "path": "docs/MRL_Bridge_Translation_Center_DL580_Acceptance.md",
-      "size": 7008,
-      "sha256": "27eb4a9c6d7eb86c2e4af1b38f0d988210684952af6b167cc421ab5c8ce73d3c",
-      "sha256_lf": "27eb4a9c6d7eb86c2e4af1b38f0d988210684952af6b167cc421ab5c8ce73d3c",
+      "size": 8506,
+      "sha256": "2db9cdea11c03047547bd749b838d64762dea06e4527bd85dc4d5d269225764b",
+      "sha256_lf": "2db9cdea11c03047547bd749b838d64762dea06e4527bd85dc4d5d269225764b",
       "before_sha256": null,
       "before_sha256_lf": null,
       "accepted_upgrade_sources": []
     },
     {
       "path": ".github/workflows/MRL_Bridge_Translation_Acceptance.yml",
-      "size": 2197,
-      "sha256": "732a3f27437b0d295f621ce3624dc841dde76226685b68d5989b9178b2f83368",
-      "sha256_lf": "732a3f27437b0d295f621ce3624dc841dde76226685b68d5989b9178b2f83368",
+      "size": 3505,
+      "sha256": "e8fc67f26375a56080bbb253387cd207402e84b410e7ef51112a27b5c3adfd2d",
+      "sha256_lf": "e8fc67f26375a56080bbb253387cd207402e84b410e7ef51112a27b5c3adfd2d",
       "before_sha256": null,
       "before_sha256_lf": null,
       "accepted_upgrade_sources": []
@@ -430,6 +430,7 @@
     "expected_changed_count": 7,
     "live_node_bridge": "NOT_VERIFIED",
     "live_python_runtime": "NOT_VERIFIED",
-    "source_tests": "24 Python unittest cases and 9 Node HTTP regressions passed locally; Windows PowerShell 5.1 parser pending CI; pytest runner not installed locally"
+    "source_tests": "24 Python unittest cases and 9 Node HTTP regressions passed locally; Windows PowerShell 5.1 parser pending CI; pytest runner not installed locally",
+    "windows_checkout_fix": "Preserve historical :mnt:data.txt; exact-head non-cone sparse source checkout; first hosted Windows checkout failed before any tests"
   }
 }

@@ -46,6 +46,29 @@ Get-NetTCPConnection -State Listen |
 
 ## 執行介面
 
+### Windows 來源取件：保留歷史的 sparse checkout
+
+首次 Windows CI 已確認既有歷史路徑 `:mnt:data.txt` 無法在 Windows checkout。
+不得改名或刪除該歷史檔案。驗收 CI 以 non-cone sparse checkout 精確取出本來源清單與 `MRL_utils.py`，並固定測試 PR head SHA。
+原主機同樣只需來源材料，不需要 checkout 全倉庫；以下只在專用的 SourceRoot 來源目錄執行，不能套用到運行中的 RuntimeRoot：
+
+```powershell
+# SourceRoot 必須是 D: 上尚不存在的來源材料目錄，非服務根目錄。
+if (Test-Path -LiteralPath $SourceRoot) { throw '不得覆寫既有來源或 Runtime' }
+git clone --no-checkout https://github.com/dofaromg/flow-tasks.git $SourceRoot
+if ($LASTEXITCODE -ne 0) { throw '來源鏡像取得失敗' }
+git -C $SourceRoot sparse-checkout init --no-cone
+git -C $SourceRoot sparse-checkout set --no-cone MRL_Bridge/ connectors/ MRL_Mother/09_workflow/ scripts/ docs/ .github/workflows/ Dockerfile.mrl
+if ($LASTEXITCODE -ne 0) { throw '來源範圍設定失敗' }
+git -C $SourceRoot checkout --detach $SourceCommit
+if ($LASTEXITCODE -ne 0) { throw '固定版本來源取件失敗' }
+```
+
+`SourceCommit` 是本 PR 經核對的完整 head SHA。這是部署材料 checkout，沒有啟動第二套服務。
+若該廣度的目錄內另有 Windows 不支援的歷史路徑，應沿 audit 的逐檔清單縮小**來源取件**範圍，不能修改原始命名。
+
+### 呼叫既有部署器與分層驗收
+
 以下參數來自原主機的既有設定，不預設任一 Python 服務或部署路徑已經驗證。
 在已取得修補的 SourceRoot 根目錄，使用既有設定變數執行：
 
