@@ -349,9 +349,9 @@
     },
     {
       "path": ".github/workflows/MRL_Bridge_Translation_Acceptance.yml",
-      "size": 4872,
-      "sha256": "ea06fc042a89a5eb6cba115233e5fd4e84e37124c007afc0b68bb9d963c5c003",
-      "sha256_lf": "ea06fc042a89a5eb6cba115233e5fd4e84e37124c007afc0b68bb9d963c5c003",
+      "size": 5190,
+      "sha256": "2c00b7ece08461239cfb5857c65be455b5c772fa8debdeea5e951b37b49f3681",
+      "sha256_lf": "2c00b7ece08461239cfb5857c65be455b5c772fa8debdeea5e951b37b49f3681",
       "before_sha256": null,
       "before_sha256_lf": null,
       "accepted_upgrade_sources": []

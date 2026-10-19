@@ -72,7 +72,11 @@ jobs:
           $file = Join-Path $SourceRoot 'fixture.txt'
           [IO.File]::WriteAllBytes($file, [Text.Encoding]::UTF8.GetBytes("MRL`nfixture`n"))
           $blob = (git -C $SourceRoot hash-object -w --no-filters $file).Trim()
-          $commit = ("100644 blob $blob`tfixture.txt" | git -C $SourceRoot mktree).Trim()
+          [byte[]]$treeBytes = [Text.Encoding]::ASCII.GetBytes('100644 fixture.txt' + [char]0)
+          for ($i=0; $i -lt 20; $i++) { $treeBytes += [Convert]::ToByte($blob.Substring($i*2,2),16) }
+          $treeFile = Join-Path $SourceRoot 'fixture.tree'
+          [IO.File]::WriteAllBytes($treeFile, $treeBytes)
+          $commit = (git -C $SourceRoot hash-object -t tree -w --no-filters $treeFile).Trim()
           if ($LASTEXITCODE -ne 0) { throw 'Fixture tree failed' }
           Test-MRLSourceBlob 'fixture.txt'
           [IO.File]::WriteAllBytes($file, [Text.Encoding]::UTF8.GetBytes("MRL`r`nfixture`r`n"))
