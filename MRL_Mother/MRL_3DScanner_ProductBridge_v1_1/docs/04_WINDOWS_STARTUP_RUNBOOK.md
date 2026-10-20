@@ -52,7 +52,9 @@ SYSTEM 執行前拒絕 Everyone／Authenticated Users／Users 的廣泛寫入 AC
 只回報現有排程；不重設觸發或啟動第二個程序。註冊／停止／啟動亦會核對排程
 主體、動作與工作目錄、開機及每分鐘觸發、重啟設定和電源設定；任何漂移都拒絕操作。
 恢復觸發須已開始或在兩分鐘的初次註冊容許期間內，且無 EndBoundary、有限的
-Repetition.Duration 或 StopAtDurationEnd；開機觸發也不得有 EndBoundary。
+Repetition.Duration；開機觸發也不得有 EndBoundary。Windows PowerShell 5.1 的
+原生觸發可能將 StopAtDurationEnd 設為 true；Duration 未指定時仍無限重複，
+因此不將這個預設值單獨視為排程漂移。
 監督程式將 Node 與其後代放入 kill-on-close Job Object，Node 意外結束時結束
 仍在執行的 Python/COLMAP 後代，再進行恢復。
 
