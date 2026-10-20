@@ -52,8 +52,8 @@
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 6387,
-      "sha256": "158acad39797a40b1179a9e8ea32332af335983acec6a3f4fd518c56f3bb8a6b"
+      "size_bytes": 7228,
+      "sha256": "0da5fcbcb686481a8c7b918c5add6ac90a76ce359837b20bcb1ada089fc00a0b"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -313,6 +313,20 @@
       },
       "current_size_bytes": 7908,
       "current_sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "cc5b00595cab803867ec9ed374902cae04aefcad",
+      "change_commit": "7a6d42479b35d5c4725d67ff1c1eb21b92eeea45",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/680",
+      "reason": "The authorization delivery also hashes the sync delivery manifest; propagate the preserved CHANGELOG integrity update through this dependency.",
+      "previous_entry": {
+        "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+        "size_bytes": 6387,
+        "sha256": "158acad39797a40b1179a9e8ea32332af335983acec6a3f4fd518c56f3bb8a6b"
+      },
+      "current_size_bytes": 7228,
+      "current_sha256": "0da5fcbcb686481a8c7b918c5add6ac90a76ce359837b20bcb1ada089fc00a0b",
       "origin_signature": "MrLiouWord"
     }
   ]

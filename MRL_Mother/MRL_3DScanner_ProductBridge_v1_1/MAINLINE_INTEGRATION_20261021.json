@@ -216,10 +216,11 @@
       ]
     },
     "config/Mrliou_Structure_Authorization_Delivery_v1.json": {
-      "sha256": "ba54c730c0d75d17c9a793a95526e7b00a2f3dea797a60a64ee05667e46da728",
-      "size": 12721,
+      "sha256": "e684a2018a09fc794e5cdbf64286bf32d336c52cbfa68b6f21b883f19bf66e6d",
+      "size": 13475,
       "dependencies": [
-        "CHANGELOG.md"
+        "CHANGELOG.md",
+        "config/Mrliou_MRL_Sync_Delivery_v1.json"
       ]
     }
   },
