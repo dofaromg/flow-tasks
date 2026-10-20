@@ -33,11 +33,16 @@ service/version/port、安裝 instance、PID、CreationDate、執行檔與監聽
 安全停止先禁用排程、寫 stop.request，等待監督程式停止；必要時只停止
 符合完整身分的 Node 程序樹。移除僅移除本安裝排程，保留所有資料與回執。
 SYSTEM 執行前拒絕 Everyone／Authenticated Users／Users 的廣泛寫入 ACL；除根目錄
-外，也檢查 node.exe、python.exe、backend（不含 storage）、scripts 及相依目錄
+外，也檢查 node.exe、python.exe、backend（只排除直接的 `backend\MRL_3D_Reconstruction_Server\storage`）、scripts 及相依目錄
 中的所有子目錄與載入檔案，避免子目錄或檔案上單獨設定的可寫 ACE 繞過父目錄檢查。
 檢查範圍包含部署根目錄、scripts、backend、node.exe 與 python.exe 所在目錄，
-以及 `-DependencyPath` 的每一個目錄（它們會被放到 SYSTEM 的 PATH 前面，並以
-解析後的絕對路徑儲存）；
+以及既有 `.bridge` 狀態樹（包含 config.json）、Python venv 根目錄與 `pyvenv.cfg`
+中 home 指向的 base interpreter 根目錄（含 Lib／DLLs）。以 metadata 取得 Python
+路徑，檢查前不執行 Python；受保護樹中的 reparse point 會拒絕，避免遍歷繞過或循環。
+`node_modules` 內名為 storage 的套件仍完整檢查。
+`-DependencyPath` 的每一個目錄會被放到 SYSTEM 的 PATH 前面，並以
+解析後的絕對路徑儲存；舊設定以相同規則正規化後比較，不因分隔空白、尾斜線或
+大小寫差異誤判為設定變更。不存在的目錄仍拒絕。
 寫入、附加、刪除、變更權限、取得擁有權與 GenericWrite／GenericAll 都視為廣泛寫入。
 部署程式碼、Node、Python 及所有依賴目錄須只允許受信管理者修改；本次不
 自動修改既有 ACL、開防火牆或其他排程。
@@ -46,6 +51,8 @@ SYSTEM 執行前拒絕 Everyone／Authenticated Users／Users 的廣泛寫入 AC
 `.bridge\config.json` 後改名保存，再用新路徑註冊。重複使用相同參數註冊
 只回報現有排程；不重設觸發或啟動第二個程序。註冊／停止／啟動亦會核對排程
 主體、動作與工作目錄、開機及每分鐘觸發、重啟設定和電源設定；任何漂移都拒絕操作。
+恢復觸發須已開始或在兩分鐘的初次註冊容許期間內，且無 EndBoundary、有限的
+Repetition.Duration 或 StopAtDurationEnd；開機觸發也不得有 EndBoundary。
 監督程式將 Node 與其後代放入 kill-on-close Job Object，Node 意外結束時結束
 仍在執行的 Python/COLMAP 後代，再進行恢復。
 

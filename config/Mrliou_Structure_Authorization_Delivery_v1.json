@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 7908,
-      "sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b"
+      "size_bytes": 8683,
+      "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 7228,
-      "sha256": "0da5fcbcb686481a8c7b918c5add6ac90a76ce359837b20bcb1ada089fc00a0b"
+      "size_bytes": 8235,
+      "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -327,6 +327,36 @@
       },
       "current_size_bytes": 7228,
       "current_sha256": "0da5fcbcb686481a8c7b918c5add6ac90a76ce359837b20bcb1ada089fc00a0b",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "0c88c9962a361dc04d74998ee4fab20be1c18981",
+      "source_pr": 680,
+      "reason": "Post-merge ProductBridge security review adds a CHANGELOG entry; preserve earlier entries and propagate exact live dependency hashes. No change to authorization rules.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 7908,
+          "sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 7228,
+          "sha256": "0da5fcbcb686481a8c7b918c5add6ac90a76ce359837b20bcb1ada089fc00a0b"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 8683,
+          "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 8235,
+          "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
+        }
+      ],
       "origin_signature": "MrLiouWord"
     }
   ]
