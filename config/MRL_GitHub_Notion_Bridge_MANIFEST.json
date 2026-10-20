@@ -1,0 +1,61 @@
+{
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "base_commit": "cc5b00595cab803867ec9ed374902cae04aefcad",
+  "expected_files": [
+    "adapters/mrl_github_notion_bridge.py",
+    "config/MRL_GitHub_Notion_Bridge.json",
+    "tests/test_mrl_github_notion_bridge.py",
+    "docs/MRL_GitHub_Notion_Bridge.md",
+    "config/MRL_GitHub_Notion_Bridge_MANIFEST.json"
+  ],
+  "payload_count": 4,
+  "delivery_count": 5,
+  "files": [
+    {
+      "path": "adapters/mrl_github_notion_bridge.py",
+      "size": 12898,
+      "sha256": "d89e9fe41ff8f349aeefd22b20a7738f88bb0c12bf73bae41f358ba28fb14746"
+    },
+    {
+      "path": "config/MRL_GitHub_Notion_Bridge.json",
+      "size": 581,
+      "sha256": "6c45035ca781e15cc4fb2aecb4e19434e7b88d9b973b79c9c19813f0ea63a6f3"
+    },
+    {
+      "path": "tests/test_mrl_github_notion_bridge.py",
+      "size": 9428,
+      "sha256": "276fdc7ea75fb0ea9d6ea59464530d3308f7a57bebb22f67327a5df92a6e5020"
+    },
+    {
+      "path": "docs/MRL_GitHub_Notion_Bridge.md",
+      "size": 7292,
+      "sha256": "a7dd3b9ee1889cd0cbca409a81a95e2c6e8fb39b80c69c11dede99414404b020"
+    }
+  ],
+  "dependency_tree": {
+    "config/MRL_GitHub_Notion_Bridge.json": [
+      "adapters/mrl_github_notion_bridge.py",
+      "Python >=3.10 stdlib",
+      "GITHUB_TOKEN (runtime only)",
+      "NOTION_TOKEN (runtime only)",
+      "GitHub repo read",
+      "Notion page read and append"
+    ]
+  },
+  "tests": {
+    "passed": 19,
+    "failed": 0,
+    "scope": "offline API fixtures, no-write plan, recovery and syntax",
+    "python": "3.12.14"
+  },
+  "runtime_acceptance": "UNRUN",
+  "missing": [],
+  "extra": [],
+  "mismatch": [],
+  "coverage": 100,
+  "source_delivery": "PASS",
+  "overall_runtime_delivery": "FAIL",
+  "continuation_reviewed_head": "0e1c039760a19e77d031d672e1255f750f92607f",
+  "live_runner_plan": "FAIL_MISSING_RUNTIME_CREDENTIALS"
+}
