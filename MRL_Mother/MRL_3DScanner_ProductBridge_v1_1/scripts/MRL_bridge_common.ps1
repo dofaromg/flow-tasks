@@ -119,6 +119,7 @@ function Assert-TaskOwner($task, $root) {
         }
         $boot = @($task.Triggers | Where-Object { $_.CimClass.CimClassName -eq 'MSFT_TaskBootTrigger' })
         $repeat = @($task.Triggers | Where-Object { $_.CimClass.CimClassName -eq 'MSFT_TaskTimeTrigger' })
+        if ($repeat.Count -eq 1) { Assert-BridgeRecoveryTrigger $repeat[0] }
         $settings = $task.Settings
         $principal = $task.Principal
         if (@($task.Triggers).Count -ne 2 -or $boot.Count -ne 1 -or $repeat.Count -ne 1 -or
@@ -182,6 +183,9 @@ function Write-BridgeReceipt($operation, $extra) {
     Write-BridgeJson $file $receipt
     if ($task) { Export-ScheduledTask -TaskPath $script:TaskPath -TaskName $script:TaskName | Set-Content "$file.task.xml" -Encoding UTF8 }
     Write-Output $file
+}
+if (-not (Get-Command -Name Assert-BridgeRegistrationAcl -ErrorAction SilentlyContinue)) {
+    . "$PSScriptRoot\MRL_bridge_acl.ps1"
 }
 function Stop-OwnedNode($c) {
     $r = Get-BridgeRecord $c

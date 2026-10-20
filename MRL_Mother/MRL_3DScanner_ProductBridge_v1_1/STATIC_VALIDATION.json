@@ -76,9 +76,10 @@
   "aclPreflightConstruction20261021": {
     "source_review": "CodeRabbit unresolved findings on PR #680",
     "changes": [
-      "MRL_register_bridge.ps1: exclude only the absolute backend storage path, not every directory named storage",
-      "MRL_register_bridge.ps1: recursively ACL-check the Python venv root and pyvenv.cfg home library trees without invoking python.exe first",
-      "windows.test.ps1: reject writable nested package storage and Python library files; keep backend scan storage writable"
+      "MRL_bridge_acl.ps1: new module owns storage-path exclusion, Python library trees, .bridge ACL, dependency-path normalize and recovery-trigger window",
+      "MRL_register_bridge.ps1: call the module; compare stored dependency paths after normalize",
+      "tests call Assert-BridgeRegistrationAcl directly and no longer slice MRL_register_bridge.ps1",
+      "windows.test.ps1: reject writable nested package storage, Python library files and .bridge config; keep backend scan storage writable"
     ],
     "windowsPowerShell51": "NOT_RUN locally; GitHub-hosted regression required",
     "dl580Deployment": "NOT_RUN"

@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 8330,
-      "sha256": "3892a9f7aee63628089fccec2da548f6d409ca9ec227ab4a392efeb9c992b355"
+      "size_bytes": 8531,
+      "sha256": "398a489858cd11f7f88da27abf3a64e74b295656667951133f87a50ba7b58869"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 7929,
-      "sha256": "d3bf6b28162cb57e595d6f0574aa843bc7314dce627fa9ba22e3bdc03d84d317"
+      "size_bytes": 8621,
+      "sha256": "6523976459cb3553fd32d1eda39501d3e312de75af8af7081b5e8c769219d149"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -232,6 +232,30 @@
           }
         ]
       }
+    },
+    {
+      "source_commit": "3cdb600b84296a965dde9e745720bb58ffd92571",
+      "reason": "ProductBridge ACL module adds a CHANGELOG bullet; retain previous evidence and refresh only the live CHANGELOG payload hash.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "size_bytes": 8330,
+        "sha256": "3892a9f7aee63628089fccec2da548f6d409ca9ec227ab4a392efeb9c992b355"
+      },
+      "current_size_bytes": 8531,
+      "current_sha256": "398a489858cd11f7f88da27abf3a64e74b295656667951133f87a50ba7b58869",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "3cdb600b84296a965dde9e745720bb58ffd92571",
+      "reason": "The authorization delivery also hashes the sync delivery manifest; propagate the preserved CHANGELOG integrity update through this dependency.",
+      "previous_entry": {
+        "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+        "size_bytes": 7929,
+        "sha256": "d3bf6b28162cb57e595d6f0574aa843bc7314dce627fa9ba22e3bdc03d84d317"
+      },
+      "current_size_bytes": 8621,
+      "current_sha256": "6523976459cb3553fd32d1eda39501d3e312de75af8af7081b5e8c769219d149",
+      "origin_signature": "MrLiouWord"
     }
   ],
   "additive_integrity_history": [

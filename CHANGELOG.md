@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   preflight, not every folder named `storage` (including nested packages).
 - Recursively check the Python venv root and `pyvenv.cfg` home library trees
   before registration, without invoking `python.exe` first.
+- Add `MRL_bridge_acl.ps1` so registration ACL, `.bridge` state, recovery-window
+  and dependency-path checks live in one module; tests call it directly instead
+  of slicing `MRL_register_bridge.ps1`.
 - origin_signature: MrLiouWord; canonical_authority: Mr.liou.
 
 ### Fixed — MRL 3DScanner ProductBridge main integration (2026-10-21)

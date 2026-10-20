@@ -37,11 +37,13 @@ SYSTEM 執行前拒絕 Everyone／Authenticated Users／Users 的廣泛寫入 AC
 `backend\MRL_3D_Reconstruction_Server\storage` 的絕對路徑，不排除任何其他
 名為 storage 的套件資料夾）、scripts 及相依目錄中的所有子目錄與載入檔案，
 避免子目錄或檔案上單獨設定的可寫 ACE 繞過父目錄檢查。
-檢查範圍包含部署根目錄、scripts、backend、node.exe 與 python.exe 所在目錄，
-python.exe 的 venv 根目錄（若存在 `pyvenv.cfg`）、該檔 `home` 指向的基底
-解譯器目錄，以及 `-DependencyPath` 的每一個目錄（它們會被放到 SYSTEM 的
-PATH 前面，並以解析後的絕對路徑儲存）。這些 Python 目錄的檢查只讀設定檔，
-不在 ACL 通過前執行 python.exe。
+檢查範圍包含部署根目錄、scripts、backend、既有 `.bridge` 狀態目錄、
+node.exe 與 python.exe 所在目錄，python.exe 的 venv 根目錄（若存在
+`pyvenv.cfg`）、該檔 `home` 指向的基底解譯器目錄，以及 `-DependencyPath`
+的每一個目錄（它們會被放到 SYSTEM 的 PATH 前面，並以解析後的絕對路徑儲存）。
+這些 Python 目錄的檢查只讀設定檔，不在 ACL 通過前執行 python.exe。
+ACL 與路徑正規化在 `scripts/MRL_bridge_acl.ps1`；排程恢復觸發必須已開始且
+重複期間為無限，不能把 StartBoundary 推到未來或縮短 RepetitionDuration。
 寫入、附加、刪除、變更權限、取得擁有權與 GenericWrite／GenericAll 都視為廣泛寫入。
 部署程式碼、Node、Python 及所有依賴目錄須只允許受信管理者修改；本次不
 自動修改既有 ACL、開防火牆或其他排程。

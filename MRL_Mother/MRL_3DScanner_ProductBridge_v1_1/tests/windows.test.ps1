@@ -42,15 +42,14 @@ home = $baseHome
 include-system-site-packages = false
 version = 3.12.0
 "@ | Set-Content -LiteralPath (Join-Path $venvRoot 'pyvenv.cfg')
-    foreach($file in @($node,$python,$entry,$nested,$packageFile,$scanFile,$plugin,$baseModule,(Join-Path $backend 'python\mrl3d_job_runner.py'))) {
+    $state=Join-Path $root '.bridge'
+    $null=New-Item -ItemType Directory $state -Force
+    $configFile=Join-Path $state 'config.json'
+    foreach($file in @($node,$python,$entry,$nested,$packageFile,$scanFile,$plugin,$baseModule,$configFile,(Join-Path $backend 'python\mrl3d_job_runner.py'))) {
         'isolated ACL fixture; never executed' | Set-Content -LiteralPath $file
     }
-    $source=Get-Content "$PSScriptRoot/../scripts/MRL_register_bridge.ps1" -Raw
-    $start=$source.IndexOf('$dependencyDirs =')
-    $end=$source.IndexOf('$task = Get-BridgeTask')
-    Assert ($start -ge 0 -and $end -gt $start) 'registration ACL section not found'
-    $preflight=[scriptblock]::Create($source.Substring($start,$end-$start))
-    & $preflight
+    function Invoke-AclPreflight { Assert-BridgeRegistrationAcl -Root $root -Backend $backend -Node $node -Python $python -DependencyDirs @($DependencyPath) }
+    Invoke-AclPreflight
     function Assert-WritableOutcome([string]$target,[bool]$mustReject,[string]$label) {
         $original=Get-Acl -LiteralPath $target
         $unsafe=Get-Acl -LiteralPath $target
@@ -58,7 +57,7 @@ version = 3.12.0
         $unsafe.AddAccessRule((New-Object Security.AccessControl.FileSystemAccessRule($users,'Write','Allow')))
         Set-Acl -LiteralPath $target -AclObject $unsafe
         $rejected=$false
-        try { & $preflight } catch {
+        try { Invoke-AclPreflight } catch {
             if($_.Exception.Message -notlike 'Broad write access*') { throw }
             $rejected=$true
         } finally { Set-Acl -LiteralPath $target -AclObject $original }
@@ -71,8 +70,9 @@ version = 3.12.0
     Assert-WritableOutcome $packageFile $true 'nested package named storage'
     Assert-WritableOutcome $plugin $true 'venv site-packages module'
     Assert-WritableOutcome $baseModule $true 'base interpreter library'
+    Assert-WritableOutcome $configFile $true 'writable .bridge config'
     Assert-WritableOutcome $scanFile $false 'backend scan storage file'
-    'PASS: native ACL rejects writable nested file/directory, package storage and Python trees; backend storage remains writable'
+    'PASS: native ACL rejects writable nested file/directory, package storage, Python trees and .bridge config; backend storage remains writable'
 
     # Assign before the fixture starts its child, then simulate a dead supervisor's Node.
     $parentFile=Join-Path $temp 'parent.ps1'
