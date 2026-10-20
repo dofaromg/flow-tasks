@@ -44,6 +44,8 @@ if (Test-Path -LiteralPath $venvConfig -PathType Leaf) {
 $state = Join-Path $root '.bridge'
 $recursiveRoots = @((Join-Path $root 'scripts')) + $dependencyDirs + $pythonRoots
 if (Test-Path -LiteralPath $state) { $recursiveRoots += $state }
+Write-Verbose ('ACL recursive roots: ' + ($recursiveRoots -join ';'))
+Write-Verbose ('ACL backend data exclusion: ' + (Join-Path $backend 'storage'))
 $protectedDirectories = @($root, $backend, (Split-Path $node)) + $recursiveRoots
 $protectedDirectories += @(Get-BridgeAclItems -Directory $backend -Directories -ExcludePath (Join-Path $backend 'storage'))
 foreach ($dir in @($recursiveRoots | Sort-Object -Unique)) {
