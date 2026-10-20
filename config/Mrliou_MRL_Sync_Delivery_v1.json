@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 8108,
-      "sha256": "d69e16cee3a9750a9bdd02443780b39f83c6fdb11b1a6c3c6038c002e433df62",
+      "size_bytes": 8893,
+      "sha256": "e1cb246a065c3852e687337885646057ab9a1038e2f0eaba8fa00f033cc2b5dd",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -173,6 +173,24 @@
       "origin_signature": "MrLiouWord"
     },
     {
+      "source_commit": "cc5b00595cab803867ec9ed374902cae04aefcad",
+      "change_commit": "9a013c15529c462a798e390f9a028d49297fb536",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/680",
+      "reason": "ProductBridge security integration adds a CHANGELOG entry; retain previous evidence and refresh only the live CHANGELOG payload hash.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "role": "additive_history",
+        "size_bytes": 7123,
+        "sha256": "81e444c3bde63b8b5a1bfc5b51d81a507d1f7785bf422f1ab2adf4514b4ffcda",
+        "dependencies": [
+          "docs/Mrliou_MRL_Sync_Operations_v1.md"
+        ]
+      },
+      "current_size_bytes": 7908,
+      "current_sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b",
+      "origin_signature": "MrLiouWord"
+    },
+    {
       "source_commit": "780f541c6d0ba96d876f137c847b237ef40fc93e",
       "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
       "reason": "PR #667 restores Codespace Monitoring and appends a CHANGELOG entry. Refresh only the live checksum; preserve the preceding entry and all sync payloads.",
@@ -205,6 +223,25 @@
       },
       "current_size_bytes": 8108,
       "current_sha256": "d69e16cee3a9750a9bdd02443780b39f83c6fdb11b1a6c3c6038c002e433df62",
+      "origin_signature": "MrLiouWord",
+      "change_commit": "bfe49d1f821bfa6d4d92ce075fa17543121e88bd"
+    },
+    {
+      "source_commit": "bfe49d1f821bfa6d4d92ce075fa17543121e88bd",
+      "base_commit": "0c88c9962a361dc04d74998ee4fab20be1c18981",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
+      "reason": "Merge main (PR #680 ProductBridge integration) into PR #667: CHANGELOG keeps the PR #680, PR #669 and PR #667 entries. Earlier PR #667 entries are retained; refresh only the live checksum.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "role": "additive_history",
+        "size_bytes": 7908,
+        "sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b",
+        "dependencies": [
+          "docs/Mrliou_MRL_Sync_Operations_v1.md"
+        ]
+      },
+      "current_size_bytes": 8893,
+      "current_sha256": "e1cb246a065c3852e687337885646057ab9a1038e2f0eaba8fa00f033cc2b5dd",
       "origin_signature": "MrLiouWord"
     }
   ]

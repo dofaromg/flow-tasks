@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 8108,
-      "sha256": "d69e16cee3a9750a9bdd02443780b39f83c6fdb11b1a6c3c6038c002e433df62"
+      "size_bytes": 8893,
+      "sha256": "e1cb246a065c3852e687337885646057ab9a1038e2f0eaba8fa00f033cc2b5dd"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 8107,
-      "sha256": "13b0af76fed4aab0a0ed34039e185445727fbfadbbe93f1c4107aa597415d486"
+      "size_bytes": 9909,
+      "sha256": "dd7fb81a266ceff28eb0f63e9cf61bc3e1bdeced6bae851be35fb06ee7fbc4d6"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -302,6 +302,34 @@
       "origin_signature": "MrLiouWord"
     },
     {
+      "source_commit": "cc5b00595cab803867ec9ed374902cae04aefcad",
+      "change_commit": "9a013c15529c462a798e390f9a028d49297fb536",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/680",
+      "reason": "ProductBridge security integration adds a CHANGELOG entry; retain previous evidence and refresh only the live CHANGELOG payload hash.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "size_bytes": 7123,
+        "sha256": "81e444c3bde63b8b5a1bfc5b51d81a507d1f7785bf422f1ab2adf4514b4ffcda"
+      },
+      "current_size_bytes": 7908,
+      "current_sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "cc5b00595cab803867ec9ed374902cae04aefcad",
+      "change_commit": "7a6d42479b35d5c4725d67ff1c1eb21b92eeea45",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/680",
+      "reason": "The authorization delivery also hashes the sync delivery manifest; propagate the preserved CHANGELOG integrity update through this dependency.",
+      "previous_entry": {
+        "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+        "size_bytes": 6387,
+        "sha256": "158acad39797a40b1179a9e8ea32332af335983acec6a3f4fd518c56f3bb8a6b"
+      },
+      "current_size_bytes": 7228,
+      "current_sha256": "0da5fcbcb686481a8c7b918c5add6ac90a76ce359837b20bcb1ada089fc00a0b",
+      "origin_signature": "MrLiouWord"
+    },
+    {
       "source_commit": "780f541c6d0ba96d876f137c847b237ef40fc93e",
       "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
       "reason": "PR #667 additive CHANGELOG entry requires refreshed live hashes for CHANGELOG and its sync manifest dependency. Preserve all preceding entries, counts, policies and payloads.",
@@ -358,6 +386,38 @@
           "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
           "size_bytes": 8107,
           "sha256": "13b0af76fed4aab0a0ed34039e185445727fbfadbbe93f1c4107aa597415d486"
+        }
+      ],
+      "origin_signature": "MrLiouWord",
+      "change_commit": "bfe49d1f821bfa6d4d92ce075fa17543121e88bd"
+    },
+    {
+      "source_commit": "bfe49d1f821bfa6d4d92ce075fa17543121e88bd",
+      "base_commit": "0c88c9962a361dc04d74998ee4fab20be1c18981",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
+      "reason": "Merge main (PR #680 ProductBridge integration) into PR #667 additive CHANGELOG and sync manifest integrity update. Earlier PR #667 entries retained; no counts, policies, payloads or names changed.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 7908,
+          "sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 7228,
+          "sha256": "0da5fcbcb686481a8c7b918c5add6ac90a76ce359837b20bcb1ada089fc00a0b"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 8893,
+          "sha256": "e1cb246a065c3852e687337885646057ab9a1038e2f0eaba8fa00f033cc2b5dd"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 9909,
+          "sha256": "dd7fb81a266ceff28eb0f63e9cf61bc3e1bdeced6bae851be35fb06ee7fbc4d6"
         }
       ],
       "origin_signature": "MrLiouWord"
