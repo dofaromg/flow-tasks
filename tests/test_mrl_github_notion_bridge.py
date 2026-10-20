@@ -6,12 +6,8 @@ from unittest.mock import patch, Mock
 SPEC = importlib.util.spec_from_file_location("bridge", Path(__file__).parents[1] / "adapters/mrl_github_notion_bridge.py")
 bridge = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(bridge)
-CONFIG = {
-    "origin_signature": "MrLiouWord", "canonical_authority": "Mr.liou",
-    "repository": "dofaromg/flow-tasks", "pull_requests": [677],
-    "notion_authority_page": "3ede7f4e-6c55-8064-a840-e3a531cb2aef",
-    "notion_receipt_page": "3e9e7f4e-6c55-80e4-9f3d-c8292dda835a",
-}
+import json
+CONFIG = json.loads((Path(__file__).parents[1] / "config/MRL_GitHub_Notion_Bridge.json").read_text())
 
 
 class Fake:
@@ -23,7 +19,7 @@ class Fake:
 
     def call(self, service, method, path, payload=None):
         if service == "github":
-            return {"head": {"sha": "a" * 40}, "base": {"sha": "b" * 40},
+            return {"number": 677, "head": {"sha": "a" * 40}, "base": {"sha": "b" * 40, "repo": {"full_name": CONFIG["repository"]}},
                     "state": "open", "merged": False, "updated_at": "2026-10-20T00:00:00Z"}
         if method == "PATCH":
             self.writes += 1
@@ -34,6 +30,9 @@ class Fake:
             return {"results": []}
         if path.startswith("/pages/"):
             return {"object": "page", "id": path.split("/")[-1], "last_edited_time": "2026-10-19T00:00:00Z"}
+        if CONFIG["notion_authority_page"] in path:
+            return {"results": [{"type": "paragraph", "paragraph": {"rich_text": [{"plain_text":
+                "Canonical authority: Mr.liou\nOrigin signature: MrLiouWord\n" + CONFIG["notion_receipt_page"], "href": "https://www.notion.so/" + CONFIG["notion_receipt_page"]}]}}], "has_more": False}
         return {"results": [{"type": "paragraph", "paragraph": {"rich_text": [{"plain_text": t}]}} for t in self.texts],
                 "has_more": False}
 
@@ -104,6 +103,101 @@ class Tests(unittest.TestCase):
     def test_missing_credentials(self):
         with self.assertRaises(bridge.BridgeError):
             bridge.Client("", "")
+
+    def test_unapproved_mapping_fails_before_requests(self):
+        for field, value in [("notion_receipt_page", CONFIG["notion_authority_page"]),
+                             ("schema", "other"), ("parent_module", "other"),
+                             ("operation", "replace"), ("pull_requests", [677, 677])]:
+            api = Mock()
+            with self.assertRaises(bridge.BridgeError):
+                bridge.sync(dict(CONFIG, **{field: value}), api, True)
+            api.call.assert_not_called()
+
+    def test_authority_content_or_link_changed_no_write(self):
+        for replacement in ["wrong", "Canonical authority: Mr.liou Origin signature: MrLiouWord"]:
+            api = Fake()
+            original = api.call
+            def call(service, method, path, payload=None):
+                if "/blocks/" + CONFIG["notion_authority_page"] in path:
+                    return {"results": [{"type": "paragraph", "paragraph": {
+                        "rich_text": [{"plain_text": replacement}]}}], "has_more": False}
+                return original(service, method, path, payload)
+            api.call = call
+            with self.assertRaises(bridge.BridgeError):
+                bridge.sync(CONFIG, api, True)
+            self.assertEqual(api.writes, 0)
+
+    def test_source_mismatch_no_write(self):
+        api = Fake()
+        original = api.call
+        def call(service, method, path, payload=None):
+            result = original(service, method, path, payload)
+            if service == "github":
+                result["number"] = 999
+            return result
+        api.call = call
+        with self.assertRaises(bridge.BridgeError):
+            bridge.sync(CONFIG, api, True)
+        self.assertEqual(api.writes, 0)
+
+    def test_journal_failure_prevents_append(self):
+        api = Fake()
+        def fail(event):
+            raise OSError("disk full")
+        with self.assertRaises(OSError):
+            bridge.sync(CONFIG, api, True, fail)
+        self.assertEqual(api.writes, 0)
+
+    def test_accepted_write_timeout_reconciles_without_second_append(self):
+        api = Fake()
+        original = api.call
+        def call(service, method, path, payload=None):
+            result = original(service, method, path, payload)
+            if method == "PATCH":
+                raise bridge.BridgeError("timeout after acceptance")
+            return result
+        api.call = call
+        events = []
+        with self.assertRaises(bridge.BridgeError):
+            bridge.sync(CONFIG, api, True, events.append)
+        self.assertEqual(events[0]["phase"], "APPEND_INTENT")
+        api.call = original
+        report = bridge.sync(CONFIG, api, True)
+        self.assertEqual(report["receipts"][0]["status"], "ALREADY_VERIFIED")
+        self.assertEqual(api.writes, 1)
+
+    def test_wrong_page_id_no_write(self):
+        api = Fake()
+        original = api.call
+        def call(service, method, path, payload=None):
+            result = original(service, method, path, payload)
+            if path.startswith("/pages/"):
+                result["id"] = "wrong"
+            return result
+        api.call = call
+        with self.assertRaises(bridge.BridgeError):
+            bridge.sync(CONFIG, api, True)
+        self.assertEqual(api.writes, 0)
+
+    def test_readback_conflicting_marker_fails(self):
+        api = Fake()
+        original = api.call
+        def call(service, method, path, payload=None):
+            result = original(service, method, path, payload)
+            if method == "PATCH":
+                api.texts.append(api.texts[0] + " changed")
+            return result
+        api.call = call
+        with self.assertRaises(bridge.BridgeError):
+            bridge.sync(CONFIG, api, True)
+
+    def test_existing_v1_receipt_is_unchanged(self):
+        api = Fake()
+        source = bridge.sync(CONFIG, api)["receipts"][0]["source"]
+        digest = bridge.hashlib.sha256(bridge.canonical(source).encode()).hexdigest()
+        api.texts = ["MRL_GITHUB_NOTION_RECEIPT_v1:" + digest + "\n" + bridge.canonical(source)]
+        self.assertEqual(bridge.sync(CONFIG, api, True)["receipts"][0]["status"], "ALREADY_VERIFIED")
+        self.assertEqual(api.writes, 0)
 
     @patch.object(bridge.urllib.request, "build_opener")
     def test_redirect_and_error_body_not_exposed(self, opener):

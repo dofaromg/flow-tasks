@@ -64,3 +64,30 @@ python -m py_compile adapters/mrl_github_notion_bridge.py
 DL580_API_EXECUTION、DL580_DEPLOYMENT、RUNTIME_ROUNDTRIP = UNRUN，不能將 GitHub/Notion connector 成功算作此 runner 的實機成功。
 本輪 sandbox 對既有 Bridge /health 回 HTTP 403；Tailscale CLI 不在本環境，100.78.70.78:7800 無可用 route。這不表示 DL580 或既有部署離線。
 main 的 Tailscale-only 修改實際位於 3DScanner ProductBridge :3050，不能把該綁定直接套用到母體 :7800。
+
+
+## 2026-10-21 接續核對與防護增補
+
+固定沿用現行 canonical／母體兩個 page ID；schema、parent_module、parent_source、operation、定義方向不符即停止。
+執行時核對 Notion 回傳 page ID、live 狀態，以及權威頁頂層正文的 Mr.liou／MrLiouWord 宣告與母體頁連結。
+此為治理內容核對，不是簽章驗證；REST 2022-06-28 不提供本次 Wiki badge 證據，runner 明示 native_wiki_verification=NOT_ASSESSED_BY_RUNNER。
+本次另以 Notion connector 讀到兩頁 verified；不將此 badge 當成每次 runner 自動重新驗證。
+GitHub number、base.repo.full_name 與兩端 40 位 SHA 必須對上；初始來源仍為 PR #677，不改成接線 PR #679。
+原 v1 source payload／marker 保持，舊回執可以直接辨識。PATCH 後核對所有同 marker 項，包含額外的衝突副本。
+
+同一 output-dir 每次新增 MRL_GitHub_Notion_<timestamp>.jsonl：先落盤 START，追加前落盤 APPEND_INTENT（含來源、目標、digest），flush／fsync 失敗則不追加。
+每項讀回結果另記錄 phase；失敗記錄 FAIL_RECONCILE_BEFORE_RETRY 與安全的例外類別，不保存 token 或 HTTP body。
+JSONL 是調查日誌，只有完整 JSON report 才是成功結果。若磁碟完全不可寫，可能無法保存 FAIL，仍須視為失敗。
+逾時、程序終止或回執寫入失敗，先確認鎖及單一寫入者，查看 APPEND_INTENT，再 plan 查遠端 marker；不得只刪鎖後盲目 apply。
+鎖只保護共用輸出目錄，不提供跨主機交易／遠端 exactly-once；FlowEditBridge 等其他寫入者須保持單一操作窗口。
+
+本次 Dropbox 原件 metadata：MRL_Edit.py、2826 bytes、rev 6520389e18e3d230ba502、server_modified 2026-05-17T13:36:51Z。
+重新讀取的 append_paragraph 仍使用 PATCH /blocks/{page_id}/children 與 paragraph.rich_text.text.content，契約相容；未修改、匯入或替換原模組。
+此為文字擷取契約比對，不宣稱原始 bytes 雜湊或 DL580 已安裝版本相符。
+
+本機使用 Python 3.12.14 跑離線測試與語法檢查。真實 CLI plan 已嘗試，缺少 runtime NOTION_TOKEN／環境 GITHUB_TOKEN 而失敗，留下 FAIL 日誌；不是 live plan PASS。
+既有 GitHub keyring 登入可用，但未從 connector 抽取憑證。本機 Tailscale 無法載入 preferences，未取得 DL580 授權執行通道。
+D:\MrlToolchain\python\python.exe 與 D:\mrl\bridge\logs\MRL_GitHub_Notion 仍為待實機核對路徑。
+執行前後沿母體既有 FullCheck 規則，OK→FAIL 立即停止與依原備份復原；此 runner 不自行啟停服務。
+LIVE_RUNNER_PLAN、LIVE_APPEND_READBACK、LIVE_REPEAT、LIVE_FAILURE_RECOVERY、DL580_DEPLOYMENT = UNRUN。
+離線 plan 與 timeout-after-acceptance 恢復案例通過，不冒充上述真實驗收。
