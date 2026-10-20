@@ -43,8 +43,8 @@ if (Test-Path -LiteralPath $venvConfig -PathType Leaf) {
 }
 $state = Join-Path $root '.bridge'
 $storagePath = Join-Path $backend 'storage'
-# Get-ChildItem expands 8.3 aliases. Compare the same resolved spelling for exclusion.
-if (Test-Path -LiteralPath $storagePath) { $storagePath = (Resolve-Path -LiteralPath $storagePath).Path }
+# Use the .NET full-path spelling shared by FileSystemInfo.FullName (8.3 aliases).
+if (Test-Path -LiteralPath $storagePath) { $storagePath = [IO.Path]::GetFullPath((Resolve-Path -LiteralPath $storagePath).Path) }
 $recursiveRoots = @((Join-Path $root 'scripts')) + $dependencyDirs + $pythonRoots
 if (Test-Path -LiteralPath $state) { $recursiveRoots += $state }
 Write-Verbose ('ACL recursive roots: ' + ($recursiveRoots -join ';'))
