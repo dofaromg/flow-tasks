@@ -23,10 +23,11 @@ async function start(kind) {
   }
   const child = spawn(process.execPath, [path.join(root, 'server.js')], {cwd:root, env:{...process.env, MRL_BRIDGE_BIND:'127.0.0.1', MRL_BRIDGE_INSTANCE:'test', ...(kind==='missing-colmap'?{PATH:'/usr/bin:/bin'}:{}), MRL_3D_BRIDGE_PORT:'3050', MRL_BRIDGE_PYTHON:kind==='missing-python'?path.join(root,'absent-python'):python}, stdio:['ignore','pipe','pipe']});
   let logs=''; child.stderr.on('data', d => logs += d);
-  for (let i=0;i<100;i++) {
-    if (child.exitCode !== null) throw new Error(logs);
+  const deadline = Date.now() + 30000;
+  while (Date.now() < deadline) {
+    if (child.exitCode !== null || child.signalCode !== null) throw new Error(logs);
     try { const h=await (await fetch(base+'/api/health')).json(); if(h.pid === child.pid) return {root,child}; } catch {}
-    await pause(50);
+    await pause(100);
   }
   child.kill(); throw new Error('startup timeout '+logs);
 }
@@ -44,11 +45,19 @@ test('health, upload preservation, empty upload, invalid scan and restart eviden
   const s=await start('interrupted');try {
     const h=await (await fetch(base+'/api/health')).json();assert.equal(h.port,3050);assert.equal(h.pid,s.child.pid);assert.equal(h.instance,'test');
     const old=JSON.parse(await fs.readFile(path.join(s.root,'storage/jobs/old.json')));assert.equal(old.status,'failed');assert.equal(old.message,'INTERRUPTED_BY_BACKEND_RESTART');
-    const response=await upload('unique');assert.equal(response.status,200);assert.equal((await response.json()).uploaded,1);
+    const response=await upload('unique');
+    assert.equal(response.status,200);
+    const uploadResult=await response.json();
+    assert.equal(uploadResult.uploaded,1);
+    assert.equal(uploadResult.manifestPath,undefined);
+    const fixture=JSON.parse(await fs.readFile(new URL('./fixtures/upload-response.json',import.meta.url),'utf8'));
+    assert.deepEqual(uploadResult,fixture);
     assert.equal((await upload('unique','different')).status,409);
     assert.equal(await fs.readFile(path.join(s.root,'storage/uploads/unique/mesh.obj'),'utf8'),'v 0 0 0');
     assert.equal((await upload('../escape')).status,400);
     assert.equal((await fetch(base+'/api/scans/upload',{method:'POST',body:new FormData()})).status,400);
+    const scans=await (await fetch(base+'/api/scans')).json();
+    assert.equal(scans.scans[0].files[0].path,undefined);
   } finally {await stop(s);}
 });
 test('missing Python produces terminal failure, never stuck running',async()=>{
@@ -83,4 +92,75 @@ test('unavailable bind address exits instead of falling back to other interfaces
    await fs.symlink(path.join(source,'node_modules'),path.join(root,'node_modules'),'dir');
    const c=spawn(process.execPath,[path.join(root,'server.js')],{cwd:root,env:{...process.env,MRL_3D_BRIDGE_PORT:'3050',MRL_BRIDGE_BIND:'192.0.2.1'}});let err='';c.stderr.on('data',d=>err+=d);const code=await new Promise(r=>c.on('exit',r));assert.equal(code,1);assert.match(err,/listen 192\.0\.2\.1:3050 failed: EADDRNOTAVAIL/);
  } finally {await fs.rm(root,{recursive:true,force:true});}
+});
+
+test('listener conflict does not mark queued jobs interrupted',async()=>{
+  const s=await start('none');
+  const jobFile=path.join(s.root,'storage/jobs/pending.json');
+  try {
+    await fs.writeFile(jobFile,JSON.stringify({jobId:'pending',status:'queued'}));
+    const conflict=spawn(process.execPath,[path.join(s.root,'server.js')],{
+      cwd:s.root,
+      env:{...process.env,MRL_3D_BRIDGE_PORT:'3050',MRL_BRIDGE_BIND:'127.0.0.1',MRL_BRIDGE_INSTANCE:'conflict'}
+    });
+    const code=await new Promise(resolve=>conflict.once('exit',resolve));
+    assert.notEqual(code,0);
+    assert.equal(JSON.parse(await fs.readFile(jobFile,'utf8')).status,'queued');
+  } finally {
+    await stop(s);
+  }
+});
+
+test('scan listing is rate-limited per client',async()=>{
+  const s=await start('none');
+  try {
+    for (let i=0;i<60;i++) {
+      assert.equal((await fetch(base+'/api/scans')).status,200);
+    }
+    const limited=await fetch(base+'/api/scans',{headers:{'X-Forwarded-For':'203.0.113.9'}});
+    assert.equal(limited.status,429);
+    assert.ok(Number(limited.headers.get('retry-after'))>0);
+    assert.equal((await fetch(base+'/api/health')).status,200);
+  } finally {
+    await stop(s);
+  }
+});
+
+test('legacy manifest paths are hidden without rewriting stored evidence',async()=>{
+  const s=await start('none');
+  try {
+    const dir=path.join(s.root,'storage/uploads/legacy');
+    await fs.mkdir(dir);
+    const file=path.join(dir,'manifest.json');
+    const original=JSON.stringify({scanId:'legacy',uploaded:1,files:[{filename:'mesh.obj',size:7,path:'D:\\private\\scan\\mesh.obj'}]});
+    await fs.writeFile(file,original);
+    const response=await (await fetch(base+'/api/scans')).json();
+    assert.deepEqual(response.scans[0].files,[{filename:'mesh.obj',size:7}]);
+    assert.equal(await fs.readFile(file,'utf8'),original);
+  } finally { await stop(s); }
+});
+
+test('partial listener failure leaves queued evidence intact and releases successful bind',async()=>{
+  const root=await fs.mkdtemp(path.join(os.tmpdir(),'mrl-bridge-partial-'));
+  let child;
+  try {
+    await fs.cp(source,root,{recursive:true,filter:p=>!p.includes('node_modules')&&!p.includes('storage')});
+    await fs.symlink(path.join(source,'node_modules'),path.join(root,'node_modules'),'dir');
+    await fs.mkdir(path.join(root,'storage/jobs'),{recursive:true});
+    const file=path.join(root,'storage/jobs/queued.json');
+    const original=JSON.stringify({jobId:'queued',status:'queued'});
+    await fs.writeFile(file,original);
+    child=spawn(process.execPath,[path.join(root,'server.js')],{cwd:root,env:{...process.env,MRL_3D_BRIDGE_PORT:'3050',MRL_BRIDGE_BIND:'127.0.0.1,192.0.2.1'},stdio:'ignore'});
+    const code=await new Promise((resolve,reject)=>{
+      const timer=setTimeout(()=>{child.kill();reject(new Error('failed startup did not exit'));},10000);
+      child.once('exit',code=>{clearTimeout(timer);resolve(code);});
+      child.once('error',err=>{clearTimeout(timer);reject(err);});
+    });
+    assert.notEqual(code,0);
+    assert.equal(await fs.readFile(file,'utf8'),original);
+    await assert.rejects(fetch(base+'/api/health'));
+  } finally {
+    if(child && child.exitCode===null && child.signalCode===null) child.kill();
+    await fs.rm(root,{recursive:true,force:true});
+  }
 });

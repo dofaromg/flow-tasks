@@ -25,14 +25,14 @@ foreach ($f in $manifest.files) {
     if ((Get-FileHash $src -Algorithm SHA256).Hash -ne $f.after) { throw "Patch checksum mismatch: $($f.path)" }
     if (Test-Path $dst) {
         $hash=(Get-FileHash $dst -Algorithm SHA256).Hash
-        if ($hash -ne $f.after -and $hash -ne $f.before) { throw "Existing repaired source differs: $($f.path). Preserve it and review diff before overlay." }
+        if ($hash -ne $f.after -and $hash -ne $f.before -and $hash -notin @($f.acceptedBeforeSha256)) { throw "Existing repaired source differs: $($f.path). Preserve it and review diff before overlay." }
     } elseif ($f.before) { throw "Missing existing source: $($f.path)" }
 }
 $backup=Join-Path $TargetRoot ('.bridge\backups\' + (Get-Date -Format 'yyyyMMdd_HHmmss_fff'))
 New-Item -ItemType Directory $backup -Force | Out-Null
 $applied=@()
 $receiptFile=Join-Path $backup 'apply-receipt.json'
-$receipt=@{time=(Get-Date -Format o); target=$TargetRoot; backup=$backup; applied=@(); source=$manifest.source; status='applying'; realDeploymentVerified=$false}
+$receipt=@{time=(Get-Date -Format o); target=$TargetRoot; backup=$backup; applied=@(); source=$manifest.source; status='applying'; preflightPassed=$true}
 $receipt | ConvertTo-Json -Depth 8 | Set-Content $receiptFile -Encoding UTF8
 try {
 foreach ($f in $manifest.files) {

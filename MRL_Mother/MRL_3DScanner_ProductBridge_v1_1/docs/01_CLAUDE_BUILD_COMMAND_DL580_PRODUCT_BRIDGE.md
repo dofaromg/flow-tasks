@@ -35,6 +35,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\MRL_install_bridge.ps1
 ## 四、啟動
 
 ```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\MRL_register_bridge.ps1 -NodePath 'C:\Program Files\nodejs\node.exe' -PythonPath 'D:\MRL_3DScanner_ProductBridge_v1\.venv\Scripts\python.exe'
 powershell -ExecutionPolicy Bypass -File .\scripts\MRL_start_bridge.ps1
 ```
 
