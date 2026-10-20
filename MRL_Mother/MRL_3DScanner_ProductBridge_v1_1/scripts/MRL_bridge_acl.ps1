@@ -39,16 +39,16 @@ function Get-BridgePythonLibraryTrees([string]$PythonPath) {
     if (Test-Path -LiteralPath $venvCfg -PathType Leaf) {
         if (-not (Test-Path -LiteralPath $venvRoot -PathType Container)) { throw "Python venv root missing: $venvRoot" }
         $trees += (Resolve-Path -LiteralPath $venvRoot).Path
-        $home = $null
+        $interpreterHome = $null
         foreach ($line in Get-Content -LiteralPath $venvCfg) {
             if ($line -match '^\s*home\s*=\s*(.+?)\s*$') {
-                $home = $Matches[1].Trim().Trim('"').Trim("'")
+                $interpreterHome = $Matches[1].Trim().Trim('"').Trim("'")
                 break
             }
         }
-        if (-not $home) { throw 'pyvenv.cfg home is required before SYSTEM registration' }
-        if (-not (Test-Path -LiteralPath $home -PathType Container)) { throw "Python home missing: $home" }
-        $trees += (Resolve-Path -LiteralPath $home).Path
+        if (-not $interpreterHome) { throw 'pyvenv.cfg home is required before SYSTEM registration' }
+        if (-not (Test-Path -LiteralPath $interpreterHome -PathType Container)) { throw "Python home missing: $interpreterHome" }
+        $trees += (Resolve-Path -LiteralPath $interpreterHome).Path
     }
     return @($trees | Sort-Object -Unique)
 }

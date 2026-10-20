@@ -84,8 +84,10 @@
     {
       "path": "scripts/MRL_bridge_acl.ps1",
       "before": null,
-      "after": "BF8D569C4D2FD9E3F619926DAB66C8244F8145E2B4582C051A643F32BC8F09D0",
-      "acceptedBeforeSha256": []
+      "after": "1D155EACDC7CD1803256B75354358F21DC902043349E3344151AD4625AEA1C18",
+      "acceptedBeforeSha256": [
+        "BF8D569C4D2FD9E3F619926DAB66C8244F8145E2B4582C051A643F32BC8F09D0"
+      ]
     },
     {
       "path": "scripts/MRL_bridge_common.ps1",
