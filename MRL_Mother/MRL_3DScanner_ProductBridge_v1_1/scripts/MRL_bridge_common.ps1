@@ -154,10 +154,11 @@ function Assert-TaskOwner($task, $root) {
             $start -gt [DateTimeOffset]::Now.AddMinutes(2) -or
             -not [string]::IsNullOrEmpty([string]$repeat[0].EndBoundary) -or
             -not [string]::IsNullOrEmpty([string]$boot[0].EndBoundary) -or
-            -not [string]::IsNullOrEmpty([string]$repeat[0].Repetition.Duration) -or
-            $repeat[0].Repetition.StopAtDurationEnd) {
+            -not [string]::IsNullOrEmpty([string]$repeat[0].Repetition.Duration)) {
             throw ('Task recovery active window changed; refusing mutation: start={0}; end={1}; bootEnd={2}; duration={3}; stopAtEnd={4}' -f $repeat[0].StartBoundary, $repeat[0].EndBoundary, $boot[0].EndBoundary, $repeat[0].Repetition.Duration, $repeat[0].Repetition.StopAtDurationEnd)
         }
+        # Native PS5.1 sets StopAtDurationEnd even for an indefinite trigger.
+        # With no duration/end boundary it cannot terminate the recovery window.
     }
 }
 function New-BridgeProcessJob { [MRLBridgeProcessJob]::Create() }

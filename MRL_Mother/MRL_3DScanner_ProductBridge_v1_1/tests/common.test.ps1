@@ -76,8 +76,7 @@ foreach ($case in @(
     @('EndBoundary', (Get-Date).AddDays(-1).ToString('s')),
     @('EndBoundary', (Get-Date).AddDays(1).ToString('s')),
     @('Duration', 'PT1H'),
-    @('Duration', 'P1D'),
-    @('StopAtDurationEnd', $true)
+    @('Duration', 'P1D')
 )) {
     $copy=$task | ConvertTo-Json -Depth 12 | ConvertFrom-Json
     $target=$copy.Triggers[1]
@@ -90,6 +89,8 @@ foreach ($case in @(
 $repeat.StartBoundary=(Get-Date).AddYears(-1).ToString('s')
 Assert-TaskOwner $task $taskRoot
 $repeat.StartBoundary=[DateTimeOffset]::Now.AddMinutes(-1).ToString('o')
+Assert-TaskOwner $task $taskRoot
+$repeat.Repetition.StopAtDurationEnd=$true
 Assert-TaskOwner $task $taskRoot
 $boot.EndBoundary=(Get-Date).AddDays(1).ToString('s')
 $rejected=$false

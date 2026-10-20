@@ -59,7 +59,7 @@
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/PATCH_MANIFEST.json": {
-      "sha256": "aa0ec04de5e18baafb400dc221b0e89b0164452f48f87ae9508c4bdfbca7a92b",
+      "sha256": "e5574f29bb7fac461d135b62af6d05d52249857137cec0d5697b610e6d64b267",
       "size": 11033,
       "dependencies": [
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/README.md",
@@ -110,8 +110,8 @@
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/docs/04_WINDOWS_STARTUP_RUNBOOK.md": {
-      "sha256": "db920bdf8163db5c524ed6a16c47c21e3f97a6d3a6ec3a3cb94931b9e753782c",
-      "size": 12592,
+      "sha256": "bced37ff31bd4d3613a0ed3f14e0f1377907e58ff5c34f5423a8877ffc110f01",
+      "size": 12745,
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/ios/MRL_3DScanner_iOS/Reconstruction/MRLReconstructionJob.swift": {
@@ -135,8 +135,8 @@
       ]
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1": {
-      "sha256": "9ae7c663c1ff2cb145423dd09ad02fb77d9253e6e06c0d467c84a7a7bc0e502e",
-      "size": 12005,
+      "sha256": "b6164a5a7b0d53f825061c7b366ba8bde0dd12943fced10478a1f6025298d0ac",
+      "size": 12108,
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_register_bridge.ps1": {
@@ -165,8 +165,8 @@
       ]
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/common.test.ps1": {
-      "sha256": "3f87fe3e4fffcee63c38ed4554bd631b4992df5907e01beef83e6e9ec38cc094",
-      "size": 6066,
+      "sha256": "e56a46782105c0b4f69c10a8b35a56b9c1aa9d972ceebbce82fe9f5d0754a70d",
+      "size": 6107,
       "dependencies": [
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1",
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/fixtures/upload-response.json"
