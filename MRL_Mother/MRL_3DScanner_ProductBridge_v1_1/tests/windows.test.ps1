@@ -20,14 +20,30 @@ try {
     $root=Join-Path $temp 'bridge'
     $backend=Join-Path $root 'backend\MRL_3D_Reconstruction_Server'
     $DependencyPath=Join-Path $temp 'deps'
-    foreach($dir in @((Join-Path $root 'scripts'),(Join-Path $backend 'python'),(Join-Path $backend 'node_modules\nested'),(Join-Path $DependencyPath 'nested'))) {
+    $venvRoot=Join-Path $root '.venv'
+    $baseHome=Join-Path $temp 'base-python'
+    $packageStorage=Join-Path $backend 'node_modules\@google-cloud\storage'
+    $scanStorage=Join-Path $backend 'storage\uploads'
+    $sitePackages=Join-Path $venvRoot 'Lib\site-packages'
+    foreach($dir in @((Join-Path $root 'scripts'),(Join-Path $backend 'python'),(Join-Path $backend 'node_modules\nested'),(Join-Path $DependencyPath 'nested'),$packageStorage,$scanStorage,(Join-Path $venvRoot 'Scripts'),$sitePackages,(Join-Path $baseHome 'Lib'))) {
         $null=New-Item -ItemType Directory $dir -Force
     }
-    $node=Join-Path $DependencyPath 'node.exe'; $python=Join-Path $DependencyPath 'python.exe'
+    $baseHome=(Resolve-Path -LiteralPath $baseHome).Path
+    $node=Join-Path $DependencyPath 'node.exe'
+    $python=Join-Path $venvRoot 'Scripts\python.exe'
     $entry=Join-Path $backend 'server.js'
     $nested=Join-Path $DependencyPath 'nested\library.dll'
-    foreach($file in @($node,$python,$entry,$nested,(Join-Path $backend 'python\mrl3d_job_runner.py'))) {
-        'isolated ACL fixture; never executed' | Set-Content $file
+    $packageFile=Join-Path $packageStorage 'index.js'
+    $scanFile=Join-Path $scanStorage 'scan.bin'
+    $plugin=Join-Path $sitePackages 'plugin.py'
+    $baseModule=Join-Path $baseHome 'Lib\encodings.py'
+    @"
+home = $baseHome
+include-system-site-packages = false
+version = 3.12.0
+"@ | Set-Content -LiteralPath (Join-Path $venvRoot 'pyvenv.cfg')
+    foreach($file in @($node,$python,$entry,$nested,$packageFile,$scanFile,$plugin,$baseModule,(Join-Path $backend 'python\mrl3d_job_runner.py'))) {
+        'isolated ACL fixture; never executed' | Set-Content -LiteralPath $file
     }
     $source=Get-Content "$PSScriptRoot/../scripts/MRL_register_bridge.ps1" -Raw
     $start=$source.IndexOf('$dependencyDirs =')
@@ -35,7 +51,7 @@ try {
     Assert ($start -ge 0 -and $end -gt $start) 'registration ACL section not found'
     $preflight=[scriptblock]::Create($source.Substring($start,$end-$start))
     & $preflight
-    foreach($target in @($nested,(Join-Path $backend 'node_modules\nested'))) {
+    function Assert-WritableOutcome([string]$target,[bool]$mustReject,[string]$label) {
         $original=Get-Acl -LiteralPath $target
         $unsafe=Get-Acl -LiteralPath $target
         $users=New-Object Security.Principal.SecurityIdentifier('S-1-5-32-545')
@@ -46,9 +62,17 @@ try {
             if($_.Exception.Message -notlike 'Broad write access*') { throw }
             $rejected=$true
         } finally { Set-Acl -LiteralPath $target -AclObject $original }
-        Assert $rejected ('nested writable dependency accepted: ' + $target)
+        if($mustReject) { Assert $rejected ('writable path accepted: ' + $label) }
+        else { Assert (-not $rejected) ('backend storage write rejected: ' + $label) }
     }
-    'PASS: native ACL rejects writable nested file/directory; protected baseline accepted'
+    foreach($target in @($nested,(Join-Path $backend 'node_modules\nested'))) {
+        Assert-WritableOutcome $target $true $target
+    }
+    Assert-WritableOutcome $packageFile $true 'nested package named storage'
+    Assert-WritableOutcome $plugin $true 'venv site-packages module'
+    Assert-WritableOutcome $baseModule $true 'base interpreter library'
+    Assert-WritableOutcome $scanFile $false 'backend scan storage file'
+    'PASS: native ACL rejects writable nested file/directory, package storage and Python trees; backend storage remains writable'
 
     # Assign before the fixture starts its child, then simulate a dead supervisor's Node.
     $parentFile=Join-Path $temp 'parent.ps1'

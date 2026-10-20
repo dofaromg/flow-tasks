@@ -25,7 +25,8 @@ scope: iOS capture app + DL580 reconstruction bridge + existing product-grade MR
 1. 先依 Windows startup runbook 確認並使用既有 D: 安裝目錄。
 2. 執行 `scripts/MRL_install_bridge.ps1` 安裝相依套件。
 3. 以管理員執行 `scripts/MRL_register_bridge.ps1`，提供受保護的 `node.exe`、
-   `python.exe` 與 COLMAP 等 dependency directories。
+   `python.exe` 與 COLMAP 等 dependency directories。註冊會檢查這些路徑與
+   Python venv／基底函式庫的 ACL，只排除 backend 掃描 `storage` 絕對路徑。
 4. 執行 `scripts/MRL_start_bridge.ps1` 啟動已註冊的排程。
 5. 執行 `scripts/MRL_acceptance_check_bridge.ps1`。
 6. iOS 端連到 DL580 Tailscale URL `http://100.78.70.78:3050`。

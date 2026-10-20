@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — ProductBridge registration ACL construction (2026-10-21)
+
+- Exclude only the absolute backend scan-storage directory from SYSTEM ACL
+  preflight, not every folder named `storage` (including nested packages).
+- Recursively check the Python venv root and `pyvenv.cfg` home library trees
+  before registration, without invoking `python.exe` first.
+- origin_signature: MrLiouWord; canonical_authority: Mr.liou.
+
 ### Fixed — MRL 3DScanner ProductBridge main integration (2026-10-21)
 
 - Integrate the remaining PR #678 safety changes onto exact main cc5b0059,

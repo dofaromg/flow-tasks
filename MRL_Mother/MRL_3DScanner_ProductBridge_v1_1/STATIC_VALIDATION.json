@@ -73,6 +73,16 @@
     "dl580DeploymentAndRecovery": "NOT_RUN",
     "evidenceSource": "PR #678; source-reported results, not re-executed DL580 acceptance"
   },
+  "aclPreflightConstruction20261021": {
+    "source_review": "CodeRabbit unresolved findings on PR #680",
+    "changes": [
+      "MRL_register_bridge.ps1: exclude only the absolute backend storage path, not every directory named storage",
+      "MRL_register_bridge.ps1: recursively ACL-check the Python venv root and pyvenv.cfg home library trees without invoking python.exe first",
+      "windows.test.ps1: reject writable nested package storage and Python library files; keep backend scan storage writable"
+    ],
+    "windowsPowerShell51": "NOT_RUN locally; GitHub-hosted regression required",
+    "dl580Deployment": "NOT_RUN"
+  },
   "mainlineIntegration20261021": {
     "base": "cc5b00595cab803867ec9ed374902cae04aefcad",
     "source": "79b0e8822a7adc707888f68e2a5b51c0191fbe04",

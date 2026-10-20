@@ -20,21 +20,49 @@ $dependencyPathValue = $dependencyDirs -join ';'
 # Write/append data, write (extended) attributes, delete child, delete, change permissions,
 # take ownership, generic write and generic all: any of these lets the group alter or take over code.
 $writeRights = 0x500D0156
-function Get-BridgeAclItems([string]$Directory, [switch]$Directories, [switch]$ExcludeStorage) {
+function Test-BridgeSamePath([string]$Left, [string]$Right) {
+    if (-not $Right) { return $false }
+    return [IO.Path]::GetFullPath($Left).TrimEnd('\') -eq [IO.Path]::GetFullPath($Right).TrimEnd('\')
+}
+function Get-BridgeAclItems([string]$Directory, [switch]$Directories, [string]$ExcludePath = '') {
     foreach ($item in Get-ChildItem -LiteralPath $Directory -Force) {
         if ($item.PSIsContainer) {
-            if ($ExcludeStorage -and $item.Name -eq 'storage') { continue }
+            if (Test-BridgeSamePath $item.FullName $ExcludePath) { continue }
             if ($Directories) { $item.FullName }
-            Get-BridgeAclItems -Directory $item.FullName -Directories:$Directories -ExcludeStorage:$ExcludeStorage
+            Get-BridgeAclItems -Directory $item.FullName -Directories:$Directories -ExcludePath $ExcludePath
         } elseif (-not $Directories) {
             $item.FullName
         }
     }
 }
-$protectedDirectories = @($root, (Join-Path $root 'scripts'), $backend, (Split-Path $node), (Split-Path $python)) + $dependencyDirs
+# Scan uploads live under backend\storage. Exclude only that absolute path, not every
+# directory named storage (for example node_modules\@google-cloud\storage).
+$backendStorage = Join-Path $backend 'storage'
+# Read pyvenv.cfg as text. Do not invoke python.exe before these ACL checks pass.
+$pythonTrees = @((Split-Path $python))
+$venvRoot = Split-Path (Split-Path $python)
+$venvCfg = Join-Path $venvRoot 'pyvenv.cfg'
+if (Test-Path -LiteralPath $venvCfg -PathType Leaf) {
+    if (-not (Test-Path -LiteralPath $venvRoot -PathType Container)) { throw "Python venv root missing: $venvRoot" }
+    $pythonTrees += (Resolve-Path -LiteralPath $venvRoot).Path
+    $home = $null
+    foreach ($line in Get-Content -LiteralPath $venvCfg) {
+        if ($line -match '^\s*home\s*=\s*(.+?)\s*$') {
+            $home = $Matches[1].Trim().Trim('"').Trim("'")
+            break
+        }
+    }
+    if (-not $home) { throw 'pyvenv.cfg home is required before SYSTEM registration' }
+    if (-not (Test-Path -LiteralPath $home -PathType Container)) { throw "Python home missing: $home" }
+    $pythonTrees += (Resolve-Path -LiteralPath $home).Path
+}
+$protectedDirectories = @($root, (Join-Path $root 'scripts'), $backend, (Split-Path $node), (Split-Path $python)) + $dependencyDirs + $pythonTrees
 $protectedDirectories += @(Get-BridgeAclItems -Directory (Join-Path $root 'scripts') -Directories)
-$protectedDirectories += @(Get-BridgeAclItems -Directory $backend -Directories -ExcludeStorage)
+$protectedDirectories += @(Get-BridgeAclItems -Directory $backend -Directories -ExcludePath $backendStorage)
 foreach ($dir in $dependencyDirs) {
+    $protectedDirectories += @(Get-BridgeAclItems -Directory $dir -Directories)
+}
+foreach ($dir in $pythonTrees) {
     $protectedDirectories += @(Get-BridgeAclItems -Directory $dir -Directories)
 }
 foreach ($dir in @($protectedDirectories | Sort-Object -Unique)) {
@@ -45,8 +73,11 @@ foreach ($dir in @($protectedDirectories | Sort-Object -Unique)) {
 }
 $protectedFiles = @($node, $python, $entry, (Join-Path $backend 'python\mrl3d_job_runner.py'))
 $protectedFiles += @(Get-BridgeAclItems -Directory (Join-Path $root 'scripts'))
-$protectedFiles += @(Get-BridgeAclItems -Directory $backend -ExcludeStorage)
+$protectedFiles += @(Get-BridgeAclItems -Directory $backend -ExcludePath $backendStorage)
 foreach ($dir in $dependencyDirs) {
+    $protectedFiles += @(Get-BridgeAclItems -Directory $dir)
+}
+foreach ($dir in $pythonTrees) {
     $protectedFiles += @(Get-BridgeAclItems -Directory $dir)
 }
 foreach ($file in @($protectedFiles | Sort-Object -Unique)) {

@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 7908,
-      "sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b",
+      "size_bytes": 8330,
+      "sha256": "3892a9f7aee63628089fccec2da548f6d409ca9ec227ab4a392efeb9c992b355",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -188,6 +188,22 @@
       },
       "current_size_bytes": 7908,
       "current_sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "0c88c9962a361dc04d74998ee4fab20be1c18981",
+      "reason": "ProductBridge ACL construction fix adds a CHANGELOG entry; retain previous evidence and refresh only the live CHANGELOG payload hash.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "role": "additive_history",
+        "size_bytes": 7908,
+        "sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b",
+        "dependencies": [
+          "docs/Mrliou_MRL_Sync_Operations_v1.md"
+        ]
+      },
+      "current_size_bytes": 8330,
+      "current_sha256": "3892a9f7aee63628089fccec2da548f6d409ca9ec227ab4a392efeb9c992b355",
       "origin_signature": "MrLiouWord"
     }
   ]
