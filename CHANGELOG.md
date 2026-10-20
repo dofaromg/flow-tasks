@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — ProductBridge backend Node builtins (2026-10-21)
+
+- Replace `cors`, `fs-extra` and `uuid` with Node `fs`/`crypto` helpers.
+  Keep `express` and `multer` for HTTP and multipart upload.
+- origin_signature: MrLiouWord; canonical_authority: Mr.liou.
+
 ### Fixed — ProductBridge registration ACL construction (2026-10-21)
 
 - Exclude only the absolute backend scan-storage directory from SYSTEM ACL

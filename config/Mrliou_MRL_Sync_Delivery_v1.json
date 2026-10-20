@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 8531,
-      "sha256": "398a489858cd11f7f88da27abf3a64e74b295656667951133f87a50ba7b58869",
+      "size_bytes": 8794,
+      "sha256": "cfabd39fbdd11d419ecb0eb8753acce8c870f2dab3b203f687992aa371c34373",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -220,6 +220,22 @@
       },
       "current_size_bytes": 8531,
       "current_sha256": "398a489858cd11f7f88da27abf3a64e74b295656667951133f87a50ba7b58869",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "0f8346429c000b5a09b925854e106df5aed1f68d",
+      "reason": "ProductBridge backend drops cors/fs-extra/uuid; retain previous evidence and refresh only the live CHANGELOG payload hash.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "role": "additive_history",
+        "size_bytes": 8531,
+        "sha256": "398a489858cd11f7f88da27abf3a64e74b295656667951133f87a50ba7b58869",
+        "dependencies": [
+          "docs/Mrliou_MRL_Sync_Operations_v1.md"
+        ]
+      },
+      "current_size_bytes": 8794,
+      "current_sha256": "cfabd39fbdd11d419ecb0eb8753acce8c870f2dab3b203f687992aa371c34373",
       "origin_signature": "MrLiouWord"
     }
   ]

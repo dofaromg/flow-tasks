@@ -55,12 +55,12 @@
       "dependencies": []
     },
     "CHANGELOG.md": {
-      "sha256": "398a489858cd11f7f88da27abf3a64e74b295656667951133f87a50ba7b58869",
-      "size": 8531,
+      "sha256": "cfabd39fbdd11d419ecb0eb8753acce8c870f2dab3b203f687992aa371c34373",
+      "size": 8794,
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/PATCH_MANIFEST.json": {
-      "sha256": "0567ad070133aedb20b654fafa7d3f914b804c7caf8081c323013d4420f729ac",
+      "sha256": "1a70f6a5cbb62ac187e83ef7e2c97438ce4b6c0df6a80c8e043e9ef4155be652",
       "size": 9537,
       "dependencies": [
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/README.md",
@@ -97,13 +97,13 @@
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/STATIC_VALIDATION.json": {
-      "sha256": "08ab9f8f32094d25314e3fdafd49ce5e242b4f399ae7a98850af70faf68229e0",
-      "size": 5730,
+      "sha256": "6ab91ca86d4f55295169d991311b84e4eb01824f9be1758af62f4952ae9f226b",
+      "size": 6031,
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/server.js": {
-      "sha256": "b1cc08263d44f3aff76c4986641cc728461b50f58c4eca94cae0fbb90ce2cf5f",
-      "size": 12277,
+      "sha256": "61b163ed66445de213d2944d12a8af8cc5d4d606f50169b604e7a74816593dd4",
+      "size": 13288,
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/docs/01_CLAUDE_BUILD_COMMAND_DL580_PRODUCT_BRIDGE.md": {
@@ -221,15 +221,15 @@
       ]
     },
     "config/Mrliou_MRL_Sync_Delivery_v1.json": {
-      "sha256": "6523976459cb3553fd32d1eda39501d3e312de75af8af7081b5e8c769219d149",
-      "size": 8621,
+      "sha256": "990dc5c1ef6b3733864cae00dce35cb357e7fc84502ed1ba9a5a1957843113e9",
+      "size": 9311,
       "dependencies": [
         "CHANGELOG.md"
       ]
     },
     "config/Mrliou_Structure_Authorization_Delivery_v1.json": {
-      "sha256": "aec0a1b92d7913d3f7e83b9999616427a5ac75e680288654283f9036c37282ff",
-      "size": 15850,
+      "sha256": "ff56220d142129b4923708a7260c027aefa1ff5c7f9a8d9aa2566bc5611d8741",
+      "size": 17031,
       "dependencies": [
         "CHANGELOG.md",
         "config/Mrliou_MRL_Sync_Delivery_v1.json"

@@ -1,12 +1,11 @@
 import express from 'express';
-import cors from 'cors';
 import multer from 'multer';
-import fs from 'fs-extra';
-import http from 'http';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { v4 as uuidv4 } from 'uuid';
-import { spawn } from 'child_process';
+import fs from 'node:fs/promises';
+import http from 'node:http';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+import { spawn } from 'node:child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,15 +24,44 @@ const REPORTS = path.join(STORAGE, 'reports');
 const LOGS = path.join(STORAGE, 'logs');
 const TMP = path.join(STORAGE, 'tmp');
 
-await fs.ensureDir(UPLOADS);
-await fs.ensureDir(JOBS);
-await fs.ensureDir(OUTPUTS);
-await fs.ensureDir(REPORTS);
-await fs.ensureDir(LOGS);
-await fs.ensureDir(TMP);
+async function ensureDir(p) { await fs.mkdir(p, { recursive: true }); }
+async function pathExists(p) { try { await fs.access(p); return true; } catch { return false; } }
+async function removePath(p) { await fs.rm(p, { recursive: true, force: true }); }
+async function moveFile(src, dest) {
+  await ensureDir(path.dirname(dest));
+  try {
+    await fs.rename(src, dest);
+  } catch (err) {
+    if (err.code === 'EXDEV') {
+      await fs.copyFile(src, dest);
+      await fs.rm(src, { force: true });
+      return;
+    }
+    if (err.code === 'EEXIST' || err.code === 'EPERM') {
+      await fs.rm(dest, { force: true });
+      await fs.rename(src, dest);
+      return;
+    }
+    throw err;
+  }
+}
+function newId() { return crypto.randomUUID(); }
+
+await ensureDir(UPLOADS);
+await ensureDir(JOBS);
+await ensureDir(OUTPUTS);
+await ensureDir(REPORTS);
+await ensureDir(LOGS);
+await ensureDir(TMP);
 
 const app = express();
-app.use(cors());
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-MRL-Scan-ID, X-MRL-Scan-Name');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  if (req.method === 'OPTIONS') return res.status(204).end();
+  next();
+});
 app.use(express.json({ limit: '20mb' }));
 let backendReady = false;
 app.use((req, res, next) => {
@@ -49,8 +77,8 @@ const upload = multer({ dest: path.join(STORAGE, 'tmp') });
 function now() { return new Date().toISOString(); }
 function jobPath(id) { return path.join(JOBS, `${id}.json`); }
 function scanDir(scanId) { return path.join(UPLOADS, scanId); }
-async function readJson(p, fallback) { try { return await fs.readJson(p); } catch { return fallback; } }
-async function writeJson(p, data) { await fs.ensureDir(path.dirname(p)); await fs.writeJson(p, data, { spaces: 2 }); }
+async function readJson(p, fallback) { try { return JSON.parse(await fs.readFile(p, 'utf8')); } catch { return fallback; } }
+async function writeJson(p, data) { await ensureDir(path.dirname(p)); await fs.writeFile(p, JSON.stringify(data, null, 2), 'utf8'); }
 const scanListRequests = new Map();
 const scanListWindowMs = 60_000;
 const scanListMaxRequests = 60;
@@ -89,11 +117,11 @@ app.get('/api/health', asyncRoute(async (req, res) => {
 
 app.get('/api/scans', limitScanList, asyncRoute(async (req, res) => {
   const items = [];
-  if (await fs.pathExists(UPLOADS)) {
+  if (await pathExists(UPLOADS)) {
     for (const name of await fs.readdir(UPLOADS)) {
       const manifest = path.join(UPLOADS, name, 'manifest.json');
-      if (await fs.pathExists(manifest)) {
-        const item = await fs.readJson(manifest);
+      if (await pathExists(manifest)) {
+        const item = await readJson(manifest, {});
         items.push({ ...item, files: (item.files || []).map(({ path: _path, ...file }) => file) });
       }
     }
@@ -102,20 +130,20 @@ app.get('/api/scans', limitScanList, asyncRoute(async (req, res) => {
 }));
 
 app.post('/api/scans/upload', upload.array('files', 500), asyncRoute(async (req, res) => {
-  const scanId = req.header('X-MRL-Scan-ID') || uuidv4();
+  const scanId = req.header('X-MRL-Scan-ID') || newId();
   if (!/^[a-zA-Z0-9_-]{1,128}$/.test(scanId)) {
-    await Promise.all((req.files || []).map(f => fs.remove(f.path)));
+    await Promise.all((req.files || []).map(f => removePath(f.path)));
     return res.status(400).json({ ok: false, error: 'invalid scanId' });
   }
   if (!req.files?.length) return res.status(400).json({ ok: false, error: 'files required' });
-  if (await fs.pathExists(scanDir(scanId))) {
-    await Promise.all(req.files.map(f => fs.remove(f.path)));
+  if (await pathExists(scanDir(scanId))) {
+    await Promise.all(req.files.map(f => removePath(f.path)));
     return res.status(409).json({ ok: false, error: 'scanId already exists; use a new ID' });
   }
   const scanName = req.header('X-MRL-Scan-Name') || `scan_${scanId}`;
   const dir = scanDir(scanId);
   try { await fs.mkdir(dir); } catch (err) {
-    await Promise.all(req.files.map(f => fs.remove(f.path)));
+    await Promise.all(req.files.map(f => removePath(f.path)));
     if (err.code === 'EEXIST') return res.status(409).json({ ok: false, error: 'scanId already exists' });
     throw err;
   }
@@ -123,7 +151,7 @@ app.post('/api/scans/upload', upload.array('files', 500), asyncRoute(async (req,
   for (const file of req.files || []) {
     const safe = path.basename(file.originalname || file.filename).replace(/[^a-zA-Z0-9._-]/g, '_');
     const target = path.join(dir, safe || file.filename);
-    await fs.move(file.path, target, { overwrite: true });
+    await moveFile(file.path, target);
     const stat = await fs.stat(target);
     files.push({ originalName: file.originalname, filename: path.basename(target), size: stat.size });
   }
@@ -137,8 +165,8 @@ app.post('/api/reconstruction/jobs', asyncRoute(async (req, res) => {
   const { scanId, mode = 'auto' } = req.body || {};
   if (typeof scanId !== 'string' || !/^[a-zA-Z0-9_-]{1,128}$/.test(scanId)) return res.status(400).json({ ok: false, error: 'scanId required' });
   const manifest = path.join(scanDir(scanId), 'manifest.json');
-  if (!(await fs.pathExists(manifest))) return res.status(404).json({ ok: false, error: 'scan manifest not found' });
-  const jobId = uuidv4();
+  if (!(await pathExists(manifest))) return res.status(404).json({ ok: false, error: 'scan manifest not found' });
+  const jobId = newId();
   const job = { jobId, scanId, mode, status: 'queued', createdAt: now(), updatedAt: now(), message: null, outputFiles: [] };
   await writeJson(jobPath(jobId), job);
   await appendLog(`job queued job=${jobId} scan=${scanId}`);
@@ -160,7 +188,7 @@ app.get('/api/reconstruction/jobs/:id', asyncRoute(async (req, res) => {
 app.get('/api/reconstruction/jobs/:id/files', asyncRoute(async (req, res) => {
   if (!/^[a-zA-Z0-9_-]{1,128}$/.test(req.params.id)) return res.status(400).json({ ok: false, error: 'invalid jobId' });
   const out = path.join(OUTPUTS, req.params.id);
-  if (!(await fs.pathExists(out))) return res.json({ ok: true, files: [] });
+  if (!(await pathExists(out))) return res.json({ ok: true, files: [] });
   const files = [];
   async function walk(d) {
     for (const n of await fs.readdir(d)) {
@@ -174,11 +202,11 @@ app.get('/api/reconstruction/jobs/:id/files', asyncRoute(async (req, res) => {
 
 
 async function runJob(jobId) {
-  let job = await fs.readJson(jobPath(jobId));
+  let job = await readJson(jobPath(jobId), null);
   job.status = 'running'; job.updatedAt = now();
   await writeJson(jobPath(jobId), job);
   const out = path.join(OUTPUTS, jobId);
-  await fs.ensureDir(out);
+  await ensureDir(out);
   const runner = path.join(ROOT, 'python', 'mrl3d_job_runner.py');
   const args = [runner, '--scan-dir', scanDir(job.scanId), '--output-dir', out, '--mode', job.mode];
   const py = process.env.MRL_BRIDGE_PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
@@ -199,12 +227,12 @@ async function runJob(jobId) {
   const report = await readJson(runnerReportPath, null);
   if (report) {
     await writeJson(path.join(REPORTS, `${jobId}_MRL_JOB_REPORT.json`), report);
-    if (await fs.pathExists(runnerMdPath)) {
-      await fs.copy(runnerMdPath, path.join(REPORTS, `${jobId}_RUN_REPORT.md`), { overwrite: true });
+    if (await pathExists(runnerMdPath)) {
+      await fs.copyFile(runnerMdPath, path.join(REPORTS, `${jobId}_RUN_REPORT.md`));
     }
   }
 
-  job = await fs.readJson(jobPath(jobId));
+  job = await readJson(jobPath(jobId), job);
   job.updatedAt = now();
   if (code === 0 && report?.status === 'completed') {
     job.status = 'completed';
@@ -223,7 +251,7 @@ async function runJob(jobId) {
 
 async function listFiles(dir) {
   const files = [];
-  if (!(await fs.pathExists(dir))) return files;
+  if (!(await pathExists(dir))) return files;
   async function walk(d) {
     for (const n of await fs.readdir(d)) {
       const p = path.join(d, n); const st = await fs.stat(p);

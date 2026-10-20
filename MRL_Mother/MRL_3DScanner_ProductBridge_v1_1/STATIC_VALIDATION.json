@@ -73,6 +73,12 @@
     "dl580DeploymentAndRecovery": "NOT_RUN",
     "evidenceSource": "PR #678; source-reported results, not re-executed DL580 acceptance"
   },
+  "backendBuiltinReduction20261021": {
+    "removed": ["cors", "fs-extra", "uuid"],
+    "retained": ["express", "multer"],
+    "reason": "filesystem, identifiers and CORS headers are provided by Node builtins; HTTP and multipart stay on express/multer",
+    "nodeTests": "PASS: 11 tests locally"
+  },
   "aclPreflightConstruction20261021": {
     "source_review": "CodeRabbit unresolved findings on PR #680",
     "changes": [
