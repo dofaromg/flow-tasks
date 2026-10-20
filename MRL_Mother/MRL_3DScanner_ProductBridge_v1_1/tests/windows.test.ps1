@@ -1,6 +1,5 @@
 #requires -Version 5.1
 $ErrorActionPreference='Stop'
-$VerbosePreference='Continue'
 if ($env:OS -ne 'Windows_NT') { throw 'Native Windows test required' }
 . "$PSScriptRoot/../scripts/MRL_bridge_common.ps1"
 function Assert($condition,$message) { if(-not $condition) { throw $message } }
