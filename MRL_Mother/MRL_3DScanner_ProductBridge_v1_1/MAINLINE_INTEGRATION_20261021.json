@@ -14,7 +14,7 @@
     "actual_differing_blobs": 15,
     "strategy": "apply the 15 exact main-to-#678 blob differences, preserve main Tailscale-only logic, append bounded regression/integrity changes"
   },
-  "expected_file_count": 22,
+  "expected_file_count": 24,
   "expected_file_list": [
     ".github/workflows/mrl-3dscanner-productbridge.yml",
     "CHANGELOG.md",
@@ -37,13 +37,20 @@
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/test_runner.py",
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/upload-contract.swift",
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/verify_integration.py",
-    "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/windows.test.ps1"
+    "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/windows.test.ps1",
+    "config/Mrliou_MRL_Sync_Delivery_v1.json",
+    "config/Mrliou_Structure_Authorization_Delivery_v1.json"
   ],
+  "scope_revision": {
+    "initial_expected": 22,
+    "current_expected": 24,
+    "reason": "Exact-head CI found two existing manifests bind CHANGELOG.md; retain their previous entries and refresh those two live hashes only."
+  },
   "self_hash_policy": "This report is included in expected_file_list; its own hash is authenticated by the Git commit to avoid recursive hashes.",
   "files": {
     ".github/workflows/mrl-3dscanner-productbridge.yml": {
-      "sha256": "754d0c4542959db2c9f14a7faaa01a4dde46879d7356c21e5ab1cd26c452d381",
-      "size": 2934,
+      "sha256": "50a955be6a53944b91c33e68d023c3ad6fe2dcdf0b165565bffb45e0e9fc9c57",
+      "size": 4707,
       "dependencies": []
     },
     "CHANGELOG.md": {
@@ -200,6 +207,20 @@
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1",
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_register_bridge.ps1"
       ]
+    },
+    "config/Mrliou_MRL_Sync_Delivery_v1.json": {
+      "sha256": "0da5fcbcb686481a8c7b918c5add6ac90a76ce359837b20bcb1ada089fc00a0b",
+      "size": 7228,
+      "dependencies": [
+        "CHANGELOG.md"
+      ]
+    },
+    "config/Mrliou_Structure_Authorization_Delivery_v1.json": {
+      "sha256": "ba54c730c0d75d17c9a793a95526e7b00a2f3dea797a60a64ee05667e46da728",
+      "size": 12721,
+      "dependencies": [
+        "CHANGELOG.md"
+      ]
     }
   },
   "audit": {
@@ -234,7 +255,9 @@
       "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/test_runner.py",
       "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/upload-contract.swift",
       "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/verify_integration.py",
-      "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/windows.test.ps1"
+      "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/windows.test.ps1",
+      "config/Mrliou_MRL_Sync_Delivery_v1.json",
+      "config/Mrliou_Structure_Authorization_Delivery_v1.json"
     ],
     "deployment_patch": [
       "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/README.md",

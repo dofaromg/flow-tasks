@@ -46,22 +46,52 @@ jobs:
         run: |
           python -m unittest discover -s "$BRIDGE/tests" -p 'test_*.py' -v
           python "$BRIDGE/tests/verify_integration.py"
+      - name: Package only tracked ProductBridge files for Windows
+        run: |
+          python - <<'PY'
+          import os, subprocess, zipfile
+          from pathlib import Path
+          files = subprocess.check_output(['git', 'ls-files', '-z', '--', os.environ['BRIDGE']], text=True).split('\0')
+          with zipfile.ZipFile(Path(os.environ['RUNNER_TEMP']) / 'MRL_ProductBridge_exact_head.zip', 'w') as z:
+              for name in filter(None, files):
+                  z.write(name, name)
+              z.writestr('MRL_CI_EXACT_HEAD.txt', subprocess.check_output(['git', 'rev-parse', 'HEAD']))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MRL-ProductBridge-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/MRL_ProductBridge_exact_head.zip
+          retention-days: 3
   windows-powershell51:
+    needs: backend
     runs-on: windows-2022
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      # Full Git checkout rejects historical root names such as :mnt:data.txt,
+      # including in sparse mode. Consume only the tested, exact-head module ZIP.
+      - uses: actions/download-artifact@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          persist-credentials: false
-          # Preserve historical root filenames that Windows cannot materialize.
-          sparse-checkout-cone-mode: false
-          sparse-checkout: /MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/
+          name: MRL-ProductBridge-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}
+      - name: Verify transferred source identity and module hashes
+        shell: powershell
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          Expand-Archive -LiteralPath "$env:RUNNER_TEMP/MRL_ProductBridge_exact_head.zip" -DestinationPath $env:GITHUB_WORKSPACE
+          $actual=(Get-Content 'MRL_CI_EXACT_HEAD.txt' -Raw).Trim()
+          if ($actual -ne $env:EXPECTED_HEAD) { throw 'Source SHA mismatch' }
+          $audit=Get-Content "$env:BRIDGE/MAINLINE_INTEGRATION_20261021.json" -Raw | ConvertFrom-Json
+          foreach ($item in $audit.files.PSObject.Properties) {
+            if ($item.Name.StartsWith($env:BRIDGE + '/')) {
+              if ((Get-FileHash -LiteralPath $item.Name -Algorithm SHA256).Hash -ne $item.Value.sha256) { throw "Source hash mismatch: $($item.Name)" }
+            }
+          }
+          Write-Host "Verified exact-head $actual"
       - name: Windows PowerShell 5.1 regression (hosted runner, not DL580)
         shell: powershell
         run: |
           if ($PSVersionTable.PSVersion.Major -ne 5) { throw 'Windows PowerShell 5.1 required' }
-          git rev-parse HEAD
           & "$env:BRIDGE/tests/common.test.ps1"
       - name: Native ACL and descendant cleanup (temporary fixtures only)
         shell: powershell
