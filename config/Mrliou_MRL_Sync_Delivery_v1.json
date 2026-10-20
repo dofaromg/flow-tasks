@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 7123,
-      "sha256": "81e444c3bde63b8b5a1bfc5b51d81a507d1f7785bf422f1ab2adf4514b4ffcda",
+      "size_bytes": 7908,
+      "sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -170,6 +170,24 @@
       },
       "current_size_bytes": 7123,
       "current_sha256": "81e444c3bde63b8b5a1bfc5b51d81a507d1f7785bf422f1ab2adf4514b4ffcda",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "cc5b00595cab803867ec9ed374902cae04aefcad",
+      "change_commit": "9a013c15529c462a798e390f9a028d49297fb536",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/680",
+      "reason": "ProductBridge security integration adds a CHANGELOG entry; retain previous evidence and refresh only the live CHANGELOG payload hash.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "role": "additive_history",
+        "size_bytes": 7123,
+        "sha256": "81e444c3bde63b8b5a1bfc5b51d81a507d1f7785bf422f1ab2adf4514b4ffcda",
+        "dependencies": [
+          "docs/Mrliou_MRL_Sync_Operations_v1.md"
+        ]
+      },
+      "current_size_bytes": 7908,
+      "current_sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b",
       "origin_signature": "MrLiouWord"
     }
   ]
