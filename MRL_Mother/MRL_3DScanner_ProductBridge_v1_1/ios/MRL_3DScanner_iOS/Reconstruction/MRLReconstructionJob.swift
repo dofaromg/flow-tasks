@@ -16,7 +16,6 @@ struct MRLUploadResponse: Codable {
     let ok: Bool
     let scanId: String
     let uploaded: Int
-    let manifestPath: String
 }
 
 struct MRLJobCreateResponse: Codable {
