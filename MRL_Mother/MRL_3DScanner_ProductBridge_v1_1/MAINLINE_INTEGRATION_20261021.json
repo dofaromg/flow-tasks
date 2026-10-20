@@ -59,7 +59,7 @@
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/PATCH_MANIFEST.json": {
-      "sha256": "342792311581a6d8276499f83137461d91f88946fe7d2e507d16e16b67cd059e",
+      "sha256": "aa0ec04de5e18baafb400dc221b0e89b0164452f48f87ae9508c4bdfbca7a92b",
       "size": 11033,
       "dependencies": [
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/README.md",
@@ -135,8 +135,8 @@
       ]
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1": {
-      "sha256": "d8c6751350ec892b10b03caaa11a7fcea16ff50e66b917b24f1d632fd3cf5cc6",
-      "size": 11794,
+      "sha256": "9ae7c663c1ff2cb145423dd09ad02fb77d9253e6e06c0d467c84a7a7bc0e502e",
+      "size": 12005,
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_register_bridge.ps1": {
