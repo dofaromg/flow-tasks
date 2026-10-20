@@ -54,6 +54,9 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+          # Preserve historical root filenames that Windows cannot materialize.
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/
       - name: Windows PowerShell 5.1 regression (hosted runner, not DL580)
         shell: powershell
         run: |

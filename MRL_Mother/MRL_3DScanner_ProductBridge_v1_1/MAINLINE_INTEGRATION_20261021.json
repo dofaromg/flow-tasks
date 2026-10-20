@@ -42,8 +42,8 @@
   "self_hash_policy": "This report is included in expected_file_list; its own hash is authenticated by the Git commit to avoid recursive hashes.",
   "files": {
     ".github/workflows/mrl-3dscanner-productbridge.yml": {
-      "sha256": "46e41dffc16357a6bf823282bc4006c3e7b65dd7148a4f456e39792b75eb7656",
-      "size": 2738,
+      "sha256": "754d0c4542959db2c9f14a7faaa01a4dde46879d7356c21e5ab1cd26c452d381",
+      "size": 2934,
       "dependencies": []
     },
     "CHANGELOG.md": {
