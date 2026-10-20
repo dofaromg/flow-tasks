@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 8794,
-      "sha256": "cfabd39fbdd11d419ecb0eb8753acce8c870f2dab3b203f687992aa371c34373"
+      "size_bytes": 8819,
+      "sha256": "88fd694092440039583c3d1b02a14009fe2e16ed9be5b62e42271d18dd20c5b2"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 9311,
-      "sha256": "990dc5c1ef6b3733864cae00dce35cb357e7fc84502ed1ba9a5a1957843113e9"
+      "size_bytes": 10026,
+      "sha256": "ca72e1ec0900c5fa86e05fe37830e2c9dfbdf3fb199dcea59ec247447f2c6b74"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -399,6 +399,32 @@
       },
       "current_size_bytes": 7929,
       "current_sha256": "d3bf6b28162cb57e595d6f0574aa843bc7314dce627fa9ba22e3bdc03d84d317",
+      "origin_signature": "MrLiouWord"
+    }
+  ],
+  "integrity_updates": [
+    {
+      "source_commit": "2288de05ace303f14aa79a58efe78fe3ebe92694",
+      "reason": "ProductBridge backend drops express/multer; retain previous evidence and refresh only the live CHANGELOG payload hash.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "size_bytes": 8794,
+        "sha256": "cfabd39fbdd11d419ecb0eb8753acce8c870f2dab3b203f687992aa371c34373"
+      },
+      "current_size_bytes": 8819,
+      "current_sha256": "88fd694092440039583c3d1b02a14009fe2e16ed9be5b62e42271d18dd20c5b2",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "2288de05ace303f14aa79a58efe78fe3ebe92694",
+      "reason": "The authorization delivery also hashes the sync delivery manifest; propagate the preserved CHANGELOG integrity update through this dependency.",
+      "previous_entry": {
+        "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+        "size_bytes": 9311,
+        "sha256": "990dc5c1ef6b3733864cae00dce35cb357e7fc84502ed1ba9a5a1957843113e9"
+      },
+      "current_size_bytes": 10026,
+      "current_sha256": "ca72e1ec0900c5fa86e05fe37830e2c9dfbdf3fb199dcea59ec247447f2c6b74",
       "origin_signature": "MrLiouWord"
     }
   ]

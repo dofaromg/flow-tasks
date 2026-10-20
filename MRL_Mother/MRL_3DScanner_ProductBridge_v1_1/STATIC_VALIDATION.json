@@ -50,7 +50,7 @@
       "tests/backend.test.mjs: tests bind loopback; new wildcard-rejection and unavailable-address tests"
     ],
     "nodeBindTests": "PASS on Node 22 with stub npm dependencies (registry blocked): wrong port, wildcard rejection, unavailable address; default bind exits 1 with EADDRNOTAVAIL off DL580; loopback-only listener refuses non-loopback address",
-    "fullBackendTests": "NOT_RUN (npm registry blocked; upload/job tests need real express/multer)",
+    "fullBackendTests": "PASS without npm packages after express/multer removal",
     "powershellParser": "NOT_RUN (no PowerShell available in the review environment)",
     "dl580TailscaleListen": "NOT_RUN"
   },
@@ -74,10 +74,10 @@
     "evidenceSource": "PR #678; source-reported results, not re-executed DL580 acceptance"
   },
   "backendBuiltinReduction20261021": {
-    "removed": ["cors", "fs-extra", "uuid"],
-    "retained": ["express", "multer"],
-    "reason": "filesystem, identifiers and CORS headers are provided by Node builtins; HTTP and multipart stay on express/multer",
-    "nodeTests": "PASS: 11 tests locally"
+    "removed": ["cors", "fs-extra", "uuid", "express", "multer"],
+    "retained": [],
+    "reason": "HTTP, multipart upload, filesystem, identifiers and CORS headers are provided by Node builtins; package.json has no npm dependencies",
+    "nodeTests": "PASS: 12 tests locally without npm packages"
   },
   "aclPreflightConstruction20261021": {
     "source_review": "CodeRabbit unresolved findings on PR #680",

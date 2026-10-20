@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 8794,
-      "sha256": "cfabd39fbdd11d419ecb0eb8753acce8c870f2dab3b203f687992aa371c34373",
+      "size_bytes": 8819,
+      "sha256": "88fd694092440039583c3d1b02a14009fe2e16ed9be5b62e42271d18dd20c5b2",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -236,6 +236,24 @@
       },
       "current_size_bytes": 8794,
       "current_sha256": "cfabd39fbdd11d419ecb0eb8753acce8c870f2dab3b203f687992aa371c34373",
+      "origin_signature": "MrLiouWord"
+    }
+  ],
+  "integrity_updates": [
+    {
+      "source_commit": "2288de05ace303f14aa79a58efe78fe3ebe92694",
+      "reason": "ProductBridge backend drops express/multer; retain previous evidence and refresh only the live CHANGELOG payload hash.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "role": "additive_history",
+        "size_bytes": 8794,
+        "sha256": "cfabd39fbdd11d419ecb0eb8753acce8c870f2dab3b203f687992aa371c34373",
+        "dependencies": [
+          "docs/Mrliou_MRL_Sync_Operations_v1.md"
+        ]
+      },
+      "current_size_bytes": 8819,
+      "current_sha256": "88fd694092440039583c3d1b02a14009fe2e16ed9be5b62e42271d18dd20c5b2",
       "origin_signature": "MrLiouWord"
     }
   ]

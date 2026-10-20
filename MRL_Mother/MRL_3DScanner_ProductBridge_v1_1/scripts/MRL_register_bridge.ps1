@@ -9,7 +9,7 @@ $node = (Resolve-Path $NodePath).Path; $python = (Resolve-Path $PythonPath).Path
 if ([IO.Path]::GetFileName($node) -ne 'node.exe' -or [IO.Path]::GetFileName($python) -ne 'python.exe') { throw 'Use absolute node.exe and real python.exe (no Store aliases)' }
 $backend = Join-Path $root 'backend\MRL_3D_Reconstruction_Server'
 $entry = Join-Path $backend 'server.js'
-if (-not (Test-Path $entry) -or -not (Test-Path (Join-Path $backend 'node_modules'))) { throw 'Install existing backend dependencies first' }
+if (-not (Test-Path $entry)) { throw 'Backend entry missing' }
 # SYSTEM must not execute code writable by broad unprivileged groups.
 # DependencyPath is prepended to SYSTEM's PATH and the runner resolves colmap/mrl3d through it.
 $dependencyPathValue = Get-BridgeNormalizedDependencyPath $DependencyPath

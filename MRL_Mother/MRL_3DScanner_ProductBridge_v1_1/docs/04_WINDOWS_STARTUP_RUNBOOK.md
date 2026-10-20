@@ -97,9 +97,10 @@ Drive 實機修復內容若不同會拒絕，需先保存差異再人工合併�
 
 ## 1. 相依安裝與註冊
 
-指定已安裝、受保護的 Node 路徑及 Python 真正執行檔。建議在既有根目錄
-建立專用 Python venv，避免 SYSTEM 看不到互動使用者的套件。COLMAP 路徑
-須包含實際可執行檔及必要 DLL，從 SYSTEM 執行環境實測才算可用。
+指定已安裝、受保護的 Node 路徑及 Python 真正執行檔。Node backend 已無 npm
+套件；安裝腳本在 package.json 無 dependencies 時記錄 NODE_PACKAGES_NONE。
+建議在既有根目錄建立專用 Python venv，避免 SYSTEM 看不到互動使用者的套件。
+COLMAP 路徑須包含實際可執行檔及必要 DLL，從 SYSTEM 執行環境實測才算可用。
 
 ```powershell
 $node = 'C:\Program Files\nodejs\node.exe'

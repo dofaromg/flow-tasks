@@ -3,7 +3,7 @@
   "canonical_authority": "Mr.liou",
   "dateTaipei": "2026-10-21",
   "authorization": "Explicit user request in this session: integrate PR #678 safety changes into a reviewable main-targeting PR; validate using available authorized DL580 channels.",
-  "classification": "MRL-native ProductBridge code and tests; third-party npm dependency provenance unchanged",
+  "classification": "MRL-native ProductBridge code and tests; Node backend has no npm packages; included Python package provenance retained",
   "base_commit": "cc5b00595cab803867ec9ed374902cae04aefcad",
   "source_pr": "https://github.com/dofaromg/flow-tasks/pull/678",
   "source_merge_commit": "79b0e8822a7adc707888f68e2a5b51c0191fbe04",
@@ -50,18 +50,18 @@
   "self_hash_policy": "This report is included in expected_file_list; its own hash is authenticated by the Git commit to avoid recursive hashes.",
   "files": {
     ".github/workflows/mrl-3dscanner-productbridge.yml": {
-      "sha256": "50a955be6a53944b91c33e68d023c3ad6fe2dcdf0b165565bffb45e0e9fc9c57",
-      "size": 4707,
+      "sha256": "ce284112e5c307cf3848762eec4ab9c932bb4a12410e6c91d26abe1faf590f81",
+      "size": 4652,
       "dependencies": []
     },
     "CHANGELOG.md": {
-      "sha256": "cfabd39fbdd11d419ecb0eb8753acce8c870f2dab3b203f687992aa371c34373",
-      "size": 8794,
+      "sha256": "88fd694092440039583c3d1b02a14009fe2e16ed9be5b62e42271d18dd20c5b2",
+      "size": 8819,
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/PATCH_MANIFEST.json": {
-      "sha256": "1a70f6a5cbb62ac187e83ef7e2c97438ce4b6c0df6a80c8e043e9ef4155be652",
-      "size": 9537,
+      "sha256": "cdd2337ce9249193f0e37059436a9036222bdf714c027a76b55c0d91057728cc",
+      "size": 9993,
       "dependencies": [
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/README.md",
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/package-lock.json",
@@ -97,23 +97,23 @@
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/STATIC_VALIDATION.json": {
-      "sha256": "6ab91ca86d4f55295169d991311b84e4eb01824f9be1758af62f4952ae9f226b",
-      "size": 6031,
+      "sha256": "cb785cd2e850b383120f4aebbe0565e09c01146027f412fbcf520bb92535ea5c",
+      "size": 6054,
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/server.js": {
-      "sha256": "61b163ed66445de213d2944d12a8af8cc5d4d606f50169b604e7a74816593dd4",
-      "size": 13288,
+      "sha256": "36de0ec834c5ad6acba648fb044bd22a346f32abf4b0556a55f5a6391b39f4d6",
+      "size": 19954,
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/docs/01_CLAUDE_BUILD_COMMAND_DL580_PRODUCT_BRIDGE.md": {
-      "sha256": "9529a1da8693d89dd1584ada9b7ace96b686c07ffe5240c1d77b5d5f24a93e0f",
-      "size": 1965,
+      "sha256": "fc0e8a199e02eba134d938efe93ff383f5406047797f0ec55f93e8fc27b5f50f",
+      "size": 1981,
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/docs/04_WINDOWS_STARTUP_RUNBOOK.md": {
-      "sha256": "7eb8f106accdd27f72902edc3cff799b173fb0e77d12a59fc01e34f48cab5f32",
-      "size": 12405,
+      "sha256": "bbe7a4c2efe7074a3589061b52bed8615f12baaf00dc65b84ad0e9431d252cab",
+      "size": 12515,
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/ios/MRL_3DScanner_iOS/Reconstruction/MRLReconstructionJob.swift": {
@@ -149,8 +149,8 @@
       ]
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_register_bridge.ps1": {
-      "sha256": "d964a42a536966b3f594d855b260cdb66b037e22cd4fd5f1f89b94a303621a8a",
-      "size": 4453,
+      "sha256": "ded1ed50c5a80e5ad54c0dd1749d0b49eb5a59fd121376b8ee8f3bbcca160458",
+      "size": 4374,
       "dependencies": [
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1",
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_acl.ps1",
@@ -166,8 +166,8 @@
       ]
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/backend.test.mjs": {
-      "sha256": "1b8b7d7c782b08143004e62b01304d0c4433b17563251705c07bfc79e2ea9b29",
-      "size": 10462,
+      "sha256": "cfc7e5472c2720389398794a55a0b5f3aa7d0afc68417ca6cb8ba273a98b0cb6",
+      "size": 11114,
       "dependencies": [
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/package-lock.json",
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/server.js",
@@ -221,15 +221,15 @@
       ]
     },
     "config/Mrliou_MRL_Sync_Delivery_v1.json": {
-      "sha256": "990dc5c1ef6b3733864cae00dce35cb357e7fc84502ed1ba9a5a1957843113e9",
-      "size": 9311,
+      "sha256": "ca72e1ec0900c5fa86e05fe37830e2c9dfbdf3fb199dcea59ec247447f2c6b74",
+      "size": 10026,
       "dependencies": [
         "CHANGELOG.md"
       ]
     },
     "config/Mrliou_Structure_Authorization_Delivery_v1.json": {
-      "sha256": "ff56220d142129b4923708a7260c027aefa1ff5c7f9a8d9aa2566bc5611d8741",
-      "size": 17031,
+      "sha256": "7cbc35656b3abe73862f7cef6bbec2d19d225af5a760a1a45d3b767d68892ed3",
+      "size": 18239,
       "dependencies": [
         "CHANGELOG.md",
         "config/Mrliou_MRL_Sync_Delivery_v1.json"
@@ -317,7 +317,7 @@
     "backendLint": "PASS",
     "backendBuild": "PASS (node syntax check, unbundled backend)",
     "pythonTests": "PASS: 3",
-    "nodeTests": "BLOCKED locally: npm dependency fetch HTTP 403; exact-head CI required",
+    "nodeTests": "PASS: 12 tests locally without npm packages; exact-head CI still required",
     "windowsPowerShell51": "NOT_RUN locally; GitHub-hosted regression configured",
     "swiftCodable": "NOT_RUN locally; GitHub-hosted regression configured",
     "dl580Deployment": "NOT_RUN",

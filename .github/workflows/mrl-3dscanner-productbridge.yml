@@ -38,7 +38,6 @@ jobs:
       - name: Backend lint, build and regression
         working-directory: MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server
         run: |
-          npm ci --ignore-scripts --no-audit --no-fund
           npm run lint
           npm run build
           MRL_TEST_PYTHON="$(command -v python)" npm test
