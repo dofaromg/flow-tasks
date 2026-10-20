@@ -42,12 +42,15 @@ if (Test-Path -LiteralPath $venvConfig -PathType Leaf) {
     $pythonRoots += (Resolve-Path -LiteralPath $pythonHome).Path
 }
 $state = Join-Path $root '.bridge'
+$storagePath = Join-Path $backend 'storage'
+# Get-ChildItem expands 8.3 aliases. Compare the same resolved spelling for exclusion.
+if (Test-Path -LiteralPath $storagePath) { $storagePath = (Resolve-Path -LiteralPath $storagePath).Path }
 $recursiveRoots = @((Join-Path $root 'scripts')) + $dependencyDirs + $pythonRoots
 if (Test-Path -LiteralPath $state) { $recursiveRoots += $state }
 Write-Verbose ('ACL recursive roots: ' + ($recursiveRoots -join ';'))
-Write-Verbose ('ACL backend data exclusion: ' + (Join-Path $backend 'storage'))
+Write-Verbose ('ACL backend data exclusion: ' + $storagePath)
 $protectedDirectories = @($root, $backend, (Split-Path $node)) + $recursiveRoots
-$protectedDirectories += @(Get-BridgeAclItems -Directory $backend -Directories -ExcludePath (Join-Path $backend 'storage'))
+$protectedDirectories += @(Get-BridgeAclItems -Directory $backend -Directories -ExcludePath $storagePath)
 foreach ($dir in @($recursiveRoots | Sort-Object -Unique)) {
     if (-not (Test-Path -LiteralPath $dir -PathType Container)) { throw "Protected path must be a directory: $dir" }
     $protectedDirectories += @(Get-BridgeAclItems -Directory $dir -Directories)
@@ -60,7 +63,7 @@ foreach ($dir in @($protectedDirectories | Sort-Object -Unique)) {
     }
 }
 $protectedFiles = @($node, $python, $entry, (Join-Path $backend 'python\mrl3d_job_runner.py'))
-$protectedFiles += @(Get-BridgeAclItems -Directory $backend -ExcludePath (Join-Path $backend 'storage'))
+$protectedFiles += @(Get-BridgeAclItems -Directory $backend -ExcludePath $storagePath)
 foreach ($dir in @($recursiveRoots | Sort-Object -Unique)) {
     $protectedFiles += @(Get-BridgeAclItems -Directory $dir)
 }
