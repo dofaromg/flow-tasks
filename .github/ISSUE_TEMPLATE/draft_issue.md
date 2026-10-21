@@ -2,7 +2,7 @@
 name: Draft Issue
 about: 草稿議題 - 需要補充更多資訊的初步議題
 title: "[Draft]: "
-labels: ''
+labels: draft, needs-info
 assignees: ''
 
 ---

@@ -1,10 +1,23 @@
 ---
-name: Custom issue template
-about: Describe this issue template's purpose here.
+name: MRL 一般議題 / General issue
+about: 不適用既有專用範本的 MRL 議題，請提供問題、來源及驗收資訊
 title: ''
 labels: ''
 assignees: ''
 
 ---
 
+## 問題描述
+說明問題、影響範圍及預期結果；涉及 MRL / FlowAgent 模組時保留原始名稱。
 
+## 議題分類
+說明議題類型；粒子定義、Copilot 任務、草稿、錯誤或功能需求，請優先使用對應專用範本，以保留既有分類標籤。
+
+## 來源與版本
+提供相關議題、PR、文件連結或原始檔案路徑，並記錄版本 / commit SHA、觀察時間及環境。無法取得時明確註明待補項目，不推定已驗證。
+保留來源血緣及既有簽名：`origin_signature: MrLiouWord`；外部材料保留其原始出處，不改寫來源歸屬。
+
+## 驗收條件
+列出可檢查的預期行為、測試方式及需要的證據；測試通過、正式部署與實機驗收分別記錄。
+- [ ] 已明確描述預期結果與驗證步驟
+- [ ] 已列出來源證據或待補資訊
