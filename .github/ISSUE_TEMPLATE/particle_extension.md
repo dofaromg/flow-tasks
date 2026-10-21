@@ -2,7 +2,7 @@
 name: 粒子語言補充
 about: 記錄或新增一顆新的粒子定義/公式
 title: "[Particle]: "
-labels: ''
+labels: particle
 assignees: ''
 
 ---
