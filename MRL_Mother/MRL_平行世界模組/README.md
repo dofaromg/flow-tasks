@@ -8,3 +8,8 @@ origin_signature = `MrLiouWord`
 - 定位：平行世界分支與同步源（completed_running）
 
 > 本構件為 MRL 完整態母體之運轉構件；外部命名僅作 Adapter 對照，不得反向取代主體命名。
+
+## Implementation Files
+
+- `MRL_ParallelWorld_Module_Runtime.py`：平行世界可執行入口（deterministic multi-world sync）
+- `module.manifest.json`：模組能力與依賴描述

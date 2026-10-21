@@ -1,0 +1,16 @@
+{
+  "schema": "MRL_Module_Manifest_v0_1",
+  "module_id": "MRL_World_Module",
+  "origin_signature": "MrLiouWord",
+  "status": "buildable",
+  "version": "1.0.0",
+  "runtime_entry": "MRL_WorldModule_Runtime.py",
+  "capabilities": [
+    "world_spawn",
+    "context_sync",
+    "world_report"
+  ],
+  "depends_on": [
+    "MRL_UniversalRuntimeLanguage_Core_v1/MRL_Runtime/MRL_WorldRuntime.py"
+  ]
+}

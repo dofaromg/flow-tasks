@@ -1,0 +1,16 @@
+{
+  "schema": "MRL_Module_Manifest_v0_1",
+  "module_id": "MRL_Parallel_World_Module",
+  "origin_signature": "MrLiouWord",
+  "status": "buildable",
+  "version": "1.0.0",
+  "runtime_entry": "MRL_ParallelWorld_Module_Runtime.py",
+  "capabilities": [
+    "multi_world_topology",
+    "deterministic_sync",
+    "replayable_operations"
+  ],
+  "depends_on": [
+    "09_workflow/MRL_WorldSync_MultiWorld_v1.py"
+  ]
+}

@@ -16,11 +16,11 @@ status: READ-ONLY INSPECTION COMPLETE — 當下狀態（沙盒）
 | `MRL_Mother/MRL_AI/README.md` | REFERENCE_ONLY | Claims `completed_running`; zero implementation files in directory |
 | `MRL_Mother/MRL_AGI/README.md` | REFERENCE_ONLY | Claims `completed_running`; README-only stub |
 | `MRL_Mother/MRL_ASI/README.md` | REFERENCE_ONLY | Claims `completed_running`; README-only stub |
-| `MRL_Mother/MRL_World/README.md` | REFERENCE_ONLY | Claims `completed_running`; README-only stub |
-| `MRL_Mother/MRL_世界模組/README.md` | REFERENCE_ONLY | README-only stub; 待起動 |
-| `MRL_Mother/MRL_平行世界模組/README.md` | REFERENCE_ONLY | README-only stub; 待起動 |
+| `MRL_Mother/MRL_World/` | BUILDABLE | Runtime entry added: `MRL_World_Projection_Runtime.py` + `module.manifest.json` |
+| `MRL_Mother/MRL_世界模組/` | BUILDABLE | Runtime entry added: `MRL_WorldModule_Runtime.py` + `module.manifest.json` |
+| `MRL_Mother/MRL_平行世界模組/` | BUILDABLE | Runtime entry added: `MRL_ParallelWorld_Module_Runtime.py` + `module.manifest.json` |
 
-**Pattern**: All MRL_Mother sub-modules carry `origin_signature=MrLiouWord` and `completed_running` status claims but have no supporting `.py`/`.js` implementation files. They function as canonical anchor declarations only.
+**Pattern**: Most MRL_Mother sub-modules are anchor declarations; world-related modules now include executable runtime entry files and manifests.
 
 ---
 
@@ -210,9 +210,9 @@ Input → Observe → Parse → MrLiouIR → ParticleIR → RuntimeStructureFiel
 | `MRL_Mother/MRL_AI/README.md` | REFERENCE_ONLY | No implementation; anchor declaration only |
 | `MRL_Mother/MRL_AGI/README.md` | REFERENCE_ONLY | No implementation |
 | `MRL_Mother/MRL_ASI/README.md` | REFERENCE_ONLY | No implementation |
-| `MRL_Mother/MRL_World/README.md` | REFERENCE_ONLY | No implementation |
-| `MRL_Mother/MRL_世界模組/README.md` | REFERENCE_ONLY | 待起動 |
-| `MRL_Mother/MRL_平行世界模組/README.md` | REFERENCE_ONLY | 待起動 |
+| `MRL_Mother/MRL_World/` | BUILDABLE | Includes `MRL_World_Projection_Runtime.py` and `module.manifest.json` |
+| `MRL_Mother/MRL_世界模組/` | BUILDABLE | Includes `MRL_WorldModule_Runtime.py` and `module.manifest.json` |
+| `MRL_Mother/MRL_平行世界模組/` | BUILDABLE | Includes `MRL_ParallelWorld_Module_Runtime.py` and `module.manifest.json` |
 | `MRL_Runtime/MRL_主權層/README.md` | REFERENCE_ONLY | Stub; 待起動 |
 | `MRL_Runtime/MRL_回放回復/README.md` | REFERENCE_ONLY | Stub; 待起動 |
 | `MRL_Runtime/MRL_多世界同步/README.md` | REFERENCE_ONLY | Stub; 待起動 |

@@ -8,3 +8,8 @@ origin_signature = `MrLiouWord`
 - 定位：世界投影與場態整合（completed_running）
 
 > 本構件為 MRL 完整態母體之運轉構件；外部命名僅作 Adapter 對照，不得反向取代主體命名。
+
+## Implementation Files
+
+- `MRL_World_Projection_Runtime.py`：世界投影與場態整合入口
+- `module.manifest.json`：模組能力與依賴描述
