@@ -16,15 +16,20 @@
     ".github/workflows/MRL_Bridge_Translation_Center.yml",
     "docs/MRL_Bridge_Translation_Center_v1.md",
     "Dockerfile.mrl",
-    "docs/MRL_Bridge_Translation_Center_v1.audit.json"
+    "docs/MRL_Bridge_Translation_Center_v1.audit.json",
+    "scripts/MRL_accept_bridge_translation_center.py",
+    "scripts/MRL_deploy_accept_bridge_translation_center.ps1",
+    "scripts/test_MRL_accept_bridge_translation_center.py",
+    "docs/MRL_Bridge_Translation_Center_DL580_Acceptance.md",
+    ".github/workflows/MRL_Bridge_Translation_Acceptance.yml"
   ],
-  "expected_count": 14,
+  "expected_count": 19,
   "files": [
     {
       "path": "MRL_Bridge/translation_center.py",
-      "size": 5815,
-      "sha256": "e410ed29a8fcd35b78535750b8a8f843814d5e257afba80cfa53e46567aab00a",
-      "sha256_lf": "e410ed29a8fcd35b78535750b8a8f843814d5e257afba80cfa53e46567aab00a",
+      "size": 6296,
+      "sha256": "eaa018d75682e076e1f738fa8cf8d9e2fd9822f86248124fe68afe72c96f7822",
+      "sha256_lf": "eaa018d75682e076e1f738fa8cf8d9e2fd9822f86248124fe68afe72c96f7822",
       "before_sha256": null,
       "before_sha256_lf": null,
       "accepted_upgrade_sources": [
@@ -39,6 +44,10 @@
         {
           "commit": "7f32579964ad9e96ba7b4ebe01489c52cf920ea5",
           "sha256_lf": "dd863f2d073f064a9c3897d582aa0d502b7c407c21d028e1ef6558d95cd4b00d"
+        },
+        {
+          "commit": "01cb5bad5fdb3142547a164aac93ce83628b27ee",
+          "sha256_lf": "e410ed29a8fcd35b78535750b8a8f843814d5e257afba80cfa53e46567aab00a"
         }
       ]
     },
@@ -301,6 +310,51 @@
           "sha256_lf": "179956aa941928c4f75ddf0811f8d69cdccc386b80afadd40b06422eeb636f1f"
         }
       ]
+    },
+    {
+      "path": "scripts/MRL_accept_bridge_translation_center.py",
+      "size": 14618,
+      "sha256": "a3cd6bc20b036a0c18cd9da101c6701795497e47ef971a883867026897a15b95",
+      "sha256_lf": "a3cd6bc20b036a0c18cd9da101c6701795497e47ef971a883867026897a15b95",
+      "before_sha256": null,
+      "before_sha256_lf": null,
+      "accepted_upgrade_sources": []
+    },
+    {
+      "path": "scripts/MRL_deploy_accept_bridge_translation_center.ps1",
+      "size": 9018,
+      "sha256": "b7d70054757cf140da799cd340108b90ce73edd24e15327fbd3ca44c80e4ae93",
+      "sha256_lf": "b7d70054757cf140da799cd340108b90ce73edd24e15327fbd3ca44c80e4ae93",
+      "before_sha256": null,
+      "before_sha256_lf": null,
+      "accepted_upgrade_sources": []
+    },
+    {
+      "path": "scripts/test_MRL_accept_bridge_translation_center.py",
+      "size": 7857,
+      "sha256": "95f9503453eb943896e6dc26815704aa3f4183fb69f23dabcb4f6f575695b24c",
+      "sha256_lf": "95f9503453eb943896e6dc26815704aa3f4183fb69f23dabcb4f6f575695b24c",
+      "before_sha256": null,
+      "before_sha256_lf": null,
+      "accepted_upgrade_sources": []
+    },
+    {
+      "path": "docs/MRL_Bridge_Translation_Center_DL580_Acceptance.md",
+      "size": 8991,
+      "sha256": "ca38e94863ca9bbcbe73f9c06d3856defedb9b576f80b38c9f0d64af743ccefd",
+      "sha256_lf": "ca38e94863ca9bbcbe73f9c06d3856defedb9b576f80b38c9f0d64af743ccefd",
+      "before_sha256": null,
+      "before_sha256_lf": null,
+      "accepted_upgrade_sources": []
+    },
+    {
+      "path": ".github/workflows/MRL_Bridge_Translation_Acceptance.yml",
+      "size": 5190,
+      "sha256": "2c00b7ece08461239cfb5857c65be455b5c772fa8debdeea5e951b37b49f3681",
+      "sha256_lf": "2c00b7ece08461239cfb5857c65be455b5c772fa8debdeea5e951b37b49f3681",
+      "before_sha256": null,
+      "before_sha256_lf": null,
+      "accepted_upgrade_sources": []
     }
   ],
   "missing": [],
@@ -330,18 +384,53 @@
     "Dockerfile.mrl": [
       "connectors/",
       "MRL_Bridge/translation_center.py"
+    ],
+    "scripts/MRL_accept_bridge_translation_center.py": [
+      "Python 3.10+ stdlib",
+      "existing DL580 Windows process inventory",
+      "docs/MRL_Bridge_Translation_Center_v1.audit.json",
+      "existing D: Node/Python ledgers"
+    ],
+    "scripts/MRL_deploy_accept_bridge_translation_center.ps1": [
+      "scripts/MRL_install_bridge_translation_center.ps1",
+      "scripts/MRL_accept_bridge_translation_center.py",
+      "Windows PowerShell 5.1",
+      "existing SCM services and TCP listener",
+      "existing source Git checkout"
+    ],
+    "scripts/test_MRL_accept_bridge_translation_center.py": [
+      "scripts/MRL_accept_bridge_translation_center.py",
+      "MRL_Bridge/translation_center.py"
     ]
   },
   "package_map": {
     "runtime_files": 5,
-    "test_files": 4,
-    "workflow_files": 1,
-    "installer_files": 1,
-    "documentation_files": 1,
+    "test_files": 5,
+    "workflow_files": 2,
+    "installer_files": 2,
+    "documentation_files": 2,
     "audit_files": 1,
-    "container_definition_files": 1
+    "container_definition_files": 1,
+    "acceptance_verifier_files": 1
   },
   "zip_required": false,
   "audit_self_hash": "Git blob SHA on readback; excluded from own checksums",
-  "text_hash_normalization": "UTF-8 bytes; CRLF -> LF only; BOM preserved; raw repository hashes retained separately"
+  "text_hash_normalization": "UTF-8 bytes; CRLF -> LF only; BOM preserved; raw repository hashes retained separately",
+  "acceptance_patch": {
+    "base_commit": "cc5b00595cab803867ec9ed374902cae04aefcad",
+    "expected_changed_files": [
+      "MRL_Bridge/translation_center.py",
+      "docs/MRL_Bridge_Translation_Center_v1.audit.json",
+      "scripts/MRL_accept_bridge_translation_center.py",
+      "scripts/MRL_deploy_accept_bridge_translation_center.ps1",
+      "scripts/test_MRL_accept_bridge_translation_center.py",
+      "docs/MRL_Bridge_Translation_Center_DL580_Acceptance.md",
+      ".github/workflows/MRL_Bridge_Translation_Acceptance.yml"
+    ],
+    "expected_changed_count": 7,
+    "live_node_bridge": "NOT_VERIFIED",
+    "live_python_runtime": "NOT_VERIFIED",
+    "source_tests": "24 Python unittest cases and 9 Node HTTP regressions passed locally; Windows PowerShell 5.1 parser pending CI; pytest runner not installed locally",
+    "windows_checkout_fix": "Keep :mnt:data.txt and NTFS protection; source material archive avoids Windows Git index; hosted Windows tests use declared Linux-packaged source; DL580 source uses bare Git object store and immutable blob verification"
+  }
 }

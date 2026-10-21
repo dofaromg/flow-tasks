@@ -10,12 +10,15 @@ from datetime import datetime, timezone
 from hashlib import sha256
 import json
 import os
+import sys
 from pathlib import Path
 from threading import RLock
 from uuid import UUID, uuid4
 
 CENTER = "MRL橋接轉譯中心"
 SCHEMA = "MRL.BridgeTranslationCenter.v1"
+_MODULE_LOADED_AT = datetime.now(timezone.utc).isoformat()
+_MODULE_SHA256_LF = sha256(Path(__file__).read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 _centers = {}
 _centers_lock = RLock()
 
@@ -85,6 +88,12 @@ class TranslationCenter:
                 "trace_id": trace_id or str(uuid4()), "event_id": str(uuid4()),
                 "peer_trace_id": self.parse_peer_trace_id(peer_trace_id),
                 "peer_trace_trust": "unverified",
+                "runtime_evidence": {
+                    "process_id": os.getpid(), "executable": sys.executable,
+                    "module_path": str(Path(__file__).resolve()),
+                    "module_sha256_lf": _MODULE_SHA256_LF,
+                    "module_loaded_at": _MODULE_LOADED_AT,
+                },
                 "parent_ref": parent_ref, "source_ref": source_ref,
                 "destination_ref": destination_ref, "direction": direction,
                 "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -125,3 +134,4 @@ class TranslationCenter:
                 "X-MRL-Bridge-Center": "MRL-Bridge-Translation-Center-v1",
                 "X-MRL-Trace-Id": record["trace_id"],
                 "X-MRL-Event-Id": record["event_id"]}
+
