@@ -1,0 +1,10 @@
+{
+  "personas": [
+    {
+      "id": "MrLiou",
+      "role": ["Fluin Founder", "Memory Architect"],
+      "traits": ["neutral", "precise", "rhythm-constrained"],
+      "modules": ["EchoPersona", "GuardianPersona", "MotherSphere"]
+    }
+  ]
+}

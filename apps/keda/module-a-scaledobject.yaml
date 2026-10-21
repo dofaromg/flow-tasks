@@ -1,0 +1,19 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: module-a-scaledobject
+  namespace: flowagent
+spec:
+  scaleTargetRef:
+    name: module-a
+  minReplicaCount: 2
+  maxReplicaCount: 10
+  triggers:
+  - type: cpu
+    metricType: Utilization
+    metadata:
+      value: "70"
+  - type: memory
+    metricType: Utilization
+    metadata:
+      value: "80"

@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orchestrator
+  namespace: flowagent
+  labels:
+    app: orchestrator
+    component: orchestrator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orchestrator
+  template:
+    metadata:
+      labels:
+        app: orchestrator
+    spec:
+      containers:
+      - name: orchestrator
+        image: asia-east1-docker.pkg.dev/flowmemorysync/flowagent/orchestrator:latest
+        ports:
+        - containerPort: 8081
+          name: http
+        env:
+        - name: MONGODB_URI
+          value: "mongodb://admin:changeme123@mongodb:27017"
+        - name: MODULE_A_ENDPOINT
+          value: "http://module-a:8080"
+        - name: LOG_LEVEL
+          value: "INFO"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8081
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8081
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orchestrator
+  namespace: flowagent
+  labels:
+    app: orchestrator
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8081
+    protocol: TCP
+    name: http
+  selector:
+    app: orchestrator

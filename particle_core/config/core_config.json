@@ -1,0 +1,79 @@
+{
+  "core_config": {
+    "name": "MRLiou Particle Language Core",
+    "version": "1.0.0",
+    "description": "MRLiou 粒子語言核心系統配置",
+    "author": "FlowAgent Task System"
+  },
+  "function_chain": {
+    "default_steps": ["structure", "mark", "flow", "recurse", "store"],
+    "step_explanations": {
+      "structure": "定義輸入資料結構",
+      "mark": "建立邏輯跳點標記", 
+      "flow": "轉換為流程結構節奏",
+      "recurse": "遞歸展開為細部結構",
+      "store": "封存至邏輯記憶模組"
+    },
+    "compression_format": "SEED(X) = STORE(RECURSE(FLOW(MARK(STRUCTURE(X)))))"
+  },
+  "file_formats": {
+    "fn": {
+      "description": "Function Notation - 人類可讀邏輯函數格式",
+      "extension": ".fn",
+      "type": "text"
+    },
+    "flpkg": {
+      "description": "Compressed logic package format",
+      "extension": ".flpkg",
+      "type": "binary"
+    },
+    "flpkg_json": {
+      "description": "JSON representation of flpkg",
+      "extension": ".flpkg.json", 
+      "type": "json"
+    },
+    "pcode": {
+      "description": "Pseudo-code for CLI execution",
+      "extension": ".pcode",
+      "type": "text"
+    }
+  },
+  "output_settings": {
+    "default_directory": "examples",
+    "timestamp_format": "%Y%m%d_%H%M%S",
+    "encoding": "utf-8",
+    "pretty_print": true
+  },
+  "cli_settings": {
+    "console_style": "rich",
+    "show_banner": true,
+    "prompt_style": "bold",
+    "result_style": "green"
+  },
+  "simulation": {
+    "default_input": "X",
+    "trace_execution": true,
+    "save_results": true,
+    "human_readable": true
+  },
+  "compression": {
+    "symbol_map": {
+      "structure": "S",
+      "mark": "M",
+      "flow": "F", 
+      "recurse": "R",
+      "store": "ST"
+    },
+    "preset_chains": {
+      "standard": ["structure", "mark", "flow", "recurse", "store"],
+      "minimal": ["structure", "store"],
+      "extended": ["structure", "mark", "flow", "recurse", "generate_persona", "store"],
+      "debug": ["structure", "mark", "debug", "flow", "recurse", "store"]
+    }
+  },
+  "validation": {
+    "required_steps": ["structure", "store"],
+    "max_chain_length": 10,
+    "allow_custom_steps": true
+  }
+}

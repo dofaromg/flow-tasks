@@ -1,0 +1,59 @@
+{
+  "emotion": [
+    ".flmod",
+    [
+      "⋄fx.adj.112",
+      "⋄fx.adj.305"
+    ]
+  ],
+  "memory": [
+    ".flnode",
+    [
+      "⋄fx.noun.024"
+    ]
+  ],
+  "flow": [
+    ".flflow",
+    [
+      "⋄fx.flow.007",
+      "⋄fx.flow.018"
+    ]
+  ],
+  "self": [
+    ".flper",
+    [
+      "⋄fx.per.001"
+    ]
+  ],
+  "time": [
+    ".fltime",
+    [
+      "⋄fx.time.010"
+    ]
+  ],
+  "logic": [
+    ".flgate",
+    [
+      "⋄fx.gate.001",
+      "∴"
+    ]
+  ],
+  "structure": [
+    ".flnode",
+    [
+      "⋄fx.noun.031"
+    ]
+  ],
+  "connection": [
+    ".flgate",
+    [
+      "⋄fx.gate.002"
+    ]
+  ],
+  "pulse": [
+    ".flpulse",
+    [
+      "⋄fx.pulse.003"
+    ]
+  ]
+}

@@ -1,0 +1,7 @@
+data_dir: data
+notion:
+  enabled: false
+  root_page_id: ""
+  database_id: ""
+github:
+  enabled: false

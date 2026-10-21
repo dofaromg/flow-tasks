@@ -1,0 +1,23 @@
+task_id: particle-language-core
+language: python
+description: MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統
+target_file: particle_core/
+components:
+  - src/logic_pipeline.py      # 邏輯管線統合執行模組
+  - src/cli_runner.py          # CLI 模擬器與執行器
+  - src/rebuild_fn.py          # 壓縮還原重建器
+  - src/logic_transformer.py   # 壓縮/還原轉化器
+  - config/core_config.json    # 核心配置檔案
+  - examples/                  # 範例與測試資料
+  - docs/                      # 說明文件
+requirements:
+  - fastapi
+  - uvicorn 
+  - rich
+features:
+  - function_chain_execution   # 函數鏈執行 (STRUCTURE→MARK→FLOW→RECURSE→STORE)
+  - logic_compression         # 邏輯壓縮/解壓縮 (.flpkg 格式)
+  - cli_simulation           # CLI 模擬與執行介面
+  - human_readable_output    # 人類可讀邏輯說明
+  - json_configuration       # JSON 配置支援
+  - memory_storage          # 記憶儲存功能

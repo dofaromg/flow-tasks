@@ -1,0 +1,79 @@
+# FlowAgent Task System CI Pipeline
+
+name: FlowAgent CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # Test the FlowAgent task system
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      # Set up Python
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Run task validation
+      - name: Validate FlowAgent tasks
+        run: |
+          echo "=== FlowAgent Task Validation ==="
+          python process_tasks.py
+
+      # Test Flask API functionality
+      - name: Test Flask API
+        run: |
+          echo "=== Testing Flask API ==="
+          # Start Flask server in background
+          python flow_code/hello_api.py &
+          FLASK_PID=$!
+          
+          # Wait for server to start
+          sleep 5
+          
+          # Test endpoints
+          echo "Testing main endpoint..."
+          curl -f http://localhost:5000/
+          
+          echo "Testing health endpoint..."
+          curl -f http://localhost:5000/health
+          
+          echo "Testing info endpoint..."
+          curl -f http://localhost:5000/info
+          
+          # Stop Flask server
+          kill $FLASK_PID
+          echo "Flask API tests completed successfully!"
+
+      # Run comprehensive test suite
+      - name: Run comprehensive tests
+        run: |
+          echo "=== Running Comprehensive Test Suite ==="
+          python test_comprehensive.py
+
+      # Test particle core system
+      - name: Test particle core integration
+        run: |
+          echo "=== Testing Particle Core System ==="
+          python test_integration.py

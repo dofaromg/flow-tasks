@@ -1,0 +1,27 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Memory seeds and exports
+memory_seeds/
+dict_seeds/
+*_export.json
+*.mseed.json
+*.dseed.json
+*.snapshot.json
+
+# Test outputs
+test_output/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

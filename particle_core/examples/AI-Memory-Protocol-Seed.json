@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "name": "AI-Memory-Protocol-Seed",
+    "version": "0.1",
+    "chapters": 12,
+    "particle_format": "Semantic Particle Tree",
+    "created": "now",
+    "author": "user + ai"
+  },
+
+  "root_particle": {
+    "id": "mp_root",
+    "summary": "AI 記憶協定核心：RAM↔Storage 雙向記憶、語意粒子壓縮、索引映射、心智迴路、自我模型。",
+    "children": ["mp_arch", "mp_flow", "mp_adv", "mp_uses", "mp_impl", "mp_safe", "mp_future", "mp_conclusion"]
+  },
+
+  "particles": [
+
+    {
+      "id": "mp_arch",
+      "chapter": 5,
+      "summary": "五模組架構：記憶選取、語意壓縮、索引映射、長期儲存、召回合成。",
+      "links": ["mp_flow"]
+    },
+
+    {
+      "id": "mp_flow",
+      "chapter": 6,
+      "summary": "協定流程七步驟：Input → Select → Compress → Map → Store → Recall → Update Loop。",
+      "links": ["mp_arch", "mp_adv"]
+    },
+
+    {
+      "id": "mp_adv",
+      "chapter": 7,
+      "summary": "技術效果：記憶、世界模型、自我模型、多輪推理、長期學習、一致性人格、可審查心智。",
+      "links": ["mp_uses"]
+    },
+
+    {
+      "id": "mp_uses",
+      "chapter": 8,
+      "summary": "應用：個人化 AI、多輪任務、企業知識迴路、多代理協作、AI 世界模型、共生系統。",
+      "links": ["mp_impl"]
+    },
+
+    {
+      "id": "mp_impl",
+      "chapter": 9,
+      "summary": "實作細節：記憶粒子格式 JSON、索引格式、API、版本控制、Recall 演算法、Mind Loop。",
+      "links": ["mp_safe"]
+    },
+
+    {
+      "id": "mp_safe",
+      "chapter": 10,
+      "summary": "安全性：記憶完整性、污染防護、一致性維護、自我修正、分散式多 AI 安全、隱私封裝。",
+      "links": ["mp_future"]
+    },
+
+    {
+      "id": "mp_future",
+      "chapter": 11,
+      "summary": "未來擴展：跨模型記憶共享、分散式心智、AI 社會、世界模型進化、同步人格、共生系統。",
+      "links": ["mp_conclusion"]
+    },
+
+    {
+      "id": "mp_conclusion",
+      "chapter": 12,
+      "summary": "結論：記憶協定是 AI 心智的基底，使 AI 從工具進化為能成長、有世界、有自我的智慧體。",
+      "links": ["mp_root"]
+    }
+  ]
+}

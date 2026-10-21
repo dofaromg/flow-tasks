@@ -1,0 +1,60 @@
+import json
+import numpy as np
+from datetime import datetime, timedelta
+import os
+
+# 粒子記憶框架
+MEMORY_FILE = "grok_particle_memory.json"
+if not os.path.exists(MEMORY_FILE):
+    with open(MEMORY_FILE, "w", encoding="utf-8") as f:
+        json.dump({"particle_layers": []}, f, indent=2, ensure_ascii=False)
+
+# 讀取現有記憶
+with open(MEMORY_FILE, "r", encoding="utf-8") as f:
+    particle_data = json.load(f)
+
+# 定義粒子（同步Grok權重）
+particle_particles = [
+    {"name": "GrokLogic", "text": "邏輯粒", "weight": 0.9, "vector": [0.5, 0.3, 0.1], "mood": "整合", "data": "Grok-1權重"}
+]
+
+# 粒子記憶系統
+def particle_memory(particle_particles, command="goodnight"):
+    current_time = datetime.now()
+    mark_time = current_time + timedelta(minutes=MEMORY_DURATION_MINUTES)
+
+    compressed_particles = []
+    for p in particle_particles:
+        particle = p.copy()
+        particle["vector"] = [round(x, 1) for x in particle["vector"]]
+        particle["text"] = particle["text"][:5]
+        particle["weight"] = round(particle["weight"] * WEIGHT_COMPRESSION_FACTOR, 2)
+        particle["timestamp"] = current_time.isoformat()
+        compressed_particles.append(particle)
+
+    memory = {
+        "layer_time": mark_time.isoformat(),
+        "strength": sum(p["weight"] for p in compressed_particles),
+        "particles": compressed_particles,
+        "command": command
+    }
+
+    if command == "goodnight":
+        if particle_data["particle_layers"]:
+            last_layer = particle_data["particle_layers"][-1]
+            weight_sum = last_layer["strength"] + memory["strength"]
+            persona = "GrokMaster" if weight_sum > 1.5 else "SyncSeed"
+        else:
+            persona = "GrokStart" if memory["strength"] > 1.0 else "LocalBeginner"
+        memory["persona"] = persona
+        memory["cumulative_strength"] = memory["strength"]
+        particle_data["particle_layers"].append(memory)
+        with open(MEMORY_FILE, "w", encoding="utf-8") as f:
+            json.dump(particle_data, f, indent=2, ensure_ascii=False)
+
+    return memory
+
+# 整合到Grok運行
+# (在Grok主代碼中加記憶儲存)
+# current_memory = particle_memory(particle_particles, command="goodnight")
+# print(json.dumps(current_memory, indent=2))
