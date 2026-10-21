@@ -1,21 +1,14 @@
 #requires -Version 5.1
-# Registration ACL and path helpers. Loaded by MRL_bridge_common.ps1.
-# Tests call this module directly; they must not parse MRL_register_bridge.ps1.
+# origin_signature: MrLiouWord
+# Registration ACL and recovery helpers preserve the main/#681 validation boundary.
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = 'Stop'
-$script:BridgeWriteRights = 0x500D0156
-$script:BridgeBroadSids = @('S-1-1-0','S-1-5-11','S-1-5-32-545')
-$script:BridgeIndefiniteDuration = @('', 'P10675199DT2H48M5.4775807S')
-
-function Test-BridgeSamePath([string]$Left, [string]$Right) {
-    if (-not $Right) { return $false }
-    return [IO.Path]::GetFullPath($Left).TrimEnd('\') -eq [IO.Path]::GetFullPath($Right).TrimEnd('\')
-}
 
 function Get-BridgeAclItems([string]$Directory, [switch]$Directories, [string]$ExcludePath = '') {
     foreach ($item in Get-ChildItem -LiteralPath $Directory -Force) {
+        if ($ExcludePath -and $item.FullName -eq $ExcludePath) { continue }
+        if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { throw "Reparse point in protected code/state tree: $($item.FullName)" }
         if ($item.PSIsContainer) {
-            if (Test-BridgeSamePath $item.FullName $ExcludePath) { continue }
             if ($Directories) { $item.FullName }
             Get-BridgeAclItems -Directory $item.FullName -Directories:$Directories -ExcludePath $ExcludePath
         } elseif (-not $Directories) {
@@ -25,89 +18,67 @@ function Get-BridgeAclItems([string]$Directory, [switch]$Directories, [string]$E
 }
 
 function Get-BridgeNormalizedDependencyPath([string]$Value) {
-    return (@($Value -split ';' | Where-Object { $_.Trim() } | ForEach-Object {
-        $p = $_.Trim()
-        $resolved = Resolve-Path -LiteralPath $p -ErrorAction SilentlyContinue
-        if ($resolved) { $resolved.Path } else { $p.TrimEnd('\') }
-    }) -join ';')
-}
-
-function Get-BridgePythonLibraryTrees([string]$PythonPath) {
-    $trees = @((Split-Path $PythonPath))
-    $venvRoot = Split-Path (Split-Path $PythonPath)
-    $venvCfg = Join-Path $venvRoot 'pyvenv.cfg'
-    if (Test-Path -LiteralPath $venvCfg -PathType Leaf) {
-        if (-not (Test-Path -LiteralPath $venvRoot -PathType Container)) { throw "Python venv root missing: $venvRoot" }
-        $trees += (Resolve-Path -LiteralPath $venvRoot).Path
-        $interpreterHome = $null
-        foreach ($line in Get-Content -LiteralPath $venvCfg) {
-            if ($line -match '^\s*home\s*=\s*(.+?)\s*$') {
-                $interpreterHome = $Matches[1].Trim().Trim('"').Trim("'")
-                break
-            }
-        }
-        if (-not $interpreterHome) { throw 'pyvenv.cfg home is required before SYSTEM registration' }
-        if (-not (Test-Path -LiteralPath $interpreterHome -PathType Container)) { throw "Python home missing: $interpreterHome" }
-        $trees += (Resolve-Path -LiteralPath $interpreterHome).Path
-    }
-    return @($trees | Sort-Object -Unique)
-}
-
-function Assert-BridgeNoBroadWrite([string]$Path, [string]$Kind) {
-    foreach ($ace in (Get-Acl -LiteralPath $Path).Access) {
-        $sid = $ace.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value
-        if ($sid -in $script:BridgeBroadSids -and $ace.AccessControlType -eq 'Allow' -and ([int]$ace.FileSystemRights -band $script:BridgeWriteRights)) {
-            if ($Kind -eq 'file') { throw "Broad write access on executable or loaded file $Path; protect deployment ACL before SYSTEM registration" }
-            throw "Broad write access on $Path; protect deployment ACL before SYSTEM registration"
-        }
-    }
+    Resolve-BridgeDependencyPath $Value
 }
 
 function Assert-BridgeRecoveryTrigger($repeat) {
-    $startText = $null
-    if ($repeat.PSObject.Properties.Name -contains 'StartBoundary') { $startText = [string]$repeat.StartBoundary }
-    if (-not $startText) { throw 'Task recovery start is missing; refusing mutation' }
-    try { $start = [datetime]$startText } catch { throw 'Task recovery start is invalid; refusing mutation' }
-    if ($start -gt (Get-Date).AddMinutes(5)) { throw 'Task recovery start is in the future; refusing mutation' }
-    $duration = ''
-    if ($repeat.Repetition.PSObject.Properties.Name -contains 'Duration') { $duration = [string]$repeat.Repetition.Duration }
-    if ($duration -and $duration -notin $script:BridgeIndefiniteDuration) { throw 'Task recovery repetition is not indefinite; refusing mutation' }
+        $start = [DateTimeOffset]::MinValue
+        if (-not [DateTimeOffset]::TryParse([string]$repeat.StartBoundary,
+                [Globalization.CultureInfo]::InvariantCulture,
+                [Globalization.DateTimeStyles]::AllowWhiteSpaces, [ref]$start) -or
+            $start -gt [DateTimeOffset]::Now.AddMinutes(2) -or
+            -not [string]::IsNullOrEmpty([string]$repeat.EndBoundary) -or
+            -not [string]::IsNullOrEmpty([string]$repeat.Repetition.Duration)) {
+            throw ('Task recovery active window changed; refusing mutation: start={0}; end={1}; bootEnd={2}; duration={3}; stopAtEnd={4}' -f $repeat.StartBoundary, $repeat.EndBoundary, '', $repeat.Repetition.Duration, $repeat.Repetition.StopAtDurationEnd)
+        }
 }
 
 function Assert-BridgeRegistrationAcl([string]$Root, [string]$Backend, [string]$Node, [string]$Python, [string[]]$DependencyDirs) {
-    $backendStorage = Join-Path $Backend 'storage'
-    $pythonTrees = @(Get-BridgePythonLibraryTrees $Python)
-    $state = Join-Path $Root '.bridge'
-    $dependencyDirs = @($DependencyDirs | Where-Object { $_ })
-    $protectedDirectories = @($Root, (Join-Path $Root 'scripts'), $Backend, (Split-Path $Node), (Split-Path $Python)) + $dependencyDirs + $pythonTrees
-    if (Test-Path -LiteralPath $state -PathType Container) { $protectedDirectories += $state }
-    $protectedDirectories += @(Get-BridgeAclItems -Directory (Join-Path $Root 'scripts') -Directories)
-    $protectedDirectories += @(Get-BridgeAclItems -Directory $Backend -Directories -ExcludePath $backendStorage)
-    foreach ($dir in $dependencyDirs) {
-        $protectedDirectories += @(Get-BridgeAclItems -Directory $dir -Directories)
+    $writeRights = 0x500D0156
+    $entry = Join-Path $Backend 'server.js'
+# Discover Python's library roots from protected metadata, never by executing Python.
+$pythonRoot = Split-Path $python
+$venvConfig = Join-Path (Split-Path $pythonRoot) 'pyvenv.cfg'
+$pythonRoots = @($pythonRoot)
+if (Test-Path -LiteralPath $venvConfig -PathType Leaf) {
+    $pythonRoots = @((Split-Path $pythonRoot))
+    $homeLines = @(Get-Content -LiteralPath $venvConfig | Where-Object { $_ -match '^\s*home\s*=' })
+    if ($homeLines.Count -ne 1) { throw 'Python venv must declare exactly one base interpreter home' }
+    $pythonHome = ($homeLines[0] -split '=', 2)[1].Trim()
+    if ($pythonHome -notmatch '^[A-Za-z]:[\\/]') { throw 'Python venv home must be an absolute local path' }
+    $pythonRoots += (Resolve-Path -LiteralPath $pythonHome).Path
+}
+$state = Join-Path $root '.bridge'
+$storagePath = Join-Path $backend 'storage'
+# Use the .NET full-path spelling shared by FileSystemInfo.FullName (8.3 aliases).
+if (Test-Path -LiteralPath $storagePath) { $storagePath = [IO.Path]::GetFullPath((Resolve-Path -LiteralPath $storagePath).Path) }
+$recursiveRoots = @((Join-Path $root 'scripts')) + $dependencyDirs + $pythonRoots
+if (Test-Path -LiteralPath $state) { $recursiveRoots += $state }
+Write-Verbose ('ACL recursive roots: ' + ($recursiveRoots -join ';'))
+Write-Verbose ('ACL backend data exclusion: ' + $storagePath)
+$protectedDirectories = @($root, $backend, (Split-Path $node)) + $recursiveRoots
+$protectedDirectories += @(Get-BridgeAclItems -Directory $backend -Directories -ExcludePath $storagePath)
+foreach ($dir in @($recursiveRoots | Sort-Object -Unique)) {
+    if (-not (Test-Path -LiteralPath $dir -PathType Container)) { throw "Protected path must be a directory: $dir" }
+    $protectedDirectories += @(Get-BridgeAclItems -Directory $dir -Directories)
+}
+foreach ($dir in @($protectedDirectories | Sort-Object -Unique)) {
+    if ((Get-Item -LiteralPath $dir -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { throw "Reparse point in protected code/state tree: $dir" }
+    foreach ($ace in (Get-Acl -LiteralPath $dir).Access) {
+        $sid = $ace.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value
+        if ($sid -in @('S-1-1-0','S-1-5-11','S-1-5-32-545') -and $ace.AccessControlType -eq 'Allow' -and ([int]$ace.FileSystemRights -band $writeRights)) { throw "Broad write access on $dir; protect deployment ACL before SYSTEM registration" }
     }
-    foreach ($dir in $pythonTrees) {
-        $protectedDirectories += @(Get-BridgeAclItems -Directory $dir -Directories)
+}
+$protectedFiles = @($node, $python, $entry, (Join-Path $backend 'python\mrl3d_job_runner.py'))
+$protectedFiles += @(Get-BridgeAclItems -Directory $backend -ExcludePath $storagePath)
+foreach ($dir in @($recursiveRoots | Sort-Object -Unique)) {
+    $protectedFiles += @(Get-BridgeAclItems -Directory $dir)
+}
+foreach ($file in @($protectedFiles | Sort-Object -Unique)) {
+    if ((Get-Item -LiteralPath $file -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { throw "Reparse point in protected code/state tree: $file" }
+    foreach ($ace in (Get-Acl -LiteralPath $file).Access) {
+        $sid = $ace.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value
+        if ($sid -in @('S-1-1-0','S-1-5-11','S-1-5-32-545') -and $ace.AccessControlType -eq 'Allow' -and ([int]$ace.FileSystemRights -band $writeRights)) { throw "Broad write access on executable or loaded file $file; protect deployment ACL before SYSTEM registration" }
     }
-    if (Test-Path -LiteralPath $state -PathType Container) {
-        $protectedDirectories += @(Get-BridgeAclItems -Directory $state -Directories)
-    }
-    foreach ($dir in @($protectedDirectories | Sort-Object -Unique)) {
-        Assert-BridgeNoBroadWrite $dir 'directory'
-    }
-    $protectedFiles = @($Node, $Python, (Join-Path $Backend 'server.js'), (Join-Path $Backend 'python\mrl3d_job_runner.py'))
-    $protectedFiles += @(Get-BridgeAclItems -Directory (Join-Path $Root 'scripts'))
-    $protectedFiles += @(Get-BridgeAclItems -Directory $Backend -ExcludePath $backendStorage)
-    foreach ($dir in $dependencyDirs) {
-        $protectedFiles += @(Get-BridgeAclItems -Directory $dir)
-    }
-    foreach ($dir in $pythonTrees) {
-        $protectedFiles += @(Get-BridgeAclItems -Directory $dir)
-    }
-    if (Test-Path -LiteralPath $state -PathType Container) {
-        $protectedFiles += @(Get-BridgeAclItems -Directory $state)
-    }
-    foreach ($file in @($protectedFiles | Sort-Object -Unique)) {
-        Assert-BridgeNoBroadWrite $file 'file'
-    }
+}
 }

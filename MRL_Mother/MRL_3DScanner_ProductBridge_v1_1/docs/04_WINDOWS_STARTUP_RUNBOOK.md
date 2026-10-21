@@ -33,17 +33,16 @@ service/version/port、安裝 instance、PID、CreationDate、執行檔與監聽
 安全停止先禁用排程、寫 stop.request，等待監督程式停止；必要時只停止
 符合完整身分的 Node 程序樹。移除僅移除本安裝排程，保留所有資料與回執。
 SYSTEM 執行前拒絕 Everyone／Authenticated Users／Users 的廣泛寫入 ACL；除根目錄
-外，也檢查 node.exe、python.exe、backend（只排除掃描資料目錄
-`backend\MRL_3D_Reconstruction_Server\storage` 的絕對路徑，不排除任何其他
-名為 storage 的套件資料夾）、scripts 及相依目錄中的所有子目錄與載入檔案，
-避免子目錄或檔案上單獨設定的可寫 ACE 繞過父目錄檢查。
-檢查範圍包含部署根目錄、scripts、backend、既有 `.bridge` 狀態目錄、
-node.exe 與 python.exe 所在目錄，python.exe 的 venv 根目錄（若存在
-`pyvenv.cfg`）、該檔 `home` 指向的基底解譯器目錄，以及 `-DependencyPath`
-的每一個目錄（它們會被放到 SYSTEM 的 PATH 前面，並以解析後的絕對路徑儲存）。
-這些 Python 目錄的檢查只讀設定檔，不在 ACL 通過前執行 python.exe。
-ACL 與路徑正規化在 `scripts/MRL_bridge_acl.ps1`；排程恢復觸發必須已開始且
-重複期間為無限，不能把 StartBoundary 推到未來或縮短 RepetitionDuration。
+外，也檢查 node.exe、python.exe、backend（只排除直接的 `backend\MRL_3D_Reconstruction_Server\storage`）、scripts 及相依目錄
+中的所有子目錄與載入檔案，避免子目錄或檔案上單獨設定的可寫 ACE 繞過父目錄檢查。
+檢查範圍包含部署根目錄、scripts、backend、node.exe 與 python.exe 所在目錄，
+以及既有 `.bridge` 狀態樹（包含 config.json）、Python venv 根目錄與 `pyvenv.cfg`
+中 home 指向的 base interpreter 根目錄（含 Lib／DLLs）。以 metadata 取得 Python
+路徑，檢查前不執行 Python；受保護樹中的 reparse point 會拒絕，避免遍歷繞過或循環。
+`node_modules` 內名為 storage 的套件仍完整檢查。
+`-DependencyPath` 的每一個目錄會被放到 SYSTEM 的 PATH 前面，並以
+解析後的絕對路徑儲存；舊設定以相同規則正規化後比較，不因分隔空白、尾斜線或
+大小寫差異誤判為設定變更。不存在的目錄仍拒絕。
 寫入、附加、刪除、變更權限、取得擁有權與 GenericWrite／GenericAll 都視為廣泛寫入。
 部署程式碼、Node、Python 及所有依賴目錄須只允許受信管理者修改；本次不
 自動修改既有 ACL、開防火牆或其他排程。
@@ -52,6 +51,10 @@ ACL 與路徑正規化在 `scripts/MRL_bridge_acl.ps1`；排程恢復觸發必�
 `.bridge\config.json` 後改名保存，再用新路徑註冊。重複使用相同參數註冊
 只回報現有排程；不重設觸發或啟動第二個程序。註冊／停止／啟動亦會核對排程
 主體、動作與工作目錄、開機及每分鐘觸發、重啟設定和電源設定；任何漂移都拒絕操作。
+恢復觸發須已開始或在兩分鐘的初次註冊容許期間內，且無 EndBoundary、有限的
+Repetition.Duration；開機觸發也不得有 EndBoundary。Windows PowerShell 5.1 的
+原生觸發可能將 StopAtDurationEnd 設為 true；Duration 未指定時仍無限重複，
+因此不將這個預設值單獨視為排程漂移。
 監督程式將 Node 與其後代放入 kill-on-close Job Object，Node 意外結束時結束
 仍在執行的 Python/COLMAP 後代，再進行恢復。
 
@@ -97,10 +100,9 @@ Drive 實機修復內容若不同會拒絕，需先保存差異再人工合併�
 
 ## 1. 相依安裝與註冊
 
-指定已安裝、受保護的 Node 路徑及 Python 真正執行檔。Node backend 已無 npm
-套件；安裝腳本在 package.json 無 dependencies 時記錄 NODE_PACKAGES_NONE。
-建議在既有根目錄建立專用 Python venv，避免 SYSTEM 看不到互動使用者的套件。
-COLMAP 路徑須包含實際可執行檔及必要 DLL，從 SYSTEM 執行環境實測才算可用。
+指定已安裝、受保護的 Node 路徑及 Python 真正執行檔。建議在既有根目錄
+建立專用 Python venv，避免 SYSTEM 看不到互動使用者的套件。COLMAP 路徑
+須包含實際可執行檔及必要 DLL，從 SYSTEM 執行環境實測才算可用。
 
 ```powershell
 $node = 'C:\Program Files\nodejs\node.exe'
@@ -202,3 +204,9 @@ upload hash 與 scan ID、重建 job/report 與功能範圍、重開機前後 bo
 Microsoft 參考：
 - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks
 - https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/new-scheduledtasksettingsset
+
+## PR #682 與 main/#681 整合｜2026-10-21
+
+ACL 與恢復窗口檢查由 `scripts/MRL_bridge_acl.ps1` 承接，註冊與原生測試直接呼叫同一函式。保留 main 的 reparse 拒絕、Python home 唯一且絕對路徑、既有 entry 比對、兩分鐘初次啟動窗口、EndBoundary 拒絕及舊 dependencyPath 正規化。
+
+Backend 已使用 Node http/fs/crypto，不再依賴 npm 套件；安裝記錄 NODE_PACKAGES_NONE，註冊只要求 server.js 存在。Python/COLMAP 相依與其來源保留。主線的原生 ScheduledTasks、十一項 ACL 與 descendant cleanup 回歸保留；本次提交的 Windows/Swift CI 和 DL580/iPhone/重開機回執分開記錄。

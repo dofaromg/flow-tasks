@@ -14,7 +14,7 @@
     "actual_differing_blobs": 15,
     "strategy": "apply the 15 exact main-to-#678 blob differences, preserve main Tailscale-only logic, append bounded regression/integrity changes"
   },
-  "expected_file_count": 25,
+  "expected_file_count": 29,
   "expected_file_list": [
     ".github/workflows/mrl-3dscanner-productbridge.yml",
     "CHANGELOG.md",
@@ -28,7 +28,6 @@
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/ios/MRL_3DScanner_iOS/Reconstruction/MRLReconstructionJob.swift",
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_acceptance_check_bridge.ps1",
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_apply_patch.ps1",
-    "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_acl.ps1",
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1",
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_register_bridge.ps1",
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_run_bridge.ps1",
@@ -40,7 +39,12 @@
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/verify_integration.py",
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/windows.test.ps1",
     "config/Mrliou_MRL_Sync_Delivery_v1.json",
-    "config/Mrliou_Structure_Authorization_Delivery_v1.json"
+    "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+    "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_acl.ps1",
+    "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/package-lock.json",
+    "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/package.json",
+    "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_install_bridge.ps1",
+    "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_install_bridge.sh"
   ],
   "scope_revision": {
     "initial_expected": 22,
@@ -55,13 +59,13 @@
       "dependencies": []
     },
     "CHANGELOG.md": {
-      "sha256": "88fd694092440039583c3d1b02a14009fe2e16ed9be5b62e42271d18dd20c5b2",
-      "size": 8819,
+      "sha256": "0d7900995710e97115633d7d9a4f9f84cb2854add893c625cf89fb0c434a01d1",
+      "size": 9594,
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/PATCH_MANIFEST.json": {
-      "sha256": "cdd2337ce9249193f0e37059436a9036222bdf714c027a76b55c0d91057728cc",
-      "size": 9993,
+      "sha256": "2d17eff072176d834b52370d0236b330c582d25dce69b20f1f7947d1584d4e84",
+      "size": 14653,
       "dependencies": [
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/README.md",
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/package-lock.json",
@@ -97,8 +101,8 @@
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/STATIC_VALIDATION.json": {
-      "sha256": "cb785cd2e850b383120f4aebbe0565e09c01146027f412fbcf520bb92535ea5c",
-      "size": 6054,
+      "sha256": "82a6d77c7c3b9022c8f6aa32c7b4dd2ab471ee5012b2f76499b87937ef071c25",
+      "size": 7043,
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/server.js": {
@@ -112,8 +116,8 @@
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/docs/04_WINDOWS_STARTUP_RUNBOOK.md": {
-      "sha256": "bbe7a4c2efe7074a3589061b52bed8615f12baaf00dc65b84ad0e9431d252cab",
-      "size": 12515,
+      "sha256": "d8ad5878b9917994a4732b58752437cfd9533093828bb43e3e0e7b041f71bf04",
+      "size": 13424,
       "dependencies": []
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/ios/MRL_3DScanner_iOS/Reconstruction/MRLReconstructionJob.swift": {
@@ -136,25 +140,20 @@
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/PATCH_MANIFEST.json"
       ]
     },
-    "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_acl.ps1": {
-      "sha256": "1d155eacdc7cd1803256b75354358f21dc902043349e3344151ad4625aea1c18",
-      "size": 6100,
-      "dependencies": []
-    },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1": {
-      "sha256": "6ce6aadf12ef69374b6e33f3f82aa57d9251983e72fb9ecf85cb995a2cd8afdb",
-      "size": 10517,
+      "sha256": "35eed89a2dc18b4dd7ab9b87349b9e0f4c7e30bdefa89668c3ac8ad53c304366",
+      "size": 11488,
       "dependencies": [
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_acl.ps1"
       ]
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_register_bridge.ps1": {
-      "sha256": "ded1ed50c5a80e5ad54c0dd1749d0b49eb5a59fd121376b8ee8f3bbcca160458",
-      "size": 4374,
+      "sha256": "cf2a23b991eec865968dee1dde5d359a0763d4e79e693a3c8771d4e3e5b247f2",
+      "size": 4140,
       "dependencies": [
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1",
-        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_acl.ps1",
-        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_run_bridge.ps1"
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_run_bridge.ps1",
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_acl.ps1"
       ]
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_run_bridge.ps1": {
@@ -175,12 +174,12 @@
       ]
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/common.test.ps1": {
-      "sha256": "ca6f40f8722bdc67eaf3508c98bed115f8bb7d3cf41cc0e4ca5d1fc09621556e",
-      "size": 5558,
+      "sha256": "27919919a43f5e6add6c8a6cc6ce9cebdfdff0944cece4a7864a8796e13bbd98",
+      "size": 6171,
       "dependencies": [
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1",
-        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_acl.ps1",
-        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/fixtures/upload-response.json"
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/fixtures/upload-response.json",
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_acl.ps1"
       ]
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/fixtures/upload-response.json": {
@@ -212,28 +211,53 @@
       ]
     },
     "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/windows.test.ps1": {
-      "sha256": "dd87c94c26d64fc5ca2c5b5a7b1716df789d534358471aa9cace35c667717775",
-      "size": 6385,
+      "sha256": "55ab622b4c3025de5363cf6574483bda19efb2c917a79c515c25b1cd4dd283e0",
+      "size": 8344,
       "dependencies": [
         "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1",
-        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_acl.ps1",
-        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_register_bridge.ps1"
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_register_bridge.ps1",
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_acl.ps1"
       ]
     },
     "config/Mrliou_MRL_Sync_Delivery_v1.json": {
-      "sha256": "ca72e1ec0900c5fa86e05fe37830e2c9dfbdf3fb199dcea59ec247447f2c6b74",
-      "size": 10026,
+      "sha256": "d6b40888572a9c63e8262f7e8ecf79781a4cb537fb15c69fb05d79f552fc00a9",
+      "size": 14004,
       "dependencies": [
         "CHANGELOG.md"
       ]
     },
     "config/Mrliou_Structure_Authorization_Delivery_v1.json": {
-      "sha256": "7cbc35656b3abe73862f7cef6bbec2d19d225af5a760a1a45d3b767d68892ed3",
-      "size": 18239,
+      "sha256": "38813249a75e1fc2f0c4d6cc2650528bf570e9187096c9ff5235fd1d678042ba",
+      "size": 21391,
       "dependencies": [
         "CHANGELOG.md",
         "config/Mrliou_MRL_Sync_Delivery_v1.json"
       ]
+    },
+    "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_acl.ps1": {
+      "sha256": "e8239091d826de66330780301b8eb6de8082c03ae79667bb1fbb891d19dbcdec",
+      "size": 5342,
+      "dependencies": []
+    },
+    "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/package-lock.json": {
+      "size": 235,
+      "sha256": "2cc44aa5ade9f09dd63fce8409fe266b31716597980adefd9f339f8fd41b3d65",
+      "dependencies": []
+    },
+    "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/package.json": {
+      "size": 331,
+      "sha256": "03da07c160d3a2b5d2193277403ca33e25f0c27cd44684930447ec9ad6f18dbf",
+      "dependencies": []
+    },
+    "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_install_bridge.ps1": {
+      "size": 1423,
+      "sha256": "82ea222359de2c140ec92e07a511d39c27e7bec00475777fa3846955fc245e7b",
+      "dependencies": []
+    },
+    "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_install_bridge.sh": {
+      "size": 502,
+      "sha256": "2d99c4a7ff20cd2aebca499b5a0b3e81d534dfbec78ba248f64952c6cf1e7964",
+      "dependencies": []
     }
   },
   "audit": {
@@ -259,7 +283,6 @@
       "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/ios/MRL_3DScanner_iOS/Reconstruction/MRLReconstructionJob.swift",
       "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_acceptance_check_bridge.ps1",
       "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_apply_patch.ps1",
-      "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_acl.ps1",
       "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1",
       "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_register_bridge.ps1",
       "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_run_bridge.ps1",
@@ -271,7 +294,12 @@
       "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/verify_integration.py",
       "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/windows.test.ps1",
       "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "config/Mrliou_Structure_Authorization_Delivery_v1.json"
+      "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+      "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_acl.ps1",
+      "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/package-lock.json",
+      "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/package.json",
+      "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_install_bridge.ps1",
+      "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_install_bridge.sh"
     ],
     "deployment_patch": [
       "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/README.md",
@@ -325,5 +353,136 @@
     "rebootRecovery": "NOT_RUN"
   },
   "deployment_gate": "NOT_RUN; source/hosted-CI PASS cannot establish DL580, real iOS or reboot acceptance",
-  "rollback": "Revert integration commit in Git; on D: use per-file .bridge/backups receipts. Preserve storage and all original packages."
+  "rollback": "Revert integration commit in Git; on D: use per-file .bridge/backups receipts. Preserve storage and all original packages.",
+  "review_revisions": [
+    {
+      "base_commit": "0c88c9962a361dc04d74998ee4fab20be1c18981",
+      "source_pr": "https://github.com/dofaromg/flow-tasks/pull/680",
+      "source_head": "68d1dc2ac1ed5cf91c2e9555b8c674cf67d08c57",
+      "base_tree_equals_source_head": true,
+      "previous_report_sha256": "c8cac3f01c205c0c648ec035002ebffdc0683d9c149189cec0000138c673ccd9",
+      "previous_file_entries": {
+        "CHANGELOG.md": {
+          "sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b",
+          "size": 7908,
+          "dependencies": []
+        },
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/PATCH_MANIFEST.json": {
+          "sha256": "6d3ac7feed37b27058a86a1e8b6f70e2f8c46cb9187e7a191c637c7b5eb7aa7a",
+          "size": 8722,
+          "dependencies": [
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/README.md",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/package-lock.json",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/package.json",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/python/mrl3d_job_runner.py",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server/server.js",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/docs/01_CLAUDE_BUILD_COMMAND_DL580_PRODUCT_BRIDGE.md",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/docs/04_WINDOWS_STARTUP_RUNBOOK.md",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_acceptance_check_bridge.ps1",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_apply_patch.ps1",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_health_bridge.ps1",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_install_bridge.ps1",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_register_bridge.ps1",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_remove_bridge.ps1",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_run_bridge.ps1",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_start_bridge.ps1",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_status_bridge.ps1",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_stop_bridge.ps1",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/backend.test.mjs",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/common.test.ps1",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/test_runner.py",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/ios/MRL_3DScanner_iOS/Reconstruction/MRLReconstructionJob.swift",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/fixtures/upload-response.json",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/upload-contract.swift",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/windows.test.ps1"
+          ]
+        },
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/docs/04_WINDOWS_STARTUP_RUNBOOK.md": {
+          "sha256": "a036d21ca08e792bf0e1af2bd4923e511cb884872ef850531528c6b57cc16403",
+          "size": 11859,
+          "dependencies": []
+        },
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1": {
+          "sha256": "0eaf83c6d290fd31f8a428d34c504576ef1655136162ed50969e2a17b9fa9178",
+          "size": 10306,
+          "dependencies": []
+        },
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_register_bridge.ps1": {
+          "sha256": "8fa31bfaa9b3aba43461fe6e2c3da268fb8eb30de56cb2b7886d13786a7ead8f",
+          "size": 6826,
+          "dependencies": [
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_run_bridge.ps1"
+          ]
+        },
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/common.test.ps1": {
+          "sha256": "fe10cae62295cc9f36a26c3964e00c132dcb849405029dad23c55d1dd1265b6e",
+          "size": 4768,
+          "dependencies": [
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/fixtures/upload-response.json"
+          ]
+        },
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/windows.test.ps1": {
+          "sha256": "88d1005d39837464261fc8fbd4480b64e54b454ab2fcc05311fce657c41b92d9",
+          "size": 4907,
+          "dependencies": [
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1",
+            "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_register_bridge.ps1"
+          ]
+        },
+        "config/Mrliou_MRL_Sync_Delivery_v1.json": {
+          "sha256": "0da5fcbcb686481a8c7b918c5add6ac90a76ce359837b20bcb1ada089fc00a0b",
+          "size": 7228,
+          "dependencies": [
+            "CHANGELOG.md"
+          ]
+        },
+        "config/Mrliou_Structure_Authorization_Delivery_v1.json": {
+          "sha256": "e684a2018a09fc794e5cdbf64286bf32d336c52cbfa68b6f21b883f19bf66e6d",
+          "size": 13475,
+          "dependencies": [
+            "CHANGELOG.md",
+            "config/Mrliou_MRL_Sync_Delivery_v1.json"
+          ]
+        }
+      },
+      "expected_followup_file_count": 10,
+      "expected_followup_file_list": [
+        "CHANGELOG.md",
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/MAINLINE_INTEGRATION_20261021.json",
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/PATCH_MANIFEST.json",
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/docs/04_WINDOWS_STARTUP_RUNBOOK.md",
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_bridge_common.ps1",
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/scripts/MRL_register_bridge.ps1",
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/common.test.ps1",
+        "MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/tests/windows.test.ps1",
+        "config/Mrliou_MRL_Sync_Delivery_v1.json",
+        "config/Mrliou_Structure_Authorization_Delivery_v1.json"
+      ],
+      "findings": [
+        4327865064,
+        4327865076,
+        4327981119,
+        4327981133,
+        4328241132
+      ],
+      "validation": "SHA-256/dependencies verified locally; Windows PowerShell 5.1 behavioral results require the follow-up exact-head CI. DL580, iPhone and reboot remain NOT_RUN.",
+      "origin_signature": "MrLiouWord"
+    }
+  ],
+  "merge_reconciliation": {
+    "id": "MRL_PRODUCTBRIDGE_MAIN_RECONCILIATION_20261021",
+    "origin_signature": "MrLiouWord",
+    "canonical_authority": "Mr.liou",
+    "main_commit": "8bc1ce8371a51a5af562c8ae0c623c92abbb9682",
+    "branch_commit": "ab2e14442e967e9b7ff6f73bae9e670762bb3c35",
+    "merge_base": "0c88c9962a361dc04d74998ee4fab20be1c18981",
+    "scope": "Preserve main/#681 ACL, reparse, task and legacy registration checks; integrate #682 ACL module and Node builtins without rewriting either parent history.",
+    "previous_main_blob": "6d2ce49531b1f871b5ebbe6a0980f95f764a5546",
+    "previous_branch_blob": "87195036f87d9833690b2bbfbda07cf7d947d8f0",
+    "integration_inventory_count": 29,
+    "actual_pr_scope": "See GitHub compare against main; inventory preserves the original integration scope and adds all reconciled paths."
+  }
 }

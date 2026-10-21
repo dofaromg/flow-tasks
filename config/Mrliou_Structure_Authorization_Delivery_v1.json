@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 8819,
-      "sha256": "88fd694092440039583c3d1b02a14009fe2e16ed9be5b62e42271d18dd20c5b2"
+      "size_bytes": 9594,
+      "sha256": "0d7900995710e97115633d7d9a4f9f84cb2854add893c625cf89fb0c434a01d1"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 10026,
-      "sha256": "ca72e1ec0900c5fa86e05fe37830e2c9dfbdf3fb199dcea59ec247447f2c6b74"
+      "size_bytes": 14004,
+      "sha256": "d6b40888572a9c63e8262f7e8ecf79781a4cb537fb15c69fb05d79f552fc00a9"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -379,6 +379,36 @@
     },
     {
       "source_commit": "0c88c9962a361dc04d74998ee4fab20be1c18981",
+      "source_pr": 680,
+      "reason": "Post-merge ProductBridge security review adds a CHANGELOG entry; preserve earlier entries and propagate exact live dependency hashes. No change to authorization rules.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 7908,
+          "sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 7228,
+          "sha256": "0da5fcbcb686481a8c7b918c5add6ac90a76ce359837b20bcb1ada089fc00a0b"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 8683,
+          "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 8235,
+          "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "0c88c9962a361dc04d74998ee4fab20be1c18981",
       "reason": "ProductBridge ACL construction fix adds a CHANGELOG entry; retain previous evidence and refresh only the live CHANGELOG payload hash.",
       "previous_entry": {
         "path": "CHANGELOG.md",
@@ -400,6 +430,39 @@
       "current_size_bytes": 7929,
       "current_sha256": "d3bf6b28162cb57e595d6f0574aa843bc7314dce627fa9ba22e3bdc03d84d317",
       "origin_signature": "MrLiouWord"
+    },
+    {
+      "id": "MRL_PRODUCTBRIDGE_MAIN_RECONCILIATION_20261021",
+      "origin_signature": "MrLiouWord",
+      "canonical_authority": "Mr.liou",
+      "main_commit": "8bc1ce8371a51a5af562c8ae0c623c92abbb9682",
+      "branch_commit": "ab2e14442e967e9b7ff6f73bae9e670762bb3c35",
+      "merge_base": "0c88c9962a361dc04d74998ee4fab20be1c18981",
+      "scope": "Preserve main/#681 ACL, reparse, task and legacy registration checks; integrate #682 ACL module and Node builtins without rewriting either parent history.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 8819,
+          "sha256": "88fd694092440039583c3d1b02a14009fe2e16ed9be5b62e42271d18dd20c5b2"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 10026,
+          "sha256": "ca72e1ec0900c5fa86e05fe37830e2c9dfbdf3fb199dcea59ec247447f2c6b74"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 9594,
+          "sha256": "0d7900995710e97115633d7d9a4f9f84cb2854add893c625cf89fb0c434a01d1"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 14004,
+          "sha256": "d6b40888572a9c63e8262f7e8ecf79781a4cb537fb15c69fb05d79f552fc00a9"
+        }
+      ]
     }
   ],
   "integrity_updates": [
@@ -427,5 +490,16 @@
       "current_sha256": "ca72e1ec0900c5fa86e05fe37830e2c9dfbdf3fb199dcea59ec247447f2c6b74",
       "origin_signature": "MrLiouWord"
     }
-  ]
+  ],
+  "merge_reconciliation": {
+    "id": "MRL_PRODUCTBRIDGE_MAIN_RECONCILIATION_20261021",
+    "origin_signature": "MrLiouWord",
+    "canonical_authority": "Mr.liou",
+    "main_commit": "8bc1ce8371a51a5af562c8ae0c623c92abbb9682",
+    "branch_commit": "ab2e14442e967e9b7ff6f73bae9e670762bb3c35",
+    "merge_base": "0c88c9962a361dc04d74998ee4fab20be1c18981",
+    "scope": "Preserve main/#681 ACL, reparse, task and legacy registration checks; integrate #682 ACL module and Node builtins without rewriting either parent history.",
+    "previous_main_blob": "1b0b73c22cdc19d376013e16246de2e93f1be3b5",
+    "previous_branch_blob": "6d0399fb207d275ca44e995c91ccd642123dd52f"
+  }
 }

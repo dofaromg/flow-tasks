@@ -24,6 +24,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   of slicing `MRL_register_bridge.ps1`.
 - origin_signature: MrLiouWord; canonical_authority: Mr.liou.
 
+### Fixed — MRL ProductBridge post-merge security review (2026-10-21)
+
+- Follow up merged PR #680 at main 0c88c996: include the existing .bridge state,
+  Python venv and base interpreter libraries in registration ACL preflight.
+- Exclude only the direct backend scan storage tree; inspect dependency packages
+  named storage and reject reparse points in protected code/state trees.
+- Reject future, expired or finite recovery triggers; compare legacy dependency
+  paths with the same normalization as new registration without rewriting config.
+- Add Windows PowerShell 5.1 regressions using isolated ACL fixtures and actual
+  unregistered ScheduledTasks definitions; DL580/iPhone/reboot gates remain separate.
+- origin_signature: MrLiouWord; canonical_authority: Mr.liou.
+
 ### Fixed — MRL 3DScanner ProductBridge main integration (2026-10-21)
 
 - Integrate the remaining PR #678 safety changes onto exact main cc5b0059,

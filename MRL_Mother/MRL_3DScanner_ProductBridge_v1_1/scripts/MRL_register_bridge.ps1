@@ -10,13 +10,9 @@ if ([IO.Path]::GetFileName($node) -ne 'node.exe' -or [IO.Path]::GetFileName($pyt
 $backend = Join-Path $root 'backend\MRL_3D_Reconstruction_Server'
 $entry = Join-Path $backend 'server.js'
 if (-not (Test-Path $entry)) { throw 'Backend entry missing' }
-# SYSTEM must not execute code writable by broad unprivileged groups.
-# DependencyPath is prepended to SYSTEM's PATH and the runner resolves colmap/mrl3d through it.
-$dependencyPathValue = Get-BridgeNormalizedDependencyPath $DependencyPath
+# SYSTEM must not execute code/state writable by broad unprivileged groups.
+$dependencyPathValue = Resolve-BridgeDependencyPath $DependencyPath
 $dependencyDirs = @($dependencyPathValue -split ';' | Where-Object { $_ })
-foreach ($dir in $dependencyDirs) {
-    if (-not (Test-Path -LiteralPath $dir -PathType Container)) { throw "Dependency path must be a directory: $dir" }
-}
 Assert-BridgeRegistrationAcl -Root $root -Backend $backend -Node $node -Python $python -DependencyDirs $dependencyDirs
 $task = Get-BridgeTask; Assert-TaskOwner $task $root
 $conflicts = @(Get-ScheduledTask | Where-Object {
@@ -33,7 +29,7 @@ $state = Join-Path $root '.bridge'; New-Item -ItemType Directory $state -Force |
 $configFile = Join-Path $state 'config.json'
 if (Test-Path $configFile) {
     $c = Get-BridgeConfig
-    if ($c.node -ne $node -or $c.python -ne $python -or (Get-BridgeNormalizedDependencyPath ([string]$c.dependencyPath)) -ne $dependencyPathValue) { throw 'Configuration change requires safe removal first' }
+    if ($c.node -ne $node -or $c.python -ne $python -or $c.entry -ne $entry -or (Resolve-BridgeDependencyPath ([string]$c.dependencyPath)) -ne $dependencyPathValue) { throw 'Configuration change requires safe removal first' }
 } else {
     if ($task) { throw 'Task exists without config; inspect before recovery' }
     $c = [ordered]@{root=$root; node=$node; python=$python; entry=$entry; port=3050; dependencyPath=$dependencyPathValue; instance=[guid]::NewGuid().ToString(); source='1b10f5605ec5542f2271315e38d8302c3f1d387a'}

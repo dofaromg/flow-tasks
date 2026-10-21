@@ -1,5 +1,6 @@
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = 'Stop'
+. "$PSScriptRoot\MRL_bridge_acl.ps1"
 $script:TaskName = 'MRL_3DScanner_ProductBridge'
 $script:TaskPath = '\MRL\'
 $script:OwnerTag = 'MRL-Bridge-Startup-v1'
@@ -97,6 +98,18 @@ public static class MRLBridgeProcessJob
 '@
 }
 function Get-BridgeRoot { (Resolve-Path (Join-Path $PSScriptRoot '..')).Path }
+function Resolve-BridgeDependencyPath([string]$value) {
+    $paths = @($value -split ';' | Where-Object { $_.Trim() } | ForEach-Object {
+        $resolved = Resolve-Path -LiteralPath $_.Trim()
+        if ($resolved.Provider.Name -ne 'FileSystem' -or -not (Test-Path -LiteralPath $resolved.Path -PathType Container)) {
+            throw "Dependency path must be a filesystem directory: $_"
+        }
+        $path = [IO.Path]::GetFullPath($resolved.Path)
+        if ($path.Length -gt [IO.Path]::GetPathRoot($path).Length) { $path = $path.TrimEnd([char[]]'\/') }
+        $path
+    })
+    return ($paths -join ';')
+}
 function Get-BridgeConfig {
     $c = Get-Content (Join-Path (Get-BridgeRoot) '.bridge\config.json') -Raw | ConvertFrom-Json
     if ($c.root -ne (Get-BridgeRoot) -or $c.port -ne 3050) { throw 'Config root/port mismatch' }
@@ -119,7 +132,6 @@ function Assert-TaskOwner($task, $root) {
         }
         $boot = @($task.Triggers | Where-Object { $_.CimClass.CimClassName -eq 'MSFT_TaskBootTrigger' })
         $repeat = @($task.Triggers | Where-Object { $_.CimClass.CimClassName -eq 'MSFT_TaskTimeTrigger' })
-        if ($repeat.Count -eq 1) { Assert-BridgeRecoveryTrigger $repeat[0] }
         $settings = $task.Settings
         $principal = $task.Principal
         if (@($task.Triggers).Count -ne 2 -or $boot.Count -ne 1 -or $repeat.Count -ne 1 -or
@@ -134,6 +146,14 @@ function Assert-TaskOwner($task, $root) {
             $settings.DisallowStartIfOnBatteries -or $settings.StopIfGoingOnBatteries) {
             throw 'Task recovery definition changed; refusing mutation'
         }
+        # Registration starts the watch one minute ahead. Allow that initial window,
+        # but reject delayed, expired or finite recovery definitions thereafter.
+        if (-not [string]::IsNullOrEmpty([string]$boot[0].EndBoundary)) {
+            throw 'Boot recovery end boundary changed; refusing mutation'
+        }
+        Assert-BridgeRecoveryTrigger $repeat[0]
+        # Native PS5.1 sets StopAtDurationEnd even for an indefinite trigger.
+        # With no duration/end boundary it cannot terminate the recovery window.
     }
 }
 function New-BridgeProcessJob { [MRLBridgeProcessJob]::Create() }
@@ -183,9 +203,6 @@ function Write-BridgeReceipt($operation, $extra) {
     Write-BridgeJson $file $receipt
     if ($task) { Export-ScheduledTask -TaskPath $script:TaskPath -TaskName $script:TaskName | Set-Content "$file.task.xml" -Encoding UTF8 }
     Write-Output $file
-}
-if (-not (Get-Command -Name Assert-BridgeRegistrationAcl -ErrorAction SilentlyContinue)) {
-    . "$PSScriptRoot\MRL_bridge_acl.ps1"
 }
 function Stop-OwnedNode($c) {
     $r = Get-BridgeRecord $c

@@ -1,6 +1,5 @@
 $ErrorActionPreference='Stop'
 . "$PSScriptRoot/../scripts/MRL_bridge_common.ps1"
-. "$PSScriptRoot/../scripts/MRL_bridge_acl.ps1"
 function Assert($value,$message) { if (-not $value) { throw $message } }
 $env:SystemRoot=(Get-Location).Path
 $c=[pscustomobject]@{node='D:\node.exe';entry='D:\bridge\server.js';root='D:\bridge';instance='test-instance'}
@@ -23,8 +22,8 @@ try { Assert-TaskOwner ([pscustomobject]@{Description='foreign-task'}) 'D:\bridg
 Assert $rejected 'foreign task must be protected'
 $taskRoot=Join-Path $PSScriptRoot 'bridge'
 $runScript=Join-Path $taskRoot 'scripts\MRL_run_bridge.ps1'
-$boot=[pscustomobject]@{CimClass=[pscustomobject]@{CimClassName='MSFT_TaskBootTrigger'};Enabled=$true;Delay='PT30S'}
-$repeat=[pscustomobject]@{CimClass=[pscustomobject]@{CimClassName='MSFT_TaskTimeTrigger'};Enabled=$true;StartBoundary=(Get-Date).AddMinutes(-1).ToString('o');Repetition=[pscustomobject]@{Interval='PT1M';Duration=''}}
+$boot=[pscustomobject]@{CimClass=[pscustomobject]@{CimClassName='MSFT_TaskBootTrigger'};Enabled=$true;Delay='PT30S';EndBoundary=''}
+$repeat=[pscustomobject]@{CimClass=[pscustomobject]@{CimClassName='MSFT_TaskTimeTrigger'};Enabled=$true;StartBoundary=(Get-Date).AddMinutes(1).ToString('s');EndBoundary='';Repetition=[pscustomobject]@{Interval='PT1M';Duration='';StopAtDurationEnd=$false}}
 $task=[pscustomobject]@{
     Description="$script:OwnerTag|$taskRoot"
     Actions=@([pscustomobject]@{
@@ -70,17 +69,35 @@ $rejected=$false
 try { Assert-TaskOwner $task $taskRoot } catch {$rejected=$true}
 Assert $rejected 'trigger interval drift must be rejected'
 $repeat.Repetition.Interval='PT1M'
-$repeat.StartBoundary=(Get-Date).AddDays(7).ToString('o')
+foreach ($case in @(
+    @('StartBoundary', (Get-Date).AddDays(1).ToString('s')),
+    @('StartBoundary', (Get-Date).AddMinutes(3).ToString('s')),
+    @('StartBoundary', 'invalid'),
+    @('StartBoundary', ''),
+    @('EndBoundary', (Get-Date).AddDays(-1).ToString('s')),
+    @('EndBoundary', (Get-Date).AddDays(1).ToString('s')),
+    @('Duration', 'PT1H'),
+    @('Duration', 'P1D')
+)) {
+    $copy=$task | ConvertTo-Json -Depth 12 | ConvertFrom-Json
+    $target=$copy.Triggers[1]
+    if($case[0] -in @('Duration','StopAtDurationEnd')) { $target=$target.Repetition }
+    $target.($case[0])=$case[1]
+    $rejected=$false
+    try { Assert-TaskOwner $copy $taskRoot } catch { $rejected=$true }
+    Assert $rejected ('recovery window drift accepted: ' + $case[0])
+}
+$repeat.StartBoundary=(Get-Date).AddYears(-1).ToString('s')
+Assert-TaskOwner $task $taskRoot
+$repeat.StartBoundary=[DateTimeOffset]::Now.AddMinutes(-1).ToString('o')
+Assert-TaskOwner $task $taskRoot
+$repeat.Repetition.StopAtDurationEnd=$true
+Assert-TaskOwner $task $taskRoot
+$boot.EndBoundary=(Get-Date).AddDays(1).ToString('s')
 $rejected=$false
-try { Assert-TaskOwner $task $taskRoot } catch {$rejected=$true}
-Assert $rejected 'future recovery start must be rejected'
-$repeat.StartBoundary=(Get-Date).AddMinutes(-1).ToString('o')
-$repeat.Repetition.Duration='PT1H'
-$rejected=$false
-try { Assert-TaskOwner $task $taskRoot } catch {$rejected=$true}
-Assert $rejected 'finite recovery duration must be rejected'
-$repeat.Repetition.Duration=''
-Assert ((Get-BridgeNormalizedDependencyPath ' D:\colmap\ ; D:\tools ') -eq 'D:\colmap;D:\tools') 'dependency path trim must not require a live filesystem'
+try { Assert-TaskOwner $task $taskRoot } catch { $rejected=$true }
+Assert $rejected 'finite boot trigger must be rejected'
+$boot.EndBoundary=''
 $fixture=Get-Content "$PSScriptRoot/fixtures/upload-response.json" -Raw | ConvertFrom-Json
 Assert-BridgeUploadResponse $fixture 'unique' 1
 $fixture | Add-Member NoteProperty manifestPath 'D:\private\manifest.json'
@@ -93,4 +110,4 @@ foreach ($file in Get-ChildItem "$PSScriptRoot/../scripts" -Filter '*.ps1') {
     $null=[Management.Automation.Language.Parser]::ParseFile($file.FullName,[ref]$tokens,[ref]$errors)
     Assert ($errors.Count -eq 0) ("Parse errors: " + $file.Name + ': ' + ($errors | Out-String))
 }
-'PASS: process identity, PID reuse, foreign port, task definition drift, recovery window, upload contract, all script syntax'
+'PASS: process identity, PID reuse, foreign port, task definition drift, upload contract, all script syntax'

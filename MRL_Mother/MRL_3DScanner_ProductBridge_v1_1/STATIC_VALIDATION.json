@@ -73,8 +73,28 @@
     "dl580DeploymentAndRecovery": "NOT_RUN",
     "evidenceSource": "PR #678; source-reported results, not re-executed DL580 acceptance"
   },
+  "mainlineIntegration20261021": {
+    "base": "cc5b00595cab803867ec9ed374902cae04aefcad",
+    "source": "79b0e8822a7adc707888f68e2a5b51c0191fbe04",
+    "environment": "Linux; Node 24.19.0; Python 3.12.14",
+    "backendLint": "PASS",
+    "backendBuild": "PASS (node syntax check, unbundled backend)",
+    "pythonTests": "PASS: 3",
+    "nodeTests": "BLOCKED locally: npm dependency fetch HTTP 403; exact-head CI required",
+    "windowsPowerShell51": "NOT_RUN locally; GitHub-hosted regression configured",
+    "swiftCodable": "NOT_RUN locally; GitHub-hosted regression configured",
+    "dl580Deployment": "NOT_RUN",
+    "iOSDeviceUpload": "NOT_RUN",
+    "rebootRecovery": "NOT_RUN"
+  },
   "backendBuiltinReduction20261021": {
-    "removed": ["cors", "fs-extra", "uuid", "express", "multer"],
+    "removed": [
+      "cors",
+      "fs-extra",
+      "uuid",
+      "express",
+      "multer"
+    ],
     "retained": [],
     "reason": "HTTP, multipart upload, filesystem, identifiers and CORS headers are provided by Node builtins; package.json has no npm dependencies",
     "nodeTests": "PASS: 12 tests locally without npm packages"
@@ -90,18 +110,24 @@
     "windowsPowerShell51": "NOT_RUN locally; GitHub-hosted regression required",
     "dl580Deployment": "NOT_RUN"
   },
-  "mainlineIntegration20261021": {
-    "base": "cc5b00595cab803867ec9ed374902cae04aefcad",
-    "source": "79b0e8822a7adc707888f68e2a5b51c0191fbe04",
-    "environment": "Linux; Node 24.19.0; Python 3.12.14",
-    "backendLint": "PASS",
-    "backendBuild": "PASS (node syntax check, unbundled backend)",
-    "pythonTests": "PASS: 3",
-    "nodeTests": "BLOCKED locally: npm dependency fetch HTTP 403; exact-head CI required",
-    "windowsPowerShell51": "NOT_RUN locally; GitHub-hosted regression configured",
-    "swiftCodable": "NOT_RUN locally; GitHub-hosted regression configured",
-    "dl580Deployment": "NOT_RUN",
-    "iOSDeviceUpload": "NOT_RUN",
-    "rebootRecovery": "NOT_RUN"
+  "merge_reconciliation": {
+    "id": "MRL_PRODUCTBRIDGE_MAIN_RECONCILIATION_20261021",
+    "origin_signature": "MrLiouWord",
+    "canonical_authority": "Mr.liou",
+    "main_commit": "8bc1ce8371a51a5af562c8ae0c623c92abbb9682",
+    "branch_commit": "ab2e14442e967e9b7ff6f73bae9e670762bb3c35",
+    "merge_base": "0c88c9962a361dc04d74998ee4fab20be1c18981",
+    "scope": "Preserve main/#681 ACL, reparse, task and legacy registration checks; integrate #682 ACL module and Node builtins without rewriting either parent history.",
+    "previous_main_blob": "45b7f8203aa4f5e60b1ebda46913779195c213c2",
+    "previous_branch_blob": "e294020032d94a52376476116ede7c43343d9257",
+    "validation": {
+      "backend_lint": "PASS",
+      "backend_build": "PASS",
+      "backend_tests": "12 PASS",
+      "python_runner_tests": "3 PASS",
+      "windows_powershell51": "PENDING_REMOTE_CI",
+      "swift_contract": "PENDING_REMOTE_CI",
+      "dl580": "NOT_RUN"
+    }
   }
 }
