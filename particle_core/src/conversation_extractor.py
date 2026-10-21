@@ -714,6 +714,7 @@ class ConversationExtractor:
         except:
             # Fallback to basic formatting if minidom fails
             return '<?xml version="1.0" encoding="UTF-8"?>\n' + xml_str
+
     def _export_to_csv(self, package: Dict, filepath: str):
         """導出為 CSV 格式"""
         import csv
