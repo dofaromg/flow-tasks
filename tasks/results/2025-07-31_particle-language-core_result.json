@@ -1,18 +1,13 @@
 {
   "task_id": "particle-language-core",
   "task_name": "Unknown Task",
-  "validation_time": "2026-07-18T06:22:53.778270",
+  "validation_time": "2026-10-21T11:40:00.015954",
   "status": "passed",
   "checks": [
     {
       "check": "schema",
       "status": "passed",
-      "message": "Required task fields are present"
-    },
-    {
-      "check": "schema_target",
-      "status": "passed",
-      "message": "Task target is declared"
+      "message": "Task schema and target compatibility are valid"
     },
     {
       "check": "directory_exists",
@@ -22,15 +17,15 @@
     {
       "check": "python_syntax",
       "status": "passed",
-      "message": "Python syntax check passed for 48 file(s)"
+      "message": "Python syntax check passed for 52 file(s)"
     }
   ],
   "errors": [],
   "warnings": [],
   "metrics": {
-    "execution_time_ms": 309.17,
-    "files_checked": 153,
-    "lines_of_code": 24940
+    "execution_time_ms": 100.43,
+    "files_checked": 115,
+    "lines_of_code": 28603
   },
   "metadata": {
     "description": "MRLiou 粒子語言核心系統 - 邏輯種子運算與函數鏈執行系統",
