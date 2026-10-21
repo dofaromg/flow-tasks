@@ -1,0 +1,33 @@
+{
+  "fusion_id": "parallel_consensus",
+  "mode": "parallel",
+  "prompt": "What are the benefits and risks of artificial intelligence?",
+  "outputs": [
+    {
+      "timestamp": "2026-02-01T11:15:54.932855+00:00",
+      "input": "What are the benefits and risks of artificial intelligence?",
+      "output": "[openai/gpt-4] Response to: What are the benefits and risks of artificial inte...",
+      "provider": "openai",
+      "model": "gpt-4",
+      "role": "analyzer"
+    },
+    {
+      "timestamp": "2026-02-01T11:15:54.932868+00:00",
+      "input": "What are the benefits and risks of artificial intelligence?",
+      "output": "[claude/claude-3-opus] Response to: What are the benefits and risks of artificial inte...",
+      "provider": "claude",
+      "model": "claude-3-opus",
+      "role": "validator"
+    },
+    {
+      "timestamp": "2026-02-01T11:15:54.932872+00:00",
+      "input": "What are the benefits and risks of artificial intelligence?",
+      "output": "[gemini/gemini-pro] Response to: What are the benefits and risks of artificial inte...",
+      "provider": "gemini",
+      "model": "gemini-pro",
+      "role": "synthesizer"
+    }
+  ],
+  "final_result": "=== Consensus Merge ===\n\n[openai]: [openai/gpt-4] Response to: What are the benefits and risks of artificial inte...\n\n[claude]: [claude/claude-3-opus] Response to: What are the benefits and risks of artificial inte...\n\n[gemini]: [gemini/gemini-pro] Response to: What are the benefits and risks of artificial inte...\n\n=== End Merge ===",
+  "particle_count": 3
+}

@@ -1,0 +1,58 @@
+{
+  "mrl_ir_type": "MRL_ParticleIR",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "source_hash": "a798310cb179b3b7f79dd9fcf679fda7b8ec0b642a609556a003fc8a245ea6f1",
+  "source_identity": {
+    "filename": "acceptance.cpp",
+    "language": "C++",
+    "detected": "cpp",
+    "source_hash": "a7e77e2634d5d0c4558d2cc28041096887bc86d9034a4ad54608fa9b9717aa7c"
+  },
+  "particles": [
+    {
+      "id": "MRL_P_0001",
+      "particle_type": "MRL_TypeParticle",
+      "layer": "L2_CodeStructure",
+      "source_language": "C++",
+      "properties": {
+        "kind": "class",
+        "name": "MRLThing"
+      },
+      "semantic": "MRLThing",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    },
+    {
+      "id": "MRL_P_0002",
+      "particle_type": "MRL_FunctionParticle",
+      "layer": "L2_CodeStructure",
+      "source_language": "C++",
+      "properties": {
+        "kind": "function",
+        "name": "run",
+        "return_type": "public: void",
+        "params": ""
+      },
+      "semantic": "run",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    }
+  ],
+  "particle_atoms": [
+    {
+      "atom_id": "MRL_P_0001",
+      "atom_type": "MRL_TypeParticle",
+      "simhash_seed": "ec9d4e210659d8d3",
+      "semantic": "MRLThing"
+    },
+    {
+      "atom_id": "MRL_P_0002",
+      "atom_type": "MRL_FunctionParticle",
+      "simhash_seed": "21ff7815dc00083a",
+      "semantic": "run"
+    }
+  ],
+  "created_at": "2026-05-10T19:02:34.162Z",
+  "mrl_hash": "d0897ca6dc1c155f411baf4274450d4e8e57693c6d6e559db7a42d9f035dc66d"
+}

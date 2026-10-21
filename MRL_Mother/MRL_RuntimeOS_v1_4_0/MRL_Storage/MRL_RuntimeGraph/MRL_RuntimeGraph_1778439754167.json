@@ -1,0 +1,17 @@
+{
+  "mrl_graph_type": "MRL_RuntimeGraph",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "nodes": [
+    {
+      "id": "MRL_P_0001",
+      "label": "MRL_FunctionParticle",
+      "layer": "L2_CodeStructure",
+      "semantic": "MRL_run",
+      "runtime_action": "MRL_EXECUTE_CALLABLE"
+    }
+  ],
+  "edges": [],
+  "created_at": "2026-05-10T19:02:34.165Z",
+  "mrl_hash": "7ca38792d9608367cbfba76dbd8023806569c7788ba0d23664b10a64739bd0b6"
+}

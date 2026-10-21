@@ -1,0 +1,25 @@
+# AI Provider Environment Variables Template
+# 複製此檔案為 .env 並填入您的 API 金鑰
+
+# OpenAI
+OPENAI_API_KEY=sk-...
+
+# Anthropic Claude
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Google Gemini
+GOOGLE_API_KEY=...
+
+# Azure OpenAI
+AZURE_OPENAI_KEY=...
+AZURE_OPENAI_ENDPOINT=https://....openai.azure.com/
+
+# Usage Instructions / 使用說明:
+# 1. Copy this file to .env in the same directory
+#    複製此檔案為同目錄下的 .env
+# 2. Fill in your API keys
+#    填入您的 API 金鑰
+# 3. Source the environment variables before running:
+#    在執行前載入環境變數：
+#    source .env  (Linux/Mac)
+#    或在 Python 中使用 python-dotenv 載入

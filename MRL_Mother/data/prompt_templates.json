@@ -1,0 +1,57 @@
+{
+  "template_version": "1.0",
+  "origin_signature": "MrLiouWord",
+  "total": 4,
+  "templates": [
+    {
+      "id": "greeting",
+      "text": "Hello, {name}! Welcome to {system}.",
+      "description": "Test greeting",
+      "version": 1,
+      "created_at_ms": 1773972145784,
+      "variables": [
+        "name",
+        "system"
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "id": "system_intro",
+      "text": "You are {name}, a {role} in the MRL AI System. Your origin signature is MrLiouWord. Always act in accordance with the Mother Core Assembly laws.",
+      "description": "Standard system introduction prompt",
+      "version": 259,
+      "created_at_ms": 1783345329995,
+      "variables": [
+        "name",
+        "role"
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "id": "task_prompt",
+      "text": "Goal: {goal}\n\nContext:\n{context}\n\nPlease proceed step by step.",
+      "description": "Standard task prompt with goal and context",
+      "version": 259,
+      "created_at_ms": 1783345329995,
+      "variables": [
+        "context",
+        "goal"
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "id": "eval_summary",
+      "text": "Output evaluation for '{label}':\n  composite score: {composite}\n  passed: {passed}\n  individual scores: {scores}",
+      "description": "Evaluation result summary template",
+      "version": 259,
+      "created_at_ms": 1783345329996,
+      "variables": [
+        "composite",
+        "label",
+        "passed",
+        "scores"
+      ],
+      "origin_signature": "MrLiouWord"
+    }
+  ]
+}

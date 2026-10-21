@@ -1,0 +1,31 @@
+{
+  "mrl_type": "MRL_RuntimeTrace",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "started_at": "2026-05-10T14:43:14.145Z",
+  "runtime_graph_hash": "40fc297b482ccd6ef58535ed732775de15de3e3f6bc8ce65aae34ebf0aa2ce34",
+  "attention_hash": "3f22b55e72b0d8249303457dd58c0afe4883b31f501045b9801734bf4604b865",
+  "steps": [
+    {
+      "step": 1,
+      "node_id": "MRL_P_0001",
+      "action": "MRL_ANALYZE_TEXT",
+      "priority": 0.62,
+      "status": "implemented_pass",
+      "message": "MRL generic runtime node processed",
+      "output_hash": "2e0113abda216e03"
+    },
+    {
+      "step": 2,
+      "node_id": "MRL_P_0002",
+      "action": "MRL_ANALYZE_TEXT",
+      "priority": 0.61,
+      "status": "implemented_pass",
+      "message": "MRL generic runtime node processed",
+      "output_hash": "2e0113abda216e03"
+    }
+  ],
+  "final_data_preview": "CREATE TABLE MRL_Test(id TEXT); SELECT * FROM MRL_Test;",
+  "completed_at": "2026-05-10T14:43:14.145Z",
+  "mrl_hash": "4ca775bf12f24216845e9f8552d7f805cff98fb0c4f00488a3bc27eeddc0b0cb"
+}

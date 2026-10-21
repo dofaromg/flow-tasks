@@ -15,6 +15,7 @@ from adapters.github_adapter import GitHubAdapter
 
 
 DEFAULT_CONFIG_PATH = Path("config.yaml")
+DEFAULT_SANDBOX_DIR = Path("data_sandbox")
 
 
 def load_config(config_path: Path) -> Dict[str, Any]:
@@ -67,6 +68,32 @@ def cmd_log(args: argparse.Namespace) -> None:
     ledger = get_ledger(config)
     entries = ledger.log(args.n)
     print(json.dumps(entries, indent=2, ensure_ascii=False))
+
+
+def cmd_sandbox_compare(args: argparse.Namespace) -> None:
+    config = load_config(args.config)
+    ledger = get_ledger(config)
+
+    sandbox_dir = Path(args.sandbox_dir or config.get("sandbox_data_dir", DEFAULT_SANDBOX_DIR))
+    sandbox_storage = Storage(sandbox_dir)
+    sandbox_ledger = Ledger(sandbox_storage)
+
+    ok_primary, msg_primary = ledger.verify()
+    if not ok_primary:
+        print(f"Primary ledger failed verification: {msg_primary}", file=sys.stderr)
+        sys.exit(1)
+
+    ok_sandbox, msg_sandbox = sandbox_ledger.verify()
+    if not ok_sandbox:
+        print(f"Sandbox ledger failed verification: {msg_sandbox}", file=sys.stderr)
+        sys.exit(1)
+
+    ok_compare, msg_compare = ledger.compare_with_storage(sandbox_storage)
+    if ok_compare:
+        print(msg_compare)
+    else:
+        print(msg_compare, file=sys.stderr)
+        sys.exit(1)
 
 
 def cmd_notion_sync(args: argparse.Namespace) -> None:
@@ -124,6 +151,17 @@ def build_parser() -> argparse.ArgumentParser:
     p_github = subparsers.add_parser("github-export", help="Export entries to GitHub adapter")
     p_github.add_argument("--n", type=int, default=20)
     p_github.set_defaults(func=cmd_github_export)
+
+    p_sandbox = subparsers.add_parser(
+        "sandbox-compare",
+        help="Compare primary ledger with a sandbox copy to validate lifecycle growth",
+    )
+    p_sandbox.add_argument(
+        "--sandbox-dir",
+        type=Path,
+        help="Sandbox data directory (defaults to config.sandbox_data_dir or data_sandbox)",
+    )
+    p_sandbox.set_defaults(func=cmd_sandbox_compare)
 
     return parser
 

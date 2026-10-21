@@ -1,0 +1,10 @@
+{
+  "particle_id": "mrl-reasoning-v1",
+  "provider": "openai",
+  "manifest": {},
+  "state": {},
+  "fusion_history": [],
+  "creation_time": "2026-06-05T09:29:49.333098Z",
+  "merkle_root": "0000000000000000000000000000000000000000000000000000000000000000",
+  "chain_length": 0
+}

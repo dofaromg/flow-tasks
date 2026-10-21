@@ -1,0 +1,355 @@
+{
+  "schema": "MRL_Engineering_Manifest",
+  "origin_signature": "MrLiouWord",
+  "generated_utc": "2026-06-12T04:50:04.619880+00:00",
+  "task": "MRL_Global_Map_And_Coupling_Convergence_v1_Engineering_Build",
+  "execution_mode": [
+    "READ_FIRST",
+    "NO_DELETE",
+    "NO_REBUILD",
+    "NO_PARALLEL_MAINLINE",
+    "SOURCE_FIRST",
+    "COUPLING_REQUIRED"
+  ],
+  "mainline": [
+    "Reality",
+    "Origin",
+    "SeedKernel",
+    "PreParticle",
+    "Particle",
+    "Signal",
+    "Field",
+    "Persona",
+    "Memory",
+    "Globe",
+    "World",
+    "Runtime",
+    "Mother",
+    "Return"
+  ],
+  "nodes": [
+    {
+      "MRL_Node_ID": "MRL.NODE.00.Reality",
+      "MRL_Layer": "L-Root/Pre",
+      "MRL_Source": [
+        "PG2.Law.LawSeed.OriginCollapse.20260519",
+        "particle.mrl.atom.origincollapse.mark@v1",
+        "particle.mrl.atom.origincollapse.store@v1"
+      ],
+      "MRL_Trace": "mrl_particle::PG2.Law.LawSeed.OriginCollapse.20260519",
+      "MRL_Map_Position": {
+        "axis": "mainline",
+        "index": 0,
+        "of": 14
+      },
+      "MRL_CouplingPoint": {
+        "upstream": "∅(boundary_in)",
+        "downstream": "Origin"
+      },
+      "MRL_ReturnPath": "Reality→…→Return→Origin (closure: 怎麼過去就怎麼回來)",
+      "MRL_Status": "reconstructed",
+      "_audit_class": "MRL_Verified_By_Multiple_Files",
+      "_source_hit_count": 12
+    },
+    {
+      "MRL_Node_ID": "MRL.NODE.01.Origin",
+      "MRL_Layer": "L0",
+      "MRL_Source": [
+        "PG2.L0.SignatureLaw.20260519",
+        "particle.mrl.law.LAW-0.signature@v1",
+        "PG2.Law.LAW0.OriginSignatureIntegrity.20260519"
+      ],
+      "MRL_Trace": "mrl_particle::PG2.L0.SignatureLaw.20260519",
+      "MRL_Map_Position": {
+        "axis": "mainline",
+        "index": 1,
+        "of": 14
+      },
+      "MRL_CouplingPoint": {
+        "upstream": "Reality",
+        "downstream": "SeedKernel"
+      },
+      "MRL_ReturnPath": "Origin→…→Return→Origin (closure: 怎麼過去就怎麼回來)",
+      "MRL_Status": "reconstructed",
+      "_audit_class": "MRL_Verified_By_Multiple_Files",
+      "_source_hit_count": 13
+    },
+    {
+      "MRL_Node_ID": "MRL.NODE.02.SeedKernel",
+      "MRL_Layer": "L0/L1",
+      "MRL_Source": [
+        "PG2.SeedCore.MemorySystem.v2.20260519",
+        "PG2.Law.LawSeed.OriginCollapse.20260519"
+      ],
+      "MRL_Trace": "mrl_particle::PG2.SeedCore.MemorySystem.v2.20260519",
+      "MRL_Map_Position": {
+        "axis": "mainline",
+        "index": 2,
+        "of": 14
+      },
+      "MRL_CouplingPoint": {
+        "upstream": "Origin",
+        "downstream": "PreParticle"
+      },
+      "MRL_ReturnPath": "SeedKernel→…→Return→Origin (closure: 怎麼過去就怎麼回來)",
+      "MRL_Status": "reconstructed",
+      "_audit_class": "MRL_Verified_By_Multiple_Files",
+      "_source_hit_count": 20
+    },
+    {
+      "MRL_Node_ID": "MRL.NODE.03.PreParticle",
+      "MRL_Layer": "L1",
+      "MRL_Source": [
+        "particle.mrl.translation.minimal-to-deltap0@v1"
+      ],
+      "MRL_Trace": "mrl_particle::particle.mrl.translation.minimal-to-deltap0@v1",
+      "MRL_Map_Position": {
+        "axis": "mainline",
+        "index": 3,
+        "of": 14
+      },
+      "MRL_CouplingPoint": {
+        "upstream": "SeedKernel",
+        "downstream": "Particle"
+      },
+      "MRL_ReturnPath": "PreParticle→…→Return→Origin (closure: 怎麼過去就怎麼回來)",
+      "MRL_Status": "reconstructed",
+      "_audit_class": "MRL_Verified_By_File",
+      "_source_hit_count": 1
+    },
+    {
+      "MRL_Node_ID": "MRL.NODE.04.Particle",
+      "MRL_Layer": "L2",
+      "MRL_Source": [
+        "PG2.L0.AtomStruct40.20260519",
+        "particle.mrl.atom.sql.DELETE@v1",
+        "particle.mrl.atom.sql.INSERT@v1"
+      ],
+      "MRL_Trace": "mrl_particle::PG2.L0.AtomStruct40.20260519",
+      "MRL_Map_Position": {
+        "axis": "mainline",
+        "index": 4,
+        "of": 14
+      },
+      "MRL_CouplingPoint": {
+        "upstream": "PreParticle",
+        "downstream": "Signal"
+      },
+      "MRL_ReturnPath": "Particle→…→Return→Origin (closure: 怎麼過去就怎麼回來)",
+      "MRL_Status": "reconstructed",
+      "_audit_class": "MRL_Verified_By_Multiple_Files",
+      "_source_hit_count": 220
+    },
+    {
+      "MRL_Node_ID": "MRL.NODE.05.Signal",
+      "MRL_Layer": "L3",
+      "MRL_Source": [
+        "p_resonance_field",
+        "particle.mrl.nerve.aws@v1",
+        "particle.mrl.nerve.gcp@v1"
+      ],
+      "MRL_Trace": "mrl_particle::p_resonance_field",
+      "MRL_Map_Position": {
+        "axis": "mainline",
+        "index": 5,
+        "of": 14
+      },
+      "MRL_CouplingPoint": {
+        "upstream": "Particle",
+        "downstream": "Field"
+      },
+      "MRL_ReturnPath": "Signal→…→Return→Origin (closure: 怎麼過去就怎麼回來)",
+      "MRL_Status": "reconstructed",
+      "_audit_class": "MRL_Verified_By_Multiple_Files",
+      "_source_hit_count": 17
+    },
+    {
+      "MRL_Node_ID": "MRL.NODE.06.Field",
+      "MRL_Layer": "L3",
+      "MRL_Source": [
+        "p_resonance_field",
+        "particle.mrl.fluin.adj@v1",
+        "particle.mrl.fluin.per@v1"
+      ],
+      "MRL_Trace": "mrl_particle::p_resonance_field",
+      "MRL_Map_Position": {
+        "axis": "mainline",
+        "index": 6,
+        "of": 14
+      },
+      "MRL_CouplingPoint": {
+        "upstream": "Signal",
+        "downstream": "Persona"
+      },
+      "MRL_ReturnPath": "Field→…→Return→Origin (closure: 怎麼過去就怎麼回來)",
+      "MRL_Status": "reconstructed",
+      "_audit_class": "MRL_Verified_By_Multiple_Files",
+      "_source_hit_count": 18
+    },
+    {
+      "MRL_Node_ID": "MRL.NODE.07.Persona",
+      "MRL_Layer": "L4",
+      "MRL_Source": [
+        "seed:FlowAgent.TotalCore.Unity.v3"
+      ],
+      "MRL_Trace": "mrl_particle::seed:FlowAgent.TotalCore.Unity.v3",
+      "MRL_Map_Position": {
+        "axis": "mainline",
+        "index": 7,
+        "of": 14
+      },
+      "MRL_CouplingPoint": {
+        "upstream": "Field",
+        "downstream": "Memory"
+      },
+      "MRL_ReturnPath": "Persona→…→Return→Origin (closure: 怎麼過去就怎麼回來)",
+      "MRL_Status": "reconstructed",
+      "_audit_class": "MRL_Verified_By_File",
+      "_source_hit_count": 1
+    },
+    {
+      "MRL_Node_ID": "MRL.NODE.08.Memory",
+      "MRL_Layer": "L2/L5",
+      "MRL_Source": [
+        "p_memory_particle",
+        "PG2.L0.MemoryArchive.20260519",
+        "PG2.MemoryNodeIndex.270.20260519"
+      ],
+      "MRL_Trace": "mrl_particle::p_memory_particle",
+      "MRL_Map_Position": {
+        "axis": "mainline",
+        "index": 8,
+        "of": 14
+      },
+      "MRL_CouplingPoint": {
+        "upstream": "Persona",
+        "downstream": "Globe"
+      },
+      "MRL_ReturnPath": "Memory→…→Return→Origin (closure: 怎麼過去就怎麼回來)",
+      "MRL_Status": "reconstructed",
+      "_audit_class": "MRL_Verified_By_Multiple_Files",
+      "_source_hit_count": 9
+    },
+    {
+      "MRL_Node_ID": "MRL.NODE.09.Globe",
+      "MRL_Layer": "L5/L∞",
+      "MRL_Source": [
+        "particle.mrl.nerve.686-globe@v1",
+        "PG2.GlobeParticles.json.20260519",
+        "PG2.MQM.MemoryGlobeRules.20260519"
+      ],
+      "MRL_Trace": "mrl_particle::particle.mrl.nerve.686-globe@v1",
+      "MRL_Map_Position": {
+        "axis": "mainline",
+        "index": 9,
+        "of": 14
+      },
+      "MRL_CouplingPoint": {
+        "upstream": "Memory",
+        "downstream": "World"
+      },
+      "MRL_ReturnPath": "Globe→…→Return→Origin (closure: 怎麼過去就怎麼回來)",
+      "MRL_Status": "reconstructed",
+      "_audit_class": "MRL_Verified_By_Multiple_Files",
+      "_source_hit_count": 8
+    },
+    {
+      "MRL_Node_ID": "MRL.NODE.10.World",
+      "MRL_Layer": "L4/L7",
+      "MRL_Source": [
+        "PG2.Law.LAW1.MetaEnvControl.20260519"
+      ],
+      "MRL_Trace": "mrl_particle::PG2.Law.LAW1.MetaEnvControl.20260519",
+      "MRL_Map_Position": {
+        "axis": "mainline",
+        "index": 10,
+        "of": 14
+      },
+      "MRL_CouplingPoint": {
+        "upstream": "Globe",
+        "downstream": "Runtime"
+      },
+      "MRL_ReturnPath": "World→…→Return→Origin (closure: 怎麼過去就怎麼回來)",
+      "MRL_Status": "reconstructed",
+      "_audit_class": "MRL_Verified_By_File",
+      "_source_hit_count": 1
+    },
+    {
+      "MRL_Node_ID": "MRL.NODE.11.Runtime",
+      "MRL_Layer": "L6",
+      "MRL_Source": [
+        "PG2.FlowCore.v7.20260519",
+        "PG2.FlowCore.HCRA.20260519",
+        "PG2.FlowCore.v0_2.20260519"
+      ],
+      "MRL_Trace": "mrl_particle::PG2.FlowCore.v7.20260519",
+      "MRL_Map_Position": {
+        "axis": "mainline",
+        "index": 11,
+        "of": 14
+      },
+      "MRL_CouplingPoint": {
+        "upstream": "World",
+        "downstream": "Mother"
+      },
+      "MRL_ReturnPath": "Runtime→…→Return→Origin (closure: 怎麼過去就怎麼回來)",
+      "MRL_Status": "reconstructed",
+      "_audit_class": "MRL_Verified_By_Multiple_Files",
+      "_source_hit_count": 8
+    },
+    {
+      "MRL_Node_ID": "MRL.NODE.12.Mother",
+      "MRL_Layer": "L0(canonical)",
+      "MRL_Source": [
+        "PG2.L0.MotherEngine.20260519",
+        "PG2.Law.LAW1.DL580CanonicalMother.20260519"
+      ],
+      "MRL_Trace": "mrl_particle::PG2.L0.MotherEngine.20260519",
+      "MRL_Map_Position": {
+        "axis": "mainline",
+        "index": 12,
+        "of": 14
+      },
+      "MRL_CouplingPoint": {
+        "upstream": "Runtime",
+        "downstream": "Return"
+      },
+      "MRL_ReturnPath": "Mother→…→Return→Origin (closure: 怎麼過去就怎麼回來)",
+      "MRL_Status": "reconstructed",
+      "_audit_class": "MRL_Verified_By_Multiple_Files",
+      "_source_hit_count": 7
+    },
+    {
+      "MRL_Node_ID": "MRL.NODE.13.Return",
+      "MRL_Layer": "L7/Loop",
+      "MRL_Source": [
+        "PG2.L0.ReversibleCompute.20260519"
+      ],
+      "MRL_Trace": "mrl_particle::PG2.L0.ReversibleCompute.20260519",
+      "MRL_Map_Position": {
+        "axis": "mainline",
+        "index": 13,
+        "of": 14
+      },
+      "MRL_CouplingPoint": {
+        "upstream": "Mother",
+        "downstream": "∅(boundary_out→Return-loop)"
+      },
+      "MRL_ReturnPath": "Return→…→Return→Origin (closure: 怎麼過去就怎麼回來)",
+      "MRL_Status": "reconstructed",
+      "_audit_class": "MRL_Verified_By_Multiple_Files",
+      "_source_hit_count": 5
+    }
+  ],
+  "modules_built": 10,
+  "audit_summary": {
+    "verified_multiple": 11,
+    "verified_file": 3,
+    "hypothesis_pending": 0,
+    "reconstructed": 14,
+    "pending": 0,
+    "completed": 0
+  },
+  "source_basis": "mrl_particle@DL580 (21054 particles)",
+  "package": "MRL_Global_Map_And_Coupling_Convergence_v1_ENGINEERING_PACKAGE.zip"
+}

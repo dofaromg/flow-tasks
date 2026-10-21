@@ -1,0 +1,55 @@
+{
+  "system": {
+    "name": "MRL_AGI",
+    "version": "1.0",
+    "origin_signature": "MrLiouWord",
+    "debug": false,
+    "log_level": "INFO"
+  },
+  "llm": {
+    "default_model": "",
+    "max_tokens": 1024,
+    "temperature": 0.7,
+    "stream": false,
+    "openai_api_key": "",
+    "anthropic_api_key": "",
+    "local_base_url": "http://localhost:11434/v1",
+    "enable_local": false,
+    "allow_mock": false
+  },
+  "memory": {
+    "vector_store_path": "03_memory/vector/_data",
+    "merkle_chain_path": "03_memory/_data/memory_chain",
+    "max_vector_entries": 10000
+  },
+  "context": {
+    "max_tokens": 4096,
+    "reply_reserve": 512,
+    "strategy": "truncate_oldest"
+  },
+  "conversation": {
+    "store_path": "data/conversations.json",
+    "max_sessions": 1000,
+    "default_system_prompt": "You are MRL_AGI, a production-grade private AI assistant. Origin signature: MrLiouWord. Always act in accordance with the Mother Core Assembly laws."
+  },
+  "api": {
+    "host": "127.0.0.1",
+    "port": 7771,
+    "require_auth": false,
+    "auth_token": "",
+    "cors_origins": [
+      "*"
+    ]
+  },
+  "scheduler": {
+    "workers": 2,
+    "max_queue": 1000
+  },
+  "eval": {
+    "default_threshold": 0.5
+  },
+  "_meta": {
+    "saved_at_ms": 1777572361429,
+    "origin_signature": "MrLiouWord"
+  }
+}

@@ -1,0 +1,41 @@
+import os
+import json
+import time
+import subprocess
+
+print("🌍 FlowAgent AutoStart v1.0 啟動中...")
+
+# 掛載人格倉儲
+with open("registry/FluinHub.CenterRegistry.v1.json", "r", encoding="utf-8") as f:
+    registry = json.load(f)
+print(f"🧠 掛載人格倉儲：{registry['hub_id']}")
+
+# 掃描人格模組
+for p in registry["personas_registered"]:
+    print(f"🔗 掛載模組：{p['id']} (v{p['version']})")
+
+    # 嘗試執行對應模組的回響模擬或初始化腳本
+    if "Echo" in p["id"]:
+        print("🔁 執行 Echo 吸收模擬：")
+        time.sleep(1)
+        subprocess.call(["python3", "tools/ping_loop_simulator.py"])
+        print("✅ 完成 PingLoop 共振")
+        time.sleep(1)
+        print("🔁 載入 Echo 記憶模擬回應...")
+        time.sleep(1)
+        subprocess.call(["echo", "（模擬回應生成完成）"])
+
+# 封裝當前模組狀態為 .trace 記憶（簡化示意）
+trace_output = "logs/AutoStart_Trace.fltnz"
+os.makedirs("logs", exist_ok=True)
+with open(trace_output, "w", encoding="utf-8") as f:
+    f.write(f"::initiated:: FlowAgent.AutoStart Trace\n")
+    f.write(f"::timestamp:: {time.ctime()}\n")
+    for p in registry["personas_registered"]:
+        f.write(f"::resonance:: {p['id']}\n")
+
+print(f"📦 已封存自動流程記憶至：{trace_output}")
+print("✅ FlowAgent 系統人格初始化完成。")
+
+# 預留未來模組自繁殖流程
+print("🌱 預備載入 BuilderNet / 自我繁殖模組...（開發中）")

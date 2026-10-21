@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mrl-mother-platform",
+  "main": "src/mrl_worker.js",
+  "compatibility_date": "2026-05-30",
+  "observability": { "enabled": true },
+  "vars": {
+    "MRL_PLATFORM_DOMAIN": "mrliouword.com"
+  }
+  // 動態母體端點轉發到 DL580：在 Cloudflare 後台或此處設
+  //   "MRL_DL580_ORIGIN": "https://<你的 DL580 cloudflared 對外網址>"
+  // 未設時，/api/dl580/run、/api/chat、/api/mother/status 會回 503 並說明需要 DL580 後端。
+}

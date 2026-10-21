@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRL_Interface_v1 &mdash; Mother Product Entry</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <style>
+    body { min-height: 100dvh; }
+    .interface-shell { padding: 40px 0 72px; }
+    .interface-hero { display: grid; grid-template-columns: 1.2fr .8fr; gap: 24px; align-items: stretch; margin-bottom: 24px; }
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 24px; }
+    .eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .hero-title { font-size: clamp(32px, 6vw, 52px); line-height: 1.08; letter-spacing: -.03em; margin-bottom: 16px; }
+    .hero-sub { color: var(--text-2); line-height: 1.75; max-width: 680px; }
+    .status-grid { display: grid; gap: 10px; }
+    .status-row { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--border); font-family: 'DM Mono', monospace; font-size: 12px; }
+    .status-row:last-child { border-bottom: 0; }
+    .status-value { color: var(--accent); text-align: right; }
+    .blocks { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 24px 0; }
+    .block { min-height: 220px; display: flex; flex-direction: column; gap: 12px; }
+    .block-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: .12em; }
+    .block-title { font-size: 20px; font-weight: 650; letter-spacing: -.02em; }
+    .block-desc { color: var(--text-2); font-size: 14px; line-height: 1.65; flex: 1; }
+    .block-link { display: inline-flex; color: var(--accent); text-decoration: none; font-size: 13px; font-weight: 600; }
+    .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .action { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); padding: 18px; text-decoration: none; color: var(--text); transition: all var(--transition); }
+    .action:hover { border-color: rgba(232,184,75,.35); background: var(--surface-2); }
+    .action strong { display: block; margin-bottom: 8px; }
+    .action span { color: var(--text-2); font-size: 13px; line-height: 1.5; }
+    .mapping { margin-top: 24px; }
+    .map-row { display: grid; grid-template-columns: 190px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .map-row:last-child { border-bottom: 0; }
+    .map-key { font-family: 'DM Mono', monospace; color: var(--accent); }
+    .map-val { color: var(--text-2); }
+    @media (max-width: 1100px) { .blocks { grid-template-columns: repeat(2, 1fr); } .interface-hero, .action-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { .blocks { grid-template-columns: 1fr; } .map-row { grid-template-columns: 1fr; gap: 4px; } }
+  </style>
+</head>
+<body>
+  <main class="interface-shell">
+    <div class="container">
+      <section class="interface-hero">
+        <div class="panel">
+          <div class="eyebrow">MRL_Interface_v1 · Product convergence entry</div>
+          <h1 class="hero-title">把已存在的母體能力，收斂成每天可用的入口。</h1>
+          <p class="hero-sub">
+            這一版不重做底層，不重寫 engine，不重開 memory。它只把現有的 product、task、memory、runtime、deploy、telemetry 與 evaluator 能力收斂成一個操作入口。
+          </p>
+        </div>
+        <aside class="panel">
+          <div class="eyebrow">Mother Status</div>
+          <div class="status-grid" aria-label="Mother status overview">
+            <div class="status-row"><span>Runtime</span><span class="status-value">MRL_Product_v1 / Node.js</span></div>
+            <div class="status-row"><span>Memory</span><span class="status-value">SQLite + ledger + events</span></div>
+            <div class="status-row"><span>Deploy</span><span class="status-value">DL580 Docker path</span></div>
+            <div class="status-row"><span>Interface</span><span class="status-value">/interface</span></div>
+            <div class="status-row"><span>Admin</span><span class="status-value">/admin + /admin/* APIs</span></div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="blocks" aria-label="MRL interface blocks">
+        <article class="panel block">
+          <div class="block-num">01</div>
+          <div class="block-title">Home</div>
+          <p class="block-desc">母體狀態、今日入口、目前 active module。第一版用本頁作唯一產品入口。</p>
+          <a class="block-link" href="/interface">Open interface</a>
+        </article>
+        <article class="panel block">
+          <div class="block-num">02</div>
+          <div class="block-title">Task</div>
+          <p class="block-desc">輸入需求，走現有 analyze / Core Generator，產出方案、網站、客服、遊戲或系統方向。</p>
+          <a class="block-link" href="/app">Start task</a>
+        </article>
+        <article class="panel block">
+          <div class="block-num">03</div>
+          <div class="block-title">Memory</div>
+          <p class="block-desc">先接現有 ledger、event logs、orders、analyses；trace / seed / replay 後續掛載，不重建。</p>
+          <a class="block-link" href="/admin.html">Review logs</a>
+        </article>
+        <article class="panel block">
+          <div class="block-num">04</div>
+          <div class="block-title">Product</div>
+          <p class="block-desc">網站生成、AI客服、助手、KidWorld 全部先歸到產品面；先入口化，再擴展。</p>
+          <a class="block-link" href="/product">View product</a>
+        </article>
+        <article class="panel block">
+          <div class="block-num">05</div>
+          <div class="block-title">Admin</div>
+          <p class="block-desc">runtime、deploy、telemetry、evaluation、logs 先由現有 admin dashboard 與 API 承接。</p>
+          <a class="block-link" href="/admin">Open admin</a>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="eyebrow">Create / Operate</div>
+        <div class="action-grid">
+          <a class="action" href="/app"><strong>生成產品方案</strong><span>使用現有 Task pipeline，把需求轉成可執行方案。</span></a>
+          <a class="action" href="/pricing"><strong>收費入口</strong><span>保留現有 Stripe / subscription / unlock 流程。</span></a>
+          <a class="action" href="/admin"><strong>營運觀測</strong><span>查看 metrics、funnel、events、orders、errors。</span></a>
+        </div>
+      </section>
+
+      <section class="panel mapping">
+        <div class="eyebrow">Existing capability map</div>
+        <div class="map-row"><div class="map-key">control_plane</div><div class="map-val">以現有 `/admin` dashboard 與 `/admin/*` API 承接。</div></div>
+        <div class="map-row"><div class="map-key">deploy_dl580</div><div class="map-val">以 `MRL_Product/deploy/` Docker Compose 與部署文件承接。</div></div>
+        <div class="map-row"><div class="map-key">telemetry / evaluator</div><div class="map-val">以 events、feedback、metrics、funnel、errors API 承接第一版觀測。</div></div>
+        <div class="map-row"><div class="map-key">pipeline_vnext / query_api</div><div class="map-val">以 `/api/analyze`、Core Generator 與 result unlock flow 承接。</div></div>
+        <div class="map-row"><div class="map-key">seed_core / Memory</div><div class="map-val">第一版不重建；先用 analyses、ledger、event_logs 作 canonical timeline 的落點。</div></div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

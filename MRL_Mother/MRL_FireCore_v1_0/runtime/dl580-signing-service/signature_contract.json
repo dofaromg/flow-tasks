@@ -1,0 +1,22 @@
+{
+  "service": "dl580-signing-service",
+  "origin_signature": "MrLiouWord",
+  "algorithm": "ed25519",
+  "private_key_policy": "private key remains on DL580 only",
+  "request": {
+    "method": "POST",
+    "path": "/v1/origin/sign",
+    "body": {
+      "subject": "string",
+      "payload_sha256": "hex string",
+      "module": "mrl-firecore-*",
+      "issued_at": "unix seconds"
+    }
+  },
+  "response": {
+    "origin_signature": "MrLiouWord",
+    "signature": "base64url ed25519 signature",
+    "public_key_id": "string",
+    "issued_at": "unix seconds"
+  }
+}

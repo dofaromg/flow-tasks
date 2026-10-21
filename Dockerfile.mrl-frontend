@@ -1,0 +1,36 @@
+FROM node:20-slim AS mrl-frontend-build
+
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --production=false
+COPY pages/ ./pages/
+COPY lib/ ./lib/
+COPY next.config.mjs tsconfig.json ./
+COPY next-env.d.ts ./
+COPY src/ ./src/
+COPY MRL_Website/ ./MRL_Website/
+RUN npm run build
+
+FROM node:20-slim AS mrl-frontend
+
+LABEL maintainer="Mr.liou"
+LABEL description="MRL Official Website Platform - Next.js Frontend"
+LABEL version="1.0"
+LABEL mrl.product="MRL_Product_Motherbody_Engineering_v1"
+
+WORKDIR /app
+
+COPY --from=mrl-frontend-build /app/.next/standalone ./
+COPY --from=mrl-frontend-build /app/.next/static ./.next/static
+
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV MRL_LAYER_A=ACTIVE_CPP_V1
+ENV MRL_CANONICAL_RUNTIME=DL580
+
+EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:3000/api/mrl/status || exit 1
+
+CMD ["node", "server.js"]

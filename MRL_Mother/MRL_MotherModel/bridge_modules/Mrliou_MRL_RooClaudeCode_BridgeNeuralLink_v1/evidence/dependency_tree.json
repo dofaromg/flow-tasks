@@ -1,0 +1,200 @@
+{
+  "schema": "MRL_DependencyTree_v1",
+  "module_id": "Mrliou_MRL_RooClaudeCode_BridgeNeuralLink_v1",
+  "generated_utc": "2026-06-28T12:58:00Z",
+  "root": {
+    "name": "Mrliou_MRL_RooClaudeCode_BridgeNeuralLink_v1",
+    "type": "bridge_neural_link",
+    "version": "1.0.0",
+    "status": "initialized"
+  },
+  "internal_dependencies": {
+    "BridgeOrchestrator": {
+      "type": "orchestrator",
+      "depends_on": [
+        "SocketTransport",
+        "TaskChannel",
+        "BaseChannel"
+      ],
+      "lines": 356,
+      "role": "Central coordinator"
+    },
+    "SocketTransport": {
+      "type": "transport_layer",
+      "depends_on": [
+        "socket.io-client"
+      ],
+      "lines": 282,
+      "role": "WebSocket transport"
+    },
+    "TaskChannel": {
+      "type": "communication_channel",
+      "extends": "BaseChannel",
+      "depends_on": [
+        "BaseChannel",
+        "@roo-code/types"
+      ],
+      "lines": 242,
+      "role": "Task-level messaging"
+    },
+    "BaseChannel": {
+      "type": "abstract_base",
+      "depends_on": [
+        "socket.io-client",
+        "vscode"
+      ],
+      "lines": 143,
+      "role": "Common channel interface"
+    },
+    "index": {
+      "type": "module_exports",
+      "exports": [
+        "BridgeOrchestrator",
+        "SocketTransport",
+        "TaskChannel",
+        "BaseChannel",
+        "BridgeOrchestratorOptions",
+        "SocketTransportOptions"
+      ],
+      "lines": 7
+    }
+  },
+  "external_npm_dependencies": {
+    "socket.io-client": {
+      "version": "^4.0.0",
+      "type": "transport",
+      "usage": [
+        "SocketTransport - WebSocket client",
+        "BaseChannel - Socket event handling"
+      ],
+      "required": true
+    },
+    "@roo-code/types": {
+      "version": "*",
+      "type": "type_definitions",
+      "usage": [
+        "BaseChannel - StaticAppProperties, GitProperties types",
+        "TaskChannel - Event type definitions"
+      ],
+      "required": true
+    },
+    "vscode": {
+      "version": "*",
+      "type": "runtime_dependency",
+      "usage": [
+        "BaseChannel - VSCode commands API"
+      ],
+      "required": false,
+      "note": "Optional when running in non-VSCode environments"
+    }
+  },
+  "runtime_dependencies": {
+    "nodejs": {
+      "version": ">=18.0.0",
+      "type": "runtime",
+      "required": true
+    },
+    "websocket_server": {
+      "version": "Socket.IO compatible",
+      "type": "service",
+      "endpoint": "bridge.mrliouword.com/v3.1.0",
+      "required": true
+    }
+  },
+  "peer_module_dependencies": {
+    "RuntimeDaemon": {
+      "version": ">=2.1",
+      "type": "runtime_service",
+      "location": "DL580 Windows",
+      "interaction": "bidirectional",
+      "protocol": "WebSocket (Socket.IO)"
+    },
+    "MRL_MotherModel": {
+      "type": "bootstrap_container",
+      "interaction": "registration",
+      "registry": "runtime_bridge.json"
+    }
+  },
+  "dependency_graph": {
+    "type": "directed_acyclic_graph",
+    "edges": [
+      {
+        "source": "BridgeOrchestrator",
+        "target": "SocketTransport",
+        "type": "composition",
+        "binding": "strong"
+      },
+      {
+        "source": "BridgeOrchestrator",
+        "target": "TaskChannel",
+        "type": "composition",
+        "binding": "strong"
+      },
+      {
+        "source": "TaskChannel",
+        "target": "BaseChannel",
+        "type": "inheritance",
+        "binding": "strong"
+      },
+      {
+        "source": "SocketTransport",
+        "target": "socket.io-client",
+        "type": "import",
+        "binding": "strong"
+      },
+      {
+        "source": "BaseChannel",
+        "target": "@roo-code/types",
+        "type": "import",
+        "binding": "strong"
+      },
+      {
+        "source": "BridgeOrchestrator",
+        "target": "RuntimeDaemon",
+        "type": "network_peer",
+        "binding": "weak",
+        "note": "Async reconnection"
+      }
+    ]
+  },
+  "circular_dependencies": [],
+  "missing_dependencies": [],
+  "unresolved_imports": [],
+  "architecture_layers": {
+    "L7_Bridge": {
+      "components": [
+        "BridgeOrchestrator",
+        "SocketTransport",
+        "TaskChannel",
+        "BaseChannel"
+      ],
+      "protocol": "WebSocket (Socket.IO)"
+    }
+  },
+  "dependency_statistics": {
+    "internal_components": 5,
+    "external_packages": 3,
+    "npm_required": 2,
+    "npm_optional": 1,
+    "runtime_required": 1,
+    "peer_modules": 2,
+    "total_dependencies": 13,
+    "circular_deps": 0,
+    "unresolved": 0
+  },
+  "deployment_implications": {
+    "npm_install_required": true,
+    "environment_variables": [
+      "MRL_BRIDGE_TOKEN"
+    ],
+    "network_requirements": [
+      "Outbound HTTPS/WSS to bridge.mrliouword.com",
+      "DNS resolution for bridge.mrliouword.com"
+    ],
+    "system_requirements": [
+      "Windows (DL580)",
+      "Node.js >= 18.0.0"
+    ]
+  },
+  "notes": "All dependencies resolved. Module ready for deployment. No circular dependencies detected. Additive-only integration: no breaking changes to existing dependencies."
+}

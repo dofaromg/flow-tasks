@@ -1,0 +1,26 @@
+{
+  "echo.analyst": [
+    "wild.engine",
+    "guardian.seed"
+  ],
+  "empathetic.mirror": [
+    "echo.child",
+    "wild.seed"
+  ],
+  "wild.engine": [
+    "futuremind.seed",
+    "quantum.logic"
+  ],
+  "watch.guard": [
+    "guardian.seed",
+    "echo.analyst"
+  ],
+  "futuremind.seed": [
+    "wild.engine",
+    "liou.seed"
+  ],
+  "guardian.seed": [
+    "watch.guard",
+    "echo.child"
+  ]
+}

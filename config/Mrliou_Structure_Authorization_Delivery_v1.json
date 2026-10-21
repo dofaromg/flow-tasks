@@ -1,0 +1,363 @@
+{
+  "origin_signature": "MrLiouWord",
+  "record_id": "Mrliou_Structure_Authorization_Delivery_v1",
+  "base_commit": "dfadd64d5f6d7e9842f289c08fe87ddfb93b2e22",
+  "expected_file_count": 9,
+  "expected_files": [
+    ".copilot/scanner/structure_scanner.py",
+    ".copilot/generator/emoji_indexer.py",
+    ".copilot/triggers/smart_updater.py",
+    "run_structure_index.py",
+    "tests/test_Mrliou_structure_authorization.py",
+    "docs/Mrliou_Structure_Authorization_v1.md",
+    "CHANGELOG.md",
+    "config/Mrliou_MRL_Sync_Delivery_v1.json",
+    "config/Mrliou_Structure_Authorization_Delivery_v1.json"
+  ],
+  "payload": [
+    {
+      "path": ".copilot/scanner/structure_scanner.py",
+      "size_bytes": 13817,
+      "sha256": "02782ba71c70a4ee3cc19cf42ef2604ff0e75992d4dd4bb88fac4bd0050ec44b"
+    },
+    {
+      "path": ".copilot/generator/emoji_indexer.py",
+      "size_bytes": 13232,
+      "sha256": "1f21aaa09ec2a023656b7d7c5d12dc31595129ec87ce8014e8f19a98a2643eae"
+    },
+    {
+      "path": ".copilot/triggers/smart_updater.py",
+      "size_bytes": 11788,
+      "sha256": "fbb183067d4549d27710e5232bb602a9457a27a83b0557ca1e0d99eb5e808d45"
+    },
+    {
+      "path": "run_structure_index.py",
+      "size_bytes": 3957,
+      "sha256": "1d61fbd570124d87ed3df81b5467d5d85fee30245d3f312beacc2c866f7e5106"
+    },
+    {
+      "path": "tests/test_Mrliou_structure_authorization.py",
+      "size_bytes": 27872,
+      "sha256": "547d9b4e6cb0930beea288b58ce5cbdb82bfc5c70c4e2d257f966ad31b9ee60c"
+    },
+    {
+      "path": "docs/Mrliou_Structure_Authorization_v1.md",
+      "size_bytes": 11904,
+      "sha256": "c2da065a8ad64fbe60f60b36b0ed96f45a22d62c04ee76aa6710cfd3a7e342eb"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "size_bytes": 8683,
+      "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78"
+    },
+    {
+      "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+      "size_bytes": 8235,
+      "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
+    }
+  ],
+  "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
+  "dependencies": {
+    "workflow": [
+      ".copilot/Mrliou_structure_authorization.py",
+      ".copilot/scanner/structure_scanner.py",
+      ".copilot/generator/emoji_indexer.py",
+      "config/MRL_AUTHORIZATION_REGISTRY_v1.json"
+    ],
+    "runner": [
+      ".copilot/Mrliou_structure_authorization.py",
+      ".copilot/scanner/structure_scanner.py",
+      ".copilot/generator/emoji_indexer.py",
+      ".copilot/triggers/smart_updater.py"
+    ],
+    "tests": [
+      ".copilot/Mrliou_structure_authorization.py",
+      ".copilot/scanner/structure_scanner.py",
+      ".copilot/generator/emoji_indexer.py",
+      "run_structure_index.py",
+      "config/MRL_AUTHORIZATION_REGISTRY_v1.json",
+      ".copilot/triggers/smart_updater.py",
+      ".github/workflows/structure-indexer.yml"
+    ]
+  },
+  "not_modified": [
+    "config/MRL_AUTHORIZATION_REGISTRY_v1.json",
+    ".copilot/structure-scan.json",
+    ".copilot/structure-index.json",
+    ".copilot/structure.fltnz",
+    "STRUCTURE.md",
+    "MRL_Mother/**",
+    "MRL_Products/**",
+    "all other workflows and routes"
+  ],
+  "local_tests": "44/44 authorization+delivery and 54/54 existing sync PASS; 98 tests, 53 subtests PASS",
+  "main_enforcement": "R02_VERIFIED; R03_PENDING_MERGE_AND_RUN",
+  "zip": "NOT_REQUESTED",
+  "scope_revision": {
+    "revision": "R03",
+    "expected_file_count": 9,
+    "comparison_base": "dfadd64d5f6d7e9842f289c08fe87ddfb93b2e22",
+    "reason": "Follow-up delta against merged R02; full prior delivery retained in delivery_history."
+  },
+  "scope_revision_history": [
+    {
+      "initial_file_count": 9,
+      "revised_file_count": 10,
+      "added_dependency": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+      "reason": "Repair live CHANGELOG checksum mismatch observed in PR #652 CI; preserve previous entry additively."
+    }
+  ],
+  "delivery_history": [
+    {
+      "source_commit": "dfadd64d5f6d7e9842f289c08fe87ddfb93b2e22",
+      "record": {
+        "origin_signature": "MrLiouWord",
+        "record_id": "Mrliou_Structure_Authorization_Delivery_v1",
+        "base_commit": "848f5d62aa807bf61529ceb740517297ab308603",
+        "expected_file_count": 11,
+        "expected_files": [
+          ".github/workflows/structure-indexer.yml",
+          ".copilot/scanner/structure_scanner.py",
+          ".copilot/generator/emoji_indexer.py",
+          "run_structure_index.py",
+          ".copilot/triggers/smart_updater.py",
+          ".copilot/Mrliou_structure_authorization.py",
+          "tests/test_Mrliou_structure_authorization.py",
+          "docs/Mrliou_Structure_Authorization_v1.md",
+          "CHANGELOG.md",
+          "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "config/Mrliou_Structure_Authorization_Delivery_v1.json"
+        ],
+        "payload": [
+          {
+            "path": ".github/workflows/structure-indexer.yml",
+            "size_bytes": 7654,
+            "sha256": "2d6e31fd008dc48c0b9a19a978fb7f3937d111eea9ed22c24e1c63c07138e533"
+          },
+          {
+            "path": ".copilot/scanner/structure_scanner.py",
+            "size_bytes": 12943,
+            "sha256": "b3832095521ff1ab529b5f83696249107b2f11d5405563b06abf448d8f76b981"
+          },
+          {
+            "path": ".copilot/generator/emoji_indexer.py",
+            "size_bytes": 13037,
+            "sha256": "a1a501e23a0805326a26ca24b8a9cb28f9dcf9a22489ffaaa700671eab1cb35d"
+          },
+          {
+            "path": "run_structure_index.py",
+            "size_bytes": 3936,
+            "sha256": "28640a704ac359122224eeab835e0d54e13d210b596983a4915838ec790fe894"
+          },
+          {
+            "path": ".copilot/triggers/smart_updater.py",
+            "size_bytes": 11439,
+            "sha256": "1872e72f885abaf6c48d55eb07fd5a2c92ceea9c52f64d28f418a394fafd29ad"
+          },
+          {
+            "path": ".copilot/Mrliou_structure_authorization.py",
+            "size_bytes": 8782,
+            "sha256": "ab46cc93fac990b3df411fe06526d93b3c9ff903d344665f24db45d42db9d6a1"
+          },
+          {
+            "path": "tests/test_Mrliou_structure_authorization.py",
+            "size_bytes": 22348,
+            "sha256": "a2203dc1ede318257ed2f799350e2f0ea95620e123093e20055f15b3cf657d7f"
+          },
+          {
+            "path": "docs/Mrliou_Structure_Authorization_v1.md",
+            "size_bytes": 10015,
+            "sha256": "a548d447fba9e5cfbfee86ebf2cb156c14c76fc15281a038b97f867b7844de34"
+          },
+          {
+            "path": "CHANGELOG.md",
+            "size_bytes": 5284,
+            "sha256": "3301958e888f659cc8364b987f0fe2386c56cea7e01cfb979b234d356091c8ef"
+          },
+          {
+            "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+            "size_bytes": 3340,
+            "sha256": "034cf87effa661719e453f3d61821816eafd949a0fae7812b3144827901042cb"
+          }
+        ],
+        "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
+        "dependencies": {
+          "workflow": [
+            ".copilot/Mrliou_structure_authorization.py",
+            ".copilot/scanner/structure_scanner.py",
+            ".copilot/generator/emoji_indexer.py",
+            "config/MRL_AUTHORIZATION_REGISTRY_v1.json"
+          ],
+          "runner": [
+            ".copilot/Mrliou_structure_authorization.py",
+            ".copilot/scanner/structure_scanner.py",
+            ".copilot/generator/emoji_indexer.py",
+            ".copilot/triggers/smart_updater.py"
+          ],
+          "tests": [
+            ".copilot/Mrliou_structure_authorization.py",
+            ".copilot/scanner/structure_scanner.py",
+            ".copilot/generator/emoji_indexer.py",
+            "run_structure_index.py",
+            "config/MRL_AUTHORIZATION_REGISTRY_v1.json",
+            ".copilot/triggers/smart_updater.py",
+            ".github/workflows/structure-indexer.yml"
+          ]
+        },
+        "not_modified": [
+          "config/MRL_AUTHORIZATION_REGISTRY_v1.json",
+          ".copilot/structure-scan.json",
+          ".copilot/structure-index.json",
+          ".copilot/structure.fltnz",
+          "STRUCTURE.md",
+          "MRL_Mother/**",
+          "MRL_Products/**",
+          "all other workflows and routes"
+        ],
+        "local_tests": "36/36 authorization + 54/54 existing sync PASS; 53 subtests PASS",
+        "main_enforcement": "OPEN_UNTIL_MERGE_AND_MAIN_RUN_VERIFICATION",
+        "zip": "NOT_REQUESTED",
+        "scope_revision": {
+          "initial_file_count": 10,
+          "revised_file_count": 11,
+          "added_dependency": ".copilot/triggers/smart_updater.py",
+          "reason": "Fix reviewed direct-entry false-success exit and authorization rechecks; isolate ordinary issue comments."
+        },
+        "scope_revision_history": [
+          {
+            "initial_file_count": 9,
+            "revised_file_count": 10,
+            "added_dependency": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+            "reason": "Repair live CHANGELOG checksum mismatch observed in PR #652 CI; preserve previous entry additively."
+          }
+        ]
+      }
+    }
+  ],
+  "additive_integrity_history": [
+    {
+      "source_commit": "d43e53dee1012571915754afdfeff66c96c19615",
+      "change_commit": "c4797c441ba6a12768258127fe6d0ad70cbf3523",
+      "original_commit": "71ab347b2ffad4be0680c3a07d47edf4faef9d5f",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/655",
+      "merged_by": "dofaromg",
+      "merged_at": "2026-09-24T01:18:42Z",
+      "reason": "PR #655 inserts 8 lines (396 bytes) for multi-cloud connector orchestration; all prior CHANGELOG bytes remain unchanged. Refresh live checksums without changing payload code, tests, authorization policy or routes.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 5750,
+          "sha256": "a3f7d6f537275e1ed11b1e7aed6d80c8dbbfbb25b3a7de1b1c7fab99fc9bbe8d"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 4496,
+          "sha256": "b0d632785fa550a5d0cc5cb4b66b12888edd7fe7aae52c1f4c1d587792bcdcfa"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 6146,
+          "sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 5560,
+          "sha256": "0f76e27a8edd94f5ada5a5ed533c030426eb4800bc5662db8f89370727022886"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "a459a758ccc920d3d762b079867c977ae15299e5",
+      "change_commit": "11bb2f68d6c7222e2f79e247dea678390108b9c4",
+      "sync_change_commit": "75e44d5cb90a78fb900ae2f3492d25a206216eaf",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/669",
+      "reason": "PR #669 additive CHANGELOG and sync manifest integrity update. Historical scope, tests, names and prior checksums retained; this entry is not a new DL580 execution claim.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 6146,
+          "sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 5560,
+          "sha256": "0f76e27a8edd94f5ada5a5ed533c030426eb4800bc5662db8f89370727022886"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 7123,
+          "sha256": "81e444c3bde63b8b5a1bfc5b51d81a507d1f7785bf422f1ab2adf4514b4ffcda"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 6387,
+          "sha256": "158acad39797a40b1179a9e8ea32332af335983acec6a3f4fd518c56f3bb8a6b"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "cc5b00595cab803867ec9ed374902cae04aefcad",
+      "change_commit": "9a013c15529c462a798e390f9a028d49297fb536",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/680",
+      "reason": "ProductBridge security integration adds a CHANGELOG entry; retain previous evidence and refresh only the live CHANGELOG payload hash.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "size_bytes": 7123,
+        "sha256": "81e444c3bde63b8b5a1bfc5b51d81a507d1f7785bf422f1ab2adf4514b4ffcda"
+      },
+      "current_size_bytes": 7908,
+      "current_sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "cc5b00595cab803867ec9ed374902cae04aefcad",
+      "change_commit": "7a6d42479b35d5c4725d67ff1c1eb21b92eeea45",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/680",
+      "reason": "The authorization delivery also hashes the sync delivery manifest; propagate the preserved CHANGELOG integrity update through this dependency.",
+      "previous_entry": {
+        "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+        "size_bytes": 6387,
+        "sha256": "158acad39797a40b1179a9e8ea32332af335983acec6a3f4fd518c56f3bb8a6b"
+      },
+      "current_size_bytes": 7228,
+      "current_sha256": "0da5fcbcb686481a8c7b918c5add6ac90a76ce359837b20bcb1ada089fc00a0b",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "0c88c9962a361dc04d74998ee4fab20be1c18981",
+      "source_pr": 680,
+      "reason": "Post-merge ProductBridge security review adds a CHANGELOG entry; preserve earlier entries and propagate exact live dependency hashes. No change to authorization rules.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 7908,
+          "sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 7228,
+          "sha256": "0da5fcbcb686481a8c7b918c5add6ac90a76ce359837b20bcb1ada089fc00a0b"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 8683,
+          "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 8235,
+          "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    }
+  ]
+}

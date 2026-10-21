@@ -1,0 +1,31 @@
+{
+  "mrl_type": "MRL_RuntimeTrace",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "started_at": "2026-05-10T19:02:34.163Z",
+  "runtime_graph_hash": "23ec0f0247bafa6ffb339390931437013cfd1f36bf43a3468f7cf12b1382964d",
+  "attention_hash": "c2f2831426ae15e4610a2f18b806d264c953adafa6fcc179bbbaa540ed3f0ad5",
+  "steps": [
+    {
+      "step": 1,
+      "node_id": "MRL_P_0002",
+      "action": "MRL_EXECUTE_CALLABLE",
+      "priority": 0.86,
+      "status": "implemented_pass",
+      "message": "MRL code structure indexed: run",
+      "output_hash": "f14d376dda21101f"
+    },
+    {
+      "step": 2,
+      "node_id": "MRL_P_0001",
+      "action": "MRL_REGISTER_TYPE",
+      "priority": 0.62,
+      "status": "implemented_pass",
+      "message": "MRL code structure indexed: MRLThing",
+      "output_hash": "edefbab60944311f"
+    }
+  ],
+  "final_data_preview": "class MRLThing { public: void run(); };",
+  "completed_at": "2026-05-10T19:02:34.163Z",
+  "mrl_hash": "7602c5da66f92e3a39cd5ab8bba9aff9ce846fe51b9d14f3600d9178afe6805d"
+}

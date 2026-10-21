@@ -68,6 +68,15 @@ def demo_basic_functionality():
         {"demo": True, "version": "1.0"}
     )
     flpkg_file = restorer.save_flpkg(flpkg_package, "examples/demo_package")
+    filename = pipeline.store_result("Demo Data", result['result'], "examples")
+    print(f"   邏輯結果已儲存: {filename}")
+    
+    # 建立 FLPKG 封包
+    package = restorer.create_flpkg_package(
+        ["structure", "mark", "flow", "recurse", "store"],
+        {"demo": True, "version": "1.0"}
+    )
+    flpkg_file = restorer.save_flpkg(package, "examples/demo_package")
     print(f"   FLPKG 封包已儲存: {flpkg_file}")
     
     # JSON 匯出
@@ -149,6 +158,12 @@ def demo_basic_functionality():
     
     print("\n=== Demo 完成 ===")
 
+
+    with open(json_file, 'w', encoding='utf-8') as f:
+        json.dump(json_export, f, ensure_ascii=False, indent=2)
+    print(f"   JSON 匯出已儲存: {json_file}")
+    
+    print("\n=== Demo 完成 ===")
 
 def run_performance_test():
     """執行效能測試"""

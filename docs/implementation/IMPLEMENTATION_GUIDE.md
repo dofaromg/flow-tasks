@@ -194,7 +194,6 @@ for fmt in formats:
 **維護者**: FlowAgent Team
 
 ---
-# Implementation Summary
 
 # MRLiou Particle Language Core - Implementation Summary
 

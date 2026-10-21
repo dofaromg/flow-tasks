@@ -1,0 +1,53 @@
+digraph FlowAgentModules {
+    rankdir=LR;
+    node [shape=box style=filled color="#e0f7fa" fontname="Noto Sans"];
+
+    subgraph cluster_dict {
+        label="Fluin 字典系統";
+        Fluin; FluinCode; ParticleLanguage; Translator; Overlay; DecoderAdapterBridge;
+    }
+
+    subgraph cluster_shell {
+        label="FlowShell 協定模組";
+        FlowShell; FlowSync; FlowMap; FlowContainer; FlowUnity;
+    }
+
+    subgraph cluster_logic {
+        label="人格邏輯模組群";
+        IdentityMap; FieldMap; FieldEvolution; PersonaTuner; PersonaCloner; PersonaGate;
+    }
+
+    subgraph cluster_os {
+        label="作業流程與啟動";
+        FlowOS; FlowAgent; FlowSeed; FlowBridge; FlowInit; FlowMeta;
+    }
+
+    subgraph cluster_signal {
+        label="電壓語言 / 外部訊號";
+        FluinPulse; UniversalSignalMediaIndex; SignalNode; ExtendedSignalProtocolIndex;
+    }
+
+    # 關聯連線
+    Fluin -> ParticleLanguage;
+    ParticleLanguage -> Translator;
+    Translator -> Overlay;
+
+    FlowShell -> FlowSync;
+    FlowShell -> FlowMap;
+    FlowMap -> FlowUnity;
+
+    FlowUnity -> FieldMap;
+    FieldMap -> PersonaCloner;
+    PersonaCloner -> PersonaTuner;
+    PersonaTuner -> PersonaGate;
+
+    FlowSeed -> FlowAgent;
+    FlowAgent -> FlowInit;
+    FlowInit -> FlowMeta;
+    FlowMeta -> IdentityMap;
+    IdentityMap -> FieldEvolution;
+
+    FluinPulse -> UniversalSignalMediaIndex;
+    UniversalSignalMediaIndex -> SignalNode;
+    SignalNode -> FlowBridge;
+}

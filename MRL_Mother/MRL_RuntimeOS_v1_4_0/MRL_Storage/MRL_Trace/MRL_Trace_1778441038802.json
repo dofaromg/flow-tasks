@@ -1,0 +1,40 @@
+{
+  "mrl_type": "MRL_RuntimeTrace",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "started_at": "2026-05-10T19:23:58.802Z",
+  "runtime_graph_hash": "a7d4ef57c48f00b8982161209b9e25123f69a58218a68ee219b91a7549cb8cd4",
+  "attention_hash": "edd3d16f706d8c44f3584eea4e74a9b75985967f9c5aabfa57e173f40d2946b9",
+  "steps": [
+    {
+      "step": 1,
+      "node_id": "MRL_P_0001",
+      "action": "MRL_REGISTER_SCHEMA_FIELD",
+      "priority": 0.88,
+      "status": "implemented_pass",
+      "message": "MRL data field registered",
+      "output_hash": "fbf4c4bc8ba77d5a"
+    },
+    {
+      "step": 2,
+      "node_id": "MRL_P_0002",
+      "action": "MRL_REGISTER_SCHEMA_FIELD",
+      "priority": 0.87,
+      "status": "implemented_pass",
+      "message": "MRL data field registered",
+      "output_hash": "fbf4c4bc8ba77d5a"
+    },
+    {
+      "step": 3,
+      "node_id": "MRL_P_0003",
+      "action": "MRL_REGISTER_SCHEMA_FIELD",
+      "priority": 0.86,
+      "status": "implemented_pass",
+      "message": "MRL data field registered",
+      "output_hash": "fbf4c4bc8ba77d5a"
+    }
+  ],
+  "final_data_preview": "{\"MRL_name\":\"demo\",\"MRL_items\":[1,2]}",
+  "completed_at": "2026-05-10T19:23:58.802Z",
+  "mrl_hash": "0767a61b2f9be82ab1d2de3818459cb1316532759109fd4b7e6acbfe1afc1151"
+}

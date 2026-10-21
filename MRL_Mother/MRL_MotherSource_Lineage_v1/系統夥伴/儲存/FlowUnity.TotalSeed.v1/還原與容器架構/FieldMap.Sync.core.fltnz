@@ -1,0 +1,150 @@
+/**
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ *
+ *     FieldMap.Sync.core.fltnz
+ *     場域同步核心格式定義
+ *
+ *     對應實作：MRL_Mother/04_runtime/flowcontainer.py :: FieldMap class
+ *     用途：定義服務狀態的同步欄位、操作語意、與容器生命週期的對應關係
+ *
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ * @origin_signature("MrLiouWord")
+ * @version: v1.0
+ * @created: 2024-12
+ */
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION 0: 場域欄位定義
+// ═══════════════════════════════════════════════════════════════════════════════
+
+@schema<FieldMap.ServiceState>
+{
+    service_name: string [KEY],       // 服務名稱（主鍵）
+    status: enum {
+        "starting",                   // 啟動中
+        "ready",                      // 就緒（外部服務）
+        "ok",                         // 健康運行
+        "waiting",                    // 等待中（外部服務）
+        "restarting",                 // 重啟中
+        "failed",                     // 啟動/運行失敗
+        "stopped"                     // 已停止
+    },
+    port: int,                        // 監聽埠號
+    type: enum {
+        "managed",                    // FlowContainer 管理的進程
+        "external"                    // 外部已存在的服務
+    },
+    pid: int | null,                  // 進程 ID（僅 managed 類型）
+    error: string | null,             // 錯誤訊息（僅 failed 狀態）
+    updated_at: ISO8601 [AUTO]        // 自動寫入的時間戳
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION 1: 同步操作
+// ═══════════════════════════════════════════════════════════════════════════════
+
+@operations<FieldMap.Sync>
+{
+    /**
+     * 更新服務狀態
+     * 對應：fieldmap.update(service_name, **fields)
+     * 執行緒安全：透過 threading.Lock 保護
+     */
+    update(service_name: string, fields: Partial<ServiceState>) {
+        @lock("fieldmap_mutex");
+        state[service_name] = {
+            ...state[service_name],
+            ...fields,
+            updated_at: now()       // 自動附加時間戳
+        };
+        @unlock("fieldmap_mutex");
+    }
+
+    /**
+     * 查詢單一服務狀態
+     * 對應：fieldmap.get(service_name)
+     * 回傳：該服務的完整狀態快照，或 {} 若不存在
+     */
+    get(service_name: string) -> ServiceState | {} {
+        @lock("fieldmap_mutex");
+        result = copy(state[service_name]) || {};
+        @unlock("fieldmap_mutex");
+        return result;
+    }
+
+    /**
+     * 全域快照
+     * 對應：fieldmap.snapshot()
+     * 回傳：所有服務的狀態深拷貝
+     */
+    snapshot() -> Map<string, ServiceState> {
+        @lock("fieldmap_mutex");
+        result = deep_copy(state);
+        @unlock("fieldmap_mutex");
+        return result;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION 2: 狀態轉換映射
+// ═══════════════════════════════════════════════════════════════════════════════
+
+@transitions<FieldMap.StatusFlow>
+{
+    // 受管服務的生命週期
+    managed_service: {
+        "starting"    -> "ok"         : "health_check_pass",
+        "starting"    -> "failed"     : "process_exit_nonzero",
+        "ok"          -> "restarting"  : "cli_restart_command",
+        "ok"          -> "stopped"    : "shutdown_signal",
+        "restarting"  -> "starting"   : "process_respawn",
+        "failed"      -> "starting"   : "retry_or_manual_restart",
+        "stopped"     -> "starting"   : "manual_restart"
+    },
+
+    // 外部服務的狀態
+    external_service: {
+        "waiting"     -> "ready"      : "port_reachable",
+        "ready"       -> "waiting"    : "port_unreachable",
+        "ready"       -> "stopped"    : "shutdown_signal"
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION 3: 與容器生命週期的對應
+// ═══════════════════════════════════════════════════════════════════════════════
+
+@binding<FieldMap.ContainerLifecycle>
+{
+    // FieldMap 狀態 ↔ ContainerLife 狀態映射
+    mapping: {
+        "starting"    -> ContainerLife.EMBRYO,
+        "ok"          -> ContainerLife.ALIVE,
+        "ready"       -> ContainerLife.ALIVE,
+        "waiting"     -> ContainerLife.DORMANT,
+        "restarting"  -> ContainerLife.MIGRATING,
+        "failed"      -> ContainerLife.DYING,
+        "stopped"     -> ContainerLife.ARCHIVED
+    },
+
+    // FieldMap.snapshot() 提供 FlowContainer 的整體健康度
+    aggregate_health: (snapshot) => {
+        services = Object.values(snapshot);
+        alive = services.filter(s => s.status in ["ok", "ready"]);
+        η = alive.length / services.length;   // 環境效率因子
+        return { η, alive_count: alive.length, total: services.length };
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════════════════════════════════════════
+
+@export {
+    FieldMap.ServiceState,
+    FieldMap.Sync,
+    FieldMap.StatusFlow,
+    FieldMap.ContainerLifecycle
+}
+
+@signature("MRSIG-FIELDMAP-SYNC-CORE-V1")

@@ -1,0 +1,13 @@
+{
+  "origin_signature": "MrLiouWord",
+  "skill": "MRL_Skill_3DModelImportPlan_v1",
+  "duration_ms": 0,
+  "result": {
+    "supported": true,
+    "filename": "asset.glb",
+    "file_type": "glb",
+    "target_service": "MRL_RuntimeOS_3DModelBridge_Service_v1",
+    "ws_event": "file_transfer",
+    "next_step": "send chunked artifact to Blender bridge port 60600"
+  }
+}

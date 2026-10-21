@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRL — 付款取消</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <style>
+    .cancel-layout {
+      min-height: calc(100dvh - 56px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .cancel-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 48px 40px;
+      text-align: center;
+    }
+
+    .cancel-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(113,113,122,0.1);
+      border: 1px solid var(--border-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin: 0 auto 24px;
+      color: var(--text-2);
+    }
+
+    .cancel-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .cancel-desc {
+      font-size: 15px;
+      color: var(--text-2);
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .cancel-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cancel-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo">MRL.</a>
+  </div>
+</nav>
+
+<div class="cancel-layout">
+  <div class="cancel-card anim-fade-up">
+    <div class="cancel-icon">—</div>
+    <div class="cancel-title">付款尚未完成</div>
+    <div class="cancel-desc">
+      你的分析結果仍然保留，你可以隨時回去繼續查看部分結果，並在準備好的時候再解鎖完整方案。
+    </div>
+    <div class="cancel-actions">
+      <button class="btn btn--primary btn--full" id="back-btn">返回分析頁</button>
+      <a href="/" class="btn btn--ghost btn--full">返回首頁</a>
+    </div>
+    <div class="cancel-note">你的分析不會因為取消付款而消失</div>
+  </div>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get('order');
+
+  document.getElementById('back-btn').addEventListener('click', () => {
+    // 嘗試回到有 analysis 記錄的 app 頁
+    const lastAnalysis = localStorage.getItem('mrl_last_analysis');
+    if (lastAnalysis) {
+      window.location.href = `/app.html?analysis=${lastAnalysis}`;
+    } else {
+      window.location.href = '/app.html';
+    }
+  });
+</script>
+</body>
+</html>

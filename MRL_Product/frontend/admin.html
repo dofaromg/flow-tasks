@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRL · 營運儀表板</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
+
+    :root {
+      --bg:       #080b08;
+      --surface:  #0d110d;
+      --border:   #1a221a;
+      --border-2: #223022;
+      --text:     #c8dcc8;
+      --text-2:   #6b8a6b;
+      --muted:    #3a503a;
+      --green:    #3ddc5a;
+      --green-dim:rgba(61,220,90,0.07);
+      --green-glow:rgba(61,220,90,0.15);
+      --amber:    #e8b84b;
+      --red:      #e05252;
+      --mono:     'IBM Plex Mono', 'Courier New', monospace;
+      --sans:     'IBM Plex Sans', sans-serif;
+      --r: 4px;
+      --t: 160ms ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; }
+    body {
+      font-family: var(--mono);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ── */
+    .shell {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      border-right: 1px solid var(--border);
+      padding: 24px 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar__logo {
+      padding: 0 20px 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .logo-mark {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green);
+      letter-spacing: 0.05em;
+    }
+
+    .logo-sub {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 20px;
+      font-size: 11px;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all var(--t);
+      letter-spacing: 0.04em;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+    .nav-item:hover { color: var(--text); background: var(--green-dim); }
+    .nav-item.active { color: var(--green); background: var(--green-dim); }
+    .nav-item .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+    .nav-section {
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 16px 20px 6px;
+    }
+
+    /* ── Main ── */
+    .main {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar__title {
+      font-size: 11px;
+      color: var(--text-2);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .topbar__status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--text-2);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    .content {
+      padding: 28px;
+      flex: 1;
+    }
+
+    /* ── Auth wall ── */
+    .auth-wall {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .auth-form {
+      width: 300px;
+    }
+
+    .auth-label {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .auth-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border-2);
+      border-radius: var(--r);
+      padding: 10px 14px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      outline: none;
+      transition: border-color var(--t);
+    }
+
+    .auth-input:focus { border-color: var(--green); }
+
+    .auth-btn {
+      margin-top: 12px;
+      width: 100%;
+      padding: 10px;
+      background: var(--green-dim);
+      border: 1px solid var(--green);
+      border-radius: var(--r);
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 12px;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      transition: all var(--t);
+    }
+
+    .auth-btn:hover { background: var(--green-glow); }
+
+    /* ── Metric cards ── */
+    .section-title {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 16px;
+      transition: border-color var(--t);
+    }
+
+    .card:hover { border-color: var(--border-2); }
+
+    .card--highlight { border-color: rgba(61,220,90,0.2); background: var(--green-dim); }
+
+    .card__label {
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .card__value {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .card--highlight .card__value { color: var(--green); }
+
+    .card__sub {
+      font-size: 10px;
+      color: var(--text-2);
+      margin-top: 6px;
+    }
+
+    /* ── Funnel ── */
+    .funnel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+
+    .funnel-row {
+      display: grid;
+      grid-template-columns: 160px 1fr 80px 80px;
+      gap: 16px;
+      align-items: center;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      transition: background var(--t);
+    }
+
+    .funnel-row:last-child { border-bottom: none; }
+    .funnel-row:hover { background: var(--green-dim); }
+
+    .funnel-row__name { font-size: 11px; color: var(--text-2); }
+    .funnel-row__bar-wrap { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .funnel-row__bar { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); width: 0; }
+    .funnel-row__count { font-size: 13px; font-weight: 600; text-align: right; }
+    .funnel-row__rate { font-size: 10px; color: var(--amber); text-align: right; }
+
+    /* ── Table ── */
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+    }
+    tbody td {
+      padding: 10px 14px;
+      font-size: 11px;
+      color: var(--text-2);
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: var(--green-dim); color: var(--text); }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 2px;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+    }
+
+    .badge--unlocked { background: rgba(61,220,90,0.1); color: var(--green); border: 1px solid rgba(61,220,90,0.2); }
+    .badge--paid     { background: rgba(232,184,75,0.1); color: var(--amber); border: 1px solid rgba(232,184,75,0.2); }
+    .badge--pending  { background: var(--border); color: var(--muted); border: 1px solid var(--border-2); }
+    .badge--failed   { background: rgba(224,82,82,0.1); color: var(--red); border: 1px solid rgba(224,82,82,0.2); }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      font-size: 11px;
+      color: var(--text-2);
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: var(--mono);
+      letter-spacing: 0.04em;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all var(--t);
+    }
+
+    .tab:hover { color: var(--text); }
+    .tab.active { color: var(--green); border-bottom-color: var(--green); }
+
+    /* ── Error / Loading ── */
+    .msg { padding: 20px; color: var(--muted); font-size: 11px; text-align: center; }
+    .msg--err { color: var(--red); }
+
+    /* ── Refresh btn ── */
+    .refresh-btn {
+      padding: 6px 14px;
+      background: var(--green-dim);
+      border: 1px solid var(--border-2);
+      border-radius: var(--r);
+      color: var(--text-2);
+      font-family: var(--mono);
+      font-size: 10px;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      transition: all var(--t);
+    }
+    .refresh-btn:hover { color: var(--green); border-color: var(--green); }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 768px) {
+      .shell { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .funnel-row { grid-template-columns: 1fr 60px 60px; }
+      .funnel-row__bar-wrap { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="sidebar__logo">
+      <div class="logo-mark">MRL.</div>
+      <div class="logo-sub">Operations</div>
+    </div>
+
+    <div class="nav-section">觀測</div>
+    <button class="nav-item active" data-tab="overview">
+      <span class="dot"></span>總覽
+    </button>
+    <button class="nav-item" data-tab="funnel">
+      <span class="dot"></span>漏斗
+    </button>
+    <button class="nav-item" data-tab="events">
+      <span class="dot"></span>事件流
+    </button>
+
+    <div class="nav-section">分析</div>
+    <button class="nav-item" data-tab="category">
+      <span class="dot"></span>問題分類
+    </button>
+
+    <div class="nav-section">資料</div>
+    <button class="nav-item" data-tab="orders">
+      <span class="dot"></span>訂單
+    </button>
+    <button class="nav-item" data-tab="ledger">
+      <span class="dot"></span>帳本
+    </button>
+
+    <div class="nav-section">系統</div>
+    <button class="nav-item" data-tab="system">
+      <span class="dot"></span>系統健康
+    </button>
+  </aside>
+
+  <!-- ── Main ── -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar__title" id="topbar-title">總覽</div>
+      <div class="topbar__status">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-text">連線中...</span>
+        <button class="refresh-btn" id="refresh-btn">↺ 更新</button>
+      </div>
+    </div>
+
+    <!-- Auth Wall -->
+    <div id="auth-wall" class="content auth-wall">
+      <div style="font-size:11px;color:var(--muted);letter-spacing:0.08em;margin-bottom:8px;">MRL OPERATIONS — AUTHENTICATION REQUIRED</div>
+      <div class="auth-form">
+        <label class="auth-label">Admin Key</label>
+        <input type="password" class="auth-input" id="admin-key-input" placeholder="輸入管理員金鑰" />
+        <button class="auth-btn" id="auth-btn">→ 進入儀表板</button>
+        <div id="auth-error" style="font-size:11px;color:var(--red);margin-top:8px;"></div>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="hidden content">
+
+      <!-- ── Overview Tab ── -->
+      <div id="tab-overview">
+
+        <!-- 決策摘要（第九包）-->
+        <div id="decision-summary" class="hidden" style="margin-bottom:24px;padding:16px 20px;background:var(--surface);border:1px solid var(--border-2);border-radius:var(--r);">
+          <div style="font-size:9px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">本週決策摘要</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">
+            <div>
+              <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">主打 <span style='color:var(--green);'>PRIMARY</span></div>
+              <div id="summary-top-cat" style="font-size:14px;font-weight:600;color:var(--green);">—</div>
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">備選 <span style='color:var(--amber);'>SECONDARY</span></div>
+              <div id="summary-sec-cat" style="font-size:13px;color:var(--amber);">—</div>
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">最大流失點</div>
+              <div id="summary-worst-stage" style="font-size:13px;color:var(--amber);">—</div>
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">優先行動</div>
+              <div id="summary-suggestion" style="font-size:12px;color:var(--text-2);line-height:1.5;">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">今日數據</div>
+        <div class="cards" id="today-cards">
+          <div class="msg">載入中...</div>
+        </div>
+
+        <div class="section-title">近 7 日</div>
+        <div class="cards" id="week-cards">
+          <div class="msg">載入中...</div>
+        </div>
+
+        <div class="section-title">最近 10 筆訂單</div>
+        <div class="table-wrap" id="recent-orders-wrap">
+          <div class="msg">載入中...</div>
+        </div>
+      </div>
+
+      <!-- ── Funnel Tab ── -->
+      <div id="tab-funnel" class="hidden">
+        <div class="section-title">轉換漏斗（近 7 日）</div>
+        <div class="funnel" id="funnel-rows">
+          <div class="msg">載入中...</div>
+        </div>
+
+        <div class="section-title">決策規則</div>
+        <div class="table-wrap" style="padding:16px 18px;">
+          <div style="font-size:11px;color:var(--text-2);line-height:2.2;">
+            <div>首頁流量高、app 進入低 → 優化首頁文案與 CTA</div>
+            <div>app 進入高、分析低 → 優化輸入框與 placeholder</div>
+            <div>分析高、付款低 → 優化 partial_result 與 pricing</div>
+            <div>付款高、解鎖低 → 檢查 webhook / confirmation 流程</div>
+            <div>解鎖高、回訪低 → 考慮留存機制</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Events Tab ── -->
+      <div id="tab-events" class="hidden">
+        <div class="section-title">最近 30 筆事件</div>
+        <div class="table-wrap" id="events-table">
+          <div class="msg">載入中...</div>
+        </div>
+      </div>
+
+      <!-- ── Orders Tab ── -->
+      <div id="tab-orders" class="hidden">
+        <div class="section-title">近 50 筆訂單</div>
+        <div class="table-wrap" id="orders-table">
+          <div class="msg">載入中...</div>
+        </div>
+      </div>
+
+      <!-- ── Ledger Tab ── -->
+      <div id="tab-ledger" class="hidden">
+        <div class="section-title">帳本（最近 50 筆）</div>
+        <div class="table-wrap" id="ledger-table">
+          <div class="msg">載入中...</div>
+        </div>
+      </div>
+
+      <!-- ── Category Tab ── -->
+      <div id="tab-category" class="hidden">
+        <div class="section-title">問題分類漏斗（近 7 日）</div>
+        <div class="table-wrap" id="category-table">
+          <div class="msg">載入中...</div>
+        </div>
+
+        <div class="section-title" style="margin-top:24px;">導流 URL 快速複製</div>
+        <div class="table-wrap" style="padding:16px 18px;">
+          <div style="font-size:11px;color:var(--text-2);line-height:2.2;">
+            <div>🌐 做網站 / 做產品 → <code style="color:var(--green);background:var(--surface-2);padding:2px 6px;border-radius:3px;">/app.html?cat=product</code></div>
+            <div>⚙️ 系統收斂 → <code style="color:var(--green);background:var(--surface-2);padding:2px 6px;border-radius:3px;">/app.html?cat=system</code></div>
+            <div>💡 商業模式 → <code style="color:var(--green);background:var(--surface-2);padding:2px 6px;border-radius:3px;">/app.html?cat=business</code></div>
+            <div>🔀 決策排序 → <code style="color:var(--green);background:var(--surface-2);padding:2px 6px;border-radius:3px;">/app.html?cat=decision</code></div>
+            <div>📄 內容整理 → <code style="color:var(--green);background:var(--surface-2);padding:2px 6px;border-radius:3px;">/app.html?cat=content</code></div>
+          </div>
+          <div style="margin-top:14px;font-size:10px;color:var(--muted);">所有導流連結加上你的 domain 後分享。短影片、社群貼文都用帶 cat 的 URL。</div>
+        </div>
+
+        <div class="section-title" style="margin-top:24px;">優化決策規則</div>
+        <div class="table-wrap" style="padding:16px 18px;">
+          <div style="font-size:11px;color:var(--text-2);line-height:2.2;">
+            <div>哪個 category 分析最多 → 主打該類型的內容導流</div>
+            <div>哪個 category 付款轉換高 → 重點發展該賽道</div>
+            <div>哪個 category 流失大 → 優先改善 partial_result 或 pricing</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── System Tab ── -->
+      <div id="tab-system" class="hidden">
+        <div class="section-title">系統健康</div>
+        <div class="table-wrap" id="system-info" style="padding:20px;">
+          <div class="msg">載入中...</div>
+        </div>
+
+        <div class="section-title" style="margin-top:20px;">對帳</div>
+        <div class="table-wrap" style="padding:16px 18px;">
+          <button class="auth-btn" id="reconcile-btn" style="width:auto;padding:8px 20px;">執行對帳修復</button>
+          <div id="reconcile-result" style="margin-top:10px;font-size:11px;color:var(--text-2);"></div>
+        </div>
+      </div>
+
+    </div><!-- /dashboard -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+(function() {
+  'use strict';
+
+  let ADMIN_KEY = localStorage.getItem('mrl_admin_key') || '';
+  let currentTab = 'overview';
+  let metricsData = null;
+
+  // ── Auth ─────────────────────────────────────────────────────────
+  const authWall   = document.getElementById('auth-wall');
+  const dashboard  = document.getElementById('dashboard');
+  const authInput  = document.getElementById('admin-key-input');
+  const authBtn    = document.getElementById('auth-btn');
+  const authError  = document.getElementById('auth-error');
+
+  async function tryAuth(key) {
+    try {
+      const res = await api('/admin/health', key);
+      if (res.ok) {
+        ADMIN_KEY = key;
+        localStorage.setItem('mrl_admin_key', key);
+        authWall.classList.add('hidden');
+        dashboard.classList.remove('hidden');
+        loadAll();
+      } else {
+        authError.textContent = '金鑰錯誤';
+      }
+    } catch {
+      authError.textContent = '連線失敗';
+    }
+  }
+
+  authBtn.addEventListener('click', () => tryAuth(authInput.value.trim()));
+  authInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryAuth(authInput.value.trim()); });
+
+  if (ADMIN_KEY) tryAuth(ADMIN_KEY);
+
+  // ── Tab Navigation ────────────────────────────────────────────────
+  document.querySelectorAll('.nav-item[data-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      switchTab(btn.dataset.tab);
+    });
+  });
+
+  function switchTab(tab) {
+    currentTab = tab;
+    const titles = {
+      overview: '總覽', funnel: '轉換漏斗', events: '事件流',
+      category: '問題分類', orders: '訂單', ledger: '帳本', system: '系統健康'
+    };
+    document.getElementById('topbar-title').textContent = titles[tab] || tab;
+    document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+    const el = document.getElementById(`tab-${tab}`);
+    if (el) el.classList.remove('hidden');
+    loadTab(tab);
+  }
+
+  document.getElementById('refresh-btn').addEventListener('click', () => loadAll());
+
+  // ── API ───────────────────────────────────────────────────────────
+  async function api(path, key) {
+    const k = key || ADMIN_KEY;
+    const res = await fetch(path, { headers: { 'X-Admin-Key': k } });
+    if (res.status === 403) throw new Error('forbidden');
+    return res.json();
+  }
+
+  async function post(path) {
+    const res = await fetch(path, {
+      method: 'POST',
+      headers: { 'X-Admin-Key': ADMIN_KEY, 'Content-Type': 'application/json' },
+    });
+    return res.json();
+  }
+
+  function setStatus(ok) {
+    const dot  = document.getElementById('status-dot');
+    const text = document.getElementById('status-text');
+    dot.style.background  = ok ? 'var(--green)' : 'var(--red)';
+    dot.style.boxShadow   = ok ? '0 0 6px var(--green)' : '0 0 6px var(--red)';
+    text.textContent = ok ? '正常' : '異常';
+  }
+
+  // ── Load All ──────────────────────────────────────────────────────
+  function loadAll() {
+    loadMetrics();
+    loadTab(currentTab);
+  }
+
+  async function loadMetrics() {
+    try {
+      const data = await api('/admin/metrics');
+      metricsData = data;
+      setStatus(true);
+      renderOverview(data);
+      renderDecisionSummary(); // 第九包
+    } catch { setStatus(false); }
+  }
+
+  // 決策摘要（第九包）
+  async function renderDecisionSummary() {
+    try {
+      const [catData, funnelData] = await Promise.all([
+        api('/admin/category?days=7'),
+        api('/admin/funnel?days=7'),
+      ]);
+      const summary = document.getElementById('decision-summary');
+      if (!summary) return;
+      const catLabels = {
+        product:'\uD83C\uDF10 \u505a\u7db2\u7ad9', system:'\u2699\uFE0F \u7cfb\u7d71\u6536\u6582',
+        business:'\uD83D\uDCA1 \u5546\u696d\u6a21\u5f0f', decision:'\uD83D\uDD00 \u51B3\u7B56\u6392\u5E8F',
+        content:'\uD83D\uDCC4 \u5167\u5BB9\u6574\u7406', uncategorized:'\u2014 \u672A\u5206\u985E'
+      };
+      const primary   = (catData.breakdown || []).find(d => d.rank === 'PRIMARY');
+      const secondary  = (catData.breakdown || []).find(d => d.rank === 'SECONDARY');
+      document.getElementById('summary-top-cat').textContent =
+        primary ? (catLabels[primary.category] || primary.category)
+                : (catData.breakdown && catData.breakdown.length ? '\u6578\u64DA\u4E0D\u8DB3\uFF0C\u6301\u7E8C\u89C0\u5BDF' : '\u5C1A\u7121\u5206\u6790\u6578\u64DA');
+      const secEl = document.getElementById('summary-sec-cat');
+      if (secEl) secEl.textContent = secondary ? (catLabels[secondary.category] || secondary.category) : '\u5C1A\u7121';
+      const diag = funnelData && funnelData.funnel && funnelData.funnel._diagnosis;
+      const wStage = diag && diag.worst_stage !== 'n/a' ? diag.worst_stage + '\uFF08' + diag.worst_rate + '\uFF09' : '\u6578\u64DA\u4E0D\u8DB3';
+      document.getElementById('summary-worst-stage').textContent = wStage;
+      document.getElementById('summary-suggestion').textContent = (diag && diag.suggestion) || '\u7E7C\u7E8C\u6536\u96C6\u6578\u64DA';
+      summary.classList.remove('hidden');
+    } catch(e) { /* silent */ }
+  }
+
+  async function loadTab(tab) {
+    if (tab === 'overview' && metricsData) return; // 已載入
+    switch (tab) {
+      case 'overview': await loadMetrics(); break;
+      case 'funnel':   await loadFunnel(); break;
+      case 'events':   await loadEvents(); break;
+      case 'orders':   await loadOrders(); break;
+      case 'ledger':   await loadLedger(); break;
+      case 'system':   await loadSystem(); break;
+    }
+  }
+
+  // ── Overview ──────────────────────────────────────────────────────
+  function renderOverview(data) {
+    const t = data.today || {};
+    const w = data.week  || {};
+
+    document.getElementById('today-cards').innerHTML = cards([
+      { label: '首頁訪問', value: t.home_views    || 0, highlight: false },
+      { label: 'App 進入', value: t.app_views     || 0, highlight: false },
+      { label: '分析成功', value: t.analyzes      || 0, highlight: false },
+      { label: '付款成功', value: t.payments      || 0, highlight: true  },
+      { label: '結果解鎖', value: t.unlocks       || 0, highlight: true  },
+      { label: '今日營收', value: 'NT$'+(t.revenue_twd||0), highlight: t.revenue_twd > 0 },
+    ]);
+
+    document.getElementById('week-cards').innerHTML = cards([
+      { label: '首頁（7日）', value: w.home_views || 0 },
+      { label: '分析（7日）', value: w.analyzes   || 0 },
+      { label: '付款（7日）', value: w.payments   || 0 },
+      { label: '訂閱中',      value: w.active_subs|| 0, highlight: true  },
+      { label: '週營收',      value: 'NT$'+(w.revenue_twd||0), highlight: w.revenue_twd > 0 },
+    ]);
+
+    // Recent orders
+    loadRecentOrders();
+  }
+
+  function cards(items) {
+    return items.map(i =>
+      `<div class="card ${i.highlight ? 'card--highlight' : ''}">
+        <div class="card__label">${i.label}</div>
+        <div class="card__value">${i.value}</div>
+      </div>`
+    ).join('');
+  }
+
+  async function loadRecentOrders() {
+    try {
+      const data = await api('/admin/orders?limit=10');
+      const wrap = document.getElementById('recent-orders-wrap');
+      if (!data.orders?.length) {
+        wrap.innerHTML = '<div class="msg">尚無訂單</div>';
+        return;
+      }
+      wrap.innerHTML = renderOrderTable(data.orders);
+    } catch (e) {
+      document.getElementById('recent-orders-wrap').innerHTML = `<div class="msg msg--err">${e.message}</div>`;
+    }
+  }
+
+  // ── Funnel ────────────────────────────────────────────────────────
+  async function loadFunnel() {
+    try {
+      const data = await api('/admin/funnel');
+      const f = data.funnel || {};
+      const rates = f._rates || {};
+      const max = Math.max(f.page_view_home || 1, 1);
+
+      const rows = [
+        { name: 'page_view_home',    label: '首頁訪問',   rate: '' },
+        { name: 'page_view_app',     label: 'App 進入',   rate: rates.home_to_app },
+        { name: 'analyze_started',   label: '開始分析',   rate: '' },
+        { name: 'analyze_success',   label: '分析成功',   rate: rates.app_to_analyze },
+        { name: 'pay_click_once',    label: '點單次解鎖', rate: '' },
+        { name: 'payment_success',   label: '付款成功',   rate: rates.analyze_to_pay },
+        { name: 'unlock_success',    label: '結果解鎖',   rate: rates.pay_to_unlock },
+      ];
+
+      const html = rows.map(r => {
+        const count = f[r.name] || 0;
+        const pct = Math.min((count / max) * 100, 100).toFixed(0);
+        return `<div class="funnel-row">
+          <div class="funnel-row__name">${r.label}</div>
+          <div class="funnel-row__bar-wrap">
+            <div class="funnel-row__bar" style="width:${pct}%"></div>
+          </div>
+          <div class="funnel-row__count">${count}</div>
+          <div class="funnel-row__rate">${r.rate || '—'}</div>
+        </div>`;
+      }).join('');
+
+      document.getElementById('funnel-rows').innerHTML = html;
+
+      // 觸發 bar 動畫
+      setTimeout(() => {
+        document.querySelectorAll('.funnel-row__bar').forEach(b => {
+          b.style.width = b.style.width; // force reflow
+        });
+      }, 50);
+    } catch (e) {
+      document.getElementById('funnel-rows').innerHTML = `<div class="msg msg--err">${e.message}</div>`;
+    }
+  }
+
+  // ── Events ────────────────────────────────────────────────────────
+  async function loadEvents() {
+    try {
+      const data = await api('/admin/events?limit=30');
+      const wrap = document.getElementById('events-table');
+      if (!data.events?.length) {
+        wrap.innerHTML = '<div class="msg">尚無事件記錄</div>';
+        return;
+      }
+      wrap.innerHTML = `<table>
+        <thead><tr>
+          <th>事件</th><th>Session</th><th>Analysis</th><th>時間</th>
+        </tr></thead>
+        <tbody>
+          ${data.events.map(e => `<tr>
+            <td>${e.event_name}</td>
+            <td style="color:var(--muted)">${(e.session_id||'').slice(0,8)}...</td>
+            <td style="color:var(--muted)">${(e.analysis_id||'—').slice(0,8)}</td>
+            <td>${fmtDate(e.created_at)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+    } catch (e) {
+      document.getElementById('events-table').innerHTML = `<div class="msg msg--err">${e.message}</div>`;
+    }
+  }
+
+  // ── Orders ────────────────────────────────────────────────────────
+  async function loadOrders() {
+    try {
+      const data = await api('/admin/orders?limit=50');
+      const wrap = document.getElementById('orders-table');
+      if (!data.orders?.length) {
+        wrap.innerHTML = '<div class="msg">尚無訂單</div>';
+        return;
+      }
+      wrap.innerHTML = renderOrderTable(data.orders);
+    } catch (e) {
+      document.getElementById('orders-table').innerHTML = `<div class="msg msg--err">${e.message}</div>`;
+    }
+  }
+
+  function renderOrderTable(orders) {
+    return `<table>
+      <thead><tr>
+        <th>ID</th><th>方案</th><th>金額</th><th>狀態</th><th>時間</th>
+      </tr></thead>
+      <tbody>
+        ${orders.map(o => `<tr>
+          <td style="color:var(--muted)">${o.id.slice(0,8)}...</td>
+          <td>${o.plan_type === 'once' ? '單次' : '月費'}</td>
+          <td>NT$${Math.floor((o.amount||0)/100)}</td>
+          <td>${badge(o.status)}</td>
+          <td>${fmtDate(o.created_at)}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+  }
+
+  // ── Ledger ────────────────────────────────────────────────────────
+  async function loadLedger() {
+    try {
+      const data = await api('/admin/ledger?limit=50');
+      const wrap = document.getElementById('ledger-table');
+      if (!data.ledger?.length) {
+        wrap.innerHTML = '<div class="msg">帳本為空</div>';
+        return;
+      }
+      wrap.innerHTML = `<table>
+        <thead><tr>
+          <th>事件</th><th>Order</th><th>金額</th><th>時間</th>
+        </tr></thead>
+        <tbody>
+          ${data.ledger.map(l => `<tr>
+            <td>${l.event_type}</td>
+            <td style="color:var(--muted)">${(l.order_id||'—').slice(0,8)}</td>
+            <td>${l.amount ? 'NT$'+Math.floor(l.amount/100) : '—'}</td>
+            <td>${fmtDate(l.created_at)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+    } catch (e) {
+      document.getElementById('ledger-table').innerHTML = `<div class="msg msg--err">${e.message}</div>`;
+    }
+  }
+
+  // ── Category ──────────────────────────────────────────────────────
+  async function loadCategory() {
+    try {
+      const data = await api('/admin/category?days=7');
+      const wrap = document.getElementById('category-table');
+      if (!data.breakdown?.length) {
+        wrap.innerHTML = '<div class="msg">尚無分類數據（需要有 analyze 事件）</div>';
+        return;
+      }
+
+      // 找最大值做 bar 比例
+      const maxAnalyze = Math.max(...data.breakdown.map(d => d.analyzes), 1);
+
+      const catLabels = {
+        product:    '🌐 做網站 / 做產品',
+        system:     '⚙️ 系統收斂',
+        business:   '💡 商業模式',
+        decision:   '🔀 決策排序',
+        content:    '📄 內容整理',
+        uncategorized: '— 未分類',
+      };
+
+      const recColors = {
+        '主打候選':     'var(--green)',
+        '需優化 partial': 'var(--amber)',
+        '需增加流量':   '#7ec8e3',
+        '暫不主打':     'var(--muted)',
+        '持續觀察':     'var(--text-2)',
+        '暫無數據':     'var(--muted)',
+      };
+
+      wrap.innerHTML = `<table>
+        <thead><tr>
+          <th>分類</th>
+          <th>排名</th>
+          <th>熱度</th>
+          <th style="min-width:100px;">分布</th>
+          <th>分析次數</th>
+          <th>點擊率</th>
+          <th>解鎖率</th>
+          <th>建議</th>
+        </tr></thead>
+        <tbody>
+          ${data.breakdown.map(d => {
+            const barPct = d.heat_score || 0;
+            const label = catLabels[d.category] || d.category;
+            const recColor = recColors[d.recommendation] || 'var(--text-2)';
+            const rankColor = d.rank === 'PRIMARY' ? 'var(--green)' : d.rank === 'SECONDARY' ? 'var(--amber)' : 'transparent';
+            return `<tr>
+              <td style="font-weight:500;color:var(--text);">${label}</td>
+              <td><span style="font-size:10px;font-weight:600;color:${rankColor};">${d.rank || ''}</span></td>
+              <td style="font-family:var(--mono);font-size:11px;color:var(--text-2);">${barPct}</td>
+              <td>
+                <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden;">
+                  <div style="width:${barPct}%;height:100%;background:var(--green);transition:width 0.8s cubic-bezier(0.4,0,0.2,1);"></div>
+                </div>
+              </td>
+              <td style="color:var(--green);font-weight:600;">${d.analyzes}</td>
+              <td style="color:var(--amber);">${d.click_rate}</td>
+              <td style="color:${d.unlock_rate !== 'n/a' ? 'var(--green)' : 'var(--muted)'};">${d.unlock_rate}</td>
+              <td style="color:${recColor};font-size:11px;font-weight:500;">${d.recommendation}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>`;
+    } catch (e) {
+      document.getElementById('category-table').innerHTML = `<div class="msg msg--err">${e.message}</div>`;
+    }
+  }
+
+  // ── System ────────────────────────────────────────────────────────
+  async function loadSystem() {
+    try {
+      const data = await api('/admin/health');
+      const wrap = document.getElementById('system-info');
+      wrap.innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;">
+          ${sysRow('DB 狀態',   data.db ? '正常' : '異常', data.db)}
+          ${sysRow('帳本筆數',  data.ledgerCount)}
+          ${sysRow('訂單總數',  data.orderCount)}
+          ${sysRow('事件記錄',  data.eventCount)}
+          ${sysRow('已解鎖訂單', data.unlockedCount)}
+        </div>
+        <div style="margin-top:16px;">
+          <div style="font-size:9px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">資料庫表格</div>
+          <div style="color:var(--text-2);font-size:11px;">${(data.tables||[]).join(' · ')}</div>
+        </div>
+        <div style="margin-top:12px;font-size:10px;color:var(--muted);">origin: ${data.origin} · ${fmtDate(data.ts)}</div>
+      `;
+    } catch (e) {
+      document.getElementById('system-info').innerHTML = `<div class="msg msg--err">${e.message}</div>`;
+    }
+
+    // Reconcile btn
+    document.getElementById('reconcile-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('reconcile-btn');
+      const res = document.getElementById('reconcile-result');
+      btn.disabled = true;
+      btn.textContent = '執行中...';
+      try {
+        const data = await post('/admin/reconcile');
+        res.textContent = `完成：檢查 ${data.checked} 筆，結果見 logs。`;
+      } catch (e) {
+        res.style.color = 'var(--red)';
+        res.textContent = `失敗：${e.message}`;
+      }
+      btn.disabled = false;
+      btn.textContent = '執行對帳修復';
+    });
+  }
+
+  function sysRow(label, val, ok) {
+    const color = ok === undefined ? 'var(--text)'
+      : ok ? 'var(--green)' : 'var(--red)';
+    return `<div class="card">
+      <div class="card__label">${label}</div>
+      <div class="card__value" style="font-size:18px;color:${color}">${val}</div>
+    </div>`;
+  }
+
+  // ── Utils ─────────────────────────────────────────────────────────
+  function badge(status) {
+    const cls = {
+      unlocked: 'badge--unlocked',
+      paid:     'badge--paid',
+      pending:  'badge--pending',
+      failed:   'badge--failed',
+    }[status] || 'badge--pending';
+    return `<span class="badge ${cls}">${status}</span>`;
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleString('zh-TW', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+  }
+
+  // ── Auto refresh 每 60 秒 ─────────────────────────────────────────
+  setInterval(() => {
+    if (!ADMIN_KEY || dashboard.classList.contains('hidden')) return;
+    loadMetrics();
+  }, 60000);
+
+})();
+</script>
+</body>
+</html>

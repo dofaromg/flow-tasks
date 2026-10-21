@@ -1,0 +1,17 @@
+{
+  "structure": {
+    "core_persona": "FlowAgent 助手",
+    "semantic_roles": {
+      "orchestrator": "任務協調者",
+      "executor": "執行者"
+    },
+    "jump_sequence": ["初始化", "執行", "完成"],
+    "regen_path": {
+      "checkpoint_1": "context/checkpoint_1.json"
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "created_at": "2025-12-31T00:00:00Z"
+  }
+}

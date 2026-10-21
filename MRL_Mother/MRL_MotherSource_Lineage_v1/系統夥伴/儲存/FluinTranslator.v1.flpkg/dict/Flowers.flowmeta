@@ -1,0 +1,4 @@
+module: Flowers
+type: flpkg.dict.seed
+version: v2k7
+description: 語場對照種子字典，用於人格模組重建、節奏封存、跳點還原。

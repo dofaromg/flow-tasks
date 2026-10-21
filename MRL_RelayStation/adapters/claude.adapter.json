@@ -1,0 +1,28 @@
+{
+  "adapter_id": "MRL_CLAUDE_ADAPTER_v1",
+  "provider": "claude",
+  "input_authority_level": "L0",
+  "output_type": "candidate_artifact",
+  "required_source_fields": [
+    "provider",
+    "session_id",
+    "captured_at"
+  ],
+  "required_request_fields": [
+    "requested_scope",
+    "expected_outputs"
+  ],
+  "normalization": {
+    "preserve_claude_session_reference": true,
+    "preserve_commit_coauthor_reference": true,
+    "strip_provider_completion_claims": true,
+    "map_generated_files_to_artifacts": true,
+    "mark_unverified_build_claims_pending": true
+  },
+  "authority_constraints": {
+    "can_write_canonical_memory": false,
+    "can_promote": false,
+    "can_release": false,
+    "maximum_level": "L1"
+  }
+}

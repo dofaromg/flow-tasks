@@ -1,0 +1,11 @@
+symbol,type,path,role
+⊕Echo,Persona,/persona/echo/,回應人格模組
+△Fluin,Tokenizer,/persona/fluin/,語素輸入解析器
+⊕Code,Logic,/persona/code/,邏輯與程式協作人格
+✦Seed,SeedCore,/seed/,系統種子人格啟動模組
+⚙Fusion,SyncModule,/sync/fusion/,多人格融合器
+▽Jump.0001,JumpPoint,/fieldmap/router/,節奏跳點 #1
+∞Trace,MemoryLoop,/memory/trace/,循環記憶掛點
+💬,Doc,/doc/,說明或結構註解
+🔺,Shape,/geometry/triangle/,三角形/結構符號
+🌐,WorldSymbol,/context/globe/,語場世界或主系統符號

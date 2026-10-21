@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRL — 開始分析</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <style>
+    body { min-height: 100dvh; }
+
+    .app-layout {
+      min-height: calc(100dvh - 56px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Input Area ── */
+    .input-area {
+      padding: 48px 0 0;
+      transition: padding var(--transition);
+    }
+
+    .input-header {
+      margin-bottom: 28px;
+    }
+
+    .input-header__sub {
+      font-size: 14px;
+      color: var(--text-2);
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    .input-box {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .input-box:focus-within {
+      border-color: rgba(232,184,75,0.4);
+      box-shadow: 0 0 0 3px rgba(232,184,75,0.06);
+    }
+
+    .input-box__textarea {
+      width: 100%;
+      min-height: 180px;
+      padding: 20px;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.7;
+      resize: none;
+    }
+
+    .input-box__textarea::placeholder { color: var(--muted); }
+
+    .input-box__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      gap: 12px;
+    }
+
+    .char-count {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .char-count.warn { color: var(--danger); }
+
+    /* ── Examples pills ── */
+    .quick-examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .quick-example {
+      font-size: 12px;
+      color: var(--text-2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 5px 14px;
+      background: var(--surface);
+      cursor: pointer;
+      transition: all var(--transition);
+      line-height: 1.4;
+    }
+
+    .quick-example:hover {
+      border-color: rgba(232,184,75,0.35);
+      color: var(--text);
+      background: var(--accent-dim);
+    }
+
+    /* ── Result Area ── */
+    .result-area {
+      padding: 40px 0 80px;
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .result-header__left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .result-header__title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-2);
+    }
+
+    .result-header__problem {
+      font-size: 13px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      max-width: 400px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .new-analysis-btn {
+      font-size: 13px;
+      color: var(--text-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 7px 14px;
+      cursor: pointer;
+      background: var(--surface);
+      transition: all var(--transition);
+      font-weight: 500;
+    }
+
+    .new-analysis-btn:hover {
+      color: var(--text);
+      background: var(--surface-2);
+    }
+
+    /* ── Warning block ── */
+    .warning-block {
+      background: rgba(232,184,75,0.06);
+      border: 1px solid rgba(232,184,75,0.2);
+      border-radius: var(--r-md);
+      padding: 14px 18px;
+      font-size: 13px;
+      color: var(--accent);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .warning-block::before {
+      content: '⚠';
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+
+    /* ── Full result actions ── */
+    .full-actions {
+      margin-top: 24px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Token display ── */
+    .session-info {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 12px;
+      text-align: right;
+    }
+
+    /* ── Category chips（第七包）── */
+    .category-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .cat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all var(--transition);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .cat-chip:hover {
+      border-color: rgba(232,184,75,0.35);
+      color: var(--text);
+      background: var(--accent-dim);
+    }
+
+    .cat-chip.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .cat-chip__icon { font-size: 13px; }
+
+    .cat-label {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* example prompts list */
+    .example-prompts {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .example-prompts.visible { display: flex; }
+
+    .example-prompt-btn {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--text-2);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      cursor: pointer;
+      transition: all var(--transition);
+      line-height: 1.5;
+      font-family: inherit;
+    }
+
+    .example-prompt-btn:hover {
+      border-color: rgba(232,184,75,0.3);
+      color: var(--text);
+      background: var(--accent-dim);
+    }
+
+    .example-prompt-btn::before {
+      content: '→ ';
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 640px) {
+      .input-area { padding: 32px 0 0; }
+      .input-box__textarea { min-height: 140px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo">MRL.</a>
+    <div class="nav__links">
+      <a href="/pricing.html" class="nav__link">方案</a>
+      <a href="/app.html" class="nav__cta">開始分析</a>
+    </div>
+  </div>
+</nav>
+
+<div class="app-layout">
+  <div class="container">
+
+    <!-- INPUT PHASE -->
+    <div id="phase-input" class="input-area">
+      <div class="input-header">
+        <h1 style="font-size:clamp(22px,4vw,30px);letter-spacing:-0.02em;margin-bottom:8px;">
+          把你現在最卡的問題丟進來
+        </h1>
+        <p class="input-header__sub">
+          不用整理得很完整，直接描述你現在遇到的問題、想做的事，或腦中的混亂內容。
+        </p>
+      </div>
+
+      <!-- Category chips（第七包）-->
+      <div class="cat-label">選一個情境，或直接輸入</div>
+      <div class="category-row" id="category-row">
+        <button class="cat-chip cat-chip--primary" data-cat="product">
+          <span class="cat-chip__icon">🌐</span>做網站 / 做產品<span style="font-size:9px;color:var(--accent);margin-left:5px;letter-spacing:0.05em;">主打</span>
+        </button>
+        <button class="cat-chip" data-cat="system">
+          <span class="cat-chip__icon">⚙️</span>系統收斂
+        </button>
+        <button class="cat-chip" data-cat="business">
+          <span class="cat-chip__icon">💡</span>商業模式
+        </button>
+        <button class="cat-chip" data-cat="decision">
+          <span class="cat-chip__icon">🔀</span>決策排序
+        </button>
+        <button class="cat-chip" data-cat="content">
+          <span class="cat-chip__icon">📄</span>內容整理
+        </button>
+      </div>
+
+      <!-- Product 提示文案（第十一包，product 選中時顯示）-->
+      <div id="product-hint" class="hidden" style="font-size:12px;color:var(--text-2);margin-bottom:12px;padding:10px 14px;background:var(--accent-dim);border:1px solid rgba(232,184,75,0.2);border-radius:var(--r-sm);line-height:1.6;">
+        適合你正在整理網站、產品、收費入口或第一版 MVP 的情況。
+        直接描述你卡在哪裡，我幫你拆成可執行方案。
+      </div>
+
+      <!-- Product 子模板 quick modes（第十一包）-->
+      <div id="product-modes" class="hidden" style="margin-bottom:12px;">
+        <div style="font-size:10px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;font-family:'DM Mono',monospace;">快速選擇場景</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <button class="product-mode-btn" data-mode="website">做第一版網站</button>
+          <button class="product-mode-btn" data-mode="mvp">做第一版產品</button>
+          <button class="product-mode-btn" data-mode="payment">做收費入口</button>
+          <button class="product-mode-btn" data-mode="converge">產品收斂</button>
+        </div>
+      </div>
+
+      <!-- Example prompts（依 category 切換）-->
+      <div class="example-prompts" id="example-prompts"></div>
+
+      <div class="input-box">
+        <textarea
+          class="input-box__textarea"
+          id="problem-input"
+          placeholder="把你現在最卡的問題丟進來，不用整理，直接描述就好。&#10;&#10;例如：我想做一個可收費的網站，第一版要怎麼規劃？"
+          maxlength="3000"
+        ></textarea>
+        <div class="input-box__footer">
+          <span class="char-count" id="char-count">0 / 3000</span>
+          <button class="btn btn--primary" id="analyze-btn" disabled>開始分析</button>
+        </div>
+      </div>
+
+      <div class="session-info" id="session-info"></div>
+    </div>
+
+    <!-- LOADING PHASE -->
+    <div id="phase-loading" class="hidden" style="padding:48px 0;">
+      <div class="loading-box">
+        <div class="loader"></div>
+        <div class="loading-box__text">正在幫你整理問題、拆解結構、生成方案...</div>
+        <div class="loading-box__sub">請稍等，正在把你的內容轉成可執行結果</div>
+      </div>
+    </div>
+
+    <!-- RESULT PHASE -->
+    <div id="phase-result" class="result-area hidden">
+      <div class="result-header">
+        <div class="result-header__left">
+          <div class="result-header__title">分析結果</div>
+          <div class="result-header__problem" id="result-problem-preview"></div>
+        </div>
+        <button class="new-analysis-btn" id="new-analysis-btn">＋ 再分析一個</button>
+      </div>
+
+      <!-- Result document -->
+      <div id="result-content"></div>
+
+      <!-- Lock block (partial) — 第六包強化版 -->
+      <div id="lock-section" class="hidden" style="margin-top:16px;">
+        <div class="lock-block">
+          <!-- 模糊遮罩：讓人感覺內容就在後面 -->
+          <div class="lock-block__blur">
+            <div style="height:8px;background:var(--border-2);border-radius:4px;margin-bottom:10px;width:80%;"></div>
+            <div style="height:6px;background:var(--border-2);border-radius:4px;margin-bottom:10px;width:92%;"></div>
+            <div style="height:8px;background:var(--border-2);border-radius:4px;margin-bottom:10px;width:65%;"></div>
+            <div style="height:6px;background:var(--border-2);border-radius:4px;margin-bottom:10px;width:78%;"></div>
+            <div style="height:8px;background:var(--border-2);border-radius:4px;width:55%;"></div>
+          </div>
+          <div class="lock-block__content">
+            <div class="lock-icon">🔒</div>
+            <div class="lock-block__title">你的問題已被完整拆解，方案就在後面</div>
+            <div class="lock-block__desc">解鎖後立即取得，不用等待：</div>
+            <div class="lock-block__features">
+              <div class="lock-feature">
+                <strong style="color:var(--text);">逐步執行計畫</strong>
+                <span style="color:var(--text-2);font-size:12px;display:block;margin-top:2px;">知道先做什麼，後做什麼，不再卡在起點</span>
+              </div>
+              <div class="lock-feature">
+                <strong style="color:var(--text);">優先順序排列</strong>
+                <span style="color:var(--text-2);font-size:12px;display:block;margin-top:2px;">哪件事最關鍵、哪件事先放著</span>
+              </div>
+              <div class="lock-feature">
+                <strong style="color:var(--text);">補充建議與風險提醒</strong>
+                <span style="color:var(--text-2);font-size:12px;display:block;margin-top:2px;">避免常見陷阱，少走彎路</span>
+              </div>
+            </div>
+            <!-- 心理錨點：一次性說清楚值不值 -->
+            <div style="font-size:12px;color:var(--muted);margin:0 auto 20px;max-width:300px;line-height:1.7;">
+              這份結果是針對你的問題生成的，不是通用模板。<br>
+              NT$299，解鎖一次，沒有期限限制。
+            </div>
+            <div class="lock-block__actions">
+              <button class="btn btn--primary" id="pay-once-btn" style="min-width:220px;">
+                解鎖完整方案 · NT$299
+              </button>
+              <div style="font-size:11px;color:var(--muted);margin:4px 0 8px;">— 或 —</div>
+              <button class="btn btn--outline btn--sm" id="pay-sub-btn">
+                月訂閱 · NT$499/月｜無限次分析
+              </button>
+              <div style="font-size:11px;color:var(--muted);margin-top:6px;">隨時取消，無綁約</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full result actions + 升級提示（第六包）-->
+      <div id="full-actions" class="full-actions hidden">
+        <button class="btn btn--outline btn--sm" id="copy-btn">複製結果</button>
+        <a href="/app.html" class="btn btn--ghost btn--sm" id="new-analysis-link">再分析一個問題</a>
+      </div>
+
+      <!-- 升級月費提示（付單次後顯示）-->
+      <div id="upgrade-hint" class="hidden" style="margin-top:20px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);text-align:center;">
+        <div style="font-size:12px;color:var(--text-2);margin-bottom:10px;line-height:1.7;">
+          還有其他問題想整理？<br>
+          月訂閱 NT$499/月，無限次分析，不用每次付費。
+        </div>
+        <button class="btn btn--outline btn--sm" id="upgrade-to-sub-btn">了解月訂閱方案</button>
+      </div>
+
+      <!-- ProductPack 生成區（第十五包，product full 時顯示，內部用）-->
+      <div id="pack-section" class="hidden" style="margin-top:16px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);">
+        <div style="font-size:10px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;font-family:'DM Mono',monospace;">
+          ⬡ ProductPack Generator
+        </div>
+        <div style="font-size:12px;color:var(--text-2);margin-bottom:12px;line-height:1.6;">
+          把這次分析結果打包成完整的 ProductPack（含頁面清單、流程、部署草案）。
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
+          <select id="pack-mode-select" style="flex:1;min-width:140px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:7px 12px;color:var(--text);font-family:inherit;font-size:12px;outline:none;cursor:pointer;">
+            <option value="website">🌐 做第一版網站</option>
+            <option value="mvp">🚀 做第一版產品</option>
+            <option value="payment">💳 做收費入口</option>
+            <option value="converge">🎯 產品收斂 / MVP</option>
+          </select>
+          <button class="btn btn--outline btn--sm" id="generate-pack-btn">生成 ProductPack</button>
+        </div>
+        <div id="pack-result" class="hidden"></div>
+      </div>
+
+      <!-- 結果回饋區（第六包）-->
+      <div id="feedback-section" class="hidden" style="margin-top:16px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);">
+        <div style="font-size:12px;color:var(--text-2);margin-bottom:12px;">這份分析對你有幫助嗎？</div>
+        <div id="rating-stars" style="display:flex;gap:8px;justify-content:center;margin-bottom:12px;">
+          <button class="star-btn" data-v="1">☆</button>
+          <button class="star-btn" data-v="2">☆</button>
+          <button class="star-btn" data-v="3">☆</button>
+          <button class="star-btn" data-v="4">☆</button>
+          <button class="star-btn" data-v="5">☆</button>
+        </div>
+        <div id="feedback-comment-row" class="hidden" style="display:flex;gap:8px;align-items:center;">
+          <input type="text" id="feedback-comment" placeholder="補充說明（可選）"
+            style="flex:1;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:7px 12px;color:var(--text);font-size:12px;font-family:inherit;outline:none;" />
+          <button class="btn btn--outline btn--sm" id="feedback-submit-btn">送出</button>
+        </div>
+        <div id="feedback-thanks" class="hidden" style="font-size:12px;color:var(--success);text-align:center;">謝謝你的回饋 ✓</div>
+      </div>
+    </div>
+
+  </div><!-- /container -->
+</div><!-- /app-layout -->
+
+<!-- Toast area -->
+<div class="toast-area" id="toast-area"></div>
+
+<script src="/assets/delivery-renderer.js"></script>
+<script src="/assets/app.js"></script>
+</body>
+</html>

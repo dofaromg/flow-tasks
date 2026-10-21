@@ -1,0 +1,222 @@
+{
+  "artifact_id": "Mrliou_MRL_Sync_Delivery_v1",
+  "origin_signature": "MrLiouWord",
+  "baseline_sha": "25e8ac661ec82995ca90aeb6cf962990bae31356",
+  "expected_file_count": 7,
+  "delivery_mode": "git_commit_and_pull_request",
+  "archive_required": false,
+  "integrity": {
+    "algorithm": "sha256",
+    "payload_files_covered": 6,
+    "manifest_identity": "Git blob identity; full manifest SHA-256 recorded in delivery PR"
+  },
+  "rights_transfer": "NOT_GRANTED",
+  "commercial_release": "NOT_APPROVED_BY_SYNC",
+  "files": [
+    {
+      "path": ".github/workflows/sync-external-repos.yml",
+      "role": "workflow",
+      "size_bytes": 4203,
+      "sha256": "c9764090ea15d7d0a3772bf0baa765c89834d0b8691041cfedb56542ee30fa43",
+      "dependencies": [
+        "scripts/sync_external_repos.py",
+        "scripts/mrliou_publish_sync.sh",
+        "tests/test_mrliou_sync.py",
+        "repos_sync.yaml"
+      ]
+    },
+    {
+      "path": "scripts/sync_external_repos.py",
+      "role": "synchronizer",
+      "size_bytes": 20464,
+      "sha256": "22316ee7bed70a3f467cefe4c2d4175daacff15309d7d422ec172bf4bab6cddb",
+      "dependencies": [
+        "repos_sync.yaml"
+      ]
+    },
+    {
+      "path": "scripts/mrliou_publish_sync.sh",
+      "role": "publisher",
+      "size_bytes": 8809,
+      "sha256": "44e183f15018d67c8e9c7f53033577c5a8cd7feaa28df250f703d857410c2cf8",
+      "dependencies": [
+        "scripts/sync_external_repos.py"
+      ]
+    },
+    {
+      "path": "tests/test_mrliou_sync.py",
+      "role": "offline_tests",
+      "size_bytes": 20430,
+      "sha256": "f0cd2cfa0ce7a53f77bde9fe9eaaaae7c4ef2ebfde0ed703ae1b26231be59e8c",
+      "dependencies": [
+        "scripts/sync_external_repos.py",
+        "scripts/mrliou_publish_sync.sh",
+        ".github/workflows/sync-external-repos.yml"
+      ]
+    },
+    {
+      "path": "docs/Mrliou_MRL_Sync_Operations_v1.md",
+      "role": "operations",
+      "size_bytes": 12057,
+      "sha256": "00835380d55b3b983874934e2e88dda248632429e6bc43610fe8ff9fc8195ff5",
+      "dependencies": [
+        "scripts/sync_external_repos.py",
+        "scripts/mrliou_publish_sync.sh"
+      ]
+    },
+    {
+      "path": "CHANGELOG.md",
+      "role": "additive_history",
+      "size_bytes": 8683,
+      "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+      "dependencies": [
+        "docs/Mrliou_MRL_Sync_Operations_v1.md"
+      ]
+    },
+    {
+      "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+      "role": "expected_delivery_map",
+      "dependencies": [
+        ".github/workflows/sync-external-repos.yml",
+        "scripts/sync_external_repos.py",
+        "scripts/mrliou_publish_sync.sh",
+        "tests/test_mrliou_sync.py",
+        "docs/Mrliou_MRL_Sync_Operations_v1.md",
+        "CHANGELOG.md"
+      ]
+    }
+  ],
+  "preserved": [
+    "repos_sync.yaml",
+    ".github/workflows/mrl-root-governance-gate.yml",
+    ".github/CODEOWNERS",
+    "PR #633",
+    "main history",
+    "repository rules",
+    "other repository routes"
+  ],
+  "out_of_scope": [
+    "billing changes",
+    "rights or license transfers",
+    "private-source publication",
+    "main bypass",
+    "deployment or product release"
+  ],
+  "additive_integrity_history": [
+    {
+      "source_commit": "848f5d62aa807bf61529ceb740517297ab308603",
+      "reason": "PR #652 appends the structure authorization repair to CHANGELOG.md; preserve the former evidence entry while updating the live checksum.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "role": "additive_history",
+        "size_bytes": 4419,
+        "sha256": "4f224e7c89f7dd24e34263a43d380e0d81351e5c4f060316d8c0eb02e83cbd54",
+        "dependencies": [
+          "docs/Mrliou_MRL_Sync_Operations_v1.md"
+        ]
+      },
+      "current_sha256": "3301958e888f659cc8364b987f0fe2386c56cea7e01cfb979b234d356091c8ef",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "dfadd64d5f6d7e9842f289c08fe87ddfb93b2e22",
+      "reason": "R03 additive CHANGELOG entry; retain previous entry and refresh live checksum.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "role": "additive_history",
+        "size_bytes": 5284,
+        "sha256": "3301958e888f659cc8364b987f0fe2386c56cea7e01cfb979b234d356091c8ef",
+        "dependencies": [
+          "docs/Mrliou_MRL_Sync_Operations_v1.md"
+        ]
+      },
+      "current_sha256": "a3f7d6f537275e1ed11b1e7aed6d80c8dbbfbb25b3a7de1b1c7fab99fc9bbe8d",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "d43e53dee1012571915754afdfeff66c96c19615",
+      "change_commit": "c4797c441ba6a12768258127fe6d0ad70cbf3523",
+      "original_commit": "71ab347b2ffad4be0680c3a07d47edf4faef9d5f",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/655",
+      "merged_by": "dofaromg",
+      "merged_at": "2026-09-24T01:18:42Z",
+      "reason": "PR #655 inserts 8 lines (396 bytes) for multi-cloud connector orchestration; all prior CHANGELOG bytes remain unchanged. Refresh live checksums without changing payload code, tests, authorization policy or routes.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "role": "additive_history",
+        "size_bytes": 5750,
+        "sha256": "a3f7d6f537275e1ed11b1e7aed6d80c8dbbfbb25b3a7de1b1c7fab99fc9bbe8d",
+        "dependencies": [
+          "docs/Mrliou_MRL_Sync_Operations_v1.md"
+        ]
+      },
+      "current_size_bytes": 6146,
+      "current_sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "a459a758ccc920d3d762b079867c977ae15299e5",
+      "change_commit": "11bb2f68d6c7222e2f79e247dea678390108b9c4",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/669",
+      "reason": "PR #669 adds evidence-only DL580 preflight to CHANGELOG.md; preserve prior evidence and refresh live payload integrity.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "role": "additive_history",
+        "size_bytes": 6146,
+        "sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953",
+        "dependencies": [
+          "docs/Mrliou_MRL_Sync_Operations_v1.md"
+        ]
+      },
+      "current_size_bytes": 7123,
+      "current_sha256": "81e444c3bde63b8b5a1bfc5b51d81a507d1f7785bf422f1ab2adf4514b4ffcda",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "cc5b00595cab803867ec9ed374902cae04aefcad",
+      "change_commit": "9a013c15529c462a798e390f9a028d49297fb536",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/680",
+      "reason": "ProductBridge security integration adds a CHANGELOG entry; retain previous evidence and refresh only the live CHANGELOG payload hash.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "role": "additive_history",
+        "size_bytes": 7123,
+        "sha256": "81e444c3bde63b8b5a1bfc5b51d81a507d1f7785bf422f1ab2adf4514b4ffcda",
+        "dependencies": [
+          "docs/Mrliou_MRL_Sync_Operations_v1.md"
+        ]
+      },
+      "current_size_bytes": 7908,
+      "current_sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "0c88c9962a361dc04d74998ee4fab20be1c18981",
+      "source_pr": 680,
+      "reason": "Post-merge ProductBridge security review adds a CHANGELOG entry; preserve earlier entries and propagate exact live dependency hashes. No change to authorization rules.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 7908,
+          "sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 8683,
+          "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+[fusion.core]
+jump = #Persona.Fusion.X01
+[mutate.formal]
+jump = #mutate.formal
+[mutate.childlike]
+jump = #mutate.childlike
+[mutate.collapse]
+jump = #mutate.collapse

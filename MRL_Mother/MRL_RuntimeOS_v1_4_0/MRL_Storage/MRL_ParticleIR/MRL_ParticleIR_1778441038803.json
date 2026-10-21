@@ -1,0 +1,79 @@
+{
+  "mrl_ir_type": "MRL_ParticleIR",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "source_hash": "2dfdfde94296284ab67b71ad78b2f32546d69a539e39b064e871186430f6127b",
+  "source_identity": {
+    "filename": "acceptance.json",
+    "language": "JSON",
+    "detected": "json",
+    "source_hash": "13a3b7b990ac3f5d049667b3de5cd4ef4689a2d814b58fc3d6b7533f66589585"
+  },
+  "particles": [
+    {
+      "id": "MRL_P_0001",
+      "particle_type": "MRL_DataFieldParticle",
+      "layer": "L3_DataStructure",
+      "source_language": "JSON",
+      "properties": {
+        "kind": "json_field",
+        "name": "root.MRL_name",
+        "value_type": "string"
+      },
+      "semantic": "root.MRL_name",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    },
+    {
+      "id": "MRL_P_0002",
+      "particle_type": "MRL_DataFieldParticle",
+      "layer": "L3_DataStructure",
+      "source_language": "JSON",
+      "properties": {
+        "kind": "json_field",
+        "name": "root.MRL_items",
+        "value_type": "array"
+      },
+      "semantic": "root.MRL_items",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    },
+    {
+      "id": "MRL_P_0003",
+      "particle_type": "MRL_DataFieldParticle",
+      "layer": "L3_DataStructure",
+      "source_language": "JSON",
+      "properties": {
+        "kind": "json_field",
+        "name": "root.MRL_items",
+        "value_type": "array",
+        "length": 2
+      },
+      "semantic": "root.MRL_items",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    }
+  ],
+  "particle_atoms": [
+    {
+      "atom_id": "MRL_P_0001",
+      "atom_type": "MRL_DataFieldParticle",
+      "simhash_seed": "3ad25b3c2273ea14",
+      "semantic": "root.MRL_name"
+    },
+    {
+      "atom_id": "MRL_P_0002",
+      "atom_type": "MRL_DataFieldParticle",
+      "simhash_seed": "01609deda5f7bd42",
+      "semantic": "root.MRL_items"
+    },
+    {
+      "atom_id": "MRL_P_0003",
+      "atom_type": "MRL_DataFieldParticle",
+      "simhash_seed": "78f3bcc2349e6d02",
+      "semantic": "root.MRL_items"
+    }
+  ],
+  "created_at": "2026-05-10T19:23:58.801Z",
+  "mrl_hash": "4ad974a0b94dd500ada0e9a6fade8ce12ef8027b07facc6435d6abb36238a356"
+}

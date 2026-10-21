@@ -1,0 +1,980 @@
+{
+  "center_id": "center",
+  "nodes": {
+    "center": {
+      "node_id": "center",
+      "ring": 0,
+      "sector": 0,
+      "cell": 0,
+      "N": 1.0,
+      "eta": 1.0,
+      "alpha": 1.0,
+      "beta": 0.0,
+      "data": {
+        "is_center": true,
+        "description": "中心節點"
+      }
+    },
+    "n1": {
+      "node_id": "n1",
+      "ring": 1,
+      "sector": 0,
+      "cell": 0,
+      "N": 2.0,
+      "eta": 0.8,
+      "alpha": 1.2,
+      "beta": 0.5,
+      "data": {
+        "description": "第一環 - 扇區0"
+      }
+    },
+    "n2": {
+      "node_id": "n2",
+      "ring": 1,
+      "sector": 1,
+      "cell": 0,
+      "N": 1.8,
+      "eta": 0.9,
+      "alpha": 1.1,
+      "beta": 0.3,
+      "data": {
+        "description": "第一環 - 扇區1"
+      }
+    },
+    "n3": {
+      "node_id": "n3",
+      "ring": 1,
+      "sector": 2,
+      "cell": 0,
+      "N": 2.2,
+      "eta": 0.7,
+      "alpha": 1.3,
+      "beta": 0.4,
+      "data": {
+        "description": "第一環 - 扇區2"
+      }
+    },
+    "n4": {
+      "node_id": "n4",
+      "ring": 2,
+      "sector": 0,
+      "cell": 0,
+      "N": 1.5,
+      "eta": 1.0,
+      "alpha": 1.0,
+      "beta": 0.2,
+      "data": {
+        "description": "第二環 - 扇區0"
+      }
+    },
+    "n5": {
+      "node_id": "n5",
+      "ring": 2,
+      "sector": 1,
+      "cell": 0,
+      "N": 1.7,
+      "eta": 0.95,
+      "alpha": 1.15,
+      "beta": 0.25,
+      "data": {
+        "description": "第二環 - 扇區1"
+      }
+    },
+    "jump_n1_1": {
+      "node_id": "jump_n1_1",
+      "ring": 2,
+      "sector": 0,
+      "cell": 0,
+      "N": 1.0,
+      "eta": 1.2000000000000002,
+      "alpha": 1.2,
+      "beta": 0.5,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n1",
+        "created_at_tick": 2
+      }
+    },
+    "jump_n3_2": {
+      "node_id": "jump_n3_2",
+      "ring": 3,
+      "sector": 2,
+      "cell": 0,
+      "N": 1.1,
+      "eta": 1.0499999999999998,
+      "alpha": 1.3,
+      "beta": 0.4,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n3",
+        "created_at_tick": 2
+      }
+    },
+    "jump_n1_3": {
+      "node_id": "jump_n1_3",
+      "ring": 2,
+      "sector": 0,
+      "cell": 0,
+      "N": 1.0,
+      "eta": 1.2000000000000002,
+      "alpha": 1.2,
+      "beta": 0.5,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n1",
+        "created_at_tick": 3
+      }
+    },
+    "jump_n3_4": {
+      "node_id": "jump_n3_4",
+      "ring": 14,
+      "sector": 2,
+      "cell": 0,
+      "N": 1.1,
+      "eta": 1.0499999999999998,
+      "alpha": 1.3,
+      "beta": 0.4,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n3",
+        "created_at_tick": 3
+      }
+    },
+    "jump_n1_5": {
+      "node_id": "jump_n1_5",
+      "ring": 8,
+      "sector": 0,
+      "cell": 0,
+      "N": 1.0,
+      "eta": 1.2000000000000002,
+      "alpha": 1.2,
+      "beta": 0.5,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n1",
+        "created_at_tick": 4
+      }
+    },
+    "jump_n2_6": {
+      "node_id": "jump_n2_6",
+      "ring": 2,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.9,
+      "eta": 1.35,
+      "alpha": 1.1,
+      "beta": 0.3,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n2",
+        "created_at_tick": 4
+      }
+    },
+    "jump_n3_7": {
+      "node_id": "jump_n3_7",
+      "ring": 58,
+      "sector": 2,
+      "cell": 0,
+      "N": 1.1,
+      "eta": 1.0499999999999998,
+      "alpha": 1.3,
+      "beta": 0.4,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n3",
+        "created_at_tick": 4
+      }
+    },
+    "jump_n1_8": {
+      "node_id": "jump_n1_8",
+      "ring": 21,
+      "sector": 0,
+      "cell": 0,
+      "N": 1.0,
+      "eta": 1.2000000000000002,
+      "alpha": 1.2,
+      "beta": 0.5,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n1",
+        "created_at_tick": 5
+      }
+    },
+    "jump_n2_9": {
+      "node_id": "jump_n2_9",
+      "ring": 2,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.9,
+      "eta": 1.35,
+      "alpha": 1.1,
+      "beta": 0.3,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n2",
+        "created_at_tick": 5
+      }
+    },
+    "jump_n3_10": {
+      "node_id": "jump_n3_10",
+      "ring": 237,
+      "sector": 2,
+      "cell": 0,
+      "N": 1.1,
+      "eta": 1.0499999999999998,
+      "alpha": 1.3,
+      "beta": 0.4,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n3",
+        "created_at_tick": 5
+      }
+    },
+    "jump_n1_11": {
+      "node_id": "jump_n1_11",
+      "ring": 58,
+      "sector": 0,
+      "cell": 0,
+      "N": 1.0,
+      "eta": 1.2000000000000002,
+      "alpha": 1.2,
+      "beta": 0.5,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n1",
+        "created_at_tick": 6
+      }
+    },
+    "jump_n2_12": {
+      "node_id": "jump_n2_12",
+      "ring": 3,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.9,
+      "eta": 1.35,
+      "alpha": 1.1,
+      "beta": 0.3,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n2",
+        "created_at_tick": 6
+      }
+    },
+    "jump_n3_13": {
+      "node_id": "jump_n3_13",
+      "ring": 964,
+      "sector": 2,
+      "cell": 0,
+      "N": 1.1,
+      "eta": 1.0499999999999998,
+      "alpha": 1.3,
+      "beta": 0.4,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n3",
+        "created_at_tick": 6
+      }
+    },
+    "jump_n5_14": {
+      "node_id": "jump_n5_14",
+      "ring": 3,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.85,
+      "eta": 1.4249999999999998,
+      "alpha": 1.15,
+      "beta": 0.25,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n5",
+        "created_at_tick": 6
+      }
+    },
+    "jump_n1_15": {
+      "node_id": "jump_n1_15",
+      "ring": 158,
+      "sector": 0,
+      "cell": 0,
+      "N": 1.0,
+      "eta": 1.2000000000000002,
+      "alpha": 1.2,
+      "beta": 0.5,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n1",
+        "created_at_tick": 7
+      }
+    },
+    "jump_n2_16": {
+      "node_id": "jump_n2_16",
+      "ring": 6,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.9,
+      "eta": 1.35,
+      "alpha": 1.1,
+      "beta": 0.3,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n2",
+        "created_at_tick": 7
+      }
+    },
+    "jump_n3_17": {
+      "node_id": "jump_n3_17",
+      "ring": 3914,
+      "sector": 2,
+      "cell": 0,
+      "N": 1.1,
+      "eta": 1.0499999999999998,
+      "alpha": 1.3,
+      "beta": 0.4,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n3",
+        "created_at_tick": 7
+      }
+    },
+    "jump_n5_18": {
+      "node_id": "jump_n5_18",
+      "ring": 3,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.85,
+      "eta": 1.4249999999999998,
+      "alpha": 1.15,
+      "beta": 0.25,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n5",
+        "created_at_tick": 7
+      }
+    },
+    "jump_n1_19": {
+      "node_id": "jump_n1_19",
+      "ring": 426,
+      "sector": 0,
+      "cell": 0,
+      "N": 1.0,
+      "eta": 1.2000000000000002,
+      "alpha": 1.2,
+      "beta": 0.5,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n1",
+        "created_at_tick": 8
+      }
+    },
+    "jump_n2_20": {
+      "node_id": "jump_n2_20",
+      "ring": 10,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.9,
+      "eta": 1.35,
+      "alpha": 1.1,
+      "beta": 0.3,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n2",
+        "created_at_tick": 8
+      }
+    },
+    "jump_n3_21": {
+      "node_id": "jump_n3_21",
+      "ring": 15882,
+      "sector": 2,
+      "cell": 0,
+      "N": 1.1,
+      "eta": 1.0499999999999998,
+      "alpha": 1.3,
+      "beta": 0.4,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n3",
+        "created_at_tick": 8
+      }
+    },
+    "jump_n5_22": {
+      "node_id": "jump_n5_22",
+      "ring": 4,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.85,
+      "eta": 1.4249999999999998,
+      "alpha": 1.15,
+      "beta": 0.25,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n5",
+        "created_at_tick": 8
+      }
+    },
+    "jump_n1_23": {
+      "node_id": "jump_n1_23",
+      "ring": 1148,
+      "sector": 0,
+      "cell": 0,
+      "N": 1.0,
+      "eta": 1.2000000000000002,
+      "alpha": 1.2,
+      "beta": 0.5,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n1",
+        "created_at_tick": 9
+      }
+    },
+    "jump_n2_24": {
+      "node_id": "jump_n2_24",
+      "ring": 19,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.9,
+      "eta": 1.35,
+      "alpha": 1.1,
+      "beta": 0.3,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n2",
+        "created_at_tick": 9
+      }
+    },
+    "jump_n3_25": {
+      "node_id": "jump_n3_25",
+      "ring": 64449,
+      "sector": 2,
+      "cell": 0,
+      "N": 1.1,
+      "eta": 1.0499999999999998,
+      "alpha": 1.3,
+      "beta": 0.4,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n3",
+        "created_at_tick": 9
+      }
+    },
+    "jump_n5_26": {
+      "node_id": "jump_n5_26",
+      "ring": 7,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.85,
+      "eta": 1.4249999999999998,
+      "alpha": 1.15,
+      "beta": 0.25,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n5",
+        "created_at_tick": 9
+      }
+    },
+    "jump_n1_27": {
+      "node_id": "jump_n1_27",
+      "ring": 3096,
+      "sector": 0,
+      "cell": 0,
+      "N": 1.0,
+      "eta": 1.2000000000000002,
+      "alpha": 1.2,
+      "beta": 0.5,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n1",
+        "created_at_tick": 10
+      }
+    },
+    "jump_n2_28": {
+      "node_id": "jump_n2_28",
+      "ring": 34,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.9,
+      "eta": 1.35,
+      "alpha": 1.1,
+      "beta": 0.3,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n2",
+        "created_at_tick": 10
+      }
+    },
+    "jump_n3_29": {
+      "node_id": "jump_n3_29",
+      "ring": 261525,
+      "sector": 2,
+      "cell": 0,
+      "N": 1.1,
+      "eta": 1.0499999999999998,
+      "alpha": 1.3,
+      "beta": 0.4,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n3",
+        "created_at_tick": 10
+      }
+    },
+    "jump_n5_30": {
+      "node_id": "jump_n5_30",
+      "ring": 10,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.85,
+      "eta": 1.4249999999999998,
+      "alpha": 1.15,
+      "beta": 0.25,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n5",
+        "created_at_tick": 10
+      }
+    },
+    "jump_n1_31": {
+      "node_id": "jump_n1_31",
+      "ring": 8348,
+      "sector": 0,
+      "cell": 0,
+      "N": 1.0,
+      "eta": 1.2000000000000002,
+      "alpha": 1.2,
+      "beta": 0.5,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n1",
+        "created_at_tick": 11
+      }
+    },
+    "jump_n2_32": {
+      "node_id": "jump_n2_32",
+      "ring": 62,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.9,
+      "eta": 1.35,
+      "alpha": 1.1,
+      "beta": 0.3,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n2",
+        "created_at_tick": 11
+      }
+    },
+    "jump_n3_33": {
+      "node_id": "jump_n3_33",
+      "ring": 1061219,
+      "sector": 2,
+      "cell": 0,
+      "N": 1.1,
+      "eta": 1.0499999999999998,
+      "alpha": 1.3,
+      "beta": 0.4,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n3",
+        "created_at_tick": 11
+      }
+    },
+    "jump_n5_34": {
+      "node_id": "jump_n5_34",
+      "ring": 16,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.85,
+      "eta": 1.4249999999999998,
+      "alpha": 1.15,
+      "beta": 0.25,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n5",
+        "created_at_tick": 11
+      }
+    },
+    "jump_n1_35": {
+      "node_id": "jump_n1_35",
+      "ring": 22506,
+      "sector": 0,
+      "cell": 0,
+      "N": 1.0,
+      "eta": 1.2000000000000002,
+      "alpha": 1.2,
+      "beta": 0.5,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n1",
+        "created_at_tick": 12
+      }
+    },
+    "jump_n2_36": {
+      "node_id": "jump_n2_36",
+      "ring": 110,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.9,
+      "eta": 1.35,
+      "alpha": 1.1,
+      "beta": 0.3,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n2",
+        "created_at_tick": 12
+      }
+    },
+    "jump_n3_37": {
+      "node_id": "jump_n3_37",
+      "ring": 4306229,
+      "sector": 2,
+      "cell": 0,
+      "N": 1.1,
+      "eta": 1.0499999999999998,
+      "alpha": 1.3,
+      "beta": 0.4,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n3",
+        "created_at_tick": 12
+      }
+    },
+    "jump_n5_38": {
+      "node_id": "jump_n5_38",
+      "ring": 25,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.85,
+      "eta": 1.4249999999999998,
+      "alpha": 1.15,
+      "beta": 0.25,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n5",
+        "created_at_tick": 12
+      }
+    },
+    "jump_n1_39": {
+      "node_id": "jump_n1_39",
+      "ring": 60675,
+      "sector": 0,
+      "cell": 0,
+      "N": 1.0,
+      "eta": 1.2000000000000002,
+      "alpha": 1.2,
+      "beta": 0.5,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n1",
+        "created_at_tick": 13
+      }
+    },
+    "jump_n2_40": {
+      "node_id": "jump_n2_40",
+      "ring": 198,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.9,
+      "eta": 1.35,
+      "alpha": 1.1,
+      "beta": 0.3,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n2",
+        "created_at_tick": 13
+      }
+    },
+    "jump_n3_41": {
+      "node_id": "jump_n3_41",
+      "ring": 17473867,
+      "sector": 2,
+      "cell": 0,
+      "N": 1.1,
+      "eta": 1.0499999999999998,
+      "alpha": 1.3,
+      "beta": 0.4,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n3",
+        "created_at_tick": 13
+      }
+    },
+    "jump_n5_42": {
+      "node_id": "jump_n5_42",
+      "ring": 39,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.85,
+      "eta": 1.4249999999999998,
+      "alpha": 1.15,
+      "beta": 0.25,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n5",
+        "created_at_tick": 13
+      }
+    },
+    "jump_n1_43": {
+      "node_id": "jump_n1_43",
+      "ring": 163580,
+      "sector": 0,
+      "cell": 0,
+      "N": 1.0,
+      "eta": 1.2000000000000002,
+      "alpha": 1.2,
+      "beta": 0.5,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n1",
+        "created_at_tick": 14
+      }
+    },
+    "jump_n2_44": {
+      "node_id": "jump_n2_44",
+      "ring": 354,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.9,
+      "eta": 1.35,
+      "alpha": 1.1,
+      "beta": 0.3,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n2",
+        "created_at_tick": 14
+      }
+    },
+    "jump_n3_45": {
+      "node_id": "jump_n3_45",
+      "ring": 70905659,
+      "sector": 2,
+      "cell": 0,
+      "N": 1.1,
+      "eta": 1.0499999999999998,
+      "alpha": 1.3,
+      "beta": 0.4,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n3",
+        "created_at_tick": 14
+      }
+    },
+    "jump_n5_46": {
+      "node_id": "jump_n5_46",
+      "ring": 63,
+      "sector": 1,
+      "cell": 0,
+      "N": 0.85,
+      "eta": 1.4249999999999998,
+      "alpha": 1.15,
+      "beta": 0.25,
+      "data": {
+        "synthetic": true,
+        "jump_source": "n5",
+        "created_at_tick": 14
+      }
+    }
+  },
+  "edges": [
+    [
+      "center",
+      "n1"
+    ],
+    [
+      "center",
+      "n2"
+    ],
+    [
+      "center",
+      "n3"
+    ],
+    [
+      "n1",
+      "n4"
+    ],
+    [
+      "n2",
+      "n5"
+    ],
+    [
+      "n1",
+      "jump_n1_1"
+    ],
+    [
+      "n3",
+      "jump_n3_2"
+    ],
+    [
+      "n1",
+      "jump_n1_3"
+    ],
+    [
+      "n3",
+      "jump_n3_4"
+    ],
+    [
+      "n1",
+      "jump_n1_5"
+    ],
+    [
+      "n2",
+      "jump_n2_6"
+    ],
+    [
+      "n3",
+      "jump_n3_7"
+    ],
+    [
+      "n1",
+      "jump_n1_8"
+    ],
+    [
+      "n2",
+      "jump_n2_9"
+    ],
+    [
+      "n3",
+      "jump_n3_10"
+    ],
+    [
+      "n1",
+      "jump_n1_11"
+    ],
+    [
+      "n2",
+      "jump_n2_12"
+    ],
+    [
+      "n3",
+      "jump_n3_13"
+    ],
+    [
+      "n5",
+      "jump_n5_14"
+    ],
+    [
+      "n1",
+      "jump_n1_15"
+    ],
+    [
+      "n2",
+      "jump_n2_16"
+    ],
+    [
+      "n3",
+      "jump_n3_17"
+    ],
+    [
+      "n5",
+      "jump_n5_18"
+    ],
+    [
+      "n1",
+      "jump_n1_19"
+    ],
+    [
+      "n2",
+      "jump_n2_20"
+    ],
+    [
+      "n3",
+      "jump_n3_21"
+    ],
+    [
+      "n5",
+      "jump_n5_22"
+    ],
+    [
+      "n1",
+      "jump_n1_23"
+    ],
+    [
+      "n2",
+      "jump_n2_24"
+    ],
+    [
+      "n3",
+      "jump_n3_25"
+    ],
+    [
+      "n5",
+      "jump_n5_26"
+    ],
+    [
+      "n1",
+      "jump_n1_27"
+    ],
+    [
+      "n2",
+      "jump_n2_28"
+    ],
+    [
+      "n3",
+      "jump_n3_29"
+    ],
+    [
+      "n5",
+      "jump_n5_30"
+    ],
+    [
+      "n1",
+      "jump_n1_31"
+    ],
+    [
+      "n2",
+      "jump_n2_32"
+    ],
+    [
+      "n3",
+      "jump_n3_33"
+    ],
+    [
+      "n5",
+      "jump_n5_34"
+    ],
+    [
+      "n1",
+      "jump_n1_35"
+    ],
+    [
+      "n2",
+      "jump_n2_36"
+    ],
+    [
+      "n3",
+      "jump_n3_37"
+    ],
+    [
+      "n5",
+      "jump_n5_38"
+    ],
+    [
+      "n1",
+      "jump_n1_39"
+    ],
+    [
+      "n2",
+      "jump_n2_40"
+    ],
+    [
+      "n3",
+      "jump_n3_41"
+    ],
+    [
+      "n5",
+      "jump_n5_42"
+    ],
+    [
+      "n1",
+      "jump_n1_43"
+    ],
+    [
+      "n2",
+      "jump_n2_44"
+    ],
+    [
+      "n3",
+      "jump_n3_45"
+    ],
+    [
+      "n5",
+      "jump_n5_46"
+    ]
+  ]
+}

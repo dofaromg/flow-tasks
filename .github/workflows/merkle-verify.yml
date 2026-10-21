@@ -1,0 +1,114 @@
+name: Merkle Tree Verification
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+      - 'copilot/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  verify-merkle-signature:
+    name: Verify Merkle Signature
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history for proper verification
+      
+      - name: Check merkle-sign.sh exists
+        run: |
+          if [[ ! -f "merkle-sign.sh" ]]; then
+            echo "❌ merkle-sign.sh not found"
+            exit 1
+          fi
+          echo "✓ merkle-sign.sh found"
+      
+      - name: Make merkle-sign.sh executable
+        run: chmod +x merkle-sign.sh
+      
+      - name: Verify Merkle signature exists
+        id: check-signature
+        run: |
+          if [[ -f ".merkle/root.txt" ]] && [[ -f ".merkle/metadata.json" ]]; then
+            echo "✓ Merkle signature files found"
+            echo "signature_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️  Merkle signature files not found - will generate"
+            echo "signature_exists=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Display existing Merkle root
+        if: steps.check-signature.outputs.signature_exists == 'true'
+        run: |
+          echo "=== Current Merkle Root ==="
+          cat .merkle/root.txt
+          echo ""
+          echo "=== Merkle Metadata ==="
+          cat .merkle/metadata.json
+      
+      - name: Generate new Merkle signature
+        run: |
+          echo "=== Generating Merkle signature ==="
+          ./merkle-sign.sh full
+      
+      - name: Compare signatures
+        if: steps.check-signature.outputs.signature_exists == 'true'
+        run: |
+          echo "=== Comparing signatures ==="
+          
+          # This is a basic comparison - in production you might want more sophisticated verification
+          if [[ -f ".merkle/root.txt.backup" ]]; then
+            OLD_ROOT=$(cat .merkle/root.txt.backup)
+            NEW_ROOT=$(cat .merkle/root.txt)
+            
+            echo "Old root: $OLD_ROOT"
+            echo "New root: $NEW_ROOT"
+            
+            if [[ "$OLD_ROOT" != "$NEW_ROOT" ]]; then
+              echo "⚠️  Merkle root changed (expected if files were modified)"
+            else
+              echo "✓ Merkle root unchanged"
+            fi
+          fi
+      
+      - name: Validate Merkle structure
+        run: |
+          echo "=== Validating Merkle structure ==="
+          
+          # Check that metadata is valid JSON
+          if ! jq empty .merkle/metadata.json 2>/dev/null; then
+            echo "❌ Invalid metadata JSON"
+            exit 1
+          fi
+          
+          # Check that root hash has correct format (64 hex characters)
+          ROOT=$(cat .merkle/root.txt)
+          if [[ ! "$ROOT" =~ ^[a-f0-9]{64}$ ]]; then
+            echo "❌ Invalid root hash format: $ROOT"
+            exit 1
+          fi
+          
+          echo "✓ Merkle structure is valid"
+          echo "✓ Root hash: $ROOT"
+      
+      - name: Display verification summary
+        if: always()
+        run: |
+          echo ""
+          echo "=== Merkle Verification Summary ==="
+          if [[ -f ".merkle/metadata.json" ]]; then
+            echo "Timestamp: $(jq -r '.timestamp' .merkle/metadata.json)"
+            echo "Mode: $(jq -r '.mode' .merkle/metadata.json)"
+            echo "File count: $(jq -r '.file_count' .merkle/metadata.json)"
+            echo "Git commit: $(jq -r '.git_commit' .merkle/metadata.json)"
+            echo "Git branch: $(jq -r '.git_branch' .merkle/metadata.json)"
+          fi
+          echo "✓ Merkle verification completed"

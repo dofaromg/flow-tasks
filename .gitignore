@@ -9,6 +9,7 @@ __pycache__/
 # C build artifacts (wire protocol)
 particle_core/src/wire/wire_test
 particle_core/src/wire/*.o
+flow_code/hello_api
 
 # Distribution / packaging
 .Python
@@ -36,12 +37,19 @@ node_modules/
 # Next.js build output
 .next/
 out/
+.open-next/
+.wrangler/
+
+# Astro build output
+.astro/
+dist/
 
 # Environment variables
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -208,6 +216,9 @@ cython_debug/
 # Ruff stuff:
 .ruff_cache/
 
+# Model Package Validator temp directory
+.mpv1_tmp/
+
 # PyPI configuration file
 .pypirc
 
@@ -235,6 +246,10 @@ dict_seeds/
 particle_core/context/
 particle_core/snapshots/
 particle_core/backups/
+particle_core/cache/
+/tmp/test_context/
+/tmp/test_snapshots/
+/tmp/test_cache/
 /tmp/test_context/
 /tmp/test_snapshots/
 
@@ -247,4 +262,6 @@ particle_core/backups/
 /data/notion_export.json
 /data/github_export.json
 /data/snapshots/*.json
-flowos/dist/
+/data_sandbox/
+/config.yaml
+*.tsbuildinfo

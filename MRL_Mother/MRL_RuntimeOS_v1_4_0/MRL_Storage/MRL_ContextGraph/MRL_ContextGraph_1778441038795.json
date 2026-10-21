@@ -1,0 +1,35 @@
+{
+  "mrl_graph_type": "MRL_ContextGraph",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "nodes": [
+    {
+      "id": "MRL_P_0001",
+      "label": "MRLThing",
+      "type": "MRL_TypeParticle",
+      "layer": "L2_CodeStructure"
+    },
+    {
+      "id": "MRL_P_0002",
+      "label": "run",
+      "type": "MRL_FunctionParticle",
+      "layer": "L2_CodeStructure"
+    }
+  ],
+  "edges": [
+    {
+      "from": "MRL_P_0001",
+      "to": "MRL_P_0002",
+      "relation": "MRL_CONTEXT_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "from": "MRLThing",
+      "to": "run",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    }
+  ],
+  "created_at": "2026-05-10T19:23:58.793Z",
+  "mrl_hash": "0404f9ada26b5990331150182d196d82e674192f25fc4cf88ea2b7ed07361742"
+}

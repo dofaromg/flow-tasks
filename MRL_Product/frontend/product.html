@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRL — 把你的產品想法整理成第一版可上線方案</title>
+  <meta name="description" content="不知道第一版該做什麼？頁面、功能、金流哪個先？丟進來幫你拆成清楚的執行計畫。">
+  <link rel="stylesheet" href="/assets/style.css">
+  <style>
+    /* ── Hero ── */
+    .prod-hero {
+      padding: 80px 0 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .prod-hero::before {
+      content: '';
+      position: absolute;
+      top: -150px; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(232,184,75,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .prod-hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 5px 14px;
+      border: 1px solid rgba(232,184,75,0.25);
+      border-radius: 100px;
+      background: var(--accent-dim);
+      margin-bottom: 24px;
+    }
+
+    .prod-hero__h1 {
+      font-size: clamp(30px, 6vw, 52px);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      max-width: 640px;
+    }
+
+    .prod-hero__h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .prod-hero__sub {
+      font-size: clamp(15px, 2.2vw, 17px);
+      color: var(--text-2);
+      line-height: 1.7;
+      max-width: 520px;
+      margin-bottom: 36px;
+    }
+
+    /* ── Pain points ── */
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      margin-bottom: 64px;
+    }
+
+    .pain-item {
+      background: var(--surface);
+      padding: 28px 24px;
+      transition: background var(--transition);
+    }
+
+    .pain-item:hover { background: var(--surface-2); }
+
+    .pain-item__q {
+      font-size: 13px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .pain-item__text {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+
+    /* ── Output preview ── */
+    .output-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 40px 36px;
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .output-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+    }
+
+    .output-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .output-blocks {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .output-block {
+      padding: 16px 18px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+    }
+
+    .output-block__name {
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+    }
+
+    .output-block__content {
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+
+    .output-lock {
+      margin-top: 16px;
+      padding: 14px 18px;
+      background: var(--accent-dim);
+      border: 1px dashed rgba(232,184,75,0.3);
+      border-radius: var(--r-md);
+      font-size: 12px;
+      color: var(--text-2);
+      text-align: center;
+    }
+
+    /* ── CTA section ── */
+    .prod-cta {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 52px 40px;
+      text-align: center;
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .prod-cta::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(232,184,75,0.5), transparent);
+    }
+
+    .prod-cta__title {
+      font-size: clamp(22px, 4vw, 32px);
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .prod-cta__desc {
+      font-size: 15px;
+      color: var(--text-2);
+      margin-bottom: 28px;
+      line-height: 1.7;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .prod-cta__note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 14px;
+    }
+
+    /* ── Quick modes ── */
+    .quick-modes {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .quick-mode-link {
+      padding: 7px 16px;
+      font-size: 12px;
+      color: var(--text-2);
+      background: var(--surface-2);
+      border: 1px solid var(--border-2);
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all var(--transition);
+    }
+
+    .quick-mode-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    @media (max-width: 768px) {
+      .pain-grid { grid-template-columns: 1fr; }
+      .output-blocks { grid-template-columns: 1fr; }
+      .prod-hero { padding: 56px 0 40px; }
+      .output-section { padding: 28px 24px; }
+      .prod-cta { padding: 36px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo">MRL.</a>
+    <div class="nav__links">
+      <a href="/pricing.html" class="nav__link">方案</a>
+      <a href="/app.html?cat=product" class="nav__cta">開始整理</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="prod-hero">
+  <div class="container">
+    <div class="prod-hero__badge">
+      <span>🌐</span> 做網站 / 做產品
+    </div>
+    <h1 class="prod-hero__h1 anim-fade-up">
+      把你的產品想法<br>
+      整理成<em>第一版可上線方案</em>
+    </h1>
+    <p class="prod-hero__sub anim-fade-up anim-delay-1">
+      從頁面、流程、收費入口到上線順序，
+      先幫你拆清楚，不讓你一直卡在起點。
+    </p>
+    <div class="anim-fade-up anim-delay-2">
+      <a href="/app.html?cat=product" class="btn btn--primary btn--lg">開始整理我的第一版產品</a>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- 三個最常見卡點 -->
+<section class="section">
+  <div class="container">
+    <div class="section__label">最常卡住的地方</div>
+    <h2 class="section__title">你不是想不出來<br>是沒有人幫你排順序</h2>
+    <p class="section__sub" style="margin-bottom:40px;">
+      這三種情況最常被丟進來，每一種都有對應的拆解方式。
+    </p>
+    <div class="pain-grid">
+      <div class="pain-item">
+        <div class="pain-item__q">卡點 01</div>
+        <div class="pain-item__text">
+          我要先做首頁、做功能、還是先接金流？
+          每個都感覺很重要，但不知道順序。
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-item__q">卡點 02</div>
+        <div class="pain-item__text">
+          我想把能力變成可收費服務，
+          但不知道賣什麼、怎麼定價、怎麼讓人付錢。
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-item__q">卡點 03</div>
+        <div class="pain-item__text">
+          想法很多，但每次開始做
+          就感覺範圍越來越大，不知道第一版要控制在哪裡。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- 輸出預覽 -->
+<section class="section">
+  <div class="container">
+    <div class="section__label">你會拿到什麼</div>
+    <h2 class="section__title">不只是建議<br>是可以直接拿去做的結構</h2>
+    <p class="section__sub" style="margin-bottom:36px;">
+      每次分析的輸出格式固定，不是散亂的聊天回答。
+    </p>
+
+    <div class="output-section">
+      <div class="output-label">輸出結構預覽（以「做第一版網站」為例）</div>
+      <div class="output-blocks">
+        <div class="output-block">
+          <div class="output-block__name">問題拆解</div>
+          <div class="output-block__content">
+            核心卡點在於頁面與付款的順序問題，
+            並非不知道要做什麼，而是不知道先做哪個。
+          </div>
+        </div>
+        <div class="output-block">
+          <div class="output-block__name">方案方向</div>
+          <div class="output-block__content">
+            先做最小入口頁（一頁式），接上 Stripe，
+            確認有人付錢後再補完整系統。
+          </div>
+        </div>
+        <div class="output-block output-block--locked" style="opacity:0.45;position:relative;">
+          <div class="output-block__name">執行步驟 ↓</div>
+          <div class="output-block__content">
+            Step 1：先做首頁說明...</div>
+        </div>
+        <div class="output-block output-block--locked" style="opacity:0.45;">
+          <div class="output-block__name">優先順序 ↓</div>
+          <div class="output-block__content">
+            最優先：先接付款入口...</div>
+        </div>
+      </div>
+      <div class="output-lock">
+        🔒 完整執行步驟、優先順序與補充建議 — 解鎖後立即可見 · NT$299
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- Quick modes -->
+<section class="section--sm">
+  <div class="container" style="text-align:center;">
+    <div class="section__label" style="text-align:center;">選一個你的情況</div>
+    <h2 class="section__title" style="margin-bottom:28px;">直接帶入你的問題場景</h2>
+    <div class="quick-modes">
+      <a href="/app.html?cat=product&prompt=%E6%88%91%E6%83%B3%E5%81%9A%E4%B8%80%E5%80%8B%E5%8F%AF%E4%B8%8A%E7%B7%9A%E3%80%81%E5%8F%AF%E6%94%B6%E8%B2%BB%E7%9A%84%E7%AC%AC%E4%B8%80%E7%89%88%E7%B6%B2%E7%AB%99%EF%BC%8C%E8%AB%8B%E5%B9%AB%E6%88%91%E6%8B%86%E6%88%90%E9%A0%81%E9%9D%A2%E3%80%81%E6%B5%81%E7%A8%8B%E3%80%81%E4%BB%98%E6%AC%BE%E8%88%87%E5%9F%B7%E8%A1%8C%E6%AD%A5%E9%A9%9F" class="quick-mode-link">
+      做第一版網站
+      </a>
+      <a href="/app.html?cat=product&prompt=%E6%88%91%E6%9C%89%E4%B8%80%E5%80%8B%E7%94%A2%E5%93%81%E6%83%B3%E6%B3%95%EF%BC%8C%E8%AB%8B%E5%B9%AB%E6%88%91%E5%88%87%E5%87%BA%E7%AC%AC%E4%B8%80%E7%89%88%E5%8A%9F%E8%83%BD%E3%80%81%E4%BD%BF%E7%94%A8%E6%B5%81%E7%A8%8B%E8%88%87%E5%84%AA%E5%85%88%E9%A0%86%E5%BA%8F%EF%BC%8C%E4%B8%A6%E5%91%8A%E8%A8%B4%E6%88%91%E5%93%AA%E4%BA%9B%E5%85%88%E4%B8%8D%E5%81%9A" class="quick-mode-link">
+      做第一版產品
+      </a>
+      <a href="/app.html?cat=product&prompt=%E6%88%91%E6%83%B3%E6%8A%8A%E8%83%BD%E5%8A%9B%E5%81%9A%E6%88%90%E5%8F%AF%E6%94%B6%E8%B2%BB%E5%85%A5%E5%8F%A3%EF%BC%8C%E8%AB%8B%E5%B9%AB%E6%88%91%E6%95%B4%E7%90%86pricing%E3%80%81%E4%BB%98%E6%AC%BE%E6%B5%81%E7%A8%8B%E3%80%81%E8%A7%A3%E9%8E%96%E9%82%8F%E8%BC%AF%E8%88%87%E4%B8%8A%E7%B7%9A%E6%AD%A5%E9%A9%9F" class="quick-mode-link">
+      做收費入口
+      </a>
+      <a href="/app.html?cat=product&prompt=%E6%88%91%E7%8F%BE%E5%9C%A8%E7%94%A2%E5%93%81%E6%83%B3%E6%B3%95%E5%A4%AA%E5%A4%9A%EF%BC%8C%E8%AB%8B%E5%B9%AB%E6%88%91%E6%94%B6%E6%96%82%E5%87%BA%E6%9C%80%E5%B0%8F%E5%8F%AF%E8%A1%8C%E7%89%88%E6%9C%AC%E3%80%81%E5%85%88%E5%81%9A%E4%BB%80%E9%BA%BC%E3%80%81%E5%85%88%E4%B8%8D%E5%81%9A%E4%BB%80%E9%BA%BC%E3%80%81%E4%BB%80%E9%BA%BC%E6%9C%80%E5%BF%AB%E8%83%BD%E4%B8%8A%E7%B7%9A" class="quick-mode-link">
+      產品收斂 / MVP
+      </a>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- 底部 CTA -->
+<section class="section--sm">
+  <div class="container">
+    <div class="prod-cta">
+      <h2 class="prod-cta__title">不用先想清楚<br>丟進來我幫你整理</h2>
+      <p class="prod-cta__desc">
+        你不是在拿一段回答，
+        你是在拿一份幫你把第一版產品整理清楚的方案。
+        NT$299 解鎖，直接可以開始做。
+      </p>
+      <a href="/app.html?cat=product" class="btn btn--primary btn--lg">開始整理我的第一版產品</a>
+      <div class="prod-cta__note">免費先看部分結果 · NT$299 解鎖完整方案</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer container container--wide">
+  <span class="footer__logo">MRL.</span>
+  <span class="footer__copy">origin_signature: MrLiouWord</span>
+</footer>
+
+</body>
+</html>

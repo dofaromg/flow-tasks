@@ -1,0 +1,37 @@
+{
+  "manifest_version": "1.0",
+  "fusion_name": "mobius_evolve",
+  "fusion_mode": "recursive",
+  "description": "Ideas cycle and evolve through multiple AIs in Möbius loop",
+  "description_zh": "想法通過莫比烏斯循環在多個 AI 中循環演化",
+  "particles": [
+    {
+      "provider": "openai",
+      "model": "gpt-4",
+      "role": "expander",
+      "weight": 1.0,
+      "description": "Expand and explore the concept"
+    },
+    {
+      "provider": "claude",
+      "model": "claude-3-opus",
+      "role": "critic",
+      "weight": 1.0,
+      "description": "Critical analysis and challenge assumptions"
+    },
+    {
+      "provider": "gemini",
+      "model": "gemini-pro",
+      "role": "synthesizer",
+      "weight": 1.0,
+      "description": "Synthesize and unify perspectives"
+    }
+  ],
+  "max_cycles": 5,
+  "convergence_threshold": 0.85,
+  "transform_prompt": "Building on this response, improve and expand: {output}",
+  "metadata": {
+    "use_case": "Iterative refinement and idea evolution",
+    "best_for": "Creative brainstorming, concept development, problem solving"
+  }
+}

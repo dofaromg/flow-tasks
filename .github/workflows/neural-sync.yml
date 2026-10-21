@@ -1,0 +1,145 @@
+name: Neural Branch Sync
+
+on:
+  push:
+    branches: ['**']
+    paths-ignore:
+      - 'neural-links/**'
+  pull_request:
+    types: [opened, closed, synchronize]
+    paths-ignore:
+      - 'neural-links/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  sync-neural-network:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Update Neural Map
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/update-neural-map.js
+      
+      - name: Test MRL naming normalization
+        run: |
+          node -e "
+          const { toMRLNodeId } = require('./scripts/update-neural-map');
+          const { validateMRLNaming } = require('./scripts/generate-mermaid');
+          const cases = [
+            ['feature/example', 'MRL_feature/example'],
+            ['mrl_existing', 'MRL_existing'],
+            ['MRL_existing', 'MRL_existing'],
+            ['Mrliou_MRL_SourceToProduct_ParallelLink_v1', 'Mrliou_MRL_SourceToProduct_ParallelLink_v1']
+          ];
+          for (const [source, expected] of cases) {
+            const actual = toMRLNodeId(source);
+            if (actual !== expected) throw new Error(source + ' normalized to ' + actual + ', expected ' + expected);
+          }
+          let rejected = false;
+          try { toMRLNodeId('MRL_'); } catch { rejected = true; }
+          if (!rejected) throw new Error('MRL_ without a suffix must be rejected');
+
+          const expectReject = (data, label) => {
+            let failed = false;
+            try { validateMRLNaming(data); } catch { failed = true; }
+            if (!failed) throw new Error(label + ' must be rejected');
+          };
+          expectReject({
+            neural_network: {
+              nodes: [{ id: 'MRL_feature/a', source_branch: 'feature/b' }],
+              synapses: []
+            }
+          }, 'canonical/source mismatch');
+          expectReject({
+            neural_network: {
+              nodes: [
+                { id: 'MRL_feature/a-b', source_branch: 'feature/a-b' },
+                { id: 'MRL_feature/a_b', source_branch: 'feature/a_b' }
+              ],
+              synapses: []
+            }
+          }, 'Mermaid identifier collision');
+          expectReject({
+            neural_network: {
+              nodes: [{ id: 'MRL_main', source_branch: 'main' }],
+              synapses: [{ from: 'MRL_main', to: 'MRL_missing' }]
+            }
+          }, 'unresolved synapse');
+
+          console.log('MRL_NAMING_NORMALIZATION_PASS');
+          "
+
+      - name: Test authority preservation regressions
+        run: node --test scripts/test-naming-authority.cjs
+
+      - name: Validate MRL canonical naming
+        run: |
+          node -e "
+          const fs = require('fs');
+          const { validateMRLNaming } = require('./scripts/generate-mermaid');
+          const data = JSON.parse(fs.readFileSync('neural-links/branch-map.json', 'utf-8'));
+          validateMRLNaming(data);
+          console.log('MRL_NAMING_GATE_PASS: canonical IDs preserve owned names and source_branch');
+          "
+
+      - name: Generate Mermaid Graph
+        run: |
+          node scripts/generate-mermaid.js
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --exit-code neural-links/ || echo "has_changes=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit Neural Updates
+        # origin_signature: MrLiouWord
+        # Feature and PR refs are validation-only. Generated topology is always
+        # proposed on a candidate branch, never written back into the source ref.
+        if: steps.check_changes.outputs.has_changes == 'true' && ((github.event_name == 'push' && github.ref_name == 'main') || github.event_name == 'workflow_dispatch')
+        run: |
+          git config --global user.name "MrLiouWord Neural Bot"
+          git config --global user.email "neural@mrliouword.dev"
+          git add neural-links/
+          git commit -m "chore(MRL_neural-map): synchronize canonical topology"
+          candidate="Mrliou_MRL_neural_sync/${GITHUB_SHA:0:12}-${GITHUB_RUN_ID}"
+          git push origin "HEAD:refs/heads/$candidate"
+          echo "Neural map candidate saved: $candidate; requires a reviewed PR into main." >> "$GITHUB_STEP_SUMMARY"
+      
+      - name: Display Neural Stats
+        run: |
+          echo "## 🧠 Neural Network Statistics" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          node -e "
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('neural-links/branch-map.json', 'utf-8'));
+          const nodes = data.neural_network.nodes;
+          const synapses = data.neural_network.synapses;
+          console.log('| Metric | Value |');
+          console.log('|--------|-------|');
+          console.log('| Total Nodes | ' + nodes.length + ' |');
+          console.log('| Total Synapses | ' + synapses.length + ' |');
+          console.log('| Active Nodes | ' + nodes.filter(n => n.status === 'active').length + ' |');
+          console.log('| Merged Nodes | ' + nodes.filter(n => n.status === 'merged').length + ' |');
+          const avgEnergy = (nodes.reduce((sum, n) => sum + n.energy, 0) / nodes.length * 100).toFixed(1);
+          console.log('| Average Energy | ' + avgEnergy + '% |');
+          " >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Neural Network Visualization" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cat neural-links/synaptic-graph.mermaid >> $GITHUB_STEP_SUMMARY

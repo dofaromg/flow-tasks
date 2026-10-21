@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react';
 import { getGrowthBook, isFeatureOn, getFeatureValue, FLAGS } from '../lib/growthbook';
 
 const features = [
-  '一鍵部署 GKE 基礎設施與 GitOps 設定',
-  '預設 CI/CD 流程，推送即可自動驗證與部署',
-  '可觀察性與調試友善：結構化配置、可重複的腳本',
+  '🧠 MRLiou 粒子語言核心 - 邏輯種子運算',
+  '💾 記憶封存系統 - 完整狀態保存',
+  '🔄 函數鏈執行 - STRUCTURE → MARK → FLOW',
+  '🐳 Docker 本地開發 - 私人環境部署',
+  '📊 私人觀測工具 - 本地監控與記錄',
 ];
 
 export default function Home() {
@@ -52,11 +54,15 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Flow Tasks - GrowthBook Demo</title>
+        <title>MRLiou 粒子語言系統 - 私人開發環境</title>
         <meta
           name="description"
-          content="FlowAgent GKE Starter：快速部署、GitOps、CI/CD 的參考範本。"
+          content="MRLiou Particle Language Core System - 私人開發與觀測環境。© Mr.liou - All Rights Reserved"
         />
+        <meta property="og:title" content="MRLiou 粒子語言系統" />
+        <meta property="og:description" content="© Mr.liou 私人開發專案" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="author" content="MRLiou / Mr.liou" />
       </Head>
       <main
         style={{
@@ -123,13 +129,15 @@ export default function Home() {
           }}
         >
           <p style={{ color: '#64748b', fontWeight: 600, letterSpacing: 1.2, marginBottom: 12 }}>
-            FLOWAGENT GKE STARTER + GROWTHBOOK
+            🔒 MRLIOU 私人開發環境
           </p>
           <h1 style={{ fontSize: '2.5rem', margin: '0 0 1rem', lineHeight: 1.2 }}>
-            快速啟動你的雲端 GitOps 與 CI/CD
+            MRLiou 粒子語言核心系統
           </h1>
           <p style={{ color: '#475569', marginBottom: '1.5rem', fontSize: '1.05rem', lineHeight: 1.7 }}>
-            以同一套配置管理 Kubernetes、CI/CD、與部署快照。複製、推送、開啟驗證腳本，即可把服務穩定送上線。
+            © 2025 Mr.liou - All Rights Reserved<br/>
+            私人開發與觀測環境 | Particle Language Core System<br/>
+            不對外公開 | Private Development Only
           </p>
 
           <div
@@ -177,7 +185,7 @@ export default function Home() {
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
             <a
-              href="https://github.com/dofaromg/flow-tasks"
+              href="/PRIVATE_DEVELOPMENT.md"
               style={{
                 background: colorMap[checkoutColor] || colorMap.blue,
                 color: '#ffffff',
@@ -190,10 +198,10 @@ export default function Home() {
               onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
             >
-              查看 Repository
+              🔒 私人開發指南
             </a>
             <a
-              href="/DEPLOYMENT.md"
+              href="/particle_core"
               style={{
                 padding: '0.85rem 1.4rem',
                 borderRadius: 12,
@@ -202,32 +210,53 @@ export default function Home() {
                 border: '1px solid #e2e8f0',
                 color: '#0f172a',
                 background: '#ffffff',
+                transition: 'box-shadow 0.2s',
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)')}
+              onMouseLeave={(e) => (e.currentTarget.style.boxShadow = 'none')}
             >
-              快速部署指南
+              🧠 粒子語言核心
+            </a>
+            <a
+              href="mailto:z814241@gmail.com"
+              style={{
+                padding: '0.85rem 1.4rem',
+                borderRadius: 12,
+                textDecoration: 'none',
+                fontWeight: 700,
+                border: '1px solid #e2e8f0',
+                color: '#0f172a',
+                background: '#ffffff',
+                transition: 'box-shadow 0.2s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)')}
+              onMouseLeave={(e) => (e.currentTarget.style.boxShadow = 'none')}
+            >
+              📧 聯絡 MRLiou
             </a>
           </div>
 
-          {/* GrowthBook Debug Info */}
-          {isLoaded && (
-            <div
-              style={{
-                marginTop: '2rem',
-                padding: '1rem',
-                background: '#f1f5f9',
-                borderRadius: 8,
-                fontSize: '0.875rem',
-                color: '#475569',
-              }}
-            >
-              <p style={{ fontWeight: 600, marginBottom: '0.5rem' }}>🎯 Feature Flags Active:</p>
-              <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
-                <li>Summer Sale Banner: {showSummerSale ? '✅ ON' : '❌ OFF'}</li>
-                <li>Free Delivery Banner: {showFreeDelivery ? '✅ ON' : '❌ OFF'}</li>
-                <li>Checkout Button Color: <span style={{ fontWeight: 600, color: colorMap[checkoutColor] }}>{checkoutColor.toUpperCase()}</span></li>
-              </ul>
-            </div>
-          )}
+          {/* Brand and Copyright Info */}
+          <div
+            style={{
+              marginTop: '2rem',
+              padding: '1rem',
+              background: '#f1f5f9',
+              borderRadius: 8,
+              fontSize: '0.875rem',
+              color: '#475569',
+              textAlign: 'center',
+            }}
+          >
+            <p style={{ fontWeight: 600, marginBottom: '0.5rem' }}>
+              🏢 MRLiou 品牌 | Mr.liou
+            </p>
+            <p style={{ fontSize: '0.75rem', color: '#64748b' }}>
+              © 2025 Mr.liou - All Rights Reserved<br/>
+              私人開發環境 | 不對外公開<br/>
+              Particle Language Core System
+            </p>
+          </div>
         </section>
       </main>
     </>

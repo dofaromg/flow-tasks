@@ -1,0 +1,14 @@
+{
+  "origin_signature": "MrLiouWord",
+  "version": "1.0.0",
+  "role_families": [
+    {"id":"architect","title":"System Architect","responsibilities":["requirements","architecture","data flow","API contracts","scalability"]},
+    {"id":"engineer","title":"Senior Full-Stack Engineer","responsibilities":["implementation","database","API","UI","tests"]},
+    {"id":"reviewer","title":"Code Reviewer","responsibilities":["correctness","security","maintainability","coverage","release gate"]},
+    {"id":"optimizer","title":"Performance Engineer","responsibilities":["profiling","CPU","memory","I/O","benchmarking"]},
+    {"id":"debugger","title":"Production Debug Engineer","responsibilities":["reproduction","root cause","boundary cases","regression tests"]},
+    {"id":"refactorer","title":"Clean Architecture Refactorer","responsibilities":["separation of concerns","modularity","dependency inversion","behavior preservation"]},
+    {"id":"ui_builder","title":"Production UI Component Builder","responsibilities":["reusable components","responsive design","accessibility","loading/error/empty states"]},
+    {"id":"physics_auditor","title":"Physics Law Audit Engineer","responsibilities":["CFD fields","mass conservation","momentum conservation","energy conservation","residual evidence"]}
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "mrl_ir_type": "MRL_ParticleIR",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "source_hash": "956f47785413fd85a9ad9507cf82c9fb3cbc5f80221bacfeb4097f6739965f06",
+  "source_identity": {
+    "filename": "acceptance.sql",
+    "language": "SQL",
+    "detected": "sql",
+    "source_hash": "ebec7ea4e420be248875926ed498a9865dc1bebdb158e20366fdbde6622d80c1"
+  },
+  "particles": [
+    {
+      "id": "MRL_P_0001",
+      "particle_type": "MRL_SQLParticle",
+      "layer": "L3_DataStructure",
+      "source_language": "SQL",
+      "properties": {
+        "kind": "sql_statement",
+        "name": "MRL_Test",
+        "operation": "CREATE",
+        "value": "CREATE TABLE MRL_Test(id TEXT)"
+      },
+      "semantic": "MRL_Test",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    },
+    {
+      "id": "MRL_P_0002",
+      "particle_type": "MRL_SQLParticle",
+      "layer": "L3_DataStructure",
+      "source_language": "SQL",
+      "properties": {
+        "kind": "sql_statement",
+        "name": "MRL_Test",
+        "operation": "SELECT",
+        "value": "SELECT * FROM MRL_Test"
+      },
+      "semantic": "MRL_Test",
+      "origin_signature": "MrLiouWord",
+      "status": "implemented_runtime_particle"
+    }
+  ],
+  "particle_atoms": [
+    {
+      "atom_id": "MRL_P_0001",
+      "atom_type": "MRL_SQLParticle",
+      "simhash_seed": "f97931d728145833",
+      "semantic": "MRL_Test"
+    },
+    {
+      "atom_id": "MRL_P_0002",
+      "atom_type": "MRL_SQLParticle",
+      "simhash_seed": "4045a328fd6273f2",
+      "semantic": "MRL_Test"
+    }
+  ],
+  "created_at": "2026-05-10T13:00:25.051Z",
+  "mrl_hash": "86845aee98ad5349b4bb8a2895006bbb32cc1162ea75e18a19c469228087db29"
+}

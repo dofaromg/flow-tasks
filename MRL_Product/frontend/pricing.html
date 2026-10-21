@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MRL — 方案與定價</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <style>
+    .pricing-hero {
+      padding: 80px 0 56px;
+      text-align: center;
+    }
+
+    .pricing-hero__title {
+      font-size: clamp(32px, 6vw, 52px);
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .pricing-hero__sub {
+      font-size: 16px;
+      color: var(--text-2);
+      max-width: 400px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Plans Grid ── */
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .plan-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .plan-card:hover {
+      border-color: var(--border-2);
+      box-shadow: var(--shadow-md);
+    }
+
+    .plan-card--featured {
+      border-color: rgba(232,184,75,0.3);
+      background: var(--surface);
+    }
+
+    .plan-card--featured::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+    }
+
+    .plan-badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(232,184,75,0.3);
+      border-radius: 100px;
+      padding: 3px 10px;
+    }
+
+    .plan-name {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      margin-bottom: 20px;
+    }
+
+    .plan-price {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .plan-price__amount {
+      font-family: 'DM Serif Display', serif;
+      font-size: 48px;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .plan-price__unit {
+      font-size: 14px;
+      color: var(--text-2);
+    }
+
+    .plan-tagline {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.6;
+      margin-bottom: 32px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .plan-features {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 36px;
+      flex: 1;
+    }
+
+    .plan-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+
+    .plan-feature__check {
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── Comparison Note ── */
+    .compare-note {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 32px 36px;
+      margin-bottom: 48px;
+    }
+
+    .compare-note__title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .compare-note__desc {
+      font-size: 15px;
+      color: var(--text-2);
+      line-height: 1.7;
+    }
+
+    /* ── FAQ ── */
+    .faq { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+
+    .faq-item {
+      padding: 24px 28px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .faq-item:last-child { border-bottom: none; }
+
+    .faq-q {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .faq-a {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 640px) {
+      .plans { grid-template-columns: 1fr; }
+      .plan-card { padding: 28px 24px; }
+      .pricing-hero { padding: 56px 0 40px; }
+      .compare-note { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo">MRL.</a>
+    <div class="nav__links">
+      <a href="/pricing.html" class="nav__link">方案</a>
+      <a href="/app.html" class="nav__cta">立即開始</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="pricing-hero">
+  <div class="container">
+    <div class="section__label">方案與定價</div>
+    <h1 class="pricing-hero__title">選擇你的<br>使用方式</h1>
+    <p class="pricing-hero__sub">先用最簡單的方式開始，不需要一次做太大決定。</p>
+  </div>
+</div>
+
+<div class="container" style="padding-bottom:80px;">
+
+  <!-- PLANS -->
+  <div class="plans">
+
+    <!-- 單次 -->
+    <div class="plan-card">
+      <div class="plan-name">單次完整分析</div>
+      <div class="plan-price">
+        <div class="plan-price__amount">299</div>
+        <div class="plan-price__unit">NT$ / 次</div>
+      </div>
+      <div class="plan-tagline">
+        適合你想把一個產品或網站想法整理成第一版可執行方案。先試再說，不滿意不用付。
+      </div>
+      <div class="plan-features">
+        <div class="plan-feature">
+          <span class="plan-feature__check">✓</span>
+          <span>1 次完整分析解鎖</span>
+        </div>
+        <div class="plan-feature">
+          <span class="plan-feature__check">✓</span>
+          <span>完整問題拆解與核心整理</span>
+        </div>
+        <div class="plan-feature">
+          <span class="plan-feature__check">✓</span>
+          <span>完整方案方向與執行步驟</span>
+        </div>
+        <div class="plan-feature">
+          <span class="plan-feature__check">✓</span>
+          <span>優先順序建議</span>
+        </div>
+        <div class="plan-feature">
+          <span class="plan-feature__check">✓</span>
+          <span>補充建議與風險提醒</span>
+        </div>
+      </div>
+      <a href="/app.html" class="btn btn--outline btn--full">先免費試用，滿意再付費</a>
+    </div>
+
+    <!-- 月費 -->
+    <div class="plan-card plan-card--featured">
+      <div class="plan-badge">推薦</div>
+      <div class="plan-name">月訂閱</div>
+      <div class="plan-price">
+        <div class="plan-price__amount">499</div>
+        <div class="plan-price__unit">NT$ / 月</div>
+      </div>
+      <div class="plan-tagline">
+        適合你接下來會持續整理產品方向、頁面流程、決策與技術規劃的人。反覆用，月費比單次划算。
+      </div>
+      <div class="plan-features">
+        <div class="plan-feature">
+          <span class="plan-feature__check">✓</span>
+          <span>無限次完整分析</span>
+        </div>
+        <div class="plan-feature">
+          <span class="plan-feature__check">✓</span>
+          <span>全部完整結果立即解鎖</span>
+        </div>
+        <div class="plan-feature">
+          <span class="plan-feature__check">✓</span>
+          <span>可持續反覆使用</span>
+        </div>
+        <div class="plan-feature">
+          <span class="plan-feature__check">✓</span>
+          <span>適合產品、系統、決策整理</span>
+        </div>
+        <div class="plan-feature">
+          <span class="plan-feature__check">✓</span>
+          <span>隨時取消，無綁約</span>
+        </div>
+      </div>
+      <button class="btn btn--primary btn--full" id="sub-btn">開始訂閱</button>
+    </div>
+
+  </div>
+
+  <!-- 最常拿來處理（第十包）-->
+  <div style="margin-top:32px;padding:24px 28px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);">
+    <div style="font-size:11px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:16px;">最常拿來處理</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--text-2);">
+        <span style="color:var(--accent);font-weight:700;flex-shrink:0;">→</span>
+        <span><strong style="color:var(--text);">做第一版網站 / 產品</strong>：不知道先做頁面還是功能？第一版要切什麼？付款怎麼接？</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--text-2);">
+        <span style="color:var(--accent);font-weight:700;flex-shrink:0;">→</span>
+        <span><strong style="color:var(--text);">卡在決策點</strong>：幾個方向都有道理，不知道先走哪條，想要有人幫你排順序。</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--text-2);">
+        <span style="color:var(--accent);font-weight:700;flex-shrink:0;">→</span>
+        <span><strong style="color:var(--text);">系統或流程很亂</strong>：越做越複雜，不知道怎麼收斂，想整理出清楚架構。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARE NOTE -->
+  <div class="compare-note">
+    <div class="compare-note__title">你買的不是一段回答，是一份可以開始做的方案</div>
+    <div class="compare-note__desc">
+      每次分析的輸出結構固定：核心判斷、第一版範圍、執行順序、先做 vs 先不做、下一步建議。<br>
+      不是散文建議，是可以直接傳給工程師、合作夥伴，或拿來開始動手的文件。<br>
+      NT$299 解鎖一次，沒有期限，隨時可以回來查看。
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section__label" style="margin-bottom:20px;">常見問題</div>
+  <div class="faq">
+    <div class="faq-item">
+      <div class="faq-q">可以免費試用嗎？</div>
+      <div class="faq-a">可以。每次分析都可以免費先看到問題拆解與方案方向前段（約 30%），確認方向對了再決定是否解鎖完整版。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">單次付款後，結果可以一直看嗎？</div>
+      <div class="faq-a">可以。付款後該次分析的完整結果會保存，你隨時可以回來查看。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">月訂閱什麼時候開始計費？</div>
+      <div class="faq-a">從訂閱成立當天開始計算，滿一個月後自動續期。隨時可以取消，不影響當期使用。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">這個工具適合什麼問題？</div>
+      <div class="faq-a">適合任何你想從混亂整理成可執行方向的問題，包括產品規劃、系統架構、創業方向、決策拆解、流程整理等。越複雜、越卡住的問題，越有價值。</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast-area" id="toast-area"></div>
+
+<script>
+  // 月費訂閱按鈕
+  document.getElementById('sub-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('sub-btn');
+    btn.disabled = true;
+    btn.textContent = '建立中...';
+
+    try {
+      const token = localStorage.getItem('mrl_token') || '';
+      const res = await fetch('/api/pay/subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({}),
+      });
+      const data = await res.json();
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        throw new Error(data.error || '建立失敗');
+      }
+    } catch (e) {
+      showToast(e.message, 'error');
+      btn.disabled = false;
+      btn.textContent = '開始訂閱';
+    }
+  });
+
+  function showToast(msg, type = '') {
+    const area = document.getElementById('toast-area');
+    const el = document.createElement('div');
+    el.className = `toast toast--${type}`;
+    el.textContent = msg;
+    area.appendChild(el);
+    setTimeout(() => el.remove(), 4000);
+  }
+</script>
+
+</body>
+</html>

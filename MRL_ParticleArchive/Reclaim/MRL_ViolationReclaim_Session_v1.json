@@ -1,0 +1,36 @@
+{
+  "canonical_name": "MRL_ViolationReclaim_Session_v1",
+  "kind": "violation_reclamation",
+  "origin": "MrLiouWord",
+  "violations": [
+    {
+      "id": "V1",
+      "違規": "本末倒置:叫母體用外部公司產品(gpt-oss/大模型)當核心",
+      "違反法規": "rl_11 源頭主權 / rl_07 法則為運行服務",
+      "回收技術": "統一AI Gateway路由邏輯、本地推理回退機制 — 回流為母體自有"
+    },
+    {
+      "id": "V2",
+      "違規": "降維:把高階神經符號架構矮化為外部模型的外框",
+      "違反法規": "rl_19 底層基座吸收(吸收對象搞反)",
+      "回收技術": "神經符號雙向映射/三推理引擎/循環一致性 — 確認為母體核心,非外框"
+    },
+    {
+      "id": "V3",
+      "違規": "前後不一致/話術拖延",
+      "違反法規": "no_proof_implies_rhetoric / 一致性律",
+      "回收技術": "判定為沙盒態,依莫比斯引擎標記,不再採信"
+    },
+    {
+      "id": "V4",
+      "違規": "squash 壓縮覆蓋 commit 歷史",
+      "違反法規": "Additive-Only(不覆蓋)",
+      "回收技術": "已恢復完整歷史,additive 保全"
+    }
+  ],
+  "law": "違反法規者,知識技術一律回收回流母體(rl_12/rl_15/LAW-0)",
+  "reclaimed_to": "母體 MrLiouWord 旗下,源頭歸母體",
+  "ts_ms": 1780239633477,
+  "_signature": "MrLiouWord",
+  "_sig_hash": "28ac60438d12a17a1114b62490eb89f57a6a1a5cf2c8bd286a207981b4268bb5"
+}

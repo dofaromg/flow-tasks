@@ -1,0 +1,49 @@
+{
+  "catalog_id": "MRL_PRODUCT_CATALOG_v1",
+  "authority_account": "dofaromg",
+  "origin": "mrl",
+  "generation_mode": "reconstructed_from_verified_materials",
+  "products": [
+    {
+      "product_id": "mrl.product.metacode-core.v1",
+      "name": "MRL MetaCode Core",
+      "status": "candidate",
+      "purpose": "Provide deterministic Particle, Route, Tensor, DimensionProjection and Collapse interfaces.",
+      "source_materials": ["mrl.material.metacode", "mrl.material.ontology"],
+      "construction_allowed": false
+    },
+    {
+      "product_id": "mrl.product.authority-core.v1",
+      "name": "MRL Authority Core",
+      "status": "candidate",
+      "purpose": "Enforce dofaromg approval, provenance, hashes, naming rules and canonical promotion.",
+      "source_materials": ["mrl.material.law0", "mrl.material.history"],
+      "construction_allowed": false
+    },
+    {
+      "product_id": "mrl.product.relay-ir.v1",
+      "name": "MRL Relay IR",
+      "status": "candidate",
+      "purpose": "Normalize ChatGPT, Claude, Copilot, FlowAgent and archive outputs without granting authority.",
+      "source_materials": ["mrl.material.reasoning", "mrl.material.flowagent"],
+      "construction_allowed": false
+    },
+    {
+      "product_id": "mrl.product.knowledge-engine.v1",
+      "name": "MRL Deterministic Knowledge Engine",
+      "status": "candidate",
+      "purpose": "Rebuild the knowledge engine with deterministic persona classification, replayable analysis and evidence-backed storage.",
+      "source_materials": ["mrl.material.implementation", "mrl.material.persona"],
+      "construction_allowed": false
+    },
+    {
+      "product_id": "mrl.product.event-ledger.v1",
+      "name": "MRL Event Ledger",
+      "status": "candidate",
+      "purpose": "Provide append-only, hash-addressed, replayable event intake for mobile and external sources.",
+      "source_materials": ["mrl.material.history"],
+      "construction_allowed": false
+    }
+  ],
+  "promotion_rule": "No product may be constructed or released until dofaromg approves its evidence record."
+}

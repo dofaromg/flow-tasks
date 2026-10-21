@@ -1,0 +1,38 @@
+{
+  "manifest_version": "MRL_RELAYSTATION_MANIFEST_v1",
+  "branch": "MRL_RelayStation_Authority_v1",
+  "base_branch": "main",
+  "purpose": "Restore MRL canonical authority without forcing source branches to converge",
+  "expected_files": [
+    "MRL_RelayStation/README.md",
+    "MRL_RelayStation/authority/MRL_AUTHORITY_CHARTER_v1.yaml",
+    "MRL_RelayStation/evidence/MRL_AUTHORITY_HISTORY_v1.md",
+    "MRL_RelayStation/evidence/MRL_AUTHORITY_EVIDENCE_CHAIN_v1.jsonl",
+    "MRL_RelayStation/schemas/relay_record.schema.json",
+    "MRL_RelayStation/manifests/MRL_RELAYSTATION_MANIFEST_v1.json"
+  ],
+  "dependency_tree": {
+    "MRL_RelayStation/README.md": [
+      "MRL_RelayStation/authority/MRL_AUTHORITY_CHARTER_v1.yaml",
+      "MRL_RelayStation/evidence/MRL_AUTHORITY_HISTORY_v1.md"
+    ],
+    "MRL_RelayStation/authority/MRL_AUTHORITY_CHARTER_v1.yaml": [
+      "MRL_RelayStation/schemas/relay_record.schema.json"
+    ],
+    "MRL_RelayStation/evidence/MRL_AUTHORITY_HISTORY_v1.md": [
+      "MRL_RelayStation/evidence/MRL_AUTHORITY_EVIDENCE_CHAIN_v1.jsonl"
+    ]
+  },
+  "source_branches": [
+    "main",
+    "MRL_System_Integration_v1"
+  ],
+  "source_policy": "read_and_map_without_force_overwrite",
+  "external_provider_policy": "authority_level_0_until_mrl_promotion",
+  "completion_gate": {
+    "required_file_count": 6,
+    "missing_allowed": 0,
+    "placeholder_allowed": false,
+    "canonical_status": "authority_recovery_candidate"
+  }
+}

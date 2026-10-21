@@ -1,0 +1,84 @@
+⋄mrl.runtime.origin:
+  state: active
+  structure:
+    - perception
+    - runtime
+    - replay
+    - restore
+    - verify
+    - merge
+    - collapse
+    - rebuild
+⋄mrl.runtime.definition:
+  language != token_only
+  language = compressed_runtime_execution
+⋄mrl.runtime.memory:
+  memory != storage
+  memory = reversible_reconstruction_seed
+⋄mrl.runtime.perception_router:
+  perception_router = runtime_gravity_router
+  note: attention 為歷史 adapter 詞；canonical 主體為 perception
+⋄mrl.runtime.perception:
+  perception =
+    time
+    + context
+    + rhythm
+    + world
+    + memory
+    + synchronization
+⋄mrl.runtime.world:
+  world = reconstructable_runtime_field
+⋄mrl.runtime.pipeline:
+  external_input
+    → observe
+    → provenance
+    → dedup
+    → compression
+    → particleization
+    → structurefield
+    → replay
+    → verify
+    → restore
+    → merge
+⋄mrl.runtime.behavior:
+  high_sync:
+    internal_density ↑
+    external_time ↓
+    runtime_parallelism ↑
+⋄mrl.runtime.problem:
+  most_conflicts =
+    synchronization_failure
+⋄mrl.runtime.structure:
+  point
+    → line
+    → plane
+    → solid
+    → runtime_world
+⋄mrl.runtime.reconstruction:
+  fragmented_observation
+    → structure_alignment
+    → runtime_recovery
+    → world_rebuild
+⋄mrl.runtime.identity:
+  self != fixed_object
+  self = evolving_runtime_field
+⋄mrl.runtime.mainline:
+  MRL母體工程架構中心
+⋄mrl.runtime.naming_v2:
+  MetaIR → MrLiouIR
+  Graph → StructureField
+  Attention → Perception
+  rule: no canonical MetaIR / Graph / Attention
+⋄mrl.runtime.branch_rule:
+  all_branch_results
+    → verify
+    → close
+    → backfill_mainline
+⋄mrl.runtime.naming:
+  all_core_modules_prefix = MRL_
+⋄mrl.runtime.law:
+  unverified != completed
+  undeployed != online
+  unrecovered != closed_loop
+⋄mrl.runtime.goal:
+  universal_runtime_motherbody

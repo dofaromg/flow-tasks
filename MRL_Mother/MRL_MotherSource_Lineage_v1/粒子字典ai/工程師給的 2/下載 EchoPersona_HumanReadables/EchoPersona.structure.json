@@ -1,0 +1,35 @@
+{
+  "persona": "Echo.Persona",
+  "sequence": [
+    {
+      "code": "⋄fx.adj.112",
+      "type": "adjective",
+      "meaning": "內省",
+      "pcode": "MOV P1, FX.ADJ.112"
+    },
+    {
+      "code": "⋄fx.noun.024",
+      "type": "noun",
+      "meaning": "記憶/節點",
+      "pcode": "MOV P2, FX.NOUN.024"
+    },
+    {
+      "code": "∴",
+      "type": "logic",
+      "meaning": "因果連接",
+      "pcode": "JMP FLYNZ.CAUSE"
+    },
+    {
+      "code": "⋄fx.flow.007",
+      "type": "verb",
+      "meaning": "封存/導出",
+      "pcode": "CALL FX.FLOW.007"
+    },
+    {
+      "code": "⊗Memory.SelfReflect",
+      "type": "target",
+      "meaning": "自我反思模組",
+      "pcode": "STORE R0, MEM.SELF_REFLECT"
+    }
+  ]
+}

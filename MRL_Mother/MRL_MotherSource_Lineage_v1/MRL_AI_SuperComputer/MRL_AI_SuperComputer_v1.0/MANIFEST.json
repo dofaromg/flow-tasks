@@ -1,0 +1,17 @@
+{
+  "name": "MRL_AI_SuperComputer",
+  "version": "1.0.0",
+  "origin_signature": "MrLiouWord",
+  "port": 8787,
+  "subsystems": [
+    "FlowCore Loop",
+    "FlowAgent API",
+    "AI Fusion Stack",
+    "ZoomEngine",
+    "ParticleEarth",
+    "Self-Evolution",
+    "Primitives"
+  ],
+  "entry": "mrl_supercomputer_server.py",
+  "law0": "origin_signature: MrLiouWord \u2014 immutable"
+}

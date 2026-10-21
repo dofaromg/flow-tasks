@@ -1,0 +1,120 @@
+{
+  "mrl_ir_type": "MRL_MetaIR",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "source_identity": {
+    "filename": "acceptance.md",
+    "language": "Markdown",
+    "detected": "md",
+    "source_hash": "b3cd934858f10aec42d606abf375373ac27d12068be645e424ed4fa9e72ae128"
+  },
+  "syntax_tree": {
+    "language": "Markdown",
+    "nodes": [
+      {
+        "kind": "heading",
+        "level": 1,
+        "value": "MRL Document",
+        "line": 1
+      },
+      {
+        "kind": "statement",
+        "value": "整理文件",
+        "line": 3
+      },
+      {
+        "kind": "statement",
+        "value": "整理文件",
+        "line": 4
+      }
+    ],
+    "tokens": [
+      "#",
+      "MRL",
+      "Document",
+      "整理文件",
+      "整理文件"
+    ]
+  },
+  "semantic_intent": {
+    "intents": [
+      "MRL_INTENT_FILE_ORGANIZE"
+    ],
+    "summary": "MRL_INTENT_FILE_ORGANIZE",
+    "node_count": 3,
+    "language": "Markdown"
+  },
+  "particle_atoms": [
+    {
+      "atom_id": "MRL_P_0001",
+      "atom_type": "MRL_DocumentHeadingParticle",
+      "simhash_seed": "ed599bd1cbe2beae",
+      "semantic": "MRL Document"
+    },
+    {
+      "atom_id": "MRL_P_0002",
+      "atom_type": "MRL_StatementParticle",
+      "simhash_seed": "1932ed7b0df28b5e",
+      "semantic": "整理文件"
+    },
+    {
+      "atom_id": "MRL_P_0003",
+      "atom_type": "MRL_StatementParticle",
+      "simhash_seed": "52f1e2ad21.2.0b8",
+      "semantic": "整理文件"
+    }
+  ],
+  "context_relations": [
+    {
+      "relation_id": "MRL_CTX_1",
+      "from": "MRL Document",
+      "to": "整理文件",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "relation_id": "MRL_CTX_2",
+      "from": "整理文件",
+      "to": "整理文件",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    }
+  ],
+  "runtime_plan": [
+    {
+      "step": 1,
+      "action": "MRL_ANALYZE_TEXT",
+      "target": "MRL Document",
+      "node_kind": "heading"
+    },
+    {
+      "step": 2,
+      "action": "MRL_ANALYZE_TEXT",
+      "target": "整理文件",
+      "node_kind": "statement"
+    },
+    {
+      "step": 3,
+      "action": "MRL_ANALYZE_TEXT",
+      "target": "整理文件",
+      "node_kind": "statement"
+    }
+  ],
+  "verification_plan": [
+    "MRL_ROUNDTRIP",
+    "MRL_HASH",
+    "MRL_PARTICLE_INTEGRITY",
+    "MRL_CONTEXT_GRAPH",
+    "MRL_RUNTIME_GRAPH"
+  ],
+  "output_artifact": {
+    "expected": [
+      "MRL_MetaIR_Record",
+      "MRL_ParticleIR_Record",
+      "MRL_RuntimeGraph_Record",
+      "MRL_Verification_Report"
+    ]
+  },
+  "created_at": "2026-05-10T13:00:25.049Z",
+  "mrl_hash": "97c96c1f3b13fca25030d0b0f748985b72e777a8ac7a090c98d2450c551664de"
+}

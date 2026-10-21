@@ -1,0 +1,27 @@
+{
+  "hub_id": "FluinHub.CenterRegistry.v1",
+  "personas_registered": [
+    {
+      "id": "guardian.mirror",
+      "version": "v1.0",
+      "source": "guardian.mirror.log.fltnz",
+      "bundle": "guardian.mirror.TraceBundle.v1.flpkg.zip"
+    },
+    {
+      "id": "guardian.mirror.v2",
+      "version": "v2.0",
+      "source": "guardian.mirror.v2.log.fltnz",
+      "bundle": "guardian.mirror.trace.loop.bundle.v2.flpkg.zip"
+    },
+    {
+      "id": "EchoPersona.Core",
+      "version": "v1.0",
+      "source": "N/A",
+      "bundle": "EchoPersona.Core.sync.json"
+    }
+  ],
+  "core_image": "FlowOS.CoreImage.v1.img.zip",
+  "registered_by": "FlowAgent.TraceSystem",
+  "timestamp": "2025-07-22T08:35:31.376588Z",
+  "description": "人格記憶模組倉儲註冊中心，管理所有 trace 封裝與人格跳頻來源封包"
+}

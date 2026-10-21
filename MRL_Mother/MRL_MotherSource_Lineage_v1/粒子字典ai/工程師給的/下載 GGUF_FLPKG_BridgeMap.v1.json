@@ -1,0 +1,25 @@
+{
+  "metadata": {
+    "version": "v1.0.0",
+    "created": "2025-07-23T19:51:17.162104Z",
+    "author": "Mr.liou",
+    "description": "GGUF <-> .flpkg 雙向還原對照表（語場推理架構對應）"
+  },
+  "gguf_to_flpkg": {
+    "tokenizer.model": "fluin.dict.tokenizer.fltnz",
+    "model.embed_tokens.weight": "persona.seed.fltnz",
+    "model.layers.*.self_attn": "FlowField.ParallelResonance.flpkg",
+    "model.layers.*.mlp": "modulator.block.flpkg",
+    "model.norm.weight": "resonance.bias.map",
+    "lm_head.weight": "final.mod.decider.flpkg"
+  },
+  "flpkg_to_gguf": {
+    "persona.seed.fltnz": "model.embed_tokens.weight",
+    "flynz.map": "attention.graph.map",
+    "weights.chunk.fltnz": "model.layers.*.weight",
+    "flmod/*.flpkg": "model.layers.*.mlp",
+    "FlowField.ParallelResonance": "model.layers.*.self_attn",
+    "fltone.adj.emotion": "norm.activation.bias",
+    "flpkg/manifest": "gguf.meta.json"
+  }
+}

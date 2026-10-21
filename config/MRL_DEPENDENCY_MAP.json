@@ -1,0 +1,102 @@
+{
+  "origin_signature": "MrLiouWord",
+  "version": "1.0.0",
+  "snapshot_date": "2026-07-08",
+  "boot_order": [
+    {
+      "phase": 0,
+      "name": "infrastructure",
+      "services": ["MRL_PostgreSQL", "mrl_redis"],
+      "wait_for": "healthcheck (pg_isready / redis-cli ping)"
+    },
+    {
+      "phase": 1,
+      "name": "data_proxy",
+      "services": ["MRL_DB_Proxy"],
+      "wait_for": "port 7801 listening"
+    },
+    {
+      "phase": 2,
+      "name": "core_engine",
+      "services": [
+        "MRL_ASI_Engine",
+        "MRL_Memory_Engine",
+        "MRL_Toolchain_Engine",
+        "MRL_Write_Guard",
+        "MRL_PersistentLoop"
+      ],
+      "wait_for": "ports 7700/7811/7812 listening"
+    },
+    {
+      "phase": 3,
+      "name": "ai_inference",
+      "services": [
+        "MRL_Inference",
+        "MRL_FlowCoreLoop",
+        "MRL_FlowAgent_API",
+        "MRL_ParticleGlobe",
+        "MRL_ReasoningEngine"
+      ],
+      "wait_for": "ports 7500/8787/7900/8788/7810 listening"
+    },
+    {
+      "phase": 4,
+      "name": "orchestration",
+      "services": [
+        "MRL_Agent_Orchestrator",
+        "MRL_RuntimeAdapter",
+        "MRL_AI_OS"
+      ],
+      "wait_for": "port 7810/7950 listening"
+    },
+    {
+      "phase": 5,
+      "name": "platform",
+      "services": [
+        "MRL_AI_Product_Server",
+        "MRL_RuntimeOS",
+        "MRL_FlowOS_Runner",
+        "MRL_Realtime_Voice",
+        "MRL_API_Service",
+        "MRL_BuilderModule"
+      ],
+      "wait_for": "port 3000 listening"
+    },
+    {
+      "phase": 6,
+      "name": "network_edge",
+      "services": ["MRL_Bridge", "MRL_Tunnel"],
+      "wait_for": "cloudflared tunnel active"
+    },
+    {
+      "phase": 7,
+      "name": "monitoring",
+      "services": ["MRL_LayerA_PIDScope", "MRL_Particle_Sync_Worker"],
+      "wait_for": null
+    }
+  ],
+  "dependency_graph": {
+    "MRL_PostgreSQL": [],
+    "mrl_redis": [],
+    "MRL_DB_Proxy": ["MRL_PostgreSQL", "mrl_redis"],
+    "MRL_ASI_Engine": ["MRL_PostgreSQL", "mrl_redis", "MRL_DB_Proxy"],
+    "MRL_Memory_Engine": ["mrl_redis"],
+    "MRL_Toolchain_Engine": ["mrl_redis"],
+    "MRL_Write_Guard": [],
+    "MRL_PersistentLoop": ["mrl_redis"],
+    "MRL_Inference": [],
+    "MRL_FlowCoreLoop": ["MRL_Inference"],
+    "MRL_FlowAgent_API": ["MRL_Inference", "MRL_Memory_Engine"],
+    "MRL_ParticleGlobe": [],
+    "MRL_Agent_Orchestrator": ["MRL_Memory_Engine", "MRL_Toolchain_Engine", "mrl_redis"],
+    "MRL_RuntimeAdapter": ["MRL_PostgreSQL"],
+    "MRL_AI_OS": ["MRL_PostgreSQL", "mrl_redis"],
+    "MRL_AI_Product_Server": ["MRL_PostgreSQL"],
+    "MRL_Bridge": ["MRL_ASI_Engine", "MRL_Tunnel"],
+    "MRL_Tunnel": [],
+    "MRL_LayerA_PIDScope": [],
+    "MRL_Operations": [],
+    "MRL_Particle_Sync_Worker": ["MRL_PostgreSQL"]
+  },
+  "critical_path": "PostgreSQL → DB_Proxy → ASI_Engine → Bridge → Tunnel → Internet"
+}

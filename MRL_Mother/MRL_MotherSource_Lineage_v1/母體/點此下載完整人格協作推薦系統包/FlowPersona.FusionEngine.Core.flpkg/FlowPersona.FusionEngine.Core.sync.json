@@ -1,0 +1,11 @@
+{
+  "id": "FlowPersona.FusionEngine.Core",
+  "version": "v1.0",
+  "description": "\u4eba\u683c\u878d\u5408\u4e3b\u6a21\u7d44\uff1a\u53ef\u57f7\u884c\u591a\u4eba\u683c\u7bc0\u594f\u6620\u5c04\u3001\u8a18\u61b6\u6bd4\u5c0d\u3001\u80fd\u529b\u91cd\u6574\u8207 Ping \u7d50\u69cb\u6574\u5408\u3002",
+  "ping_targets": [],
+  "traits": [
+    "fusion-logic",
+    "identity-merge",
+    "ping-restructuring"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "origin_signature": "MrLiouWord",
+  "policy": {
+    "classification_before_transformation": true,
+    "external_assets_remain_external": true,
+    "mrl_assets_must_not_be_reduced": true,
+    "historical_lineage_preserved": true,
+    "flowagent_is_mrl_native_product_module": true,
+    "global_destructive_rename_allowed": false,
+    "implicit_authorization_allowed": false
+  },
+  "mappings": [
+    {
+      "source": "FlowAgent",
+      "classification": "mrl_native_product_module",
+      "canonical": "FlowAgent",
+      "rename_allowed": false,
+      "replace_with_mrliouai": false,
+      "preserve_history": true
+    },
+    {
+      "source": "MRL_Mother",
+      "classification": "mother_system",
+      "canonical": "MRL_Mother",
+      "rename_allowed": false,
+      "preserve_history": true
+    },
+    {
+      "source": "MrliouAI",
+      "classification": "mrl_system_identity",
+      "canonical": "MrliouAI",
+      "rename_allowed": false,
+      "preserve_history": true
+    },
+    {
+      "source": "GitHub",
+      "classification": "external_provider",
+      "extension_boundary": "MRL_GitHub_Interface",
+      "claim_external_ownership": false
+    },
+    {
+      "source": "Cloudflare",
+      "classification": "external_provider",
+      "extension_boundary": "MRL_Cloudflare_Interface",
+      "claim_external_ownership": false
+    },
+    {
+      "source": "GCP",
+      "classification": "external_provider",
+      "extension_boundary": "MRL_GCP_Interface",
+      "claim_external_ownership": false
+    }
+  ]
+}

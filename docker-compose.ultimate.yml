@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  # Ultimate AI Video System Main Service
+  ultimate-system:
+    build:
+      context: .
+      dockerfile: Dockerfile.ultimate
+    container_name: ultimate-ai-system
+    ports:
+      - "8000:8000"
+    environment:
+      - CUDA_VISIBLE_DEVICES=0,1,2,3,4,5
+      - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
+      - MODEL_BASE_PATH=/models
+      - WORKSPACE_BASE_PATH=/workspaces
+    volumes:
+      - ./models:/models
+      - ./workspaces:/workspaces
+      - ./shared:/shared
+      - ./logs:/app/logs
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 6
+              capabilities: [gpu]
+    networks:
+      - ultimate-network
+    restart: unless-stopped
+
+  # Redis for Task Queue
+  redis:
+    image: redis:7-alpine
+    container_name: ultimate-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - ultimate-network
+    restart: unless-stopped
+
+  # PostgreSQL for Metadata
+  postgres:
+    image: postgres:15-alpine
+    container_name: ultimate-postgres
+    environment:
+      POSTGRES_DB: ultimate_ai
+      POSTGRES_USER: ultimate
+      POSTGRES_PASSWORD: ultimate_password_change_me
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - ultimate-network
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: ultimate-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./workspaces:/usr/share/nginx/html/workspaces:ro
+    networks:
+      - ultimate-network
+    depends_on:
+      - ultimate-system
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+  postgres-data:
+
+networks:
+  ultimate-network:
+    driver: bridge

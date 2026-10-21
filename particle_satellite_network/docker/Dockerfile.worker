@@ -1,0 +1,37 @@
+# Dockerfile for Particle Satellite Network Worker
+# 粒子衛星網路工作節點容器
+
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY particle_satellite_network/requirements.txt /app/requirements.txt
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY particle_satellite_network /app/particle_satellite_network
+COPY particle_core /app/particle_core
+
+# Set Python path
+ENV PYTHONPATH=/app
+
+# Environment variables
+ENV LAYER_TYPE=LEO
+ENV SATELLITE_ID=worker-001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import sys; sys.exit(0)"
+
+# Default command (will be overridden by docker-compose)
+CMD ["python", "-m", "particle_satellite_network.core.satellite_layers.leo_layer"]

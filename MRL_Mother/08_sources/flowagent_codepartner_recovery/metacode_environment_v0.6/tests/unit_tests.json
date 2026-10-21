@@ -1,0 +1,25 @@
+{
+  "version": "v0.6",
+  "cases": [
+    {
+      "name": "loop_integrity_present",
+      "assert": true
+    },
+    {
+      "name": "marker_slot_reserved",
+      "assert": true
+    },
+    {
+      "name": "particles_nonempty",
+      "assert": true
+    },
+    {
+      "name": "process_has_5_steps",
+      "assert": true
+    },
+    {
+      "name": "demo_trace_progresses",
+      "assert": true
+    }
+  ]
+}

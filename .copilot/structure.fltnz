@@ -1,0 +1,103 @@
+✦Seed:⊕StructureIndex/▽Depth8.0001→⚙Analysis
+∞Trace → ζGenerated[2026-02-03T01:18:11.572722]
+⊕Metadata:
+  ⊗Files[597]
+  ⊗Dirs[113]
+  ⊗Lines[177997]
+  ⊗Size[9445548]
+
+⊕Categories:
+  ▽⚙️ 系統核心:
+    ⊗Count[18]
+    →Module[.flowcore]:
+      ⊗Path[.flowcore]
+      ⊗Files[2]
+      ⊗Lines[32]
+    →Module[demo]:
+      ⊗Path[.flowcore/demo]
+      ⊗Files[2]
+      ⊗Lines[32]
+    →Module[runtime]:
+      ⊗Path[MrLiou_AI_SuperComputer/runtime]
+      ⊗Files[4]
+      ⊗Lines[722]
+    ⊗More[15]
+
+  ▽🧠 AI 核心:
+    ⊗Count[39]
+    →Module[MrLiou_AI_SuperComputer]:
+      ⊗Path[MrLiou_AI_SuperComputer]
+      ⊗Files[82]
+      ⊗Lines[6783]
+    →Module[ai_primitives]:
+      ⊗Path[MrLiou_AI_SuperComputer/ai_primitives]
+      ⊗Files[5]
+      ⊗Lines[826]
+    →Module[docs]:
+      ⊗Path[MrLiou_AI_SuperComputer/docs]
+      ⊗Files[3]
+      ⊗Lines[744]
+    ⊗More[36]
+
+  ▽📝 文件:
+    ⊗Count[6]
+    →Module[docs]:
+      ⊗Path[MrLiou_AI_SuperComputer/docs]
+      ⊗Files[3]
+      ⊗Lines[744]
+    →Module[docs]:
+      ⊗Path[docs]
+      ⊗Files[28]
+      ⊗Lines[13098]
+    →Module[archive]:
+      ⊗Path[docs/archive]
+      ⊗Files[19]
+      ⊗Lines[9554]
+    ⊗More[3]
+
+  ▽🗂️ 資料:
+    ⊗Count[26]
+    →Module[memory]:
+      ⊗Path[MrLiou_AI_SuperComputer/memory]
+      ⊗Files[46]
+      ⊗Lines[570]
+    →Module[derived]:
+      ⊗Path[MrLiou_AI_SuperComputer/memory/derived]
+      ⊗Files[0]
+      ⊗Lines[0]
+    →Module[l1]:
+      ⊗Path[MrLiou_AI_SuperComputer/memory/derived/l1]
+      ⊗Files[0]
+      ⊗Lines[0]
+    ⊗More[23]
+
+  ▽🔧 配置:
+    ⊗Count[2]
+    →Module[config]:
+      ⊗Path[config]
+      ⊗Files[2]
+      ⊗Lines[314]
+    →Module[config]:
+      ⊗Path[particle_core/config]
+      ⊗Files[1]
+      ⊗Lines[81]
+
+  ▽🧪 測試:
+    ⊗Count[2]
+    →Module[tests]:
+      ⊗Path[modules/context_management/tests]
+      ⊗Files[7]
+      ⊗Lines[1094]
+    →Module[tests]:
+      ⊗Path[particle_core/tests]
+      ⊗Files[2]
+      ⊗Lines[648]
+
+  ▽🎨 UI:
+    ⊗Count[1]
+    →Module[pages]:
+      ⊗Path[pages]
+      ⊗Files[1]
+      ⊗Lines[267]
+
+∞EndTrace

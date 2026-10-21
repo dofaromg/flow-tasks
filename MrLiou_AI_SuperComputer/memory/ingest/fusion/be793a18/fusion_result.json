@@ -1,0 +1,27 @@
+{
+  "fusion_id": "be793a18",
+  "mode": "weighted",
+  "prompt": "Write a haiku",
+  "outputs": [
+    {
+      "timestamp": "2026-02-01T11:13:47.398139+00:00",
+      "input": "Write a haiku",
+      "output": "[claude/default] Response to: Write a haiku...",
+      "provider": "claude",
+      "model": "default",
+      "role": "",
+      "weight": 0.6
+    },
+    {
+      "timestamp": "2026-02-01T11:13:47.398177+00:00",
+      "input": "Write a haiku",
+      "output": "[gemini/default] Response to: Write a haiku...",
+      "provider": "gemini",
+      "model": "default",
+      "role": "",
+      "weight": 0.4
+    }
+  ],
+  "final_result": "=== Weighted Merge ===\n\n[claude - 60.0%]: [claude/default] Response to: Write a haiku...\n\n[gemini - 40.0%]: [gemini/default] Response to: Write a haiku...\n\n=== End Weighted Merge ===",
+  "particle_count": 2
+}

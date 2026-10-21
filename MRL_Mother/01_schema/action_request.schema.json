@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FlowAgent ActionRequest v1",
+  "type": "object",
+  "properties": {
+    "action_id": {"type": "string"},
+    "actor_id": {"type": "string"},
+    "persona_id": {"type": "string"},
+    "action_type": {"type": "string"},
+    "target": {
+      "type": "object",
+      "properties": {
+        "host": {"type": "string"},
+        "url": {"type": "string"},
+        "recipient": {"type": "string"},
+        "path": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "purpose": {"type": "string"},
+    "data_tags": {"type": "array", "items": {"type": "string"}},
+    "risk_hint": {"type": "string"},
+    "requested_at": {"type": "string", "format": "date-time"},
+    "meta": {"type": "object", "additionalProperties": true}
+  },
+  "required": ["action_id", "actor_id", "action_type", "requested_at"]
+}

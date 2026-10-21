@@ -1,0 +1,16 @@
+{
+  "levels": [
+    "micro",
+    "core",
+    "macro",
+    "abstract"
+  ],
+  "golden_ratio": 1.618,
+  "projection_modes": [
+    "semantic",
+    "spatial",
+    "temporal",
+    "causal"
+  ],
+  "origin_signature": "MrLiouWord"
+}

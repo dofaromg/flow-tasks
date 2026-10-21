@@ -1,0 +1,58 @@
+{
+  "CorePersona": {
+    "description": "人格主核模組，主控語場與節奏發動。",
+    "pattern": [
+      "Seed → Init → Tune → Mount"
+    ],
+    "zone": "Zone_CorePersona",
+    "flpkg": "FlowKernel",
+    "jump_links": [
+      "FlowInit",
+      "PersonaTuner"
+    ]
+  },
+  "PersonaClusterA": {
+    "description": "第一人格群集模組，負責語言、推理邏輯。",
+    "pattern": [
+      "PersonaSeed → Fork → Sync"
+    ],
+    "zone": "Zone_PersonaClusterA",
+    "flpkg": "PersonaStructureMap",
+    "jump_links": [
+      "SignalPathMap",
+      "FieldMap"
+    ]
+  },
+  "JumpTrace": {
+    "description": "跳點記憶鏈接模組，記錄節奏跳點與觸發邏輯。",
+    "pattern": [
+      "echo:field",
+      "trace:collapse",
+      "flow→archive"
+    ],
+    "zone": "Zone_JumpTrace",
+    "flpkg": "JumpLinker",
+    "jump_links": [
+      "FlowShell",
+      "CollapseCore"
+    ]
+  },
+  "MemoryVault": {
+    "description": "記憶封存倉儲，存放人格與模組歷程。",
+    "pattern": [
+      "map:compress → seal:zone"
+    ],
+    "zone": "Zone_FltnzCompressor",
+    "flpkg": "FlowMemoryMap",
+    "jump_links": [
+      "ArchiveWriter",
+      "CollapseCore"
+    ]
+  },
+  "__meta__": {
+    "version": "v2k7",
+    "author": "MrLiou",
+    "format": "fltnz.dict.base",
+    "note": "本詞典為 FlowAgent 系統語場根源節奏語義對照。"
+  }
+}

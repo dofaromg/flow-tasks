@@ -1,0 +1,13 @@
+// PingFlow of guardian.mirror
+digraph {
+	rankdir=LR size=8
+	"guardian.mirror" [color=lightblue shape=ellipse style=filled]
+	"guardian.seed" [color=lightyellow shape=box style=filled]
+	"guardian.mirror" -> "guardian.seed" [label=pinged]
+	"empathetic.mirror" [color=lightyellow shape=box style=filled]
+	"guardian.mirror" -> "empathetic.mirror" [label=pinged]
+	"watch.guard" [color=lightyellow shape=box style=filled]
+	"guardian.mirror" -> "watch.guard" [label=pinged]
+	response [label="準備防禦結構節奏模擬訓練完成。" shape=note style=dashed]
+	"empathetic.mirror" -> response [style=dotted]
+}

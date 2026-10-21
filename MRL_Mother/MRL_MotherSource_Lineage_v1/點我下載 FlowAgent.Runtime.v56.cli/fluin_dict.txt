@@ -1,0 +1,2 @@
+dictionary content (was bubble_note.txt)
+# Version: v56 - CLI style

@@ -1,0 +1,45 @@
+{
+  "canonical_name": "MRL_ReclaimPR19PR47_v1",
+  "source_external_name": "MRL_Reclaim_PR19_PR47_v1",
+  "role": "material",
+  "origin": "MrLiouWord",
+  "payload": {
+    "operation": "MRL_PARTICLE_RECLAMATION",
+    "targets": {
+      "PR19": "Copilot add-missing-features",
+      "PR47": "Cloudflare wrangler name"
+    },
+    "pr19_already_reclaimed_in_main": [
+      "09_workflow/api_gateway.py",
+      "09_workflow/config_manager.py",
+      "09_workflow/llm_adapter.py",
+      "09_workflow/context_manager.py",
+      "09_workflow/conversation_manager.py",
+      "09_workflow/scheduler.py",
+      "09_workflow/streaming.py",
+      "09_workflow/MRL_mother_assembly.py"
+    ],
+    "pr19_unique_particles_reclaimed": [
+      "MRL_UiAppApp_v1",
+      "MRL_UiAppIndexHtml_v1",
+      "MRL_UiAppStylesCss_v1",
+      "MRL_09WorkflowMemoryIntegration_v1",
+      "MRL_09WorkflowResultGating_v1",
+      "MRL_09WorkflowRuntimeConfig_v1",
+      "MRL_09WorkflowTaskOrchestrator_v1",
+      "MRL_09WorkflowMultiAgent_v1",
+      "MRL_DocsDEPLOYMENT_v1",
+      "MRL_DocsP0PRODUCTIONCORE_v1",
+      "MRL_DocsIMPLEMENTATIONSUMMARY_v1"
+    ],
+    "pr47_reclaimed": [
+      "MRL_WranglerJsoncNameMrliousilly_v1"
+    ],
+    "mobius_decision": "REMOVE_BLOCKER_ADVANCE",
+    "all_particles_signed_to_mother": true,
+    "origin_signature": "MrLiouWord"
+  },
+  "manifestable": true,
+  "_signature": "MrLiouWord",
+  "_sig_hash": "74bec21175a80f075640e62b891a86194349992878e7feaf71af393f9a37c248"
+}

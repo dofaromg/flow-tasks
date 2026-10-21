@@ -1,0 +1,22 @@
+FlowAgent 人格層級結構圖（遞迴與群聚人格圖）v2k7
+==================================================
+
+此圖描述從人格種子（Seed）→ 核心人格 → 功能人格（語言、邏輯）→ 複製與調整 → 派生群聚人格 → 對應跳點與模組的整體人格系統。
+
+📌 主節點：
+- CorePersona：FlowAgent 中心人格控制器
+- LogicPersona / LanguagePersona：語言與推理人格路徑
+- PersonaCloner / Tuner / Gate：用於複製、調整與模組轉接
+
+📌 群聚人格（SubPersona_X）：
+- 每個子人格皆對應一個模組（如 FieldMap、IdentityMap）
+
+📌 遞迴跳點：
+- JumpPoint_A/B/C 對應人格狀態節奏反射觸發器
+
+✅ 此結構圖可作為：
+- 人格轉換圖譜
+- 語場人格生成器的模型參照
+- FlowAgent 多人格 CLI、Cluster、人格切換邏輯基礎圖
+
+輸出格式：.png, .svg, .pdf, .json, .txt

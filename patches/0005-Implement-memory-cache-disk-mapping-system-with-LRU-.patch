@@ -1,0 +1,1582 @@
+From 7e0098b2003cf45b13945a893f4803751b383ecc Mon Sep 17 00:00:00 2001
+From: "copilot-swe-agent[bot]" <198982749+Copilot@users.noreply.github.com>
+Date: Fri, 2 Jan 2026 09:33:33 +0000
+Subject: [PATCH 5/6] Implement memory cache disk mapping system with LRU
+ eviction and auto-persistence
+
+Co-authored-by: dofaromg <217537952+dofaromg@users.noreply.github.com>
+---
+ .gitignore                                    |   2 +
+ .../docs/memory_cache_disk_mapping.md         | 534 ++++++++++++++++++
+ particle_core/src/memory/config.yaml          |   1 +
+ particle_core/src/memory/memory_cache_disk.py | 490 ++++++++++++++++
+ .../src/memory/memory_quick_mount.py          | 138 +++++
+ particle_core/tests/test_memory_cache_disk.py | 328 +++++++++++
+ 6 files changed, 1493 insertions(+)
+ create mode 100644 particle_core/docs/memory_cache_disk_mapping.md
+ create mode 100644 particle_core/src/memory/memory_cache_disk.py
+ create mode 100644 particle_core/tests/test_memory_cache_disk.py
+
+diff --git a/.gitignore b/.gitignore
+index e969bb6..c605775 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -235,8 +235,10 @@ dict_seeds/
+ particle_core/context/
+ particle_core/snapshots/
+ particle_core/backups/
++particle_core/cache/
+ /tmp/test_context/
+ /tmp/test_snapshots/
++/tmp/test_cache/
+ 
+ # Repository sync backups
+ .sync_backups/
+diff --git a/particle_core/docs/memory_cache_disk_mapping.md b/particle_core/docs/memory_cache_disk_mapping.md
+new file mode 100644
+index 0000000..2177be0
+--- /dev/null
++++ b/particle_core/docs/memory_cache_disk_mapping.md
+@@ -0,0 +1,534 @@
++# Memory Cache Disk Mapping Documentation
++# 記憶快取磁碟映射文檔
++
++## 概述 (Overview)
++
++Memory Cache Disk Mapping System provides LRU (Least Recently Used) cache with automatic disk persistence for efficient state management.
++
++記憶快取磁碟映射系統提供 LRU（最近最少使用）快取，配合自動磁碟持久化，實現高效的狀態管理。
++
++## 核心功能 (Core Features)
++
++### 1. LRU Cache 策略
++
++- **最近最少使用淘汰**: 自動淘汰最久未使用的項目
++- **自動大小管理**: 配置最大快取大小
++- **存取統計追蹤**: 命中率、未命中率、淘汰次數等
++
++### 2. Automatic Disk Persistence 自動磁碟持久化
++
++- **淘汰項目持久化**: 被淘汰的項目自動保存到磁碟
++- **背景自動同步**: 定期將快取內容同步到磁碟
++- **啟動時預熱**: 從磁碟載入既有快取項目
++
++### 3. Integration with Memory Quick Mount
++
++- **無縫整合**: 與 Memory Quick Mount 系統完全整合
++- **快取感知快照**: 快照時自動快取狀態
++- **快速恢復**: 優先從快取恢復，提升效能
++
++## 架構 (Architecture)
++
++```
++┌─────────────────────────────────────────────────────────────┐
++│                   Application Layer                          │
++│           (Memory Quick Mount / User Code)                   │
++└──────────────────────────┬──────────────────────────────────┘
++                           │
++┌──────────────────────────▼──────────────────────────────────┐
++│              MemoryCacheDiskMapper                           │
++│         High-level cache interface                           │
++│  - get_state() / set_state()                                │
++│  - Cache statistics                                          │
++│  - Shutdown management                                       │
++└──────────────────────────┬──────────────────────────────────┘
++                           │
++┌──────────────────────────▼──────────────────────────────────┐
++│                    LRUCache                                  │
++│         Core LRU implementation                              │
++│  - OrderedDict-based LRU                                    │
++│  - Eviction policy                                           │
++│  - Disk I/O operations                                       │
++└──────────────────────────┬──────────────────────────────────┘
++                           │
++              ┌────────────┴────────────┐
++              │                         │
++┌─────────────▼────────────┐   ┌───────▼──────────────┐
++│   Memory Cache           │   │   Disk Storage       │
++│   (OrderedDict)          │   │   (JSON files)       │
++│                          │   │                      │
++│ - Fast access            │   │ - Persistence        │
++│ - Limited size           │   │ - Unlimited storage  │
++│ - Volatile               │   │ - Durable            │
++└──────────────────────────┘   └──────────────────────┘
++```
++
++## 配置 (Configuration)
++
++### config.yaml 設定
++
++```yaml
++# Cache directory
++cache_dir: "particle_core/cache"
++
++# Performance settings
++performance:
++  # Enable caching
++  enable_caching: true
++  
++  # Maximum cache size (number of entries)
++  cache_size: 256
++```
++
++### Python 配置
++
++```python
++from memory_cache_disk import MemoryCacheDiskMapper
++
++config = {
++    "performance": {
++        "enable_caching": True,
++        "cache_size": 256
++    },
++    "cache_dir": "particle_core/cache"
++}
++
++mapper = MemoryCacheDiskMapper(config)
++```
++
++## API Reference
++
++### LRUCache Class
++
++#### Constructor
++
++```python
++LRUCache(
++    max_size: int = 256,
++    cache_dir: str = "particle_core/cache",
++    auto_persist: bool = True,
++    persist_interval: int = 30
++)
++```
++
++**參數 (Parameters)**:
++- `max_size`: 快取最大項目數 (Maximum cache entries)
++- `cache_dir`: 磁碟快取目錄 (Disk cache directory)
++- `auto_persist`: 啟用自動持久化 (Enable auto-persistence)
++- `persist_interval`: 自動持久化間隔（秒）(Auto-persist interval in seconds)
++
++#### Methods
++
++##### get(key: str) → Optional[Any]
++
++Get value from cache (LRU access).
++
++```python
++value = cache.get("my_key")
++if value is not None:
++    print(f"Cache hit: {value}")
++else:
++    print("Cache miss")
++```
++
++##### put(key: str, value: Any)
++
++Put value into cache.
++
++```python
++cache.put("my_key", {"data": "value"})
++```
++
++##### delete(key: str) → bool
++
++Delete key from cache and disk.
++
++```python
++deleted = cache.delete("my_key")
++```
++
++##### clear()
++
++Clear all cache entries.
++
++```python
++cache.clear()
++```
++
++##### get_stats() → Dict[str, Any]
++
++Get cache statistics.
++
++```python
++stats = cache.get_stats()
++print(f"Hit rate: {stats['hit_rate']:.2%}")
++print(f"Cache size: {stats['cache_size']}/{stats['max_size']}")
++```
++
++**返回的統計資訊 (Returned statistics)**:
++- `hits`: 快取命中次數
++- `misses`: 快取未命中次數
++- `evictions`: 淘汰次數
++- `disk_reads`: 磁碟讀取次數
++- `disk_writes`: 磁碟寫入次數
++- `total_requests`: 總請求數
++- `cache_size`: 當前快取大小
++- `max_size`: 最大快取大小
++- `hit_rate`: 命中率 (0.0-1.0)
++- `utilization`: 使用率 (0.0-1.0)
++
++##### persist_all()
++
++Manually persist all cache entries to disk.
++
++```python
++cache.persist_all()
++```
++
++##### shutdown()
++
++Shutdown cache and persist final state.
++
++```python
++cache.shutdown()
++```
++
++### MemoryCacheDiskMapper Class
++
++#### Constructor
++
++```python
++MemoryCacheDiskMapper(config: Optional[Dict[str, Any]] = None)
++```
++
++#### Methods
++
++##### get_state(key: str) → Optional[Any]
++
++Get state from cache.
++
++```python
++state = mapper.get_state("agent_1")
++```
++
++##### set_state(key: str, state: Any)
++
++Set state in cache.
++
++```python
++mapper.set_state("agent_1", {"status": "active"})
++```
++
++##### delete_state(key: str) → bool
++
++Delete state from cache.
++
++```python
++deleted = mapper.delete_state("agent_1")
++```
++
++##### get_cache_stats() → Dict[str, Any]
++
++Get cache statistics.
++
++```python
++stats = mapper.get_cache_stats()
++```
++
++##### persist()
++
++Manually trigger cache persistence.
++
++```python
++mapper.persist()
++```
++
++##### shutdown()
++
++Shutdown cache system.
++
++```python
++mapper.shutdown()
++```
++
++### MemoryQuickMounter Integration
++
++新增的快取感知方法 (New cache-aware methods):
++
++##### get_cached_state(key: str) → Optional[Dict[str, Any]]
++
++Get state from cache.
++
++```python
++state = mqm.get_cached_state("agent:worker-01")
++```
++
++##### set_cached_state(key: str, state: Dict[str, Any])
++
++Set state in cache.
++
++```python
++mqm.set_cached_state("agent:worker-01", state)
++```
++
++##### snapshot_with_cache(agent_name: str, state: Dict[str, Any]) → str
++
++Create snapshot and cache it.
++
++```python
++snapshot_path = mqm.snapshot_with_cache("worker-01", state)
++```
++
++##### rehydrate_with_cache(snapshot_path: Optional[str] = None, agent_name: Optional[str] = None) → Dict[str, Any]
++
++Rehydrate with cache lookup (優先從快取恢復).
++
++```python
++# 優先從快取恢復 (Try cache first)
++state = mqm.rehydrate_with_cache(agent_name="worker-01")
++
++# 從快照恢復 (Fall back to snapshot)
++state = mqm.rehydrate_with_cache(snapshot_path="path/to/snapshot.json")
++```
++
++##### get_cache_stats() → Dict[str, Any]
++
++Get cache statistics.
++
++```python
++stats = mqm.get_cache_stats()
++print(f"Hit rate: {stats['hit_rate']:.2%}")
++```
++
++##### persist_cache()
++
++Manually persist cache.
++
++```python
++mqm.persist_cache()
++```
++
++##### shutdown()
++
++Shutdown and cleanup.
++
++```python
++mqm.shutdown()
++```
++
++## 使用範例 (Usage Examples)
++
++### Example 1: Basic Cache Operations
++
++```python
++from memory_cache_disk import MemoryCacheDiskMapper
++
++# Initialize mapper
++config = {
++    "performance": {"enable_caching": True, "cache_size": 100},
++    "cache_dir": "particle_core/cache"
++}
++mapper = MemoryCacheDiskMapper(config)
++
++# Store states
++states = {
++    "agent_1": {"status": "active", "task": "processing"},
++    "agent_2": {"status": "idle", "task": None},
++    "agent_3": {"status": "error", "task": "failed"}
++}
++
++for key, state in states.items():
++    mapper.set_state(key, state)
++
++# Retrieve states
++for key in states.keys():
++    state = mapper.get_state(key)
++    print(f"{key}: {state}")
++
++# Check statistics
++stats = mapper.get_cache_stats()
++print(f"Hit rate: {stats['hit_rate']:.2%}")
++
++# Cleanup
++mapper.shutdown()
++```
++
++### Example 2: MemoryQuickMounter with Cache
++
++```python
++from memory_quick_mount import MemoryQuickMounter
++
++# Initialize with cache enabled
++mqm = MemoryQuickMounter("config.yaml")
++
++# Create snapshot with caching
++state = {
++    "scene": "laboratory",
++    "objects": ["microscope", "samples"],
++    "temperature": 23.5
++}
++
++snapshot_path = mqm.snapshot_with_cache("lab_agent", state)
++
++# Later, quick restore from cache
++restored = mqm.rehydrate_with_cache(agent_name="lab_agent")
++print(f"Restored: {restored}")
++
++# Check cache performance
++stats = mqm.get_cache_stats()
++print(f"Cache hit rate: {stats['hit_rate']:.2%}")
++print(f"Cache utilization: {stats['utilization']:.2%}")
++
++# Cleanup
++mqm.shutdown()
++```
++
++### Example 3: Cache Warmup and Persistence
++
++```python
++from memory_cache_disk import LRUCache
++
++# Create cache (automatically warms up from disk)
++cache = LRUCache(
++    max_size=50,
++    cache_dir="/path/to/cache",
++    auto_persist=True,
++    persist_interval=60  # Persist every 60 seconds
++)
++
++# Cache automatically loads existing entries from disk
++print("Cache warmed up from disk")
++
++# Use cache...
++cache.put("key1", "value1")
++cache.put("key2", "value2")
++
++# Automatic persistence runs in background
++# Manual persist if needed
++cache.persist_all()
++
++# Shutdown (final persist)
++cache.shutdown()
++```
++
++## 效能考量 (Performance Considerations)
++
++### Best Practices
++
++1. **選擇適當的快取大小 (Choose appropriate cache size)**
++   - 考慮記憶體限制 (Consider memory constraints)
++   - 平衡命中率與記憶體使用 (Balance hit rate vs memory usage)
++   - 建議：256-1024 個項目 (Recommended: 256-1024 entries)
++
++2. **調整自動持久化間隔 (Adjust auto-persist interval)**
++   - 頻繁持久化：資料更安全但效能較低 (Frequent: safer but slower)
++   - 較長間隔：效能更好但風險較高 (Longer: faster but riskier)
++   - 建議：30-60 秒 (Recommended: 30-60 seconds)
++
++3. **適當的鍵命名 (Proper key naming)**
++   - 使用描述性鍵名 (Use descriptive keys)
++   - 避免過長的鍵 (Avoid overly long keys)
++   - 範例：`agent:worker-01`, `state:scene-laboratory`
++
++4. **定期清理 (Regular cleanup)**
++   - 刪除不再需要的項目 (Delete unused entries)
++   - 監控磁碟使用量 (Monitor disk usage)
++   - 定期清空過時快取 (Periodically clear stale cache)
++
++### Performance Metrics
++
++| Operation | Time Complexity | Typical Time |
++|-----------|----------------|--------------|
++| get() - Memory hit | O(1) | < 1 μs |
++| get() - Disk hit | O(1) | 1-5 ms |
++| put() | O(1) | < 1 μs |
++| Eviction | O(1) | 1-5 ms (disk write) |
++| persist_all() | O(n) | n × 1-5 ms |
++
++## 故障排除 (Troubleshooting)
++
++### Cache not enabled
++
++**問題**: Cache operations don't work
++
++**解決方案**:
++```python
++# Check config
++config = {
++    "performance": {
++        "enable_caching": True,  # Ensure this is True
++        "cache_size": 256
++    }
++}
++```
++
++### Disk write errors
++
++**問題**: "Failed to save cache entry to disk"
++
++**解決方案**:
++- Ensure cache directory exists and is writable
++- Check disk space
++- Verify file permissions
++
++### High miss rate
++
++**問題**: Low cache hit rate
++
++**解決方案**:
++- Increase cache size
++- Check access patterns (sequential vs random)
++- Review eviction behavior
++
++### Memory usage too high
++
++**問題**: Cache consuming too much memory
++
++**解決方案**:
++- Decrease `cache_size` configuration
++- Enable compression for large objects
++- Consider object size limits
++
++## 測試 (Testing)
++
++Run the test suite:
++
++```bash
++# Run all cache tests
++python particle_core/tests/test_memory_cache_disk.py
++
++# Run specific test
++python -c "from test_memory_cache_disk import test_lru_basic_operations; test_lru_basic_operations()"
++
++# Run demo
++python particle_core/src/memory/memory_cache_disk.py
++```
++
++## 未來增強 (Future Enhancements)
++
++1. **多層快取 (Multi-tier caching)**
++   - L1: Memory cache
++   - L2: Disk cache
++   - L3: Remote cache (Redis, Memcached)
++
++2. **壓縮支援 (Compression support)**
++   - Compress large objects before disk write
++   - Reduce disk space usage
++
++3. **快取預熱策略 (Cache warmup strategies)**
++   - Priority-based warmup
++   - Predictive pre-loading
++
++4. **分散式快取 (Distributed caching)**
++   - Share cache across nodes
++   - Cache synchronization
++
++5. **TTL 支援 (TTL support)**
++   - Time-to-live for cache entries
++   - Automatic expiration
++
++---
++
++**版本 (Version)**: 1.0.0  
++**更新日期 (Last Updated)**: 2026-01-02  
++**作者 (Author)**: FlowAgent Team
+diff --git a/particle_core/src/memory/config.yaml b/particle_core/src/memory/config.yaml
+index e2e65a7..b4c3589 100644
+--- a/particle_core/src/memory/config.yaml
++++ b/particle_core/src/memory/config.yaml
+@@ -4,6 +4,7 @@
+ # Context and snapshot directories
+ context_dir: "particle_core/context"
+ snapshot_dir: "particle_core/snapshots"
++cache_dir: "particle_core/cache"
+ 
+ # Memory seeds to mount on startup
+ seeds:
+diff --git a/particle_core/src/memory/memory_cache_disk.py b/particle_core/src/memory/memory_cache_disk.py
+new file mode 100644
+index 0000000..9c15ec2
+--- /dev/null
++++ b/particle_core/src/memory/memory_cache_disk.py
+@@ -0,0 +1,490 @@
++#!/usr/bin/env python3
++# -*- coding: utf-8 -*-
++"""
++Memory Cache Disk Mapping System
++記憶快取磁碟映射系統
++
++Provides LRU cache with automatic disk persistence for memory state management.
++
++Features:
++- LRU (Least Recently Used) cache eviction policy
++- Automatic persistence to disk
++- Cache warmup from disk on startup
++- Cache hit/miss statistics tracking
++- Configurable cache size and persistence intervals
++"""
++
++import json
++import time
++import threading
++from pathlib import Path
++from typing import Dict, Any, Optional, List
++from datetime import datetime
++from collections import OrderedDict
++
++
++class LRUCache:
++    """
++    LRU Cache with disk persistence
++    LRU 快取配合磁碟持久化
++    
++    Implements Least Recently Used eviction policy with automatic
++    synchronization to disk storage.
++    """
++    
++    def __init__(
++        self,
++        max_size: int = 256,
++        cache_dir: str = "particle_core/cache",
++        auto_persist: bool = True,
++        persist_interval: int = 30
++    ):
++        """
++        Initialize LRU Cache
++        
++        Args:
++            max_size: Maximum number of cache entries
++            cache_dir: Directory for cache persistence
++            auto_persist: Enable automatic background persistence
++            persist_interval: Seconds between auto-persist operations
++        """
++        self.max_size = max_size
++        self.cache_dir = Path(cache_dir)
++        self.cache_dir.mkdir(parents=True, exist_ok=True)
++        
++        # OrderedDict maintains insertion order, perfect for LRU
++        self.cache: OrderedDict = OrderedDict()
++        
++        # Statistics
++        self.stats = {
++            "hits": 0,
++            "misses": 0,
++            "evictions": 0,
++            "disk_reads": 0,
++            "disk_writes": 0,
++            "total_requests": 0
++        }
++        
++        # Auto-persistence
++        self.auto_persist = auto_persist
++        self.persist_interval = persist_interval
++        self._persist_lock = threading.Lock()
++        self._persist_thread = None
++        self._stop_persist = threading.Event()
++        
++        # Load cache from disk on startup
++        self._warmup_from_disk()
++        
++        # Start auto-persist thread
++        if self.auto_persist:
++            self._start_auto_persist()
++    
++    def get(self, key: str) -> Optional[Any]:
++        """
++        Get value from cache (LRU access)
++        
++        Args:
++            key: Cache key
++            
++        Returns:
++            Cached value or None if not found
++        """
++        self.stats["total_requests"] += 1
++        
++        if key in self.cache:
++            # Move to end (most recently used)
++            self.cache.move_to_end(key)
++            self.stats["hits"] += 1
++            return self.cache[key]["value"]
++        else:
++            self.stats["misses"] += 1
++            # Try to load from disk
++            disk_value = self._load_from_disk(key)
++            if disk_value is not None:
++                self.put(key, disk_value, from_disk=True)
++                return disk_value
++            return None
++    
++    def put(self, key: str, value: Any, from_disk: bool = False):
++        """
++        Put value into cache
++        
++        Args:
++            key: Cache key
++            value: Value to cache
++            from_disk: Internal flag indicating load from disk
++        """
++        if not from_disk:
++            self.stats["total_requests"] += 1
++        
++        # If key exists, move to end
++        if key in self.cache:
++            self.cache.move_to_end(key)
++        
++        # Add/update entry
++        self.cache[key] = {
++            "value": value,
++            "timestamp": datetime.now().isoformat(),
++            "access_count": self.cache.get(key, {}).get("access_count", 0) + 1
++        }
++        
++        # Evict if over capacity
++        if len(self.cache) > self.max_size:
++            # Remove least recently used (first item)
++            evicted_key, evicted_value = self.cache.popitem(last=False)
++            self.stats["evictions"] += 1
++            # Persist evicted item to disk
++            self._save_to_disk(evicted_key, evicted_value)
++    
++    def delete(self, key: str) -> bool:
++        """
++        Delete key from cache and disk
++        
++        Args:
++            key: Cache key to delete
++            
++        Returns:
++            True if key was deleted, False if not found
++        """
++        deleted = False
++        
++        # Remove from memory cache
++        if key in self.cache:
++            del self.cache[key]
++            deleted = True
++        
++        # Remove from disk
++        disk_path = self._get_disk_path(key)
++        if disk_path.exists():
++            disk_path.unlink()
++            deleted = True
++        
++        return deleted
++    
++    def clear(self):
++        """Clear all cache entries from memory and disk"""
++        self.cache.clear()
++        
++        # Clear disk cache
++        for cache_file in self.cache_dir.glob("*.cache.json"):
++            cache_file.unlink()
++        
++        # Reset statistics
++        self.stats = {
++            "hits": 0,
++            "misses": 0,
++            "evictions": 0,
++            "disk_reads": 0,
++            "disk_writes": 0,
++            "total_requests": 0
++        }
++    
++    def get_stats(self) -> Dict[str, Any]:
++        """
++        Get cache statistics
++        
++        Returns:
++            Dictionary with cache statistics
++        """
++        hit_rate = (
++            self.stats["hits"] / self.stats["total_requests"]
++            if self.stats["total_requests"] > 0 else 0.0
++        )
++        
++        return {
++            **self.stats,
++            "cache_size": len(self.cache),
++            "max_size": self.max_size,
++            "hit_rate": hit_rate,
++            "utilization": len(self.cache) / self.max_size
++        }
++    
++    def persist_all(self):
++        """Manually persist all cache entries to disk"""
++        with self._persist_lock:
++            for key, entry in self.cache.items():
++                self._save_to_disk(key, entry)
++            print(f"💾 Persisted {len(self.cache)} cache entries to disk")
++    
++    def _get_disk_path(self, key: str) -> Path:
++        """Get disk path for cache key"""
++        # Use hash of key to avoid filesystem issues
++        import hashlib
++        key_hash = hashlib.md5(key.encode('utf-8')).hexdigest()
++        return self.cache_dir / f"{key_hash}.cache.json"
++    
++    def _save_to_disk(self, key: str, entry: Dict[str, Any]):
++        """Save cache entry to disk"""
++        try:
++            disk_path = self._get_disk_path(key)
++            disk_data = {
++                "key": key,
++                "entry": entry,
++                "persisted_at": datetime.now().isoformat()
++            }
++            with open(disk_path, 'w', encoding='utf-8') as f:
++                json.dump(disk_data, f, ensure_ascii=False, indent=2)
++            self.stats["disk_writes"] += 1
++        except Exception as e:
++            print(f"⚠ Failed to save cache entry to disk: {e}")
++    
++    def _load_from_disk(self, key: str) -> Optional[Any]:
++        """Load cache entry from disk"""
++        try:
++            disk_path = self._get_disk_path(key)
++            if disk_path.exists():
++                with open(disk_path, 'r', encoding='utf-8') as f:
++                    disk_data = json.load(f)
++                self.stats["disk_reads"] += 1
++                return disk_data["entry"]["value"]
++        except Exception as e:
++            print(f"⚠ Failed to load cache entry from disk: {e}")
++        return None
++    
++    def _warmup_from_disk(self):
++        """Load existing cache entries from disk on startup"""
++        print(f"🔥 Warming up cache from disk...")
++        loaded = 0
++        
++        for cache_file in self.cache_dir.glob("*.cache.json"):
++            if loaded >= self.max_size:
++                break
++            
++            try:
++                with open(cache_file, 'r', encoding='utf-8') as f:
++                    disk_data = json.load(f)
++                
++                key = disk_data["key"]
++                entry = disk_data["entry"]
++                
++                # Add to cache without triggering disk write
++                self.cache[key] = entry
++                loaded += 1
++                self.stats["disk_reads"] += 1
++            except Exception as e:
++                print(f"⚠ Failed to load cache file {cache_file.name}: {e}")
++        
++        if loaded > 0:
++            print(f"  ✓ Loaded {loaded} cache entries from disk")
++        else:
++            print(f"  ℹ No cache entries found on disk")
++    
++    def _start_auto_persist(self):
++        """Start background thread for automatic persistence"""
++        def persist_worker():
++            while not self._stop_persist.is_set():
++                # Wait for persist interval or stop event
++                if self._stop_persist.wait(timeout=self.persist_interval):
++                    break
++                
++                # Persist cache to disk
++                if len(self.cache) > 0:
++                    self.persist_all()
++        
++        self._persist_thread = threading.Thread(target=persist_worker, daemon=True)
++        self._persist_thread.start()
++        print(f"🔄 Auto-persist enabled (interval: {self.persist_interval}s)")
++    
++    def shutdown(self):
++        """Shutdown cache and persist final state"""
++        # Stop auto-persist thread
++        if self._persist_thread:
++            self._stop_persist.set()
++            self._persist_thread.join(timeout=5)
++        
++        # Final persist
++        self.persist_all()
++        print("🛑 Cache shutdown complete")
++    
++    def __del__(self):
++        """Destructor - ensure cache is persisted"""
++        try:
++            if hasattr(self, 'auto_persist') and self.auto_persist:
++                self.shutdown()
++        except:
++            pass
++
++
++class MemoryCacheDiskMapper:
++    """
++    Memory Cache Disk Mapper
++    記憶快取磁碟映射器
++    
++    High-level interface for memory caching with disk persistence.
++    Integrates with Memory Quick Mount system.
++    """
++    
++    def __init__(self, config: Optional[Dict[str, Any]] = None):
++        """
++        Initialize Memory Cache Disk Mapper
++        
++        Args:
++            config: Configuration dictionary
++        """
++        if config is None:
++            config = {}
++        
++        # Extract performance settings
++        perf_config = config.get("performance", {})
++        cache_enabled = perf_config.get("enable_caching", True)
++        cache_size = perf_config.get("cache_size", 256)
++        
++        # Extract cache directory
++        cache_dir = config.get("cache_dir", "particle_core/cache")
++        
++        # Initialize cache
++        if cache_enabled:
++            self.cache = LRUCache(
++                max_size=cache_size,
++                cache_dir=cache_dir,
++                auto_persist=True,
++                persist_interval=30
++            )
++            self.enabled = True
++        else:
++            self.cache = None
++            self.enabled = False
++            print("⚠ Cache disabled in configuration")
++    
++    def get_state(self, key: str) -> Optional[Any]:
++        """
++        Get state from cache
++        
++        Args:
++            key: State identifier
++            
++        Returns:
++            Cached state or None
++        """
++        if not self.enabled:
++            return None
++        return self.cache.get(key)
++    
++    def set_state(self, key: str, state: Any):
++        """
++        Set state in cache
++        
++        Args:
++            key: State identifier
++            state: State data to cache
++        """
++        if not self.enabled:
++            return
++        self.cache.put(key, state)
++    
++    def delete_state(self, key: str) -> bool:
++        """
++        Delete state from cache
++        
++        Args:
++            key: State identifier
++            
++        Returns:
++            True if deleted, False otherwise
++        """
++        if not self.enabled:
++            return False
++        return self.cache.delete(key)
++    
++    def clear_cache(self):
++        """Clear all cached states"""
++        if self.enabled:
++            self.cache.clear()
++    
++    def get_cache_stats(self) -> Dict[str, Any]:
++        """
++        Get cache statistics
++        
++        Returns:
++            Cache statistics dictionary
++        """
++        if not self.enabled:
++            return {"enabled": False}
++        
++        return {
++            "enabled": True,
++            **self.cache.get_stats()
++        }
++    
++    def persist(self):
++        """Manually trigger cache persistence to disk"""
++        if self.enabled:
++            self.cache.persist_all()
++    
++    def shutdown(self):
++        """Shutdown cache system"""
++        if self.enabled:
++            self.cache.shutdown()
++
++
++def main():
++    """Demo and test for Memory Cache Disk Mapper"""
++    print("=" * 60)
++    print("Memory Cache Disk Mapping System Demo")
++    print("=" * 60)
++    
++    # Create mapper with test config
++    config = {
++        "performance": {
++            "enable_caching": True,
++            "cache_size": 10
++        },
++        "cache_dir": "/tmp/test_cache"
++    }
++    
++    mapper = MemoryCacheDiskMapper(config)
++    
++    # Test cache operations
++    print("\n1. Testing cache operations...")
++    
++    # Put some states
++    for i in range(5):
++        state = {
++            "agent": f"agent_{i}",
++            "status": "active",
++            "data": f"test_data_{i}"
++        }
++        mapper.set_state(f"state_{i}", state)
++        print(f"  ✓ Cached state_{i}")
++    
++    # Get states
++    print("\n2. Retrieving cached states...")
++    for i in range(5):
++        state = mapper.get_state(f"state_{i}")
++        if state:
++            print(f"  ✓ Retrieved state_{i}: {state['agent']}")
++    
++    # Check statistics
++    print("\n3. Cache statistics:")
++    stats = mapper.get_cache_stats()
++    for key, value in stats.items():
++        if isinstance(value, float):
++            print(f"  {key}: {value:.2%}" if key in ["hit_rate", "utilization"] else f"  {key}: {value:.2f}")
++        else:
++            print(f"  {key}: {value}")
++    
++    # Test cache miss
++    print("\n4. Testing cache miss...")
++    missing = mapper.get_state("nonexistent")
++    print(f"  Result: {missing} (expected None)")
++    
++    # Persist to disk
++    print("\n5. Persisting cache to disk...")
++    mapper.persist()
++    
++    # Show final stats
++    print("\n6. Final statistics:")
++    stats = mapper.get_cache_stats()
++    print(f"  Cache size: {stats['cache_size']}/{stats['max_size']}")
++    print(f"  Hit rate: {stats['hit_rate']:.2%}")
++    print(f"  Disk writes: {stats['disk_writes']}")
++    
++    # Shutdown
++    print("\n7. Shutting down cache...")
++    mapper.shutdown()
++    
++    print("\n✓ Demo complete!")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/particle_core/src/memory/memory_quick_mount.py b/particle_core/src/memory/memory_quick_mount.py
+index dc072c9..c82bd6c 100644
+--- a/particle_core/src/memory/memory_quick_mount.py
++++ b/particle_core/src/memory/memory_quick_mount.py
+@@ -21,6 +21,13 @@ from pathlib import Path
+ from typing import Dict, List, Any, Optional
+ from datetime import datetime
+ 
++# Import cache system
++try:
++    from memory_cache_disk import MemoryCacheDiskMapper
++    CACHE_AVAILABLE = True
++except ImportError:
++    CACHE_AVAILABLE = False
++
+ 
+ class ParticleCompressor:
+     """
+@@ -225,6 +232,13 @@ class MemoryQuickMounter:
+         self.snapshot_dir.mkdir(parents=True, exist_ok=True)
+         
+         self.mounted_seeds = []
++        
++        # Initialize cache system
++        if CACHE_AVAILABLE:
++            self.cache_mapper = MemoryCacheDiskMapper(self.config)
++        else:
++            self.cache_mapper = None
++            print("⚠ Cache system not available")
+     
+     def _load_config(self, config_path: Optional[str]) -> Dict[str, Any]:
+         """Load configuration from file or use defaults"""
+@@ -350,6 +364,130 @@ class MemoryQuickMounter:
+         print(f"  📅 Snapshot timestamp: {snapshot_data.get('timestamp', 'unknown')}")
+         
+         return restored_state
++    
++    def get_cached_state(self, key: str) -> Optional[Dict[str, Any]]:
++        """
++        Get state from cache (cache-aware access)
++        從快取取得狀態
++        
++        Args:
++            key: State identifier
++            
++        Returns:
++            Cached state or None
++        """
++        if not self.cache_mapper:
++            return None
++        
++        cached = self.cache_mapper.get_state(key)
++        if cached:
++            print(f"💾 Cache hit: {key}")
++        else:
++            print(f"⚠ Cache miss: {key}")
++        
++        return cached
++    
++    def set_cached_state(self, key: str, state: Dict[str, Any]):
++        """
++        Set state in cache
++        設定快取狀態
++        
++        Args:
++            key: State identifier
++            state: State data
++        """
++        if not self.cache_mapper:
++            print("⚠ Cache not available")
++            return
++        
++        self.cache_mapper.set_state(key, state)
++        print(f"💾 Cached: {key}")
++    
++    def snapshot_with_cache(self, agent_name: str, state: Dict[str, Any]) -> str:
++        """
++        Create snapshot and cache it
++        建立快照並快取
++        
++        Args:
++            agent_name: Name of the agent
++            state: Current state to snapshot
++            
++        Returns:
++            Path to the snapshot file
++        """
++        # Create snapshot
++        snapshot_path = self.snapshot(agent_name, state)
++        
++        # Cache the state
++        if self.cache_mapper:
++            cache_key = f"agent:{agent_name}"
++            self.cache_mapper.set_state(cache_key, state)
++            print(f"  💾 State cached for quick access")
++        
++        return snapshot_path
++    
++    def rehydrate_with_cache(self, snapshot_path: Optional[str] = None, 
++                            agent_name: Optional[str] = None) -> Dict[str, Any]:
++        """
++        Rehydrate with cache lookup
++        從快取或快照恢復
++        
++        Args:
++            snapshot_path: Path to snapshot file (uses latest if None)
++            agent_name: Agent name for cache lookup
++            
++        Returns:
++            Restored state
++        """
++        # Try cache first if agent_name provided
++        if agent_name and self.cache_mapper:
++            cache_key = f"agent:{agent_name}"
++            cached_state = self.cache_mapper.get_state(cache_key)
++            if cached_state:
++                print(f"💾 Restored from cache: {agent_name}")
++                return cached_state
++        
++        # Fall back to snapshot
++        restored = self.rehydrate(snapshot_path)
++        
++        # Cache for next time
++        if agent_name and self.cache_mapper and restored:
++            cache_key = f"agent:{agent_name}"
++            self.cache_mapper.set_state(cache_key, restored)
++        
++        return restored
++    
++    def get_cache_stats(self) -> Dict[str, Any]:
++        """
++        Get cache statistics
++        取得快取統計
++        
++        Returns:
++            Cache statistics dictionary
++        """
++        if not self.cache_mapper:
++            return {"enabled": False, "message": "Cache not available"}
++        
++        return self.cache_mapper.get_cache_stats()
++    
++    def persist_cache(self):
++        """
++        Manually persist cache to disk
++        手動持久化快取
++        """
++        if self.cache_mapper:
++            self.cache_mapper.persist()
++        else:
++            print("⚠ Cache not available")
++    
++    def shutdown(self):
++        """
++        Shutdown and cleanup
++        關閉並清理
++        """
++        if self.cache_mapper:
++            print("🛑 Shutting down cache system...")
++            self.cache_mapper.shutdown()
+ 
+ 
+ def main():
+diff --git a/particle_core/tests/test_memory_cache_disk.py b/particle_core/tests/test_memory_cache_disk.py
+new file mode 100644
+index 0000000..1d895b1
+--- /dev/null
++++ b/particle_core/tests/test_memory_cache_disk.py
+@@ -0,0 +1,328 @@
++#!/usr/bin/env python3
++# -*- coding: utf-8 -*-
++"""
++Test suite for Memory Cache Disk Mapping System
++記憶快取磁碟映射系統測試套件
++"""
++
++import sys
++import json
++import time
++import tempfile
++from pathlib import Path
++
++# Add memory module to path
++sys.path.insert(0, str(Path(__file__).parent.parent / 'src' / 'memory'))
++
++from memory_cache_disk import LRUCache, MemoryCacheDiskMapper
++
++
++def test_lru_basic_operations():
++    """Test basic LRU cache operations"""
++    print("\n" + "=" * 60)
++    print("Test 1: Basic LRU Operations")
++    print("=" * 60)
++    
++    with tempfile.TemporaryDirectory() as tmpdir:
++        cache = LRUCache(max_size=3, cache_dir=tmpdir, auto_persist=False)
++        
++        # Test put and get
++        cache.put("key1", "value1")
++        cache.put("key2", "value2")
++        cache.put("key3", "value3")
++        
++        # Verify all keys are in cache (without accessing them, so order is preserved)
++        assert len(cache.cache) == 3, "Cache should have 3 entries"
++        
++        print("  ✓ Put operations work correctly")
++        
++        # Now access key1 to verify get works (this moves it to end)
++        assert cache.get("key1") == "value1", "Failed to retrieve key1"
++        
++        print("  ✓ Get operations work correctly")
++        
++        # Test LRU eviction
++        # Order is now: key2 (oldest), key3, key1 (most recent due to get)
++        cache.put("key4", "value4")  # Should evict key2 (least recently used)
++        
++        # key2 should be evicted from memory but saved to disk
++        # When we try to get it, it will be loaded from disk and added back to cache
++        assert "key2" not in cache.cache, "key2 should be evicted from memory cache"
++        
++        # But it should still be retrievable from disk
++        value2 = cache.get("key2")
++        assert value2 == "value2", "key2 should be loadable from disk"
++        
++        # Now key2 is back in memory cache (loaded from disk)
++        assert "key2" in cache.cache, "key2 should be back in memory after disk load"
++        
++        print("  ✓ LRU eviction works correctly")
++        
++        # Check stats
++        stats = cache.get_stats()
++        assert stats["cache_size"] == 3, "Cache size should be 3"
++        assert stats["evictions"] >= 1, "Should have at least 1 eviction"
++        
++        print(f"  ✓ Statistics: {stats['cache_size']} entries, {stats['evictions']} evictions")
++        
++    print("✓✓✓ Test 1 PASSED ✓✓✓")
++    return True
++
++
++def test_disk_persistence():
++    """Test disk persistence functionality"""
++    print("\n" + "=" * 60)
++    print("Test 2: Disk Persistence")
++    print("=" * 60)
++    
++    with tempfile.TemporaryDirectory() as tmpdir:
++        # Create cache and add data
++        cache1 = LRUCache(max_size=5, cache_dir=tmpdir, auto_persist=False)
++        
++        for i in range(5):
++            cache1.put(f"key{i}", f"value{i}")
++        
++        # Manually persist
++        cache1.persist_all()
++        print(f"  ✓ Persisted 5 entries to disk")
++        
++        # Check disk files
++        cache_files = list(Path(tmpdir).glob("*.cache.json"))
++        assert len(cache_files) == 5, f"Should have 5 cache files, got {len(cache_files)}"
++        print(f"  ✓ Found {len(cache_files)} cache files on disk")
++        
++        # Create new cache and warmup
++        cache2 = LRUCache(max_size=10, cache_dir=tmpdir, auto_persist=False)
++        
++        # Verify warmup loaded data
++        assert cache2.get("key0") == "value0", "Warmup failed for key0"
++        assert cache2.get("key4") == "value4", "Warmup failed for key4"
++        
++        stats = cache2.get_stats()
++        assert stats["cache_size"] == 5, "Should have loaded 5 entries"
++        assert stats["disk_reads"] >= 5, "Should have read from disk"
++        
++        print(f"  ✓ Warmup loaded {stats['cache_size']} entries from disk")
++        print(f"  ✓ Disk reads: {stats['disk_reads']}")
++        
++    print("✓✓✓ Test 2 PASSED ✓✓✓")
++    return True
++
++
++def test_cache_hit_rate():
++    """Test cache hit rate tracking"""
++    print("\n" + "=" * 60)
++    print("Test 3: Cache Hit Rate")
++    print("=" * 60)
++    
++    with tempfile.TemporaryDirectory() as tmpdir:
++        cache = LRUCache(max_size=3, cache_dir=tmpdir, auto_persist=False)
++        
++        # Add some data
++        cache.put("a", 1)
++        cache.put("b", 2)
++        cache.put("c", 3)
++        
++        # Generate some hits
++        cache.get("a")
++        cache.get("a")
++        cache.get("b")
++        
++        # Generate some misses
++        cache.get("d")
++        cache.get("e")
++        
++        stats = cache.get_stats()
++        
++        # 3 puts + 5 gets = 8 total requests
++        # 3 hits (a, a, b), 2 misses (d, e)
++        assert stats["total_requests"] == 8, f"Total requests should be 8, got {stats['total_requests']}"
++        assert stats["hits"] == 3, f"Hits should be 3, got {stats['hits']}"
++        assert stats["misses"] == 2, f"Misses should be 2, got {stats['misses']}"
++        
++        hit_rate = stats["hit_rate"]
++        expected_rate = 3 / 8  # 37.5%
++        
++        print(f"  ✓ Total requests: {stats['total_requests']}")
++        print(f"  ✓ Hits: {stats['hits']}")
++        print(f"  ✓ Misses: {stats['misses']}")
++        print(f"  ✓ Hit rate: {hit_rate:.2%} (expected: {expected_rate:.2%})")
++        
++        assert abs(hit_rate - expected_rate) < 0.01, "Hit rate calculation incorrect"
++        
++    print("✓✓✓ Test 3 PASSED ✓✓✓")
++    return True
++
++
++def test_cache_mapper_integration():
++    """Test MemoryCacheDiskMapper integration"""
++    print("\n" + "=" * 60)
++    print("Test 4: Cache Mapper Integration")
++    print("=" * 60)
++    
++    with tempfile.TemporaryDirectory() as tmpdir:
++        config = {
++            "performance": {
++                "enable_caching": True,
++                "cache_size": 5
++            },
++            "cache_dir": tmpdir
++        }
++        
++        mapper = MemoryCacheDiskMapper(config)
++        
++        # Test state operations
++        states = {
++            "agent_1": {"status": "active", "data": "test1"},
++            "agent_2": {"status": "idle", "data": "test2"},
++            "agent_3": {"status": "processing", "data": "test3"}
++        }
++        
++        # Set states
++        for key, state in states.items():
++            mapper.set_state(key, state)
++        
++        print(f"  ✓ Set {len(states)} states")
++        
++        # Get states
++        for key, expected_state in states.items():
++            retrieved = mapper.get_state(key)
++            assert retrieved is not None, f"Failed to retrieve {key}"
++            assert retrieved["status"] == expected_state["status"], f"State mismatch for {key}"
++        
++        print(f"  ✓ Retrieved all {len(states)} states correctly")
++        
++        # Check stats
++        stats = mapper.get_cache_stats()
++        assert stats["enabled"], "Cache should be enabled"
++        assert stats["cache_size"] == 3, f"Cache size should be 3, got {stats['cache_size']}"
++        
++        print(f"  ✓ Cache stats: {stats['cache_size']} entries, hit rate: {stats['hit_rate']:.2%}")
++        
++        # Test delete
++        deleted = mapper.delete_state("agent_1")
++        assert deleted, "Failed to delete state"
++        assert mapper.get_state("agent_1") is None, "State should be deleted"
++        
++        print("  ✓ State deletion works correctly")
++        
++        # Shutdown
++        mapper.shutdown()
++        print("  ✓ Shutdown completed")
++        
++    print("✓✓✓ Test 4 PASSED ✓✓✓")
++    return True
++
++
++def test_memory_quick_mount_cache_integration():
++    """Test MemoryQuickMounter with cache integration"""
++    print("\n" + "=" * 60)
++    print("Test 5: MemoryQuickMounter Cache Integration")
++    print("=" * 60)
++    
++    with tempfile.TemporaryDirectory() as tmpdir:
++        # Create config
++        config_path = Path(tmpdir) / "config.json"
++        config = {
++            "context_dir": str(Path(tmpdir) / "context"),
++            "snapshot_dir": str(Path(tmpdir) / "snapshots"),
++            "cache_dir": str(Path(tmpdir) / "cache"),
++            "performance": {
++                "enable_caching": True,
++                "cache_size": 10
++            }
++        }
++        
++        with open(config_path, 'w') as f:
++            json.dump(config, f)
++        
++        # Import and test
++        from memory_quick_mount import MemoryQuickMounter
++        
++        mqm = MemoryQuickMounter(str(config_path))
++        
++        # Test cached state operations
++        state = {"scene": "room_a", "objects": ["table", "chair"], "temp": 22.5}
++        
++        mqm.set_cached_state("test_agent", state)
++        print("  ✓ Set cached state")
++        
++        retrieved = mqm.get_cached_state("test_agent")
++        assert retrieved is not None, "Failed to retrieve cached state"
++        assert retrieved["scene"] == "room_a", "State mismatch"
++        
++        print("  ✓ Retrieved cached state correctly")
++        
++        # Test snapshot with cache
++        snapshot_path = mqm.snapshot_with_cache("test_agent", state)
++        assert Path(snapshot_path).exists(), "Snapshot file should exist"
++        
++        print(f"  ✓ Created snapshot with cache: {Path(snapshot_path).name}")
++        
++        # Test cache stats
++        cache_stats = mqm.get_cache_stats()
++        assert cache_stats["enabled"], "Cache should be enabled"
++        assert cache_stats["cache_size"] > 0, "Cache should have entries"
++        
++        print(f"  ✓ Cache stats: {cache_stats['cache_size']} entries, hit rate: {cache_stats['hit_rate']:.2%}")
++        
++        # Shutdown
++        mqm.shutdown()
++        print("  ✓ Shutdown completed")
++        
++    print("✓✓✓ Test 5 PASSED ✓✓✓")
++    return True
++
++
++def run_all_tests():
++    """Run all cache system tests"""
++    print("\n")
++    print("╔" + "=" * 58 + "╗")
++    print("║" + " " * 10 + "Memory Cache Disk Test Suite" + " " * 20 + "║")
++    print("╚" + "=" * 58 + "╝")
++    
++    tests = [
++        ("Basic LRU Operations", test_lru_basic_operations),
++        ("Disk Persistence", test_disk_persistence),
++        ("Cache Hit Rate", test_cache_hit_rate),
++        ("Cache Mapper Integration", test_cache_mapper_integration),
++        ("MemoryQuickMounter Integration", test_memory_quick_mount_cache_integration)
++    ]
++    
++    passed = 0
++    failed = 0
++    
++    for name, test_func in tests:
++        try:
++            if test_func():
++                passed += 1
++            else:
++                failed += 1
++                print(f"\n✗ {name} FAILED")
++        except Exception as e:
++            failed += 1
++            print(f"\n✗ {name} FAILED with exception:")
++            print(f"  {type(e).__name__}: {e}")
++            import traceback
++            traceback.print_exc()
++    
++    # Summary
++    print("\n")
++    print("=" * 60)
++    print("Test Summary")
++    print("=" * 60)
++    print(f"Total tests: {len(tests)}")
++    print(f"Passed: {passed}")
++    print(f"Failed: {failed}")
++    
++    if failed == 0:
++        print("\n✓✓✓ ALL TESTS PASSED ✓✓✓")
++        return 0
++    else:
++        print(f"\n✗✗✗ {failed} TEST(S) FAILED ✗✗✗")
++        return 1
++
++
++if __name__ == "__main__":
++    exit_code = run_all_tests()
++    sys.exit(exit_code)
+-- 
+2.52.0
+

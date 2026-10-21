@@ -1,0 +1,189 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "MRL_RuntimeOS_EnterpriseRuntimePlatform_CoreExecutable_v1_4_0 API",
+    "version": "1.4.0"
+  },
+  "paths": {
+    "/api/mrl/health": {
+      "get": {
+        "summary": "MRL health"
+      }
+    },
+    "/api/mrl/parser/parse": {
+      "post": {
+        "summary": "Parse source to MetaIR and ParticleIR"
+      }
+    },
+    "/api/mrl/runtime/execute": {
+      "post": {
+        "summary": "Execute RuntimeGraph"
+      }
+    },
+    "/api/mrl/jobs/submit": {
+      "post": {
+        "summary": "Submit async runtime job"
+      }
+    },
+    "/api/mrl/jobs/list": {
+      "get": {
+        "summary": "List jobs"
+      }
+    },
+    "/api/mrl/audit/ledger": {
+      "get": {
+        "summary": "Read audit ledger"
+      }
+    },
+    "/api/mrl/runtime/nodes": {
+      "get": {
+        "summary": "List MRL RuntimeNodes",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/mrl/runtime/nodes/create": {
+      "post": {
+        "summary": "Create MRL RuntimeNode",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/mrl/runtime/nodes/heartbeat": {
+      "post": {
+        "summary": "Heartbeat RuntimeNode",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/mrl/runtime/mesh/plan": {
+      "post": {
+        "summary": "Build RuntimeMesh plan",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/mrl/runtime/mesh/list": {
+      "get": {
+        "summary": "List RuntimeMesh records",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/mrl/adapters/upstash/describe": {
+      "get": {
+        "summary": "Describe MRL Upstash Box adapter",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/mrl/adapters/upstash/register-node": {
+      "post": {
+        "summary": "Register external Upstash Box as MRL RuntimeNode",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/mrl/runtimeos/ai/health": {
+      "get": {
+        "summary": "/api/mrl/runtimeos/ai/health",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/mrl/runtimeos/ai/generate": {
+      "post": {
+        "summary": "/api/mrl/runtimeos/ai/generate",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/mrl/runtimeos/skills/list": {
+      "get": {
+        "summary": "/api/mrl/runtimeos/skills/list",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/mrl/runtimeos/skills/execute": {
+      "post": {
+        "summary": "/api/mrl/runtimeos/skills/execute",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/mrl/runtimeos/artifacts/begin": {
+      "post": {
+        "summary": "/api/mrl/runtimeos/artifacts/begin",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/mrl/runtimeos/artifacts/chunk": {
+      "post": {
+        "summary": "/api/mrl/runtimeos/artifacts/chunk",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/mrl/runtimeos/artifacts/assemble": {
+      "post": {
+        "summary": "/api/mrl/runtimeos/artifacts/assemble",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/mrl/runtimeos/blender/bridge/manifest": {
+      "get": {
+        "summary": "/api/mrl/runtimeos/blender/bridge/manifest",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

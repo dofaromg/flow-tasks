@@ -1,0 +1,35 @@
+{
+  "manifest_version": "1.0",
+  "fusion_name": "parallel_consensus",
+  "fusion_mode": "parallel",
+  "description": "All AIs process simultaneously, results merged by consensus",
+  "description_zh": "所有 AI 同時處理，結果通過共識合併",
+  "particles": [
+    {
+      "provider": "openai",
+      "model": "gpt-4",
+      "weight": 0.4,
+      "role": "analyzer",
+      "description": "Primary analysis provider"
+    },
+    {
+      "provider": "claude",
+      "model": "claude-3-opus",
+      "weight": 0.4,
+      "role": "validator",
+      "description": "Validation and cross-checking"
+    },
+    {
+      "provider": "gemini",
+      "model": "gemini-pro",
+      "weight": 0.2,
+      "role": "synthesizer",
+      "description": "Synthesis and alternative perspectives"
+    }
+  ],
+  "merge_strategy": "weighted_consensus",
+  "metadata": {
+    "use_case": "Diverse perspectives on controversial topics",
+    "best_for": "Decision making, fact checking, multiple viewpoints"
+  }
+}

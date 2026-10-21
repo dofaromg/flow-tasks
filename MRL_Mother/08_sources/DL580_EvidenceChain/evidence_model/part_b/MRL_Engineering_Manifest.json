@@ -1,0 +1,109 @@
+{
+  "schema": "MRL_Engineering_Manifest",
+  "origin_signature": "MrLiouWord",
+  "generated_utc": "2026-06-12T22:16:00.000000+00:00",
+  "audit_phase": "Part_B / Phase_B05",
+  "manifest_type": "Part_B_Completion_Manifest",
+  "audit_version": "MRL_Evidence_Model_Audit_v1",
+  "execution_mode": "Part_A_Complete → Part_B_Execute → STOP",
+  "part_b_outputs": [
+    {
+      "file": "MRL_Coupling_Model.json",
+      "schema": "MRL_Coupling_Model",
+      "phase": "Phase_B01",
+      "coupling_count": 16,
+      "coupling_types": 3,
+      "backfill_upgraded": 3,
+      "status": "generated"
+    },
+    {
+      "file": "MRL_Return_Model.json",
+      "schema": "MRL_Return_Model",
+      "phase": "Phase_B02",
+      "return_count": 14,
+      "return_types": 3,
+      "universal_target": "MRL.NODE.01.Origin",
+      "all_nodes_covered": true,
+      "status": "generated"
+    },
+    {
+      "file": "MRL_14_Node_Evidence_Audit.json",
+      "schema": "MRL_14_Node_Evidence_Audit",
+      "phase": "Phase_B03",
+      "nodes_audited": 14,
+      "evidence_strong": 6,
+      "evidence_partial_backfill": 3,
+      "evidence_moderate": 4,
+      "evidence_minimal": 1,
+      "status": "generated"
+    },
+    {
+      "file": "MRL_Evidence_Model_Report.md",
+      "schema": "MRL_Evidence_Model_Report",
+      "phase": "Phase_B04",
+      "report_type": "summary_markdown",
+      "status": "generated"
+    },
+    {
+      "file": "MRL_Engineering_Manifest.json",
+      "schema": "MRL_Engineering_Manifest",
+      "phase": "Phase_B05",
+      "manifest_type": "Part_B_Completion_Manifest",
+      "status": "generated"
+    }
+  ],
+  "part_a_ref": {
+    "path": "evidence_model/part_a/",
+    "files": [
+      "MRL_Source_Model.json",
+      "MRL_Trace_Model.json",
+      "MRL_Map_Model.json",
+      "MRL_Engineering_Manifest.json"
+    ]
+  },
+  "full_audit_summary": {
+    "total_sources": 35,
+    "total_traces": 41,
+    "total_maps": 29,
+    "total_couplings": 16,
+    "total_return_paths": 14,
+    "nodes_covered": 14,
+    "evidence_chain_total": 554,
+    "wave_gate_sigma": "418/418 PASS",
+    "all_nodes_trace": true,
+    "all_nodes_coupling": true,
+    "all_nodes_return_path": true
+  },
+  "pending_verification": {
+    "items": [
+      {"node": "MRL.NODE.03.PreParticle", "pending": "completed_claim=false; content_null"},
+      {"node": "MRL.NODE.07.Persona", "pending": "completed_claim=false"},
+      {"node": "MRL.NODE.10.World", "pending": "completed_claim=false; content_null"},
+      {"scope": "W06-W09", "pending": "待實機 DL580 host gate 驗收"},
+      {"scope": "bridge.mrliouword.com", "pending": "待 v3.1.0 endpoint 驗收"}
+    ],
+    "note": "當下狀態 2026-06-12，沙盒；待實機 DL580 驗收後方可升級"
+  },
+  "integrity": {
+    "no_fabricated_canonical": true,
+    "no_external_data_as_verified": true,
+    "no_hardcoded_secrets": true,
+    "additive_only": true,
+    "no_delete": true,
+    "no_rebuild": true,
+    "source_first": true,
+    "trace_first": true
+  },
+  "zip_target": "MRL_Evidence_Model_Audit_v1_ENGINEERING_PACKAGE.zip",
+  "zip_contents": [
+    "evidence_model/part_a/MRL_Source_Model.json",
+    "evidence_model/part_a/MRL_Trace_Model.json",
+    "evidence_model/part_a/MRL_Map_Model.json",
+    "evidence_model/part_a/MRL_Engineering_Manifest.json",
+    "evidence_model/part_b/MRL_Coupling_Model.json",
+    "evidence_model/part_b/MRL_Return_Model.json",
+    "evidence_model/part_b/MRL_14_Node_Evidence_Audit.json",
+    "evidence_model/part_b/MRL_Evidence_Model_Report.md",
+    "evidence_model/part_b/MRL_Engineering_Manifest.json"
+  ]
+}

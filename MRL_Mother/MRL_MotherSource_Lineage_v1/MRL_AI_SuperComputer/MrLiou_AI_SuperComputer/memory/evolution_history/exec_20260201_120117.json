@@ -1,0 +1,6 @@
+{
+  "stack_name": "test_stack",
+  "timestamp": "2026-02-01T12:01:17.141933Z",
+  "input": "test input",
+  "result": "AI_RESULT[fn_func2](AI_RESULT[fn_func1](test input))"
+}

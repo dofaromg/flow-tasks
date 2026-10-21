@@ -9,6 +9,7 @@ resources:
 - ../../../apps/mongodb
 - ../../../apps/module-a
 - ../../../apps/orchestrator
+- ../../../apps/nextjs-frontend
 
 labels:
 - pairs:
@@ -19,4 +20,6 @@ images:
 - name: asia-east1-docker.pkg.dev/flowmemorysync/flowagent/module-a
   newTag: latest
 - name: asia-east1-docker.pkg.dev/flowmemorysync/flowagent/orchestrator
+  newTag: latest
+- name: asia-east1-docker.pkg.dev/flowmemorysync/flowagent/nextjs-frontend
   newTag: latest

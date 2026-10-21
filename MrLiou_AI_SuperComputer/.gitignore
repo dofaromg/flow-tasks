@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Runtime data
+log/*.jsonl
+log/*.json
+memory/ingest/fusion/*/
+memory/ingest/mobius/*/
+memory/snapshot/*
+memory/derived/l1/*.l1.json
+
+# Backups
+*.backup
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,7 @@
+{
+  "listen_address": "127.0.0.1",
+  "port": 8787,
+  "project_root": "C:\\MRLiou\\MRLiou_800AI",
+  "task_name": "MRLiou-800AI-Runtime",
+  "authentication": "X-MRL-Token or Authorization: Bearer"
+}

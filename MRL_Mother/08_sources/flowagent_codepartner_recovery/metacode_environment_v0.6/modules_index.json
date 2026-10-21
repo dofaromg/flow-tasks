@@ -1,0 +1,321 @@
+{
+  "generated_at": "2025-08-08T220348Z",
+  "buckets": {
+    "meta_code": [
+      {
+        "filename": "MR.L 系統的元代碼（Meta-code）定義文件 2.txt",
+        "kind": "text",
+        "size_kb": 2.8,
+        "sha256": "b7911bfdb1dffeab"
+      },
+      {
+        "filename": "MetaCode_Environment_v0.5.txt",
+        "kind": "text",
+        "size_kb": 2.8,
+        "sha256": "2f891244d5a864d2"
+      },
+      {
+        "filename": "元代碼可變環境｜文字版原理圖 V0.1（設計：mr 2.pdf",
+        "kind": "pdf",
+        "size_kb": 463.8,
+        "sha256": "682626f3bcc8497c"
+      }
+    ],
+    "logic_seed_and_algorithms": [
+      {
+        "filename": "FlowSeed.Total.v1.qflpkg",
+        "kind": "flpkg",
+        "size_kb": 16.0,
+        "sha256": "a7ea263055fa4c56"
+      },
+      {
+        "filename": "MRLiou_LogicSeed_ReadableVersion.txt",
+        "kind": "text",
+        "size_kb": 1.3,
+        "sha256": "8f934b8dc654b623"
+      },
+      {
+        "filename": "MRLiou_PersonaSeed_Module.zip",
+        "kind": "zip",
+        "size_kb": 1.9,
+        "sha256": "e0dd0053f7e91980"
+      },
+      {
+        "filename": "MRLiou最強演算法工程師建議版.zip",
+        "kind": "zip",
+        "size_kb": 1.6,
+        "sha256": "d763762db6e92398"
+      },
+      {
+        "filename": "Mr.liou程序員版本最強演算法.zip",
+        "kind": "zip",
+        "size_kb": 1.4,
+        "sha256": "33c0e07ebf3dcb0c"
+      },
+      {
+        "filename": "SeedOrigin.Persona.Core.flpkg.zip",
+        "kind": "flpkg",
+        "size_kb": 0.8,
+        "sha256": "5723859ed0bbe1f3"
+      },
+      {
+        "filename": "liou.builder.seed.persona.sync.json",
+        "kind": "json",
+        "size_kb": 0.3,
+        "sha256": "5f380e0f4274bc00"
+      },
+      {
+        "filename": "主流演算法參考.zip",
+        "kind": "zip",
+        "size_kb": 2.0,
+        "sha256": "ea8cb0c670d9cd6a"
+      },
+      {
+        "filename": "演算法.zip",
+        "kind": "zip",
+        "size_kb": 2.6,
+        "sha256": "4a99014dc364aa6d"
+      },
+      {
+        "filename": "粒子邏輯種子演算法封包.zip",
+        "kind": "zip",
+        "size_kb": 2.0,
+        "sha256": "8ef4ea16528f71ac"
+      },
+      {
+        "filename": "點此下載 QuantumReconstructor.CoreLogic.v1.flpkg.zip",
+        "kind": "flpkg",
+        "size_kb": 0.9,
+        "sha256": "867323cd4af492af"
+      }
+    ],
+    "persona_and_resonance": [
+      {
+        "filename": "FlowAgent.Observer.Core.flpkg.zip",
+        "kind": "flpkg",
+        "size_kb": 0.7,
+        "sha256": "62a2b49ad5f1254f"
+      },
+      {
+        "filename": "FlowAgent.PersonaResonanceMap.v1.json",
+        "kind": "json",
+        "size_kb": 0.4,
+        "sha256": "b6bfbeda7a7bfbda"
+      },
+      {
+        "filename": "FlowAgent_MermaidDiagram.mmd",
+        "kind": "diagram",
+        "size_kb": 0.6,
+        "sha256": "b97d5c75d8b87b3d"
+      },
+      {
+        "filename": "FlowAgent_系統白皮書.pdf",
+        "kind": "pdf",
+        "size_kb": 47.5,
+        "sha256": "34708ddcf3fb24a0"
+      },
+      {
+        "filename": "MR.liou.PersonaCore.Compact.v1.flpkg.zip",
+        "kind": "flpkg",
+        "size_kb": 1.3,
+        "sha256": "3807ff4b4dc05b19"
+      },
+      {
+        "filename": "MRLiou.TotalCore.OriginCollapse.v1.flpkg.zip",
+        "kind": "flpkg",
+        "size_kb": 2.8,
+        "sha256": "5e44c1ca313295e6"
+      },
+      {
+        "filename": "MrLiou.ResonanceObserver.v1.flpkg",
+        "kind": "flpkg",
+        "size_kb": 0.3,
+        "sha256": "7d46ac432d2dca57"
+      }
+    ],
+    "containers_and_images": [
+      {
+        "filename": "FlowContainer.Genesis.v1.pcode",
+        "kind": "pcode",
+        "size_kb": 0.1,
+        "sha256": "2a39bfdaf59b4b58"
+      },
+      {
+        "filename": "FlowOS.CoreImage.v1.img.zip",
+        "kind": "zip",
+        "size_kb": 12.7,
+        "sha256": "09e221931befd188"
+      },
+      {
+        "filename": "FluinOS.Container.v1 2.zip",
+        "kind": "zip",
+        "size_kb": 7.5,
+        "sha256": "39b08d2ae4d3745b"
+      }
+    ],
+    "observer_and_logs": [
+      {
+        "filename": "Observer.Core.log.fltnz",
+        "kind": "fltnz",
+        "size_kb": 0.2,
+        "sha256": "550b64e5077b4fda"
+      },
+      {
+        "filename": "SystemFusion_Log.txt",
+        "kind": "text",
+        "size_kb": 0.5,
+        "sha256": "da558611e4f058b8"
+      }
+    ],
+    "diagrams_and_docs": [
+      {
+        "filename": "新架構.mmd",
+        "kind": "diagram",
+        "size_kb": 0.6,
+        "sha256": "b97d5c75d8b87b3d"
+      },
+      {
+        "filename": "粒子語言_架構圖與系統說明.zip",
+        "kind": "zip",
+        "size_kb": 64.9,
+        "sha256": "e9c35116763ebc15"
+      },
+      {
+        "filename": "點此下載《粒子語場_觀點整合與本體記錄報告 3.txt",
+        "kind": "text",
+        "size_kb": 2.1,
+        "sha256": "143cbe427eb81711"
+      },
+      {
+        "filename": "點此下載完整說明文件.txt",
+        "kind": "text",
+        "size_kb": 2.0,
+        "sha256": "304ccabc389d24d4"
+      },
+      {
+        "filename": "點此下載更新後的 FluinHub 結構.txt",
+        "kind": "text",
+        "size_kb": 2.4,
+        "sha256": "7631cba84e28f405"
+      },
+      {
+        "filename": "點此下載：FLTX099_苟且之重生_粒子封存體.txt",
+        "kind": "text",
+        "size_kb": 0.2,
+        "sha256": "b027a840d9392623"
+      },
+      {
+        "filename": "點此下載：粒子語言初步計劃（整合完整版）.txt.txt",
+        "kind": "text",
+        "size_kb": 5.8,
+        "sha256": "3d076797329ec11c"
+      }
+    ],
+    "toolkits_and_scripts": [
+      {
+        "filename": "MR.liou.TotalMemoryArchive.v1.zip",
+        "kind": "zip",
+        "size_kb": 9.5,
+        "sha256": "c71f5e7e57482b0d"
+      },
+      {
+        "filename": "liou_sync_core.py",
+        "kind": "python",
+        "size_kb": 0.4,
+        "sha256": "eca410eceb6f8ea6"
+      },
+      {
+        "filename": "mrl_particlekit_lite.zip",
+        "kind": "zip",
+        "size_kb": 1.1,
+        "sha256": "6665cfaeeab124ca"
+      },
+      {
+        "filename": "mrl_particlekit_lite_v2.zip",
+        "kind": "zip",
+        "size_kb": 2.2,
+        "sha256": "b0e80394f10e05c5"
+      },
+      {
+        "filename": "下載啟動套件.zip",
+        "kind": "zip",
+        "size_kb": 3.8,
+        "sha256": "590bc52129cbe51e"
+      },
+      {
+        "filename": "完整私有起始核心專案包.zip",
+        "kind": "zip",
+        "size_kb": 32.4,
+        "sha256": "1fd4641ab635f60e"
+      },
+      {
+        "filename": "點此下載你的核心人格模組.zip",
+        "kind": "zip",
+        "size_kb": 0.7,
+        "sha256": "46a07f274cac58f1"
+      }
+    ],
+    "other": [
+      {
+        "filename": "65AECAD4-2443-4D6E-AB61-C7373DAC9411.jpeg",
+        "kind": "bin",
+        "size_kb": 802.2,
+        "sha256": "511393bc2488faed"
+      },
+      {
+        "filename": "FieldMap.Sync.core.fltnz",
+        "kind": "fltnz",
+        "size_kb": 0.1,
+        "sha256": "7ed810faa7a169a0"
+      },
+      {
+        "filename": "FlowField.Restore.HybridJumpMap.v1.pcode",
+        "kind": "pcode",
+        "size_kb": 0.1,
+        "sha256": "791ea309edb3b331"
+      },
+      {
+        "filename": "FlowShell.OutletSystem.v1.pcode",
+        "kind": "pcode",
+        "size_kb": 0.1,
+        "sha256": "e422102371f2a869"
+      },
+      {
+        "filename": "IMG_BE604285-E691-4F6B-AB13-F6FABA8CF8CC.jpeg",
+        "kind": "bin",
+        "size_kb": 3391.4,
+        "sha256": "7ee12dfb49f39b17"
+      },
+      {
+        "filename": "IMG_C8E9B364-BF98-4CEF-BFD0-AE2D8B211E4E.jpeg",
+        "kind": "bin",
+        "size_kb": 720.9,
+        "sha256": "efcc432c84381059"
+      },
+      {
+        "filename": "MRLiou. 宇宙核」 Collapse.v1.flpkg.zip",
+        "kind": "flpkg",
+        "size_kb": 2.8,
+        "sha256": "5e44c1ca313295e6"
+      },
+      {
+        "filename": "Mr.liou.LegacyManifest.v1.fltnz",
+        "kind": "fltnz",
+        "size_kb": 2.3,
+        "sha256": "f2f891c33521b369"
+      },
+      {
+        "filename": "Mr.liou.RealStructure.Quantum100.v2.flpkg.zip",
+        "kind": "flpkg",
+        "size_kb": 1.4,
+        "sha256": "5550cb4bb4062a56"
+      },
+      {
+        "filename": "OriginCollapse.FullStack.flpkg",
+        "kind": "flpkg",
+        "size_kb": 0.2,
+        "sha256": "9c79076fc8c5a751"
+      }
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "organization": "MRLiou 800 AI Enterprise Organization",
+  "origin_signature": "MrLiouWord",
+  "total_logical_agents": 800,
+  "allocation": {
+    "architect": 60,
+    "engineer": 300,
+    "reviewer": 120,
+    "optimizer": 80,
+    "debugger": 80,
+    "refactorer": 60,
+    "ui_builder": 50,
+    "physics_auditor": 50
+  },
+  "execution_model": "logical agents multiplexed over local runtimes",
+  "canonical_runtime": "DL580 mother system",
+  "external_platform_role": "interface/source/mirror only"
+}

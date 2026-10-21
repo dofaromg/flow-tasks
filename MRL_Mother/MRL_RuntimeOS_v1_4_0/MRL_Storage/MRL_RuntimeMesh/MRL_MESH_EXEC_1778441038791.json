@@ -1,0 +1,37 @@
+{
+  "mrl_type": "MRL_RuntimeMeshExecution",
+  "origin_signature": "MrLiouWord",
+  "execution_id": "MRL_MESH_EXEC_1778441038791",
+  "plan_id": "MRL_MESH_PLAN_1778441038790",
+  "status": "completed",
+  "executed_at": "2026-05-10T19:23:58.791Z",
+  "local_trace": {
+    "mrl_type": "MRL_RuntimeTrace",
+    "version": "v1.2.0",
+    "origin_signature": "MrLiouWord",
+    "started_at": "2026-05-10T19:23:58.791Z",
+    "runtime_graph_hash": "0c973ab28f459be8aa231f98633aa4ac87fa3c6f54852c1e37e91ddd98c94dff",
+    "attention_hash": "a9da65a65bcc9bbe8a60dc1735eebcb4dd8c551494872d6abe6075551df276fd",
+    "steps": [
+      {
+        "step": 1,
+        "node_id": "MRL_P_0001",
+        "action": "MRL_EXECUTE_CALLABLE",
+        "priority": 0.86,
+        "status": "implemented_pass",
+        "message": "MRL code structure indexed: MRL_add",
+        "output_hash": "d6bfe8207dbc9e23"
+      }
+    ],
+    "final_data_preview": "function MRL_add(a,b){ return a+b }",
+    "completed_at": "2026-05-10T19:23:58.791Z",
+    "mrl_hash": "606dcc6e9603c86942dee81fb3e46ea1b5cd78034f8cff2759e3c29841f809b1"
+  },
+  "node_assignments": [
+    {
+      "index": 0,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    }
+  ]
+}

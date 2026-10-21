@@ -1,5 +1,31 @@
-fastapi
-uvicorn
-rich
-anthropic
-pyyaml
+# Mr.liou.Particle.Core 依賴清單
+# 目標：零強制外部依賴，所有核心功能使用 Python 標準庫實現
+#
+# 標準庫使用清單（已內建，無需安裝）：
+#   math, random, json, hashlib, datetime, os, sys
+#   http.server, socketserver, threading, subprocess
+#   sqlite3, pathlib, dataclasses, enum, abc
+#   concurrent.futures, functools, typing, shutil, re
+#
+# ======================================================
+# 可選依賴（選擇性安裝，用於增強功能）
+# ======================================================
+#
+# 本地 GGUF 模型推理（替代所有雲端 API）
+# llama-cpp-python>=0.2.0
+#
+# 性能加速（可選，用於大規模矩陣運算）
+# numpy>=1.24.0
+#
+# 本地 Web UI（可選）
+# gradio>=4.0.0
+#
+# ======================================================
+# 已移除的依賴（由 MRL 自行實作取代）
+# ======================================================
+# fastapi    → particle_core/src/mrl_server.py     (Mr.liou.IO.Server.v1)
+# uvicorn    → particle_core/src/mrl_server.py     (Mr.liou.IO.Server.v1)
+# rich       → particle_core/src/mrl_cli.py        (Mr.liou.IO.CLI.v1)
+# anthropic  → particle_core/src/mrl_distill_teacher.py (Mr.liou.Distill.Teacher.v1)
+# pyyaml     → 改用 json 標準庫 (particle_core/config/core_config.json)
+# torch      → particle_core/src/mrl_tensor.py     (Mr.liou.Core.Tensor.v1)

@@ -1,0 +1,63 @@
+{
+  "mrl_type": "MRL_AttentionRoute",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "routes": [
+    {
+      "node_id": "MRL_P_0007",
+      "priority": 1,
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+      "runtime_action": "MRL_ANALYZE_NODE"
+    },
+    {
+      "node_id": "MRL_P_0001",
+      "priority": 0.94,
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+      "runtime_action": "MRL_REGISTER_PARTICLE"
+    },
+    {
+      "node_id": "MRL_P_0002",
+      "priority": 0.93,
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+      "runtime_action": "MRL_REGISTER_PARTICLE"
+    },
+    {
+      "node_id": "MRL_P_0003",
+      "priority": 0.92,
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+      "runtime_action": "MRL_ANALYZE_NODE"
+    },
+    {
+      "node_id": "MRL_P_0004",
+      "priority": 0.91,
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+      "runtime_action": "MRL_ANALYZE_NODE"
+    },
+    {
+      "node_id": "MRL_P_0005",
+      "priority": 0.9,
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+      "runtime_action": "MRL_ANALYZE_NODE"
+    },
+    {
+      "node_id": "MRL_P_0006",
+      "priority": 0.89,
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+      "runtime_action": "MRL_ANALYZE_NODE"
+    },
+    {
+      "node_id": "MRL_P_0008",
+      "priority": 0.87,
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+      "runtime_action": "MRL_ANALYZE_NODE"
+    },
+    {
+      "node_id": "MRL_P_0009",
+      "priority": 0.86,
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+      "runtime_action": "MRL_ANALYZE_NODE"
+    }
+  ],
+  "created_at": "2026-05-10T19:02:34.149Z",
+  "mrl_hash": "4d80c48c26e68e87bbd75167dcb147cefc9f532b9b8ca2533e8fee355cec2d77"
+}

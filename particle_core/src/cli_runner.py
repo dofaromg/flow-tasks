@@ -13,12 +13,24 @@ from rich import print as rprint
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
+    from pipeline_constants import PIPELINE_STEPS, STEP_EXPLANATIONS
+except ImportError:
+    PIPELINE_STEPS = ["structure", "mark", "flow", "recurse", "store"]
+    STEP_EXPLANATIONS = {
+        "structure": "定義輸入資料結構",
+        "mark": "建立邏輯跳點標記",
+        "flow": "轉換為流程結構節奏",
+        "recurse": "遞歸展開為細部結構",
+        "store": "封存至邏輯記憶模組"
+    }
+
+try:
     from logic_pipeline import LogicPipeline
 except ImportError:
     # 如果無法匯入，建立簡化版本
     class LogicPipeline:
         def __init__(self):
-            self.pipeline_steps = ["structure", "mark", "flow", "recurse", "store"]
+            self.pipeline_steps = list(PIPELINE_STEPS)
         
         def simulate(self, input_data):
             result = input_data
@@ -79,27 +91,19 @@ class ParticleLanguageCLI:
     
     def show_function_chain(self):
         """顯示函數鏈說明"""
-        explanations = {
-            "structure": "定義輸入資料結構",
-            "mark": "建立邏輯跳點標記",
-            "flow": "轉換為流程結構節奏", 
-            "recurse": "遞歸展開為細部結構",
-            "store": "封存至邏輯記憶模組"
-        }
-        
         table = Table(title="MRLiou 函數鏈說明", show_header=True, header_style="bold blue")
         table.add_column("步驟", style="cyan", no_wrap=True)
         table.add_column("英文", style="yellow")
         table.add_column("說明", style="green")
         
         for i, step in enumerate(self.pipeline.pipeline_steps, 1):
-            table.add_row(str(i), step.upper(), explanations.get(step, "未知"))
+            table.add_row(str(i), step.upper(), STEP_EXPLANATIONS.get(step, "未知"))
         
         self.console.print(table)
     
     def test_compression(self):
         """測試邏輯壓縮/解壓縮"""
-        test_steps = ["structure", "mark", "flow", "recurse", "store"]
+        test_steps = list(PIPELINE_STEPS)
         compressed = self.pipeline.compress_logic(test_steps)
         decompressed = self.pipeline.decompress_logic(compressed)
         

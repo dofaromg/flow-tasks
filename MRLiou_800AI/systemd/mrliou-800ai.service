@@ -1,0 +1,15 @@
+[Unit]
+Description=MRLiou 800 AI Integrated Runtime
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/mrliou-800ai
+Environment=MRL_HOME=/opt/mrliou-800ai
+ExecStart=/opt/mrliou-800ai/.venv/bin/python -m mrliou_800ai.cli serve --host 0.0.0.0 --port 8787
+Restart=on-failure
+User=mrl
+Group=mrl
+
+[Install]
+WantedBy=multi-user.target

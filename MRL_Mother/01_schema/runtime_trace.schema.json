@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FlowAgent RuntimeTrace v1",
+  "type": "object",
+  "properties": {
+    "trace_id": {
+      "type": "string",
+      "description": "Link back to the canonical TraceRecord / Merkle chain entry."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC timestamp when this trace line was emitted."
+    },
+    "rid": {
+      "type": "string",
+      "description": "Run/session ID if available."
+    },
+    "tick": {
+      "type": "integer",
+      "description": "Tick/step counter for the run, if applicable."
+    },
+    "persona_id": {
+      "type": "string",
+      "description": "Persona/agent identity."
+    },
+    "action_id": {
+      "type": "string",
+      "description": "Original request ID (ActionRequest.action_id)."
+    },
+    "action_type": {
+      "type": "string",
+      "description": "ActionRequest.action_type."
+    },
+    "target": {
+      "type": "object",
+      "description": "Target fields copied from ActionRequest.target for quick lookup.",
+      "properties": {
+        "host": { "type": "string" },
+        "url": { "type": "string" },
+        "recipient": { "type": "string" },
+        "path": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["ALLOW", "DENY", "REQUIRE_HUMAN", "REDACT"],
+      "description": "Compliance decision outcome."
+    },
+    "rule_hits": {
+      "type": "array",
+      "description": "Flattened rule hit identifiers.",
+      "items": { "type": "string" }
+    },
+    "merkle_root": {
+      "type": "string",
+      "description": "Merkle root for this trace line."
+    },
+    "merkle_prev": {
+      "type": "string",
+      "description": "Previous Merkle root (NULL/empty for head)."
+    },
+    "meta": {
+      "type": "object",
+      "description": "Implementation-specific additional metadata (status codes, request IDs, etc.).",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "trace_id",
+    "created_at",
+    "persona_id",
+    "action_id",
+    "action_type",
+    "decision",
+    "merkle_root",
+    "merkle_prev"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,31 @@
+{
+  "mrl_graph_type": "MRL_RuntimeGraph",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "nodes": [
+    {
+      "id": "MRL_P_0001",
+      "label": "MRL_TypeParticle",
+      "layer": "L2_CodeStructure",
+      "semantic": "MRLThing",
+      "runtime_action": "MRL_REGISTER_TYPE"
+    },
+    {
+      "id": "MRL_P_0002",
+      "label": "MRL_FunctionParticle",
+      "layer": "L2_CodeStructure",
+      "semantic": "run",
+      "runtime_action": "MRL_EXECUTE_CALLABLE"
+    }
+  ],
+  "edges": [
+    {
+      "from": "MRL_P_0001",
+      "to": "MRL_P_0002",
+      "relation": "MRL_RUNTIME_SEQUENCE",
+      "weight": 1
+    }
+  ],
+  "created_at": "2026-05-10T13:00:25.042Z",
+  "mrl_hash": "db08d99d0a201d4db0de9ff4dc450d58007ab9282391023c5dcd81c44c2b3af8"
+}

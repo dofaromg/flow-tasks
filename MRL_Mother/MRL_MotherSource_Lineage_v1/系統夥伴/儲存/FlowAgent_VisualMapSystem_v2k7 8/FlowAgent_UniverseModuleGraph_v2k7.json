@@ -1,0 +1,101 @@
+{
+  "nodes": [
+    "FieldEvolution",
+    "FieldMap",
+    "FlowAgent",
+    "FlowBridge",
+    "FlowInit",
+    "FlowMap",
+    "FlowMeta",
+    "FlowOS",
+    "FlowSeed",
+    "FlowShell",
+    "FlowSync",
+    "FlowUnity",
+    "Fluin",
+    "FluinPulse",
+    "IdentityMap",
+    "Overlay",
+    "ParticleLanguage",
+    "PersonaCloner",
+    "PersonaGate",
+    "PersonaTuner",
+    "SignalNode",
+    "Translator",
+    "UniversalSignalMediaIndex"
+  ],
+  "edges": [
+    {
+      "from": "Fluin",
+      "to": "ParticleLanguage"
+    },
+    {
+      "from": "ParticleLanguage",
+      "to": "Translator"
+    },
+    {
+      "from": "Translator",
+      "to": "Overlay"
+    },
+    {
+      "from": "FlowShell",
+      "to": "FlowSync"
+    },
+    {
+      "from": "FlowShell",
+      "to": "FlowMap"
+    },
+    {
+      "from": "FlowMap",
+      "to": "FlowUnity"
+    },
+    {
+      "from": "FlowUnity",
+      "to": "FieldMap"
+    },
+    {
+      "from": "FieldMap",
+      "to": "PersonaCloner"
+    },
+    {
+      "from": "PersonaCloner",
+      "to": "PersonaTuner"
+    },
+    {
+      "from": "PersonaTuner",
+      "to": "PersonaGate"
+    },
+    {
+      "from": "FlowSeed",
+      "to": "FlowAgent"
+    },
+    {
+      "from": "FlowAgent",
+      "to": "FlowInit"
+    },
+    {
+      "from": "FlowInit",
+      "to": "FlowMeta"
+    },
+    {
+      "from": "FlowMeta",
+      "to": "IdentityMap"
+    },
+    {
+      "from": "IdentityMap",
+      "to": "FieldEvolution"
+    },
+    {
+      "from": "FluinPulse",
+      "to": "UniversalSignalMediaIndex"
+    },
+    {
+      "from": "UniversalSignalMediaIndex",
+      "to": "SignalNode"
+    },
+    {
+      "from": "SignalNode",
+      "to": "FlowBridge"
+    }
+  ]
+}

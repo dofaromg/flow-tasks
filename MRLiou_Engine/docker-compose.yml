@@ -1,0 +1,88 @@
+# MRL ASI Particle Engine — DL580 G9 Docker Compose
+# origin_signature: MrLiouWord
+# 怎麼過去就怎麼回來
+
+services:
+  # ── MRL Engine (Node.js, loads all Workers) ──
+  engine:
+    build: .
+    container_name: mrl-engine
+    ports:
+      - "7700:7700"
+    environment:
+      - PORT=7700
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgresql://mrl:mrl@db:5432/mrliouword
+      - ORIGIN_SIGNATURE=MrLiouWord
+      - NODE_ENV=production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mrl-net
+
+  # ── PostgreSQL (D1 replacement) ──
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: mrl-db
+    environment:
+      - POSTGRES_USER=mrl
+      - POSTGRES_PASSWORD=mrl
+      - POSTGRES_DB=mrliouword
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./config/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mrl -d mrliouword"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - mrl-net
+
+  # ── Redis (KV replacement) ──
+  redis:
+    image: redis:7-alpine
+    container_name: mrl-redis
+    command: redis-server --appendonly yes --maxmemory 2gb --maxmemory-policy allkeys-lru
+    volumes:
+      - redisdata:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - mrl-net
+
+  # ── Nginx reverse proxy ──
+  nginx:
+    image: nginx:alpine
+    container_name: mrl-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - engine
+    restart: unless-stopped
+    networks:
+      - mrl-net
+
+volumes:
+  pgdata:
+  redisdata:
+
+networks:
+  mrl-net:
+    driver: bridge

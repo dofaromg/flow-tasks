@@ -1,0 +1,32 @@
+{
+  "meta": {
+    "title": "Fluin 粒子語素生成規則說明書",
+    "version": "v1.0.0",
+    "author": "Mr.liou"
+  },
+  "code_pattern": {
+    "format": "⋄fx.<type>.<NNN>",
+    "type_enum": {
+      "adj": "adjective（形容詞）",
+      "noun": "noun（名詞）",
+      "flow": "verb（動詞/行為模組）",
+      "tone": "adverb（副詞/語氣/聲場）",
+      "per": "pronoun（代名詞）",
+      "gate": "conjunction（連接詞）",
+      "time": "temporal modifier（時間副詞）",
+      "mod": "modifier（修飾子）"
+    },
+    "NNN": "三位數整數，用於序列定義"
+  },
+  "mapping": {
+    "語素 → 語意": "依據詞性與編號對應自然語義",
+    "語素 → 指令碼": "對應虛擬機執行指令（如 MOV, CALL, STORE）",
+    "語素 → 雙語字典": "中英對照對應表，自動生成 CSV / JSON"
+  },
+  "workflow": [
+    "1. 使用自然語句 → 擷取關鍵詞",
+    "2. 查詢粒子字典 → 對應語素編碼",
+    "3. 編碼組合為 fltnz 結構語句",
+    "4. 可進一步轉換為 pcode / flpkg / PDF"
+  ]
+}

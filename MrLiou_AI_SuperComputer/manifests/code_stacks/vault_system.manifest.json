@@ -1,0 +1,103 @@
+{
+  "manifest_version": "2.0",
+  "stack_type": "code_generator",
+  "stack_name": "vault_system_stack",
+  "description": "File vault operations are AI particle compositions with automatic snapshotting",
+  "composition": {
+    "mode": "parallel_fusion",
+    "particles": [
+      {
+        "particle_type": "function",
+        "function": "read_text",
+        "ai_providers": ["openai", "claude"],
+        "fusion_strategy": "consensus_implementation",
+        "synthesis_prompt": "Generate secure file reading function with encoding detection, size limits, and hash verification",
+        "parameters": {
+          "path": "file path",
+          "max_bytes": "maximum bytes to read"
+        },
+        "security_requirements": [
+          "path_traversal_prevention",
+          "size_limit_enforcement",
+          "encoding_validation"
+        ]
+      },
+      {
+        "particle_type": "function",
+        "function": "write_text",
+        "ai_providers": ["claude", "gemini"],
+        "fusion_strategy": "security_optimized",
+        "synthesis_prompt": "Generate secure file writing function with atomic operations, backup creation, and integrity checks",
+        "parameters": {
+          "path": "file path",
+          "text": "content to write",
+          "overwrite": "allow overwrite flag"
+        },
+        "security_requirements": [
+          "atomic_write",
+          "backup_before_write",
+          "checksum_verification"
+        ]
+      },
+      {
+        "particle_type": "function",
+        "function": "snapshot",
+        "ai_providers": ["openai", "gemini"],
+        "fusion_strategy": "reliability_first",
+        "synthesis_prompt": "Generate automatic snapshot function with versioning, compression, and deduplication",
+        "parameters": {
+          "source_path": "file to snapshot",
+          "snapshot_dir": "snapshot storage directory"
+        },
+        "features": [
+          "timestamp_naming",
+          "compression",
+          "deduplication",
+          "metadata_storage"
+        ]
+      },
+      {
+        "particle_type": "function",
+        "function": "restore",
+        "ai_providers": ["claude", "openai"],
+        "fusion_strategy": "consensus_implementation",
+        "synthesis_prompt": "Generate snapshot restoration function with validation and rollback capability",
+        "parameters": {
+          "snapshot_path": "snapshot to restore",
+          "target_path": "restore destination"
+        },
+        "features": [
+          "integrity_check",
+          "rollback_on_error",
+          "metadata_validation"
+        ]
+      }
+    ]
+  },
+  "self_optimization": {
+    "enabled": true,
+    "triggers": [
+      "io_performance_degradation",
+      "snapshot_storage_threshold",
+      "restore_failure_rate"
+    ],
+    "regeneration_strategy": "mobius_refinement",
+    "optimization_goals": [
+      "reduce_io_latency",
+      "optimize_storage_usage",
+      "improve_reliability"
+    ]
+  },
+  "integration": {
+    "merkle_chain": {
+      "enabled": true,
+      "track_all_operations": true,
+      "hash_algorithm": "sha256"
+    },
+    "snapshot_policy": {
+      "auto_snapshot_on_write": true,
+      "retention_policy": "7_days",
+      "compression": "gzip"
+    }
+  }
+}

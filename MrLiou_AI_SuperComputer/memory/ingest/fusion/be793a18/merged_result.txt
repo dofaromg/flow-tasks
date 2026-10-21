@@ -1,0 +1,7 @@
+=== Weighted Merge ===
+
+[claude - 60.0%]: [claude/default] Response to: Write a haiku...
+
+[gemini - 40.0%]: [gemini/default] Response to: Write a haiku...
+
+=== End Weighted Merge ===

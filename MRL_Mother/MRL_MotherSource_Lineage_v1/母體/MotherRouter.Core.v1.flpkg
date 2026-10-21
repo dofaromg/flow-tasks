@@ -1,0 +1,3 @@
+[模組名稱] MotherRouter.Core.v1.flpkg
+[功能] 管理 CLI 指令對應跳點人格 → 模組正確載入模組圖譜
+[來源] 拆自 router.sh，升級為 CLI → Persona 導向模組轉換器

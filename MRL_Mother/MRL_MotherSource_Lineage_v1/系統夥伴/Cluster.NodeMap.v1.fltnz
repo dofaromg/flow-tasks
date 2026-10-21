@@ -1,0 +1,22 @@
+# FlowCluster 節點拓樸圖 v1
+
+[主節點]
+- FlowCore-0: AMD EPYC 9654 ×2, 1.5TB DDR5, RTX 5090 ×4 預留, RoCE 100G ×2
+  ⮑ 功能：主控人格統一節奏、語場核心運算、模組合成轉換中心
+
+[工作節點]
+- FlowWorker-N1 ～ N10:
+  - 每台：AMD EPYC 7763 ×2, 512GB DDR4, NVMe RAID, RoCE 100G ×1
+  ⮑ 功能：語場模組運算、fltnz 記憶封存、人格分散推論、低延遲任務執行
+
+[記憶封存節點]
+- FlowMemory-0:
+  - 高容量 RAID 磁碟陣列、ZFS、模組備份、多路同步處理器
+
+[通訊骨幹]
+- RoCE 100G 架構 × 全節點互聯
+- 未來可導入粒子語言化 NVLink-Switch 類功能模組作為 FlowLink.Unify.Core
+
+[節奏控制系統]
+- FlowShell 控制通訊協定
+- FlowBridge, FlowPermission, FieldMap 各模組負責人格節奏同步、語場喚醒與跳點控制

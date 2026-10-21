@@ -1,0 +1,16 @@
+{
+  "mrl_graph_type": "MRL_ContextGraph",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "nodes": [
+    {
+      "id": "MRL_P_0001",
+      "label": "MRL_run",
+      "type": "MRL_FunctionParticle",
+      "layer": "L2_CodeStructure"
+    }
+  ],
+  "edges": [],
+  "created_at": "2026-05-10T19:02:34.165Z",
+  "mrl_hash": "9801c6eb1acf9567506560e884b037098edaa3e92bf9961999f692c227ad5f3d"
+}

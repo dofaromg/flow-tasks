@@ -1,0 +1,21 @@
+{
+  "providers": {
+    "ollama": {
+      "base_url": "http://127.0.0.1:11434",
+      "enabled": true
+    },
+    "openai": {
+      "api_key": "",
+      "enabled": false
+    },
+    "claude": {
+      "api_key": "",
+      "enabled": false
+    },
+    "gemini": {
+      "api_key": "",
+      "enabled": false
+    }
+  },
+  "origin_signature": "MrLiouWord"
+}

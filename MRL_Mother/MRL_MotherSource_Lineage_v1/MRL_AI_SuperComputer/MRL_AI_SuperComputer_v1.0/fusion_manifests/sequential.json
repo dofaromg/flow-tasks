@@ -1,0 +1,8 @@
+{
+  "name": "sequential",
+  "providers": [
+    "local"
+  ],
+  "strategy": "one_by_one",
+  "origin_signature": "MrLiouWord"
+}

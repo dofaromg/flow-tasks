@@ -1,0 +1,6 @@
+{"t": 0, "event": "init", "E0": {"energy": 0.73, "source": "particles/fields"}}
+{"t": 1, "event": "resonance", "R": {"sync": 0.86, "inputs": ["E0", "trigger:boot", "state:idle"]}}
+{"t": 2, "event": "superposition", "S": {"vectors": 3, "coherence": 0.81}}
+{"t": 3, "event": "entanglement", "T": {"links": 2, "coords": [[0, 1, 2], [2, 3, 5]]}}
+{"t": 4, "event": "quantum_jump", "J": {"delta": {"pos": [1, -1, 2], "state": "+0.2"}}}
+{"t": 5, "event": "fission", "F": {"spawned_nodes": ["node#a1", "node#a2"], "heritage": "MR.liou"}}

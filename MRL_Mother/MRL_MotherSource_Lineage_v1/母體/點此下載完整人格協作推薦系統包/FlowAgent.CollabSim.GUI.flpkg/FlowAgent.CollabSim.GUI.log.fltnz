@@ -1,0 +1,4 @@
+::persona:: FlowAgent.CollabSim.GUI
+::example:: 顯示團隊中各人格模組當前任務角色狀態與關聯
+::example:: 以圖形方式描繪 Ping 頻率、互動強度、合作熱區
+::example:: 支援拖曳式任務指派與人格切換模擬

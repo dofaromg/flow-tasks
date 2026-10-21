@@ -1,0 +1,21 @@
+{
+  "mrl_type": "MRL_AttentionRoute",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "routes": [
+    {
+      "node_id": "MRL_P_0001",
+      "priority": 0.87,
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+      "runtime_action": "MRL_REGISTER_SCHEMA_FIELD"
+    },
+    {
+      "node_id": "MRL_P_0002",
+      "priority": 0.86,
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+      "runtime_action": "MRL_REGISTER_SCHEMA_FIELD"
+    }
+  ],
+  "created_at": "2026-05-10T14:43:14.145Z",
+  "mrl_hash": "9b1633c4ca6e85ca7362462855878cf5f789ac43db4049836540ffe980cafa0e"
+}

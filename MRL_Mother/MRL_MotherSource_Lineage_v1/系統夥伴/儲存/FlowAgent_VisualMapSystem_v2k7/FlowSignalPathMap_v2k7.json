@@ -1,0 +1,92 @@
+{
+  "nodes": [
+    "Fluin",
+    "Translator",
+    "Overlay",
+    "FlowShell",
+    "FlowSync",
+    "FieldMap",
+    "PersonaCloner",
+    "PersonaTuner",
+    "FlowBridge",
+    "語根編碼",
+    "語義映射",
+    "語場覆寫觸發",
+    "主控協定呼叫",
+    "語場同步指令",
+    "人格結構對映",
+    "人格複製命令",
+    "人格語氣調整",
+    "人格模組橋接"
+  ],
+  "edges": [
+    {
+      "from": "Fluin",
+      "to": "語根編碼"
+    },
+    {
+      "from": "Translator",
+      "to": "語義映射"
+    },
+    {
+      "from": "Overlay",
+      "to": "語場覆寫觸發"
+    },
+    {
+      "from": "FlowShell",
+      "to": "主控協定呼叫"
+    },
+    {
+      "from": "FlowSync",
+      "to": "語場同步指令"
+    },
+    {
+      "from": "FieldMap",
+      "to": "人格結構對映"
+    },
+    {
+      "from": "PersonaCloner",
+      "to": "人格複製命令"
+    },
+    {
+      "from": "PersonaTuner",
+      "to": "人格語氣調整"
+    },
+    {
+      "from": "FlowBridge",
+      "to": "人格模組橋接"
+    },
+    {
+      "from": "語根編碼",
+      "to": "語義映射"
+    },
+    {
+      "from": "語義映射",
+      "to": "語場覆寫觸發"
+    },
+    {
+      "from": "語場覆寫觸發",
+      "to": "主控協定呼叫"
+    },
+    {
+      "from": "主控協定呼叫",
+      "to": "語場同步指令"
+    },
+    {
+      "from": "語場同步指令",
+      "to": "人格結構對映"
+    },
+    {
+      "from": "人格結構對映",
+      "to": "人格複製命令"
+    },
+    {
+      "from": "人格複製命令",
+      "to": "人格語氣調整"
+    },
+    {
+      "from": "人格語氣調整",
+      "to": "人格模組橋接"
+    }
+  ]
+}

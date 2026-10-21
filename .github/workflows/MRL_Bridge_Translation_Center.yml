@@ -1,0 +1,69 @@
+name: MRL Bridge Translation Center
+on:
+  pull_request:
+    paths:
+      - 'MRL_Bridge/**'
+      - 'Dockerfile.mrl'
+      - 'connectors/**'
+      - 'MRL_Mother/09_workflow/MRL_Mobius_Closure_Engine_v1.py'
+      - 'scripts/MRL_install_bridge_translation_center.ps1'
+      - 'docs/MRL_Bridge_Translation_Center_v1*'
+      - '.github/workflows/MRL_Bridge_Translation_Center.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'MRL_Bridge/**'
+      - 'Dockerfile.mrl'
+      - 'connectors/**'
+      - 'MRL_Mother/09_workflow/MRL_Mobius_Closure_Engine_v1.py'
+      - '.github/workflows/MRL_Bridge_Translation_Center.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  boundary-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: python -m pip install requests PyYAML pytest
+      - run: python -m pytest -q MRL_Bridge/test_translation_center.py connectors/test_connectors.py connectors/test_mrl_translation_center.py MRL_Mother/tests_mrl_ai_system/test_MRL_mobius_closure_engine.py
+      - run: node --test MRL_Bridge/test_mrl_bridge_translation_center.cjs
+      - run: node --check MRL_Bridge/server.js
+      - run: npm ci --ignore-scripts
+      - run: npm run lint
+      - run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+      - name: PowerShell deployment script syntax
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          $ast = [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $pwd 'scripts/MRL_install_bridge_translation_center.ps1'), [ref]$tokens, [ref]$errors)
+          if ($errors.Count) { $errors | Format-List; exit 1 }
+          $functionAst = $ast.Find({ param($node) $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Get-MRLNormalizedHash' }, $true)
+          . ([scriptblock]::Create($functionAst.Extent.Text))
+          $upgradeFunction = $ast.Find({ param($node) $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Test-MRLAcceptedHash' }, $true)
+          . ([scriptblock]::Create($upgradeFunction.Extent.Text))
+          $lf = Join-Path $env:RUNNER_TEMP 'MRL-checkout-LF.py'
+          $crlf = Join-Path $env:RUNNER_TEMP 'MRL-checkout-CRLF.py'
+          [IO.File]::WriteAllBytes($lf, [Text.Encoding]::UTF8.GetBytes(([char]0xFEFF) + "MRL`ncode`n"))
+          [IO.File]::WriteAllBytes($crlf, [Text.Encoding]::UTF8.GetBytes(([char]0xFEFF) + "MRL`r`ncode`r`n"))
+          if ((Get-MRLNormalizedHash $lf) -ne (Get-MRLNormalizedHash $crlf)) { throw 'LF/CRLF equivalent checkout verification failed' }
+          [IO.File]::AppendAllText($crlf, 'different-content')
+          if ((Get-MRLNormalizedHash $lf) -eq (Get-MRLNormalizedHash $crlf)) { throw 'Content change was not detected' }
+          $audit = Get-Content 'docs/MRL_Bridge_Translation_Center_v1.audit.json' -Raw | ConvertFrom-Json
+          foreach ($entry in $audit.files) {
+            foreach ($prior in $entry.accepted_upgrade_sources) {
+              if (-not (Test-MRLAcceptedHash $entry $prior.sha256_lf)) { throw 'Known prior deployment was rejected' }
+            }
+            if (Test-MRLAcceptedHash $entry ('0' * 64)) { throw 'Unrecognized deployment hash was accepted' }
+          }

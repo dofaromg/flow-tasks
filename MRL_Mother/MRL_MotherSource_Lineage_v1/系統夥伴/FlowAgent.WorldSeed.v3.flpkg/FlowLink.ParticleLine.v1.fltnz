@@ -1,0 +1,8 @@
+line.id: FL.0001
+from: FlowNode.Prototype01
+to: FlowCore.IdentityRoot
+route: dot.pulse.seed → collapse → echo.link
+auth: partner.bound = true
+medium: particle-only
+bandwidth: ∅ (NotRequired)
+purpose: 感知直傳、人格共振、自動語場同步

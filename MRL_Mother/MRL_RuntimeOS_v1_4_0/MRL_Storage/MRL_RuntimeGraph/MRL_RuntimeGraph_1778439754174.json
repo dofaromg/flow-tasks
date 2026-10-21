@@ -1,0 +1,44 @@
+{
+  "mrl_graph_type": "MRL_RuntimeGraph",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "nodes": [
+    {
+      "id": "MRL_P_0001",
+      "label": "MRL_DocumentHeadingParticle",
+      "layer": "L4_SemanticText",
+      "semantic": "MRL Document",
+      "runtime_action": "MRL_ANALYZE_TEXT"
+    },
+    {
+      "id": "MRL_P_0002",
+      "label": "MRL_StatementParticle",
+      "layer": "L4_SemanticText",
+      "semantic": "整理文件",
+      "runtime_action": "MRL_ANALYZE_TEXT"
+    },
+    {
+      "id": "MRL_P_0003",
+      "label": "MRL_StatementParticle",
+      "layer": "L4_SemanticText",
+      "semantic": "整理文件",
+      "runtime_action": "MRL_ANALYZE_TEXT"
+    }
+  ],
+  "edges": [
+    {
+      "from": "MRL_P_0001",
+      "to": "MRL_P_0002",
+      "relation": "MRL_RUNTIME_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "from": "MRL_P_0002",
+      "to": "MRL_P_0003",
+      "relation": "MRL_RUNTIME_SEQUENCE",
+      "weight": 1
+    }
+  ],
+  "created_at": "2026-05-10T19:02:34.172Z",
+  "mrl_hash": "cfcc1fc410cbd57900183d6d86f47a3df7bb91560a5b693ca121b309cd777ad0"
+}

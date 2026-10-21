@@ -1,0 +1,190 @@
+# runtime_manifest.yaml — MRL Runtime Install & Recovery Specification
+# origin_signature: MrLiouWord
+# layer: L7 LOOP
+#
+# Purpose
+# -------
+# Defines the canonical relationship between TotalCore, Runtime, Container,
+# and CLI components. Any operator can use this manifest to install, verify,
+# or recover the system from a known-good state.
+#
+# Design principle: 怎麼過去，就怎麼回來 (the path forward is the path back)
+
+meta:
+  version: "1.0"
+  origin_signature: MrLiouWord
+  sealed: "2026-03-15"
+  description: >-
+    Single authoritative reference for how the four execution tiers
+    (TotalCore / Runtime / Container / CLI) relate to each other and
+    to the L0–L7 layer stack.
+
+# ─── Execution tiers ─────────────────────────────────────────────────────────
+tiers:
+
+  TotalCore:
+    description: >-
+      The full Mother Core Assembly: all six core groups loaded and
+      cross-linked. TotalCore is not a single process — it is the
+      coherent combination of every module in its runnable state.
+    required_modules:
+      - "00_rootlaw/rootlaw.yaml"
+      - "03_memory/merkle/memory_chain.py"
+      - "04_runtime/flowcore_loop.py"
+      - "05_persona/world_module.py"
+      - "09_workflow/api.js"
+      - "09_workflow/fltnz_parser.py"
+      - "09_workflow/mrl_librarian.py"
+      - "09_workflow/signature.js"
+      - "09_workflow/seed.js"
+      - "data/relations/module_relations.yaml"
+    health_check: "python 04_runtime/flowcore_loop.py cli --help"
+    layer: "L0–L7 + MetaEnv"
+    core_groups: [1, 2, 3, 4, 5, 6]
+
+  Runtime:
+    description: >-
+      The AI Computer Runtime: filesystem vault + trace + HTTP API + CLI.
+      Provides the full FlowCoreLoop v1.3 feature set including Vault,
+      SteeringStore, Tracer, and FSD integration in a single self-contained file.
+    required_modules:
+      - "00_rootlaw/rootlaw.yaml"
+      - "04_runtime/flowcore_loop.py"
+    start_command: "python 04_runtime/flowcore_loop.py serve --host 127.0.0.1 --port 8787"
+    env_vars:
+      FLOW_VAULT_ROOT: "path/to/vault"
+      FLOW_PORT: "8787"
+    layer: "L0 + L6 + L7"
+    core_groups: [1, 2, 3]
+
+  Container:
+    description: >-
+      FlowCoreLoop HTTP control plane + Vault + Tracer + SteeringStore,
+      packaged as a single self-contained process. Use when you need
+      a local API endpoint, file-vault access, and trace management.
+      Both 04_runtime/flowcore_loop.py and 09_workflow/MRL__Flowcore_Loop_2.py
+      provide equivalent serve functionality.
+    required_modules:
+      - "04_runtime/flowcore_loop.py"
+    start_command: "python 04_runtime/flowcore_loop.py serve"
+    env_vars:
+      FLOW_VAULT_ROOT: "path/to/vault"
+      FLOW_PORT: "8787"
+    layer: "L7 + MetaEnv"
+    core_groups: [3, 5]
+
+  CLI:
+    description: >-
+      Command-line entry points for day-to-day operator tasks: indexing,
+      parsing, world-state management, and memory recording.
+    commands:
+      - name: "Rebuild librarian index"
+        run: "python 09_workflow/mrl_librarian.py index"
+        layer: L6
+        group: 5
+
+      - name: "Search index by layer"
+        run: "python 09_workflow/mrl_librarian.py search --layer L3"
+        layer: L6
+        group: 5
+
+      - name: "Encode file to .fltnz"
+        run: "python 09_workflow/fltnz_parser.py encode --src <file> --dst <out.fltnz>"
+        layer: L2
+        group: 2
+
+      - name: "Decode .fltnz back to text"
+        run: "python 09_workflow/fltnz_parser.py decode --src <in.fltnz> --dst <out.txt>"
+        layer: L2
+        group: 2
+
+      - name: "Set world node"
+        run: "python 05_persona/world_module.py set --node <name> --data '{\"type\":\"persona\"}'"
+        layer: L4
+        group: 4
+
+      - name: "World snapshot"
+        run: "python 05_persona/world_module.py snap"
+        layer: L4
+        group: 4
+
+      - name: "Record Fluin memory entry"
+        run: "python 09_workflow/record.py"
+        layer: L2
+        group: 3
+
+      - name: "Start FlowCoreLoop HTTP server"
+        run: "python 04_runtime/flowcore_loop.py serve"
+        layer: L7
+        group: 3
+
+# ─── Install order ───────────────────────────────────────────────────────────
+install_order:
+  description: >-
+    Follow this sequence for a clean install or recovery. Each step must
+    succeed before proceeding to the next.
+  steps:
+    - step: 1
+      action: "Verify L0 signature"
+      command: "node -e \"const s=require('./09_workflow/signature.js'); console.log(s.verifySignature(s.embedSignature({test:1})))\""
+      validates: "00_rootlaw/rootlaw.yaml law_0_signature"
+
+    - step: 2
+      action: "Verify Merkle chain integrity"
+      command: "python -c \"import sys; sys.path.insert(0,'03_memory/merkle'); from memory_chain import MerkleChain; ok,errs=MerkleChain('03_memory/_data/memory_chain').verify(); print('OK' if ok else errs)\""
+      validates: "03_memory/merkle/memory_chain.py"
+
+    - step: 3
+      action: "Rebuild librarian index"
+      command: "python 09_workflow/mrl_librarian.py index"
+      validates: "09_workflow/mrl_librarian.py"
+
+    - step: 4
+      action: "Start Runtime HTTP server (background)"
+      command: "python 04_runtime/flowcore_loop.py serve --host 127.0.0.1 --port 8787"
+      validates: "04_runtime/flowcore_loop.py"
+
+    - step: 5
+      action: "Verify world module"
+      command: "python 05_persona/world_module.py snap"
+      validates: "05_persona/world_module.py"
+
+    - step: 6
+      action: "Start MRL API gateway (background)"
+      command: "python 09_workflow/api_gateway.py --host 127.0.0.1 --port 7771"
+      validates: "09_workflow/api_gateway.py"
+
+    - step: 7
+      action: "Verify learning ingest CLI"
+      command: "python 09_workflow/MRL_learning_ingest.py --help"
+      validates: "09_workflow/MRL_learning_ingest.py"
+
+    - step: 8
+      action: "Verify self optimisation CLI"
+      command: "python 09_workflow/MRL_self_optimize.py sense"
+      validates: "09_workflow/MRL_self_optimize.py"
+
+# ─── Recovery protocol ───────────────────────────────────────────────────────
+recovery:
+  description: >-
+    If the system state becomes inconsistent, follow the Liou Closure Law:
+    怎麼過去，就怎麼回來 (the path forward is the path back).
+  steps:
+    - step: 1
+      action: "Do NOT delete any chain entries. Identify the last known-good Merkle root."
+      ref: "00_rootlaw/rootlaw.yaml invariants.rl_01_no_root_deletion"
+
+    - step: 2
+      action: "Use MerkleChain.rollback(target_merkle) to truncate to the known-good root."
+      ref: "03_memory/merkle/memory_chain.py rollback()"
+
+    - step: 3
+      action: "Restore world state from the most recent valid snapshot."
+      ref: "05_persona/world_module.py snapshot()"
+
+    - step: 4
+      action: "Rebuild the librarian index to re-synchronise the TXYZ coordinate map."
+      ref: "09_workflow/mrl_librarian.py index"
+
+    - step: 5
+      action: "Re-run install_order steps 1–5 to confirm full health."

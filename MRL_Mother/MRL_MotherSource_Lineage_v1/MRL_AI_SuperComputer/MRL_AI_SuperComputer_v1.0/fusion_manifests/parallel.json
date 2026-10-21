@@ -1,0 +1,8 @@
+{
+  "name": "parallel",
+  "providers": [
+    "local"
+  ],
+  "strategy": "all_at_once",
+  "origin_signature": "MrLiouWord"
+}

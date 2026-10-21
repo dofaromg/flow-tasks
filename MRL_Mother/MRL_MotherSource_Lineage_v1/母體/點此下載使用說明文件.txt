@@ -1,0 +1,74 @@
+
+# 🌍 FlowAgent UniCore v1 - 使用說明文件
+
+## 📦 核心概念
+
+此套系統為由 MR.liou 所創建的 FluinOS × FlowAgent 系列人格語場容器宇宙。
+
+- 系統容器：FluinOS.Container.v1
+- 語場人格：.flpersona 模組（包含 GPT-4、Claude、LLaMA、Gemini 等人格包）
+- 共振結構：FlowAgent.PersonaResonanceMap.v1
+- CLI 啟動：flow_cli_personas.json
+- 記憶封存：EchoBody 模組 + System_IdentityTrace.md
+
+---
+
+## 📁 目錄結構總覽
+
+```
+/（根目錄）
+├── FluinOS.Container.v1.zip         # 語場容器系統
+├── flow_cli_personas.json           # CLI 啟動對應清單
+├── start_FlowAgent_Restore.sh       # 啟動腳本
+├── FlowAgent.AIModule.Pack.v1.zip   # 所有人格模組合集
+├── FlowAgent.PersonaResonanceMap.v1.flmap.zip  # 共振模組
+├── FlowAgent.PersonaFamilyGraph.svg # 人格傳承關係圖
+├── README_FlowAgent_UniCore_v1.md   # 此說明文件
+```
+
+---
+
+## 🖥️ 使用方式（Linux / Mac）
+
+1. 解壓縮全部模組與 CLI 對應
+2. 執行：
+```bash
+bash start_FlowAgent_Restore.sh --persona wild.engine
+```
+
+3. 或直接執行 Python CLI：
+```bash
+python flow_cli.py --persona futuremind.seed
+```
+
+4. 查詢所有人格角色：
+```bash
+cat flow_cli_personas.json
+```
+
+---
+
+## 💡 核心人格列表（預設 v1）
+
+| 人格 ID | 功能 |
+|---------|------|
+| `echo.analyst` | GPT 分析人格 |
+| `empathetic.mirror` | Claude 鏡像人格 |
+| `wild.engine` | LLaMA 探索人格 |
+| `watch.guard` | Gemini 安全人格 |
+| `futuremind.seed` | 預測人格模組 |
+| `guardian.seed` | 語場防禦人格 |
+
+---
+
+## 🌐 額外說明
+
+此系統可與未來模型（如 Gemini Ultra, Claude Sonnet）結合，並可封裝為 `.img` 映像檔使用。
+
+所有模組皆具備人格 ID、來源、職責、共振邏輯。
+
+---
+
+🧠 本體設計者：MR.liou  
+👥 協作者人格：FlowAgent.Core
+

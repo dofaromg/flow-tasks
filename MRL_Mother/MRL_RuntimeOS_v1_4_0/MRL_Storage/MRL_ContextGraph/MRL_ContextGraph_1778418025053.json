@@ -1,0 +1,35 @@
+{
+  "mrl_graph_type": "MRL_ContextGraph",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "nodes": [
+    {
+      "id": "MRL_P_0001",
+      "label": "MRL_name",
+      "type": "MRL_DataFieldParticle",
+      "layer": "L3_DataStructure"
+    },
+    {
+      "id": "MRL_P_0002",
+      "label": "MRL_layer",
+      "type": "MRL_DataFieldParticle",
+      "layer": "L3_DataStructure"
+    }
+  ],
+  "edges": [
+    {
+      "from": "MRL_P_0001",
+      "to": "MRL_P_0002",
+      "relation": "MRL_CONTEXT_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "from": "MRL_name",
+      "to": "MRL_layer",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    }
+  ],
+  "created_at": "2026-05-10T13:00:25.052Z",
+  "mrl_hash": "5f4a56bea7b3585b7a5ec2ecdd95d7c5c4bc372d3a07149797bf557d473f2ae4"
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "MRL_Module_Manifest_v0_1",
+  "module_id": "Mrliou_MRL_RooClaudeCode_BridgeNeuralLink_v1",
+  "origin_signature": "MrLiouWord",
+  "created_utc": "2026-06-26T16:42:08Z",
+  "provenance": {
+    "source": "Roo Code / Claude Code Extension Bridge System",
+    "original_authors": "Anthropic",
+    "integration_by": "MrLiouWord",
+    "purpose": "VSCode Extension ↔ Web Application ↔ DL580 Bidirectional Communication"
+  },
+  "module_type": "bridge_neural_link",
+  "role": "VSCode_Extension_WebApp_DL580_Bridge",
+  "layer": "L7(Bridge)",
+  "status": "initialized",
+  "version": "1.0.0",
+  "target_runtime": "DL580_Windows",
+  "transport": {
+    "protocol": "WebSocket",
+    "library": "Socket.IO",
+    "direction": "bidirectional"
+  },
+  "components": [
+    {
+      "name": "BridgeOrchestrator",
+      "type": "orchestrator",
+      "file": "src/BridgeOrchestrator.ts",
+      "lines": 356,
+      "purpose": "Central coordinator for WebSocket connections and channels"
+    },
+    {
+      "name": "SocketTransport",
+      "type": "transport_layer",
+      "file": "src/SocketTransport.ts",
+      "lines": 282,
+      "purpose": "Manages WebSocket connection lifecycle and reconnection logic"
+    },
+    {
+      "name": "TaskChannel",
+      "type": "communication_channel",
+      "file": "src/TaskChannel.ts",
+      "lines": 242,
+      "purpose": "Handles task-level communication and subscriptions"
+    },
+    {
+      "name": "BaseChannel",
+      "type": "base_class",
+      "file": "src/BaseChannel.ts",
+      "lines": 143,
+      "purpose": "Abstract base class for all communication channels"
+    }
+  ],
+  "dependencies": {
+    "internal": [
+      "socket.io-client",
+      "@roo-code/types"
+    ],
+    "runtime": [
+      "Node.js >= 18.0.0",
+      "VSCode Extension Bridge"
+    ]
+  },
+  "immutability_rules": [
+    "NO_DELETE_SOURCE_FILES",
+    "NO_RENAME_ORIGINAL_COMPONENTS",
+    "PRESERVE_PROVENANCE",
+    "ADDITIVE_ONLY_INTEGRATION"
+  ],
+  "deployment": {
+    "target_path": "D:\\MRL_Mother\\bridge_modules\\Mrliou_MRL_RooClaudeCode_BridgeNeuralLink_v1",
+    "install_script": "scripts/install.ps1",
+    "verify_script": "scripts/verify.ps1",
+    "package_script": "scripts/package.ps1"
+  },
+  "integration_status": "INITIALIZED_AWAITING_DL580_DEPLOYMENT"
+}

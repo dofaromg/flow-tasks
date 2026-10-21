@@ -1,0 +1,9 @@
+{
+  "total_records": 668,
+  "max_tick": 14,
+  "event_types": {
+    "jump": 101,
+    "projection": 567
+  },
+  "unique_nodes": 94
+}

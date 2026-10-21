@@ -1,0 +1,66 @@
+{
+  "schema": "MRL_State_Snapshot_v0_1",
+  "origin_signature": "MrLiouWord",
+  "snapshot_timestamp": "2026-06-26T16:42:08.388411Z",
+  "snapshot_source": "mrl_mothermodel_snapshot.py",
+  "status": "INITIALIZED",
+  "registries": {
+    "mother_model.json": {
+      "file": "mother_model.json",
+      "size": 1275,
+      "sha256": "a349416e0eb7e7f75380167b9095164b5cd13b9086451f76984c248364ed8bf6"
+    },
+    "module_registry.json": {
+      "file": "module_registry.json",
+      "size": 5093,
+      "sha256": "df1659794f968586a63af1555d42406c9fa494d884a61118fca665da224a0030"
+    },
+    "evidence_registry.jsonl": {
+      "file": "evidence_registry.jsonl",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "line_count": 0
+    },
+    "ingest_queue.jsonl": {
+      "file": "ingest_queue.jsonl",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "line_count": 0
+    },
+    "absorb_log.jsonl": {
+      "file": "absorb_log.jsonl",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "line_count": 0
+    },
+    "dependency_map.json": {
+      "file": "dependency_map.json",
+      "size": 3332,
+      "sha256": "87dc8d446d82439b2aff569454e2d8dff8b76bea8ebf4c524d1bbb716b3a3eb3"
+    },
+    "runtime_bridge.json": {
+      "file": "runtime_bridge.json",
+      "size": 2753,
+      "sha256": "48355854e79bc4eeef0ec7b68f82042b81001fa1f09fb7dae28d489ee701dc05"
+    },
+    "verification_gate.json": {
+      "file": "verification_gate.json",
+      "size": 2845,
+      "sha256": "f3b22f6f73e55813ca06661ac58645e749dff9bfa1e25099c63fbcf5dfecbc4d"
+    },
+    "replay_restore_hooks.json": {
+      "file": "replay_restore_hooks.json",
+      "size": 3189,
+      "sha256": "574c00c85cbc7d85d15969a1d7817bd32e98522233ed1cc86fd94c6df2611d03"
+    }
+  },
+  "system_status": {
+    "mainline_nodes": 14,
+    "infrastructure_modules": 12,
+    "evidence_items_absorbed": 0,
+    "ingest_queue_pending": 0,
+    "overall_system_status": "INITIALIZATION",
+    "ready_for_absorption": true
+  },
+  "notes": "Snapshot taken at 2026-06-26T16:42:08.388411Z. 0 items absorbed, 0 pending."
+}

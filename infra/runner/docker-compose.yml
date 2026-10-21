@@ -1,0 +1,38 @@
+# MRLiou Cloud-on-Cloud Runner Fleet
+# origin_signature: MrLiouWord
+#
+# Deploy self-hosted runners across cloud regions.
+# Each runner registers with GitHub and picks up jobs from the flow-tasks repo.
+#
+# Usage:
+#   GITHUB_TOKEN=<PAT> RUNNER_NAME=<name> RUNNER_LABELS=<labels> docker compose up -d
+#
+# Required env vars:
+#   GITHUB_TOKEN  — PAT with repo scope
+#   RUNNER_NAME   — unique runner name
+#   RUNNER_LABELS — comma-separated labels (e.g. cloud-tw,cloud-us,edge-nrt)
+
+services:
+  runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        RUNNER_VERSION: "2.329.0"
+    environment:
+      - RUNNER_NAME=${RUNNER_NAME:-mrliou-runner-01}
+      - RUNNER_LABELS=${RUNNER_LABELS:-self-hosted,linux,x64,cloud-on-cloud}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - RUNNER_WORKDIR=/home/runner/_work
+    volumes:
+      - runner-work:/home/runner/_work
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 8G
+
+volumes:
+  runner-work:

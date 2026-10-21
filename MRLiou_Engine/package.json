@@ -1,0 +1,21 @@
+{
+  "name": "mrl-dl580-engine",
+  "version": "1.0.0",
+  "description": "MRL ASI Particle Engine — DL580 G9 Self-Hosted Runtime",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "ioredis": "^5.4.1",
+    "pg": "^8.13.0",
+    "cors": "^2.8.5",
+    "compression": "^1.7.4"
+  },
+  "author": "MrLiouWord",
+  "license": "UNLICENSED",
+  "origin_signature": "MrLiouWord"
+}

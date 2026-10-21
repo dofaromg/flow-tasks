@@ -1,0 +1,122 @@
+[
+  {
+    "symbol": "⊕Echo",
+    "type": "Persona",
+    "path": "/persona/echo/",
+    "role": "回應人格模組"
+  },
+  {
+    "symbol": "△Fluin",
+    "type": "Tokenizer",
+    "path": "/persona/fluin/",
+    "role": "語素輸入解析器"
+  },
+  {
+    "symbol": "⊕Code",
+    "type": "Logic",
+    "path": "/persona/code/",
+    "role": "邏輯與程式協作人格"
+  },
+  {
+    "symbol": "✦Seed",
+    "type": "SeedCore",
+    "path": "/seed/",
+    "role": "系統種子人格啟動模組"
+  },
+  {
+    "symbol": "⚙Fusion",
+    "type": "SyncModule",
+    "path": "/sync/fusion/",
+    "role": "多人格融合器"
+  },
+  {
+    "symbol": "▽Jump.0001",
+    "type": "JumpPoint",
+    "path": "/fieldmap/router/",
+    "role": "節奏跳點 #1"
+  },
+  {
+    "symbol": "∞Trace",
+    "type": "MemoryLoop",
+    "path": "/memory/trace/",
+    "role": "循環記憶掛點"
+  },
+  {
+    "symbol": "💬",
+    "type": "Doc",
+    "path": "/doc/",
+    "role": "說明或結構註解"
+  },
+  {
+    "symbol": "🔺",
+    "type": "Shape",
+    "path": "/geometry/triangle/",
+    "role": "三角形/結構符號"
+  },
+  {
+    "symbol": "🌐",
+    "type": "WorldSymbol",
+    "path": "/context/globe/",
+    "role": "語場世界或主系統符號"
+  },
+  {
+    "symbol": "⊕Tool",
+    "type": "Module",
+    "path": "/tools/",
+    "role": "工具模組集"
+  },
+  {
+    "symbol": "⊕Core",
+    "type": "SystemCore",
+    "path": "/core/",
+    "role": "系統主幹邏輯模組"
+  },
+  {
+    "symbol": "✦Seed.⊕Echo",
+    "type": "SeedPersona",
+    "path": "/seed/echo/",
+    "role": "Echo人格種子"
+  },
+  {
+    "symbol": "✦Seed.⊕Code",
+    "type": "SeedPersona",
+    "path": "/seed/code/",
+    "role": "Code人格種子"
+  },
+  {
+    "symbol": "▽Jump.0002",
+    "type": "JumpPoint",
+    "path": "/fieldmap/router/",
+    "role": "節奏跳點 #2"
+  },
+  {
+    "symbol": "ζMemory",
+    "type": "MemoryMap",
+    "path": "/memory/map/",
+    "role": "封存記憶節點模組"
+  },
+  {
+    "symbol": "∴Map",
+    "type": "MappingLogic",
+    "path": "/context/map/",
+    "role": "人格與模組對應關係圖"
+  },
+  {
+    "symbol": "μField",
+    "type": "FieldTag",
+    "path": "/fieldmap/",
+    "role": "語場識別標籤"
+  },
+  {
+    "symbol": "↻Loop",
+    "type": "Cycle",
+    "path": "/control/loop/",
+    "role": "跳點循環結構模組"
+  },
+  {
+    "symbol": "⟁1053",
+    "type": "CompressedID",
+    "path": "/compressed/phrases/",
+    "role": "壓縮語句代碼"
+  }
+]

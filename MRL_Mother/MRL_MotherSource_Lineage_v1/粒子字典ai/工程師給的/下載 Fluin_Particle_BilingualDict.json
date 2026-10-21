@@ -1,0 +1,56 @@
+[
+  {
+    "code": "⋄fx.adj.112",
+    "type": "adjective",
+    "zh": "內省的",
+    "en": "introspective"
+  },
+  {
+    "code": "⋄fx.noun.024",
+    "type": "noun",
+    "zh": "記憶 / 節點",
+    "en": "memory / node"
+  },
+  {
+    "code": "⋄fx.flow.007",
+    "type": "verb",
+    "zh": "封存 / 導出",
+    "en": "archive / export"
+  },
+  {
+    "code": "⋄fx.adj.305",
+    "type": "adjective",
+    "zh": "激烈的",
+    "en": "intense / fierce"
+  },
+  {
+    "code": "⋄fx.noun.091",
+    "type": "noun",
+    "zh": "衝突",
+    "en": "conflict"
+  },
+  {
+    "code": "⋄fx.flow.018",
+    "type": "verb",
+    "zh": "產生 / 轉變",
+    "en": "emerge / transform"
+  },
+  {
+    "code": "⋄fx.time.010",
+    "type": "adverb",
+    "zh": "現在",
+    "en": "now"
+  },
+  {
+    "code": "⋄fx.gate.001",
+    "type": "conjunction",
+    "zh": "並且",
+    "en": "and"
+  },
+  {
+    "code": "⋄fx.per.001",
+    "type": "pronoun",
+    "zh": "我",
+    "en": "I"
+  }
+]

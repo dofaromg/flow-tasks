@@ -1,0 +1,29 @@
+{
+  "origin_signature": "MrLiouWord",
+  "component": "Tailscale VPN Mesh",
+  "layer": "network",
+  "purpose": "DL580 內網 VPN mesh，提供跨裝置安全互聯 (MagicDNS / direct WireGuard tunnels)",
+  "dl580_service": {
+    "service_name": "MRL_Tailscale",
+    "nssm_registered": true,
+    "runtime": "native_binary",
+    "binary_path": "C:\\Program Files\\Tailscale\\tailscaled.exe",
+    "status": "Running",
+    "port": null,
+    "note": "Tailscale 不開 listener port，透過 WireGuard 隧道做 P2P 連線"
+  },
+  "source_reference": {
+    "upstream_repo": "tailscale/tailscale",
+    "upstream_url": "https://github.com/tailscale/tailscale",
+    "language": "Go 1.26+",
+    "license": "BSD-3-Clause",
+    "local_archive": "tailscalemain.zip (5.9MB, Go source snapshot)",
+    "import_policy": "NOT_IMPORTED — upstream binary，不匯入源碼到 MRL repo。DL580 使用官方安裝包。"
+  },
+  "integration_with_mrl": {
+    "role": "提供 DL580 與開發機之間的安全 mesh VPN",
+    "depends_on": [],
+    "depended_by": ["MRL_SSHD"],
+    "config_notes": "Tailscale 的 MagicDNS 讓 DL580 可用 hostname 互連，不需記 IP"
+  }
+}

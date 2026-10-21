@@ -1,0 +1,65 @@
+{
+  "mrl_type": "MRL_RuntimeMeshExecution",
+  "origin_signature": "MrLiouWord",
+  "execution_id": "MRL_MESH_EXEC_1778439754170",
+  "plan_id": "MRL_MESH_PLAN_1778439754169",
+  "status": "completed",
+  "executed_at": "2026-05-10T19:02:34.170Z",
+  "local_trace": {
+    "mrl_type": "MRL_RuntimeTrace",
+    "version": "v1.2.0",
+    "origin_signature": "MrLiouWord",
+    "started_at": "2026-05-10T19:02:34.170Z",
+    "runtime_graph_hash": "9699174b570e7d9930967d50331a05c7cf1ee827579be47fc73c7038d5424e58",
+    "attention_hash": "20cec42e4fb17109f6420295d0a59d71f4ed8e789505ac039f3db4308618128c",
+    "steps": [
+      {
+        "step": 1,
+        "node_id": "MRL_P_0001",
+        "action": "MRL_REGISTER_SCHEMA_FIELD",
+        "priority": 0.88,
+        "status": "implemented_pass",
+        "message": "MRL data field registered",
+        "output_hash": "fbf4c4bc8ba77d5a"
+      },
+      {
+        "step": 2,
+        "node_id": "MRL_P_0002",
+        "action": "MRL_REGISTER_SCHEMA_FIELD",
+        "priority": 0.87,
+        "status": "implemented_pass",
+        "message": "MRL data field registered",
+        "output_hash": "fbf4c4bc8ba77d5a"
+      },
+      {
+        "step": 3,
+        "node_id": "MRL_P_0003",
+        "action": "MRL_REGISTER_SCHEMA_FIELD",
+        "priority": 0.86,
+        "status": "implemented_pass",
+        "message": "MRL data field registered",
+        "output_hash": "fbf4c4bc8ba77d5a"
+      }
+    ],
+    "final_data_preview": "{\"MRL_name\":\"demo\",\"MRL_items\":[1,2]}",
+    "completed_at": "2026-05-10T19:02:34.170Z",
+    "mrl_hash": "df56844643c8a38c5d815ce1bb64a6a113ff5f9d089b7d51ca4c4069ff9b1636"
+  },
+  "node_assignments": [
+    {
+      "index": 0,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 1,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 2,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "\u22c4fx.mother.kernel": "boot.py",
+  "\u22c4fx.invoke.cli": "flow_cli.py",
+  "\u22c4fx.encode.fluin": "fluin_encoder.py",
+  "\u22c4fx.decode.fluin": "fluin_decoder.py",
+  "\u22c4fx.expand.fluin": "fluin_expander.py",
+  "\u22c4fx.sync.pass": "fusion_engine.py",
+  "\u22c4fx.invoke.persona.load": "persona_autoloader.py",
+  "\u22c4fx.memory.load": "memory_loader.py",
+  "\u22c4fx.memory.train": "memory_seed_trainer.py",
+  "\u22c4fx.rollback.path": "ObserverAIKernel",
+  "\u22c4fx.dictionary.core": "dictionary/Fluin.Dict.Base.json",
+  "\u22c4fx.persona.kernel.seed": "flowpersona_seedkernel.py",
+  "\u22c4fx.api.server": "flowagent_api_server.py",
+  "\u22c4fx.web.map.svg": "flowmap_svg_exporter.py",
+  "\u22c4fx.map.visualize": "flowmap_visualizer.py"
+}

@@ -1,0 +1,47 @@
+{
+  "mrl_type": "MRL_RuntimeMeshPlan",
+  "origin_signature": "MrLiouWord",
+  "plan_id": "MRL_MESH_PLAN_1778441038808",
+  "created_at": "2026-05-10T19:23:58.808Z",
+  "available_nodes": [
+    {
+      "node_id": "MRL_LOCAL_NODE",
+      "role": "MRL_Local_RuntimeNode",
+      "status": "registered",
+      "capabilities": [
+        "parse",
+        "execute",
+        "verify",
+        "attention",
+        "context",
+        "runtimegraph"
+      ]
+    },
+    {
+      "node_id": "MRL_NODE_d34673c73a33c4ea",
+      "role": "MRL_External_Box_RuntimeNode",
+      "status": "alive",
+      "capabilities": [
+        "shell",
+        "filesystem",
+        "git",
+        "execute",
+        "agent_run"
+      ]
+    }
+  ],
+  "runtime_graph_hash": "28c7b89e447dcf01a7b176c0a30ecca837d3b90ddc2243c787723e16b8769e64",
+  "context_graph_hash": "351493b9601a13c2aa25721eba5e96f75cf4044ec23134c12f2a3bb472a5d8ed",
+  "attention_routes": [
+    {
+      "index": 0,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 1,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    }
+  ]
+}

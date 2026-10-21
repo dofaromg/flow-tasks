@@ -1,0 +1,117 @@
+{
+  "mrl_ir_type": "MRL_MetaIR",
+  "version": "v1.2.0",
+  "origin_signature": "MrLiouWord",
+  "source_identity": {
+    "filename": "acceptance.json",
+    "language": "JSON",
+    "detected": "json",
+    "source_hash": "13a3b7b990ac3f5d049667b3de5cd4ef4689a2d814b58fc3d6b7533f66589585"
+  },
+  "syntax_tree": {
+    "language": "JSON",
+    "nodes": [
+      {
+        "kind": "json_field",
+        "name": "root.MRL_name",
+        "value_type": "string"
+      },
+      {
+        "kind": "json_field",
+        "name": "root.MRL_items",
+        "value_type": "array"
+      },
+      {
+        "kind": "json_field",
+        "name": "root.MRL_items",
+        "value_type": "array",
+        "length": 2
+      }
+    ],
+    "tokens": [
+      "MRL_name",
+      "MRL_items"
+    ]
+  },
+  "semantic_intent": {
+    "intents": [
+      "MRL_INTENT_GENERAL_PARSE"
+    ],
+    "summary": "MRL_INTENT_GENERAL_PARSE",
+    "node_count": 3,
+    "language": "JSON"
+  },
+  "particle_atoms": [
+    {
+      "atom_id": "MRL_P_0001",
+      "atom_type": "MRL_DataFieldParticle",
+      "simhash_seed": "3ad25b3c2273ea14",
+      "semantic": "root.MRL_name"
+    },
+    {
+      "atom_id": "MRL_P_0002",
+      "atom_type": "MRL_DataFieldParticle",
+      "simhash_seed": "01609deda5f7bd42",
+      "semantic": "root.MRL_items"
+    },
+    {
+      "atom_id": "MRL_P_0003",
+      "atom_type": "MRL_DataFieldParticle",
+      "simhash_seed": "78f3bcc2349e6d02",
+      "semantic": "root.MRL_items"
+    }
+  ],
+  "context_relations": [
+    {
+      "relation_id": "MRL_CTX_1",
+      "from": "root.MRL_name",
+      "to": "root.MRL_items",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    },
+    {
+      "relation_id": "MRL_CTX_2",
+      "from": "root.MRL_items",
+      "to": "root.MRL_items",
+      "relation": "MRL_SOURCE_SEQUENCE",
+      "weight": 1
+    }
+  ],
+  "runtime_plan": [
+    {
+      "step": 1,
+      "action": "MRL_REGISTER_SCHEMA_FIELD",
+      "target": "root.MRL_name",
+      "node_kind": "json_field"
+    },
+    {
+      "step": 2,
+      "action": "MRL_REGISTER_SCHEMA_FIELD",
+      "target": "root.MRL_items",
+      "node_kind": "json_field"
+    },
+    {
+      "step": 3,
+      "action": "MRL_REGISTER_SCHEMA_FIELD",
+      "target": "root.MRL_items",
+      "node_kind": "json_field"
+    }
+  ],
+  "verification_plan": [
+    "MRL_ROUNDTRIP",
+    "MRL_HASH",
+    "MRL_PARTICLE_INTEGRITY",
+    "MRL_CONTEXT_GRAPH",
+    "MRL_RUNTIME_GRAPH"
+  ],
+  "output_artifact": {
+    "expected": [
+      "MRL_MetaIR_Record",
+      "MRL_ParticleIR_Record",
+      "MRL_RuntimeGraph_Record",
+      "MRL_Verification_Report"
+    ]
+  },
+  "created_at": "2026-05-10T19:23:58.801Z",
+  "mrl_hash": "2dfdfde94296284ab67b71ad78b2f32546d69a539e39b064e871186430f6127b"
+}

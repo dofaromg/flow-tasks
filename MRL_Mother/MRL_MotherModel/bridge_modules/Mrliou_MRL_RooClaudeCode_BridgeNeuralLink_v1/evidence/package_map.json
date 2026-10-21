@@ -1,0 +1,175 @@
+{
+  "schema": "MRL_PackageMap_v1",
+  "module_id": "Mrliou_MRL_RooClaudeCode_BridgeNeuralLink_v1",
+  "generated_utc": "2026-06-28T12:58:00Z",
+  "npm_packages": {
+    "socket.io-client": {
+      "version": "^4.0.0",
+      "latest_stable": "4.7.2",
+      "type": "production",
+      "required": true,
+      "install_command": "npm install socket.io-client@^4.0.0",
+      "components": [
+        "SocketTransport",
+        "BaseChannel"
+      ],
+      "usage": "WebSocket client library for real-time bidirectional event-based communication",
+      "imports": [
+        "import { type Socket } from 'socket.io-client'"
+      ],
+      "features_used": [
+        "Socket connection management",
+        "Event emission and listening",
+        "Automatic reconnection",
+        "Error handling"
+      ],
+      "notes": "Must be version 4.x for compatibility with Socket.IO 4.x server"
+    },
+    "@roo-code/types": {
+      "version": "*",
+      "type": "production",
+      "required": true,
+      "install_command": "npm install @roo-code/types",
+      "components": [
+        "BaseChannel",
+        "TaskChannel"
+      ],
+      "usage": "Type definitions for Roo Code / Claude Code extension bridge",
+      "imports": [
+        "import type { StaticAppProperties, GitProperties } from '@roo-code/types'"
+      ],
+      "types_used": [
+        "StaticAppProperties",
+        "GitProperties"
+      ],
+      "notes": "Provides TypeScript type safety for application properties and git configuration"
+    },
+    "vscode": {
+      "version": "*",
+      "type": "optional",
+      "required": false,
+      "install_command": "npm install vscode",
+      "components": [
+        "BaseChannel"
+      ],
+      "usage": "VSCode extension API for command execution",
+      "imports": [
+        "import * as vscode from 'vscode'"
+      ],
+      "apis_used": [
+        "vscode.commands.executeCommand"
+      ],
+      "fallback": "Can be mocked in non-VSCode environments",
+      "notes": "Only required when running within VSCode extension context"
+    }
+  },
+  "package_installation": {
+    "method": "npm install",
+    "location": "Module root directory",
+    "package_json_required": true,
+    "lock_file_recommended": "package-lock.json",
+    "installation_steps": [
+      "1. Navigate to module directory: D:\\MRL_Mother\\bridge_modules\\Mrliou_MRL_RooClaudeCode_BridgeNeuralLink_v1",
+      "2. Create or verify package.json exists",
+      "3. Run: npm install",
+      "4. Verify: npm list"
+    ]
+  },
+  "package_json_template": {
+    "name": "@mrliouword/mrl-roo-claude-bridge",
+    "version": "1.0.0",
+    "description": "MRL Bridge Neural Link for VSCode Extension ↔ Web App ↔ DL580 Communication",
+    "main": "src/index.ts",
+    "type": "module",
+    "scripts": {
+      "build": "tsc",
+      "test": "jest",
+      "verify": "node -e \"require('./src/index.ts')\""
+    },
+    "dependencies": {
+      "socket.io-client": "^4.0.0",
+      "@roo-code/types": "*"
+    },
+    "optionalDependencies": {
+      "vscode": "*"
+    },
+    "devDependencies": {
+      "typescript": "^5.0.0",
+      "@types/node": "^20.0.0"
+    }
+  },
+  "dependency_resolution": {
+    "resolved_packages": 2,
+    "unresolved_packages": 0,
+    "conflicts": [],
+    "warnings": [
+      "vscode package is optional - can fail gracefully in non-extension environments"
+    ]
+  },
+  "installation_verification": {
+    "check_commands": [
+      "npm list socket.io-client",
+      "npm list @roo-code/types",
+      "npm list vscode"
+    ],
+    "verification_script": "node -e \"console.log('Dependencies:', Object.keys(require('./package.json').dependencies))\"",
+    "expected_output": "socket.io-client, @roo-code/types"
+  },
+  "version_compatibility": {
+    "node_js": {
+      "minimum": "18.0.0",
+      "recommended": "20.0.0",
+      "tested": "20.10.0"
+    },
+    "npm": {
+      "minimum": "9.0.0",
+      "recommended": "10.0.0"
+    },
+    "typescript": {
+      "minimum": "4.7.0",
+      "recommended": "5.0.0"
+    }
+  },
+  "platform_specific_notes": {
+    "windows_dl580": {
+      "platform": "Windows Server",
+      "nodejs_distribution": "Use Official Node.js MSI installer",
+      "npm_path": "C:\\Program Files\\nodejs\\npm.cmd",
+      "package_location": "D:\\MRL_Mother\\bridge_modules\\Mrliou_MRL_RooClaudeCode_BridgeNeuralLink_v1"
+    }
+  },
+  "npm_audit": {
+    "status": "pending",
+    "command": "npm audit",
+    "notes": "Run after npm install to check for vulnerabilities"
+  },
+  "lock_file": {
+    "type": "package-lock.json",
+    "recommended": true,
+    "purpose": "Ensure reproducible builds and consistent dependency versions across environments"
+  },
+  "dependency_update_strategy": {
+    "socket.io-client": {
+      "strategy": "minor updates allowed",
+      "constraint": "^4.0.0",
+      "rationale": "Socket.IO 4.x protocol compatibility required"
+    },
+    "@roo-code/types": {
+      "strategy": "any version",
+      "constraint": "*",
+      "rationale": "Types should remain compatible across versions"
+    },
+    "vscode": {
+      "strategy": "any version",
+      "constraint": "*",
+      "rationale": "VSCode API surface is stable"
+    }
+  },
+  "summary": {
+    "total_packages": 3,
+    "required_packages": 2,
+    "optional_packages": 1,
+    "all_resolved": true,
+    "ready_for_deployment": true
+  }
+}

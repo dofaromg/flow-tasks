@@ -1,0 +1,225 @@
+version: '3.8'
+
+# Docker Compose for Particle Satellite Network
+# 粒子AI未來星鏈平行粒子雲網路 - Docker 編排
+
+services:
+  # GEO Layer - 語場核心層
+  geo-layer:
+    build:
+      context: ..
+      dockerfile: particle_satellite_network/docker/Dockerfile.worker
+    container_name: particle-geo-001
+    environment:
+      - LAYER_TYPE=GEO
+      - ORBIT_ALTITUDE=35786
+      - SATELLITE_ID=geo-001
+      - LONGITUDE=0.0
+    volumes:
+      - ../particle_satellite_network:/app/particle_satellite_network:ro
+      - ../particle_core:/app/particle_core:ro
+      - geo-data:/app/data
+    networks:
+      - satellite-network
+    restart: unless-stopped
+    
+  # MEO Layer - 邏輯管道層 (3 instances)
+  meo-layer-1:
+    build:
+      context: ..
+      dockerfile: particle_satellite_network/docker/Dockerfile.worker
+    container_name: particle-meo-001
+    environment:
+      - LAYER_TYPE=MEO
+      - ORBIT_ALTITUDE=10000
+      - SATELLITE_ID=meo-001
+      - REGION=asia-pacific
+    volumes:
+      - ../particle_satellite_network:/app/particle_satellite_network:ro
+      - ../particle_core:/app/particle_core:ro
+    networks:
+      - satellite-network
+    depends_on:
+      - geo-layer
+    restart: unless-stopped
+      
+  meo-layer-2:
+    build:
+      context: ..
+      dockerfile: particle_satellite_network/docker/Dockerfile.worker
+    container_name: particle-meo-002
+    environment:
+      - LAYER_TYPE=MEO
+      - ORBIT_ALTITUDE=10000
+      - SATELLITE_ID=meo-002
+      - REGION=europe
+    volumes:
+      - ../particle_satellite_network:/app/particle_satellite_network:ro
+      - ../particle_core:/app/particle_core:ro
+    networks:
+      - satellite-network
+    depends_on:
+      - geo-layer
+    restart: unless-stopped
+      
+  meo-layer-3:
+    build:
+      context: ..
+      dockerfile: particle_satellite_network/docker/Dockerfile.worker
+    container_name: particle-meo-003
+    environment:
+      - LAYER_TYPE=MEO
+      - ORBIT_ALTITUDE=10000
+      - SATELLITE_ID=meo-003
+      - REGION=americas
+    volumes:
+      - ../particle_satellite_network:/app/particle_satellite_network:ro
+      - ../particle_core:/app/particle_core:ro
+    networks:
+      - satellite-network
+    depends_on:
+      - geo-layer
+    restart: unless-stopped
+      
+  # LEO Layer - 粒子執行層 (3 instances for demo)
+  leo-layer-1:
+    build:
+      context: ..
+      dockerfile: particle_satellite_network/docker/Dockerfile.worker
+    container_name: particle-leo-001
+    environment:
+      - LAYER_TYPE=LEO
+      - ORBIT_ALTITUDE=1000
+      - SATELLITE_ID=leo-001
+      - POSITION=120.0,35.0,1000.0
+    volumes:
+      - ../particle_satellite_network:/app/particle_satellite_network:ro
+      - ../particle_core:/app/particle_core:ro
+    networks:
+      - satellite-network
+    depends_on:
+      - meo-layer-1
+      - meo-layer-2
+      - meo-layer-3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+      
+  leo-layer-2:
+    build:
+      context: ..
+      dockerfile: particle_satellite_network/docker/Dockerfile.worker
+    container_name: particle-leo-002
+    environment:
+      - LAYER_TYPE=LEO
+      - ORBIT_ALTITUDE=1000
+      - SATELLITE_ID=leo-002
+      - POSITION=122.0,35.0,1000.0
+    volumes:
+      - ../particle_satellite_network:/app/particle_satellite_network:ro
+      - ../particle_core:/app/particle_core:ro
+    networks:
+      - satellite-network
+    depends_on:
+      - meo-layer-1
+      - meo-layer-2
+      - meo-layer-3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+      
+  leo-layer-3:
+    build:
+      context: ..
+      dockerfile: particle_satellite_network/docker/Dockerfile.worker
+    container_name: particle-leo-003
+    environment:
+      - LAYER_TYPE=LEO
+      - ORBIT_ALTITUDE=1000
+      - SATELLITE_ID=leo-003
+      - POSITION=124.0,35.0,1000.0
+    volumes:
+      - ../particle_satellite_network:/app/particle_satellite_network:ro
+      - ../particle_core:/app/particle_core:ro
+    networks:
+      - satellite-network
+    depends_on:
+      - meo-layer-1
+      - meo-layer-2
+      - meo-layer-3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+      
+  # Ground Layer - 地面介面層
+  ground-layer:
+    build:
+      context: ..
+      dockerfile: particle_satellite_network/docker/Dockerfile.worker
+    container_name: particle-ground-001
+    environment:
+      - LAYER_TYPE=GROUND
+      - STATION_ID=gs-tokyo
+      - LOCATION=139.6917,35.6895
+    volumes:
+      - ../particle_satellite_network:/app/particle_satellite_network:ro
+      - ../particle_core:/app/particle_core:ro
+    networks:
+      - satellite-network
+    depends_on:
+      - leo-layer-1
+      - leo-layer-2
+      - leo-layer-3
+    restart: unless-stopped
+      
+  # MongoDB (數據持久化)
+  mongodb:
+    image: mongo:6.0
+    container_name: particle-mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=particlenetwork2024
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - satellite-network
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+      
+  # Redis (緩存與消息隊列)
+  redis:
+    image: redis:7-alpine
+    container_name: particle-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - satellite-network
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+networks:
+  satellite-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  geo-data:
+    driver: local
+  mongo-data:
+    driver: local
+  redis-data:
+    driver: local

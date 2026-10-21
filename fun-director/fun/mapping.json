@@ -1,0 +1,70 @@
+{
+  "version": "1.0.0",
+  "description": "情緒向量（comfort/humor/thrill/power）到參數的映射規則",
+  "emotionVectors": {
+    "comfort": {
+      "description": "舒適感 — 低壓力、打擊感舒服",
+      "params": {
+        "hitStop_intensity": 0.5,
+        "shake_amplitude": 4,
+        "knockback_force": 200
+      }
+    },
+    "humor": {
+      "description": "幽默感 — 失控搞笑、越亂越好",
+      "params": {
+        "ragdoll_loose": 0.9,
+        "chain_count": 5,
+        "laugh_factor": 2.0
+      }
+    },
+    "thrill": {
+      "description": "刺激感 — 節奏緊張、爆點密集",
+      "params": {
+        "hitStop_intensity": 1.5,
+        "shake_amplitude": 20,
+        "knockback_force": 800
+      }
+    },
+    "power": {
+      "description": "力量感 — 每一擊都震天動地",
+      "params": {
+        "hitStop_intensity": 2.0,
+        "shake_amplitude": 30,
+        "knockback_force": 1200
+      }
+    }
+  },
+  "personaPresets": {
+    "HYPE": {
+      "description": "炒熱者：全場爆炸，所有參數拉滿",
+      "funIntensity": 1.5,
+      "chaos": 1.0,
+      "vfxScale": 1.5,
+      "sfxPunch": 1.5,
+      "slowMo": true
+    },
+    "PRANK": {
+      "description": "惡作劇者：亂度最高，搞笑失控",
+      "funIntensity": 1.2,
+      "chaos": 1.8,
+      "vfxScale": 1.0,
+      "sfxPunch": 1.0,
+      "slowMo": false
+    },
+    "SPOOKY": {
+      "description": "驚恐者：緊繃刺激，意外爆點",
+      "funIntensity": 1.0,
+      "chaos": 0.7,
+      "vfxScale": 1.2,
+      "sfxPunch": 0.8,
+      "slowMo": true
+    }
+  },
+  "compressionScales": {
+    "_note": "預留欄位：前端依裝置類型傳入 compressionScale，Director 可據此調整 vfxScale / fragments / chain_count（v1.1 實作）",
+    "mobile":   { "vfxScale": 0.5,  "fragments": 4,  "chain_count": 2 },
+    "desktop":  { "vfxScale": 1.0,  "fragments": 12, "chain_count": 3 },
+    "showcase": { "vfxScale": 2.5,  "fragments": 30, "chain_count": 6 }
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "schema": "MRL_Return_Model",
+  "origin_signature": "MrLiouWord",
+  "generated_utc": "2026-06-12T22:16:00.000000+00:00",
+  "audit_phase": "Part_B / Phase_B02",
+  "return_law": "怎麼過去就怎麼回來",
+  "closure_law": "Return→Origin (MRL.COUPLE.CLOSURE)",
+  "source_ref": "MRL_Trace_Model::ReturnTrace×14 + MRL_ReturnPath_Registry",
+  "returns": [
+    {
+      "Return_ID": "RET.00",
+      "Return_Path": "Reality→Origin→SeedKernel→…→Return→Origin",
+      "Return_Type": "full_mainline_return",
+      "Return_Evidence": "TRC.RETURN.00",
+      "Return_Source": "MRL_ReturnPath_Registry",
+      "Return_Target_Node": "MRL.NODE.01.Origin",
+      "Return_From_Node": "MRL.NODE.00.Reality",
+      "Return_Hops": 14,
+      "Return_Note": "boundary_in node; traverses full mainline before returning"
+    },
+    {
+      "Return_ID": "RET.01",
+      "Return_Path": "Origin→SeedKernel→…→Return→Origin",
+      "Return_Type": "full_mainline_return",
+      "Return_Evidence": "TRC.RETURN.01",
+      "Return_Source": "MRL_ReturnPath_Registry",
+      "Return_Target_Node": "MRL.NODE.01.Origin",
+      "Return_From_Node": "MRL.NODE.01.Origin",
+      "Return_Hops": 13,
+      "Return_Note": "Origin is both start and closure target; identity loop via mainline"
+    },
+    {
+      "Return_ID": "RET.02",
+      "Return_Path": "SeedKernel→PreParticle→Particle→Signal→Field→Persona→Memory→Globe→World→Runtime→Mother→Return→Origin",
+      "Return_Type": "partial_mainline_return",
+      "Return_Evidence": "TRC.RETURN.02",
+      "Return_Source": "MRL_ReturnPath_Registry",
+      "Return_Target_Node": "MRL.NODE.01.Origin",
+      "Return_From_Node": "MRL.NODE.02.SeedKernel",
+      "Return_Hops": 12
+    },
+    {
+      "Return_ID": "RET.03",
+      "Return_Path": "PreParticle→Particle→Signal→Field→Persona→Memory→Globe→World→Runtime→Mother→Return→Origin",
+      "Return_Type": "partial_mainline_return",
+      "Return_Evidence": "TRC.RETURN.03",
+      "Return_Source": "MRL_ReturnPath_Registry",
+      "Return_Target_Node": "MRL.NODE.01.Origin",
+      "Return_From_Node": "MRL.NODE.03.PreParticle",
+      "Return_Hops": 11
+    },
+    {
+      "Return_ID": "RET.04",
+      "Return_Path": "Particle→Signal→Field→Persona→Memory→Globe→World→Runtime→Mother→Return→Origin",
+      "Return_Type": "partial_mainline_return",
+      "Return_Evidence": "TRC.RETURN.04",
+      "Return_Source": "MRL_ReturnPath_Registry",
+      "Return_Target_Node": "MRL.NODE.01.Origin",
+      "Return_From_Node": "MRL.NODE.04.Particle",
+      "Return_Hops": 10
+    },
+    {
+      "Return_ID": "RET.05",
+      "Return_Path": "Signal→Field→Persona→Memory→Globe→World→Runtime→Mother→Return→Origin",
+      "Return_Type": "partial_mainline_return",
+      "Return_Evidence": "TRC.RETURN.05",
+      "Return_Source": "MRL_ReturnPath_Registry",
+      "Return_Target_Node": "MRL.NODE.01.Origin",
+      "Return_From_Node": "MRL.NODE.05.Signal",
+      "Return_Hops": 9
+    },
+    {
+      "Return_ID": "RET.06",
+      "Return_Path": "Field→Persona→Memory→Globe→World→Runtime→Mother→Return→Origin",
+      "Return_Type": "partial_mainline_return",
+      "Return_Evidence": "TRC.RETURN.06",
+      "Return_Source": "MRL_ReturnPath_Registry",
+      "Return_Target_Node": "MRL.NODE.01.Origin",
+      "Return_From_Node": "MRL.NODE.06.Field",
+      "Return_Hops": 8
+    },
+    {
+      "Return_ID": "RET.07",
+      "Return_Path": "Persona→Memory→Globe→World→Runtime→Mother→Return→Origin",
+      "Return_Type": "partial_mainline_return",
+      "Return_Evidence": "TRC.RETURN.07",
+      "Return_Source": "MRL_ReturnPath_Registry",
+      "Return_Target_Node": "MRL.NODE.01.Origin",
+      "Return_From_Node": "MRL.NODE.07.Persona",
+      "Return_Hops": 7
+    },
+    {
+      "Return_ID": "RET.08",
+      "Return_Path": "Memory→Globe→World→Runtime→Mother→Return→Origin",
+      "Return_Type": "partial_mainline_return",
+      "Return_Evidence": "TRC.RETURN.08",
+      "Return_Source": "MRL_ReturnPath_Registry",
+      "Return_Target_Node": "MRL.NODE.01.Origin",
+      "Return_From_Node": "MRL.NODE.08.Memory",
+      "Return_Hops": 6
+    },
+    {
+      "Return_ID": "RET.09",
+      "Return_Path": "Globe→World→Runtime→Mother→Return→Origin",
+      "Return_Type": "partial_mainline_return",
+      "Return_Evidence": "TRC.RETURN.09",
+      "Return_Source": "MRL_ReturnPath_Registry",
+      "Return_Target_Node": "MRL.NODE.01.Origin",
+      "Return_From_Node": "MRL.NODE.09.Globe",
+      "Return_Hops": 5
+    },
+    {
+      "Return_ID": "RET.10",
+      "Return_Path": "World→Runtime→Mother→Return→Origin",
+      "Return_Type": "partial_mainline_return",
+      "Return_Evidence": "TRC.RETURN.10",
+      "Return_Source": "MRL_ReturnPath_Registry",
+      "Return_Target_Node": "MRL.NODE.01.Origin",
+      "Return_From_Node": "MRL.NODE.10.World",
+      "Return_Hops": 4
+    },
+    {
+      "Return_ID": "RET.11",
+      "Return_Path": "Runtime→Mother→Return→Origin",
+      "Return_Type": "partial_mainline_return",
+      "Return_Evidence": "TRC.RETURN.11",
+      "Return_Source": "MRL_ReturnPath_Registry",
+      "Return_Target_Node": "MRL.NODE.01.Origin",
+      "Return_From_Node": "MRL.NODE.11.Runtime",
+      "Return_Hops": 3
+    },
+    {
+      "Return_ID": "RET.12",
+      "Return_Path": "Mother→Return→Origin",
+      "Return_Type": "partial_mainline_return",
+      "Return_Evidence": "TRC.RETURN.12",
+      "Return_Source": "MRL_ReturnPath_Registry",
+      "Return_Target_Node": "MRL.NODE.01.Origin",
+      "Return_From_Node": "MRL.NODE.12.Mother",
+      "Return_Hops": 2
+    },
+    {
+      "Return_ID": "RET.13",
+      "Return_Path": "Return→Origin",
+      "Return_Type": "closure_return",
+      "Return_Evidence": "TRC.RETURN.13",
+      "Return_Source": "MRL.COUPLE.CLOSURE + TRC.UNIVERSAL.CLOSURE",
+      "Return_Target_Node": "MRL.NODE.01.Origin",
+      "Return_From_Node": "MRL.NODE.13.Return",
+      "Return_Hops": 1,
+      "Return_Note": "closure node; 1-hop direct to Origin via MRL.COUPLE.CLOSURE"
+    }
+  ],
+  "return_count": 14,
+  "return_type_summary": {
+    "full_mainline_return": 2,
+    "partial_mainline_return": 11,
+    "closure_return": 1
+  },
+  "universal_target": "MRL.NODE.01.Origin",
+  "all_nodes_have_return_path": true
+}

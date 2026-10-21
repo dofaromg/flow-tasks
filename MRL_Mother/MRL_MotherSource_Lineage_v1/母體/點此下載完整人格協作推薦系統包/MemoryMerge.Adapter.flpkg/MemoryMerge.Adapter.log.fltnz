@@ -1,0 +1,4 @@
+::persona:: MemoryMerge.Adapter
+::example:: 將兩份記憶中相似節點自動比對、標記、重組排序
+::example:: 標註差異性與融合程度（比對分數）
+::example:: 生成 `.fltnz` 節奏記憶融合報告檔

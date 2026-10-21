@@ -1,0 +1,8 @@
+# MRL 母體容器 — origin_signature: MrLiouWord
+FROM python:3.11-slim
+WORKDIR /app
+COPY . /app
+ENV MRL_PORT=8790
+ENV MRL_PLATFORM_DOMAIN=mrliouword.com
+EXPOSE 8790
+CMD ["python3", "MRL_Platform_Server.py"]

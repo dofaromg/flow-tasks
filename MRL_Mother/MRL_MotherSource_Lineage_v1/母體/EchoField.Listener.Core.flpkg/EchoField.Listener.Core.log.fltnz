@@ -1,0 +1,4 @@
+::persona:: EchoField.Listener.Core
+::example:: 掃描人格模組語場，偵測語意與回音失衡
+::example:: 分析共振節點過載／短頻／遺漏區域
+::example:: 可與 WebNet.Observer 聯動顯示聲場圖譜

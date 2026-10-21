@@ -1,0 +1,159 @@
+MRL_Branch_05_BaseWorld_DB_v1_MAINLINE_BACKFILL
+origin_signature: MrLiouWord
+⽇期: 2026-04-02
+回填分⽀: MRL_Branch_05_BaseWorld_DB_v1
+回填性質: schema-level 正式完成 + runtime-level 待驗證
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+追加段落 1/3：給 MRL_⼯程⽇誌.md
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2026-04-02｜批次 008
+本輪定錨
+Branch B｜MRL_Branch_05_BaseWorld_DB_v1 schema-level 驗收完成，執⾏主線回填。
+本輪吸收檔案
+MRL_BaseWorld_DB_v1_Dockerfile
+docker-compose.mrl-baseworld.yml
+.env.mrl-baseworld.example
+initdb/00_MRL_BaseWorld_DB_v1.sql
+initdb/01_MRL_BaseWorld_DB_v1_Init.sql
+initdb/02_MRL_FLTNZ_Asset_Seed_Insert_v1.sql
+MRL_BaseWorld_DB_v1_Healthcheck.sh
+MRL_BaseWorld_DB_v1_Backup.sh
+MRL_BaseWorld_DB_v1_Deploy_DL580.md
+本輪核⼼吸收內容
+補上 MRL_BaseWorld_DB_v1 作為⺟體 canonical database 之 schema-level 正式定義
+補上三基層（MRL_Origin / MRL_State / MRL_Projection）在資料庫中的正式表結構補上 MRL_ControlCenter + MRL_World_Module 表結構
+補上粒⼦崩塌引擎五⼤核⼼表（persona / memory / particle / jump_point / stasis）
+補上雙通⾏證系統表結構（passport_system / passport_user）
+補上 MetaEnv 六表（metaenv / policy / snapshot / channel_map / lockdown_log / backtrace_log）
+補上 Closure Law / FX Registry / FLTNZ Asset / Relation 四表
+補上 27 tables + 8 indexes schema 驗證通過
+補上 9 FLTNZ 資產種⼦ + 3 Relations 之 seed insert
+補上 ROOT origin_signature = MrLiouWord 初始化
+補上部署⽬標為 DL580 canonical，Cloudflare 僅作未來 mirror
+本輪粒⼦封包判定
+1. Packet: BaseWorld.DB.Schema.v1
+type: Database / Schema / Structure
+support: 27 tables + 8 indexes，涵蓋三基層、控制中⼼、崩塌引擎、通⾏證、MetaEnv、審計、
+FX、FLTNZ
+status: schema-level-formal
+2. Packet: BaseWorld.DB.Seed.v1
+type: Seed / Init / Asset
+support: ROOT 記錄 + 3 Closure Laws + 17 FX + 5 世界模組 + 5 顯化分⽀ + 9 FLTNZ assets + 3
+relations
+status: schema-level-formal
+3. Packet: BaseWorld.DB.Deploy.DL580.v1
+type: Deploy / Container / Ops
+support: Dockerfile + compose + env + healthcheck + backup + README
+status: schema-level-formal
+更新到哪些主⽂件
+MRL_⺟體定義檔_v1：新增 BaseWorld DB 定義章節
+MRL_世界模組⼯程書_v1：新增 BaseWorld DB 與世界模組的承載關係
+待驗證
+DL580 端 runtime-level 實際部署執⾏docker compose up 後 27 tables / 8 indexes 實際查詢確認
+9 FLTNZ assets + 3 relations 實際查詢確認
+healthcheck 實際運⾏確認
+backup script 實際運⾏確認
+asset_hash = pending
+state_hash = pending
+不回填
+runtime-level 執⾏驗證（尚未在 DL580 實際執⾏）
+Cloudflare mirror 機制（本次不建）
+D1 / Workers 主寫入（本次不做）
+缺⼝／模糊點
+schema-level 已完成，但 runtime-level 執⾏驗證待 DL580 端確認
+asset_hash / state_hash 待 runtime 補上
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+追加段落 2/3：給 MRL_⺟體定義檔_v1.md
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⼆⼗⼀、MRL_BaseWorld_DB_v1 Canonical Mother Database
+MRL_BaseWorld_DB_v1 為⺟體之 canonical database schema 定義。 部署⽬標為 DL580 本機，
+Cloudflare 僅作未來 mirror / API edge，不作主庫。
+21.1 三基層表結構
+三基層已正式建立對應 schema：
+mrl_origin：起源層，存放所有源、種⼦、封存記憶、可逆回推起點
+mrl_state：現⾏狀態層，承載當前被觀測、被執⾏、被交互的世界狀態
+mrl_projection：投影⽣成層，承載未顯化、待⽣成、可分⽀的未來狀態
+21.2 控制中⼼與世界模組表結構
+mrl_control_center：唯⼀合法入⼝註冊表
+mrl_world_module：世界模組表，強制包含 entry / structure / interaction / data_flow / execution
+21.3 粒⼦崩塌引擎核⼼表mrl_persona：⼈格紀錄
+mrl_memory：記憶體（.fltnz 格式）
+mrl_particle：粒⼦
+mrl_jump_point：節奏跳點
+mrl_stasis：靜⽌態
+21.4 簽名與通⾏證表
+mrl_signature：簽名紀錄
+mrl_passport_system：系統通⾏證
+mrl_passport_user：⽤⼾通⾏證
+21.5 壓縮、掃描、MetaEnv、審計、註冊表
+schema 已建立但尚未 runtime-level 驗證的表：
+mrl_seed / mrl_scan_session / mrl_metaenv / mrl_policy / mrl_snapshot / mrl_channel_map /
+mrl_lockdown_log / mrl_backtrace_log / mrl_dimension_sync / mrl_audit_log / mrl_closure_law /
+mrl_fx_registry / mrl_fltnz_asset / mrl_relation
+21.6 統計與驗收
+Tables: 27（schema-level 已建立）
+Indexes: 8（schema-level 已建立）
+FLTNZ Assets: 9（seed insert SQL 已寫入）
+Relations: 3（seed insert SQL 已寫入）
+ROOT origin_signature: MrLiouWord（init SQL 已寫入）
+Closure Law: 3 條全部 enforced = TRUE（init SQL 已寫入）
+21.7 狀態聲明
+schema-level： 正式完成
+runtime-level： 執⾏驗證待補（DL580 端 docker compose up 後確認）
+asset_hash：pending
+state_hash：pending
+21.8 回填來源
+回填分⽀：MRL_Branch_05_BaseWorld_DB_v1
+回填性質：schema-level 正式完成 + runtime-level 待驗證限制：不得寫成 runtime-level 已全數落地
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+追加段落 3/3：給 MRL_世界模組⼯程書_v1.md
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BaseWorld DB 與世界模組承載層
+定位
+MRL_BaseWorld_DB_v1 為世界模組之 canonical database 承載層。 它不是世界模組本體，但它是世界模
+組中所有結構、粒⼦、⼈格、記憶、簽名、MetaEnv 狀態的持久化存放層。
+三基層表對應
+世界模組之三基層已正式對應到資料庫表結構：
+MRL_Origin → mrl_origin 表
+MRL_State → mrl_state 表
+MRL_Projection → mrl_projection 表 所有世界模組資料必須歸屬三基層之⼀，在資料庫層以 origin_id
+/ state_id 關聯確保。
+控制中⼼註冊
+MRL_ControlCenter 在資料庫中對應 mrl_control_center 表。 所有世界模組必須透過 mrl_world_module
+表註冊，並透過 control_id 關聯到控制中⼼。 ⽬前已註冊的世界模組：
+MRL_World_Workbench
+MRL_World_Chat
+MRL_World_Knowledge
+MRL_World_Research
+MRL_World_SystemAssist
+FLTNZ 資產對應
+9 個 FLTNZ 資產種⼦已寫入 mrl_fltnz_asset 表，涵蓋：
+粒⼦崩塌引擎、推理引擎規格、⺟體進度對⿑、主控中⼼⺟法、雙通⾏證系統、MetaEnv 控制、七層架
+構、知識橋接終端、BaseWorld DB ⾃⾝
+Relation 對應
+3 個 canonical relations 已寫入 mrl_relation 表：
+1. 粒⼦崩塌引擎 → 推理引擎（引擎依賴）2. 主控中⼼⺟法 → BaseWorld DB（法律約束）
+3. 雙通⾏證 → MetaEnv 控制（安全授權）
+⺟體記憶球最⼩實體
+資料庫中已存在以下最⼩實體（schema-level）：
+ROOT 紀錄（mrl_origin）
+Closure Law 三條（mrl_closure_law）
+Canon 配置（mrl_control_center + mrl_world_module）
+FLTNZ 資產 9 筆（mrl_fltnz_asset）
+Mother Memory Sphere 表結構（mrl_memory + mrl_persona）
+Mirror 狀態（mrl_metaenv env_dl580_canonical）
+Trace 表結構（mrl_audit_log + mrl_backtrace_log）
+Relation 3 筆（mrl_relation）
+狀態聲明
+schema-level： 正式完成
+runtime-level： 執⾏驗證待補（DL580 端 docker compose up 後確認）
+asset_hash：pending
+state_hash：pending
+部署約束
+DL580：canonical mother database
+Cloudflare：未來僅作 mirror / API edge / read replica
+寫入永遠回 DL580，Cloudflare 不承擔主寫入
+回填來源
+回填分⽀：MRL_Branch_05_BaseWorld_DB_v1
+回填性質：schema-level 正式完成 + runtime-level 待驗證
+限制：不得寫成 runtime-level 已全數落地，不得把 pending 寫成完成{"num_pages":6,"pages":[{"page_number":1,"image":{"path":"1.jpeg","dimensions":{"width":952,"height":1260},"media_type":"image/jpeg"},"text":{"path":"1.txt"},"has_visual_content":false,"page_uuid":"122f0c01-af70-4175-9483-37a97f410dd0"},{"page_number":2,"image":{"path":"2.jpeg","dimensions":{"width":952,"height":1260},"media_type":"image/jpeg"},"text":{"path":"2.txt"},"has_visual_content":false,"page_uuid":"1aaba5c7-d01a-46d9-a806-be901e797192"},{"page_number":3,"image":{"path":"3.jpeg","dimensions":{"width":952,"height":1260},"media_type":"image/jpeg"},"text":{"path":"3.txt"},"has_visual_content":false,"page_uuid":"2732419c-93ab-4b45-aa43-24cef37ccef1"},{"page_number":4,"image":{"path":"4.jpeg","dimensions":{"width":952,"height":1260},"media_type":"image/jpeg"},"text":{"path":"4.txt"},"has_visual_content":true,"page_uuid":"362eb1a5-d4ca-4106-911d-ad6de6537dbf"},{"page_number":5,"image":{"path":"5.jpeg","dimensions":{"width":952,"height":1260},"media_type":"image/jpeg"},"text":{"path":"5.txt"},"has_visual_content":false,"page_uuid":"3252c716-ac27-458f-b100-9960a693484e"},{"page_number":6,"image":{"path":"6.jpeg","dimensions":{"width":952,"height":1260},"media_type":"image/jpeg"},"text":{"path":"6.txt"},"has_visual_content":true,"page_uuid":"b1fc8ef0-5bd5-4333-996b-2af4c697fbe1"}]}

@@ -1,11 +1,39 @@
 # 對話知識提取器 (Conversation Knowledge Extractor)
 
 **作者**: MR.liou × Claude (empathetic.mirror)  
+**版本**: v1.1 (新增全格式導入支援)  
 **版本**: v1.0  
 **位置**: `particle_core/src/conversation_extractor.py`
 
 ## 概述
 
+對話知識提取器是一個強大的工具，用於分析、打包、導入和導出對話記錄。它能夠自動識別對話中的重點、邏輯結構和知識要點，並生成結構化的分析報告。**現已支援多種檔案格式的雙向轉換！**
+
+## 主要功能
+
+### 1. 對話打包、導入與導出 (Conversation Import/Export)
+
+**導出支援格式**：
+- **JSON**: 完整的數據結構，包含元數據和統計資訊
+- **Markdown**: 易讀的格式，適合文檔化
+- **純文字**: 簡潔的文字格式
+- **CSV**: 表格格式，適合數據分析
+- **XML**: 結構化標記語言
+- **YAML**: 人類友好的數據序列化格式
+
+**導入支援格式**：
+- **JSON**: 導入完整的對話包或訊息列表
+- **Markdown**: 自動解析 Markdown 格式的對話記錄
+- **純文字**: 支援多種文字對話格式（[USER]/[ASSISTANT]、User:/Assistant: 等）
+- **CSV**: 從 CSV 表格導入對話
+- **XML**: 導入 XML 格式的對話數據
+- **YAML**: 導入 YAML 格式的對話數據
+
+**特色功能**：
+- ✅ 自動檢測檔案格式（根據副檔名）
+- ✅ 支援多種文字對話格式
+- ✅ 完整保留元數據（支援格式：JSON, XML, YAML, Markdown）
+- ✅ 往返導出/導入測試通過
 對話知識提取器是一個強大的工具，用於分析、打包和導出對話記錄。它能夠自動識別對話中的重點、邏輯結構和知識要點，並生成結構化的分析報告。
 
 ## 主要功能
@@ -57,6 +85,18 @@
 - 邏輯結構分析
 - AI 深度分析（可選）
 
+### 6. 外部分析拆解去重蒸餾重組管道 (External Analysis Pipeline)
+
+新增一組零外部依賴的管道方法，用於持續加強「對外部資料分析 → 拆解 → 去重 → 蒸餾 → 重組」能力：
+
+- **統一外部匯入**：`ingest_external()` 支援 file、folder、repo、api/package、web_text/text。
+- **Canonical Schema**：`canonicalize_package()` 將每筆資料正規化為 `source`、`role`、`content`、`timestamp`、`metadata`、`hash`、`language`、`provenance`。
+- **Exact / Near Dedup**：`deduplicate_package()` 使用 normalized hash 與 Jaccard token similarity，合併重複來源但保留 provenance。normalized 內容會轉小寫以穩定比對，但原始 `content` 仍完整保留。
+- **結構拆解**：`decompose_package()` 產出 chunks、claims、entities、relationships、evidence、action items、decisions、contradictions。
+- **蒸餾洞察**：`distill_insights()` 將重複與長內容壓縮成 canonical insights，保留 source refs、confidence、conflicts。
+- **重組視圖**：`recompose_views()` 產出 summary、technical_analysis、action_plan、knowledge_graph、memory_seed。
+- **一鍵管道**：`process_external_analysis_pipeline()` 串接 ingest、deduplicate、decompose、distill、recompose。
+
 ## 快速開始
 
 ### 基本使用
@@ -99,6 +139,58 @@ extractor.export_to_file(package, "conversation.html", "html")
 extractor.export_to_file(package, "conversation.xml", "xml")
 ```
 
+### 導入對話
+
+**從檔案導入**（自動檢測格式）：
+
+```python
+from conversation_extractor import ConversationExtractor
+
+extractor = ConversationExtractor()
+
+# 自動檢測檔案格式並導入
+package = extractor.import_from_file("conversation.json")
+package = extractor.import_from_file("conversation.md")
+package = extractor.import_from_file("conversation.csv")
+
+# 導入後訪問訊息
+messages = package["messages"]
+metadata = package.get("metadata", {})
+```
+
+**指定格式導入**：
+
+```python
+# 明確指定格式
+package = extractor.import_from_file("my_file.txt", format="txt")
+package = extractor.import_from_file("data.xml", format="xml")
+```
+
+**支援的文字格式**：
+
+```python
+# 格式1: [USER] 和 [ASSISTANT]
+text1 = """
+[USER]
+這是用戶問題
+
+[ASSISTANT]
+這是助手回答
+"""
+
+# 格式2: User: 和 Assistant:
+text2 = """
+User: 這是用戶問題
+Assistant: 這是助手回答
+"""
+
+# 兩種格式都能正確解析
+with open("conversation.txt", "w") as f:
+    f.write(text1)
+
+package = extractor.import_from_file("conversation.txt")
+```
+
 ### 分析對話
 
 ```python
@@ -122,6 +214,40 @@ report = extractor.generate_report(conversation, include_ai_analysis=False)
 # 保存報告
 with open("analysis_report.md", "w", encoding="utf-8") as f:
     f.write(report)
+```
+
+### 外部分析管道
+
+```python
+from conversation_extractor import ConversationExtractor
+
+extractor = ConversationExtractor()
+
+# 匯入外部資料並轉成 canonical schema
+package = extractor.ingest_external(
+    "external_notes.txt",
+    source_type="file",
+    metadata={"source": "external_notes"},
+    trust_level="medium"
+)
+
+# 去重：保留 provenance，不直接刪除來源脈絡
+deduped = extractor.deduplicate_package(package, near_threshold=0.72)
+
+# 拆解：chunks / claims / evidence / action items / decisions / conflicts
+decomposition = extractor.decompose_package(deduped)
+
+# 蒸餾與重組
+distilled = extractor.distill_insights(deduped)
+views = extractor.recompose_views(deduped)
+
+# 或使用一鍵管道
+result = extractor.process_external_analysis_pipeline(
+    "external_notes.txt",
+    source_type="file"
+)
+summary = result["views"]["summary"]
+memory_seed = result["views"]["memory_seed"]
 ```
 
 ### 使用 AI 深度分析（需要 API Key）
@@ -183,6 +309,11 @@ python test_conversation_extractor.py
 - ✓ 邏輯結構提取
 - ✓ 報告生成
 - ✓ AI 分析（無 API key 測試）
+- ✓ Canonical schema、normalized hash、provenance
+- ✓ Exact / near dedup 與來源保留
+- ✓ 長文本拆解與 claims/evidence/action/decision/conflict 提取
+- ✓ 蒸餾洞察與重組視圖
+- ✓ 多格式資料夾匯入
 
 ## API 參考
 
@@ -241,6 +372,43 @@ python test_conversation_extractor.py
 - `include_ai_analysis`: 是否包含 AI 深度分析
 
 **返回**: Markdown 格式的報告字串
+
+#### `ingest_external(source, source_type: str = "auto", metadata: Dict = None, trust_level: str = "medium") -> Dict`
+
+統一匯入外部資料並轉為 canonical package。
+
+**支援來源**:
+- `file`: 單一檔案
+- `folder`: 資料夾遞迴匯入
+- `repo`: repo 工作樹資料匯入
+- `api` / `package`: API 回傳 dict/list 或既有 conversation package
+- `web_text` / `text`: 網頁或純文字內容
+
+#### `canonicalize_package(package: Dict, source: str = "conversation", trust_level: str = "medium") -> Dict`
+
+將訊息正規化並補上 canonical metadata、normalized content hash、language、provenance。
+
+#### `deduplicate_package(package: Dict, near_threshold: float = 0.72) -> Dict`
+
+使用 exact hash 與 near Jaccard similarity 去重；重複資料會合併到 `provenance` 與 `aliases`，避免遺失來源脈絡。
+
+預設 `near_threshold=0.72` 偏保守，用於降低不同短句被誤合併的風險；如需高召回清理大量重複資料，可依情境調低。
+
+#### `decompose_package(package: Dict, max_chunk_chars: int = 500) -> Dict`
+
+將內容拆解為 chunks、claims、entities、relationships、evidence、action items、decisions、contradictions。
+
+#### `distill_insights(package: Dict, max_insights: int = 10) -> Dict`
+
+將拆解結果蒸餾為 canonical insights，每個 insight 包含 confidence、source_refs、conflicts。
+
+#### `recompose_views(package: Dict) -> Dict`
+
+產出 summary、technical_analysis、action_plan、knowledge_graph、memory_seed 等多視圖。
+
+#### `process_external_analysis_pipeline(source, source_type: str = "auto", operations: List[str] = None, metadata: Dict = None, trust_level: str = "medium") -> Dict`
+
+一鍵串接 ingest → deduplicate → decompose → distill → recompose，可用 `operations` 指定執行步驟。
 
 ## 依賴項
 
@@ -326,6 +494,9 @@ pyyaml     # 用於 YAML 格式導出（可選，系統會自動降級）
 ## 未來改進方向
 
 - [ ] 支持更多導出格式（PDF、DOCX）
+- [x] 增加 canonical schema、normalized hash 與 provenance
+- [x] 增加 exact / near dedup
+- [x] 增加 claims、evidence、action items、decisions、contradictions 拆解
 - [ ] 增強關鍵詞提取算法（使用 TF-IDF 或 BERT）
 - [ ] 支持多輪對話的層次結構分析
 - [ ] 添加視覺化功能（知識圖譜、時間線）

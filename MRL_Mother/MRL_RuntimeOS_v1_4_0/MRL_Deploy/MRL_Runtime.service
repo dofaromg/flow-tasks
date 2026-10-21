@@ -1,0 +1,14 @@
+[Unit]
+Description=MRL Universal Runtime Language Core v1.2.0
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/MRL_UniversalRuntimeLanguage_Core_v1_2_0
+ExecStart=/usr/bin/node MRL_API/MRL_RuntimeServer.js
+Restart=always
+Environment=MRL_PORT=8788
+Environment=MRL_HOST=0.0.0.0
+Environment=MRL_AUTH_REQUIRED=false
+
+[Install]
+WantedBy=multi-user.target

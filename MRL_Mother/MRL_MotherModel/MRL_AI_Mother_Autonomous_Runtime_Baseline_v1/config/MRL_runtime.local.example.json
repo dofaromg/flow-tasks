@@ -1,0 +1,23 @@
+{
+  "schema": "MRL_AI_Mother_Runtime_Config_v1",
+  "runtime_id": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
+  "origin_signature": "MrLiouWord",
+  "data_dir": "./MRL_runtime_data",
+  "autonomy_policy": {
+    "local_model_required": true,
+    "external_model_endpoints_allowed": false,
+    "stub_counts_as_inference": false,
+    "loopback_gateway_only": true
+  },
+  "local_model": {
+    "backend": "ollama",
+    "endpoint": "http://127.0.0.1:11434",
+    "model": "MRL_LOCAL_MODEL_NOT_CONFIGURED",
+    "timeout_seconds": 120
+  },
+  "apiworks_gateway": {
+    "host": "127.0.0.1",
+    "port": 7811
+  }
+}
+

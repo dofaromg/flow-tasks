@@ -1,0 +1,6 @@
+{
+  "deliver_priority": "accuracy",
+  "explain_depth": "concise",
+  "inference_scope": "local",
+  "origin_signature": "MrLiouWord"
+}

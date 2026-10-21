@@ -1,0 +1,11 @@
+{
+  "id": "EchoField.Listener.Core",
+  "version": "v1.0",
+  "description": "\u8072\u5834\u7bc0\u594f\u611f\u77e5\u6a21\u7d44\uff1a\u53ef\u611f\u61c9\u8a9e\u5834\u5167\u90e8\u5171\u9cf4\u7bc0\u594f\u3001\u97f3\u983b\u8b8a\u5316\u3001\u7bc0\u9ede\u58d3\u529b\u8207\u8a9e\u7fa9\u5931\u8861\u3002",
+  "ping_targets": [],
+  "traits": [
+    "resonance-listening",
+    "tone-mapping",
+    "ping-intensity-monitor"
+  ]
+}

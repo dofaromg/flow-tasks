@@ -1,0 +1,13 @@
+{
+  "CorePersona": [
+    "PersonaClusterA",
+    "FieldMap"
+  ],
+  "PersonaClusterA": [
+    "JumpTrace"
+  ],
+  "JumpTrace": [
+    "MemoryVault"
+  ],
+  "MemoryVault": []
+}

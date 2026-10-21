@@ -97,13 +97,10 @@ class CodeQualityChecker:
         if directory is None:
             directory = self.base_dir
         
-        # Find all Python files
-        python_files = list(directory.rglob("*.py"))
-        
-        # Filter out common excludes
+        # Find all Python files (use generator, then filter)
         excludes = ['node_modules', '.git', '__pycache__', 'venv', 'env', '.venv']
         python_files = [
-            f for f in python_files 
+            f for f in directory.rglob("*.py")
             if not any(exclude in f.parts for exclude in excludes)
         ]
         

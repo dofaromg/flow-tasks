@@ -1,0 +1,269 @@
+太好了，既然你要先以 iOS 手機端為主，我們就把「只靠 iPhone 就能完成的閉環」一次補齊：
+	•	直接在手機上用 LiDAR → 產生 3D 網格 → 匯出 USDZ（離線可用、無需雲端/電腦）。
+	•	仍保留「相機連拍＋注意力挑圖」模式（給之後要上雲端 photogrammetry 用）。
+
+下面我只給新增/必要修改的檔案（繁中 UI），你貼進你現有專案即可跑（iOS 16+、有 LiDAR 的機型）。
+
+⸻
+
+0) Info.plist 檢查（已有可略過）
+
+你先前的 NSCameraUsageDescription、UIFileSharingEnabled 等都已補好就 OK，不需要再改。
+
+⸻
+
+1) 新增：LiDAR 掃描視圖（在機器上建網格）
+
+檔案：AR/LiDARScanView.swift
+
+import SwiftUI
+import ARKit
+import SceneKit
+import ModelIO
+import SceneKit.ModelIO
+
+struct LiDARScanView: View {
+    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var store: ScanStore
+    @StateObject private var vm = LiDARVM()
+
+    var body: some View {
+        VStack {
+            LiDARPreview(session: vm.session)
+                .overlay(alignment: .topLeading) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("已偵測網格：\(vm.meshCount)").bold().foregroundColor(.white)
+                        Text("提示：緩慢移動，繞物體/房間 360°").foregroundColor(.white)
+                    }
+                    .padding(8)
+                    .background(.black.opacity(0.45)).cornerRadius(8)
+                    .padding()
+                }
+
+            HStack {
+                Button("取消") { vm.stop(); dismiss() }.foregroundColor(.red)
+                Spacer()
+                Button(vm.running ? "暫停擷取" : "開始擷取") { vm.toggleRun() }
+                Spacer()
+                Button("完成並匯出") {
+                    Task {
+                        do {
+                            let scan = try await vm.finishAndExport(base: store.base)
+                            store.save(scan)
+                            dismiss()
+                        } catch {
+                            print("export error:", error)
+                        }
+                    }
+                }.bold()
+            }
+            .padding()
+        }
+        .task { await vm.prepare() }
+        .onDisappear { vm.stop() }
+    }
+}
+
+final class LiDARVM: NSObject, ObservableObject, ARSCNViewDelegate {
+    let session = ARSession()
+    @Published var meshCount: Int = 0
+    @Published var running: Bool = true
+
+    private var sceneView: ARSCNView!
+    private var meshAnchors: [ARMeshAnchor] = []
+
+    @MainActor
+    func prepare() async {
+        guard ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh) else {
+            print("此裝置不支援 LiDAR Scene Reconstruction")
+            return
+        }
+        let view = ARSCNView()
+        view.session = session
+        view.delegate = self
+        view.automaticallyUpdatesLighting = true
+        self.sceneView = view
+
+        let config = ARWorldTrackingConfiguration()
+        config.environmentTexturing = .automatic
+        config.sceneReconstruction = .meshWithClassification
+        config.frameSemantics = []
+        session.run(config, options: [.resetTracking, .removeExistingAnchors])
+        running = true
+    }
+
+    func toggleRun() {
+        running.toggle()
+        if running { session.run(session.configuration!, options: []) }
+        else { session.pause() }
+    }
+
+    func stop() { session.pause() }
+
+    // 收集目前的 ARMeshAnchor
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        for a in anchors {
+            if let m = a as? ARMeshAnchor { meshAnchors.append(m) }
+        }
+        Task { @MainActor in meshCount = meshAnchors.count }
+    }
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        for a in anchors {
+            if let m = a as? ARMeshAnchor {
+                if let idx = meshAnchors.firstIndex(where: { $0.identifier == m.identifier }) {
+                    meshAnchors[idx] = m
+                } else { meshAnchors.append(m) }
+            }
+        }
+        Task { @MainActor in meshCount = meshAnchors.count }
+    }
+
+    // 匯出 USDZ 並建立 Scan
+    func finishAndExport(base: URL) async throws -> Scan {
+        // 建立專案資料夾
+        var scan = try Scan.makeNew(base: base, name: "LiDAR \(Date().formatted(.dateTime.hour().minute()))")
+
+        // 將 ARMeshAnchor 轉為 MDLAsset
+        let asset = MDLAsset()
+        for anchor in meshAnchors {
+            let mdlMesh = anchor.geometry.toMDLMesh(transform: anchor.transform)
+            asset.add(mdlMesh)
+        }
+
+        // 存成 USDZ
+        let url = scan.folder.appendingPathComponent("model.usdz")
+        try asset.export(to: url)
+
+        // 更新 meta
+        scan.modelURL = url
+        scan.hasTexture = false
+        scan.imageCount = 0
+        let bytes = (try? FileManager.default.allocatedSizeOfDirectory(at: scan.folder)) ?? 0
+        scan.sizeMB = Double(bytes) / 1048576.0
+        return scan
+    }
+}
+
+// MARK: - 轉換工具：ARMeshGeometry → MDLMesh
+extension ARMeshGeometry {
+    func toMDLMesh(transform: simd_float4x4) -> MDLMesh {
+        // 頂點
+        let vertices = self.vertices
+        let vertexCount = vertices.count
+        var vertexArray = [SIMD3<Float>](repeating: .zero, count: vertexCount)
+        for i in 0..<vertexCount {
+            let v = vertices.vertex(at: UInt32(i))
+            vertexArray[i] = (transform * SIMD4<Float>(v, 1)).xyz
+        }
+        let vertexBuffer = Data(bytes: &vertexArray, count: MemoryLayout<SIMD3<Float>>.stride * vertexCount)
+        let vertexData = MDLVertexBufferLayout(stride: MemoryLayout<SIMD3<Float>>.stride)
+        let vertexBufferAllocator = MDLMemoryAllocator()
+        let mdlVertexBuffer = MDLMeshBufferData(type: .vertex, data: vertexBuffer, allocator: vertexBufferAllocator)
+
+        let vertexDescriptor = MDLVertexDescriptor()
+        vertexDescriptor.attributes[0] = MDLVertexAttribute(name: MDLVertexAttributePosition,
+                                                            format: .float3, offset: 0, bufferIndex: 0)
+        vertexDescriptor.layouts[0] = vertexData
+
+        // 面索引（三角形）
+        var indexArray: [UInt32] = []
+        for s in 0..<self.submeshCount {
+            let sub = self.submesh(at: s)
+            let indexCount = sub.indexCount
+            indexArray.reserveCapacity(indexArray.count + indexCount)
+            sub.enumerateIndices { idx in indexArray.append(UInt32(idx)) }
+        }
+        let indexBuffer = Data(bytes: &indexArray, count: MemoryLayout<UInt32>.stride * indexArray.count)
+        let mdlIndexBuffer = MDLMeshBufferData(type: .index, data: indexBuffer, allocator: vertexBufferAllocator)
+        let submesh = MDLSubmesh(indexBuffer: mdlIndexBuffer, indexCount: indexArray.count, indexType: .uInt32, geometryType: .triangles, material: nil)
+
+        let mdlMesh = MDLMesh(vertexBuffer: mdlVertexBuffer, vertexCount: vertexCount, descriptor: vertexDescriptor, submeshes: [submesh])
+        mdlMesh.addNormals(withAttributeNamed: MDLVertexAttributeNormal, creaseThreshold: 0.0)
+        return mdlMesh
+    }
+}
+
+// MARK: - AR 預覽封裝（用 ARSCNView 以顯示網格）
+struct LiDARPreview: UIViewRepresentable {
+    let session: ARSession
+    func makeUIView(context: Context) -> ARSCNView {
+        let v = ARSCNView()
+        v.session = session
+        v.autoenablesDefaultLighting = true
+        v.debugOptions = [.showSceneUnderstanding, .showFeaturePoints]
+        return v
+    }
+    func updateUIView(_ uiView: ARSCNView, context: Context) {}
+}
+
+private extension SIMD4 where Scalar == Float {
+    var xyz: SIMD3<Float> { SIMD3(x, y, z) }
+}
+
+這支會：收集 ARMeshAnchor → 現場可視化 → 一鍵匯出 USDZ（直接存在該 Scan 的資料夾）。
+匯出的 model.usdz 立刻可在 ScanDetailView 預覽（我們之前有 QuickLook / SceneKit fallback）。
+
+⸻
+
+2) 在清單頁加入「LiDAR 掃描」入口
+
+檔案：Views/ScansListView.swift – 在右上角多一個選單，讓你可選「相機快照模式」或「LiDAR 模式」。
+
+// ... 省略前半
+@State private var showModePicker = false
+@State private var showLiDAR = false
+@State private var showingCapture = false
+// ...
+
+.toolbar {
+    ToolbarItem(placement: .navigationBarLeading) {
+        Button { showingSettings = true } label: { Image(systemName: "gearshape") }
+    }
+    ToolbarItem(placement: .navigationBarTrailing) {
+        Menu {
+            Button("相機快照（注意力取樣）") { showingCapture = true }
+            Button("LiDAR 掃描（即時建網格）") { showLiDAR = true }
+        } label: {
+            Image(systemName: "camera.viewfinder")
+        }
+    }
+}
+.sheet(isPresented: $showingCapture) { CaptureFlowView() }
+.sheet(isPresented: $showLiDAR) { LiDARScanView().environmentObject(store) }
+.sheet(isPresented: $showingSettings) { SettingsView() }
+
+
+⸻
+
+3) 詳情頁無需改（可直接預覽 USDZ）
+
+你的 ScanDetailView 已支援 model.usdz 用 QuickLook 預覽，不用修改。
+LiDAR 掃描完成後 scan.modelURL 已指向該 USDZ，列表/詳情就會出現。
+
+⸻
+
+4) 使用建議（iPhone 端最小閉環）
+	1.	打開 App → 右上選單 → LiDAR 掃描（即時建網格）。
+	2.	繞著物體/房間慢慢走，等 已偵測網格數增加。
+	3.	按 完成並匯出 → 自動建立一個 Scan，內含 model.usdz。
+	4.	點進詳情即可預覽；也能 分享/AirDrop 出去。
+	5.	若要走「照片→雲端重建」路徑，選 相機快照（注意力取樣），之後再把 raw/ 交給你的後端。
+
+⸻
+
+5) 什麼時候用哪個模式？
+	•	LiDAR 模式（本機、即時）：房間/家具/中大型場景，追求速度與穩定即可用。
+	•	相機快照（注意力）：小物件、高貼圖細節；之後可接你雲端 photogrammetry/NeRF。
+
+⸻
+
+6) 你可能會問的兩個點
+	•	USDZ 檔案會很大嗎？
+視場景而定，房間級模型數十～數百 MB 常見；若要壓小可做 decimate/法線壓縮，我可以再補一個「簡化網格」步驟。
+	•	非 LiDAR 機型能用嗎？
+沒 LiDAR 的機型可以用「相機快照模式」，但 LiDAR 模式會自動偵測為不支援。
+
+⸻
+
+這樣你在 iPhone 上單機就能完成：「快照（或 LiDAR）→ 立體模型 → 預覽/分享」。
+若你要，我下一步可以加「網格簡化（Quadric decimation）」與「材質烘焙」按鈕，讓 USDZ 更輕、觀感更好。

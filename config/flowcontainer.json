@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "origin_signature": "MrLiouWord",
+    "version": "1.0",
+    "description": "FlowContainer service definitions — MRL Native Runtime (replaces docker-compose)"
+  },
+  "services": {
+    "mrl-db": {
+      "type": "external",
+      "port": 5432,
+      "health_cmd": "pg_isready -U mrl -d mrliouword"
+    },
+    "mrl-redis": {
+      "type": "external",
+      "port": 6379,
+      "health_cmd": "redis-cli ping"
+    },
+    "mrl-engine": {
+      "runtime": "node",
+      "cwd": "./MRLiou_Engine",
+      "entry": "server.js",
+      "port": 7700,
+      "health": "/health",
+      "depends_on": ["mrl-db", "mrl-redis"],
+      "env": {
+        "PORT": "7700",
+        "REDIS_URL": "redis://localhost:6379",
+        "DATABASE_URL": "postgresql://mrl:mrl@localhost:5432/mrliouword",
+        "NODE_ENV": "production"
+      }
+    },
+    "mrl-product": {
+      "runtime": "node",
+      "cwd": "./MRL_Product",
+      "entry": "server.js",
+      "port": 3000,
+      "health": "/health",
+      "env": {
+        "PORT": "3000",
+        "NODE_ENV": "production"
+      }
+    },
+    "mrl-ai": {
+      "runtime": "python",
+      "cwd": "./MrLiou_AI_SuperComputer",
+      "entry": "server.py",
+      "port": 8787,
+      "health": "/health",
+      "env": {
+        "MRL_PORT": "8787",
+        "OLLAMA_BASE_URL": "http://localhost:11434"
+      }
+    },
+    "mrl-800ai": {
+      "runtime": "python",
+      "cwd": "./MRLiou_800AI",
+      "entry": "server.py",
+      "port": 8800,
+      "health": "/health",
+      "env": {
+        "MRL_PORT": "8800"
+      }
+    },
+    "mrl-bridge": {
+      "runtime": "node",
+      "cwd": "./MRL_Bridge",
+      "entry": "server.js",
+      "port": 7800,
+      "health": "/health",
+      "depends_on": ["mrl-db", "mrl-redis"],
+      "env": {
+        "MRL_BRIDGE_PORT": "7800",
+        "MRL_PG_HOST": "localhost",
+        "MRL_PG_PORT": "5432",
+        "MRL_PG_DATABASE": "mrliouword",
+        "MRL_PG_USER": "mrl",
+        "MRL_PG_PASSWORD": "mrl"
+      }
+    },
+    "mrl-platform": {
+      "runtime": "python",
+      "cwd": "./MRL_Mother",
+      "entry": "09_workflow/api_gateway.py",
+      "args": ["--host", "0.0.0.0", "--port", "8790"],
+      "port": 8790,
+      "health": "/health",
+      "env": {
+        "OLLAMA_BASE_URL": "http://localhost:11434",
+        "LLAMACPP_BASE_URL": "http://localhost:8080"
+      }
+    },
+    "mrl-runtimeos": {
+      "runtime": "node",
+      "cwd": "./MRL_Mother/MRL_RuntimeOS_v1_4_0",
+      "entry": "MRL_API/MRL_RuntimeServer.js",
+      "port": 8788,
+      "health": "/api/mrl/health",
+      "env": {
+        "MRL_PORT": "8788",
+        "MRL_HOST": "0.0.0.0",
+        "MRL_AUTH_REQUIRED": "false",
+        "OLLAMA_HOST": "http://localhost:11434"
+      }
+    }
+  }
+}

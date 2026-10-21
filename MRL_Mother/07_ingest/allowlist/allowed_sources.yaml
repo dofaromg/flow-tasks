@@ -1,0 +1,13 @@
+# Allowlist for data sources (ingest/origins) that FlowAgent can trust.
+# Deny-by-default: if a source is not listed here, ingestion should require human approval or be denied.
+
+version: 1
+sources:
+  # Example entries:
+  # - id: dropbox_mrliou
+  #   type: dropbox
+  #   name: MRLiou sealed specs
+  #   path: Mrliou_agents/Mrl_FlowAgent/FlowCoreLoop_AIComputer_Runtime_v0/memory/ingest/raw
+  # - id: github_mrl_ai_system
+  #   type: git
+  #   name: MRL_AI_SYSTEM repo

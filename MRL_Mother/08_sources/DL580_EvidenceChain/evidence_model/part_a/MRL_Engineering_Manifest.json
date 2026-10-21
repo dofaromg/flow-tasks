@@ -1,0 +1,153 @@
+{
+  "schema": "MRL_Engineering_Manifest",
+  "origin_signature": "MrLiouWord",
+  "generated_utc": "2026-06-12T21:40:00.000000+00:00",
+  "audit_phase": "Part_A / Phase_A04",
+  "manifest_type": "Part_A_Completion_Manifest",
+  "execution_mode": "READ_FIRST → SOURCE_FIRST → TRACE_FIRST → MAP",
+  "rules": [
+    "READ_FIRST",
+    "SOURCE_FIRST",
+    "TRACE_FIRST",
+    "NO_STATUS",
+    "NO_COMPLETION",
+    "NO_CLASSIFICATION",
+    "NO_DELETE",
+    "NO_REBUILD"
+  ],
+  "read_order_executed": [
+    "01_mrl_particle",
+    "02_EvidenceChain",
+    "03_storage",
+    "04_runtime",
+    "05_mother_arch",
+    "06_manifest",
+    "07_OriginTraceMap",
+    "08_UniversalTraceMap",
+    "09_FlowSignalPathMap",
+    "10_FlowPersonaStructureMap",
+    "11_FlowMemoryMap",
+    "12_ParticleGlobe",
+    "13_MemoryGlobe",
+    "14_WorldRuntime"
+  ],
+  "part_a_outputs": [
+    {
+      "file": "MRL_Source_Model.json",
+      "schema": "MRL_Source_Model",
+      "phase": "Phase_A01",
+      "source_count": 35,
+      "node_count": 14,
+      "backfill_upgraded_nodes": 3,
+      "status": "generated"
+    },
+    {
+      "file": "MRL_Trace_Model.json",
+      "schema": "MRL_Trace_Model",
+      "phase": "Phase_A02",
+      "trace_count": 41,
+      "trace_types": 6,
+      "node_count": 14,
+      "status": "generated"
+    },
+    {
+      "file": "MRL_Map_Model.json",
+      "schema": "MRL_Map_Model",
+      "phase": "Phase_A03",
+      "map_count": 29,
+      "map_types": 7,
+      "node_count": 14,
+      "status": "generated"
+    },
+    {
+      "file": "MRL_Engineering_Manifest.json",
+      "schema": "MRL_Engineering_Manifest",
+      "phase": "Phase_A04",
+      "manifest_type": "Part_A_Completion_Manifest",
+      "status": "generated"
+    }
+  ],
+  "source_basis": {
+    "mrl_particle_db": "21054 particles @DL580",
+    "evidence_chain_total": 554,
+    "breakdown": {
+      "dl580": 337,
+      "notion": 7,
+      "crosscheck": 4,
+      "iphone_import": 206
+    },
+    "wave_gate_verification": {
+      "batches_processed": "Batch01_Batch02_Batch03A_Batch03B_Batch04",
+      "wave_gates_verified": "W01=11/11, W02=20/20, W03=30/30, W04=39/39, W05=44/44, W06=54/54, W07=64/64, W08=74/74, W09=82/82",
+      "sigma_pass": 418,
+      "sigma_total": 418,
+      "sigma_fail": 0
+    },
+    "weak_source_backfill": {
+      "total_items": 53,
+      "upgraded_nodes": [
+        {"node": "MRL.NODE.03.PreParticle", "before": 1, "after": 24, "pg_id": 6, "fs": 18},
+        {"node": "MRL.NODE.07.Persona", "before": 1, "after": 79, "pg_id": 9, "fs": 70, "content": 415},
+        {"node": "MRL.NODE.10.World", "before": 1, "after": 14, "pg_id": 5, "fs": 9}
+      ]
+    }
+  },
+  "topology": {
+    "mainline_node_count": 14,
+    "mainline_sequence": "Reality→Origin→SeedKernel→PreParticle→Particle→Signal→Field→Persona→Memory→Globe→World→Runtime→Mother→Return",
+    "closure": "Return→Origin",
+    "map_law": "Node存在不等於可見；Node+Trace+Map+Coupling才可見",
+    "return_law": "怎麼過去就怎麼回來"
+  },
+  "part_a_summary": {
+    "total_sources": 35,
+    "total_traces": 41,
+    "total_maps": 29,
+    "nodes_covered": 14,
+    "trace_type_breakdown": {
+      "OriginTrace": 14,
+      "UniversalTrace": 2,
+      "JumpTrace": 3,
+      "ReturnTrace": 14,
+      "ReplayTrace": 6,
+      "RestoreTrace": 2
+    },
+    "map_type_breakdown": {
+      "Position": 14,
+      "Route": 2,
+      "Projection": 5,
+      "Index": 2,
+      "Registry": 3,
+      "Globe": 1,
+      "WorldMap": 1
+    },
+    "source_type_breakdown": {
+      "pg_particle": 18,
+      "mrl_particle": 10,
+      "resonance_particle": 2,
+      "seed_particle": 1,
+      "memory_particle": 1,
+      "dl580_backfill_aggregate": 3
+    }
+  },
+  "part_b_pending": {
+    "status": "waiting",
+    "outputs": [
+      "MRL_Coupling_Model.json",
+      "MRL_Return_Model.json",
+      "MRL_14_Node_Evidence_Audit.json",
+      "MRL_Evidence_Model_Report.md",
+      "MRL_Engineering_Manifest.json (Part_B)",
+      "MRL_Evidence_Model_Audit_v1_ENGINEERING_PACKAGE.zip"
+    ],
+    "target_path": "D:\\MRL_Mother\\EvidenceChain\\evidence_model\\part_b\\"
+  },
+  "integrity": {
+    "no_fabricated_canonical": true,
+    "no_external_data_as_verified": true,
+    "no_hardcoded_secrets": true,
+    "additive_only": true,
+    "source_verified_before_trace": true,
+    "trace_verified_before_map": true
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MRL Formula Parameter Record v1",
+  "description": "牽一髮動全身參數保存層的唯一參數記錄格式。未登錄參數不得進入母體運算。",
+  "type": "object",
+  "properties": {
+    "formula_name": {
+      "type": "string",
+      "description": "參數所屬公式名稱（創世公式、反推公式、放大縮小公式、源代碼壓縮、環境變化、APFS-style customs gate、莫比斯反轉鏡像轉正）。"
+    },
+    "parameter_name": {
+      "type": "string",
+      "description": "參數名稱（唯一鍵之一）。"
+    },
+    "parameter_value": {
+      "description": "參數當前值，可為數值、字串、布林或結構。"
+    },
+    "parameter_version": {
+      "type": "string",
+      "description": "參數版本號，每次變更遞增。"
+    },
+    "source_ref": {
+      "type": "string",
+      "description": "參數來源引用（檔案路徑、PR、issue 或文件章節）。"
+    },
+    "changed_by": {
+      "type": "string",
+      "description": "變更者身分。"
+    },
+    "changed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC 變更時間。"
+    },
+    "change_reason": {
+      "type": "string",
+      "description": "變更原因，必填且不得為空。"
+    },
+    "impact_scope": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "description": "影響範圍。high 必須進 parameter_review，不可自動放行。"
+    },
+    "before_value": {
+      "description": "變更前的值（首次登錄可為 null）。"
+    },
+    "after_value": {
+      "description": "變更後的值，必須等於 parameter_value。"
+    },
+    "rollback_ref": {
+      "type": "string",
+      "description": "回滾參考點（checkpoint id 或 commit ref）。"
+    },
+    "replay_required": {
+      "type": "boolean",
+      "description": "此變更是否需要回放驗證。"
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": ["pending", "verified", "parameter_review", "rejected"],
+      "description": "驗證狀態。高影響參數不得處於 pending 以外的自動放行狀態。"
+    },
+    "origin_signature": {
+      "type": "string",
+      "const": "MrLiouWord",
+      "description": "母體起源簽名，必須為 MrLiouWord。"
+    }
+  },
+  "required": [
+    "formula_name",
+    "parameter_name",
+    "parameter_value",
+    "parameter_version",
+    "source_ref",
+    "changed_by",
+    "changed_at",
+    "change_reason",
+    "impact_scope",
+    "before_value",
+    "after_value",
+    "rollback_ref",
+    "replay_required",
+    "verification_status",
+    "origin_signature"
+  ],
+  "additionalProperties": false
+}

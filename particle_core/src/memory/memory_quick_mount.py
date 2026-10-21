@@ -21,6 +21,13 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 
+# Import cache system
+try:
+    from memory_cache_disk import MemoryCacheDiskMapper
+    CACHE_AVAILABLE = True
+except ImportError:
+    CACHE_AVAILABLE = False
+
 
 class ParticleCompressor:
     """
@@ -225,6 +232,13 @@ class MemoryQuickMounter:
         self.snapshot_dir.mkdir(parents=True, exist_ok=True)
         
         self.mounted_seeds = []
+        
+        # Initialize cache system
+        if CACHE_AVAILABLE:
+            self.cache_mapper = MemoryCacheDiskMapper(self.config)
+        else:
+            self.cache_mapper = None
+            print("⚠ Cache system not available")
     
     def _load_config(self, config_path: Optional[str]) -> Dict[str, Any]:
         """Load configuration from file or use defaults"""
@@ -336,6 +350,13 @@ class MemoryQuickMounter:
                 print("⚠ No snapshots found")
                 return {}
             snapshot_path = max(snapshots, key=lambda p: p.stat().st_mtime)
+            # Find latest snapshot (efficient: avoid list conversion)
+            snapshots = sorted(self.snapshot_dir.glob("*.snapshot.json"), 
+                             key=lambda p: p.stat().st_mtime, reverse=True)
+            if not snapshots:
+                print("⚠ No snapshots found")
+                return {}
+            snapshot_path = snapshots[0]  # Most recent
         
         print(f"💧 Rehydrating from: {Path(snapshot_path).name}")
         
@@ -350,6 +371,130 @@ class MemoryQuickMounter:
         print(f"  📅 Snapshot timestamp: {snapshot_data.get('timestamp', 'unknown')}")
         
         return restored_state
+    
+    def get_cached_state(self, key: str) -> Optional[Dict[str, Any]]:
+        """
+        Get state from cache (cache-aware access)
+        從快取取得狀態
+        
+        Args:
+            key: State identifier
+            
+        Returns:
+            Cached state or None
+        """
+        if not self.cache_mapper:
+            return None
+        
+        cached = self.cache_mapper.get_state(key)
+        if cached:
+            print(f"💾 Cache hit: {key}")
+        else:
+            print(f"⚠ Cache miss: {key}")
+        
+        return cached
+    
+    def set_cached_state(self, key: str, state: Dict[str, Any]):
+        """
+        Set state in cache
+        設定快取狀態
+        
+        Args:
+            key: State identifier
+            state: State data
+        """
+        if not self.cache_mapper:
+            print("⚠ Cache not available")
+            return
+        
+        self.cache_mapper.set_state(key, state)
+        print(f"💾 Cached: {key}")
+    
+    def snapshot_with_cache(self, agent_name: str, state: Dict[str, Any]) -> str:
+        """
+        Create snapshot and cache it
+        建立快照並快取
+        
+        Args:
+            agent_name: Name of the agent
+            state: Current state to snapshot
+            
+        Returns:
+            Path to the snapshot file
+        """
+        # Create snapshot
+        snapshot_path = self.snapshot(agent_name, state)
+        
+        # Cache the state
+        if self.cache_mapper:
+            cache_key = f"agent:{agent_name}"
+            self.cache_mapper.set_state(cache_key, state)
+            print(f"  💾 State cached for quick access")
+        
+        return snapshot_path
+    
+    def rehydrate_with_cache(self, snapshot_path: Optional[str] = None, 
+                            agent_name: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Rehydrate with cache lookup
+        從快取或快照恢復
+        
+        Args:
+            snapshot_path: Path to snapshot file (uses latest if None)
+            agent_name: Agent name for cache lookup
+            
+        Returns:
+            Restored state
+        """
+        # Try cache first if agent_name provided
+        if agent_name and self.cache_mapper:
+            cache_key = f"agent:{agent_name}"
+            cached_state = self.cache_mapper.get_state(cache_key)
+            if cached_state:
+                print(f"💾 Restored from cache: {agent_name}")
+                return cached_state
+        
+        # Fall back to snapshot
+        restored = self.rehydrate(snapshot_path)
+        
+        # Cache for next time
+        if agent_name and self.cache_mapper and restored:
+            cache_key = f"agent:{agent_name}"
+            self.cache_mapper.set_state(cache_key, restored)
+        
+        return restored
+    
+    def get_cache_stats(self) -> Dict[str, Any]:
+        """
+        Get cache statistics
+        取得快取統計
+        
+        Returns:
+            Cache statistics dictionary
+        """
+        if not self.cache_mapper:
+            return {"enabled": False, "message": "Cache not available"}
+        
+        return self.cache_mapper.get_cache_stats()
+    
+    def persist_cache(self):
+        """
+        Manually persist cache to disk
+        手動持久化快取
+        """
+        if self.cache_mapper:
+            self.cache_mapper.persist()
+        else:
+            print("⚠ Cache not available")
+    
+    def shutdown(self):
+        """
+        Shutdown and cleanup
+        關閉並清理
+        """
+        if self.cache_mapper:
+            print("🛑 Shutting down cache system...")
+            self.cache_mapper.shutdown()
 
 
 def main():

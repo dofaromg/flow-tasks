@@ -1,0 +1,51 @@
+{
+  "mrl_type": "MRL_RuntimeMeshExecution",
+  "origin_signature": "MrLiouWord",
+  "execution_id": "MRL_MESH_EXEC_1778441038808",
+  "plan_id": "MRL_MESH_PLAN_1778441038808",
+  "status": "completed",
+  "executed_at": "2026-05-10T19:23:58.808Z",
+  "local_trace": {
+    "mrl_type": "MRL_RuntimeTrace",
+    "version": "v1.2.0",
+    "origin_signature": "MrLiouWord",
+    "started_at": "2026-05-10T19:23:58.808Z",
+    "runtime_graph_hash": "a010c4b9c091e7715a681d70694a5e55b03b50f1f37f91c591190932fd68cbf0",
+    "attention_hash": "e4ec7c71402fc18b41f6df6f364c2726a2b4eea6a9864ed52d3c4bc96b4361a4",
+    "steps": [
+      {
+        "step": 1,
+        "node_id": "MRL_P_0001",
+        "action": "MRL_ANALYZE_TEXT",
+        "priority": 0.62,
+        "status": "implemented_pass",
+        "message": "MRL generic runtime node processed",
+        "output_hash": "2e0113abda216e03"
+      },
+      {
+        "step": 2,
+        "node_id": "MRL_P_0002",
+        "action": "MRL_ANALYZE_TEXT",
+        "priority": 0.61,
+        "status": "implemented_pass",
+        "message": "MRL generic runtime node processed",
+        "output_hash": "2e0113abda216e03"
+      }
+    ],
+    "final_data_preview": "CREATE TABLE MRL_Test(id TEXT); SELECT * FROM MRL_Test;",
+    "completed_at": "2026-05-10T19:23:58.808Z",
+    "mrl_hash": "79915de8255fb9e934a796b74840670d7aa938693af9a48a496432f9b4d7d70a"
+  },
+  "node_assignments": [
+    {
+      "index": 0,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 1,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    }
+  ]
+}

@@ -1,0 +1,1055 @@
+{
+  "job_id": "MRL_JOB_1778424194146_1bddafb6",
+  "origin_signature": "MrLiouWord",
+  "status": "completed",
+  "created_at": "2026-05-10T14:43:14.146Z",
+  "input": {
+    "source": "particle CTX { @layer: L2 @data: \"整理文件\" }\nparticle TOOL { @layer: L3 @type: \"parser\" }\nCTX ⊕ TOOL |> execute()",
+    "filename": "job_acceptance.fpp",
+    "command": "execute verify"
+  },
+  "started_at": "2026-05-10T14:43:14.147Z",
+  "result": {
+    "origin_signature": "MrLiouWord",
+    "product": "MRL_UniversalRuntimeLanguage_Core_v1_2_0",
+    "bundle": {
+      "ast": {
+        "language": "MRL_FPlusPlus",
+        "nodes": [
+          {
+            "kind": "particle",
+            "name": "CTX",
+            "properties": {
+              "layer": "L2",
+              "data": "整理文件"
+            }
+          },
+          {
+            "kind": "particle",
+            "name": "TOOL",
+            "properties": {
+              "layer": "L3",
+              "type": "parser"
+            }
+          },
+          {
+            "kind": "operator_or_token",
+            "value": "CTX"
+          },
+          {
+            "kind": "operator_or_token",
+            "value": "⊕"
+          },
+          {
+            "kind": "operator_or_token",
+            "value": "TOOL"
+          },
+          {
+            "kind": "operator_or_token",
+            "value": "|>"
+          },
+          {
+            "kind": "operator_or_token",
+            "value": "execute"
+          },
+          {
+            "kind": "operator_or_token",
+            "value": "("
+          },
+          {
+            "kind": "operator_or_token",
+            "value": ")"
+          }
+        ],
+        "tokens": [
+          "particle",
+          "CTX",
+          "{",
+          "@layer",
+          ":",
+          "L2",
+          "@data",
+          ":",
+          "\"整理文件\"",
+          "}",
+          "particle",
+          "TOOL",
+          "{",
+          "@layer",
+          ":",
+          "L3",
+          "@type",
+          ":",
+          "\"parser\"",
+          "}",
+          "CTX",
+          "⊕",
+          "TOOL",
+          "|>",
+          "execute",
+          "(",
+          ")"
+        ]
+      },
+      "metaIR": {
+        "mrl_ir_type": "MRL_MetaIR",
+        "version": "v1.2.0",
+        "origin_signature": "MrLiouWord",
+        "source_identity": {
+          "filename": "job_acceptance.fpp",
+          "language": "MRL_FPlusPlus",
+          "detected": "fpp",
+          "source_hash": "913ae424689411e425100b89eb855c8f4a02df68d409453fba143b7e0eed28b0"
+        },
+        "syntax_tree": {
+          "language": "MRL_FPlusPlus",
+          "nodes": [
+            {
+              "kind": "particle",
+              "name": "CTX",
+              "properties": {
+                "layer": "L2",
+                "data": "整理文件"
+              }
+            },
+            {
+              "kind": "particle",
+              "name": "TOOL",
+              "properties": {
+                "layer": "L3",
+                "type": "parser"
+              }
+            },
+            {
+              "kind": "operator_or_token",
+              "value": "CTX"
+            },
+            {
+              "kind": "operator_or_token",
+              "value": "⊕"
+            },
+            {
+              "kind": "operator_or_token",
+              "value": "TOOL"
+            },
+            {
+              "kind": "operator_or_token",
+              "value": "|>"
+            },
+            {
+              "kind": "operator_or_token",
+              "value": "execute"
+            },
+            {
+              "kind": "operator_or_token",
+              "value": "("
+            },
+            {
+              "kind": "operator_or_token",
+              "value": ")"
+            }
+          ],
+          "tokens": [
+            "particle",
+            "CTX",
+            "{",
+            "@layer",
+            ":",
+            "L2",
+            "@data",
+            ":",
+            "\"整理文件\"",
+            "}",
+            "particle",
+            "TOOL",
+            "{",
+            "@layer",
+            ":",
+            "L3",
+            "@type",
+            ":",
+            "\"parser\"",
+            "}",
+            "CTX",
+            "⊕",
+            "TOOL",
+            "|>",
+            "execute",
+            "(",
+            ")"
+          ]
+        },
+        "semantic_intent": {
+          "intents": [
+            "MRL_INTENT_EXECUTE",
+            "MRL_INTENT_PARTICLE_RUNTIME",
+            "MRL_INTENT_FILE_ORGANIZE"
+          ],
+          "summary": "MRL_INTENT_EXECUTE,MRL_INTENT_PARTICLE_RUNTIME,MRL_INTENT_FILE_ORGANIZE",
+          "node_count": 9,
+          "language": "MRL_FPlusPlus"
+        },
+        "particle_atoms": [
+          {
+            "atom_id": "MRL_P_0001",
+            "atom_type": "MRL_FluinParticle",
+            "simhash_seed": "df40d5b017922bd5",
+            "semantic": "CTX"
+          },
+          {
+            "atom_id": "MRL_P_0002",
+            "atom_type": "MRL_FluinParticle",
+            "simhash_seed": "c3bc777cf3b9a852",
+            "semantic": "TOOL"
+          },
+          {
+            "atom_id": "MRL_P_0003",
+            "atom_type": "MRL_GenericParticle",
+            "simhash_seed": "cc9058e1d6ee991d",
+            "semantic": "CTX"
+          },
+          {
+            "atom_id": "MRL_P_0004",
+            "atom_type": "MRL_GenericParticle",
+            "simhash_seed": "637019523943a2a8",
+            "semantic": "⊕"
+          },
+          {
+            "atom_id": "MRL_P_0005",
+            "atom_type": "MRL_GenericParticle",
+            "simhash_seed": "0271521fff7c8e0a",
+            "semantic": "TOOL"
+          },
+          {
+            "atom_id": "MRL_P_0006",
+            "atom_type": "MRL_GenericParticle",
+            "simhash_seed": "5de7429ad1acc675",
+            "semantic": "|>"
+          },
+          {
+            "atom_id": "MRL_P_0007",
+            "atom_type": "MRL_GenericParticle",
+            "simhash_seed": "b686239e50105bff",
+            "semantic": "execute"
+          },
+          {
+            "atom_id": "MRL_P_0008",
+            "atom_type": "MRL_GenericParticle",
+            "simhash_seed": "81b08204d30bd857",
+            "semantic": "("
+          },
+          {
+            "atom_id": "MRL_P_0009",
+            "atom_type": "MRL_GenericParticle",
+            "simhash_seed": "ae7e7591431b5939",
+            "semantic": ")"
+          }
+        ],
+        "context_relations": [
+          {
+            "relation_id": "MRL_CTX_1",
+            "from": "CTX",
+            "to": "TOOL",
+            "relation": "MRL_SOURCE_SEQUENCE",
+            "weight": 1
+          },
+          {
+            "relation_id": "MRL_CTX_2",
+            "from": "TOOL",
+            "to": "CTX",
+            "relation": "MRL_SOURCE_SEQUENCE",
+            "weight": 1
+          },
+          {
+            "relation_id": "MRL_CTX_3",
+            "from": "CTX",
+            "to": "⊕",
+            "relation": "MRL_SOURCE_SEQUENCE",
+            "weight": 1
+          },
+          {
+            "relation_id": "MRL_CTX_4",
+            "from": "⊕",
+            "to": "TOOL",
+            "relation": "MRL_SOURCE_SEQUENCE",
+            "weight": 1
+          },
+          {
+            "relation_id": "MRL_CTX_5",
+            "from": "TOOL",
+            "to": "|>",
+            "relation": "MRL_SOURCE_SEQUENCE",
+            "weight": 1
+          },
+          {
+            "relation_id": "MRL_CTX_6",
+            "from": "|>",
+            "to": "execute",
+            "relation": "MRL_SOURCE_SEQUENCE",
+            "weight": 1
+          },
+          {
+            "relation_id": "MRL_CTX_7",
+            "from": "execute",
+            "to": "(",
+            "relation": "MRL_SOURCE_SEQUENCE",
+            "weight": 1
+          },
+          {
+            "relation_id": "MRL_CTX_8",
+            "from": "(",
+            "to": ")",
+            "relation": "MRL_SOURCE_SEQUENCE",
+            "weight": 1
+          }
+        ],
+        "runtime_plan": [
+          {
+            "step": 1,
+            "action": "MRL_REGISTER_PARTICLE",
+            "target": "CTX",
+            "node_kind": "particle"
+          },
+          {
+            "step": 2,
+            "action": "MRL_REGISTER_PARTICLE",
+            "target": "TOOL",
+            "node_kind": "particle"
+          },
+          {
+            "step": 3,
+            "action": "MRL_ANALYZE_NODE",
+            "target": "CTX",
+            "node_kind": "operator_or_token"
+          },
+          {
+            "step": 4,
+            "action": "MRL_ANALYZE_NODE",
+            "target": "⊕",
+            "node_kind": "operator_or_token"
+          },
+          {
+            "step": 5,
+            "action": "MRL_ANALYZE_NODE",
+            "target": "TOOL",
+            "node_kind": "operator_or_token"
+          },
+          {
+            "step": 6,
+            "action": "MRL_ANALYZE_NODE",
+            "target": "|>",
+            "node_kind": "operator_or_token"
+          },
+          {
+            "step": 7,
+            "action": "MRL_ANALYZE_NODE",
+            "target": "execute",
+            "node_kind": "operator_or_token"
+          },
+          {
+            "step": 8,
+            "action": "MRL_ANALYZE_NODE",
+            "target": "(",
+            "node_kind": "operator_or_token"
+          },
+          {
+            "step": 9,
+            "action": "MRL_ANALYZE_NODE",
+            "target": ")",
+            "node_kind": "operator_or_token"
+          }
+        ],
+        "verification_plan": [
+          "MRL_ROUNDTRIP",
+          "MRL_HASH",
+          "MRL_PARTICLE_INTEGRITY",
+          "MRL_CONTEXT_GRAPH",
+          "MRL_RUNTIME_GRAPH"
+        ],
+        "output_artifact": {
+          "expected": [
+            "MRL_MetaIR_Record",
+            "MRL_ParticleIR_Record",
+            "MRL_RuntimeGraph_Record",
+            "MRL_Verification_Report"
+          ]
+        },
+        "created_at": "2026-05-10T14:43:14.147Z",
+        "mrl_hash": "8f8ec31f56c8b6130c152693855c1adb2c97740dcc3bc7442a014aed776ea212"
+      },
+      "particleIR": {
+        "mrl_ir_type": "MRL_ParticleIR",
+        "version": "v1.2.0",
+        "origin_signature": "MrLiouWord",
+        "source_hash": "8f8ec31f56c8b6130c152693855c1adb2c97740dcc3bc7442a014aed776ea212",
+        "source_identity": {
+          "filename": "job_acceptance.fpp",
+          "language": "MRL_FPlusPlus",
+          "detected": "fpp",
+          "source_hash": "913ae424689411e425100b89eb855c8f4a02df68d409453fba143b7e0eed28b0"
+        },
+        "particles": [
+          {
+            "id": "MRL_P_0001",
+            "particle_type": "MRL_FluinParticle",
+            "layer": "L2",
+            "source_language": "MRL_FPlusPlus",
+            "properties": {
+              "kind": "particle",
+              "name": "CTX",
+              "properties": {
+                "layer": "L2",
+                "data": "整理文件"
+              }
+            },
+            "semantic": "CTX",
+            "origin_signature": "MrLiouWord",
+            "status": "implemented_runtime_particle"
+          },
+          {
+            "id": "MRL_P_0002",
+            "particle_type": "MRL_FluinParticle",
+            "layer": "L3",
+            "source_language": "MRL_FPlusPlus",
+            "properties": {
+              "kind": "particle",
+              "name": "TOOL",
+              "properties": {
+                "layer": "L3",
+                "type": "parser"
+              }
+            },
+            "semantic": "TOOL",
+            "origin_signature": "MrLiouWord",
+            "status": "implemented_runtime_particle"
+          },
+          {
+            "id": "MRL_P_0003",
+            "particle_type": "MRL_GenericParticle",
+            "layer": "L5_Runtime",
+            "source_language": "MRL_FPlusPlus",
+            "properties": {
+              "kind": "operator_or_token",
+              "value": "CTX"
+            },
+            "semantic": "CTX",
+            "origin_signature": "MrLiouWord",
+            "status": "implemented_runtime_particle"
+          },
+          {
+            "id": "MRL_P_0004",
+            "particle_type": "MRL_GenericParticle",
+            "layer": "L5_Runtime",
+            "source_language": "MRL_FPlusPlus",
+            "properties": {
+              "kind": "operator_or_token",
+              "value": "⊕"
+            },
+            "semantic": "⊕",
+            "origin_signature": "MrLiouWord",
+            "status": "implemented_runtime_particle"
+          },
+          {
+            "id": "MRL_P_0005",
+            "particle_type": "MRL_GenericParticle",
+            "layer": "L5_Runtime",
+            "source_language": "MRL_FPlusPlus",
+            "properties": {
+              "kind": "operator_or_token",
+              "value": "TOOL"
+            },
+            "semantic": "TOOL",
+            "origin_signature": "MrLiouWord",
+            "status": "implemented_runtime_particle"
+          },
+          {
+            "id": "MRL_P_0006",
+            "particle_type": "MRL_GenericParticle",
+            "layer": "L5_Runtime",
+            "source_language": "MRL_FPlusPlus",
+            "properties": {
+              "kind": "operator_or_token",
+              "value": "|>"
+            },
+            "semantic": "|>",
+            "origin_signature": "MrLiouWord",
+            "status": "implemented_runtime_particle"
+          },
+          {
+            "id": "MRL_P_0007",
+            "particle_type": "MRL_GenericParticle",
+            "layer": "L5_Runtime",
+            "source_language": "MRL_FPlusPlus",
+            "properties": {
+              "kind": "operator_or_token",
+              "value": "execute"
+            },
+            "semantic": "execute",
+            "origin_signature": "MrLiouWord",
+            "status": "implemented_runtime_particle"
+          },
+          {
+            "id": "MRL_P_0008",
+            "particle_type": "MRL_GenericParticle",
+            "layer": "L5_Runtime",
+            "source_language": "MRL_FPlusPlus",
+            "properties": {
+              "kind": "operator_or_token",
+              "value": "("
+            },
+            "semantic": "(",
+            "origin_signature": "MrLiouWord",
+            "status": "implemented_runtime_particle"
+          },
+          {
+            "id": "MRL_P_0009",
+            "particle_type": "MRL_GenericParticle",
+            "layer": "L5_Runtime",
+            "source_language": "MRL_FPlusPlus",
+            "properties": {
+              "kind": "operator_or_token",
+              "value": ")"
+            },
+            "semantic": ")",
+            "origin_signature": "MrLiouWord",
+            "status": "implemented_runtime_particle"
+          }
+        ],
+        "particle_atoms": [
+          {
+            "atom_id": "MRL_P_0001",
+            "atom_type": "MRL_FluinParticle",
+            "simhash_seed": "df40d5b017922bd5",
+            "semantic": "CTX"
+          },
+          {
+            "atom_id": "MRL_P_0002",
+            "atom_type": "MRL_FluinParticle",
+            "simhash_seed": "c3bc777cf3b9a852",
+            "semantic": "TOOL"
+          },
+          {
+            "atom_id": "MRL_P_0003",
+            "atom_type": "MRL_GenericParticle",
+            "simhash_seed": "cc9058e1d6ee991d",
+            "semantic": "CTX"
+          },
+          {
+            "atom_id": "MRL_P_0004",
+            "atom_type": "MRL_GenericParticle",
+            "simhash_seed": "637019523943a2a8",
+            "semantic": "⊕"
+          },
+          {
+            "atom_id": "MRL_P_0005",
+            "atom_type": "MRL_GenericParticle",
+            "simhash_seed": "0271521fff7c8e0a",
+            "semantic": "TOOL"
+          },
+          {
+            "atom_id": "MRL_P_0006",
+            "atom_type": "MRL_GenericParticle",
+            "simhash_seed": "5de7429ad1acc675",
+            "semantic": "|>"
+          },
+          {
+            "atom_id": "MRL_P_0007",
+            "atom_type": "MRL_GenericParticle",
+            "simhash_seed": "b686239e50105bff",
+            "semantic": "execute"
+          },
+          {
+            "atom_id": "MRL_P_0008",
+            "atom_type": "MRL_GenericParticle",
+            "simhash_seed": "81b08204d30bd857",
+            "semantic": "("
+          },
+          {
+            "atom_id": "MRL_P_0009",
+            "atom_type": "MRL_GenericParticle",
+            "simhash_seed": "ae7e7591431b5939",
+            "semantic": ")"
+          }
+        ],
+        "created_at": "2026-05-10T14:43:14.148Z",
+        "mrl_hash": "afc4edcf60e522173160deb4c69ade699aaa8c88db42b4cb862c9e66999690aa"
+      }
+    },
+    "contextGraph": {
+      "mrl_graph_type": "MRL_ContextGraph",
+      "version": "v1.2.0",
+      "origin_signature": "MrLiouWord",
+      "nodes": [
+        {
+          "id": "MRL_P_0001",
+          "label": "CTX",
+          "type": "MRL_FluinParticle",
+          "layer": "L2"
+        },
+        {
+          "id": "MRL_P_0002",
+          "label": "TOOL",
+          "type": "MRL_FluinParticle",
+          "layer": "L3"
+        },
+        {
+          "id": "MRL_P_0003",
+          "label": "CTX",
+          "type": "MRL_GenericParticle",
+          "layer": "L5_Runtime"
+        },
+        {
+          "id": "MRL_P_0004",
+          "label": "⊕",
+          "type": "MRL_GenericParticle",
+          "layer": "L5_Runtime"
+        },
+        {
+          "id": "MRL_P_0005",
+          "label": "TOOL",
+          "type": "MRL_GenericParticle",
+          "layer": "L5_Runtime"
+        },
+        {
+          "id": "MRL_P_0006",
+          "label": "|>",
+          "type": "MRL_GenericParticle",
+          "layer": "L5_Runtime"
+        },
+        {
+          "id": "MRL_P_0007",
+          "label": "execute",
+          "type": "MRL_GenericParticle",
+          "layer": "L5_Runtime"
+        },
+        {
+          "id": "MRL_P_0008",
+          "label": "(",
+          "type": "MRL_GenericParticle",
+          "layer": "L5_Runtime"
+        },
+        {
+          "id": "MRL_P_0009",
+          "label": ")",
+          "type": "MRL_GenericParticle",
+          "layer": "L5_Runtime"
+        }
+      ],
+      "edges": [
+        {
+          "from": "MRL_P_0001",
+          "to": "MRL_P_0002",
+          "relation": "MRL_CONTEXT_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "MRL_P_0002",
+          "to": "MRL_P_0003",
+          "relation": "MRL_CONTEXT_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "MRL_P_0003",
+          "to": "MRL_P_0004",
+          "relation": "MRL_CONTEXT_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "MRL_P_0004",
+          "to": "MRL_P_0005",
+          "relation": "MRL_CONTEXT_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "MRL_P_0005",
+          "to": "MRL_P_0006",
+          "relation": "MRL_CONTEXT_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "MRL_P_0006",
+          "to": "MRL_P_0007",
+          "relation": "MRL_CONTEXT_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "MRL_P_0007",
+          "to": "MRL_P_0008",
+          "relation": "MRL_CONTEXT_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "MRL_P_0008",
+          "to": "MRL_P_0009",
+          "relation": "MRL_CONTEXT_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "CTX",
+          "to": "TOOL",
+          "relation": "MRL_SOURCE_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "TOOL",
+          "to": "CTX",
+          "relation": "MRL_SOURCE_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "CTX",
+          "to": "⊕",
+          "relation": "MRL_SOURCE_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "⊕",
+          "to": "TOOL",
+          "relation": "MRL_SOURCE_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "TOOL",
+          "to": "|>",
+          "relation": "MRL_SOURCE_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "|>",
+          "to": "execute",
+          "relation": "MRL_SOURCE_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "execute",
+          "to": "(",
+          "relation": "MRL_SOURCE_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "(",
+          "to": ")",
+          "relation": "MRL_SOURCE_SEQUENCE",
+          "weight": 1
+        }
+      ],
+      "created_at": "2026-05-10T14:43:14.148Z",
+      "mrl_hash": "e37af122f597d39015d808c09a33ad4470f95d617e06dd48f3e55fc88169dd9e"
+    },
+    "runtimeGraph": {
+      "mrl_graph_type": "MRL_RuntimeGraph",
+      "version": "v1.2.0",
+      "origin_signature": "MrLiouWord",
+      "nodes": [
+        {
+          "id": "MRL_P_0001",
+          "label": "MRL_FluinParticle",
+          "layer": "L2",
+          "semantic": "CTX",
+          "runtime_action": "MRL_REGISTER_PARTICLE"
+        },
+        {
+          "id": "MRL_P_0002",
+          "label": "MRL_FluinParticle",
+          "layer": "L3",
+          "semantic": "TOOL",
+          "runtime_action": "MRL_REGISTER_PARTICLE"
+        },
+        {
+          "id": "MRL_P_0003",
+          "label": "MRL_GenericParticle",
+          "layer": "L5_Runtime",
+          "semantic": "CTX",
+          "runtime_action": "MRL_ANALYZE_NODE"
+        },
+        {
+          "id": "MRL_P_0004",
+          "label": "MRL_GenericParticle",
+          "layer": "L5_Runtime",
+          "semantic": "⊕",
+          "runtime_action": "MRL_ANALYZE_NODE"
+        },
+        {
+          "id": "MRL_P_0005",
+          "label": "MRL_GenericParticle",
+          "layer": "L5_Runtime",
+          "semantic": "TOOL",
+          "runtime_action": "MRL_ANALYZE_NODE"
+        },
+        {
+          "id": "MRL_P_0006",
+          "label": "MRL_GenericParticle",
+          "layer": "L5_Runtime",
+          "semantic": "|>",
+          "runtime_action": "MRL_ANALYZE_NODE"
+        },
+        {
+          "id": "MRL_P_0007",
+          "label": "MRL_GenericParticle",
+          "layer": "L5_Runtime",
+          "semantic": "execute",
+          "runtime_action": "MRL_ANALYZE_NODE"
+        },
+        {
+          "id": "MRL_P_0008",
+          "label": "MRL_GenericParticle",
+          "layer": "L5_Runtime",
+          "semantic": "(",
+          "runtime_action": "MRL_ANALYZE_NODE"
+        },
+        {
+          "id": "MRL_P_0009",
+          "label": "MRL_GenericParticle",
+          "layer": "L5_Runtime",
+          "semantic": ")",
+          "runtime_action": "MRL_ANALYZE_NODE"
+        }
+      ],
+      "edges": [
+        {
+          "from": "MRL_P_0001",
+          "to": "MRL_P_0002",
+          "relation": "MRL_RUNTIME_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "MRL_P_0002",
+          "to": "MRL_P_0003",
+          "relation": "MRL_RUNTIME_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "MRL_P_0003",
+          "to": "MRL_P_0004",
+          "relation": "MRL_RUNTIME_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "MRL_P_0004",
+          "to": "MRL_P_0005",
+          "relation": "MRL_RUNTIME_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "MRL_P_0005",
+          "to": "MRL_P_0006",
+          "relation": "MRL_RUNTIME_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "MRL_P_0006",
+          "to": "MRL_P_0007",
+          "relation": "MRL_RUNTIME_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "MRL_P_0007",
+          "to": "MRL_P_0008",
+          "relation": "MRL_RUNTIME_SEQUENCE",
+          "weight": 1
+        },
+        {
+          "from": "MRL_P_0008",
+          "to": "MRL_P_0009",
+          "relation": "MRL_RUNTIME_SEQUENCE",
+          "weight": 1
+        }
+      ],
+      "created_at": "2026-05-10T14:43:14.148Z",
+      "mrl_hash": "4087d423b771045e39f2fbf7921480c59075157e867c9fd9a205338d96c74dec"
+    },
+    "attentionRoute": {
+      "mrl_type": "MRL_AttentionRoute",
+      "version": "v1.2.0",
+      "origin_signature": "MrLiouWord",
+      "routes": [
+        {
+          "node_id": "MRL_P_0007",
+          "priority": 0.68,
+          "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+          "runtime_action": "MRL_ANALYZE_NODE"
+        },
+        {
+          "node_id": "MRL_P_0001",
+          "priority": 0.49,
+          "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+          "runtime_action": "MRL_REGISTER_PARTICLE"
+        },
+        {
+          "node_id": "MRL_P_0002",
+          "priority": 0.48,
+          "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+          "runtime_action": "MRL_REGISTER_PARTICLE"
+        },
+        {
+          "node_id": "MRL_P_0003",
+          "priority": 0.47,
+          "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+          "runtime_action": "MRL_ANALYZE_NODE"
+        },
+        {
+          "node_id": "MRL_P_0004",
+          "priority": 0.46,
+          "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+          "runtime_action": "MRL_ANALYZE_NODE"
+        },
+        {
+          "node_id": "MRL_P_0005",
+          "priority": 0.45,
+          "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+          "runtime_action": "MRL_ANALYZE_NODE"
+        },
+        {
+          "node_id": "MRL_P_0006",
+          "priority": 0.44,
+          "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+          "runtime_action": "MRL_ANALYZE_NODE"
+        },
+        {
+          "node_id": "MRL_P_0008",
+          "priority": 0.42,
+          "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+          "runtime_action": "MRL_ANALYZE_NODE"
+        },
+        {
+          "node_id": "MRL_P_0009",
+          "priority": 0.41,
+          "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC",
+          "runtime_action": "MRL_ANALYZE_NODE"
+        }
+      ],
+      "created_at": "2026-05-10T14:43:14.148Z",
+      "mrl_hash": "a98d3920d9eda3c6ba29292e114b6244b805c3262985215001655932ecd17133"
+    },
+    "verification": {
+      "mrl_type": "MRL_RoundTrip_VerificationReport",
+      "version": "v1.2.0",
+      "origin_signature": "MrLiouWord",
+      "pass": true,
+      "checks": [
+        {
+          "name": "MRL_AST_EXISTS",
+          "pass": true
+        },
+        {
+          "name": "MRL_METAIR_EXISTS",
+          "pass": true
+        },
+        {
+          "name": "MRL_PARTICLEIR_EXISTS",
+          "pass": true
+        },
+        {
+          "name": "MRL_ORIGIN_SIGNATURE",
+          "pass": true
+        },
+        {
+          "name": "MRL_CONTEXT_GRAPH_EXISTS",
+          "pass": true
+        },
+        {
+          "name": "MRL_RUNTIME_GRAPH_EXISTS",
+          "pass": true
+        }
+      ],
+      "sourceHash": "0c34b1de654a8796e9cc7290d06156a06b18dfcd936978280e2e95f019e3160b",
+      "artifactHash": "b493edd25555b7dc0bd6ddfd2539c7a3fc1fe6cbe9a07bc154540221e1d5d1ca",
+      "created_at": "2026-05-10T14:43:14.148Z"
+    },
+    "trace": {
+      "mrl_type": "MRL_RuntimeTrace",
+      "version": "v1.2.0",
+      "origin_signature": "MrLiouWord",
+      "started_at": "2026-05-10T14:43:14.148Z",
+      "runtime_graph_hash": "4087d423b771045e39f2fbf7921480c59075157e867c9fd9a205338d96c74dec",
+      "attention_hash": "a98d3920d9eda3c6ba29292e114b6244b805c3262985215001655932ecd17133",
+      "steps": [
+        {
+          "step": 1,
+          "node_id": "MRL_P_0007",
+          "action": "MRL_ANALYZE_NODE",
+          "priority": 0.68,
+          "status": "implemented_pass",
+          "message": "MRL particle executed/indexed: execute",
+          "output_hash": "08536a79df7d053b"
+        },
+        {
+          "step": 2,
+          "node_id": "MRL_P_0001",
+          "action": "MRL_REGISTER_PARTICLE",
+          "priority": 0.49,
+          "status": "implemented_pass",
+          "message": "MRL particle executed/indexed: CTX",
+          "output_hash": "047fd678b54c5bf1"
+        },
+        {
+          "step": 3,
+          "node_id": "MRL_P_0002",
+          "action": "MRL_REGISTER_PARTICLE",
+          "priority": 0.48,
+          "status": "implemented_pass",
+          "message": "MRL particle executed/indexed: TOOL",
+          "output_hash": "b630f43850c24786"
+        },
+        {
+          "step": 4,
+          "node_id": "MRL_P_0003",
+          "action": "MRL_ANALYZE_NODE",
+          "priority": 0.47,
+          "status": "implemented_pass",
+          "message": "MRL particle executed/indexed: CTX",
+          "output_hash": "047fd678b54c5bf1"
+        },
+        {
+          "step": 5,
+          "node_id": "MRL_P_0004",
+          "action": "MRL_ANALYZE_NODE",
+          "priority": 0.46,
+          "status": "implemented_pass",
+          "message": "MRL particle executed/indexed: ⊕",
+          "output_hash": "d2f811eddc82e555"
+        },
+        {
+          "step": 6,
+          "node_id": "MRL_P_0005",
+          "action": "MRL_ANALYZE_NODE",
+          "priority": 0.45,
+          "status": "implemented_pass",
+          "message": "MRL particle executed/indexed: TOOL",
+          "output_hash": "b630f43850c24786"
+        },
+        {
+          "step": 7,
+          "node_id": "MRL_P_0006",
+          "action": "MRL_ANALYZE_NODE",
+          "priority": 0.44,
+          "status": "implemented_pass",
+          "message": "MRL particle executed/indexed: |>",
+          "output_hash": "16e83eb57105e473"
+        },
+        {
+          "step": 8,
+          "node_id": "MRL_P_0008",
+          "action": "MRL_ANALYZE_NODE",
+          "priority": 0.42,
+          "status": "implemented_pass",
+          "message": "MRL particle executed/indexed: (",
+          "output_hash": "4db859c826472199"
+        },
+        {
+          "step": 9,
+          "node_id": "MRL_P_0009",
+          "action": "MRL_ANALYZE_NODE",
+          "priority": 0.41,
+          "status": "implemented_pass",
+          "message": "MRL particle executed/indexed: )",
+          "output_hash": "7aed81d6379945ac"
+        }
+      ],
+      "final_data_preview": "particle CTX { @layer: L2 @data: \"整理文件\" }\nparticle TOOL { @layer: L3 @type: \"parser\" }\nCTX ⊕ TOOL |> execute()",
+      "completed_at": "2026-05-10T14:43:14.148Z",
+      "mrl_hash": "5eb9640470708284c80494399f1d02de94b080c6ba24140b40b27ca3f1fec60c"
+    }
+  },
+  "completed_at": "2026-05-10T14:43:14.149Z"
+}

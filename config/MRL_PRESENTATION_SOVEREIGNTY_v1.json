@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "origin_signature": "MrLiouWord",
+  "policy": "federated_presentation_independent_canonical_authority",
+  "mrl_display": {
+    "name_source": "canonical_name",
+    "product_source": "canonical_product",
+    "history_source": "canonical_history",
+    "origin_source": "origin_signature"
+  },
+  "external_view": {
+    "preserve_source_name": true,
+    "preserve_source_origin": true,
+    "preserve_source_ref": true,
+    "treat_as_metadata": true,
+    "may_override_mrl_canonical": false
+  },
+  "write_policy": {
+    "external_writes_target": "shadow_state",
+    "canonical_write_requires_validation": true,
+    "canonical_write_requires_root_authorization": true,
+    "destructive_rename_allowed": false,
+    "history_rewrite_allowed": false
+  },
+  "projection_contract": {
+    "view_is_state": false,
+    "external_name_is_canonical": false,
+    "canonical_name_controls_mrl_ui": true,
+    "source_provenance_is_immutable_metadata": true
+  }
+}

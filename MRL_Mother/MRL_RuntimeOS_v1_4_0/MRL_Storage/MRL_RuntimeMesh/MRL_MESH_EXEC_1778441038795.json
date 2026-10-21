@@ -1,0 +1,51 @@
+{
+  "mrl_type": "MRL_RuntimeMeshExecution",
+  "origin_signature": "MrLiouWord",
+  "execution_id": "MRL_MESH_EXEC_1778441038795",
+  "plan_id": "MRL_MESH_PLAN_1778441038794",
+  "status": "completed",
+  "executed_at": "2026-05-10T19:23:58.795Z",
+  "local_trace": {
+    "mrl_type": "MRL_RuntimeTrace",
+    "version": "v1.2.0",
+    "origin_signature": "MrLiouWord",
+    "started_at": "2026-05-10T19:23:58.794Z",
+    "runtime_graph_hash": "5eeff9738b55d8bdcdee42d7e997b185c79737afb938811488668dc0716c5694",
+    "attention_hash": "2b12c6b788643c946fb5796452afdc76e97a65f061da262ea28a69ff40d48641",
+    "steps": [
+      {
+        "step": 1,
+        "node_id": "MRL_P_0002",
+        "action": "MRL_EXECUTE_CALLABLE",
+        "priority": 0.86,
+        "status": "implemented_pass",
+        "message": "MRL code structure indexed: run",
+        "output_hash": "f14d376dda21101f"
+      },
+      {
+        "step": 2,
+        "node_id": "MRL_P_0001",
+        "action": "MRL_REGISTER_TYPE",
+        "priority": 0.62,
+        "status": "implemented_pass",
+        "message": "MRL code structure indexed: MRLThing",
+        "output_hash": "edefbab60944311f"
+      }
+    ],
+    "final_data_preview": "class MRLThing { public: void run(); };",
+    "completed_at": "2026-05-10T19:23:58.794Z",
+    "mrl_hash": "febf1a40fdd8d54168e2065d12e6be5fa9fdebe0bcc9be386454c3cde886d946"
+  },
+  "node_assignments": [
+    {
+      "index": 0,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    },
+    {
+      "index": 1,
+      "assigned_node": "MRL_LOCAL_NODE",
+      "reason": "MRL_ATTENTION_SCORE_BY_COMMAND_AND_SEMANTIC"
+    }
+  ]
+}

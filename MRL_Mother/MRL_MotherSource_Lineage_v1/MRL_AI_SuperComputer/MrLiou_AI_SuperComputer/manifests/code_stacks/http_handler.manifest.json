@@ -1,0 +1,85 @@
+{
+  "manifest_version": "2.0",
+  "stack_type": "code_generator",
+  "stack_name": "http_handler_stack",
+  "description": "HTTP handler is AI-generated and self-optimizing",
+  "composition": {
+    "mode": "sequential_synthesis",
+    "particles": [
+      {
+        "particle_type": "function",
+        "role": "request_parser",
+        "ai_provider": "openai",
+        "synthesis_prompt": "Generate Python function to parse HTTP request headers and body into structured dict",
+        "parameters": {
+          "request": "HTTP request object"
+        },
+        "expected_output": "dict with parsed request data"
+      },
+      {
+        "particle_type": "function",
+        "role": "route_dispatcher",
+        "ai_provider": "claude",
+        "synthesis_prompt": "Generate Python function to dispatch HTTP request to appropriate handler based on path and method",
+        "parameters": {
+          "path": "URL path",
+          "method": "HTTP method"
+        },
+        "expected_output": "handler function reference"
+      },
+      {
+        "particle_type": "function",
+        "role": "response_builder",
+        "ai_provider": "gemini",
+        "synthesis_prompt": "Generate Python function to build HTTP response with proper headers and status codes",
+        "parameters": {
+          "data": "Response data",
+          "status": "HTTP status code"
+        },
+        "expected_output": "formatted HTTP response"
+      },
+      {
+        "particle_type": "function",
+        "role": "error_handler",
+        "ai_provider": "openai",
+        "synthesis_prompt": "Generate robust error handling function with proper logging and graceful degradation",
+        "parameters": {
+          "error": "Exception object",
+          "context": "Request context"
+        },
+        "expected_output": "error response with stack trace"
+      }
+    ]
+  },
+  "self_optimization": {
+    "enabled": true,
+    "triggers": [
+      "performance_degradation",
+      "error_rate_increase",
+      "latency_threshold_exceeded"
+    ],
+    "regeneration_strategy": "mobius_refinement",
+    "optimization_goals": [
+      "reduce_latency",
+      "improve_error_handling",
+      "increase_throughput"
+    ],
+    "performance_baseline": {
+      "target_latency_ms": 100,
+      "max_error_rate": 0.01,
+      "min_throughput_rps": 1000
+    }
+  },
+  "monitoring": {
+    "metrics_collection": true,
+    "merkle_audit": true,
+    "performance_tracking": true
+  },
+  "fusion_strategy": {
+    "ai_consensus": {
+      "enabled": true,
+      "providers": ["openai", "claude", "gemini"],
+      "voting_method": "weighted_quality"
+    }
+  }
+}
