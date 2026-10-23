@@ -31,7 +31,7 @@ jobs:
       matrix:
         service:
           - name: module-a
-            context: ./apps/module-a
+            context: ./apps
             dockerfile: ./apps/module-a/Dockerfile
           - name: orchestrator
             context: ./apps/orchestrator
