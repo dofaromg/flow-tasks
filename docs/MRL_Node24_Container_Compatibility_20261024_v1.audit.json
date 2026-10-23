@@ -32,14 +32,14 @@
     },
     {
       "path": ".github/workflows/MRL_Node24_Container_Compatibility.yml",
-      "size": 3693,
-      "sha256": "88c212e0a9fe542cf6de88f37d676159e3aee90ebd55d9117a42c8ca9e1d3345",
+      "size": 4482,
+      "sha256": "3b1be47d7652c17d1768ead102aefada3857397e336544642e0e029302202d61",
       "before_sha256": null
     },
     {
       "path": "docs/MRL_Node24_Container_Compatibility_20261024_v1.md",
-      "size": 7602,
-      "sha256": "e9e74120c00d752e46e5fd5ab5aba6e4a8fa85f73edde0faf8a9e791bac16203",
+      "size": 8789,
+      "sha256": "ee8918488566026821deddcd6b37c870bac75d05039a074dbabf54afd6ba89ac",
       "before_sha256": null
     }
   ],
@@ -161,6 +161,22 @@
       "runtimeos_acceptance": "PASS",
       "runtimeos_health": "HARNESS_STARTUP_RETRY_FAILURE",
       "bridge": "HARNESS_REDIS_SERVICE_QUOTING_FAILURE"
+    },
+    {
+      "head": "f31d2f7d31a6b5b9be16e73092c7a81e75c4fe6c",
+      "run_id": 39987796225,
+      "bridge_image_build_regression_pg_redis_7800": "PASS",
+      "runtimeos_image_build_acceptance_8788": "PASS",
+      "dl580": "NOT_VERIFIED"
     }
-  ]
+  ],
+  "source_delivery_check": {
+    "expected": 6,
+    "verified_readback_at_prior_head": 6,
+    "missing": 0,
+    "extra": 0,
+    "mismatch": 0,
+    "coverage_percent": 100,
+    "scope": "source files only; latest commit must be read back independently"
+  }
 }

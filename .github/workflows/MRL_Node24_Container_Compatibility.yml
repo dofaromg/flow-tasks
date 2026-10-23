@@ -13,21 +13,28 @@ jobs:
   bridge:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_DB: mrl_baseworld
-          POSTGRES_USER: mrl_root
-          POSTGRES_PASSWORD: mrl-ci-only
-        ports: ['5432:5432']
-        options: --health-cmd "pg_isready -U mrl_root -d mrl_baseworld" --health-interval 5s --health-retries 10
-      redis:
-        image: redis:7-alpine
-        ports: ['6379:6379']
-        options: --health-cmd "redis-cli ping" --health-interval 5s --health-retries 10
     steps:
       - uses: actions/checkout@v4
+      - name: Start isolated PostgreSQL and Redis with ephemeral credentials
+        run: |
+          set -eu
+          MRL_CI_DB_PASSWORD=$(openssl rand -hex 24)
+          MRL_CI_API_KEY=$(openssl rand -hex 24)
+          echo "::add-mask::$MRL_CI_DB_PASSWORD"
+          echo "::add-mask::$MRL_CI_API_KEY"
+          echo "MRL_CI_DB_PASSWORD=$MRL_CI_DB_PASSWORD" >> "$GITHUB_ENV"
+          echo "MRL_CI_API_KEY=$MRL_CI_API_KEY" >> "$GITHUB_ENV"
+          docker run -d --name MRL_Node24_Postgres -p 127.0.0.1:5432:5432 \
+            -e POSTGRES_DB=mrl_baseworld -e POSTGRES_USER=mrl_root \
+            -e POSTGRES_PASSWORD="$MRL_CI_DB_PASSWORD" postgres:16-alpine
+          docker run -d --name MRL_Node24_Redis -p 127.0.0.1:6379:6379 redis:7-alpine
+          for attempt in $(seq 1 30); do
+            if docker exec MRL_Node24_Postgres pg_isready -U mrl_root -d mrl_baseworld && docker exec MRL_Node24_Redis redis-cli ping; then
+              exit 0
+            fi
+            sleep 1
+          done
+          exit 1
       - name: Build existing MRL_Bridge image
         run: docker build -t mrl-bridge-node24 MRL_Bridge
       - name: Test translation contract in built image
@@ -39,7 +46,7 @@ jobs:
           set -eu
           trap 'docker logs MRL_Bridge_Node24; docker rm -f MRL_Bridge_Node24' EXIT
           docker run -d --name MRL_Bridge_Node24 --network host \
-            -e MRL_BRIDGE_API_KEY=mrl-ci-only -e MRL_PG_PASSWORD=mrl-ci-only \
+            -e MRL_BRIDGE_API_KEY="$MRL_CI_API_KEY" -e MRL_PG_PASSWORD="$MRL_CI_DB_PASSWORD" \
             -e MRL_BRIDGE_LOG_DIR=/tmp/MRL_Bridge_logs mrl-bridge-node24
           curl --retry 30 --retry-all-errors --retry-delay 1 --retry-max-time 60 --max-time 10 --fail http://127.0.0.1:7800/version > /tmp/MRL_Bridge_version.json
           curl --max-time 30 --fail http://127.0.0.1:7800/health > /tmp/MRL_Bridge_health.json
@@ -51,6 +58,12 @@ jobs:
           assert v['origin_signature']==h['origin_signature']=='MrLiouWord'
           assert h['api'] and h['pg'] and h['redis'], h
           PY
+      - name: Remove isolated test databases
+        if: always()
+        run: |
+          docker logs MRL_Node24_Postgres || true
+          docker logs MRL_Node24_Redis || true
+          docker rm -f MRL_Node24_Postgres MRL_Node24_Redis || true
   runtimeos:
     runs-on: ubuntu-latest
     timeout-minutes: 15

@@ -57,3 +57,10 @@ Expected_File_List 為 audit JSON 列出的六個檔案；四組件皆已查核�
 Node24.22.1 root production build（含 postbuild）PASS。既有 standalone 在 Node24.22.1、隔離 3300 埠啟動成功，/api/mrl/status 回 200（讀取來源樹既有 snapshot）；此回應不是 DL580 即時觀測，不能當作實機驗收。缺快照時回 503 仍為原始碼契約。Product 精確版本 npm ci 無預編譯 binary，node-gyp header 解壓遭 fchown EINVAL；改用隔離 headers 進一步嘗試編譯，未宣告相容。
 
 [首輪映像 CI](https://github.com/dofaromg/flow-tasks/actions/runs/39987510501)，head ce09066bd4cdc1a88829e6c7ea863ca4cddae7ec：RuntimeOS image build 與容器內 acceptance PASS，健康輪詢在啟動瞬間遭 curl 56 connection reset；Bridge 在 Redis service 建立階段因 health-cmd 單引號解析 invalid reference format，尚未執行映像 build。修正測試框架為雙引號 health-cmd 與有界 retry-all-errors，保留原服務契約；下一輪以新 head 驗證，首輪結果不改寫為成功。
+
+
+[第二輪映像 CI](https://github.com/dofaromg/flow-tasks/actions/runs/39987796225)，head `f31d2f7d31a6b5b9be16e73092c7a81e75c4fe6c`：Bridge Alpine build、精確 Node24.22.1、9 regressions、7800 version、PG/Redis health **全部 PASS**；RuntimeOS Debian build、精確 Node24.22.1、既有 acceptance、8788 health **全部 PASS**。本次兩個 Dockerfile 已在 hosted Linux Docker 驗證，仍非 DL580 驗收。
+
+GitGuardian 將首 commit 工作流內固定的 CI-only 測試字串標記 Generic Password（incident 38907116）。這些值只曾供此隔離測試容器使用，非既有服務憑證；現行工作流改為 openssl 隨機生成、add-mask、job env 傳遞，測試後銷毀資料庫容器。既有 commit 不重寫，也不替 GitGuardian 裁定／關閉歷史 incident；若掃描仍針對舊 commit 報失敗，保留 owner review 阻擋。新 head 必須再驗證，不將第二輪結果當作新 head 結果。
+
+第二輪來源讀回比對 6/6（首輪也為 6/6），實際 Git compare 只包含 Expected_File_List，沒有 package／lock／Product／前端或正式服務設定差異。原生編譯還在隔離副本測試，Product 保留不變。
