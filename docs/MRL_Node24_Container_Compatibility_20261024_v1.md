@@ -51,3 +51,9 @@ Parent/source：dofaromg/flow-tasks main `80084033894dacc01e0d0fde54a553202d8e41
 Expected_File_List 為 audit JSON 列出的六個檔案；四組件皆已查核（4/4），兩個容器升級候選、兩個保留並有風險紀錄。依賴與 package map 同時列於 audit，逐檔記錄大小、SHA-256、before SHA-256、parent/source；audit 自身以 Git blob 身分核對，避免遞迴自雜湊。
 
 來源檔交付核對與執行驗收分開：Missing/Extra/Mismatch 必須為 0 才可標記來源 DELIVERY_PASS；**整體 runtime/deployment DELIVERY_PASS 尚未成立**。未要求 ZIP，因此 ZIP 比對不適用；實際 Dockerfile/workflow 已交付，audit 不替代內容。
+
+## 追加驗證 2026-10-24（保留初次回執）
+
+Node24.22.1 root production build（含 postbuild）PASS。既有 standalone 在 Node24.22.1、隔離 3300 埠啟動成功，/api/mrl/status 回 200（讀取來源樹既有 snapshot）；此回應不是 DL580 即時觀測，不能當作實機驗收。缺快照時回 503 仍為原始碼契約。Product 精確版本 npm ci 無預編譯 binary，node-gyp header 解壓遭 fchown EINVAL；改用隔離 headers 進一步嘗試編譯，未宣告相容。
+
+[首輪映像 CI](https://github.com/dofaromg/flow-tasks/actions/runs/39987510501)，head ce09066bd4cdc1a88829e6c7ea863ca4cddae7ec：RuntimeOS image build 與容器內 acceptance PASS，健康輪詢在啟動瞬間遭 curl 56 connection reset；Bridge 在 Redis service 建立階段因 health-cmd 單引號解析 invalid reference format，尚未執行映像 build。修正測試框架為雙引號 health-cmd 與有界 retry-all-errors，保留原服務契約；下一輪以新 head 驗證，首輪結果不改寫為成功。

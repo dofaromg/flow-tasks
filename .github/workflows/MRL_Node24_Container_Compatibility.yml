@@ -21,11 +21,11 @@ jobs:
           POSTGRES_USER: mrl_root
           POSTGRES_PASSWORD: mrl-ci-only
         ports: ['5432:5432']
-        options: --health-cmd pg_isready --health-interval 5s --health-retries 10
+        options: --health-cmd "pg_isready -U mrl_root -d mrl_baseworld" --health-interval 5s --health-retries 10
       redis:
         image: redis:7-alpine
         ports: ['6379:6379']
-        options: --health-cmd 'redis-cli ping' --health-interval 5s --health-retries 10
+        options: --health-cmd "redis-cli ping" --health-interval 5s --health-retries 10
     steps:
       - uses: actions/checkout@v4
       - name: Build existing MRL_Bridge image
@@ -41,7 +41,7 @@ jobs:
           docker run -d --name MRL_Bridge_Node24 --network host \
             -e MRL_BRIDGE_API_KEY=mrl-ci-only -e MRL_PG_PASSWORD=mrl-ci-only \
             -e MRL_BRIDGE_LOG_DIR=/tmp/MRL_Bridge_logs mrl-bridge-node24
-          curl --retry 30 --retry-connrefused --retry-delay 1 --max-time 10 --fail http://127.0.0.1:7800/version > /tmp/MRL_Bridge_version.json
+          curl --retry 30 --retry-all-errors --retry-delay 1 --retry-max-time 60 --max-time 10 --fail http://127.0.0.1:7800/version > /tmp/MRL_Bridge_version.json
           curl --max-time 30 --fail http://127.0.0.1:7800/health > /tmp/MRL_Bridge_health.json
           python - <<'PY'
           import json
@@ -67,7 +67,7 @@ jobs:
           set -eu
           trap 'docker logs MRL_RuntimeOS_Node24; docker rm -f MRL_RuntimeOS_Node24' EXIT
           docker run -d --name MRL_RuntimeOS_Node24 -p 127.0.0.1:8788:8788 mrl-runtimeos-node24
-          curl --retry 30 --retry-connrefused --retry-delay 1 --max-time 10 --fail http://127.0.0.1:8788/api/mrl/health > /tmp/MRL_RuntimeOS_health.json
+          curl --retry 30 --retry-all-errors --retry-delay 1 --retry-max-time 60 --max-time 10 --fail http://127.0.0.1:8788/api/mrl/health > /tmp/MRL_RuntimeOS_health.json
           python - <<'PY'
           import json
           h=json.load(open('/tmp/MRL_RuntimeOS_health.json'))
