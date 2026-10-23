@@ -113,7 +113,11 @@ invented Terraform or perimeter configuration is added to this repository.
 
 ## Sources
 
-- https://mail.google.com/mail/u/?authuser=z814241%40gmail.com#all/1a0f935bf7088d3a
+- https://mail.google.com/mail/u/#all/1a0f935bf7088d3a
+  (private mailbox evidence; sign in to the authorized mailbox and locate message
+  `1a0f935bf7088d3a`, Google Cloud notification dated 2026-10-02 Taiwan time).
+  The account selector is omitted to avoid publishing personal account data;
+  the original notification remains in the private mailbox.
 - https://drive.google.com/file/d/1VpjhAEcE9BODyxB1iCg6Wrbn0pLXUUn0/view
 - https://github.com/dofaromg/flow-tasks/blob/8bc1ce8371a51a5af562c8ae0c623c92abbb9682/apps/mongodb/pvc.yaml
 - https://docs.cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/filestore-csi-driver
