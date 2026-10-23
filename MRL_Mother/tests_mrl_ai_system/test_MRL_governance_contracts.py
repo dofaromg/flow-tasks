@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import yaml
+
 ROOT=Path(__file__).resolve().parents[2]
 
 def load(path):
@@ -69,3 +71,13 @@ def test_rootlaw_v11_binding():
     text=(ROOT/"MRL_Mother/00_rootlaw/rootlaw.yaml").read_text(encoding="utf-8")
     assert "version: 11" in text
     assert "rl_21_classification_before_reclamation_and_explicit_authorization" in text
+
+def test_trusted_governance_targets_protected_main():
+    text=(ROOT/".github/workflows/mrl-root-governance-gate.yml").read_text(encoding="utf-8")
+    workflow=yaml.load(text,Loader=yaml.BaseLoader)
+    events=workflow["on"]
+    assert events["pull_request_target"]["branches"]==["main"]
+    assert events["push"]["branches"]==["main"]
+    assert events["pull_request_target"]["types"]==[
+        "opened","synchronize","reopened","ready_for_review"
+    ]
