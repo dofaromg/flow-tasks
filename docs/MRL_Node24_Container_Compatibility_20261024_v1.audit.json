@@ -38,8 +38,8 @@
     },
     {
       "path": "docs/MRL_Node24_Container_Compatibility_20261024_v1.md",
-      "size": 8789,
-      "sha256": "ee8918488566026821deddcd6b37c870bac75d05039a074dbabf54afd6ba89ac",
+      "size": 10298,
+      "sha256": "4d813edb81d8e706d458fc8e4f5b0158052594ebb454a09004fae4913bbb9972",
       "before_sha256": null
     }
   ],
@@ -168,6 +168,16 @@
       "bridge_image_build_regression_pg_redis_7800": "PASS",
       "runtimeos_image_build_acceptance_8788": "PASS",
       "dl580": "NOT_VERIFIED"
+    },
+    {
+      "head": "e72c250c81fdbf3db4d44e9b76197eef1eccba6d",
+      "run_id": 39988073299,
+      "bridge": "PASS",
+      "runtimeos": "PASS",
+      "source_readback": "6/6 PASS",
+      "missing": 0,
+      "extra": 0,
+      "mismatch": 0
     }
   ],
   "source_delivery_check": {
@@ -178,5 +188,19 @@
     "mismatch": 0,
     "coverage_percent": 100,
     "scope": "source files only; latest commit must be read back independently"
+  },
+  "product_native_probe": {
+    "node": "24.22.1",
+    "better_sqlite3": "9.6.0",
+    "result": "SOURCE_BUILD_FAIL",
+    "make_exit": 2,
+    "npm_exit": 1,
+    "errors": [
+      "C++20 or later required",
+      "requires/std::ranges unavailable in existing build standard",
+      "V8 Local<Primitive> conversion error"
+    ],
+    "product_dockerfile": "UNCHANGED",
+    "db_acceptance": "NOT_RUN_NATIVE_BUILD_BLOCKED"
   }
 }

@@ -64,3 +64,14 @@ Node24.22.1 root production build（含 postbuild）PASS。既有 standalone 在
 GitGuardian 將首 commit 工作流內固定的 CI-only 測試字串標記 Generic Password（incident 38907116）。這些值只曾供此隔離測試容器使用，非既有服務憑證；現行工作流改為 openssl 隨機生成、add-mask、job env 傳遞，測試後銷毀資料庫容器。既有 commit 不重寫，也不替 GitGuardian 裁定／關閉歷史 incident；若掃描仍針對舊 commit 報失敗，保留 owner review 阻擋。新 head 必須再驗證，不將第二輪結果當作新 head 結果。
 
 第二輪來源讀回比對 6/6（首輪也為 6/6），實際 Git compare 只包含 Expected_File_List，沒有 package／lock／Product／前端或正式服務設定差異。原生編譯還在隔離副本測試，Product 保留不變。
+
+
+## 原生模組最終結果與最新來源核對
+
+2026-10-24 隔離 Product 副本以精確 Node `v24.22.1`、現有 package-lock 執行 `npm ci`；預編譯 binary 不存在，先排除 header 解壓限制，再用 `/tmp/node-v24.22.1` headers 編譯。**better-sqlite3 9.6.0 source build FAIL**，make exit 2／npm exit 1；主要錯誤包含 `v8config.h: C++20 or later required`、舊建置標準不接受 `requires`／`std::ranges`，以及 V8 `Local<v8::Primitive>` 型別轉換錯誤。這證明現存原生建置路徑未通過 Node24.22.1，不能只改 FROM；未修改套件、lock、schema 或資料庫。後續應獨立評估原生套件升級並驗證資料庫往返／持久化／服務啟動，而不是強行在此次 PR 全面替換。
+
+原生安裝失敗後未執行 DB／金流整合，不將缺少模組時的空 `npm rebuild` 成功訊息當作相容證據。
+
+[最新映像驗證回執](https://github.com/dofaromg/flow-tasks/actions/runs/39988073299)，head `e72c250c81fdbf3db4d44e9b76197eef1eccba6d`：改用隨機短期測試憑證後，Bridge、RuntimeOS jobs **均 PASS**。此 head 六個檔案逐檔讀回一致、compare 僅有預期六檔、hash／依賴均已核對：Missing 0、Extra 0、Mismatch 0、Coverage 100%，**來源 DELIVERY_PASS**。部署／實機 DELIVERY_PASS 未成立。
+
+本追加僅更新報告及 audit 的原生失敗結果；容器、工作流、package/lock 與上述驗證 head 相同。追加 commit 的來源讀回與 checks 仍須分別核對。
