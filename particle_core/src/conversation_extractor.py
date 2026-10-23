@@ -11,19 +11,16 @@
 5. 概念關聯分析
 """
 
-import json
-import re
-import hashlib
-import os
-from datetime import datetime
-from typing import List, Dict, Tuple, Optional, Any
-from collections import Counter, defaultdict
 import csv
+import hashlib
+import json
+import os
+import re
 import xml.etree.ElementTree as ET
-from datetime import datetime
-from typing import List, Dict
 from collections import Counter, defaultdict
+from datetime import datetime
 from html import escape as html_escape
+from typing import Any, Dict, List, Optional, Tuple
 
 try:
     import anthropic
@@ -717,6 +714,7 @@ class ConversationExtractor:
         except:
             # Fallback to basic formatting if minidom fails
             return '<?xml version="1.0" encoding="UTF-8"?>\n' + xml_str
+
     def _export_to_csv(self, package: Dict, filepath: str):
         """導出為 CSV 格式"""
         import csv
