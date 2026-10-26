@@ -111,6 +111,18 @@ class NodeEvidenceTests(unittest.TestCase):
         self.assertNotEqual(process.returncode, 0)
         self.assertEqual(before.read_bytes(), original)
 
+    def test_jsonl_preserves_unicode_separators(self):
+        """Valid JSON strings retain Unicode separators / 保留字串分隔字元。"""
+        for separator in ("\u0085", "\u2028", "\u2029"):
+            with self.subTest(separator=repr(separator)):
+                record = {"sequence": 1, "previous_hash": "GENESIS",
+                          "origin_signature": "MrLiouWord",
+                          "payload": {"content": "before" + separator + "after"}}
+                record["record_hash"] = capture_module.digest(record)
+                ledger = self.root / "unicode.jsonl"
+                ledger.write_text(json.dumps(record, ensure_ascii=False) + "\n\n", encoding="utf-8")
+                self.assertEqual(capture_module.read_chain(ledger), [record])
+
     def test_external_gateway_is_rejected(self):
         self.url = "https://example.com"
         process, output = self.run_cli("failed.json")

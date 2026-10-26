@@ -35,7 +35,7 @@ jobs:
       - name: Upload delivery ZIP and checksum
         uses: actions/upload-artifact@v4
         with:
-          name: MRL_APIWorks_BYOH_Deployment_Product_v1-${{ github.event.pull_request.head.sha || github.sha }}
+          name: MRL_APIWorks_BYOH_Deployment_Product_v1-${{ github.sha }}
           path: |
             MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/dist/MRL_APIWorks_BYOH_Deployment_Product_v1.zip
             MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/dist/MRL_APIWorks_BYOH_Deployment_Product_v1.zip.sha256
