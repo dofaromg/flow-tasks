@@ -22,8 +22,8 @@ try { Assert-TaskOwner ([pscustomobject]@{Description='foreign-task'}) 'D:\bridg
 Assert $rejected 'foreign task must be protected'
 $taskRoot=Join-Path $PSScriptRoot 'bridge'
 $runScript=Join-Path $taskRoot 'scripts\MRL_run_bridge.ps1'
-$boot=[pscustomobject]@{CimClass=[pscustomobject]@{CimClassName='MSFT_TaskBootTrigger'};Enabled=$true;Delay='PT30S'}
-$repeat=[pscustomobject]@{CimClass=[pscustomobject]@{CimClassName='MSFT_TaskTimeTrigger'};Enabled=$true;Repetition=[pscustomobject]@{Interval='PT1M'}}
+$boot=[pscustomobject]@{CimClass=[pscustomobject]@{CimClassName='MSFT_TaskBootTrigger'};Enabled=$true;Delay='PT30S';EndBoundary=''}
+$repeat=[pscustomobject]@{CimClass=[pscustomobject]@{CimClassName='MSFT_TaskTimeTrigger'};Enabled=$true;StartBoundary=(Get-Date).AddMinutes(1).ToString('s');EndBoundary='';Repetition=[pscustomobject]@{Interval='PT1M';Duration='';StopAtDurationEnd=$false}}
 $task=[pscustomobject]@{
     Description="$script:OwnerTag|$taskRoot"
     Actions=@([pscustomobject]@{
@@ -68,6 +68,35 @@ $repeat.Repetition.Interval='PT2M'
 $rejected=$false
 try { Assert-TaskOwner $task $taskRoot } catch {$rejected=$true}
 Assert $rejected 'trigger interval drift must be rejected'
+$repeat.Repetition.Interval='PT1M'
+foreach ($case in @(
+    @('StartBoundary', (Get-Date).AddDays(1).ToString('s')),
+    @('StartBoundary', 'invalid'),
+    @('StartBoundary', ''),
+    @('EndBoundary', (Get-Date).AddDays(-1).ToString('s')),
+    @('EndBoundary', (Get-Date).AddDays(1).ToString('s')),
+    @('Duration', 'PT1H'),
+    @('Duration', 'P1D')
+)) {
+    $copy=$task | ConvertTo-Json -Depth 12 | ConvertFrom-Json
+    $target=$copy.Triggers[1]
+    if($case[0] -in @('Duration','StopAtDurationEnd')) { $target=$target.Repetition }
+    $target.($case[0])=$case[1]
+    $rejected=$false
+    try { Assert-TaskOwner $copy $taskRoot } catch { $rejected=$true }
+    Assert $rejected ('recovery window drift accepted: ' + $case[0])
+}
+$repeat.StartBoundary=(Get-Date).AddYears(-1).ToString('s')
+Assert-TaskOwner $task $taskRoot
+$repeat.StartBoundary=[DateTimeOffset]::Now.AddMinutes(-1).ToString('o')
+Assert-TaskOwner $task $taskRoot
+$repeat.Repetition.StopAtDurationEnd=$true
+Assert-TaskOwner $task $taskRoot
+$boot.EndBoundary=(Get-Date).AddDays(1).ToString('s')
+$rejected=$false
+try { Assert-TaskOwner $task $taskRoot } catch { $rejected=$true }
+Assert $rejected 'finite boot trigger must be rejected'
+$boot.EndBoundary=''
 $fixture=Get-Content "$PSScriptRoot/fixtures/upload-response.json" -Raw | ConvertFrom-Json
 Assert-BridgeUploadResponse $fixture 'unique' 1
 $fixture | Add-Member NoteProperty manifestPath 'D:\private\manifest.json'

@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 8893,
-      "sha256": "e1cb246a065c3852e687337885646057ab9a1038e2f0eaba8fa00f033cc2b5dd"
+      "size_bytes": 9668,
+      "sha256": "991b533c2b523b16b20fbb285b8ae64ef0f3ede64a48483a9572681c6039f841"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 9909,
-      "sha256": "dd7fb81a266ceff28eb0f63e9cf61bc3e1bdeced6bae851be35fb06ee7fbc4d6"
+      "size_bytes": 11878,
+      "sha256": "fb7f121cd52d61e65fde43439b740f9ec893745be2d16ad424e80ed2e59e703e"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -330,6 +330,36 @@
       "origin_signature": "MrLiouWord"
     },
     {
+      "source_commit": "0c88c9962a361dc04d74998ee4fab20be1c18981",
+      "source_pr": 680,
+      "reason": "Post-merge ProductBridge security review adds a CHANGELOG entry; preserve earlier entries and propagate exact live dependency hashes. No change to authorization rules.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 7908,
+          "sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 7228,
+          "sha256": "0da5fcbcb686481a8c7b918c5add6ac90a76ce359837b20bcb1ada089fc00a0b"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 8683,
+          "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 8235,
+          "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
       "source_commit": "780f541c6d0ba96d876f137c847b237ef40fc93e",
       "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
       "reason": "PR #667 additive CHANGELOG entry requires refreshed live hashes for CHANGELOG and its sync manifest dependency. Preserve all preceding entries, counts, policies and payloads.",
@@ -418,6 +448,38 @@
           "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
           "size_bytes": 9909,
           "sha256": "dd7fb81a266ceff28eb0f63e9cf61bc3e1bdeced6bae851be35fb06ee7fbc4d6"
+        }
+      ],
+      "origin_signature": "MrLiouWord",
+      "change_commit": "cac701c98d2019a33756e4e743698b2e80d9c481"
+    },
+    {
+      "source_commit": "cac701c98d2019a33756e4e743698b2e80d9c481",
+      "base_commit": "32d4294b929f67cc6717318f6df05f15f01f0661",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
+      "reason": "Merge main (PR #685 and issue-governance updates) into PR #667 additive CHANGELOG and sync manifest integrity update. Earlier PR #667 entries retained; no counts, policies, payloads or names changed.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 8683,
+          "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 8235,
+          "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 9668,
+          "sha256": "991b533c2b523b16b20fbb285b8ae64ef0f3ede64a48483a9572681c6039f841"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 11878,
+          "sha256": "fb7f121cd52d61e65fde43439b740f9ec893745be2d16ad424e80ed2e59e703e"
         }
       ],
       "origin_signature": "MrLiouWord"

@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 8893,
-      "sha256": "e1cb246a065c3852e687337885646057ab9a1038e2f0eaba8fa00f033cc2b5dd",
+      "size_bytes": 9668,
+      "sha256": "991b533c2b523b16b20fbb285b8ae64ef0f3ede64a48483a9572681c6039f841",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -191,6 +191,34 @@
       "origin_signature": "MrLiouWord"
     },
     {
+      "source_commit": "0c88c9962a361dc04d74998ee4fab20be1c18981",
+      "source_pr": 680,
+      "reason": "Post-merge ProductBridge security review adds a CHANGELOG entry; preserve earlier entries and propagate exact live dependency hashes. No change to authorization rules.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 7908,
+          "sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 8683,
+          "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
       "source_commit": "780f541c6d0ba96d876f137c847b237ef40fc93e",
       "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
       "reason": "PR #667 restores Codespace Monitoring and appends a CHANGELOG entry. Refresh only the live checksum; preserve the preceding entry and all sync payloads.",
@@ -242,6 +270,25 @@
       },
       "current_size_bytes": 8893,
       "current_sha256": "e1cb246a065c3852e687337885646057ab9a1038e2f0eaba8fa00f033cc2b5dd",
+      "origin_signature": "MrLiouWord",
+      "change_commit": "cac701c98d2019a33756e4e743698b2e80d9c481"
+    },
+    {
+      "source_commit": "cac701c98d2019a33756e4e743698b2e80d9c481",
+      "base_commit": "32d4294b929f67cc6717318f6df05f15f01f0661",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
+      "reason": "Merge main (PR #685 and issue-governance updates) into PR #667: CHANGELOG keeps every main entry and the PR #667 entry. Earlier PR #667 entries are retained; refresh only the live checksum.",
+      "previous_entry": {
+        "path": "CHANGELOG.md",
+        "role": "additive_history",
+        "size_bytes": 8683,
+        "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+        "dependencies": [
+          "docs/Mrliou_MRL_Sync_Operations_v1.md"
+        ]
+      },
+      "current_size_bytes": 9668,
+      "current_sha256": "991b533c2b523b16b20fbb285b8ae64ef0f3ede64a48483a9572681c6039f841",
       "origin_signature": "MrLiouWord"
     }
   ]

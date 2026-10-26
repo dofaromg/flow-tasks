@@ -20,22 +20,34 @@ try {
     $root=Join-Path $temp 'bridge'
     $backend=Join-Path $root 'backend\MRL_3D_Reconstruction_Server'
     $DependencyPath=Join-Path $temp 'deps'
-    foreach($dir in @((Join-Path $root 'scripts'),(Join-Path $backend 'python'),(Join-Path $backend 'node_modules\nested'),(Join-Path $DependencyPath 'nested'))) {
+    $venv=Join-Path $root '.venv'
+    $basePython=Join-Path $temp 'basePython'
+    $state=Join-Path $root '.bridge'
+    $storage=Join-Path $backend 'storage'
+    $packageStorage=Join-Path $backend 'node_modules\@fixture\storage'
+    foreach($dir in @((Join-Path $root 'scripts'),(Join-Path $backend 'python'),(Join-Path $backend 'node_modules\nested'),(Join-Path $DependencyPath 'nested'),(Join-Path $venv 'Scripts'),(Join-Path $venv 'Lib\site-packages'),(Join-Path $basePython 'Lib'),(Join-Path $basePython 'DLLs'),(Join-Path $state 'receipts'),$storage,$packageStorage)) {
         $null=New-Item -ItemType Directory $dir -Force
     }
-    $node=Join-Path $DependencyPath 'node.exe'; $python=Join-Path $DependencyPath 'python.exe'
+    $node=Join-Path $DependencyPath 'node.exe'; $python=Join-Path $venv 'Scripts\python.exe'
     $entry=Join-Path $backend 'server.js'
     $nested=Join-Path $DependencyPath 'nested\library.dll'
-    foreach($file in @($node,$python,$entry,$nested,(Join-Path $backend 'python\mrl3d_job_runner.py'))) {
+    $venvModule=Join-Path $venv 'Lib\site-packages\module.py'
+    $baseModule=Join-Path $basePython 'Lib\module.py'
+    $baseDll=Join-Path $basePython 'DLLs\module.pyd'
+    $configFile=Join-Path $state 'config.json'
+    $packageModule=Join-Path $packageStorage 'index.js'
+    foreach($file in @($node,$python,$entry,$nested,$venvModule,$baseModule,$baseDll,$configFile,$packageModule,(Join-Path $backend 'python\mrl3d_job_runner.py'))) {
         'isolated ACL fixture; never executed' | Set-Content $file
     }
+    $venvConfig=Join-Path $venv 'pyvenv.cfg'
+    ('home = ' + $basePython) | Set-Content $venvConfig
     $source=Get-Content "$PSScriptRoot/../scripts/MRL_register_bridge.ps1" -Raw
     $start=$source.IndexOf('$dependencyDirs =')
     $end=$source.IndexOf('$task = Get-BridgeTask')
     Assert ($start -ge 0 -and $end -gt $start) 'registration ACL section not found'
     $preflight=[scriptblock]::Create($source.Substring($start,$end-$start))
     & $preflight
-    foreach($target in @($nested,(Join-Path $backend 'node_modules\nested'))) {
+    foreach($target in @($nested,(Join-Path $backend 'node_modules\nested'),$state,$configFile,(Join-Path $state 'receipts'),$venvModule,$baseModule,$baseDll,$venvConfig,$packageStorage,$packageModule)) {
         $original=Get-Acl -LiteralPath $target
         $unsafe=Get-Acl -LiteralPath $target
         $users=New-Object Security.Principal.SecurityIdentifier('S-1-5-32-545')
@@ -48,7 +60,38 @@ try {
         } finally { Set-Acl -LiteralPath $target -AclObject $original }
         Assert $rejected ('nested writable dependency accepted: ' + $target)
     }
-    'PASS: native ACL rejects writable nested file/directory; protected baseline accepted'
+    # Only the top-level data tree is excluded; package folders named storage are code.
+    $original=Get-Acl -LiteralPath $storage
+    $unsafe=Get-Acl -LiteralPath $storage
+    $unsafe.AddAccessRule((New-Object Security.AccessControl.FileSystemAccessRule($users,'Write','Allow')))
+    try { Set-Acl -LiteralPath $storage -AclObject $unsafe; & $preflight }
+    finally { Set-Acl -LiteralPath $storage -AclObject $original }
+    'PASS: native ACL rejects 11 writable code/state/Python targets; only backend storage excluded'
+
+    $canonical=Resolve-BridgeDependencyPath $DependencyPath
+    foreach($legacy in @(($DependencyPath + '\'),(' ; ' + $DependencyPath.Replace('\','/') + '/ ; '),$DependencyPath.ToUpperInvariant())) {
+        Assert ((Resolve-BridgeDependencyPath $legacy) -eq $canonical) 'legacy equivalent dependency path rejected'
+    }
+    Assert ((Resolve-BridgeDependencyPath $null) -eq (Resolve-BridgeDependencyPath ' ; ')) 'null/empty dependency paths differ'
+    Assert ((Resolve-BridgeDependencyPath $basePython) -ne $canonical) 'changed dependency directory accepted'
+    $rejected=$false
+    try { Resolve-BridgeDependencyPath (Join-Path $temp 'missing') | Out-Null } catch { $rejected=$true }
+    Assert $rejected 'missing dependency directory accepted'
+    'PASS: legacy dependency paths normalize; changed/missing directories remain distinct or rejected'
+
+    # Exercise actual ScheduledTasks CIM defaults without registering or starting any task.
+    $action=New-ScheduledTaskAction -Execute (Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe') -Argument ('-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "' + (Join-Path $root 'scripts\MRL_run_bridge.ps1') + '"') -WorkingDirectory $backend
+    $boot=New-ScheduledTaskTrigger -AtStartup; $boot.Delay='PT30S'
+    $watch=New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes 1)
+    $settings=New-ScheduledTaskSettingsSet -MultipleInstances IgnoreNew -ExecutionTimeLimit ([TimeSpan]::Zero) -StartWhenAvailable -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1) -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+    $principal=New-ScheduledTaskPrincipal -UserId 'SYSTEM' -LogonType ServiceAccount -RunLevel Highest
+    $task=New-ScheduledTask -Action $action -Trigger @($boot,$watch) -Settings $settings -Principal $principal -Description "$script:OwnerTag|$root"
+    Assert-TaskOwner $task $root
+    $task.Triggers[1].Repetition.Duration='PT1H'
+    $rejected=$false
+    try { Assert-TaskOwner $task $root } catch { $rejected=$true }
+    Assert $rejected 'finite native trigger accepted'
+    'PASS: native ScheduledTasks CIM active window accepted; finite repetition rejected; no task registered'
 
     # Assign before the fixture starts its child, then simulate a dead supervisor's Node.
     $parentFile=Join-Path $temp 'parent.ps1'
