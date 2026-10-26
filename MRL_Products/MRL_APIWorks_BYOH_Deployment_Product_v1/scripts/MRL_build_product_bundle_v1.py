@@ -93,7 +93,14 @@ def main() -> int:
         )
         with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as archive:
             for path in files_under(stage):
-                archive.write(path, path.relative_to(stage.parent).as_posix())
+                # Filesystem mtimes and host permissions are not product identity.
+                # Keep source timestamps in Git; normalize only ZIP metadata.
+                info = zipfile.ZipInfo(path.relative_to(stage.parent).as_posix(),
+                                       date_time=(1980, 1, 1, 0, 0, 0))
+                info.create_system = 3
+                info.external_attr = 0o100644 << 16
+                info.compress_type = zipfile.ZIP_DEFLATED
+                archive.writestr(info, path.read_bytes())
         # Read the persisted ZIP before asserting PASS, including the manifest.
         prefix = f"{BUNDLE_ROOT_NAME}/"
         expected_names = {prefix + item["path"] for item in entries} | {prefix + MANIFEST_NAME}
@@ -107,7 +114,13 @@ def main() -> int:
                 data = archive.read(prefix + item["path"])
                 if len(data) != item["size"] or hashlib.sha256(data).hexdigest() != item["sha256"]:
                     raise ValueError("customer ZIP content mismatch: " + item["path"])
-    print(json.dumps({"delivery_gate": "PRODUCT_BUNDLE_DELIVERY_PASS", "path": str(output), "sha256": sha256(output)}, ensure_ascii=False))
+    checksum = sha256(output)
+    checksum_path = output.with_suffix(".zip.sha256")
+    checksum_path.write_text(f"{checksum}  {output.name}\n", encoding="utf-8")
+    if checksum_path.read_text(encoding="utf-8") != f"{checksum}  {output.name}\n":
+        raise ValueError("customer ZIP checksum sidecar readback mismatch")
+    print(json.dumps({"delivery_gate": "PRODUCT_BUNDLE_DELIVERY_PASS", "path": str(output),
+                      "sha256": checksum, "checksum_path": str(checksum_path)}, ensure_ascii=False))
     return 0
 
 
