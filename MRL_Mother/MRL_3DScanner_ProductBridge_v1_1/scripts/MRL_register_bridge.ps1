@@ -9,71 +9,11 @@ $node = (Resolve-Path $NodePath).Path; $python = (Resolve-Path $PythonPath).Path
 if ([IO.Path]::GetFileName($node) -ne 'node.exe' -or [IO.Path]::GetFileName($python) -ne 'python.exe') { throw 'Use absolute node.exe and real python.exe (no Store aliases)' }
 $backend = Join-Path $root 'backend\MRL_3D_Reconstruction_Server'
 $entry = Join-Path $backend 'server.js'
-if (-not (Test-Path $entry) -or -not (Test-Path (Join-Path $backend 'node_modules'))) { throw 'Install existing backend dependencies first' }
-# SYSTEM must not execute code writable by broad unprivileged groups.
-# DependencyPath is prepended to SYSTEM's PATH and the runner resolves colmap/mrl3d through it.
-$dependencyDirs = @((Resolve-BridgeDependencyPath $DependencyPath) -split ';' | Where-Object { $_ })
-$dependencyPathValue = $dependencyDirs -join ';'
-# Write/append data, write (extended) attributes, delete child, delete, change permissions,
-# take ownership, generic write and generic all: any of these lets the group alter or take over code.
-$writeRights = 0x500D0156
-function Get-BridgeAclItems([string]$Directory, [switch]$Directories, [string]$ExcludePath = '') {
-    foreach ($item in Get-ChildItem -LiteralPath $Directory -Force) {
-        if ($ExcludePath -and $item.FullName -eq $ExcludePath) { continue }
-        if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { throw "Reparse point in protected code/state tree: $($item.FullName)" }
-        if ($item.PSIsContainer) {
-            if ($Directories) { $item.FullName }
-            Get-BridgeAclItems -Directory $item.FullName -Directories:$Directories -ExcludePath $ExcludePath
-        } elseif (-not $Directories) {
-            $item.FullName
-        }
-    }
-}
-# Discover Python's library roots from protected metadata, never by executing Python.
-$pythonRoot = Split-Path $python
-$venvConfig = Join-Path (Split-Path $pythonRoot) 'pyvenv.cfg'
-$pythonRoots = @($pythonRoot)
-if (Test-Path -LiteralPath $venvConfig -PathType Leaf) {
-    $pythonRoots = @((Split-Path $pythonRoot))
-    $homeLines = @(Get-Content -LiteralPath $venvConfig | Where-Object { $_ -match '^\s*home\s*=' })
-    if ($homeLines.Count -ne 1) { throw 'Python venv must declare exactly one base interpreter home' }
-    $pythonHome = ($homeLines[0] -split '=', 2)[1].Trim()
-    if ($pythonHome -notmatch '^[A-Za-z]:[\\/]') { throw 'Python venv home must be an absolute local path' }
-    $pythonRoots += (Resolve-Path -LiteralPath $pythonHome).Path
-}
-$state = Join-Path $root '.bridge'
-$storagePath = Join-Path $backend 'storage'
-# Use the .NET full-path spelling shared by FileSystemInfo.FullName (8.3 aliases).
-if (Test-Path -LiteralPath $storagePath) { $storagePath = [IO.Path]::GetFullPath((Resolve-Path -LiteralPath $storagePath).Path) }
-$recursiveRoots = @((Join-Path $root 'scripts')) + $dependencyDirs + $pythonRoots
-if (Test-Path -LiteralPath $state) { $recursiveRoots += $state }
-Write-Verbose ('ACL recursive roots: ' + ($recursiveRoots -join ';'))
-Write-Verbose ('ACL backend data exclusion: ' + $storagePath)
-$protectedDirectories = @($root, $backend, (Split-Path $node)) + $recursiveRoots
-$protectedDirectories += @(Get-BridgeAclItems -Directory $backend -Directories -ExcludePath $storagePath)
-foreach ($dir in @($recursiveRoots | Sort-Object -Unique)) {
-    if (-not (Test-Path -LiteralPath $dir -PathType Container)) { throw "Protected path must be a directory: $dir" }
-    $protectedDirectories += @(Get-BridgeAclItems -Directory $dir -Directories)
-}
-foreach ($dir in @($protectedDirectories | Sort-Object -Unique)) {
-    if ((Get-Item -LiteralPath $dir -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { throw "Reparse point in protected code/state tree: $dir" }
-    foreach ($ace in (Get-Acl -LiteralPath $dir).Access) {
-        $sid = $ace.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value
-        if ($sid -in @('S-1-1-0','S-1-5-11','S-1-5-32-545') -and $ace.AccessControlType -eq 'Allow' -and ([int]$ace.FileSystemRights -band $writeRights)) { throw "Broad write access on $dir; protect deployment ACL before SYSTEM registration" }
-    }
-}
-$protectedFiles = @($node, $python, $entry, (Join-Path $backend 'python\mrl3d_job_runner.py'))
-$protectedFiles += @(Get-BridgeAclItems -Directory $backend -ExcludePath $storagePath)
-foreach ($dir in @($recursiveRoots | Sort-Object -Unique)) {
-    $protectedFiles += @(Get-BridgeAclItems -Directory $dir)
-}
-foreach ($file in @($protectedFiles | Sort-Object -Unique)) {
-    if ((Get-Item -LiteralPath $file -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { throw "Reparse point in protected code/state tree: $file" }
-    foreach ($ace in (Get-Acl -LiteralPath $file).Access) {
-        $sid = $ace.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value
-        if ($sid -in @('S-1-1-0','S-1-5-11','S-1-5-32-545') -and $ace.AccessControlType -eq 'Allow' -and ([int]$ace.FileSystemRights -band $writeRights)) { throw "Broad write access on executable or loaded file $file; protect deployment ACL before SYSTEM registration" }
-    }
-}
+if (-not (Test-Path $entry)) { throw 'Backend entry missing' }
+# SYSTEM must not execute code/state writable by broad unprivileged groups.
+$dependencyPathValue = Resolve-BridgeDependencyPath $DependencyPath
+$dependencyDirs = @($dependencyPathValue -split ';' | Where-Object { $_ })
+Assert-BridgeRegistrationAcl -Root $root -Backend $backend -Node $node -Python $python -DependencyDirs $dependencyDirs
 $task = Get-BridgeTask; Assert-TaskOwner $task $root
 $conflicts = @(Get-ScheduledTask | Where-Object {
     $candidate = $_

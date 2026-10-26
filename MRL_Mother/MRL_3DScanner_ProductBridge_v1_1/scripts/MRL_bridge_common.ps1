@@ -1,5 +1,6 @@
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = 'Stop'
+. "$PSScriptRoot\MRL_bridge_acl.ps1"
 $script:TaskName = 'MRL_3DScanner_ProductBridge'
 $script:TaskPath = '\MRL\'
 $script:OwnerTag = 'MRL-Bridge-Startup-v1'
@@ -147,16 +148,10 @@ function Assert-TaskOwner($task, $root) {
         }
         # Registration starts the watch one minute ahead. Allow that initial window,
         # but reject delayed, expired or finite recovery definitions thereafter.
-        $start = [DateTimeOffset]::MinValue
-        if (-not [DateTimeOffset]::TryParse([string]$repeat[0].StartBoundary,
-                [Globalization.CultureInfo]::InvariantCulture,
-                [Globalization.DateTimeStyles]::AllowWhiteSpaces, [ref]$start) -or
-            $start -gt [DateTimeOffset]::Now.AddMinutes(2) -or
-            -not [string]::IsNullOrEmpty([string]$repeat[0].EndBoundary) -or
-            -not [string]::IsNullOrEmpty([string]$boot[0].EndBoundary) -or
-            -not [string]::IsNullOrEmpty([string]$repeat[0].Repetition.Duration)) {
-            throw ('Task recovery active window changed; refusing mutation: start={0}; end={1}; bootEnd={2}; duration={3}; stopAtEnd={4}' -f $repeat[0].StartBoundary, $repeat[0].EndBoundary, $boot[0].EndBoundary, $repeat[0].Repetition.Duration, $repeat[0].Repetition.StopAtDurationEnd)
+        if (-not [string]::IsNullOrEmpty([string]$boot[0].EndBoundary)) {
+            throw 'Boot recovery end boundary changed; refusing mutation'
         }
+        Assert-BridgeRecoveryTrigger $repeat[0]
         # Native PS5.1 sets StopAtDurationEnd even for an indefinite trigger.
         # With no duration/end boundary it cannot terminate the recovery window.
     }

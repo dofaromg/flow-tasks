@@ -41,11 +41,7 @@ try {
     }
     $venvConfig=Join-Path $venv 'pyvenv.cfg'
     ('home = ' + $basePython) | Set-Content $venvConfig
-    $source=Get-Content "$PSScriptRoot/../scripts/MRL_register_bridge.ps1" -Raw
-    $start=$source.IndexOf('$dependencyDirs =')
-    $end=$source.IndexOf('$task = Get-BridgeTask')
-    Assert ($start -ge 0 -and $end -gt $start) 'registration ACL section not found'
-    $preflight=[scriptblock]::Create($source.Substring($start,$end-$start))
+    $preflight={ Assert-BridgeRegistrationAcl -Root $root -Backend $backend -Node $node -Python $python -DependencyDirs @($DependencyPath) }
     & $preflight
     foreach($target in @($nested,(Join-Path $backend 'node_modules\nested'),$state,$configFile,(Join-Path $state 'receipts'),$venvModule,$baseModule,$baseDll,$venvConfig,$packageStorage,$packageModule)) {
         $original=Get-Acl -LiteralPath $target
