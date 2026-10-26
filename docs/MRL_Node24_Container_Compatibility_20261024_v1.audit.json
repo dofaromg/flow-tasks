@@ -1,0 +1,206 @@
+{
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "base_commit": "80084033894dacc01e0d0fde54a553202d8e41f6",
+  "expected_files": [
+    "MRL_Bridge/Dockerfile",
+    "MRL_Mother/MRL_RuntimeOS_v1_4_0/Dockerfile",
+    ".github/workflows/mrl-pr-validation-v2.yml",
+    ".github/workflows/MRL_Node24_Container_Compatibility.yml",
+    "docs/MRL_Node24_Container_Compatibility_20261024_v1.md",
+    "docs/MRL_Node24_Container_Compatibility_20261024_v1.audit.json"
+  ],
+  "expected_count": 6,
+  "files": [
+    {
+      "path": "MRL_Bridge/Dockerfile",
+      "size": 285,
+      "sha256": "19ca11a31d2bd7fe2d3cb9cb9ffdd57311f14f0de045fe09ed8e6bb03f38ad52",
+      "before_sha256": "cc18510035f1021f18989673864db10589a79c9e5ed613bcfa871bbd5618e877"
+    },
+    {
+      "path": "MRL_Mother/MRL_RuntimeOS_v1_4_0/Dockerfile",
+      "size": 197,
+      "sha256": "e71bbc146df509a80a508368afe1ca7b66b74ebe16f44a933b82834b17dd8fcc",
+      "before_sha256": "2e60de9c2743ee05ec51ed1aab68cccf5eda5b570627d82f2a828553469e6bed"
+    },
+    {
+      "path": ".github/workflows/mrl-pr-validation-v2.yml",
+      "size": 1719,
+      "sha256": "aa602eaca5325a395cdf698340bfc30ed85793a88a84b279dd07bb08fafc6dda",
+      "before_sha256": "8b448c74b425a2daa05bbb2db1780e7583df769940af5e0179df9e31ab238b35"
+    },
+    {
+      "path": ".github/workflows/MRL_Node24_Container_Compatibility.yml",
+      "size": 4482,
+      "sha256": "3b1be47d7652c17d1768ead102aefada3857397e336544642e0e029302202d61",
+      "before_sha256": null
+    },
+    {
+      "path": "docs/MRL_Node24_Container_Compatibility_20261024_v1.md",
+      "size": 10298,
+      "sha256": "4d813edb81d8e706d458fc8e4f5b0158052594ebb454a09004fae4913bbb9972",
+      "before_sha256": null
+    }
+  ],
+  "source_inventory": [
+    {
+      "path": "MRL_Bridge/package.json",
+      "size": 316,
+      "sha256": "bc6d531cfc305a01d4f22b6f142b8e878c0e5945b5396409181d59e31ab604de",
+      "parent": "80084033894dacc01e0d0fde54a553202d8e41f6"
+    },
+    {
+      "path": "MRL_Bridge/package-lock.json",
+      "size": 35735,
+      "sha256": "7258785833e4febedee68561dd2dd83895be0bc078f6de9971c7929d3a8833dd",
+      "parent": "80084033894dacc01e0d0fde54a553202d8e41f6"
+    },
+    {
+      "path": "MRL_Product/deploy/Dockerfile",
+      "size": 1735,
+      "sha256": "4e5df81a983c5d829d14146b61fa3f72237141d2f635cce988671d9a50df7002",
+      "parent": "80084033894dacc01e0d0fde54a553202d8e41f6"
+    },
+    {
+      "path": "MRL_Product/deploy/entrypoint.sh",
+      "size": 1480,
+      "sha256": "11092e37f2437742ec7c92f868a9525a349dfc136a2393f3743b8b7e3a9e9770",
+      "parent": "80084033894dacc01e0d0fde54a553202d8e41f6"
+    },
+    {
+      "path": "MRL_Product/package.json",
+      "size": 822,
+      "sha256": "7f2334218bf241415c9db1f0fc6c241824dac9a9f6c0b6d9a00eb06a911d7f6e",
+      "parent": "80084033894dacc01e0d0fde54a553202d8e41f6"
+    },
+    {
+      "path": "MRL_Product/package-lock.json",
+      "size": 59706,
+      "sha256": "86494001f713e1759e4a99bfb62cb18487cd9962b16dee7cdd99b388a114580e",
+      "parent": "80084033894dacc01e0d0fde54a553202d8e41f6"
+    },
+    {
+      "path": "MRL_Mother/MRL_RuntimeOS_v1_4_0/package.json",
+      "size": 905,
+      "sha256": "0d181dc2948d089b11509b623288a06b628186d902163a2b8e6a0d15ca2f90fe",
+      "parent": "80084033894dacc01e0d0fde54a553202d8e41f6"
+    },
+    {
+      "path": "MRL_Mother/MRL_RuntimeOS_v1_4_0/package-lock.json",
+      "size": 338,
+      "sha256": "0c62f9c3e831db16ee4240249d24fe36d7a98a1f54f41755fab4dae09f520d90",
+      "parent": "80084033894dacc01e0d0fde54a553202d8e41f6"
+    },
+    {
+      "path": "Dockerfile.mrl-frontend",
+      "size": 912,
+      "sha256": "bb39c2e08d77e4d985a8f80751749f9ede4f275718ec56771a3215c47139b469",
+      "parent": "80084033894dacc01e0d0fde54a553202d8e41f6"
+    },
+    {
+      "path": "package.json",
+      "size": 1355,
+      "sha256": "87605b02870cef4010be25a8b7fec8b7d445d861b44fe21286fa6e70402f8d9c",
+      "parent": "80084033894dacc01e0d0fde54a553202d8e41f6"
+    },
+    {
+      "path": "package-lock.json",
+      "size": 554726,
+      "sha256": "4b6fddd55e73b453b9f0fbc9f7ed067626e2abfe2246e2425814411080cf36e4",
+      "parent": "80084033894dacc01e0d0fde54a553202d8e41f6"
+    },
+    {
+      "path": "next.config.mjs",
+      "size": 194,
+      "sha256": "8b85f883fdad92eb9db265fb210a280cfb99107aaab5abc1ffce7385026fdd41",
+      "parent": "80084033894dacc01e0d0fde54a553202d8e41f6"
+    },
+    {
+      "path": "pages/api/mrl/status.js",
+      "size": 1769,
+      "sha256": "86d0dbafd2c31c8c32eb029ea25aa0f91b27eec96e9f47fa0467615b44c14178",
+      "parent": "80084033894dacc01e0d0fde54a553202d8e41f6"
+    }
+  ],
+  "expected_dependency_tree": {
+    "MRL_Bridge/Dockerfile": [
+      "MRL_Bridge/package.json",
+      "MRL_Bridge/package-lock.json",
+      "MRL_Bridge/server.js",
+      "MRL_Bridge/mrl_bridge_translation_center.cjs",
+      "MRL_Bridge/MRL_bridge_route_patch.cjs",
+      "MRL_Bridge/add_platform_route.cjs"
+    ],
+    "MRL_Mother/MRL_RuntimeOS_v1_4_0/Dockerfile": [
+      "MRL_Mother/MRL_RuntimeOS_v1_4_0/package.json",
+      "MRL_Mother/MRL_RuntimeOS_v1_4_0/package-lock.json",
+      "MRL_Mother/MRL_RuntimeOS_v1_4_0/MRL_API/MRL_RuntimeServer.js"
+    ],
+    ".github/workflows/MRL_Node24_Container_Compatibility.yml": [
+      "MRL_Bridge/Dockerfile",
+      "MRL_Mother/MRL_RuntimeOS_v1_4_0/Dockerfile",
+      "MRL_Bridge/test_mrl_bridge_translation_center.cjs",
+      "MRL_Mother/MRL_RuntimeOS_v1_4_0/MRL_Acceptance/MRL_Acceptance_TestSuite.js"
+    ]
+  },
+  "package_map": {
+    "MRL_Bridge": "UPGRADE_CANDIDATE_24.22.1_ALPINE",
+    "MRL_RuntimeOS_v1_4_0": "UPGRADE_CANDIDATE_24.22.1_BOOKWORM_SLIM",
+    "MRL_Product": "RETAIN_NODE20_NATIVE_VALIDATION_BLOCKED",
+    "MRL frontend": "RETAIN_NODE20_BUILD_AND_HEALTH_CONTRACT_GAPS"
+  },
+  "zip": "NOT_REQUESTED",
+  "runtime_delivery": "NOT_ACCEPTED",
+  "source_audit_self_identity": "Git blob SHA and size, verified outside this JSON to avoid recursive hash",
+  "historical_validation_receipts": [
+    {
+      "head": "ce09066bd4cdc1a88829e6c7ea863ca4cddae7ec",
+      "run_id": 39987510501,
+      "runtimeos_build": "PASS",
+      "runtimeos_acceptance": "PASS",
+      "runtimeos_health": "HARNESS_STARTUP_RETRY_FAILURE",
+      "bridge": "HARNESS_REDIS_SERVICE_QUOTING_FAILURE"
+    },
+    {
+      "head": "f31d2f7d31a6b5b9be16e73092c7a81e75c4fe6c",
+      "run_id": 39987796225,
+      "bridge_image_build_regression_pg_redis_7800": "PASS",
+      "runtimeos_image_build_acceptance_8788": "PASS",
+      "dl580": "NOT_VERIFIED"
+    },
+    {
+      "head": "e72c250c81fdbf3db4d44e9b76197eef1eccba6d",
+      "run_id": 39988073299,
+      "bridge": "PASS",
+      "runtimeos": "PASS",
+      "source_readback": "6/6 PASS",
+      "missing": 0,
+      "extra": 0,
+      "mismatch": 0
+    }
+  ],
+  "source_delivery_check": {
+    "expected": 6,
+    "verified_readback_at_prior_head": 6,
+    "missing": 0,
+    "extra": 0,
+    "mismatch": 0,
+    "coverage_percent": 100,
+    "scope": "source files only; latest commit must be read back independently"
+  },
+  "product_native_probe": {
+    "node": "24.22.1",
+    "better_sqlite3": "9.6.0",
+    "result": "SOURCE_BUILD_FAIL",
+    "make_exit": 2,
+    "npm_exit": 1,
+    "errors": [
+      "C++20 or later required",
+      "requires/std::ranges unavailable in existing build standard",
+      "V8 Local<Primitive> conversion error"
+    ],
+    "product_dockerfile": "UNCHANGED",
+    "db_acceptance": "NOT_RUN_NATIVE_BUILD_BLOCKED"
+  }
+}

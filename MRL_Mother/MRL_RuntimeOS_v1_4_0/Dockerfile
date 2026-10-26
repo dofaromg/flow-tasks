@@ -1,4 +1,4 @@
-FROM node:20-bookworm-slim
+FROM node:24.22.1-bookworm-slim
 WORKDIR /app
 COPY . .
 RUN npm install --omit=dev
