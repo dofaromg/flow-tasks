@@ -71,15 +71,42 @@ jobs:
             }
             if (Test-MRLAcceptedHash $entry ('0' * 64)) { throw 'Unrecognized deployment hash was accepted' }
           }
-  file-verification-windows:
-    runs-on: windows-latest
-    timeout-minutes: 10
+  file-verification-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          sparse-checkout: /MRL_Bridge/
-          sparse-checkout-cone-mode: false
+      - name: Package declared Windows-safe Bridge sources
+        run: |
+          git rev-parse HEAD > MRL_source_commit.txt
+          sha256sum MRL_Bridge/server.js MRL_Bridge/mrl_bridge_translation_center.cjs MRL_Bridge/test_mrl_file_verification.cjs MRL_Bridge/test_mrl_bridge_translation_center.cjs MRL_Bridge/package.json MRL_Bridge/package-lock.json > MRL_source_sha256.txt
+          tar -czf MRL_bridge_test_source.tgz MRL_source_commit.txt MRL_source_sha256.txt MRL_Bridge/server.js MRL_Bridge/mrl_bridge_translation_center.cjs MRL_Bridge/test_mrl_file_verification.cjs MRL_Bridge/test_mrl_bridge_translation_center.cjs MRL_Bridge/package.json MRL_Bridge/package-lock.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MRL-bridge-test-source
+          path: MRL_bridge_test_source.tgz
+          retention-days: 7
+  file-verification-windows:
+    needs: file-verification-source
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: MRL-bridge-test-source
+      - name: Verify packaged source identity
+        shell: pwsh
+        env:
+          MRL_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          tar -xzf MRL_bridge_test_source.tgz
+          if ((Get-Content MRL_source_commit.txt -Raw).Trim() -ne $env:MRL_EXPECTED_HEAD) { throw 'MRL source head mismatch' }
+          foreach ($line in Get-Content MRL_source_sha256.txt) {
+            $parts = $line -split '  ', 2
+            if ((Get-FileHash -LiteralPath $parts[1] -Algorithm SHA256).Hash.ToLowerInvariant() -ne $parts[0]) { throw 'MRL source byte mismatch' }
+          }
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
