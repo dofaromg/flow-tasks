@@ -97,6 +97,18 @@ public static class MRLBridgeProcessJob
 '@
 }
 function Get-BridgeRoot { (Resolve-Path (Join-Path $PSScriptRoot '..')).Path }
+function Resolve-BridgeDependencyPath([string]$value) {
+    $paths = @($value -split ';' | Where-Object { $_.Trim() } | ForEach-Object {
+        $resolved = Resolve-Path -LiteralPath $_.Trim()
+        if ($resolved.Provider.Name -ne 'FileSystem' -or -not (Test-Path -LiteralPath $resolved.Path -PathType Container)) {
+            throw "Dependency path must be a filesystem directory: $_"
+        }
+        $path = [IO.Path]::GetFullPath($resolved.Path)
+        if ($path.Length -gt [IO.Path]::GetPathRoot($path).Length) { $path = $path.TrimEnd([char[]]'\/') }
+        $path
+    })
+    return ($paths -join ';')
+}
 function Get-BridgeConfig {
     $c = Get-Content (Join-Path (Get-BridgeRoot) '.bridge\config.json') -Raw | ConvertFrom-Json
     if ($c.root -ne (Get-BridgeRoot) -or $c.port -ne 3050) { throw 'Config root/port mismatch' }
@@ -133,6 +145,20 @@ function Assert-TaskOwner($task, $root) {
             $settings.DisallowStartIfOnBatteries -or $settings.StopIfGoingOnBatteries) {
             throw 'Task recovery definition changed; refusing mutation'
         }
+        # Registration starts the watch one minute ahead. Allow that initial window,
+        # but reject delayed, expired or finite recovery definitions thereafter.
+        $start = [DateTimeOffset]::MinValue
+        if (-not [DateTimeOffset]::TryParse([string]$repeat[0].StartBoundary,
+                [Globalization.CultureInfo]::InvariantCulture,
+                [Globalization.DateTimeStyles]::AllowWhiteSpaces, [ref]$start) -or
+            $start -gt [DateTimeOffset]::Now.AddMinutes(2) -or
+            -not [string]::IsNullOrEmpty([string]$repeat[0].EndBoundary) -or
+            -not [string]::IsNullOrEmpty([string]$boot[0].EndBoundary) -or
+            -not [string]::IsNullOrEmpty([string]$repeat[0].Repetition.Duration)) {
+            throw ('Task recovery active window changed; refusing mutation: start={0}; end={1}; bootEnd={2}; duration={3}; stopAtEnd={4}' -f $repeat[0].StartBoundary, $repeat[0].EndBoundary, $boot[0].EndBoundary, $repeat[0].Repetition.Duration, $repeat[0].Repetition.StopAtDurationEnd)
+        }
+        # Native PS5.1 sets StopAtDurationEnd even for an indefinite trigger.
+        # With no duration/end boundary it cannot terminate the recovery window.
     }
 }
 function New-BridgeProcessJob { [MRLBridgeProcessJob]::Create() }
