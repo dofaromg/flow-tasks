@@ -37,6 +37,10 @@
 
 只有第三項通過，該客戶部署才算完成。
 
+私人節點驗收可使用 `scripts/MRL_capture_node_evidence_v1.py` 保存推論、磁碟記憶、
+Evidence 與 Passport 的核對回執，並在 Gateway 重啟後重播同一個 session。
+步驟與限制見 [交付驗收](docs/MRL_DELIVERY_ACCEPTANCE_v1.md)。回執不自動授予客戶驗收。
+
 ## 建立交付 ZIP
 
 從 GitHub repository checkout 的商品來源目錄執行：

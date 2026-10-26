@@ -11,4 +11,6 @@ docs/MRL_DATA_BOUNDARY_v1.md
 scripts/MRL_build_product_bundle_v1.py
 scripts/MRL_verify_product_source_v1.py
 tests/test_product_bundle.py
+scripts/MRL_capture_node_evidence_v1.py
+tests/test_node_evidence.py
 
