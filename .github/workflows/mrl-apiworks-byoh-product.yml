@@ -30,3 +30,14 @@ jobs:
         run: python MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_verify_product_source_v1.py
       - name: Build and inspect customer bundle
         run: python -m unittest discover -s MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests -v
+      - name: Build final verified delivery bundle
+        run: python MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_build_product_bundle_v1.py
+      - name: Upload delivery ZIP and checksum
+        uses: actions/upload-artifact@v4
+        with:
+          name: MRL_APIWorks_BYOH_Deployment_Product_v1-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/dist/MRL_APIWorks_BYOH_Deployment_Product_v1.zip
+            MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/dist/MRL_APIWorks_BYOH_Deployment_Product_v1.zip.sha256
+          if-no-files-found: error
+          retention-days: 7
