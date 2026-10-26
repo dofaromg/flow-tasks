@@ -49,6 +49,10 @@ Expected_File_List 為下表三檔及本文件，共4檔；ZIP 0。Missing 0、E
 |---|---:|---|
 | MRL_Bridge/server.js | 36230 | 4c1a38fe64d9fbd70a92c606b440ffa7db1ed822fef8d018c46ef20675768187 |
 | MRL_Bridge/test_mrl_file_verification.cjs | 9157 | 05cbd4df63102556986993839b6e8ec5099822f54c2818396725d8980457a9bc |
-| .github/workflows/MRL_Bridge_Translation_Center.yml | 3936 | f04c6970137648f09a7e9fb5a90411bcb5b6f5a747a822ccdd11d06c10f1eb95 |
+| .github/workflows/MRL_Bridge_Translation_Center.yml | 4264 | 11568533f10305d7653d56e736b4f083e15f15df4a6ea29972ee6e25387cdc73 |
 
 Dependency tree：原 Notion 定義＋Drive 觀測＋main source → 原 server.js（Node fs/crypto/child_process＋原轉譯中心＋原依賴）→ HTTP 回歸 → Linux/Windows workflow → 本證據。Package map：既有 Git 倉庫同一路徑；未新增 ZIP，manifest 不取代程式。
+
+### CI 配置修正
+
+初次 run 40413476519：Linux 在 HTTP 回歸前缺少 Express 安裝；Windows checkout 因既有根目錄 :mnt:data.txt 失敗，未執行測試。已在 Linux 增加原 Bridge lockfile npm ci，Windows 用 non-cone sparse checkout 僅取 /MRL_Bridge/（不刪原歷史檔、不停用 NTFS 保護），兩 job 固定 PR head 來源。重跑結果另查，不把此次失敗隱藏。
