@@ -63,7 +63,7 @@ def request_json(url: str, payload: dict[str, Any] | None = None) -> dict[str, A
 
 def read_chain(path: Path, passport: bool = False) -> list[dict[str, Any]]:
     require(path.is_file() and path.stat().st_size > 0, f"missing or empty ledger: {path.name}")
-    records = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    records = [json.loads(line) for line in path.read_text(encoding="utf-8").split("\n") if line.strip()]
     previous = "GENESIS"
     hash_key = "passport_hash" if passport else "record_hash"
     for index, record in enumerate(records, 1):
