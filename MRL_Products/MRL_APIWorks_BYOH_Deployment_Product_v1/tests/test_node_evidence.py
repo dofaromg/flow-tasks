@@ -130,5 +130,33 @@ class NodeEvidenceTests(unittest.TestCase):
         self.assertIn("loopback", json.loads(output.read_text())["error"])
 
 
+class UnicodeLedgerTests(unittest.TestCase):
+    def test_hash_chain_recall_preserves_unicode_separators(self):
+        """Valid model text must survive disk recall and hash verification."""
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "memory.jsonl"
+            chain = fixture.MRLHashChain(path, "MRL_TEST")
+            text = "before\u0085middle\u2028next\u2029after"
+            record = chain.append({"content": text})
+            self.assertEqual(chain.read_all(), [record])
+            self.assertTrue(chain.verify()["ok"])
+            self.assertEqual(capture_module.read_chain(path), [record])
+
+    def test_passport_latest_and_versions_preserve_unicode_separators(self):
+        """Unicode metadata must not split a Passport JSONL record."""
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            registry = fixture.MRLPassportRegistry(root)
+            arguments = dict(canonical_id="MRL_unicode", source_identity="MRL_test",
+                             world_state="candidate", capabilities=[], evidence_refs=[],
+                             return_anchor="GENESIS", environment={"text": "a\u0085b\u2028c\u2029d"})
+            first = registry.issue(**arguments)
+            self.assertEqual(registry.latest("MRL_unicode"), first)
+            second = registry.issue(**arguments)
+            self.assertTrue(registry.verify("MRL_unicode")["ok"])
+            self.assertEqual(capture_module.read_chain(registry._path("MRL_unicode"), passport=True),
+                             [first, second])
+
+
 if __name__ == "__main__":
     unittest.main()
