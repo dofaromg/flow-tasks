@@ -14,7 +14,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const { execSync } = require('child_process');
+const { execSync, execFileSync } = require('child_process');
 const crypto = require('crypto');
 const { TranslationCenter } = require('./mrl_bridge_translation_center.cjs');
 const { Pool } = require('pg');
@@ -235,6 +235,59 @@ function fileInfo(filePath) {
   };
 }
 
+// Byte-level evidence is independent of HTTP/process success.
+function digest(bytes) {
+  return crypto.createHash('sha256').update(bytes).digest('hex');
+}
+
+function verifiedWrite(filepath, data, req) {
+  const bytes = Buffer.isBuffer(data) ? data : Buffer.from(data);
+  const fd = fs.openSync(filepath, 'w');
+  try { fs.writeFileSync(fd, bytes); fs.fsyncSync(fd); }
+  finally { fs.closeSync(fd); }
+  const actual = fs.readFileSync(filepath);
+  const st = fs.statSync(filepath);
+  if (!st.isFile() || st.size !== bytes.length || !actual.equals(bytes)) {
+    throw new Error('FILE_READBACK_MISMATCH: write completed but bytes differ');
+  }
+  const record = mrlTranslationCenter.label(digest(actual), actual.length, {
+    trace_id: req.mrlBridge.trace_id, parent_ref: req.mrlBridge.inbound_event_id,
+    source_ref: 'MRL_Bridge.file-write', destination_ref: filepath,
+    direction: 'internal', status: 'file_readback_verified',
+  });
+  req.mrlBridge.last_event_id = record.event_id;
+  return { size: actual.length, modified: st.mtime.toISOString(),
+    verification: { status: 'READBACK_VERIFIED', resolved_path: filepath,
+      sha256: digest(actual), expected_sha256: digest(bytes), bytes: actual.length,
+      scope: 'file-bytes-at-readback', event_id: record.event_id,
+      trace_id: record.trace_id, record_sha256: record.record_sha256 } };
+}
+
+function writeBytes(content, b64, encoding = 'utf-8') {
+  if (b64 !== undefined) {
+    if (typeof b64 !== 'string' || !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(b64)) {
+      throw new TypeError('invalid base64');
+    }
+    return Buffer.from(b64, 'base64');
+  }
+  if (typeof content !== 'string') throw new TypeError('content must be a string');
+  return Buffer.from(content, encoding);
+}
+
+function executeCommand(cmd, options) {
+  if (typeof cmd !== 'string') throw new TypeError('cmd must be a string');
+  if (!options.shell || /^(?:.*[\\/])?powershell(?:\.exe)?$/i.test(options.shell)) {
+    // EncodedCommand avoids cmd.exe interpolation and makes non-terminating
+    // PowerShell errors fail the process. Preserve native program exit failures.
+    const script = "$ErrorActionPreference='Stop'; $LASTEXITCODE=$null; try { & {\n" + cmd +
+      "\n}; if (-not $?) { exit 1 }; if ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0) { exit $LASTEXITCODE } } catch { [Console]::Error.WriteLine($_.ToString()); exit 1 }";
+    const { shell, ...rest } = options;
+    return execFileSync(shell || 'powershell.exe', ['-NoLogo', '-NoProfile', '-NonInteractive',
+      '-EncodedCommand', Buffer.from(script, 'utf16le').toString('base64')], rest);
+  }
+  return execSync(cmd, options);
+}
+
 function ok(res, data) {
   stats.success++;
   res.json({ ok: true, ...data, _v: VERSION, _t: new Date().toISOString() });
@@ -308,6 +361,8 @@ app.get('/version', (req, res) => {
     platform: process.platform,
     arch: process.arch,
     hostname: os.hostname(),
+    source_sha256: digest(fs.readFileSync(__filename)),
+    file_verification: 'MRL.FileReadback.v1',
     bridge_translation: {
       name: 'MRL橋接轉譯中心',
       schema: 'MRL.BridgeTranslationCenter.v1',
@@ -458,7 +513,7 @@ app.get('/MRL_run', auth, (req, res) => {
   const timeout = Math.min(parseInt(req.query.timeout) || 15, 30) * 1000;
   log('RUN_GET', { cmd, cwd }, req);
   try {
-    const output = execSync(cmd, {
+    const output = executeCommand(cmd, {
       cwd,
       timeout,
       encoding: 'utf-8',
@@ -466,10 +521,10 @@ app.get('/MRL_run', auth, (req, res) => {
       maxBuffer: 5 * 1024 * 1024,
       windowsHide: true,
     });
-    ok(res, { cmd, cwd, output: output.trim() });
+    ok(res, { cmd, cwd, output: output.trim(), execution: { status: 'PROCESS_EXIT_ZERO', file_verified: false, scope: 'process-only' } });
   } catch (e) {
     stats.error++;
-    res.json({ ok: false, cmd, cwd, exitCode: e.status, stderr: (e.stderr || '').trim(), stdout: (e.stdout || '').trim(), error: e.message, _v: VERSION, _t: new Date().toISOString() });
+    res.status(e.killed || e.signal ? 504 : 500).json({ ok: false, cmd, cwd, exitCode: e.status, stderr: (e.stderr || '').trim(), stdout: (e.stdout || '').trim(), error: e.message, _v: VERSION, _t: new Date().toISOString() });
   }
 });
 
@@ -543,23 +598,15 @@ app.get('/MRL_write', auth, (req, res) => {
   if (!sp) return fail(res, 400, 'invalid path');
 
   let content;
-  if (req.query.b64) {
-    try {
-      content = Buffer.from(req.query.b64, 'base64').toString('utf-8');
-    } catch (e) { return fail(res, 400, 'invalid base64: ' + e.message); }
-  } else if (req.query.content !== undefined) {
-    content = req.query.content;
-  } else {
-    return fail(res, 400, 'need ?content= or ?b64= parameter');
-  }
+  try { content = writeBytes(req.query.content, req.query.b64); }
+  catch (e) { return fail(res, 400, e.message); }
 
   log('WRITE_GET', { filepath, size: content.length }, req);
   try {
     const dir = path.dirname(sp);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(sp, content, 'utf-8');
-    const st = fs.statSync(sp);
-    ok(res, { filepath, size: st.size, modified: st.mtime.toISOString() });
+    const evidence = verifiedWrite(sp, content, req);
+    ok(res, { filepath, ...evidence });
   } catch (e) { fail(res, 500, e.message); }
 });
 
@@ -594,20 +641,14 @@ app.post('/MRL_file/write', auth, (req, res) => {
     if (!sp) return fail(res, 400, 'invalid path');
 
     let data;
-    if (b64) {
-      data = Buffer.from(b64, 'base64');
-    } else if (content !== undefined) {
-      data = content;
-    } else {
-      return fail(res, 400, 'need content or b64');
-    }
+    try { data = writeBytes(content, b64, encoding); }
+    catch (e) { return fail(res, 400, e.message); }
 
     log('FILE_WRITE', { filepath, size: typeof data === 'string' ? data.length : data.length }, req);
     const dir = path.dirname(sp);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(sp, data, typeof data === 'string' ? (encoding || 'utf-8') : undefined);
-    const st = fs.statSync(sp);
-    ok(res, { filepath, size: st.size, modified: st.mtime.toISOString() });
+    const evidence = verifiedWrite(sp, data, req);
+    ok(res, { filepath, ...evidence });
   } catch (e) { fail(res, 500, e.message); }
 });
 
@@ -621,8 +662,9 @@ app.post('/MRL_file/read', auth, (req, res) => {
     if (st.size > MAX_FILE_READ) return fail(res, 413, 'file too large: ' + st.size + ' bytes');
     log('FILE_READ', filepath, req);
 
-    let content = fs.readFileSync(filepath, encoding || 'utf-8');
-    const result = { filepath, size: st.size, modified: st.mtime.toISOString() };
+    const raw = fs.readFileSync(filepath);
+    let content = raw.toString(encoding || 'utf-8');
+    const result = { filepath, resolved_path: path.resolve(filepath), size: raw.length, modified: st.mtime.toISOString(), sha256: digest(raw), hash_scope: 'full-file-bytes', content_scope: lines > 0 ? 'line-slice' : 'full-file' };
 
     if (lines > 0) {
       const all = content.split('\n');
@@ -676,7 +718,7 @@ app.post('/MRL_exec', auth, (req, res) => {
     const t = Math.min((timeout || 15) * 1000, MAX_EXEC_TIMEOUT);
     const s = shell || 'powershell.exe';
     log('EXEC', { cmd, cwd: cwd || 'D:\\mrl', shell: s }, req);
-    const output = execSync(cmd, {
+    const output = executeCommand(cmd, {
       cwd: cwd || 'D:\\mrl',
       timeout: t,
       encoding: 'utf-8',
@@ -684,10 +726,10 @@ app.post('/MRL_exec', auth, (req, res) => {
       maxBuffer: 5 * 1024 * 1024,
       windowsHide: true,
     });
-    ok(res, { cmd, output: output.trim() });
+    ok(res, { cmd, output: output.trim(), execution: { status: 'PROCESS_EXIT_ZERO', file_verified: false, scope: 'process-only' } });
   } catch (e) {
     stats.error++;
-    res.json({ ok: false, cmd: req.body.cmd, exitCode: e.status, stderr: (e.stderr || '').trim(), stdout: (e.stdout || '').trim(), error: e.message, _v: VERSION, _t: new Date().toISOString() });
+    res.status(e.killed || e.signal ? 504 : 500).json({ ok: false, cmd: req.body.cmd, exitCode: e.status, stderr: (e.stderr || '').trim(), stdout: (e.stdout || '').trim(), error: e.message, _v: VERSION, _t: new Date().toISOString() });
   }
 });
 
