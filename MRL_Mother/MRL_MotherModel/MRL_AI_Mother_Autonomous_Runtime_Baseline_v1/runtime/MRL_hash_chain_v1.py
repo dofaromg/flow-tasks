@@ -31,7 +31,7 @@ class MRLHashChain:
 
     def _records(self) -> list[dict[str, Any]]:
         records: list[dict[str, Any]] = []
-        for line in self.path.read_text(encoding="utf-8").splitlines():
+        for line in self.path.read_text(encoding="utf-8").split("\n"):
             if line.strip():
                 item = json.loads(line)
                 if not isinstance(item, dict):
