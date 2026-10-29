@@ -289,7 +289,8 @@
       },
       "current_size_bytes": 9668,
       "current_sha256": "991b533c2b523b16b20fbb285b8ae64ef0f3ede64a48483a9572681c6039f841",
-      "origin_signature": "MrLiouWord"
+      "origin_signature": "MrLiouWord",
+      "change_commit": "a45f1d5a623f971e1ad2bc0500270b2a3897ad8b"
     }
   ]
 }

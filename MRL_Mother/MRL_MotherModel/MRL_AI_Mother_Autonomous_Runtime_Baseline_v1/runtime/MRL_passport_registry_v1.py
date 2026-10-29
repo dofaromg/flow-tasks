@@ -82,7 +82,7 @@ class MRLPassportRegistry:
         path = self._path(canonical_id)
         if not path.exists():
             return None
-        lines = [line for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        lines = [line for line in path.read_text(encoding="utf-8").split("\n") if line.strip()]
         return json.loads(lines[-1]) if lines else None
 
     def latest(self, canonical_id: str) -> dict[str, Any] | None:
@@ -94,7 +94,7 @@ class MRLPassportRegistry:
             path = self._path(canonical_id)
             if not path.exists():
                 return {"ok": False, "reason": "passport_not_found"}
-            lines = [line for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+            lines = [line for line in path.read_text(encoding="utf-8").split("\n") if line.strip()]
             previous_hash = "GENESIS"
             for count, line in enumerate(lines, start=1):
                 passport = json.loads(line)

@@ -52,8 +52,8 @@
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 11878,
-      "sha256": "fb7f121cd52d61e65fde43439b740f9ec893745be2d16ad424e80ed2e59e703e"
+      "size_bytes": 11945,
+      "sha256": "d2d575a8cddd8291c752d788244b3b8d7e61c5f64e07872cb06df5b51bf9da51"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -480,6 +480,28 @@
           "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
           "size_bytes": 11878,
           "sha256": "fb7f121cd52d61e65fde43439b740f9ec893745be2d16ad424e80ed2e59e703e"
+        }
+      ],
+      "origin_signature": "MrLiouWord",
+      "change_commit": "a45f1d5a623f971e1ad2bc0500270b2a3897ad8b"
+    },
+    {
+      "source_commit": "a45f1d5a623f971e1ad2bc0500270b2a3897ad8b",
+      "base_commit": "9116b578eca6ec6bd66bc3030f801a0226264b26",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
+      "reason": "Merge main (PR #690 and APIWorks delivery evidence) into PR #667. Main did not change CHANGELOG or the sync manifest; only change_commit is recorded on the preceding PR #667 merge entries, so refresh only the sync manifest checksum. Earlier PR #667 entries retained; no counts, policies, payloads or names changed.",
+      "previous_entries": [
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 11878,
+          "sha256": "fb7f121cd52d61e65fde43439b740f9ec893745be2d16ad424e80ed2e59e703e"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 11945,
+          "sha256": "d2d575a8cddd8291c752d788244b3b8d7e61c5f64e07872cb06df5b51bf9da51"
         }
       ],
       "origin_signature": "MrLiouWord"
