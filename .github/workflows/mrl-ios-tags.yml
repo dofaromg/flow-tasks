@@ -1,0 +1,18 @@
+name: MRL iOS Tags
+on:
+  pull_request:
+    paths: ['MrliouWord/iOS/**', '.github/workflows/mrl-ios-tags.yml']
+  push:
+    paths: ['MrliouWord/iOS/**', '.github/workflows/mrl-ios-tags.yml']
+permissions:
+  contents: read
+jobs:
+  tags:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: 選取、批次套用與儲存格式測試
+        run: swift test --package-path MrliouWord/iOS
+      - name: iOS 16 標籤介面型別檢查
+        run: |
+          xcrun --sdk iphonesimulator swiftc -typecheck -target arm64-apple-ios16.0-simulator -sdk "$(xcrun --sdk iphonesimulator --show-sdk-path)" MrliouWord/iOS/MrliouWord/Models/MRLTagSelection.swift MrliouWord/iOS/MrliouWord/Services/MRLTagStore.swift MrliouWord/iOS/MrliouWord/Views/MRLTagManagerView.swift
