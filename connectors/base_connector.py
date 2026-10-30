@@ -43,6 +43,7 @@ class AuthType(Enum):
 class ConnectorConfig:
     """Connector configuration / 連接器配置"""
     enabled: bool = False
+    required: bool = False
     auth_type: AuthType = AuthType.API_KEY
     credentials: Dict[str, str] = field(default_factory=dict)
     sync_enabled: bool = False
@@ -159,6 +160,7 @@ class BaseConnector(ABC):
             "service": self.service_name,
             "status": self.health.status.value,
             "enabled": self.config.enabled,
+            "required": self.config.required,
             "sync_enabled": self.config.sync_enabled,
             "agent_mode": self.config.agent_mode,
             "auth_type": self.config.auth_type.value,
