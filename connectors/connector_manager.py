@@ -62,6 +62,7 @@ class ConnectorManager:
             "connectors": {
                 service: {
                     "enabled": False,
+                    "required": False,
                     "auth_type": "api_key",
                     "sync_enabled": False,
                     "agent_mode": False,
@@ -97,6 +98,7 @@ class ConnectorManager:
 
             config = ConnectorConfig(
                 enabled=service_config.get("enabled", False),
+                required=service_config.get("required", False),
                 auth_type=auth_type,
                 credentials=credentials,
                 sync_enabled=service_config.get("sync_enabled", False),
@@ -142,11 +144,20 @@ class ConnectorManager:
         results = {}
         for service_name, connector in self.connectors.items():
             if not connector.config.enabled:
-                results[service_name] = {
-                    **connector.get_status_report(),
-                    "skipped": True,
-                    "reason": "disabled",
-                }
+                report = connector.get_status_report()
+                if connector.config.required:
+                    report.update({
+                        "status": ConnectorStatus.ERROR.value,
+                        "error": "Required connector is disabled",
+                        "skipped": False,
+                        "reason": "required_disabled",
+                    })
+                else:
+                    report.update({
+                        "skipped": True,
+                        "reason": "disabled",
+                    })
+                results[service_name] = report
                 continue
 
             try:
@@ -166,11 +177,28 @@ class ConnectorManager:
 
         results = {}
         for service_name, connector in self.connectors.items():
-            if not connector.config.enabled or not connector.config.sync_enabled:
+            if not connector.config.enabled:
+                if connector.config.required:
+                    results[service_name] = {
+                        "success": False,
+                        "skipped": False,
+                        "reason": "required_disabled",
+                        "error": "Required connector is disabled",
+                        "direction": direction,
+                    }
+                else:
+                    results[service_name] = {
+                        "success": True,
+                        "skipped": True,
+                        "reason": "disabled",
+                        "direction": direction,
+                    }
+                continue
+            if not connector.config.sync_enabled:
                 results[service_name] = {
                     "success": True,
                     "skipped": True,
-                    "reason": "disabled" if not connector.config.enabled else "sync_disabled",
+                    "reason": "sync_disabled",
                     "direction": direction,
                 }
                 continue
