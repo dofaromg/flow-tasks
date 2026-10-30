@@ -96,9 +96,15 @@ class ConnectorManager:
             except ValueError:
                 auth_type = AuthType.CUSTOM
 
+            required = service_config.get("required", False)
+            if not isinstance(required, bool):
+                raise ValueError(
+                    f"connectors.{service_name}.required must be true or false"
+                )
+
             config = ConnectorConfig(
                 enabled=service_config.get("enabled", False),
-                required=service_config.get("required", False),
+                required=required,
                 auth_type=auth_type,
                 credentials=credentials,
                 sync_enabled=service_config.get("sync_enabled", False),
