@@ -1,6 +1,20 @@
 name: Cloud connector audit
 
 on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "connectors/**"
+      - "config/connectors.yaml"
+      - ".github/workflows/cloud-connectors.yml"
+      - "requirements.txt"
+  push:
+    branches: ["main"]
+    paths:
+      - "connectors/**"
+      - "config/connectors.yaml"
+      - ".github/workflows/cloud-connectors.yml"
+      - "requirements.txt"
   workflow_dispatch:
     inputs:
       sync:
@@ -23,6 +37,8 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: pip install -r requirements.txt
+      - name: Run connector audit regression tests
+        run: python -m pytest connectors/test_connectors.py -q
       - name: Verify enabled cloud connectors
         env:
           GITHUB_TOKEN: ${{ secrets.CLOUD_GITHUB_TOKEN }}
