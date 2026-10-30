@@ -51,7 +51,10 @@ final class MRLTagStore: ObservableObject {
 
     func addTag(_ name: String) {
         var candidate = archive
-        candidate.addTag(name)
+        guard candidate.addTag(name) else {
+            errorMessage = "標籤不可空白或超過 1024 UTF-8 位元組。"
+            return
+        }
         commit(candidate)
     }
 
@@ -59,11 +62,20 @@ final class MRLTagStore: ObservableObject {
     func register(_ urls: [URL], sourceRecord: String? = nil) -> Bool {
         var candidate = archive
         do {
-            var registered = Set(candidate.documents.compactMap { existing -> URL? in
+            var registered = Set<URL>()
+            for i in candidate.documents.indices {
                 var stale = false
-                return (try? URL(resolvingBookmarkData: existing.bookmark,
-                    options: [], relativeTo: nil, bookmarkDataIsStale: &stale))?.standardizedFileURL
-            })
+                if let resolved = try? URL(resolvingBookmarkData: candidate.documents[i].bookmark,
+                    options: [], relativeTo: nil, bookmarkDataIsStale: &stale) {
+                    registered.insert(resolved.standardizedFileURL)
+                    if stale {
+                        let scoped = resolved.startAccessingSecurityScopedResource()
+                        defer { if scoped { resolved.stopAccessingSecurityScopedResource() } }
+                        candidate.documents[i].bookmark = try resolved.bookmarkData(options: .minimalBookmark,
+                            includingResourceValuesForKeys: nil, relativeTo: nil)
+                    }
+                }
+            }
             for url in urls {
                 let scoped = url.startAccessingSecurityScopedResource()
                 defer { if scoped { url.stopAccessingSecurityScopedResource() } }
@@ -85,32 +97,51 @@ final class MRLTagStore: ObservableObject {
     }
 
     /// 收件匣成功登錄後才移除；失敗保留副本，重新啟動可重試。
-    func receiveSharedFiles() {
+    func receiveSharedFiles(inboxRoot: URL? = nil, importsRoot: URL? = nil) {
         do {
             let manager = FileManager.default
-            let inbox = try MRLShareInbox.root()
-            let imports = manager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let inbox = try inboxRoot ?? MRLShareInbox.root()
+            let imports = importsRoot ?? manager.urls(for: .documentDirectory, in: .userDomainMask)[0]
                 .appendingPathComponent("MRL_匯入", isDirectory: true)
             try manager.createDirectory(at: imports, withIntermediateDirectories: true)
+            var failures: [String] = []
             for folder in try manager.contentsOfDirectory(at: inbox,
                 includingPropertiesForKeys: nil, options: [.skipsHiddenFiles]) {
                 guard UUID(uuidString: folder.lastPathComponent) != nil else { continue }
-                let destination = imports.appendingPathComponent(folder.lastPathComponent, isDirectory: true)
-                if !manager.fileExists(atPath: destination.path) {
-                    let staging = imports.appendingPathComponent(".staging-" + UUID().uuidString)
-                    do {
-                        try manager.copyItem(at: folder, to: staging)
-                        try manager.moveItem(at: staging, to: destination)
-                    } catch {
-                        try? manager.removeItem(at: staging)
-                        throw error
+                do {
+                    let destination = imports.appendingPathComponent(folder.lastPathComponent, isDirectory: true)
+                    if !manager.fileExists(atPath: destination.path) {
+                        let staging = imports.appendingPathComponent(".staging-" + UUID().uuidString)
+                        do {
+                            try manager.copyItem(at: folder, to: staging)
+                            try manager.moveItem(at: staging, to: destination)
+                        } catch {
+                            try? manager.removeItem(at: staging)
+                            throw error
+                        }
                     }
+                    // 逐件修復缺少的副本；衝突保留兩側原件，禁止靜默覆寫。
+                    let incoming = folder.appendingPathComponent("MRL_Payload")
+                    let payload = destination.appendingPathComponent("MRL_Payload")
+                    try manager.createDirectory(at: payload, withIntermediateDirectories: true)
+                    for source in try manager.contentsOfDirectory(at: incoming, includingPropertiesForKeys: nil) {
+                        let target = payload.appendingPathComponent(source.lastPathComponent)
+                        if !manager.fileExists(atPath: target.path) { try manager.copyItem(at: source, to: target) }
+                        guard try Self.digest(source) == Self.digest(target) else {
+                            throw CocoaError(.fileWriteFileExists)
+                        }
+                    }
+                    let files = try manager.contentsOfDirectory(at: destination.appendingPathComponent("MRL_Payload"),
+                        includingPropertiesForKeys: nil)
+                    guard !files.isEmpty, register(files, sourceRecord: folder.lastPathComponent) else {
+                        throw CocoaError(.fileWriteUnknown)
+                    }
+                    try manager.removeItem(at: folder)
+                } catch {
+                    failures.append("\(folder.lastPathComponent)：\(error.localizedDescription)")
                 }
-                let files = try manager.contentsOfDirectory(at: destination.appendingPathComponent("MRL_Payload"),
-                    includingPropertiesForKeys: nil)
-                guard !files.isEmpty, register(files, sourceRecord: folder.lastPathComponent) else { return }
-                try manager.removeItem(at: folder)
             }
+            if !failures.isEmpty { errorMessage = "分享收件匣保留待重試：" + failures.joined(separator: "；") }
         } catch { errorMessage = "分享收件匣尚未完成：\(error.localizedDescription)" }
     }
 
@@ -191,9 +222,14 @@ final class MRLTagStore: ObservableObject {
         var stale = false
         let url = try URL(resolvingBookmarkData: document.bookmark, options: [],
             relativeTo: nil, bookmarkDataIsStale: &stale)
-        guard !stale else { throw CocoaError(.fileReadNoSuchFile) }
         let scoped = url.startAccessingSecurityScopedResource()
         defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+        if stale, let index = archive.documents.firstIndex(where: { $0.id == document.id }) {
+            var candidate = archive
+            candidate.documents[index].bookmark = try url.bookmarkData(options: .minimalBookmark,
+                includingResourceValuesForKeys: nil, relativeTo: nil)
+            guard commit(candidate) else { throw CocoaError(.fileWriteUnknown) }
+        }
         return try Self.coordinated(url, body: body)
     }
 
@@ -219,7 +255,10 @@ final class MRLTagStore: ObservableObject {
     func apply(tags: Set<String>, to ids: Set<UUID>) -> Bool {
         guard !tags.isEmpty, !ids.isEmpty else { return false }
         var candidate = archive
-        candidate.apply(tags: tags, to: ids)
+        guard candidate.apply(tags: tags, to: ids) else {
+            errorMessage = "每份文件最多保留 1000 個標籤；本次未寫入。"
+            return false
+        }
         return commit(candidate)
     }
 
@@ -228,5 +267,3 @@ final class MRLTagStore: ObservableObject {
         var errorDescription: String? { "不支援此資料版本" }
     }
 }
-
-

@@ -76,10 +76,11 @@ final class MRLShareViewController: UIViewController {
             receive(providers, index: index + 1, failures: failures + 1)
             return
         }
+        let suggestedName = provider.suggestedName
         provider.loadFileRepresentation(forTypeIdentifier: type) { url, error in
             var failed = error != nil
             if let url, !failed {
-                do { try MRLShareInbox.receive(url) } catch { failed = true }
+                do { try MRLShareInbox.receive(url, suggestedName: suggestedName) } catch { failed = true }
             } else { failed = true }
             let nextFailures = failures + (failed ? 1 : 0)
             DispatchQueue.main.async {

@@ -25,6 +25,25 @@ final class MRLTagTransferTests: XCTestCase {
         XCTAssertEqual(merged.originSignature, "MrLiouWord")
     }
 
+    func testValidEncodedRoundTrip() throws {
+        let packet = MRLTagTransfer(documents: [.init(name: "原名.txt", sha256: digest, tags: ["新"])])
+        XCTAssertEqual(try JSONDecoder().decode(MRLTagTransfer.self, from: packet.encoded()), packet)
+    }
+
+    func testTagLimitsRejectWithoutMutation() {
+        var archive = MRLTagArchive()
+        let before = archive
+        XCTAssertFalse(archive.addTag(String(repeating: "界", count: 342)))
+        XCTAssertEqual(archive, before)
+        XCTAssertTrue(archive.addTag("新"))
+        let id = UUID()
+        archive.documents = [.init(id: id, name: "原名", bookmark: Data(),
+            tags: Set((0..<1000).map { "標籤\($0)" }))]
+        let full = archive
+        XCTAssertFalse(archive.apply(tags: ["新"], to: [id]))
+        XCTAssertEqual(archive, full)
+    }
+
     func testRejectsInvalidPacketBeforeMutation() throws {
         let valid = MRLTagTransfer.Entry(name: "原名.txt", sha256: digest, tags: ["新"])
         var unknown = MRLTagTransfer(documents: [valid])

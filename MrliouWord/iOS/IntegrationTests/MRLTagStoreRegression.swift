@@ -42,10 +42,36 @@ struct MRLTagStoreRegression {
         precondition(copy == bytes)
         let provenance = try Data(contentsOf: received[0].appendingPathComponent(".MRL_source.json"))
         precondition(String(decoding: provenance, as: UTF8.self).contains("MrLiouWord"))
+        let inboxStore = MRLTagStore(location: root.appendingPathComponent("inbox-archive.json"))
+        let imports = root.appendingPathComponent("imports")
+        try manager.createDirectory(at: imports, withIntermediateDirectories: false)
+        let destination = imports.appendingPathComponent(received[0].lastPathComponent)
+        try manager.copyItem(at: received[0], to: destination)
+        let target = destination.appendingPathComponent("MRL_Payload/原名.txt")
+        let conflict = Data("保留不同內容".utf8)
+        try conflict.write(to: target)
+        inboxStore.receiveSharedFiles(inboxRoot: inbox, importsRoot: imports)
+        precondition(inboxStore.errorMessage != nil)
+        precondition(manager.fileExists(atPath: received[0].path))
+        let keptConflict = try Data(contentsOf: target)
+        precondition(keptConflict == conflict)
+        try manager.removeItem(at: target)
+        inboxStore.receiveSharedFiles(inboxRoot: inbox, importsRoot: imports)
+        precondition(inboxStore.archive.documents.map(\.name) == ["原名.txt"])
+        precondition(!manager.fileExists(atPath: received[0].path))
+        let repaired = try Data(contentsOf: target)
+        precondition(repaired == bytes)
+        // NSItemProvider 暫存 URL 與原名不同時仍保留來源名稱。
+        try MRLShareInbox.receive(target, suggestedName: "分享原名.txt", inboxRoot: inbox)
+        let named = try manager.contentsOfDirectory(at: inbox, includingPropertiesForKeys: nil)[0]
+        precondition(manager.fileExists(atPath: named.appendingPathComponent("MRL_Payload/分享原名.txt").path))
+        try manager.removeItem(at: named)
+        try MRLShareInbox.receive(target, suggestedName: "../非法.txt", inboxRoot: inbox)
         do { try MRLShareInbox.receive(root, inboxRoot: inbox); preconditionFailure("directory must fail") }
         catch { /* 不支持的來源沒有 ready 目錄 */ }
         let remaining = try manager.contentsOfDirectory(atPath: inbox.path)
         precondition(remaining.count == 1)
+        try manager.removeItem(at: inbox.appendingPathComponent(remaining[0]))
         // 真實失敗寫入之後恢復：原 archive、記憶體及 blocker 均須保留。
         let recoverDirectory = root.appendingPathComponent("recover")
         try manager.createDirectory(at: recoverDirectory, withIntermediateDirectories: false)
@@ -92,11 +118,10 @@ struct MRLTagStoreRegression {
         try bytes.write(to: reservedName)
         try MRLShareInbox.receive(reservedName, inboxRoot: inbox)
         let envelopes = try manager.contentsOfDirectory(at: inbox, includingPropertiesForKeys: nil)
-        let reservedCopy = try envelopes.first { $0 != received[0] }.map {
+        let reservedCopy = try envelopes.first.map {
             try Data(contentsOf: $0.appendingPathComponent("MRL_Payload/.MRL_source.json"))
         }
         precondition(reservedCopy == bytes)
         print("MRL store: restart/corrupt/version/origin/write recovery/dedup/provenance collision PASS")
     }
 }
-

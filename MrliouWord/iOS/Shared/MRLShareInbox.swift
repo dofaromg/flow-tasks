@@ -17,8 +17,15 @@ enum MRLShareInbox {
     }
 
     /// 在 provider callback 有效期內同步複製，目錄原子更名後才對 App 可見。
-    static func receive(_ source: URL, inboxRoot: URL? = nil) throws {
+    static func receive(_ source: URL, suggestedName: String? = nil, inboxRoot: URL? = nil) throws {
         let manager = FileManager.default
+        let name: String
+        if let suggestedName, !suggestedName.isEmpty,
+            suggestedName != ".", suggestedName != "..",
+            !suggestedName.contains("/"), !suggestedName.contains("\\"),
+            !suggestedName.contains("\0") {
+            name = suggestedName
+        } else { name = source.lastPathComponent }
         let root = try inboxRoot ?? MRLShareInbox.root()
         let id = UUID().uuidString
         let staging = root.appendingPathComponent(".staging-" + id, isDirectory: true)
@@ -36,13 +43,13 @@ enum MRLShareInbox {
             var coordinationError: NSError?
             var copyError: Error?
             NSFileCoordinator().coordinate(readingItemAt: source, options: [], error: &coordinationError) { url in
-                do { try manager.copyItem(at: url, to: payload.appendingPathComponent(source.lastPathComponent)) }
+                do { try manager.copyItem(at: url, to: payload.appendingPathComponent(name)) }
                 catch { copyError = error }
             }
             if let coordinationError { throw coordinationError }
             if let copyError { throw copyError }
             let provenance: [String: String] = ["origin_signature": "MrLiouWord",
-                "source_record": id, "original_name": source.lastPathComponent,
+                "source_record": id, "original_name": name,
                 "received_at": ISO8601DateFormatter().string(from: Date()),
                 "mode": "Files_share_copy", "native_tags": "not_imported"]
             try JSONSerialization.data(withJSONObject: provenance, options: [.sortedKeys])

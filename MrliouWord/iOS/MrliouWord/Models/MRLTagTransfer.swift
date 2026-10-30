@@ -40,15 +40,17 @@ struct MRLTagTransfer: Codable, Equatable {
     func merging(into archive: MRLTagArchive, fingerprints: [UUID: String]) throws -> MRLTagArchive {
         try validate()
         var candidate = archive
+        let byName = Dictionary(grouping: documents, by: \.name)
         for i in candidate.documents.indices {
             let document = candidate.documents[i]
-            for entry in documents where entry.name == document.name &&
+            for entry in byName[document.name] ?? [] where
                 fingerprints[document.id] == entry.sha256 {
                 for tag in entry.tags.sorted() { candidate.addTag(tag) }
-                candidate.documents[i].tags.formUnion(entry.tags)
+                let merged = candidate.documents[i].tags.union(entry.tags)
+                guard merged.count <= 1000 else { throw ValidationError.invalidPacket }
+                candidate.documents[i].tags = merged
             }
         }
         return candidate
     }
 }
-
