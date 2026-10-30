@@ -35,7 +35,7 @@ struct MRLTagStoreRegression {
         let received = try manager.contentsOfDirectory(at: inbox, includingPropertiesForKeys: nil)
         precondition(received.count == 1 && UUID(uuidString: received[0].lastPathComponent) != nil)
         try manager.removeItem(at: original)
-        let copy = try Data(contentsOf: received[0].appendingPathComponent("原名.txt"))
+        let copy = try Data(contentsOf: received[0].appendingPathComponent("MRL_Payload/原名.txt"))
         precondition(copy == bytes)
         let provenance = try Data(contentsOf: received[0].appendingPathComponent(".MRL_source.json"))
         precondition(String(decoding: provenance, as: UTF8.self).contains("MrLiouWord"))
@@ -43,6 +43,14 @@ struct MRLTagStoreRegression {
         catch { /* 不支持的來源沒有 ready 目錄 */ }
         let remaining = try manager.contentsOfDirectory(atPath: inbox.path)
         precondition(remaining.count == 1)
+        let reservedName = root.appendingPathComponent(".MRL_source.json")
+        try bytes.write(to: reservedName)
+        try MRLShareInbox.receive(reservedName, inboxRoot: inbox)
+        let envelopes = try manager.contentsOfDirectory(at: inbox, includingPropertiesForKeys: nil)
+        let reservedCopy = try envelopes.first { $0 != received[0] }.map {
+            try Data(contentsOf: $0.appendingPathComponent("MRL_Payload/.MRL_source.json"))
+        }
+        precondition(reservedCopy == bytes)
         print("MRL store: restart/corrupt/version/origin/write failure PASS")
     }
 }

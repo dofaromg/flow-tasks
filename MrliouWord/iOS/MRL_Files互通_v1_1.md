@@ -35,7 +35,7 @@ loadFileRepresentation 提供的暫存檔在 callback 返回後可能被刪除�
 
 1. 開啟 `MrliouWord.xcodeproj` 的 MrliouWord scheme。App 與 MRLShareExtension 都需設定同一個開發團隊，並註冊 `group.com.mrliouword.app` App Group；沒有此 entitlement 時顯示錯誤，不假裝分享成功。Bundle IDs 需與簽署帳號註冊值一致。
 2. Files 選取多份普通檔案 → 分享 →「加入 MRL」→ 按「加入 MRL」。顯示成功／失敗數；不支援資料夾、符號連結或未提供相容 representation 的來源。每次最多 1000 份。
-3. 回到 MRL「檔案與標籤」，自動讀取或按「讀取分享收件匣」。檔案副本存於 Documents/MRL_匯入/來源 UUID/原檔名，Files 可透過 App 文件目錄看到它們。
+3. 回到 MRL「檔案與標籤」，自動讀取或按「讀取分享收件匣」。檔案副本存於 Documents/MRL_匯入/來源 UUID/MRL_Payload/原檔名，Files 可透過 App 文件目錄看到它們。
 4. 全選文件 → 加入標籤 → 全選／取消全選／逐項選取 → 套用。既有標籤保留。
 5. 「分享所選文件與 MRL 標籤」產生文件副本和 `MRL_標籤.json`；在系統分享面板選「儲存到檔案」。相同檔名放入不同 UUID 暫存子目錄，避免覆寫；最終 provider 的儲存對話由使用者決定。
 6. 在另一個 MRL 安裝先加入文件，再選取目標文件 →「匯入 MRL 標籤到所選文件」→ 選 JSON。只有原檔名與 SHA-256 同時符合才合併，顯示配對數。內容改變或改名不自動套用。JSON 不含 bookmark、本機路徑或權限。
@@ -43,7 +43,7 @@ loadFileRepresentation 提供的暫存檔在 callback 返回後可能被刪除�
 ## 儲存與回復
 
 主檔仍是 Application Support/MRL_TagArchive.json，版本 1；新增可選 sourceRecord，舊版沒有此欄位仍可解碼。
-sourceRecord 連到同目錄副本的 `.MRL_source.json`，記錄 origin_signature、來源 UUID、原名、收件時間、複製模式與原生標籤未匯入狀態。
+sourceRecord 連到來源 UUID 目錄的 `.MRL_source.json`，記錄 origin_signature、來源 UUID、原名、收件時間、複製模式與原生標籤未匯入狀態。payload 與來源紀錄分開，原文件即使同名也不會被來源紀錄覆寫。
 分享 extension 只寫 App Group/MRL_Inbox；主 App 獨占標籤主檔，避免兩程序覆寫。每份文件先 staging，再原子更名為 ready。
 主 App 完整複製後才登錄，登錄成功才清除共享收件匣。中途終止可重試，同一路徑不重複登錄。
 損壞、未知版本或來源標記不同的主檔停止寫入。寫入失敗不更新 archive，不顯示過時成功訊息。

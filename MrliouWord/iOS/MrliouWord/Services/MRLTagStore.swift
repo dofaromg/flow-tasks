@@ -106,8 +106,8 @@ final class MRLTagStore: ObservableObject {
                         throw error
                     }
                 }
-                let files = try manager.contentsOfDirectory(at: destination,
-                    includingPropertiesForKeys: nil).filter { $0.lastPathComponent != ".MRL_source.json" }
+                let files = try manager.contentsOfDirectory(at: destination.appendingPathComponent("MRL_Payload"),
+                    includingPropertiesForKeys: nil)
                 guard !files.isEmpty, register(files, sourceRecord: folder.lastPathComponent) else { return }
                 try manager.removeItem(at: folder)
             }
@@ -132,9 +132,12 @@ final class MRLTagStore: ObservableObject {
             let scoped = url.startAccessingSecurityScopedResource()
             defer { if scoped { url.stopAccessingSecurityScopedResource() } }
             let data = try Self.coordinated(url) { coordinated in
-                let size = try coordinated.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
-                guard size <= 16 * 1024 * 1024 else { throw MRLTagTransfer.ValidationError.invalidPacket }
-                return try Data(contentsOf: coordinated)
+                let handle = try FileHandle(forReadingFrom: coordinated)
+                defer { try? handle.close() }
+                let maximum = 16 * 1024 * 1024
+                let bytes = try handle.read(upToCount: maximum + 1) ?? Data()
+                guard bytes.count <= maximum else { throw MRLTagTransfer.ValidationError.invalidPacket }
+                return bytes
             }
             let packet = try JSONDecoder().decode(MRLTagTransfer.self, from: data)
             try packet.validate()

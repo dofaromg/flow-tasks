@@ -23,7 +23,7 @@ struct MRLTagTransfer: Codable, Equatable {
                 !entry.name.contains("/") && !entry.name.contains("\\") &&
                 entry.sha256.count == 64 && entry.sha256.allSatisfy({ "0123456789abcdef".contains($0) }) &&
                 entry.tags.count <= 1000 && entry.tags.allSatisfy({
-                    !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && $0.utf8.count <= 1024
+                    !$0.isEmpty && $0 == $0.trimmingCharacters(in: .whitespacesAndNewlines) && $0.utf8.count <= 1024
                 })
             }) else { throw ValidationError.invalidPacket }
     }

@@ -36,7 +36,8 @@ final class MRLTagTransferTests: XCTestCase {
         for entry in [
             MRLTagTransfer.Entry(name: "../原名", sha256: digest, tags: []),
             .init(name: "原名", sha256: "broken", tags: []),
-            .init(name: "原名", sha256: digest, tags: ["  "])
+            .init(name: "原名", sha256: digest, tags: ["  "]),
+            .init(name: "原名", sha256: digest, tags: [" 未正規化 "])
         ] {
             XCTAssertThrowsError(try MRLTagTransfer(documents: [valid, entry])
                 .merging(into: MRLTagArchive(), fingerprints: [:]))

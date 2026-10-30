@@ -25,6 +25,8 @@ enum MRLShareInbox {
         let ready = root.appendingPathComponent(id, isDirectory: true)
         try manager.createDirectory(at: staging, withIntermediateDirectories: false)
         do {
+            let payload = staging.appendingPathComponent("MRL_Payload", isDirectory: true)
+            try manager.createDirectory(at: payload, withIntermediateDirectories: false)
             let scoped = source.startAccessingSecurityScopedResource()
             defer { if scoped { source.stopAccessingSecurityScopedResource() } }
             let values = try source.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
@@ -34,7 +36,7 @@ enum MRLShareInbox {
             var coordinationError: NSError?
             var copyError: Error?
             NSFileCoordinator().coordinate(readingItemAt: source, options: [], error: &coordinationError) { url in
-                do { try manager.copyItem(at: url, to: staging.appendingPathComponent(source.lastPathComponent)) }
+                do { try manager.copyItem(at: url, to: payload.appendingPathComponent(source.lastPathComponent)) }
                 catch { copyError = error }
             }
             if let coordinationError { throw coordinationError }
