@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import CryptoKit
 
 @MainActor
 final class MRLTagStore: ObservableObject {
@@ -16,7 +17,7 @@ final class MRLTagStore: ObservableObject {
             if FileManager.default.fileExists(atPath: self.location.path) {
                 let loaded = try JSONDecoder().decode(MRLTagArchive.self,
                     from: Data(contentsOf: self.location))
-                guard loaded.version == 1 else { throw StoreError.unsupportedVersion }
+                guard loaded.version == 1, loaded.originSignature == "MrLiouWord" else { throw StoreError.unsupportedVersion }
                 archive = loaded
             }
         } catch {
@@ -50,12 +51,16 @@ final class MRLTagStore: ObservableObject {
         commit(candidate)
     }
 
-    func register(_ urls: [URL]) {
+    @discardableResult
+    func register(_ urls: [URL], sourceRecord: String? = nil) -> Bool {
         var candidate = archive
         do {
             for url in urls {
                 let scoped = url.startAccessingSecurityScopedResource()
                 defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+                guard try url.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile == true else {
+                    throw CocoaError(.fileReadUnsupportedScheme)
+                }
                 var alreadyRegistered = false
                 for existing in candidate.documents {
                     var stale = false
@@ -70,12 +75,142 @@ final class MRLTagStore: ObservableObject {
                 let bookmark = try url.bookmarkData(options: .minimalBookmark,
                     includingResourceValuesForKeys: nil, relativeTo: nil)
                 candidate.documents.append(MRLTaggedDocument(
-                    id: UUID(), name: url.lastPathComponent, bookmark: bookmark, tags: []))
+                    id: UUID(), name: url.lastPathComponent, bookmark: bookmark, tags: [], sourceRecord: sourceRecord))
             }
-            commit(candidate)
+            return commit(candidate)
         } catch {
             errorMessage = "檔案尚未加入：\(error.localizedDescription)"
+            return false
         }
+    }
+
+    /// 收件匣成功登錄後才移除；失敗保留副本，重新啟動可重試。
+    func receiveSharedFiles() {
+        do {
+            let manager = FileManager.default
+            let inbox = try MRLShareInbox.root()
+            let imports = manager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                .appendingPathComponent("MRL_匯入", isDirectory: true)
+            try manager.createDirectory(at: imports, withIntermediateDirectories: true)
+            for folder in try manager.contentsOfDirectory(at: inbox,
+                includingPropertiesForKeys: nil, options: [.skipsHiddenFiles]) {
+                guard UUID(uuidString: folder.lastPathComponent) != nil else { continue }
+                let destination = imports.appendingPathComponent(folder.lastPathComponent, isDirectory: true)
+                if !manager.fileExists(atPath: destination.path) {
+                    let staging = imports.appendingPathComponent(".staging-" + UUID().uuidString)
+                    do {
+                        try manager.copyItem(at: folder, to: staging)
+                        try manager.moveItem(at: staging, to: destination)
+                    } catch {
+                        try? manager.removeItem(at: staging)
+                        throw error
+                    }
+                }
+                let files = try manager.contentsOfDirectory(at: destination,
+                    includingPropertiesForKeys: nil).filter { $0.lastPathComponent != ".MRL_source.json" }
+                guard !files.isEmpty, register(files, sourceRecord: folder.lastPathComponent) else { return }
+                try manager.removeItem(at: folder)
+            }
+        } catch { errorMessage = "分享收件匣尚未完成：\(error.localizedDescription)" }
+    }
+
+    /// 只輸出可攜標籤，不洩漏 bookmark 或本機路徑。
+    func transferData(for ids: Set<UUID>) throws -> Data {
+        let entries = try archive.documents.filter { ids.contains($0.id) }.map { document in
+            try withDocument(document) { url in
+                MRLTagTransfer.Entry(name: document.name, sha256: try Self.digest(url), tags: document.tags)
+            }
+        }
+        let packet = MRLTagTransfer(documents: entries)
+        try packet.validate()
+        return try JSONEncoder().encode(packet)
+    }
+
+    /// 匯入前完整驗證；只對使用者選取的 MRL 文件比對內容，不以名稱單獨套用。
+    func importTransfer(_ url: URL, to ids: Set<UUID>) -> Int? {
+        do {
+            let scoped = url.startAccessingSecurityScopedResource()
+            defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+            let data = try Self.coordinated(url) { coordinated in
+                let size = try coordinated.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
+                guard size <= 16 * 1024 * 1024 else { throw MRLTagTransfer.ValidationError.invalidPacket }
+                return try Data(contentsOf: coordinated)
+            }
+            let packet = try JSONDecoder().decode(MRLTagTransfer.self, from: data)
+            try packet.validate()
+            var fingerprints: [UUID: String] = [:]
+            for document in archive.documents where ids.contains(document.id) {
+                fingerprints[document.id] = try withDocument(document) { try Self.digest($0) }
+            }
+            let matches = archive.documents.filter { document in
+                packet.documents.contains { $0.name == document.name && $0.sha256 == fingerprints[document.id] }
+            }.count
+            let candidate = try packet.merging(into: archive, fingerprints: fingerprints)
+            return commit(candidate) ? matches : nil
+        } catch {
+            errorMessage = "標籤封包尚未匯入：\(error.localizedDescription)"
+            return nil
+        }
+    }
+
+    /// 分享副本與標籤封包，完整準備成功才顯示分享面板。
+    func exportFiles(_ ids: Set<UUID>) throws -> (directory: URL, files: [URL]) {
+        let manager = FileManager.default
+        let directory = manager.temporaryDirectory.appendingPathComponent("MRL_" + UUID().uuidString)
+        try manager.createDirectory(at: directory, withIntermediateDirectories: false)
+        do {
+            var files: [URL] = []
+            for document in archive.documents where ids.contains(document.id) {
+                let child = directory.appendingPathComponent(document.id.uuidString, isDirectory: true)
+                try manager.createDirectory(at: child, withIntermediateDirectories: false)
+                let copy = child.appendingPathComponent(document.name)
+                try withDocument(document) { try manager.copyItem(at: $0, to: copy) }
+                files.append(copy)
+            }
+            let packet = directory.appendingPathComponent("MRL_標籤.json")
+            // 從實際分享副本計算，避免原件在兩次讀取間改變造成配對錯誤。
+            let selected = archive.documents.filter { ids.contains($0.id) }
+            let entries = try zip(selected, files).map { document, file in
+                MRLTagTransfer.Entry(name: document.name, sha256: try Self.digest(file), tags: document.tags)
+            }
+            let transfer = MRLTagTransfer(documents: entries)
+            try transfer.validate()
+            try JSONEncoder().encode(transfer).write(to: packet, options: .atomic)
+            files.append(packet)
+            return (directory, files)
+        } catch {
+            try? manager.removeItem(at: directory)
+            throw error
+        }
+    }
+
+    private func withDocument<T>(_ document: MRLTaggedDocument, body: (URL) throws -> T) throws -> T {
+        var stale = false
+        let url = try URL(resolvingBookmarkData: document.bookmark, options: [],
+            relativeTo: nil, bookmarkDataIsStale: &stale)
+        guard !stale else { throw CocoaError(.fileReadNoSuchFile) }
+        let scoped = url.startAccessingSecurityScopedResource()
+        defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+        return try Self.coordinated(url, body: body)
+    }
+
+    private static func coordinated<T>(_ url: URL, body: (URL) throws -> T) throws -> T {
+        var coordinationError: NSError?
+        var result: Result<T, Error>?
+        NSFileCoordinator().coordinate(readingItemAt: url, options: [], error: &coordinationError) { coordinated in
+            result = Result { try body(coordinated) }
+        }
+        if let coordinationError { throw coordinationError }
+        guard let result else { throw CocoaError(.fileReadUnknown) }
+        return try result.get()
+    }
+
+    private static func digest(_ url: URL) throws -> String {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        var hash = SHA256()
+        while let data = try handle.read(upToCount: 1024 * 1024), !data.isEmpty { hash.update(data: data) }
+        return hash.finalize().map { String(format: "%02x", $0) }.joined()
     }
 
     func apply(tags: Set<String>, to ids: Set<UUID>) -> Bool {
@@ -90,3 +225,4 @@ final class MRLTagStore: ObservableObject {
         var errorDescription: String? { "不支援此資料版本" }
     }
 }
+

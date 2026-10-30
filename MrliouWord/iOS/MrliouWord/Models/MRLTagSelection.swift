@@ -29,6 +29,7 @@ struct MRLTaggedDocument: Codable, Identifiable, Equatable {
     let name: String
     let bookmark: Data
     var tags: Set<String>
+    var sourceRecord: String? = nil
 }
 
 struct MRLTagArchive: Codable, Equatable {
@@ -51,3 +52,4 @@ struct MRLTagArchive: Codable, Equatable {
         }
     }
 }
+

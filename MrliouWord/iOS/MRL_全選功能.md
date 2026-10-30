@@ -1,5 +1,8 @@
 # MRL 一鍵全選 v1
 
+> 本文保留 PR #691 初版歷史。後續 Files／分享入口與驗收現況以
+> [MRL_Files互通_v1_1.md](MRL_Files互通_v1_1.md) 為準；下列「尚未建立分享延伸」是初版狀態。
+
 origin_signature: MrLiouWord
 
 ## 原名與父子關係
@@ -44,3 +47,4 @@ Apple 文件：
 GitHub Actions `MRL iOS Tags` 另以 iOS 16 simulator SDK 型別檢查新增介面和 store。
 此檢查不是完整 App 建置，也不是文件 provider 或實機驗收。
 儲存失敗、檔案選取取消、重啟讀回與不同 provider 必須在 iPhone 實測。
+

@@ -6,7 +6,8 @@ let package = Package(
     products: [.library(name: "MRLTagCore", targets: ["MRLTagCore"])],
     targets: [
         .target(name: "MRLTagCore", path: "MrliouWord/Models",
-            exclude: ["AppModel.swift", "ScanMode.swift"], sources: ["MRLTagSelection.swift"]),
+            exclude: ["AppModel.swift", "ScanMode.swift"], sources: ["MRLTagSelection.swift", "MRLTagTransfer.swift"]),
         .testTarget(name: "MRLTagCoreTests", dependencies: ["MRLTagCore"], path: "Tests")
     ]
 )
+
