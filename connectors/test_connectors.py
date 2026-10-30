@@ -421,7 +421,7 @@ class TestConnectorAudit:
     ):
         config_path = tmp_path / "connectors.yaml"
         config_path.write_text(
-            "connectors:\\n  github:\\n    enabled: false\\n    required: true\\n",
+            "connectors:\n  github:\n    enabled: false\n    required: true\n",
             encoding="utf-8",
         )
         command = [
@@ -458,7 +458,7 @@ class TestConnectorAudit:
     def test_required_disabled_connector_fails_strict_sync(self, tmp_path):
         config_path = tmp_path / "connectors.yaml"
         config_path.write_text(
-            "connectors:\\n  github:\\n    enabled: false\\n    required: true\\n",
+            "connectors:\n  github:\n    enabled: false\n    required: true\n",
             encoding="utf-8",
         )
         result = subprocess.run(
