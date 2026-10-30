@@ -72,6 +72,66 @@ struct MRLTagStoreRegression {
         let remaining = try manager.contentsOfDirectory(atPath: inbox.path)
         precondition(remaining.count == 1)
         try manager.removeItem(at: inbox.appendingPathComponent(remaining[0]))
+        // 超長 ASCII／多位元名稱由目的檔案系統拒絕後回退；原名不可截斷。
+        for longName in [String(repeating: "a", count: 4096) + ".txt",
+                         String(repeating: "原", count: 4096) + ".txt"] {
+            try MRLShareInbox.receive(target, suggestedName: longName, inboxRoot: inbox)
+            let envelope = try manager.contentsOfDirectory(at: inbox, includingPropertiesForKeys: nil)[0]
+            let payload = envelope.appendingPathComponent("MRL_Payload")
+            let files = try manager.contentsOfDirectory(at: payload, includingPropertiesForKeys: nil)
+            precondition(files.count == 1 && files[0].lastPathComponent == target.lastPathComponent)
+            let copiedBytes = try Data(contentsOf: files[0])
+            precondition(copiedBytes == bytes)
+            let record = try JSONSerialization.jsonObject(with: Data(contentsOf:
+                envelope.appendingPathComponent(".MRL_source.json"))) as! [String: String]
+            precondition(record["original_name"] == longName)
+            precondition(record["stored_name"] == target.lastPathComponent)
+            precondition(record["origin_signature"] == "MrLiouWord")
+            try manager.removeItem(at: envelope)
+        }
+        let sourceAfterFallback = try Data(contentsOf: target)
+        precondition(sourceAfterFallback == bytes)
+
+        // 可重現 stale 更新失敗：保留舊 bookmark、標籤、來源並繼續直接／收件匣登錄。
+        let staleLocation = root.appendingPathComponent("stale-archive.json")
+        let staleSeed = MRLTagStore(location: staleLocation)
+        precondition(staleSeed.register([target], sourceRecord: "既有來源"))
+        let oldID = staleSeed.archive.documents[0].id
+        precondition(staleSeed.apply(tags: ["既有"], to: [oldID]))
+        let oldDocument = staleSeed.archive.documents[0]
+        var refreshAttempts = 0
+        let staleStore = MRLTagStore(location: staleLocation, resolveBookmark: { data in
+            if data == oldDocument.bookmark { return (target, true) }
+            var stale = false
+            return (try URL(resolvingBookmarkData: data, options: [], relativeTo: nil,
+                bookmarkDataIsStale: &stale), stale)
+        }, makeBookmark: { url in
+            if url == target {
+                refreshAttempts += 1
+                throw CocoaError(.fileReadNoPermission)
+            }
+            return try url.bookmarkData(options: .minimalBookmark,
+                includingResourceValuesForKeys: nil, relativeTo: nil)
+        })
+        let newFile = root.appendingPathComponent("新文件.txt")
+        try bytes.write(to: newFile)
+        precondition(staleStore.register([target, newFile, newFile]))
+        precondition(refreshAttempts == 1 && staleStore.archive.documents.count == 2)
+        precondition(staleStore.archive.documents[0] == oldDocument)
+        try MRLShareInbox.receive(newFile, inboxRoot: inbox)
+        staleStore.receiveSharedFiles(inboxRoot: inbox, importsRoot: root.appendingPathComponent("stale-imports"))
+        precondition(refreshAttempts == 2 && staleStore.archive.documents.count == 3)
+        precondition(staleStore.archive.documents[0] == oldDocument)
+        let drained = try manager.contentsOfDirectory(atPath: inbox.path)
+        precondition(drained.isEmpty && staleStore.errorMessage == nil)
+        precondition(MRLTagStore(location: staleLocation).archive == staleStore.archive)
+        let renewed = Data("renewed bookmark".utf8)
+        let refreshing = MRLTagStore(location: staleLocation,
+            resolveBookmark: { _ in (target, true) }, makeBookmark: { _ in renewed })
+        precondition(refreshing.register([]))
+        precondition(refreshing.archive.documents.allSatisfy { $0.bookmark == renewed })
+        precondition(MRLTagStore(location: staleLocation).archive == refreshing.archive)
+        print("MRL store: stale refresh isolation/success and long-name fallback PASS")
         // 真實失敗寫入之後恢復：原 archive、記憶體及 blocker 均須保留。
         let recoverDirectory = root.appendingPathComponent("recover")
         try manager.createDirectory(at: recoverDirectory, withIntermediateDirectories: false)

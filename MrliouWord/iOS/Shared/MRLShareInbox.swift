@@ -42,14 +42,34 @@ enum MRLShareInbox {
             }
             var coordinationError: NSError?
             var copyError: Error?
+            var storedName = name
             NSFileCoordinator().coordinate(readingItemAt: source, options: [], error: &coordinationError) { url in
-                do { try manager.copyItem(at: url, to: payload.appendingPathComponent(name)) }
-                catch { copyError = error }
+                // 由目的檔案系統判定名稱能否使用，不假設固定 byte 上限。
+                // 每份收件有獨立 UUID 目錄；不截斷名稱或覆寫其他收件。
+                var names = [name]
+                if source.lastPathComponent != name { names.append(source.lastPathComponent) }
+                names.append(UUID().uuidString)
+                for candidate in names {
+                    let target = payload.appendingPathComponent(candidate)
+                    do {
+                        try manager.copyItem(at: url, to: target)
+                        storedName = candidate
+                        copyError = nil
+                        break
+                    } catch {
+                        copyError = error
+                        // 只清除此輪未完成的 staging 副本，來源始終保留。
+                        if manager.fileExists(atPath: target.path) {
+                            do { try manager.removeItem(at: target) }
+                            catch { copyError = error; break }
+                        }
+                    }
+                }
             }
             if let coordinationError { throw coordinationError }
             if let copyError { throw copyError }
             let provenance: [String: String] = ["origin_signature": "MrLiouWord",
-                "source_record": id, "original_name": name,
+                "source_record": id, "original_name": name, "stored_name": storedName,
                 "received_at": ISO8601DateFormatter().string(from: Date()),
                 "mode": "Files_share_copy", "native_tags": "not_imported"]
             try JSONSerialization.data(withJSONObject: provenance, options: [.sortedKeys])

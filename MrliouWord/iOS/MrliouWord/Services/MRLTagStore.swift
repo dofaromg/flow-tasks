@@ -10,7 +10,22 @@ final class MRLTagStore: ObservableObject {
     private var writable = true
     private let location: URL
 
-    init(location: URL? = nil) {
+    private let resolveBookmark: (Data) throws -> (url: URL, stale: Bool)
+    private let makeBookmark: (URL) throws -> Data
+
+    init(location: URL? = nil,
+         resolveBookmark: @escaping (Data) throws -> (url: URL, stale: Bool) = { data in
+             var stale = false
+             let url = try URL(resolvingBookmarkData: data, options: [],
+                 relativeTo: nil, bookmarkDataIsStale: &stale)
+             return (url, stale)
+         },
+         makeBookmark: @escaping (URL) throws -> Data = { url in
+             try url.bookmarkData(options: .minimalBookmark,
+                 includingResourceValuesForKeys: nil, relativeTo: nil)
+         }) {
+        self.resolveBookmark = resolveBookmark
+        self.makeBookmark = makeBookmark
         self.location = location ?? FileManager.default.urls(
             for: .applicationSupportDirectory, in: .userDomainMask
         )[0].appendingPathComponent("MRL_TagArchive.json")
@@ -64,15 +79,16 @@ final class MRLTagStore: ObservableObject {
         do {
             var registered = Set<URL>()
             for i in candidate.documents.indices {
-                var stale = false
-                if let resolved = try? URL(resolvingBookmarkData: candidate.documents[i].bookmark,
-                    options: [], relativeTo: nil, bookmarkDataIsStale: &stale) {
+                if let resolution = try? resolveBookmark(candidate.documents[i].bookmark) {
+                    let resolved = resolution.url
                     registered.insert(resolved.standardizedFileURL)
-                    if stale {
+                    if resolution.stale {
                         let scoped = resolved.startAccessingSecurityScopedResource()
                         defer { if scoped { resolved.stopAccessingSecurityScopedResource() } }
-                        candidate.documents[i].bookmark = try resolved.bookmarkData(options: .minimalBookmark,
-                            includingResourceValuesForKeys: nil, relativeTo: nil)
+                        // 舊文件暫時無法更新，不得阻斷新文件；保留 bookmark 待重試。
+                        if let refreshed = try? makeBookmark(resolved) {
+                            candidate.documents[i].bookmark = refreshed
+                        }
                     }
                 }
             }
@@ -83,8 +99,7 @@ final class MRLTagStore: ObservableObject {
                     throw CocoaError(.fileReadUnsupportedScheme)
                 }
                 guard !registered.contains(url.standardizedFileURL) else { continue }
-                let bookmark = try url.bookmarkData(options: .minimalBookmark,
-                    includingResourceValuesForKeys: nil, relativeTo: nil)
+                let bookmark = try makeBookmark(url)
                 candidate.documents.append(MRLTaggedDocument(
                     id: UUID(), name: url.lastPathComponent, bookmark: bookmark, tags: [], sourceRecord: sourceRecord))
                 registered.insert(url.standardizedFileURL)
