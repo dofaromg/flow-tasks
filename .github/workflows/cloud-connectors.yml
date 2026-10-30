@@ -40,6 +40,7 @@ jobs:
       - name: Run connector audit regression tests
         run: python -m pytest connectors/test_connectors.py -q
       - name: Verify enabled cloud connectors
+        if: ${{ github.event_name != 'pull_request' }}
         env:
           GITHUB_TOKEN: ${{ secrets.CLOUD_GITHUB_TOKEN }}
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
