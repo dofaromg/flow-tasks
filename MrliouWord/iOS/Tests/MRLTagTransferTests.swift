@@ -37,11 +37,19 @@ final class MRLTagTransferTests: XCTestCase {
             MRLTagTransfer.Entry(name: "../原名", sha256: digest, tags: []),
             .init(name: "原名", sha256: "broken", tags: []),
             .init(name: "原名", sha256: digest, tags: ["  "]),
-            .init(name: "原名", sha256: digest, tags: [" 未正規化 "])
+            .init(name: "原名", sha256: digest, tags: [" 新 "])
         ] {
             XCTAssertThrowsError(try MRLTagTransfer(documents: [valid, entry])
                 .merging(into: MRLTagArchive(), fingerprints: [:]))
         }
+    }
+
+    func testExportRespectsTheSameByteLimitAsImport() throws {
+        let entry = MRLTagTransfer.Entry(name: String(repeating: "x", count: 1024),
+            sha256: digest, tags: [String(repeating: "y", count: 1024)])
+        let transfer = MRLTagTransfer(documents: Array(repeating: entry, count: 9000))
+        XCTAssertNoThrow(try transfer.validate())
+        XCTAssertThrowsError(try transfer.encoded())
     }
 
     func testNoFingerprintCannotApplyAndOriginalV1StillDecodes() throws {
@@ -51,3 +59,4 @@ final class MRLTagTransferTests: XCTestCase {
         XCTAssertEqual(try transfer.merging(into: archive, fingerprints: [:]), archive)
     }
 }
+

@@ -24,7 +24,7 @@ struct MRLTagManagerView: View {
         NavigationStack {
             List {
                 Section {
-                    Button("從「檔案」加入") { importingTags = false; importing = true }
+                    Button("從「檔案」加入") { notice = nil; importingTags = false; importing = true }
                     Button("讀取分享收件匣") { notice = nil; store.receiveSharedFiles() }
                     Text("標籤儲存在 MRL App 內；不修改原始檔案或 iPhone 系統標籤。")
                         .font(.footnote).foregroundStyle(.secondary)
@@ -63,13 +63,14 @@ struct MRLTagManagerView: View {
                     HStack {
                         TextField("新增標籤", text: $newTag)
                         Button("新增") {
+                            notice = nil
                             store.addTag(newTag)
                             if store.errorMessage == nil { newTag = "" }
                         }.disabled(newTag.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
                     ForEach(store.archive.catalog, id: \.self) { Text($0) }
                 }
-                Button("加入標籤") { addingTags = true }
+                Button("加入標籤") { notice = nil; addingTags = true }
                     .disabled(selectedDocuments.isEmpty || store.archive.catalog.isEmpty)
                 Button("分享所選文件與 MRL 標籤") {
                     notice = nil
@@ -99,7 +100,12 @@ struct MRLTagManagerView: View {
                             notice = "已配對 \(count) 份文件並保留既有標籤；未修改系統標籤。"
                         }
                     } else { store.register(urls) }
-                case .failure(let error): store.errorMessage = error.localizedDescription
+                case .failure(let error):
+                    notice = nil
+                    if (error as NSError).domain != NSCocoaErrorDomain ||
+                        (error as NSError).code != NSUserCancelledError {
+                        store.errorMessage = error.localizedDescription
+                    }
                 }
             }
             .sheet(isPresented: $addingTags) {
@@ -197,4 +203,5 @@ private struct MRLTagPickerView: View {
         }
     }
 }
+
 

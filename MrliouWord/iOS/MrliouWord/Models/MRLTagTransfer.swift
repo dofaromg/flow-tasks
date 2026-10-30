@@ -3,6 +3,7 @@ import Foundation
 // origin_signature: MrLiouWord
 // 可攜封包不包含 bookmark、裝置路徑或存取權限。
 struct MRLTagTransfer: Codable, Equatable {
+    static let maximumBytes = 16 * 1024 * 1024
     var version = 1
     var originSignature = "MrLiouWord"
     var documents: [Entry]
@@ -28,6 +29,13 @@ struct MRLTagTransfer: Codable, Equatable {
             }) else { throw ValidationError.invalidPacket }
     }
 
+    func encoded() throws -> Data {
+        try validate()
+        let data = try JSONEncoder().encode(self)
+        guard data.count <= Self.maximumBytes else { throw ValidationError.invalidPacket }
+        return data
+    }
+
     /// 同名且內容雜湊相同才連結；以聯集保留所有舊標籤，不相信外部 UUID。
     func merging(into archive: MRLTagArchive, fingerprints: [UUID: String]) throws -> MRLTagArchive {
         try validate()
@@ -43,3 +51,4 @@ struct MRLTagTransfer: Codable, Equatable {
         return candidate
     }
 }
+

@@ -43,7 +43,7 @@ loadFileRepresentation 提供的暫存檔在 callback 返回後可能被刪除�
 ## 儲存與回復
 
 主檔仍是 Application Support/MRL_TagArchive.json，版本 1；新增可選 sourceRecord，舊版沒有此欄位仍可解碼。
-sourceRecord 連到來源 UUID 目錄的 `.MRL_source.json`，記錄 origin_signature、來源 UUID、原名、收件時間、複製模式與原生標籤未匯入狀態。payload 與來源紀錄分開，原文件即使同名也不會被來源紀錄覆寫。
+sourceRecord 連到來源 UUID 目錄的 `.MRL_source.json`，記錄 origin_signature、來源 UUID、原名、收件時間、複製模式與原生標籤未匯入狀態。
 分享 extension 只寫 App Group/MRL_Inbox；主 App 獨占標籤主檔，避免兩程序覆寫。每份文件先 staging，再原子更名為 ready。
 主 App 完整複製後才登錄，登錄成功才清除共享收件匣。中途終止可重試，同一路徑不重複登錄。
 損壞、未知版本或來源標記不同的主檔停止寫入。寫入失敗不更新 archive，不顯示過時成功訊息。
@@ -65,3 +65,22 @@ bookmark 失效時明確報錯，請從 Files 重新選取，不暗中變更來�
 Root Owner 決定是否合併；本次不合併、不部署、不提交 App Store。
 
 回滾：保留本次 commit 與原始 v1，必要時 revert 工程 commit。先備份 Documents/MRL_匯入、App Group/MRL_Inbox 與原標籤 JSON；不刪使用者資料。
+
+
+## 同分支補強（2026-10-30）
+
+承接 `43e8a3a1bc190f44fa0518886c8691f1fa96c9b3`，保留其 Xcode 專案、分享延伸、
+MRLTagTransfer、sourceRecord 與名稱＋SHA-256 配對方式，不另建第二套標籤封包。
+
+- 登錄前只解析既有 bookmark 一次，批次內與重新開啟後均以標準 URL 去重。
+- 成功原子寫入會清除過往錯誤；每次操作先清除舊成功訊息，取消選檔不當成故障。
+- 主檔若包含重複文件 UUID／標籤目錄鍵，停止寫入保留原件。
+- 可攜封包輸出與輸入共用 16 MiB 上限；拒絕未正規化標籤，避免目錄與文件標籤分歧。
+- 沿用父版本的 MRL_Payload 內容／溯源隔離，原名為 `.MRL_source.json` 的文件也保留原內容。
+- 新增實際寫入失敗再恢復、記憶體／磁碟原件保留、重複 UUID、批次去重、來源側檔衝突、
+  封包輸出超限與空白標籤回歸；沿用既有 macOS CI，不以型別檢查取代完整 App 建置。
+
+本次補強預期 6 檔：本文件、MRLTagStore.swift、MRLTagTransfer.swift、MRLTagManagerView.swift、
+IntegrationTests/MRLTagStoreRegression.swift、Tests/MRLTagTransferTests.swift。
+無刪除、更名、第二份 App target 或平行標籤格式；以 Git commit 交付，ZIP 不適用。
+逐檔雜湊與 Requested/Generated 對照附於 PR 說明。完整原始需求與實機閘門仍維持上節狀態。

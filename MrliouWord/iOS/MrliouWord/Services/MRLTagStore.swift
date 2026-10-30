@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import CryptoKit
 
+// origin_signature: MrLiouWord
 @MainActor
 final class MRLTagStore: ObservableObject {
     @Published private(set) var archive = MRLTagArchive()
@@ -18,6 +19,8 @@ final class MRLTagStore: ObservableObject {
                 let loaded = try JSONDecoder().decode(MRLTagArchive.self,
                     from: Data(contentsOf: self.location))
                 guard loaded.version == 1, loaded.originSignature == "MrLiouWord" else { throw StoreError.unsupportedVersion }
+                guard Set(loaded.documents.map(\.id)).count == loaded.documents.count,
+                    Set(loaded.catalog).count == loaded.catalog.count else { throw StoreError.unsupportedVersion }
                 archive = loaded
             }
         } catch {
@@ -38,6 +41,7 @@ final class MRLTagStore: ObservableObject {
             let data = try JSONEncoder().encode(candidate)
             try data.write(to: location, options: .atomic)
             archive = candidate
+            errorMessage = nil
             return true
         } catch {
             errorMessage = "標籤尚未儲存：\(error.localizedDescription)"
@@ -55,27 +59,23 @@ final class MRLTagStore: ObservableObject {
     func register(_ urls: [URL], sourceRecord: String? = nil) -> Bool {
         var candidate = archive
         do {
+            var registered = Set(candidate.documents.compactMap { existing -> URL? in
+                var stale = false
+                return (try? URL(resolvingBookmarkData: existing.bookmark,
+                    options: [], relativeTo: nil, bookmarkDataIsStale: &stale))?.standardizedFileURL
+            })
             for url in urls {
                 let scoped = url.startAccessingSecurityScopedResource()
                 defer { if scoped { url.stopAccessingSecurityScopedResource() } }
                 guard try url.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile == true else {
                     throw CocoaError(.fileReadUnsupportedScheme)
                 }
-                var alreadyRegistered = false
-                for existing in candidate.documents {
-                    var stale = false
-                    if let resolved = try? URL(resolvingBookmarkData: existing.bookmark,
-                        options: [], relativeTo: nil, bookmarkDataIsStale: &stale),
-                        resolved.standardizedFileURL == url.standardizedFileURL {
-                        alreadyRegistered = true
-                        break
-                    }
-                }
-                guard !alreadyRegistered else { continue }
+                guard !registered.contains(url.standardizedFileURL) else { continue }
                 let bookmark = try url.bookmarkData(options: .minimalBookmark,
                     includingResourceValuesForKeys: nil, relativeTo: nil)
                 candidate.documents.append(MRLTaggedDocument(
                     id: UUID(), name: url.lastPathComponent, bookmark: bookmark, tags: [], sourceRecord: sourceRecord))
+                registered.insert(url.standardizedFileURL)
             }
             return commit(candidate)
         } catch {
@@ -123,7 +123,7 @@ final class MRLTagStore: ObservableObject {
         }
         let packet = MRLTagTransfer(documents: entries)
         try packet.validate()
-        return try JSONEncoder().encode(packet)
+        return try packet.encoded()
     }
 
     /// 匯入前完整驗證；只對使用者選取的 MRL 文件比對內容，不以名稱單獨套用。
@@ -134,7 +134,7 @@ final class MRLTagStore: ObservableObject {
             let data = try Self.coordinated(url) { coordinated in
                 let handle = try FileHandle(forReadingFrom: coordinated)
                 defer { try? handle.close() }
-                let maximum = 16 * 1024 * 1024
+                let maximum = MRLTagTransfer.maximumBytes
                 let bytes = try handle.read(upToCount: maximum + 1) ?? Data()
                 guard bytes.count <= maximum else { throw MRLTagTransfer.ValidationError.invalidPacket }
                 return bytes
@@ -178,7 +178,7 @@ final class MRLTagStore: ObservableObject {
             }
             let transfer = MRLTagTransfer(documents: entries)
             try transfer.validate()
-            try JSONEncoder().encode(transfer).write(to: packet, options: .atomic)
+            try transfer.encoded().write(to: packet, options: .atomic)
             files.append(packet)
             return (directory, files)
         } catch {
@@ -228,4 +228,5 @@ final class MRLTagStore: ObservableObject {
         var errorDescription: String? { "不支援此資料版本" }
     }
 }
+
 
