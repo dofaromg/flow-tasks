@@ -1,7 +1,12 @@
 # Cloud Service Connector Configuration
 # 雲端服務連接器配置
 
-version: "1.0"
+version: "1.1"
+
+# required: true means disabling this connector is a strict audit failure.
+# required: false means disabled is an intentional skipped state.
+# required: true 表示停用該連接器會造成 strict audit 失敗。
+# required: false 表示停用是預期的 skipped 狀態。
 
 # Connector Settings for 8 Cloud Services
 # 8個雲端服務的連接器設定
@@ -10,6 +15,7 @@ connectors:
   # GitHub - Repository and workflow management
   github:
     enabled: false
+    required: false
     auth_type: "api_key"
     sync_enabled: false
     agent_mode: true
@@ -24,6 +30,7 @@ connectors:
   # Notion - Knowledge base and database
   notion:
     enabled: false
+    required: false
     auth_type: "oauth2"
     sync_enabled: false
     agent_mode: true
@@ -37,6 +44,7 @@ connectors:
   # Dropbox - File storage and sharing
   dropbox:
     enabled: false
+    required: false
     auth_type: "oauth2"
     sync_enabled: false
     agent_mode: false
@@ -49,6 +57,7 @@ connectors:
   # Google Drive - Document and file storage
   google_drive:
     enabled: false
+    required: false
     auth_type: "oauth2"
     sync_enabled: false
     agent_mode: false
@@ -63,6 +72,7 @@ connectors:
   # Vercel - Deployment and hosting
   vercel:
     enabled: false
+    required: false
     auth_type: "api_key"
     sync_enabled: false
     agent_mode: true
@@ -75,6 +85,7 @@ connectors:
   # iCloud - Apple ecosystem integration
   icloud:
     enabled: false
+    required: false
     auth_type: "basic_auth"
     sync_enabled: false
     agent_mode: false
@@ -90,6 +101,7 @@ connectors:
   # GitLab - Repository management (supports self-hosted)
   gitlab:
     enabled: false
+    required: false
     auth_type: "api_key"
     sync_enabled: false
     agent_mode: true
@@ -104,6 +116,7 @@ connectors:
   # HuggingFace - AI models and datasets
   huggingface:
     enabled: false
+    required: false
     auth_type: "api_key"
     sync_enabled: false
     agent_mode: false

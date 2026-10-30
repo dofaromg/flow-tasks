@@ -253,6 +253,7 @@ version: '1.0'
 connectors:
   github:
     enabled: true
+    required: true
     auth_type: api_key
   icloud:
     enabled: true
@@ -269,11 +270,25 @@ global:
         manager = ConnectorManager(str(config_path))
 
         assert manager.connectors["github"].config.auth_type.value == "api_key"
+        assert manager.connectors["github"].config.required is True
         assert manager.connectors["github"].config.timeout == 12
         assert manager.connectors["icloud"].config.credentials == {
             "username": "cloud@example.com",
             "app_password": "app-password",
         }
+
+    def test_rejects_non_boolean_required_config(self, tmp_path):
+        config_path = tmp_path / "connectors.yaml"
+        config_path.write_text(
+            'connectors:\n  github:\n    enabled: false\n    required: "false"\n',
+            encoding="utf-8",
+        )
+
+        with pytest.raises(
+            ValueError,
+            match=r"connectors\.github\.required must be true or false",
+        ):
+            ConnectorManager(str(config_path))
 
     @pytest.mark.parametrize("include_disabled", [False, True])
     def test_connect_all_only_attempts_enabled_connectors(
@@ -314,6 +329,21 @@ global:
 
         with pytest.raises(ValueError, match="Unsupported sync direction"):
             manager.sync_all("sideways")
+
+    def test_sync_all_marks_required_disabled_connector_as_failure(self, tmp_path):
+        manager = ConnectorManager(str(tmp_path / "connectors.yaml"))
+        github = manager.connectors["github"]
+        github.config.required = True
+
+        results = manager.sync_all("pull")
+
+        assert results["github"] == {
+            "success": False,
+            "skipped": False,
+            "reason": "required_disabled",
+            "error": "Required connector is disabled",
+            "direction": "pull",
+        }
 
 
 class TestConnectorAudit:
@@ -384,6 +414,75 @@ class TestConnectorAudit:
                 assert report["enabled"] is False
                 assert report["skipped"] is True
                 assert report["reason"] == "disabled"
+
+    @pytest.mark.parametrize("include_disabled", [False, True])
+    def test_required_disabled_connector_fails_strict(
+        self, tmp_path, include_disabled
+    ):
+        config_path = tmp_path / "connectors.yaml"
+        config_path.write_text(
+            "connectors:\n  github:\n    enabled: false\n    required: true\n",
+            encoding="utf-8",
+        )
+        command = [
+            sys.executable, "-m", "connectors.connector_manager",
+            "--connect-all",
+        ]
+        if include_disabled:
+            command.append("--include-disabled")
+        command.extend([
+            "--strict", "--json", "--config", str(config_path),
+        ])
+        result = subprocess.run(
+            command,
+            cwd=Path(__file__).resolve().parents[1],
+            env={},
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+
+        assert result.returncode == 1
+        inventory = json.loads(result.stdout)
+        report = inventory["github"]
+        assert report["required"] is True
+        assert report["status"] == "error"
+        assert report["skipped"] is False
+        assert report["reason"] == "required_disabled"
+        assert report["error"] == "Required connector is disabled"
+        assert all(
+            item.get("skipped")
+            for service, item in inventory.items() if service != "github"
+        )
+
+    def test_required_disabled_connector_fails_strict_sync(self, tmp_path):
+        config_path = tmp_path / "connectors.yaml"
+        config_path.write_text(
+            "connectors:\n  github:\n    enabled: false\n    required: true\n",
+            encoding="utf-8",
+        )
+        result = subprocess.run(
+            [
+                sys.executable, "-m", "connectors.connector_manager",
+                "--sync-all", "--strict", "--json",
+                "--config", str(config_path),
+            ],
+            cwd=Path(__file__).resolve().parents[1],
+            env={},
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+
+        assert result.returncode == 1
+        inventory = json.loads(result.stdout)
+        assert inventory["github"] == {
+            "success": False,
+            "skipped": False,
+            "reason": "required_disabled",
+            "error": "Required connector is disabled",
+            "direction": "pull",
+        }
 
     @pytest.mark.parametrize("strict", [False, True])
     @pytest.mark.parametrize("outcome", ["connected", "unauthorized", "timeout", "exception"])
