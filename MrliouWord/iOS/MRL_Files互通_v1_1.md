@@ -84,3 +84,25 @@ MRLTagTransfer、sourceRecord 與名稱＋SHA-256 配對方式，不另建第二
 IntegrationTests/MRLTagStoreRegression.swift、Tests/MRLTagTransferTests.swift。
 無刪除、更名、第二份 App target 或平行標籤格式；以 Git commit 交付，ZIP 不適用。
 逐檔雜湊與 Requested/Generated 對照附於 PR 說明。完整原始需求與實機閘門仍維持上節狀態。
+
+## 2026-10-30 接續修補（父系 7a47d14）
+
+保留 PR #691、原名、v1 格式與 origin_signature: MrLiouWord。
+
+- 已核對前版將每次操作 notice 清空、register 一次建立 bookmark 索引，以及損壞／未知版本／來源錯誤／寫入失敗保留原資料的回歸。
+- 分享 representation 優先使用 provider.suggestedName；拒絕斜線、反斜線、空白名稱、點目錄與 NUL，非法名稱回退暫存 basename。
+- 新增標籤限制 1024 UTF-8 bytes；批次套用與封包聯集限制每文件 1000 標籤，拒絕時不提交候選資料。
+- 登錄時每個既有 bookmark 只解析一次並更新過期 bookmark；文件操作時也持久化更新，寫入失敗停止操作。
+- 收件匣以 SHA-256 核對 payload 與來源紀錄；缺少副本補回，衝突保留兩側原件且不刪收件匣；單份失敗不阻止其他收件。只登錄本次 incoming payload，不將目的地額外檔案視為來源。
+- 新增有效封包 encoded round-trip、標籤上限不可變更、真實收件匣至 store、衝突保留與遺失副本重試、suggestedName 與非法名稱回退測試。
+
+Apple 公開文件再次核對：
+- https://developer.apple.com/documentation/foundation/nsitemprovider/suggestedname
+- https://developer.apple.com/documentation/foundation/nsitemprovider/loadfilerepresentation(forTypeIdentifier:completionHandler:)
+- https://developer.apple.com/documentation/fileprovider/nsfileproviderextension/settagdata(_:foritemidentifier:completionhandler:)
+
+setTagData 是 File Provider extension 接收其項目標籤變更的 override，不提供任意第三方 provider 的原生標籤寫入權限。沿用 Files 分享入口與可逆 MRL 封包；不宣稱修改系統標籤介面。
+
+仍待完成：大檔 copy／digest 的背景執行、可重現的過期 bookmark 測試、Apple 簽署與 App Group 實際 provisioning、iPhone／多 provider／效能驗收。主檔保護與跨文件標籤行為由 macOS CI 執行；本機沒有 Swift／Xcode，不將靜態檢查列為編譯成功。完整需求 DELIVERY_FAIL，待 exact-head CI 及上述驗收補齊。
+
+本次交付依賴：Selection／Transfer → Store → Manager；Share controller → Inbox → Store；Tests／IntegrationTests → 既有 mrl-ios-tags workflow。工程已引用各檔，無新增 target 或遺失依賴，無重新建立相同功能。交付形式為既有 Git 分支，ZIP 不適用。

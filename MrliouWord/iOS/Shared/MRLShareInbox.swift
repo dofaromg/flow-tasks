@@ -20,7 +20,7 @@ enum MRLShareInbox {
     static func receive(_ source: URL, suggestedName: String? = nil, inboxRoot: URL? = nil) throws {
         let manager = FileManager.default
         let name: String
-        if let suggestedName, !suggestedName.isEmpty,
+        if let suggestedName, !suggestedName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
             suggestedName != ".", suggestedName != "..",
             !suggestedName.contains("/"), !suggestedName.contains("\\"),
             !suggestedName.contains("\0") {

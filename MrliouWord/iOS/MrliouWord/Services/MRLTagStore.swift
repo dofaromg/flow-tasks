@@ -131,8 +131,16 @@ final class MRLTagStore: ObservableObject {
                             throw CocoaError(.fileWriteFileExists)
                         }
                     }
-                    let files = try manager.contentsOfDirectory(at: destination.appendingPathComponent("MRL_Payload"),
-                        includingPropertiesForKeys: nil)
+                    let sourceRecord = folder.appendingPathComponent(".MRL_source.json")
+                    let savedRecord = destination.appendingPathComponent(".MRL_source.json")
+                    if !manager.fileExists(atPath: savedRecord.path) {
+                        try manager.copyItem(at: sourceRecord, to: savedRecord)
+                    }
+                    guard try Self.digest(sourceRecord) == Self.digest(savedRecord) else {
+                        throw CocoaError(.fileWriteFileExists)
+                    }
+                    let files = try manager.contentsOfDirectory(at: incoming, includingPropertiesForKeys: nil)
+                        .map { payload.appendingPathComponent($0.lastPathComponent) }
                     guard !files.isEmpty, register(files, sourceRecord: folder.lastPathComponent) else {
                         throw CocoaError(.fileWriteUnknown)
                     }
