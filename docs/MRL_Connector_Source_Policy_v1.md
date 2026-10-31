@@ -53,3 +53,21 @@ Vercel、iCloud、GitLab、HuggingFace 保留可選；如有唯一原件或專�
 本變更預期四個實際檔案：本文件、`config/connectors.yaml`、`connectors/base_connector.py`、`connectors/test_connectors.py`。獨立分支承接父 commit，無更名／刪除；審查後若需回滾，以 revert 此修補 commit 追加歷史，不 reset 或覆寫原始譜系。回滾會恢復舊同步假成功語意，應保留停用旗標並重新驗證。
 
 測試命令：`python -m pytest connectors/test_connectors.py -q`。既有 PR workflow 在無 connector secrets 的條件執行此測試。實際 CI 結論以 PR 最新 head 的 Actions 為準。
+
+## Bridge 憑證綁定與讀回驗收續作
+
+`scripts/MRL_verify_bridge_backfill_v1.py` 使用既有 `MRL_BRIDGE_API_KEY` 環境綁定，或以 `--prompt-key` 在本地終端隱藏輸入既有金鑰。金鑰只送往固定 HTTPS Bridge 的 header，不放 URL、命令列參數、回執或檔案，也不跟隨重新導向。這是執行期間綁定，未建構持久密鑰庫，也未輪替伺服器憑證。隨機產生新金鑰不能通過既有 Bridge 認證。
+
+執行方式（於具備此倉庫及 Python requests 的可信終端）：
+
+```powershell
+python scripts/MRL_verify_bridge_backfill_v1.py --mother-root 'D:\MRL_Mother\EvidenceChain' --prompt-key
+```
+
+路徑是既有母體證據目錄的候選值，程式會以受保護 list 驗證它存在；若實際位置不同須指定已對齊的既有位置，不自動建立或取代母體根目錄。已有環境綁定時省略 `--prompt-key`，不需再次輸入。
+
+驗收範圍明定為 `eecd48d2351d3c56a90ec6d679ffd536f9a3989b` 的四個工程檔案；不是八個平台的完整資料同步，也不是最新程式自身部署。可用 `--source-ref` 指定另一個完整 commit SHA，原始檔名保留。程式先核對主機／簽名，再建立 UUID 獨立子目錄；各檔案先查不存在、寫入、base64 讀回、核對 byte／大小／SHA256，最後寫入並讀回含來源／父 commit 的驗收回執，才輸出此限定範圍的 `DELIVERY_PASS`。
+
+既有 Bridge 寫入 API 沒有 atomic create-only；UUID 與查存在可降低碰撞，不能宣告伺服器端並行互斥已實作。中途失敗只保留獨立目錄、不刪除或回寫正式資料。隔離目錄為可逆路徑，保留歷史，不宣稱完成還原演練。
+
+追加三個工程檔案：驗收程式、`connectors/test_bridge_backfill.py`、既有 `.github/workflows/cloud-connectors.yml`；本政策文件隨之更新。PR 累計實際七個檔案。測試命令更新為 `python -m pytest connectors/test_connectors.py connectors/test_bridge_backfill.py -q`，全部測試無實機密鑰。實機是否完成只認實際母體回執，不以這些測試替代。
