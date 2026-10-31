@@ -66,8 +66,29 @@ python scripts/MRL_verify_bridge_backfill_v1.py --mother-root 'D:\MRL_Mother\Evi
 
 路徑是既有母體證據目錄的候選值，程式會以受保護 list 驗證它存在；若實際位置不同須指定已對齊的既有位置，不自動建立或取代母體根目錄。已有環境綁定時省略 `--prompt-key`，不需再次輸入。
 
-驗收範圍明定為 `eecd48d2351d3c56a90ec6d679ffd536f9a3989b` 的四個工程檔案；不是八個平台的完整資料同步，也不是最新程式自身部署。可用 `--source-ref` 指定另一個完整 commit SHA，原始檔名保留。程式先核對主機／簽名，再建立 UUID 獨立子目錄；各檔案先查不存在、寫入、base64 讀回、核對 byte／大小／SHA256，最後寫入並讀回含來源／父 commit 的驗收回執，才輸出此限定範圍的 `DELIVERY_PASS`。
+驗收範圍明定為 `eecd48d2351d3c56a90ec6d679ffd536f9a3989b` 的四個工程檔案；不是八個平台的完整資料同步，也不是最新程式自身部署。可用 `--source-ref` 指定另一個完整 commit SHA，原始檔名保留。程式先核對主機／簽名，再建立 UUID 獨立子目錄；各檔案先驗證原子建立能力、查不存在、要求 create_only 寫入、確認 created_exclusively、base64 讀回、核對 byte／大小／SHA256，最後寫入並讀回含來源／父 commit 的驗收回執，才輸出此限定範圍的 `DELIVERY_PASS`。
 
-既有 Bridge 寫入 API 沒有 atomic create-only；UUID 與查存在可降低碰撞，不能宣告伺服器端並行互斥已實作。中途失敗只保留獨立目錄、不刪除或回寫正式資料。隔離目錄為可逆路徑，保留歷史，不宣稱完成還原演練。
+既有 Bridge 寫入 API 沒有 atomic create-only；本次安全修補會在 `/version` 未明示 `capabilities.file_write_create_only: true` 時拒絕寫入。未來相容伺服器必須原子拒絕既有目的檔（含競態），並回傳 `created_exclusively: true`，不得只增加能力宣告而不實作互斥。此 PR 不修改或部署 Bridge 伺服器；既有版本會被安全阻擋，不能繞過閘門恢復舊覆寫流程。中途失敗只保留獨立目錄、不刪除或回寫正式資料。隔離目錄為可逆路徑，保留歷史，不宣稱完成還原演練。
 
 追加三個工程檔案：驗收程式、`connectors/test_bridge_backfill.py`、既有 `.github/workflows/cloud-connectors.yml`；本政策文件隨之更新。PR 累計實際七個檔案。測試命令更新為 `python -m pytest connectors/test_connectors.py connectors/test_bridge_backfill.py -q`，全部測試無實機密鑰。實機是否完成只認實際母體回執，不以這些測試替代。
+
+
+## PR #694 獨立程式碼與安全審查（2026-10-31，Asia/Taipei）
+
+審查基準：`00471a37a9c77f438958e3d307006881c207f5f8`，原工作分支 `MRL_fix/connector-source-policy-20261031`。已檢查全部七個 PR 變更檔案、父版本差異、既有 Bridge `MRL_Bridge/server.js` 寫入契約、PR 討論與 inline threads。當時無 inline review threads，CodeRabbit 只有 draft skipped 通知；本次由 Codex 直接獨立檢查，未購買點數、未設定自動儲值。
+
+確認並修正：
+
+- 高風險：讀取 404 後到寫入前可被並行建立，現有伺服器 `writeFileSync` 會覆寫。最小修正採 fail-closed：每次寫入重新驗證主機與原子建立能力，要求 create_only 及回應確認；舊伺服器不送寫入要求。伺服器原子實作／部署仍是實機驗收阻擋，測試中的 FakeBridge 不是已部署證據。
+- 目的地原先允許任意磁碟絕對路徑，且未拒絕混合分隔符、ADS。限制至既有 `D:\MRL_Mother` 命名空間，拒絕跳脫、別名、非法字元及尾端點／空白。這是字串路徑防護，不能驗證實機 junction；伺服器仍須實施真實路徑及授權邊界。
+- `write_verified` 可被直接呼叫而跳過主機檢查，現在函式本身執行檢查。
+
+保留並核對：固定 HTTPS 來源、金鑰僅 header／隱藏輸入、禁止 redirect、HTTP 錯誤不讀 body、CLI 不輸出異常原文、401/403 即停、原始 byte／大小比較後計算 SHA256、UUID 隔離回執、完整來源與父 SHA、失敗不刪檔。未發現本 PR 新增硬編碼憑證；header key 是持有者認證，主機名稱與 origin_signature 是目標一致性檢查，不能取代伺服器身分認證或細粒度 grant。
+
+驗證：`python -m pytest connectors/test_connectors.py connectors/test_bridge_backfill.py -q`：83 passed（Python 3.12.14）；`py_compile` 與 `git diff --check` 通過。新增 18 個測試案例，涵蓋能力缺失、競態拒絕、缺少建立確認、路徑拒絕、307/308/401/403 停止及憑證錯誤遮蔽。全程無實機密鑰、無 DL580 寫入。
+
+基準 head CI：Cloud connector audit、CodeQL、GitGuardian 通過；CodeRabbit skipped；Cloudflare Pages 與三個 Workers Builds 失敗。沒有證據將其失敗歸因於 Greptile 額度，亦未推定為本次 Python 變更造成。修補後 head 的 CI 必須重新核對，舊 head 成功不能沿用。
+
+交付比對：本續作 Expected_File_List 為原名驗收程式、原名 Bridge 測試、本政策文件，共三檔；無刪除、更名、額外檔或 placeholder。七檔審查 Coverage=100%；原子伺服器能力、有效憑證與 DL580 讀回驗收未完成，因此整體交付仍 DELIVERY_FAIL，不能把本地測試當作實機 PASS。依賴樹：workflow → connector／Bridge 測試 → 驗收程式 → 四個指定來源檔 → 既有 Bridge 契約 → DL580 隔離目錄及回執。無 ZIP 交付，封裝數量比對不適用。
+
+回滾：以本次修補 commit 的 `git revert` 追加歷史，原始 SHA／檔名／四檔來源不變；回滾會移除安全閘門，不能視為允許恢復不安全實機寫入。檔案大小及 SHA256 於本次審查回執列出，政策文件自身完整性以 Git blob／commit 記錄核對。

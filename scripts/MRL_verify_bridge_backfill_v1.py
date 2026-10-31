@@ -30,6 +30,28 @@ FILES = (
 )
 
 
+def validate_destination(path):
+    """Limit this receiver to the mother archive; reject Windows aliases/ADS."""
+    parts = path.split("\\")
+    if (len(parts) < 2 or parts[0].upper() != "D:"
+            or parts[1].casefold() != "mrl_mother"
+            or any(not p or p in (".", "..") or p.endswith((".", " "))
+                   or re.search(r'[<>:"/|?*\x00-\x1f]', p) for p in parts[1:])):
+        raise ValueError("目的地必須位於 D:\\MRL_Mother，禁止別名、ADS 與路徑跳脫")
+
+
+def verify_host(session):
+    """Fail closed on legacy servers: pre-read alone cannot prevent overwrite."""
+    version = call(session, "GET", "/version")
+    if (version.get("hostname") != "WIN-PBVUI7VK2A6"
+            or version.get("origin_signature") != "MrLiouWord"):
+        raise RuntimeError("母體主機或 origin_signature 不符")
+    capabilities = version.get("capabilities")
+    if (not isinstance(capabilities, dict)
+            or capabilities.get("file_write_create_only") is not True):
+        raise RuntimeError("Bridge 尚未證明原子 create_only 能力；拒絕寫入")
+
+
 def call(session, method, route, body=None, missing_ok=False):
     """Never redirect credentials or include response bodies in errors."""
     response = session.request(
@@ -61,11 +83,17 @@ def read_bytes(session, path, missing_ok=False):
 
 
 def write_verified(session, path, raw):
+    validate_destination(path)
+    verify_host(session)
     if read_bytes(session, path, missing_ok=True) is not None:
         raise RuntimeError("目的檔案已存在，拒絕覆寫")
-    call(session, "POST", "/MRL_file/write", {
+    result = call(session, "POST", "/MRL_file/write", {
         "filepath": path, "b64": base64.b64encode(raw).decode("ascii"),
+        "create_only": True,
     })
+    data = result.get("data", result)
+    if not isinstance(data, dict) or data.get("created_exclusively") is not True:
+        raise RuntimeError("Bridge 未確認原子建立；不可宣告驗收通過")
     returned = read_bytes(session, path)
     if returned != raw:
         raise RuntimeError("母體逐 byte 讀回核對失敗")
@@ -73,10 +101,7 @@ def write_verified(session, path, raw):
 
 
 def verify_backfill(session, mother_root, source_ref=SOURCE_REF):
-    drive, tail = ntpath.splitdrive(mother_root)
-    if (not re.fullmatch(r"[A-Za-z]:", drive) or not tail.startswith("\\")
-            or ".." in tail.split("\\") or "\x00" in mother_root):
-        raise ValueError("請指定既有母體目錄的 Windows 絕對路徑")
+    validate_destination(mother_root)
     if not re.fullmatch(r"[0-9a-f]{40}", source_ref):
         raise ValueError("來源必須為完整 commit SHA")
     repo = Path(__file__).resolve().parents[1]
@@ -86,10 +111,7 @@ def verify_backfill(session, mother_root, source_ref=SOURCE_REF):
     }
     if any(not raw for raw in payloads.values()):
         raise RuntimeError("來源檔案不得為空")
-    version = call(session, "GET", "/version")
-    if (version.get("hostname") != "WIN-PBVUI7VK2A6"
-            or version.get("origin_signature") != "MrLiouWord"):
-        raise RuntimeError("母體主機或 origin_signature 不符")
+    verify_host(session)
     # Protected preflight: the requested parent must already exist.
     call(session, "POST", "/MRL_file/list", {
         "dirpath": mother_root, "recursive": False,

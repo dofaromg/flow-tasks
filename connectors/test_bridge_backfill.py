@@ -21,6 +21,9 @@ class FakeBridge:
         self.disk = {}
         self.corrupt = False
         self.hostname = "WIN-PBVUI7VK2A6"
+        self.capabilities = {"file_write_create_only": True}
+        self.race = False
+        self.ack = True
 
     def request(self, method, url, json, **options):
         assert options["allow_redirects"] is False
@@ -28,12 +31,19 @@ class FakeBridge:
         if url.endswith("/version"):
             response.json.return_value = {
                 "hostname": self.hostname, "origin_signature": "MrLiouWord",
+                "capabilities": self.capabilities,
             }
         elif url.endswith("/MRL_file/list"):
             response.json.return_value = {"ok": True, "items": []}
         elif url.endswith("/MRL_file/write"):
-            self.disk[json["filepath"]] = base64.b64decode(json["b64"])
-            response.json.return_value = {"ok": True}
+            assert json["create_only"] is True
+            if self.race:
+                self.disk[json["filepath"]] = b"concurrent-original"
+            if json["filepath"] in self.disk:
+                response.status_code = 409
+            else:
+                self.disk[json["filepath"]] = base64.b64decode(json["b64"])
+            response.json.return_value = {"ok": True, "created_exclusively": self.ack}
         elif json["filepath"] not in self.disk:
             response.status_code = 404
         else:
@@ -59,12 +69,12 @@ def test_readback_corruption_blocks_success():
     session = FakeBridge()
     session.corrupt = True
     with pytest.raises(RuntimeError, match="逐 byte"):
-        bridge.write_verified(session, r"D:\evidence\unique.bin", b"original")
+        bridge.write_verified(session, r"D:\MRL_Mother\evidence\unique.bin", b"original")
 
 
 def test_existing_destination_is_not_overwritten():
     session = FakeBridge()
-    path = r"D:\evidence\existing.bin"
+    path = r"D:\MRL_Mother\evidence\existing.bin"
     session.disk[path] = b"original"
     with pytest.raises(RuntimeError, match="拒絕覆寫"):
         bridge.write_verified(session, path, b"replacement")
@@ -93,3 +103,58 @@ def test_missing_binding_blocks_before_network(monkeypatch, capsys):
     monkeypatch.setattr("sys.argv", ["verify", "--mother-root", r"D:\MRL_Mother"])
     assert bridge.main() == 2
     assert "BLOCKED" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("capabilities", [None, {}, {"file_write_create_only": "true"}])
+def test_legacy_server_cannot_write(capabilities):
+    session = FakeBridge()
+    session.capabilities = capabilities
+    with pytest.raises(RuntimeError, match="create_only"):
+        bridge.verify_backfill(session, r"D:\MRL_Mother\EvidenceChain")
+    assert not session.disk
+
+
+def test_concurrent_creation_is_never_overwritten():
+    session = FakeBridge()
+    session.race = True
+    path = r"D:\MRL_Mother\evidence\race.bin"
+    with pytest.raises(RuntimeError, match="HTTP 409"):
+        bridge.write_verified(session, path, b"replacement")
+    assert session.disk[path] == b"concurrent-original"
+
+
+def test_missing_exclusive_ack_cannot_pass():
+    session = FakeBridge()
+    session.ack = False
+    with pytest.raises(RuntimeError, match="原子建立"):
+        bridge.write_verified(session, r"D:\MRL_Mother\evidence\new.bin", b"data")
+
+
+@pytest.mark.parametrize("path", [
+    r"C:\Windows", r"D:\other", r"D:\MRL_Mother\..\Windows",
+    r"D:\MRL_Mother/../Windows", r"D:\MRL_Mother\x:stream",
+    r"D:\MRL_Mother\x. ", r"\\server\share", r"D:MRL_Mother",
+])
+def test_invalid_destination_blocks_before_network(path):
+    session = Mock()
+    with pytest.raises(ValueError):
+        bridge.verify_backfill(session, path)
+    session.request.assert_not_called()
+
+
+@pytest.mark.parametrize("status", [307, 308, 401, 403])
+def test_denial_prevents_any_followup_write(status):
+    session = Mock()
+    session.request.return_value = Mock(status_code=status)
+    with pytest.raises(RuntimeError):
+        bridge.write_verified(session, r"D:\MRL_Mother\evidence\new.bin", b"data")
+    assert session.request.call_count == 1
+
+
+def test_cli_error_redacts_credentials(monkeypatch, capsys):
+    secret = "test-only-sensitive-value"
+    monkeypatch.setenv("MRL_BRIDGE_API_KEY", secret)
+    monkeypatch.setattr("sys.argv", ["verify", "--mother-root", r"D:\MRL_Mother"])
+    monkeypatch.setattr(bridge, "verify_backfill", Mock(side_effect=RuntimeError(secret)))
+    assert bridge.main() == 1
+    assert secret not in capsys.readouterr().out
