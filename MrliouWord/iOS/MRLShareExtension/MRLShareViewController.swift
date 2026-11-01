@@ -72,7 +72,7 @@ final class MRLShareViewController: UIViewController {
         let provider = providers[index]
         let control = self.control
         if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
-            progress = provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { item, error in
+            provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { item, error in
                 var failed = error != nil
                 if let url = item as? URL, !failed {
                     do { try MRLShareInbox.receive(url, control: control) } catch { failed = true }

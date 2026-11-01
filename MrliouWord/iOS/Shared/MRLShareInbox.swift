@@ -105,6 +105,23 @@ enum MRLImportIO {
         }, onCancel: { control.cancel() })
     }
 
+    static func copyEnvelope(_ source: URL, to target: URL, control: MRLImportControl) throws {
+        let manager = FileManager.default
+        try manager.createDirectory(at: target, withIntermediateDirectories: false)
+        let payload = target.appendingPathComponent("MRL_Payload", isDirectory: true)
+        try manager.createDirectory(at: payload, withIntermediateDirectories: false)
+        for file in try manager.contentsOfDirectory(at: source.appendingPathComponent("MRL_Payload"),
+            includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey]) {
+            let values = try file.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
+            guard values.isRegularFile == true, values.isSymbolicLink != true else {
+                throw CocoaError(.fileReadUnsupportedScheme)
+            }
+            try copy(file, to: payload.appendingPathComponent(file.lastPathComponent), control: control)
+        }
+        try copy(source.appendingPathComponent(".MRL_source.json"),
+            to: target.appendingPathComponent(".MRL_source.json"), control: control)
+    }
+
     static func copyAtomically(_ source: URL, to target: URL, control: MRLImportControl) throws {
         let staging = target.deletingLastPathComponent().appendingPathComponent(".staging-" + UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: staging) }

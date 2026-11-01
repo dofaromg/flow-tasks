@@ -229,6 +229,32 @@ struct MRLTagStoreRegression {
         let acquired = slowReady.appendingPathComponent("MRL_Payload/大型.bin")
         let acquiredHash = try MRLTagStore.digest(acquired)
         precondition(acquiredHash == largeHash)
+        // Real NSItemProvider delayed file representation, acquired inside its valid callback.
+        let provider = NSItemProvider()
+        provider.registerFileRepresentation(forTypeIdentifier: "public.data", fileOptions: [], visibility: .all) { completion in
+            let progress = Progress(totalUnitCount: 1)
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+                completion(large, false, nil)
+                progress.completedUnitCount = 1
+            }
+            return progress
+        }
+        let providerInbox = root.appendingPathComponent("real-provider")
+        try manager.createDirectory(at: providerInbox, withIntermediateDirectories: false)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            _ = provider.loadFileRepresentation(forTypeIdentifier: "public.data") { url, error in
+                do {
+                    if let error { throw error }
+                    guard let url else { throw CocoaError(.fileReadUnknown) }
+                    precondition(!Thread.isMainThread)
+                    try MRLShareInbox.receive(url, suggestedName: "provider.bin", inboxRoot: providerInbox)
+                    continuation.resume()
+                } catch { continuation.resume(throwing: error) }
+            }
+        }
+        let providerReady = try manager.contentsOfDirectory(at: providerInbox, includingPropertiesForKeys: nil)[0]
+        let providerHash = try MRLTagStore.digest(providerReady.appendingPathComponent("MRL_Payload/provider.bin"))
+        precondition(providerHash == largeHash)
         // Simulate process interruption before rename: hidden partial envelope is never registered.
         let interrupted = slowInbox.appendingPathComponent(".staging-" + UUID().uuidString)
         try manager.createDirectory(at: interrupted, withIntermediateDirectories: false)

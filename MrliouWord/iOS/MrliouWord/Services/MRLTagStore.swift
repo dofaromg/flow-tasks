@@ -134,7 +134,7 @@ final class MRLTagStore: ObservableObject {
                     if !manager.fileExists(atPath: destination.path) {
                         let staging = imports.appendingPathComponent(".staging-" + UUID().uuidString)
                         do {
-                            try manager.copyItem(at: folder, to: staging)
+                            try MRLImportIO.copyEnvelope(folder, to: staging, control: control)
                             try control.check()
                             try manager.moveItem(at: staging, to: destination)
                         } catch {
@@ -192,15 +192,22 @@ final class MRLTagStore: ObservableObject {
     }
 
     /// 只輸出可攜標籤，不洩漏 bookmark 或本機路徑。
-    func transferData(for ids: Set<UUID>) throws -> Data {
-        let entries = try archive.documents.filter { ids.contains($0.id) }.map { document in
-            try withDocument(document) { url in
-                MRLTagTransfer.Entry(name: document.name, sha256: try Self.digest(url), tags: document.tags)
+    func transferData(for ids: Set<UUID>) async throws -> Data {
+        let control = MRLImportControl()
+        let selected = archive.documents.filter { ids.contains($0.id) }
+        let sources = try selected.map { try documentURL($0) }
+        return try await MRLImportIO.run(control) {
+            let entries = try zip(selected, sources).map { document, url in
+                let scoped = url.startAccessingSecurityScopedResource()
+                defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+                return try Self.coordinated(url) {
+                    MRLTagTransfer.Entry(name: document.name, sha256: try Self.digest($0, control: control), tags: document.tags)
+                }
             }
+            let packet = MRLTagTransfer(documents: entries)
+            try packet.validate()
+            return try packet.encoded()
         }
-        let packet = MRLTagTransfer(documents: entries)
-        try packet.validate()
-        return try packet.encoded()
     }
 
     /// 匯入前完整驗證；只對使用者選取的 MRL 文件比對內容，不以名稱單獨套用。
@@ -279,21 +286,6 @@ final class MRLTagStore: ObservableObject {
         }
     }
 
-    }
-
-    private func withDocument<T>(_ document: MRLTaggedDocument, body: (URL) throws -> T) throws -> T {
-        var stale = false
-        let url = try URL(resolvingBookmarkData: document.bookmark, options: [],
-            relativeTo: nil, bookmarkDataIsStale: &stale)
-        let scoped = url.startAccessingSecurityScopedResource()
-        defer { if scoped { url.stopAccessingSecurityScopedResource() } }
-        if stale, let index = archive.documents.firstIndex(where: { $0.id == document.id }) {
-            var candidate = archive
-            candidate.documents[index].bookmark = try url.bookmarkData(options: .minimalBookmark,
-                includingResourceValuesForKeys: nil, relativeTo: nil)
-            guard commit(candidate) else { throw CocoaError(.fileWriteUnknown) }
-        }
-        return try Self.coordinated(url, body: body)
     }
 
     nonisolated private static func coordinated<T>(_ url: URL, body: (URL) throws -> T) throws -> T {
