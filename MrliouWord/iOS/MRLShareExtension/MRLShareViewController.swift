@@ -35,6 +35,7 @@ final class MRLShareViewController: UIViewController {
         if started {
             control.cancel()
             progress?.cancel()
+            extensionContext?.cancelRequest(withError: CocoaError(.userCancelled))
             status.text = "正在取消；已完成的副本保留，未完成文件可重新分享。"
             return
         }

@@ -212,19 +212,22 @@ struct MRLTagStoreRegression {
         try manager.createDirectory(at: slowInbox, withIntermediateDirectories: false)
         let providerTemp = root.appendingPathComponent("provider.tmp")
         try manager.copyItem(at: large, to: providerTemp)
-        var heartbeat = false
+        let heartbeat = DispatchSemaphore(value: 0)
         let slow = Task { @MainActor in
             try await MRLImportIO.run(MRLImportControl()) {
                 precondition(!Thread.isMainThread)
+                guard heartbeat.wait(timeout: .now() + 5) == .success else {
+                    throw CocoaError(.fileReadUnknown)
+                }
                 Thread.sleep(forTimeInterval: 0.15)
                 try MRLShareInbox.receive(providerTemp, suggestedName: "大型.bin", inboxRoot: slowInbox)
                 try manager.removeItem(at: providerTemp)
             }
         }
         await Task.yield()
-        heartbeat = true
+        heartbeat.signal()
         try await slow.value
-        precondition(heartbeat && !manager.fileExists(atPath: providerTemp.path))
+        precondition(!manager.fileExists(atPath: providerTemp.path))
         let slowReady = try manager.contentsOfDirectory(at: slowInbox, includingPropertiesForKeys: nil)[0]
         let acquired = slowReady.appendingPathComponent("MRL_Payload/大型.bin")
         let acquiredHash = try MRLTagStore.digest(acquired)
