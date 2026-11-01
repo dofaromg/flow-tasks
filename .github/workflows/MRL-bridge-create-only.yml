@@ -19,6 +19,12 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /MRL_Bridge/
+            /connectors/
+            /scripts/MRL_verify_bridge_backfill_v1.py
+            /pytest.ini
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
