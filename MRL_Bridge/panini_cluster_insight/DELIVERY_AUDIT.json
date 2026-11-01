@@ -23,13 +23,15 @@
     "MRL_Bridge/panini_cluster_insight/schema.cjs",
     "MRL_Bridge/panini_cluster_insight/sources/Mrliou_MRL_ParticleDict_PaniniClusterInsight_v1.0.0.json",
     "MRL_Bridge/panini_cluster_insight/test.cjs",
-    "MRL_Bridge/server.js"
+    "MRL_Bridge/server.js",
+    "config/Mrliou_MRL_Sync_Delivery_v1.json",
+    "config/Mrliou_Structure_Authorization_Delivery_v1.json"
   ],
   "files": [
     {
       "path": ".github/workflows/MRL_Panini_Cluster_Insight.yml",
-      "size": 923,
-      "sha256": "acccc7ca03e247fef85943aa7448b5c193fc13f728461150657e3e29aaf0ee69"
+      "size": 1008,
+      "sha256": "38aa4c2f889110d950f79c9311df1f0b8e6c5ad35e02c76282424337e730c98f"
     },
     {
       "path": "CHANGELOG.md",
@@ -48,8 +50,8 @@
     },
     {
       "path": "MRL_Bridge/panini_cluster_insight/README.md",
-      "size": 12273,
-      "sha256": "2fb7ba54d5dd3d8801c071a3549260b6bb1c995185939aa7c94356447f37fe37"
+      "size": 12564,
+      "sha256": "8ed39ace53c94204cffac437e961557a6d24dd791655c2a92b7439deceb2ff44"
     },
     {
       "path": "MRL_Bridge/panini_cluster_insight/adapter.cjs",
@@ -58,8 +60,8 @@
     },
     {
       "path": "MRL_Bridge/panini_cluster_insight/audit.cjs",
-      "size": 3949,
-      "sha256": "e6d320e60ed6a896f36320138e9c28d67206084c29eb115d171bbb1c7046d13b"
+      "size": 4052,
+      "sha256": "1fcc95378fbc0869c1cc8ae725b5824ad531dd4cf95ca0991c22759b0a2c8630"
     },
     {
       "path": "MRL_Bridge/panini_cluster_insight/call.schema.json",
@@ -135,6 +137,16 @@
       "path": "MRL_Bridge/server.js",
       "size": 33703,
       "sha256": "6065954d7da0604d33a3ae84a8af5bb00e429399bc15d6cb4cd43e2e57d41ca5"
+    },
+    {
+      "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+      "size": 9293,
+      "sha256": "366ff385bb8f2ef386008a8f7691fe44c920c28f4560189f9e45864cfd6c6228"
+    },
+    {
+      "path": "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+      "size": 15812,
+      "sha256": "d7f7c88daa3253960f9b12433157c978cad40ba6dcc9a6116ad46fc837b4ec99"
     }
   ],
   "missing_files": [],

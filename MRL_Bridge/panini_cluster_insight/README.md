@@ -82,7 +82,7 @@ node MRL_Bridge/panini_cluster_insight/audit.cjs --check
 
 `node MRL_Bridge/panini_cluster_insight/contracts.cjs` regenerates the seven checked-in contracts. Tests reject contract drift. `.github/workflows/MRL_Panini_Cluster_Insight.yml` runs read/compute, HTTP, stdio, provenance, source immutability and parent Bridge regression checks without live keys or mother data. The existing Bridge workflow also runs lint/build. Tests do not alter the formal mother originals.
 
-Local verification on 2026-11-01: 28/28 Node regressions passed on Node v24.22.1; repository lint and production build passed. Bridge production dependency audit after updating the pinned Ajv and compatible transitive lock entries reported 0 vulnerabilities. These receipts apply to this checkout; remote exact-head CI is recorded separately by the pull request.
+Local verification on 2026-11-01: 28/28 Node regressions passed on Node v24.22.1; repository lint and production build passed. An additional 98 sync/authorization regression tests and 53 subtests passed after refreshing the two existing delivery manifests' CHANGELOG dependency hashes. Their previous hashes remain in append-only integrity history. Bridge production dependency audit after updating the pinned Ajv and compatible transitive lock entries reported 0 vulnerabilities. These receipts apply to this checkout; remote exact-head CI is recorded separately by the pull request. The dedicated Panini workflow explicitly checks out the PR head SHA.
 
 ## Observed live boundary — 2026-11-01 Asia/Taipei
 

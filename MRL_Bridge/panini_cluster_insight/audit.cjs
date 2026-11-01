@@ -9,6 +9,7 @@ const prefix = 'MRL_Bridge/panini_cluster_insight/';
 const expected = [
   'CHANGELOG.md', 'MRL_Bridge/package.json', 'MRL_Bridge/package-lock.json', 'MRL_Bridge/server.js',
   '.github/workflows/MRL_Panini_Cluster_Insight.yml',
+  'config/Mrliou_MRL_Sync_Delivery_v1.json', 'config/Mrliou_Structure_Authorization_Delivery_v1.json',
   ...['schema.cjs', 'engine.cjs', 'adapter.cjs', 'mcp_stdio.cjs', 'contracts.cjs', 'register_dataset.cjs', 'test.cjs', 'audit.cjs', 'README.md',
     'chatgpt_tools.json', 'openapi.json', 'input.schema.json', 'call.schema.json', 'canonical.schema.json', 'catalogue.schema.json', 'output.schema.json',
     'sources/Mrliou_MRL_ParticleDict_PaniniClusterInsight_v1.0.0.json'].map(p => prefix + p),
