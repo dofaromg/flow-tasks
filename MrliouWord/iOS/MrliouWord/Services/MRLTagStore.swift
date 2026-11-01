@@ -7,6 +7,7 @@ import CryptoKit
 final class MRLTagStore: ObservableObject {
     @Published private(set) var archive = MRLTagArchive()
     @Published var errorMessage: String?
+    @Published private(set) var receiving = false
     private var writable = true
     private let location: URL
 
@@ -112,7 +113,11 @@ final class MRLTagStore: ObservableObject {
     }
 
     /// 收件匣成功登錄後才移除；失敗保留副本，重新啟動可重試。
-    func receiveSharedFiles(inboxRoot: URL? = nil, importsRoot: URL? = nil) {
+    func receiveSharedFiles(inboxRoot: URL? = nil, importsRoot: URL? = nil) async {
+        guard !receiving else { return }
+        receiving = true
+        defer { receiving = false }
+        let control = MRLImportControl()
         do {
             let manager = FileManager.default
             let inbox = try inboxRoot ?? MRLShareInbox.root()
@@ -125,10 +130,12 @@ final class MRLTagStore: ObservableObject {
                 guard UUID(uuidString: folder.lastPathComponent) != nil else { continue }
                 do {
                     let destination = imports.appendingPathComponent(folder.lastPathComponent, isDirectory: true)
+                    let files: [URL] = try await MRLImportIO.run(control) {
                     if !manager.fileExists(atPath: destination.path) {
                         let staging = imports.appendingPathComponent(".staging-" + UUID().uuidString)
                         do {
                             try manager.copyItem(at: folder, to: staging)
+                            try control.check()
                             try manager.moveItem(at: staging, to: destination)
                         } catch {
                             try? manager.removeItem(at: staging)
@@ -141,8 +148,8 @@ final class MRLTagStore: ObservableObject {
                     try manager.createDirectory(at: payload, withIntermediateDirectories: true)
                     for source in try manager.contentsOfDirectory(at: incoming, includingPropertiesForKeys: nil) {
                         let target = payload.appendingPathComponent(source.lastPathComponent)
-                        if !manager.fileExists(atPath: target.path) { try manager.copyItem(at: source, to: target) }
-                        guard try Self.digest(source) == Self.digest(target) else {
+                        if !manager.fileExists(atPath: target.path) { try MRLImportIO.copyAtomically(source, to: target, control: control) }
+                        guard try Self.digest(source, control: control) == Self.digest(target, control: control) else {
                             throw CocoaError(.fileWriteFileExists)
                         }
                     }
@@ -151,21 +158,37 @@ final class MRLTagStore: ObservableObject {
                     if !manager.fileExists(atPath: savedRecord.path) {
                         try manager.copyItem(at: sourceRecord, to: savedRecord)
                     }
-                    guard try Self.digest(sourceRecord) == Self.digest(savedRecord) else {
+                    guard try Self.digest(sourceRecord, control: control) == Self.digest(savedRecord, control: control) else {
                         throw CocoaError(.fileWriteFileExists)
                     }
-                    let files = try manager.contentsOfDirectory(at: incoming, includingPropertiesForKeys: nil)
+                    return try manager.contentsOfDirectory(at: incoming, includingPropertiesForKeys: nil)
                         .map { payload.appendingPathComponent($0.lastPathComponent) }
+                    }
+                    try control.check()
                     guard !files.isEmpty, register(files, sourceRecord: folder.lastPathComponent) else {
                         throw CocoaError(.fileWriteUnknown)
                     }
                     try manager.removeItem(at: folder)
+                } catch is CancellationError {
+                    throw CancellationError()
                 } catch {
                     failures.append("\(folder.lastPathComponent)：\(error.localizedDescription)")
                 }
             }
             if !failures.isEmpty { errorMessage = "分享收件匣保留待重試：" + failures.joined(separator: "；") }
         } catch { errorMessage = "分享收件匣尚未完成：\(error.localizedDescription)" }
+    }
+
+    private func documentURL(_ document: MRLTaggedDocument) throws -> URL {
+        let resolution = try resolveBookmark(document.bookmark)
+        if resolution.stale, let index = archive.documents.firstIndex(where: { $0.id == document.id }) {
+            let scoped = resolution.url.startAccessingSecurityScopedResource()
+            defer { if scoped { resolution.url.stopAccessingSecurityScopedResource() } }
+            var candidate = archive
+            candidate.documents[index].bookmark = try makeBookmark(resolution.url)
+            guard commit(candidate) else { throw CocoaError(.fileWriteUnknown) }
+        }
+        return resolution.url
     }
 
     /// 只輸出可攜標籤，不洩漏 bookmark 或本機路徑。
@@ -181,11 +204,13 @@ final class MRLTagStore: ObservableObject {
     }
 
     /// 匯入前完整驗證；只對使用者選取的 MRL 文件比對內容，不以名稱單獨套用。
-    func importTransfer(_ url: URL, to ids: Set<UUID>) -> Int? {
+    func importTransfer(_ url: URL, to ids: Set<UUID>) async -> Int? {
+        let control = MRLImportControl()
         do {
+            let data: Data = try await MRLImportIO.run(control) {
             let scoped = url.startAccessingSecurityScopedResource()
             defer { if scoped { url.stopAccessingSecurityScopedResource() } }
-            let data = try Self.coordinated(url) { coordinated in
+            return try Self.coordinated(url) { coordinated in
                 let handle = try FileHandle(forReadingFrom: coordinated)
                 defer { try? handle.close() }
                 let maximum = MRLTagTransfer.maximumBytes
@@ -193,15 +218,22 @@ final class MRLTagStore: ObservableObject {
                 guard bytes.count <= maximum else { throw MRLTagTransfer.ValidationError.invalidPacket }
                 return bytes
             }
+            }
             let packet = try JSONDecoder().decode(MRLTagTransfer.self, from: data)
             try packet.validate()
             var fingerprints: [UUID: String] = [:]
             for document in archive.documents where ids.contains(document.id) {
-                fingerprints[document.id] = try withDocument(document) { try Self.digest($0) }
+                let source = try documentURL(document)
+                fingerprints[document.id] = try await MRLImportIO.run(control) {
+                    let scoped = source.startAccessingSecurityScopedResource()
+                    defer { if scoped { source.stopAccessingSecurityScopedResource() } }
+                    return try Self.coordinated(source) { try Self.digest($0, control: control) }
+                }
             }
             let matches = archive.documents.filter { document in
                 packet.documents.contains { $0.name == document.name && $0.sha256 == fingerprints[document.id] }
             }.count
+            try control.check()
             let candidate = try packet.merging(into: archive, fingerprints: fingerprints)
             return commit(candidate) ? matches : nil
         } catch {
@@ -211,34 +243,42 @@ final class MRLTagStore: ObservableObject {
     }
 
     /// 分享副本與標籤封包，完整準備成功才顯示分享面板。
-    func exportFiles(_ ids: Set<UUID>) throws -> (directory: URL, files: [URL]) {
+    func exportFiles(_ ids: Set<UUID>) async throws -> (directory: URL, files: [URL]) {
+        let control = MRLImportControl()
+        let selected = archive.documents.filter { ids.contains($0.id) }
+        let sources = try selected.map { try documentURL($0) }
+        return try await MRLImportIO.run(control) {
         let manager = FileManager.default
         let directory = manager.temporaryDirectory.appendingPathComponent("MRL_" + UUID().uuidString)
         try manager.createDirectory(at: directory, withIntermediateDirectories: false)
         do {
             var files: [URL] = []
-            for document in archive.documents where ids.contains(document.id) {
+            for (document, source) in zip(selected, sources) {
                 let child = directory.appendingPathComponent(document.id.uuidString, isDirectory: true)
                 try manager.createDirectory(at: child, withIntermediateDirectories: false)
                 let copy = child.appendingPathComponent(document.name)
-                try withDocument(document) { try manager.copyItem(at: $0, to: copy) }
+                let scoped = source.startAccessingSecurityScopedResource()
+                defer { if scoped { source.stopAccessingSecurityScopedResource() } }
+                try Self.coordinated(source) { try MRLImportIO.copy($0, to: copy, control: control) }
                 files.append(copy)
             }
             let packet = directory.appendingPathComponent("MRL_標籤.json")
             // 從實際分享副本計算，避免原件在兩次讀取間改變造成配對錯誤。
-            let selected = archive.documents.filter { ids.contains($0.id) }
             let entries = try zip(selected, files).map { document, file in
-                MRLTagTransfer.Entry(name: document.name, sha256: try Self.digest(file), tags: document.tags)
+                MRLTagTransfer.Entry(name: document.name, sha256: try Self.digest(file, control: control), tags: document.tags)
             }
             let transfer = MRLTagTransfer(documents: entries)
             try transfer.validate()
             try transfer.encoded().write(to: packet, options: .atomic)
             files.append(packet)
+            try control.check()
             return (directory, files)
         } catch {
             try? manager.removeItem(at: directory)
             throw error
         }
+    }
+
     }
 
     private func withDocument<T>(_ document: MRLTaggedDocument, body: (URL) throws -> T) throws -> T {
@@ -256,7 +296,7 @@ final class MRLTagStore: ObservableObject {
         return try Self.coordinated(url, body: body)
     }
 
-    private static func coordinated<T>(_ url: URL, body: (URL) throws -> T) throws -> T {
+    nonisolated private static func coordinated<T>(_ url: URL, body: (URL) throws -> T) throws -> T {
         var coordinationError: NSError?
         var result: Result<T, Error>?
         NSFileCoordinator().coordinate(readingItemAt: url, options: [], error: &coordinationError) { coordinated in
@@ -267,11 +307,15 @@ final class MRLTagStore: ObservableObject {
         return try result.get()
     }
 
-    private static func digest(_ url: URL) throws -> String {
+    nonisolated static func digest(_ url: URL, control: MRLImportControl = MRLImportControl()) throws -> String {
         let handle = try FileHandle(forReadingFrom: url)
         defer { try? handle.close() }
         var hash = SHA256()
-        while let data = try handle.read(upToCount: 1024 * 1024), !data.isEmpty { hash.update(data: data) }
+        while true {
+            try control.check()
+            guard let data = try handle.read(upToCount: 1024 * 1024), !data.isEmpty else { break }
+            hash.update(data: data)
+        }
         return hash.finalize().map { String(format: "%02x", $0) }.joined()
     }
 
@@ -290,3 +334,4 @@ final class MRLTagStore: ObservableObject {
         var errorDescription: String? { "不支援此資料版本" }
     }
 }
+

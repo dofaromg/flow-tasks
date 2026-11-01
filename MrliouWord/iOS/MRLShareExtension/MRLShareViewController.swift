@@ -5,6 +5,8 @@ import UniformTypeIdentifiers
 final class MRLShareViewController: UIViewController {
     private let status = UILabel()
     private var started = false
+    private var control = MRLImportControl()
+    private var progress: Progress?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +32,12 @@ final class MRLShareViewController: UIViewController {
     }
 
     @objc private func closeRequest() {
-        guard !started else { return }
+        if started {
+            control.cancel()
+            progress?.cancel()
+            status.text = "正在取消；已完成的副本保留，未完成文件可重新分享。"
+            return
+        }
         extensionContext?.completeRequest(returningItems: nil)
     }
 
@@ -38,6 +45,7 @@ final class MRLShareViewController: UIViewController {
     @objc private func saveFiles() {
         guard !started else { return }
         started = true
+        control = MRLImportControl()
         let providers = (extensionContext?.inputItems as? [NSExtensionItem] ?? [])
             .flatMap { $0.attachments ?? [] }
         guard !providers.isEmpty, providers.count <= 1000 else {
@@ -49,17 +57,25 @@ final class MRLShareViewController: UIViewController {
     }
 
     private func receive(_ providers: [NSItemProvider], index: Int, failures: Int) {
+        if control.isCancelled {
+            started = false
+            progress = nil
+            status.text = "已取消；已完成副本保留，請重新分享未完成文件。"
+            return
+        }
         guard index < providers.count else {
             started = false
             status.text = "已加入 \(providers.count - failures)／\(providers.count) 份文件副本。\(failures > 0 ? "部分失敗，請從 Files 重選失敗文件。" : "")請關閉後開啟 MRL 的檔案與標籤。"
             return
         }
+        status.text = "正在加入第 \(index + 1)／\(providers.count) 份文件；可按關閉取消。"
         let provider = providers[index]
+        let control = self.control
         if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
-            provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { item, error in
+            progress = provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { item, error in
                 var failed = error != nil
                 if let url = item as? URL, !failed {
-                    do { try MRLShareInbox.receive(url) } catch { failed = true }
+                    do { try MRLShareInbox.receive(url, control: control) } catch { failed = true }
                 } else { failed = true }
                 let nextFailures = failures + (failed ? 1 : 0)
                 DispatchQueue.main.async {
@@ -77,10 +93,10 @@ final class MRLShareViewController: UIViewController {
             return
         }
         let suggestedName = provider.suggestedName
-        provider.loadFileRepresentation(forTypeIdentifier: type) { url, error in
+        progress = provider.loadFileRepresentation(forTypeIdentifier: type) { url, error in
             var failed = error != nil
             if let url, !failed {
-                do { try MRLShareInbox.receive(url, suggestedName: suggestedName) } catch { failed = true }
+                do { try MRLShareInbox.receive(url, suggestedName: suggestedName, control: control) } catch { failed = true }
             } else { failed = true }
             let nextFailures = failures + (failed ? 1 : 0)
             DispatchQueue.main.async {
@@ -89,3 +105,4 @@ final class MRLShareViewController: UIViewController {
         }
     }
 }
+

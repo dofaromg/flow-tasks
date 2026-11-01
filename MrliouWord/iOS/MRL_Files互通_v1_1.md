@@ -106,3 +106,15 @@ setTagData 是 File Provider extension 接收其項目標籤變更的 override�
 仍待完成：大檔 copy／digest 的背景執行、可重現的過期 bookmark 測試、Apple 簽署與 App Group 實際 provisioning、iPhone／多 provider／效能驗收。主檔保護與跨文件標籤行為由 macOS CI 執行；本機沒有 Swift／Xcode，不將靜態檢查列為編譯成功。完整需求 DELIVERY_FAIL，待 exact-head CI 及上述驗收補齊。
 
 本次交付依賴：Selection／Transfer → Store → Manager；Share controller → Inbox → Store；Tests／IntegrationTests → 既有 mrl-ios-tags workflow。工程已引用各檔，無新增 target 或遺失依賴，無重新建立相同功能。交付形式為既有 Git 分支，ZIP 不適用。
+
+
+
+## 2026-11-01 背景匯入增量（保留前版歷史）
+
+父版本：6b45c1683096e7f32265afcc300d58e8dfbd82fc，PR #691 原分支。
+收件匣 copy／SHA-256 比對、封包讀取／指紋及分享副本準備在背景佇列執行；archive 的最新內容合併與原子寫入留在 MainActor。每次收件匣只允許一個 drain，避免 scene 重入。
+NSItemProvider 回呼中的來源仍同步取得自有 staging 副本，絕不將 provider 暫存 URL 逃逸到回呼之後。取消以鎖保護的控制項跨回呼／背景工作傳遞；每 1 MiB 檢查取消。分享延伸關閉按鈕可取消 provider Progress 和未完成複製；已提交 UUID 保留。主 App 分享及封包準備提供取消按鈕。NSFileCoordinator 或 provider 自身的等待不能保證立即取消。
+來源名稱、UUID、來源紀錄與 staging 更名維持原格式；修復缺檔使用同層 staging 後更名；hash 衝突保留兩側。中斷遺留的 hidden staging 不當成 ready，也不擅自清除可能仍被 extension 寫入的資料。
+新增 64MiB、分塊取消、延遲 callback 模擬及回呼後刪除來源、重啟／重複 drain、匯出副本 hash／封包配對一致性案例。延遲案例是檔案生命週期測試替身，不能取代真實 iCloud／第三方 provider 實機測試。
+本地沒有 Swift／Xcode，須以本次 exact-head CI 結果判定編譯與回歸；Apple provisioning、簽署、iPhone 多 provider、Files 原生標籤回寫維持未通過。Rollback 使用 revert 本次 commit，保留 archive、imports、inbox 與來源，不刪使用者資料。
+依賴：View → MainActor Store → MRLImportIO／MRLImportControl；Share Controller → Inbox → MRLImportIO；IntegrationTests → 既有 macOS CI → 不簽署 simulator build。

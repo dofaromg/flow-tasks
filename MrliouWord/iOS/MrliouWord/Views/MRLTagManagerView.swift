@@ -13,6 +13,8 @@ struct MRLTagManagerView: View {
     @State private var notice: String?
     @Environment(\.scenePhase) private var scenePhase
     @State private var importingTags = false
+    @State private var work: Task<Void, Never>?
+    @State private var busy = false
     @State private var shareDirectory: URL?
     @State private var share: MRLSharePayload?
 
@@ -23,9 +25,10 @@ struct MRLTagManagerView: View {
     var body: some View {
         NavigationStack {
             List {
+                if busy { Button("取消準備") { work?.cancel() } }
                 Section {
                     Button("從「檔案」加入") { notice = nil; importingTags = false; importing = true }
-                    Button("讀取分享收件匣") { notice = nil; store.receiveSharedFiles() }
+                    Button("讀取分享收件匣") { notice = nil; Task { await store.receiveSharedFiles() } }
                     Text("標籤儲存在 MRL App 內；不修改原始檔案或 iPhone 系統標籤。")
                         .font(.footnote).foregroundStyle(.secondary)
                 }
@@ -74,20 +77,26 @@ struct MRLTagManagerView: View {
                     .disabled(selectedDocuments.isEmpty || store.archive.catalog.isEmpty)
                 Button("分享所選文件與 MRL 標籤") {
                     notice = nil
+                    guard !busy else { return }
+                    busy = true
+                    work = Task {
+                    defer { busy = false }
                     do {
-                        let exported = try store.exportFiles(documentSelection.selected)
+                        let exported = try await store.exportFiles(documentSelection.selected)
                         shareDirectory = exported.directory
                         share = MRLSharePayload(directory: exported.directory, files: exported.files)
                     } catch { store.errorMessage = "無法分享，請重新選取失效文件：\(error.localizedDescription)" }
+                }
                 }.disabled(selectedDocuments.isEmpty)
                 Button("匯入 MRL 標籤到所選文件") { notice = nil; importingTags = true; importing = true }
                     .disabled(selectedDocuments.isEmpty)
                 if let notice { Text(notice).foregroundStyle(.secondary) }
             }
             .navigationTitle("檔案與標籤")
-            .onAppear { store.receiveSharedFiles() }
+            .onDisappear { work?.cancel() }
+            .onAppear { Task { await store.receiveSharedFiles() } }
             .onChange(of: scenePhase) { phase in
-                if phase == .active { store.receiveSharedFiles() }
+                if phase == .active { Task { await store.receiveSharedFiles() } }
             }
             .toolbar { Button("關閉") { dismiss() } }
             .fileImporter(isPresented: $importing, allowedContentTypes: importingTags ? [.json] : [.item],
@@ -96,8 +105,13 @@ struct MRLTagManagerView: View {
                 case .success(let urls):
                     notice = nil
                     if importingTags, let url = urls.first {
-                        if let count = store.importTransfer(url, to: documentSelection.selected) {
+                        guard !busy else { return }
+                        busy = true
+                        work = Task {
+                        defer { busy = false }
+                        if let count = await store.importTransfer(url, to: documentSelection.selected) {
                             notice = "已配對 \(count) 份文件並保留既有標籤；未修改系統標籤。"
+                        }
                         }
                     } else { store.register(urls) }
                 case .failure(let error):
@@ -203,5 +217,6 @@ private struct MRLTagPickerView: View {
         }
     }
 }
+
 
 

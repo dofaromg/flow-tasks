@@ -3,7 +3,7 @@ import Foundation
 // origin_signature: MrLiouWord
 @main
 struct MRLTagStoreRegression {
-    @MainActor static func main() throws {
+    @MainActor static func main() async throws {
         let manager = FileManager.default
         let root = manager.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try manager.createDirectory(at: root, withIntermediateDirectories: false)
@@ -50,13 +50,13 @@ struct MRLTagStoreRegression {
         let target = destination.appendingPathComponent("MRL_Payload/原名.txt")
         let conflict = Data("保留不同內容".utf8)
         try conflict.write(to: target)
-        inboxStore.receiveSharedFiles(inboxRoot: inbox, importsRoot: imports)
+        await inboxStore.receiveSharedFiles(inboxRoot: inbox, importsRoot: imports)
         precondition(inboxStore.errorMessage != nil)
         precondition(manager.fileExists(atPath: received[0].path))
         let keptConflict = try Data(contentsOf: target)
         precondition(keptConflict == conflict)
         try manager.removeItem(at: target)
-        inboxStore.receiveSharedFiles(inboxRoot: inbox, importsRoot: imports)
+        await inboxStore.receiveSharedFiles(inboxRoot: inbox, importsRoot: imports)
         precondition(inboxStore.archive.documents.map(\.name) == ["原名.txt"])
         precondition(!manager.fileExists(atPath: received[0].path))
         let repaired = try Data(contentsOf: target)
@@ -119,7 +119,7 @@ struct MRLTagStoreRegression {
         precondition(refreshAttempts == 1 && staleStore.archive.documents.count == 2)
         precondition(staleStore.archive.documents[0] == oldDocument)
         try MRLShareInbox.receive(newFile, inboxRoot: inbox)
-        staleStore.receiveSharedFiles(inboxRoot: inbox, importsRoot: root.appendingPathComponent("stale-imports"))
+        await staleStore.receiveSharedFiles(inboxRoot: inbox, importsRoot: root.appendingPathComponent("stale-imports"))
         precondition(refreshAttempts == 2 && staleStore.archive.documents.count == 3)
         precondition(staleStore.archive.documents[0] == oldDocument)
         let drained = try manager.contentsOfDirectory(atPath: inbox.path)
@@ -182,6 +182,79 @@ struct MRLTagStoreRegression {
             try Data(contentsOf: $0.appendingPathComponent("MRL_Payload/.MRL_source.json"))
         }
         precondition(reservedCopy == bytes)
+        // Large bounded-memory copy and digest; provider completion owns URL lifetime.
+        let large = root.appendingPathComponent("大型.bin")
+        manager.createFile(atPath: large.path, contents: nil)
+        let writer = try FileHandle(forWritingTo: large)
+        let chunk = Data(repeating: 0x5a, count: 1024 * 1024)
+        for _ in 0..<64 { try writer.write(contentsOf: chunk) }
+        try writer.close()
+        let largeHash = try MRLTagStore.digest(large)
+        let copyControl = MRLImportControl()
+        let partial = root.appendingPathComponent("partial.bin")
+        do {
+            try MRLImportIO.copy(large, to: partial, control: copyControl) { _ in copyControl.cancel() }
+            preconditionFailure("mid-copy cancellation must throw")
+        } catch is CancellationError { }
+        let partialSize = try partial.resourceValues(forKeys: [.fileSizeKey]).fileSize!
+        precondition(partialSize == chunk.count)
+        let cancelledInbox = root.appendingPathComponent("cancel-inbox")
+        try manager.createDirectory(at: cancelledInbox, withIntermediateDirectories: false)
+        do {
+            try MRLShareInbox.receive(large, inboxRoot: cancelledInbox, control: copyControl)
+            preconditionFailure("cancelled receive must not publish")
+        } catch is CancellationError { }
+        let cancelledEntries = try manager.contentsOfDirectory(atPath: cancelledInbox.path)
+        precondition(cancelledEntries.isEmpty)
+        // Slow provider simulation: complete on worker only after acquiring a durable copy.
+        // Delete its temporary source immediately after callback to expose escaped-URL bugs.
+        let slowInbox = root.appendingPathComponent("slow-inbox")
+        try manager.createDirectory(at: slowInbox, withIntermediateDirectories: false)
+        let providerTemp = root.appendingPathComponent("provider.tmp")
+        try manager.copyItem(at: large, to: providerTemp)
+        var heartbeat = false
+        let slow = Task { @MainActor in
+            try await MRLImportIO.run(MRLImportControl()) {
+                precondition(!Thread.isMainThread)
+                Thread.sleep(forTimeInterval: 0.15)
+                try MRLShareInbox.receive(providerTemp, suggestedName: "大型.bin", inboxRoot: slowInbox)
+                try manager.removeItem(at: providerTemp)
+            }
+        }
+        await Task.yield()
+        heartbeat = true
+        try await slow.value
+        precondition(heartbeat && !manager.fileExists(atPath: providerTemp.path))
+        let slowReady = try manager.contentsOfDirectory(at: slowInbox, includingPropertiesForKeys: nil)[0]
+        let acquired = slowReady.appendingPathComponent("MRL_Payload/大型.bin")
+        let acquiredHash = try MRLTagStore.digest(acquired)
+        precondition(acquiredHash == largeHash)
+        // Simulate process interruption before rename: hidden partial envelope is never registered.
+        let interrupted = slowInbox.appendingPathComponent(".staging-" + UUID().uuidString)
+        try manager.createDirectory(at: interrupted, withIntermediateDirectories: false)
+        try Data([1]).write(to: interrupted.appendingPathComponent("partial"))
+        let largeLocation = root.appendingPathComponent("large-archive.json")
+        let largeStore = MRLTagStore(location: largeLocation)
+        let largeImports = root.appendingPathComponent("large-imports")
+        await largeStore.receiveSharedFiles(inboxRoot: slowInbox, importsRoot: largeImports)
+        precondition(largeStore.archive.documents.count == 1)
+        precondition(manager.fileExists(atPath: interrupted.path))
+        let restarted = MRLTagStore(location: largeLocation)
+        await restarted.receiveSharedFiles(inboxRoot: slowInbox, importsRoot: largeImports)
+        precondition(restarted.archive == largeStore.archive)
+        let selectedLarge = Set(restarted.archive.documents.map(\.id))
+        let exported = try await restarted.exportFiles(selectedLarge)
+        defer { try? manager.removeItem(at: exported.directory) }
+        let exportedHash = try MRLTagStore.digest(exported.files[0])
+        precondition(exportedHash == largeHash)
+        let importedCount = await restarted.importTransfer(exported.files.last!, to: selectedLarge)
+        precondition(importedCount == 1)
+        let cancelledExport = Task { @MainActor in try await restarted.exportFiles(selectedLarge) }
+        cancelledExport.cancel()
+        do { _ = try await cancelledExport.value; preconditionFailure("cancelled export must fail") }
+        catch is CancellationError { }
+        print("MRL large import: 64MiB/cancellation/slow callback/restart/dedup/digest consistency PASS")
         print("MRL store: restart/corrupt/version/origin/write recovery/dedup/provenance collision PASS")
     }
 }
+

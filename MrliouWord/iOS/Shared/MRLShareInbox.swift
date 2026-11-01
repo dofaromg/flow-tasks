@@ -17,7 +17,7 @@ enum MRLShareInbox {
     }
 
     /// 在 provider callback 有效期內同步複製，目錄原子更名後才對 App 可見。
-    static func receive(_ source: URL, suggestedName: String? = nil, inboxRoot: URL? = nil) throws {
+    static func receive(_ source: URL, suggestedName: String? = nil, inboxRoot: URL? = nil, control: MRLImportControl = MRLImportControl()) throws {
         let manager = FileManager.default
         let name: String
         if let suggestedName, !suggestedName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
@@ -52,12 +52,13 @@ enum MRLShareInbox {
                 for candidate in names {
                     let target = payload.appendingPathComponent(candidate)
                     do {
-                        try manager.copyItem(at: url, to: target)
+                        try MRLImportIO.copy(url, to: target, control: control)
                         storedName = candidate
                         copyError = nil
                         break
                     } catch {
                         copyError = error
+                        if control.isCancelled { break }
                         // 只清除此輪未完成的 staging 副本，來源始終保留。
                         if manager.fileExists(atPath: target.path) {
                             do { try manager.removeItem(at: target) }
@@ -74,10 +75,61 @@ enum MRLShareInbox {
                 "mode": "Files_share_copy", "native_tags": "not_imported"]
             try JSONSerialization.data(withJSONObject: provenance, options: [.sortedKeys])
                 .write(to: staging.appendingPathComponent(".MRL_source.json"), options: .atomic)
+            try control.check()
             try manager.moveItem(at: staging, to: ready)
         } catch {
             try? manager.removeItem(at: staging)
             throw error
         }
+    }
+}
+
+
+// Cancellation crosses provider callbacks and worker queues without sharing UI state.
+final class MRLImportControl: @unchecked Sendable {
+    private let lock = NSLock()
+    private var cancelled = false
+    var isCancelled: Bool { lock.lock(); defer { lock.unlock() }; return cancelled }
+    func cancel() { lock.lock(); cancelled = true; lock.unlock() }
+    func check() throws { if isCancelled { throw CancellationError() } }
+}
+
+enum MRLImportIO {
+    static func run<T>(_ control: MRLImportControl, work: @escaping () throws -> T) async throws -> T {
+        try await withTaskCancellationHandler(operation: {
+            try await withCheckedThrowingContinuation { continuation in
+                DispatchQueue.global(qos: .userInitiated).async {
+                    continuation.resume(with: Result { try control.check(); return try work() })
+                }
+            }
+        }, onCancel: { control.cancel() })
+    }
+
+    static func copyAtomically(_ source: URL, to target: URL, control: MRLImportControl) throws {
+        let staging = target.deletingLastPathComponent().appendingPathComponent(".staging-" + UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: staging) }
+        try copy(source, to: staging, control: control)
+        try control.check()
+        try FileManager.default.moveItem(at: staging, to: target)
+    }
+
+    // Bounded memory; caller owns staging and removes partial output on failure.
+    static func copy(_ source: URL, to target: URL, control: MRLImportControl, didCopy: ((Int) -> Void)? = nil) throws {
+        try control.check()
+        let input = try FileHandle(forReadingFrom: source)
+        defer { try? input.close() }
+        guard FileManager.default.createFile(atPath: target.path, contents: nil) else {
+            throw CocoaError(.fileWriteUnknown)
+        }
+        let output = try FileHandle(forWritingTo: target)
+        defer { try? output.close() }
+        while true {
+            try control.check()
+            guard let bytes = try input.read(upToCount: 1024 * 1024), !bytes.isEmpty else { break }
+            try output.write(contentsOf: bytes)
+            didCopy?(bytes.count)
+        }
+        try output.synchronize()
+        try control.check()
     }
 }
