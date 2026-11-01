@@ -47,7 +47,7 @@
     {
       "path": "core/law.seal.json",
       "size": 475,
-      "sha256": "e369b49cf1c82fe5212831f2a1f4276e640817c3b19f56469e10b10b8d82b2c5"
+      "sha256": "e6898343e8fe4c82b3cd7fb556e74ec62fbd25e6f25986c4166ce040590ce826"
     },
     {
       "path": "core/time_machine.py",
@@ -76,8 +76,8 @@
     },
     {
       "path": ".github/workflows/mrl-timemachine.yml",
-      "size": 637,
-      "sha256": "514d1d39931f33424f89af6afacea3951dfe018b805109731fde3ef6325a1a0c"
+      "size": 722,
+      "sha256": "1e923919157466af3603ac4a14f02a43709b99a4c21eb8875084422a58a30742"
     }
   ],
   "self_hash_policy": "Audit file excluded from its own SHA256 list; Git blob and commit identify it.",
