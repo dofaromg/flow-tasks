@@ -24,7 +24,7 @@ test('traversal, sibling escape, symlink parent and destination refused', t=>{
  fs.symlinkSync(path.join(other,'target'),path.join(root,'leaf')); assert.throws(()=>write(path.join(root,'leaf'),Buffer.from('x'))); assert.equal(fs.existsSync(path.join(other,'target')),false);
 });
 test('Windows special paths rejected on every CI host',()=>{
- for(const p of ['D:relative','\\\\host\\share\\x','\\\\?\\D:\\x','D:\\MRL_Mother\\..\\x','D:\\MRL_Mother\\x:ads','D:\\MRL_Mother\\NUL.txt','D:\\MRL_Mother\\x.','D:\\MRL_Mother\\x ','D:\\MRL_Mother/x','D:\\MRL_Mother\\COM1','D:\\MRL_Mother\\CONIN'D:\\MRL_Mother\\FOO~1']) assert.throws(()=>validateName(p,true));
+ for(const p of ['D:relative','\\\\host\\share\\x','\\\\?\\D:\\x','D:\\MRL_Mother\\..\\x','D:\\MRL_Mother\\x:ads','D:\\MRL_Mother\\NUL.txt','D:\\MRL_Mother\\x.','D:\\MRL_Mother\\x ','D:\\MRL_Mother/x','D:\\MRL_Mother\\COM1','D:\\MRL_Mother\\CONIN$','D:\\MRL_Mother\\CONOUT$','D:\\MRL_Mother\\CON .txt','D:\\MRL_Mother\\FOO~1']) assert.throws(()=>validateName(p,true));
  validateName('D:\\MRL_Mother\\MRL_PR694_123\\回執.json',true);
 });
 test('permission failure is 403 and never creates target',t=>{
