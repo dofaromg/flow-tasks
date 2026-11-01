@@ -1,0 +1,86 @@
+{
+  "origin_signature": "MrLiouWord",
+  "source_parent_commit": "36dc69d98ec3e28e5cca744e82013ed32b203b61",
+  "expected_file_count": 9,
+  "expected_file_list": [
+    "core/law.md",
+    "core/law.seal.json",
+    "core/time_machine.py",
+    "MRL_Mother/04_runtime/flowcore_loop.py",
+    "MRL_Mother/09_workflow/MRL__Flowcore_Loop_2.py",
+    "tests/test_mrl_time_machine.py",
+    "docs/MRL_TimeMachine_v1.md",
+    ".github/workflows/mrl-timemachine.yml",
+    "docs/MRL_TimeMachine_v1.audit.json"
+  ],
+  "missing": [],
+  "extra": [],
+  "mismatch": [],
+  "coverage_percent": 100,
+  "local_tests": {
+    "command": "python -m unittest discover -s tests -p test_mrl_time_machine.py -v",
+    "passed": 18,
+    "failed": 0,
+    "syntax_check": "PASS"
+  },
+  "dependency_tree": {
+    "runtime_and_container": [
+      "core/time_machine.py",
+      "MRL_Mother/09_workflow/MRL_utils.py"
+    ],
+    "core/time_machine.py": [
+      "core/law.seal.json",
+      "existing Tracer.trace.jsonl",
+      "existing Tracer.trace_state.json"
+    ],
+    "core/law.seal.json": [
+      "core/law.md",
+      "MRL_Mother/00_rootlaw/README.md"
+    ]
+  },
+  "files": [
+    {
+      "path": "core/law.md",
+      "size": 1939,
+      "sha256": "f9193cd6a6ee32f4a6f71391f4ba87b336c5b6f1794c2b60e9af44764d77a964"
+    },
+    {
+      "path": "core/law.seal.json",
+      "size": 475,
+      "sha256": "e369b49cf1c82fe5212831f2a1f4276e640817c3b19f56469e10b10b8d82b2c5"
+    },
+    {
+      "path": "core/time_machine.py",
+      "size": 8872,
+      "sha256": "92e10d174159831761a2f38de0206f3e67b0a6ca185184990279868519835465"
+    },
+    {
+      "path": "MRL_Mother/04_runtime/flowcore_loop.py",
+      "size": 35332,
+      "sha256": "59ea5258fb083dfbb14f2f78cccec34b5e0f5c261b96aebc680f7eb9db7728a8"
+    },
+    {
+      "path": "MRL_Mother/09_workflow/MRL__Flowcore_Loop_2.py",
+      "size": 37715,
+      "sha256": "ac30615a3a011e24d238ee2a02776713b1b6d16767035bdb3d4cdb5d93499120"
+    },
+    {
+      "path": "tests/test_mrl_time_machine.py",
+      "size": 8777,
+      "sha256": "a68457cad2618f6a8f5745aa91463ceb46aaee2e61e915a5a4f1cb34d9a177fe"
+    },
+    {
+      "path": "docs/MRL_TimeMachine_v1.md",
+      "size": 5331,
+      "sha256": "94e2622a36c85646ac81494c443d0dd2643a9facb81cc2a9e27e6ba96c56ee80"
+    },
+    {
+      "path": ".github/workflows/mrl-timemachine.yml",
+      "size": 637,
+      "sha256": "514d1d39931f33424f89af6afacea3951dfe018b805109731fde3ef6325a1a0c"
+    }
+  ],
+  "self_hash_policy": "Audit file excluded from its own SHA256 list; Git blob and commit identify it.",
+  "package_map": "Git tree; no ZIP requested",
+  "scope_gate": "DELIVERY_PASS for committed engineering files and local regression; not deployment acceptance"
+}
