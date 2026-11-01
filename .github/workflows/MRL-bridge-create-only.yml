@@ -1,0 +1,30 @@
+name: MRL Bridge create_only
+on:
+  pull_request:
+    paths: ['MRL_Bridge/**', 'scripts/MRL_verify_bridge_backfill_v1.py', 'connectors/test_bridge_backfill.py', '.github/workflows/MRL-bridge-create-only.yml']
+  push:
+    branches: ['MRL_fix/bridge-atomic-create-only-20261101']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regression:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --test MRL_Bridge/mrl_create_only.test.cjs
+      - run: node --check MRL_Bridge/server.js
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pytest requests
+      - run: python -m pytest connectors/test_bridge_backfill.py -q
