@@ -41,10 +41,19 @@ function createWriter(root, io = fs) {
       try { io.mkdirSync(parent); } catch (e) { if (e.code !== 'EEXIST') throw e; }
       directory(parent);
     }
-    let fd; let identity;
+    const staged = path.join(parent, '.MRL_create_' + crypto.randomUUID());
+    let fd; let identity; let published = false;
+    function removeOwned(file) {
+      try {
+        const current = io.lstatSync(file);
+        if (current.dev === identity.dev && current.ino === identity.ino && !current.isSymbolicLink()) io.unlinkSync(file);
+        else throw new Error('rollback identity mismatch');
+      } catch (cleanup) { if (cleanup.code !== 'ENOENT') throw cleanup; }
+    }
     try {
-      // O_EXCL is the atomic no-clobber decision, never exists()+write().
-      fd = io.openSync(target, 'wx+', 0o600);
+      // Exclusive staging plus exclusive hard-link publication also rejects dangling
+      // Windows destination symlinks, unlike opening a destination with wx alone.
+      fd = io.openSync(staged, 'wx+', 0o600);
       identity = io.fstatSync(fd);
       io.writeFileSync(fd, data);
       io.fsyncSync(fd);
@@ -56,12 +65,15 @@ function createWriter(root, io = fs) {
         offset += n;
       }
       if (!raw.equals(data)) throw Object.assign(new Error('readback mismatch'), { code: 'EIO' });
+      // link() creates a new directory entry or fails; it never replaces target.
+      io.linkSync(staged, target);
+      published = true;
+      removeOwned(staged);
       return { filepath, size: raw.length, sha256: crypto.createHash('sha256').update(raw).digest('hex'), created_exclusively: true };
     } catch (e) {
-      // Remove only this operation's incomplete inode; never unlink a conflict winner.
       if (identity) {
-        try { const current = io.lstatSync(target); if (current.dev === identity.dev && current.ino === identity.ino && !current.isSymbolicLink()) io.unlinkSync(target); }
-        catch (cleanup) { if (cleanup.code !== 'ENOENT') e.rollback_failed = true; }
+        if (published) { try { removeOwned(target); } catch (_) { e.rollback_failed = true; } }
+        try { removeOwned(staged); } catch (_) { e.rollback_failed = true; }
       }
       throw e;
     } finally { if (fd !== undefined) io.closeSync(fd); }
