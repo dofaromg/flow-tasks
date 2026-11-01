@@ -6,7 +6,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { spawn } = require('node:child_process');
 const { createWriter, validateName, status } = require('./mrl_create_only.cjs');
-function fixture(t) { const root = fs.mkdtempSync(path.join(os.tmpdir(), 'MRL-')); t.after(() => fs.rmSync(root, { recursive:true, force:true })); return root; }
+function fixture(t) { const root = fs.mkdtempSync(path.join(process.env.RUNNER_TEMP || os.tmpdir(), 'MRL-')); t.after(() => fs.rmSync(root, { recursive:true, force:true })); return root; }
 test('binary SHA256 readback and existing file is preserved', t => {
  const root=fixture(t), write=createWriter(root), dest=path.join(root,'nested','x'), raw=Buffer.from([0,255,42]);
  const r=write(dest,raw); assert.equal(r.created_exclusively,true); assert.equal(r.sha256,crypto.createHash('sha256').update(fs.readFileSync(dest)).digest('hex'));
