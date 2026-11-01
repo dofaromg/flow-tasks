@@ -42,3 +42,9 @@ Five actual engineering files, no ZIP:
 - MRL_Bridge/MRL_create_only_v1.md: provenance, deployment, rollback, limitations
 
 No original files renamed/deleted. Scope includes engineering PR and CI configuration; live CI completion and DL580 acceptance remain separate gates.
+
+## Deployment-path review and CI follow-up
+
+Existing repository installer scripts/MRL_install_bridge_translation_center.ps1 targets service MRL_Bridge and D:\\mrl\\bridge with Node D:\\MrlToolchain\\node\\node.exe. It checks a different historical audit inventory (five older modules) and copies over active files. It is not a supported installer for this new dependency: do not invoke it for this branch. Preserve that installer and audit; use the staged-version service-reference procedure above. No authenticated remote administration channel or secret setter was established in this execution session.
+
+Initial CI exposed missing PyYAML at client test collection; the dependency is now explicit. Linux Node and unchanged PR694 client tests succeeded at 28bd8f23456a9dbbacfd2674130ba995a2803235. Windows checkout failed on unrelated existing root filename :mnt:data.txt; the dedicated matrix now sparse-checks only required test/runtime paths while retaining full Git history for provenance git-show reads. No historical file is renamed or removed. Latest-head Windows results remain the acceptance gate.
