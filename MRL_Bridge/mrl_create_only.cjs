@@ -11,7 +11,7 @@ function validateName(value, windows = process.platform === 'win32') {
   if (windows) {
     if (!/^[a-z]:\\/i.test(value) || value.includes('/')) throw invalid('absolute drive path required');
     for (const p of value.slice(3).split('\\')) {
-      if (!p || /[<>:"|?*]/.test(p) || /[. ]$/.test(p) || /^(con|prn|aux|nul|com[1-9¹²³]|lpt[1-9¹²³])(?:\.|$)/i.test(p) || p.includes('~')) throw invalid('Windows alias/device/ADS');
+      if (!p || /[<>:"|?*]/.test(p) || /[. ]$/.test(p) || /^(con|prn|aux|nul|clock\$|conin\$|conout\$|com[1-9¹²³]|lpt[1-9¹²³])(?:[ .]|$)/i.test(p) || p.includes('~')) throw invalid('Windows alias/device/ADS');
     }
   } else if (!path.isAbsolute(value) || value.includes('\\')) throw invalid('absolute path required');
 }
