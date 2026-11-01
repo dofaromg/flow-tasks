@@ -43,6 +43,12 @@ function createWriter(root, io = fs) {
     }
     const staged = path.join(parent, '.MRL_create_' + crypto.randomUUID());
     let fd; let identity; let published = false;
+    function closeStage() {
+      if (fd === undefined) return;
+      // A failed close may already have released the descriptor: never retry it.
+      const closing = fd; fd = undefined;
+      io.closeSync(closing);
+    }
     function removeOwned(file) {
       try {
         const current = io.lstatSync(file);
@@ -65,18 +71,22 @@ function createWriter(root, io = fs) {
         offset += n;
       }
       if (!raw.equals(data)) throw Object.assign(new Error('readback mismatch'), { code: 'EIO' });
+      // Finish descriptor operations before publishing any destination entry.
+      closeStage();
       // link() creates a new directory entry or fails; it never replaces target.
       io.linkSync(staged, target);
       published = true;
       removeOwned(staged);
       return { filepath, size: raw.length, sha256: crypto.createHash('sha256').update(raw).digest('hex'), created_exclusively: true };
     } catch (e) {
+      // Keep the primary failure and rollback result even when close also fails.
+      try { closeStage(); } catch (closeError) { e.close_error = closeError; }
       if (identity) {
         if (published) { try { removeOwned(target); } catch (_) { e.rollback_failed = true; } }
         try { removeOwned(staged); } catch (_) { e.rollback_failed = true; }
       }
       throw e;
-    } finally { if (fd !== undefined) io.closeSync(fd); }
+    }
   };
 }
 function status(error) {

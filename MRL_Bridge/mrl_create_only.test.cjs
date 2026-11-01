@@ -52,3 +52,43 @@ test('actual server route contract: capabilities, status, legacy denial and base
  const read=call('POST /MRL_file/read',{filepath:dest,encoding:'base64'});assert.equal(read.data.content,raw.toString('base64'));assert.equal(read.data.size,raw.length);
  assert.equal(call('GET /MRL_write').code,405);
 });
+
+test('close failure prevents publication, cleans staging and is never retried', t => {
+ const root=fixture(t), dest=path.join(root,'close'), io=Object.create(fs);
+ const failure=Object.assign(new Error('close failed'),{code:'EIO'}); let closes=0, links=0;
+ io.closeSync=fd=>{closes++;fs.closeSync(fd);throw failure;};
+ io.linkSync=()=>{links++;throw new Error('must not publish');};
+ assert.throws(()=>createWriter(root,io)(dest,Buffer.from('x')),e=>e===failure && !e.rollback_failed);
+ assert.equal(closes,1); assert.equal(links,0); assert.deepEqual(fs.readdirSync(root),[]);
+});
+test('primary write failure survives close failure and reports rollback outcome', t => {
+ for(const rollbackFails of [false,true]) {
+  const root=fixture(t), io=Object.create(fs), dest=path.join(root,'write'); let closes=0;
+  const primary=Object.assign(new Error('write failed'),{code:'EIO'}), closeError=new Error('close failed');
+  io.writeFileSync=()=>{throw primary;};
+  io.closeSync=fd=>{closes++;fs.closeSync(fd);throw closeError;};
+  if(rollbackFails) io.unlinkSync=()=>{throw new Error('rollback denied');};
+  assert.throws(()=>createWriter(root,io)(dest,Buffer.from('x')),e=>e===primary && e.close_error===closeError && Boolean(e.rollback_failed)===rollbackFails);
+  assert.equal(closes,1); assert.equal(fs.existsSync(dest),false);
+  assert.equal(fs.readdirSync(root).length,rollbackFails?1:0);
+ }
+});
+test('close failure with failed staging cleanup retains owner review flag', t => {
+ const root=fixture(t), io=Object.create(fs), failure=Object.assign(new Error('close failed'),{code:'EIO'});
+ io.closeSync=fd=>{fs.closeSync(fd);throw failure;};
+ io.unlinkSync=()=>{throw new Error('rollback denied');};
+ assert.throws(()=>createWriter(root,io)(path.join(root,'close'),Buffer.from('x')),e=>e===failure && e.rollback_failed===true);
+ assert.equal(fs.readdirSync(root).length,1); assert.equal(fs.existsSync(path.join(root,'close')),false);
+});
+test('post-publication cleanup failure preserves primary error and rollback state', t => {
+ for(const rollbackFails of [false,true]) {
+  const root=fixture(t), dest=path.join(root,'published'), io=Object.create(fs); let closes=0, unlinks=0;
+  const primary=Object.assign(new Error('stage cleanup failed'),{code:'EIO'});
+  io.closeSync=fd=>{closes++;fs.closeSync(fd);};
+  io.linkSync=(src,target)=>{assert.equal(closes,1);fs.linkSync(src,target);};
+  io.unlinkSync=file=>{unlinks++;if(unlinks===1) throw primary;if(rollbackFails) throw new Error('rollback denied');fs.unlinkSync(file);};
+  assert.throws(()=>createWriter(root,io)(dest,Buffer.from('x')),e=>e===primary && Boolean(e.rollback_failed)===rollbackFails);
+  assert.equal(closes,1); assert.equal(fs.existsSync(dest),rollbackFails);
+  assert.equal(fs.readdirSync(root).length,rollbackFails?2:0);
+ }
+});
