@@ -275,6 +275,18 @@ struct MRLTagStoreRegression {
         precondition(exportedHash == largeHash)
         let importedCount = await restarted.importTransfer(exported.files.last!, to: selectedLarge)
         precondition(importedCount == 1)
+        // Same bytes/name shared twice are distinct source UUIDs; draining again adds nothing.
+        let duplicateInbox = root.appendingPathComponent("duplicate-inbox")
+        try manager.createDirectory(at: duplicateInbox, withIntermediateDirectories: false)
+        try MRLShareInbox.receive(large, inboxRoot: duplicateInbox)
+        try MRLShareInbox.receive(large, inboxRoot: duplicateInbox)
+        let duplicateStore = MRLTagStore(location: root.appendingPathComponent("duplicate-archive.json"))
+        let duplicateImports = root.appendingPathComponent("duplicate-imports")
+        await duplicateStore.receiveSharedFiles(inboxRoot: duplicateInbox, importsRoot: duplicateImports)
+        precondition(duplicateStore.archive.documents.count == 2)
+        precondition(Set(duplicateStore.archive.documents.compactMap(\.sourceRecord)).count == 2)
+        await duplicateStore.receiveSharedFiles(inboxRoot: duplicateInbox, importsRoot: duplicateImports)
+        precondition(duplicateStore.archive.documents.count == 2)
         let cancelledExport = Task { @MainActor in try await restarted.exportFiles(selectedLarge) }
         cancelledExport.cancel()
         do { _ = try await cancelledExport.value; preconditionFailure("cancelled export must fail") }

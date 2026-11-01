@@ -15,8 +15,14 @@ struct MRLTagManagerView: View {
     @State private var importingTags = false
     @State private var work: Task<Void, Never>?
     @State private var busy = false
+    @State private var inboxWork: Task<Void, Never>?
     @State private var shareDirectory: URL?
     @State private var share: MRLSharePayload?
+
+    private func startInbox() {
+        guard !store.receiving else { return }
+        inboxWork = Task { await store.receiveSharedFiles() }
+    }
 
     private var documentSelection: MRLTagSelection<UUID> {
         MRLTagSelection(all: store.archive.documents.map(\.id), selected: selectedDocuments)
@@ -26,9 +32,10 @@ struct MRLTagManagerView: View {
         NavigationStack {
             List {
                 if busy { Button("取消準備") { work?.cancel() } }
+                if store.receiving { Button("取消收件") { inboxWork?.cancel() } }
                 Section {
                     Button("從「檔案」加入") { notice = nil; importingTags = false; importing = true }
-                    Button("讀取分享收件匣") { notice = nil; Task { await store.receiveSharedFiles() } }
+                    Button("讀取分享收件匣") { notice = nil; startInbox() }
                     Text("標籤儲存在 MRL App 內；不修改原始檔案或 iPhone 系統標籤。")
                         .font(.footnote).foregroundStyle(.secondary)
                 }
@@ -93,10 +100,10 @@ struct MRLTagManagerView: View {
                 if let notice { Text(notice).foregroundStyle(.secondary) }
             }
             .navigationTitle("檔案與標籤")
-            .onDisappear { work?.cancel() }
-            .onAppear { Task { await store.receiveSharedFiles() } }
+            .onDisappear { work?.cancel(); inboxWork?.cancel() }
+            .onAppear { startInbox() }
             .onChange(of: scenePhase) { phase in
-                if phase == .active { Task { await store.receiveSharedFiles() } }
+                if phase == .active { startInbox() }
             }
             .toolbar { Button("關閉") { dismiss() } }
             .fileImporter(isPresented: $importing, allowedContentTypes: importingTags ? [.json] : [.item],
