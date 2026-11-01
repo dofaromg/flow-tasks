@@ -1,4 +1,4 @@
-﻿// ╔══════════════════════════════════════════════════════════════╗
+// ╔══════════════════════════════════════════════════════════════╗
 // ║  MRL_Bridge_API v3.1.0                                     ║
 // ║  origin_signature: MrLiouWord                              ║
 // ║  歸屬：MRL系統 / DL580 母體通道層                             ║
@@ -23,7 +23,10 @@ const Redis = require('ioredis');
 // ─────────────────────────────────────────────
 // 常數
 // ─────────────────────────────────────────────
-const VERSION = '3.1.0';
+const VERSION = '3.1.1';
+const { createWriter, status: writeStatus } = require('./mrl_create_only.cjs');
+const createOnly = createWriter(process.env.MRL_BRIDGE_WRITE_ROOT);
+const capabilities = { file_write_create_only: Boolean(createOnly) };
 const PORT = parseInt(process.env.MRL_BRIDGE_PORT || '7800', 10);
 const ORIGIN = 'MrLiouWord';
 const API_KEY = process.env.MRL_BRIDGE_API_KEY || '';
@@ -304,6 +307,7 @@ app.get('/version', (req, res) => {
     service: 'MRL_Bridge_API',
     version: VERSION,
     origin_signature: ORIGIN,
+    capabilities,
     node: process.version,
     platform: process.platform,
     arch: process.arch,
@@ -537,30 +541,7 @@ app.get('/MRL_sysinfo', auth, (req, res) => {
 // GET /write?path=...&content=...&key= (短文本)
 // GET /write?path=...&b64=BASE64...&key= (base64 編碼，支援大檔案或二進位)
 app.get('/MRL_write', auth, (req, res) => {
-  const filepath = req.query.path;
-  if (!filepath) return fail(res, 400, 'need ?path= parameter');
-  const sp = safePath(filepath);
-  if (!sp) return fail(res, 400, 'invalid path');
-
-  let content;
-  if (req.query.b64) {
-    try {
-      content = Buffer.from(req.query.b64, 'base64').toString('utf-8');
-    } catch (e) { return fail(res, 400, 'invalid base64: ' + e.message); }
-  } else if (req.query.content !== undefined) {
-    content = req.query.content;
-  } else {
-    return fail(res, 400, 'need ?content= or ?b64= parameter');
-  }
-
-  log('WRITE_GET', { filepath, size: content.length }, req);
-  try {
-    const dir = path.dirname(sp);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(sp, content, 'utf-8');
-    const st = fs.statSync(sp);
-    ok(res, { filepath, size: st.size, modified: st.mtime.toISOString() });
-  } catch (e) { fail(res, 500, e.message); }
+  return fail(res, 405, 'Use POST /MRL_file/write with create_only:true');
 });
 
 // GET /audit?date=2026-04-05&key=&tail=50
@@ -587,28 +568,24 @@ app.get('/MRL_audit', auth, (req, res) => {
 
 // POST /file/write { filepath, content, encoding, mkdir }
 app.post('/MRL_file/write', auth, (req, res) => {
+  if (!createOnly) return fail(res, 503, 'MRL_BRIDGE_WRITE_ROOT not configured');
+  if (req.body.create_only !== true) return fail(res, 400, 'create_only:true required');
   try {
     const { filepath, content, encoding, b64 } = req.body;
-    if (!filepath) return fail(res, 400, 'need filepath');
-    const sp = safePath(filepath);
-    if (!sp) return fail(res, 400, 'invalid path');
-
     let data;
-    if (b64) {
+    if (typeof b64 === 'string') {
+      if (!/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(b64)) return fail(res, 400, 'invalid base64');
       data = Buffer.from(b64, 'base64');
-    } else if (content !== undefined) {
-      data = content;
-    } else {
-      return fail(res, 400, 'need content or b64');
-    }
-
-    log('FILE_WRITE', { filepath, size: typeof data === 'string' ? data.length : data.length }, req);
-    const dir = path.dirname(sp);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(sp, data, typeof data === 'string' ? (encoding || 'utf-8') : undefined);
-    const st = fs.statSync(sp);
-    ok(res, { filepath, size: st.size, modified: st.mtime.toISOString() });
-  } catch (e) { fail(res, 500, e.message); }
+    } else if (typeof content === 'string' && (!encoding || encoding === 'utf-8' || encoding === 'utf8')) {
+      data = Buffer.from(content, 'utf8');
+    } else return fail(res, 400, 'need b64 or UTF-8 content');
+    const result = createOnly(filepath, data);
+    log('FILE_CREATE_ONLY', result, req);
+    ok(res, result);
+  } catch (e) {
+    log('FILE_CREATE_ONLY_FAILED', { code: e.code, rollback_failed: Boolean(e.rollback_failed) }, req);
+    fail(res, writeStatus(e), e.rollback_failed ? 'write failed; rollback requires owner review' : (e.code || 'write failed'));
+  }
 });
 
 // POST /file/read { filepath, encoding, lines, offset }
