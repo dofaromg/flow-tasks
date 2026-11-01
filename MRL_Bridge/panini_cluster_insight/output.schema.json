@@ -1,0 +1,184 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ok",
+    "canonical_name",
+    "schema_version",
+    "origin_signature",
+    "internal_id",
+    "stage",
+    "function",
+    "dataset_id",
+    "lineage",
+    "result",
+    "result_sha256",
+    "mutation"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "canonical_name": {
+      "const": "Mrliou_MRL_ParticleDict_PaniniClusterInsight_v1.0.0"
+    },
+    "schema_version": {
+      "const": "panini_cluster_insight/v1.0.0"
+    },
+    "origin_signature": {
+      "const": "MrLiouWord"
+    },
+    "internal_id": {
+      "const": "Mrliou.ParticleDict.PaniniClusterInsight.v1"
+    },
+    "stage": {
+      "const": "S4.5"
+    },
+    "function": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6"
+          ]
+        },
+        "name": {
+          "enum": [
+            "cluster_activity_ranker",
+            "ontology_aspect_detector",
+            "fractal_self_similarity_scorer",
+            "panini_ontology_profiler",
+            "concept_intensity_map",
+            "downstream_module_advisor"
+          ]
+        }
+      }
+    },
+    "dataset_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_source_sha256",
+        "snapshot_sha256",
+        "upstream",
+        "verification",
+        "input_sha256",
+        "implementation_version"
+      ],
+      "properties": {
+        "canonical_source_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "snapshot_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "upstream": {
+          "type": "object",
+          "properties": {
+            "S4": {
+              "type": "object",
+              "properties": {
+                "ref": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024
+                },
+                "version": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "ref",
+                "version",
+                "sha256"
+              ],
+              "additionalProperties": false
+            },
+            "S3_5": {
+              "type": "object",
+              "properties": {
+                "ref": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024
+                },
+                "version": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "ref",
+                "version",
+                "sha256"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "S4",
+            "S3_5"
+          ],
+          "additionalProperties": false
+        },
+        "verification": {
+          "const": "operator_registered_byte_pins_not_semantic_canonical_approval"
+        },
+        "input_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "implementation_version": {
+          "const": "MRL.PaniniAdapter/v1.0.0"
+        }
+      }
+    },
+    "result": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "result_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "mutation": {
+      "const": false
+    }
+  }
+}

@@ -1,0 +1,26 @@
+name: MRL Panini Cluster Insight
+on:
+  pull_request:
+    paths: ['MRL_Bridge/**', '.github/workflows/MRL_Panini_Cluster_Insight.yml']
+  push:
+    branches: [main]
+    paths: ['MRL_Bridge/**', '.github/workflows/MRL_Panini_Cluster_Insight.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deterministic-read-compute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: MRL_Bridge/package-lock.json
+      - run: npm ci --ignore-scripts --prefix MRL_Bridge
+      - run: node --check MRL_Bridge/server.js
+      - run: node --test MRL_Bridge/panini_cluster_insight/test.cjs MRL_Bridge/test_mrl_bridge_translation_center.cjs
+      - name: Verify delivery file hashes
+        run: node MRL_Bridge/panini_cluster_insight/audit.cjs --check

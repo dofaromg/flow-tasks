@@ -1,0 +1,178 @@
+{
+  "origin_signature": "MrLiouWord",
+  "base_commit": "36dc69d98ec3e28e5cca744e82013ed32b203b61",
+  "expected_file_list": [
+    ".github/workflows/MRL_Panini_Cluster_Insight.yml",
+    "CHANGELOG.md",
+    "MRL_Bridge/package-lock.json",
+    "MRL_Bridge/package.json",
+    "MRL_Bridge/panini_cluster_insight/README.md",
+    "MRL_Bridge/panini_cluster_insight/adapter.cjs",
+    "MRL_Bridge/panini_cluster_insight/audit.cjs",
+    "MRL_Bridge/panini_cluster_insight/call.schema.json",
+    "MRL_Bridge/panini_cluster_insight/canonical.schema.json",
+    "MRL_Bridge/panini_cluster_insight/catalogue.schema.json",
+    "MRL_Bridge/panini_cluster_insight/chatgpt_tools.json",
+    "MRL_Bridge/panini_cluster_insight/contracts.cjs",
+    "MRL_Bridge/panini_cluster_insight/engine.cjs",
+    "MRL_Bridge/panini_cluster_insight/input.schema.json",
+    "MRL_Bridge/panini_cluster_insight/mcp_stdio.cjs",
+    "MRL_Bridge/panini_cluster_insight/openapi.json",
+    "MRL_Bridge/panini_cluster_insight/output.schema.json",
+    "MRL_Bridge/panini_cluster_insight/register_dataset.cjs",
+    "MRL_Bridge/panini_cluster_insight/schema.cjs",
+    "MRL_Bridge/panini_cluster_insight/sources/Mrliou_MRL_ParticleDict_PaniniClusterInsight_v1.0.0.json",
+    "MRL_Bridge/panini_cluster_insight/test.cjs",
+    "MRL_Bridge/server.js"
+  ],
+  "files": [
+    {
+      "path": ".github/workflows/MRL_Panini_Cluster_Insight.yml",
+      "size": 923,
+      "sha256": "acccc7ca03e247fef85943aa7448b5c193fc13f728461150657e3e29aaf0ee69"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "size": 9264,
+      "sha256": "86b015091574286ef8d50b0ce157340dda521df71f7900f513b2e8df3c03295b"
+    },
+    {
+      "path": "MRL_Bridge/package-lock.json",
+      "size": 39645,
+      "sha256": "f0592cb0e625f7ec202fb1e3b1b099ccf6c8885331be0586a20f77408f322a6b"
+    },
+    {
+      "path": "MRL_Bridge/package.json",
+      "size": 337,
+      "sha256": "2647e1b566dafd8b0730b77427328d3f1af0c66c4dfb93e9b7a6f0bf9da31761"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/README.md",
+      "size": 12273,
+      "sha256": "2fb7ba54d5dd3d8801c071a3549260b6bb1c995185939aa7c94356447f37fe37"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/adapter.cjs",
+      "size": 2349,
+      "sha256": "14ece150eafba34fbca63a39299aed4661c4a274b3345b8b96fa28f10d40b3a8"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/audit.cjs",
+      "size": 3949,
+      "sha256": "e6d320e60ed6a896f36320138e9c28d67206084c29eb115d171bbb1c7046d13b"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/call.schema.json",
+      "size": 802,
+      "sha256": "97fbe749f634481a10a5226b4c4921360edbabafdad42e15ec0f0cb33190ea0f"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/canonical.schema.json",
+      "size": 1458,
+      "sha256": "f1bff052bf721507d9063c8d08087f4703e6be5454b83673c85326a2f8955f5f"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/catalogue.schema.json",
+      "size": 2425,
+      "sha256": "da7ea75af79422b00933286bc45199f8891ebe38bb4fce6b94b1a2a47fe800a9"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/chatgpt_tools.json",
+      "size": 7230,
+      "sha256": "85fd00c0c141ac06270d3dad8bfc1d10320012d617d1d9c95553cf867f211056"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/contracts.cjs",
+      "size": 3397,
+      "sha256": "305e7dc01546e9e0bddcb0d69665b8f01ab6cdd74e822a711a3c3e2e02c1b701"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/engine.cjs",
+      "size": 10073,
+      "sha256": "7aec490190d1726b5003fc18495f1ff9f301598edd53eec335566e47741d455a"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/input.schema.json",
+      "size": 2838,
+      "sha256": "3121514c9ac059fe9ce3877db8a2a5389dc0bbab43f3e71196f2c18b3c523949"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/mcp_stdio.cjs",
+      "size": 4148,
+      "sha256": "e710aa7821b57e1e988cadb03bd5f581f0c2d87e07b89b0143f8b88a0650ca2b"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/openapi.json",
+      "size": 57600,
+      "sha256": "4ad2064f59425b0e04730bb756455fe994560e1d97411b99024e12e84267c29b"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/output.schema.json",
+      "size": 4270,
+      "sha256": "c34e708ea6caa461f63471231ce8436d2a9b1140109e40b846d1f9db81b71e3c"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/register_dataset.cjs",
+      "size": 1722,
+      "sha256": "83f59b2db1ec16861fc87994b37f62090605f5e815d64393300dc94290dd2136"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/schema.cjs",
+      "size": 2295,
+      "sha256": "1f51a83f5b670431c3e4a38ffa334e3f6e494d438f23cd8cc834a0bdd20e2d68"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/sources/Mrliou_MRL_ParticleDict_PaniniClusterInsight_v1.0.0.json",
+      "size": 14639,
+      "sha256": "92dd5c24c1e7f9e85b097b4fb3e54b9205d275323208c732a68105277fd0659a"
+    },
+    {
+      "path": "MRL_Bridge/panini_cluster_insight/test.cjs",
+      "size": 15295,
+      "sha256": "92348117538c95ae9cbfe37df0764d44f9eb6d0a9d4c203769fd5a5bb0956ddd"
+    },
+    {
+      "path": "MRL_Bridge/server.js",
+      "size": 33703,
+      "sha256": "6065954d7da0604d33a3ae84a8af5bb00e429399bc15d6cb4cd43e2e57d41ca5"
+    }
+  ],
+  "missing_files": [],
+  "empty_files": [],
+  "unexpected_files": [],
+  "file_coverage_percent": 100,
+  "hash_scope": "exact_file_bytes",
+  "audit_report_self_hash": "printed_by_verifier_outside_this_report",
+  "dependency_tree": {
+    "parent": "MRL_Bridge/server.js",
+    "input": [
+      "original S3.5 FxDualContextBridge",
+      "original S4 CrossLayerIDMap v1.0.0",
+      "operator-verified pinned projection"
+    ],
+    "chain": [
+      "schema.cjs",
+      "engine.cjs",
+      "adapter.cjs",
+      "existing Bridge admission/audit",
+      "OpenAPI / function-dispatch / MCP stdio"
+    ],
+    "child": "S5 ReversibilityBatchTest priority consumer (not implemented by this change)"
+  },
+  "package_map": {
+    "deployment": "existing MRL_Bridge checkout; no ZIP requested",
+    "source": "MRL_Bridge/panini_cluster_insight/sources/",
+    "tools": "MRL_Bridge/panini_cluster_insight/chatgpt_tools.json",
+    "actions": "MRL_Bridge/panini_cluster_insight/openapi.json",
+    "mcp": "MRL_Bridge/panini_cluster_insight/mcp_stdio.cjs",
+    "tests": "MRL_Bridge/panini_cluster_insight/test.cjs",
+    "ci": ".github/workflows/MRL_Panini_Cluster_Insight.yml"
+  },
+  "open_gates": [
+    "recover actual S3.5/S4 and parent/companion source definitions",
+    "verify normalization against mother originals and register byte pins",
+    "deploy reviewed branch to existing mother Bridge with dedicated read credential",
+    "perform live F1-F6 and ChatGPT tool-host invocation"
+  ],
+  "overall_delivery": "DELIVERY_FAIL_PENDING_LIVE_AND_UPSTREAM_GATES"
+}

@@ -1,0 +1,43 @@
+{
+  "type": "object",
+  "properties": {
+    "dataset_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+    },
+    "expected_schema_version": {
+      "const": "panini_cluster_insight/v1.0.0"
+    },
+    "cluster_root": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "avg_cluster_size_ratio": {
+      "anyOf": [
+        {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "exclusiveMaximum": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "dataset_id",
+    "expected_schema_version",
+    "cluster_root",
+    "avg_cluster_size_ratio"
+  ],
+  "additionalProperties": false
+}
