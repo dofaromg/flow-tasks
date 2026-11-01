@@ -37,10 +37,23 @@ jobs:
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
           git --git-dir=.git fetch "https://github.com/$env:GITHUB_REPOSITORY.git" $env:MRL_HEAD_SHA
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
-          git --git-dir=.git archive --format=tar --output="$env:RUNNER_TEMP/MRL-source.tar" FETCH_HEAD MRL_Bridge connectors scripts/MRL_verify_bridge_backfill_v1.py pytest.ini
+          $paths = git --git-dir=.git ls-tree -r --name-only FETCH_HEAD -- MRL_Bridge connectors scripts/MRL_verify_bridge_backfill_v1.py pytest.ini
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
-          tar -xf "$env:RUNNER_TEMP/MRL-source.tar"
-          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          foreach ($file in $paths) {
+            $parent = Split-Path $file -Parent
+            if ($parent) { New-Item -ItemType Directory -Force -Path $parent | Out-Null }
+            $psi = [Diagnostics.ProcessStartInfo]::new('git')
+            $psi.ArgumentList.Add('--git-dir=.git')
+            $psi.ArgumentList.Add('cat-file')
+            $psi.ArgumentList.Add('blob')
+            $psi.ArgumentList.Add("$($env:MRL_HEAD_SHA):$file")
+            $psi.RedirectStandardOutput = $true
+            $proc = [Diagnostics.Process]::Start($psi)
+            $stream = [IO.File]::Create((Join-Path $pwd $file))
+            try { $proc.StandardOutput.BaseStream.CopyTo($stream) } finally { $stream.Dispose() }
+            $proc.WaitForExit()
+            if ($proc.ExitCode) { exit $proc.ExitCode }
+          }
           git --git-dir=.git config core.bare false
           git --git-dir=.git update-ref HEAD $env:MRL_HEAD_SHA
       - uses: actions/setup-node@v4
