@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add a static version/hash/digest deny policy and scanner with HIT, NO_HIT and
   UNKNOWN results; never import target packages or start target Python/pip.
-- Add 25 positive/negative tests, a read-only DL580 PowerShell collector and
+- Add 26 positive/negative tests, a read-only DL580 PowerShell collector and
   a fail-closed GitHub gate required by the two APIWorks delivery build jobs.
 - Keep unresolved archives, runtime evidence, historical caches and unverified
   image provenance blocked; this change does not certify DL580 or authorize release.

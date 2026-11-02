@@ -1,0 +1,104 @@
+{
+  "schema": "MRL-32_Code_Delivery_Manifest/v1.0.0",
+  "origin_signature": "MrLiouWord",
+  "Expected_File_List": [
+    ".github/workflows/mrl-apiworks-byoh-product.yml",
+    ".github/workflows/mrl-apiworks-production-delivery.yml",
+    ".github/workflows/mrl-litellm-incident.yml",
+    "CHANGELOG.md",
+    "security/MRL_LiteLLM_Incident_v1/policy.json",
+    "security/MRL_LiteLLM_Incident_v1/scan.py",
+    "security/MRL_LiteLLM_Incident_v1/test_scan.py",
+    "security/MRL_LiteLLM_Incident_v1/MRL_collect_DL580.ps1",
+    "security/MRL_LiteLLM_Incident_v1/README.md",
+    "security/MRL_LiteLLM_Incident_v1/audit_summary.json",
+    "security/MRL_LiteLLM_Incident_v1/DELIVERY_MANIFEST.json"
+  ],
+  "Expected_Dependency_Tree": {
+    "scan.py": [
+      "policy.json"
+    ],
+    "test_scan.py": [
+      "scan.py",
+      "policy.json"
+    ],
+    "MRL_collect_DL580.ps1": [
+      "policy.json"
+    ],
+    "mrl-litellm-incident.yml": [
+      "scan.py",
+      "test_scan.py",
+      "policy.json"
+    ],
+    "mrl-apiworks-byoh-product.yml": [
+      "mrl-litellm-incident.yml"
+    ],
+    "mrl-apiworks-production-delivery.yml": [
+      "mrl-litellm-incident.yml"
+    ]
+  },
+  "package_map": "GitHub PR #698: existing files modified in place; new security directory and workflow; no renames",
+  "files": [
+    {
+      "path": ".github/workflows/mrl-apiworks-byoh-product.yml",
+      "size": 1966,
+      "sha256": "59f53e1397d78376ad15c326ddbd645fb46033d79ad0e73eae0abc83767c9cd1"
+    },
+    {
+      "path": ".github/workflows/mrl-apiworks-production-delivery.yml",
+      "size": 6187,
+      "sha256": "f9f689deb77dd0864cee8025d63a89d3df2e16b628487dcb76c54aaefde3fe91"
+    },
+    {
+      "path": ".github/workflows/mrl-litellm-incident.yml",
+      "size": 861,
+      "sha256": "a182f454ec8002bb95e25b436f70e9514e2a3c6ecd2adcdad29e1950935eef95"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "size": 9304,
+      "sha256": "24a99523548f1079fca9350fc3117aa3c690d043381cc8a5807e863b0412ca4a"
+    },
+    {
+      "path": "security/MRL_LiteLLM_Incident_v1/policy.json",
+      "size": 1945,
+      "sha256": "59d5676783323fe17fcd7720d6157aef1f74c530e3b09191d72209bc4466e603"
+    },
+    {
+      "path": "security/MRL_LiteLLM_Incident_v1/scan.py",
+      "size": 10603,
+      "sha256": "0bb36534394cec9b9d7cdb6b966ad9a635d439ff145ea5549252839b99618ab1"
+    },
+    {
+      "path": "security/MRL_LiteLLM_Incident_v1/test_scan.py",
+      "size": 6977,
+      "sha256": "b995666ad3c3ce295bd2381b4e444362cb861b286d28dc7280981edc70bb38d3"
+    },
+    {
+      "path": "security/MRL_LiteLLM_Incident_v1/MRL_collect_DL580.ps1",
+      "size": 5079,
+      "sha256": "a82ad99e2e579a433ea5be683d97842f01ca1a54419b4fdb8d27e599fd43a696"
+    },
+    {
+      "path": "security/MRL_LiteLLM_Incident_v1/README.md",
+      "size": 6322,
+      "sha256": "689f61b562338f005bbdcb7422f04705448c744aaaae86a2269be35570891a04"
+    },
+    {
+      "path": "security/MRL_LiteLLM_Incident_v1/audit_summary.json",
+      "size": 6354,
+      "sha256": "360416ac9f29792fa3db84cb236fbf01ff59731331929284e217c7226a5cf6af"
+    }
+  ],
+  "self_integrity": "Manifest SHA is covered by the Git commit blob; recursive self-hash intentionally omitted.",
+  "Missing": [],
+  "Extra": [],
+  "Mismatch": [],
+  "renamed_files": [],
+  "orphan_files": [],
+  "Coverage": 100,
+  "expected_file_count": 11,
+  "delivered_file_count": 11,
+  "code_delivery_gate": "DELIVERY_PASS",
+  "incident_closure_gate": "BLOCKED_UNKNOWN; this manifest does not authorize release"
+}

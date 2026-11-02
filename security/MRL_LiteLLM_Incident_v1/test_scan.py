@@ -116,6 +116,14 @@ class ScannerTests(unittest.TestCase):
             (Path(tmp) / "cached.zip").write_bytes(b"not an executable fixture")
             self.assertEqual(scanner.scan(tmp)["state"], "UNKNOWN")
 
+    def test_container_templates_and_unusual_extensions(self):
+        for filename in ["registry-docker-compose.yml.j2", "docker-compose.mdx", "dockerfile/parser/NOTICE"]:
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / filename
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("image: ghcr.io/berriai/litellm:v1.107.0")
+                self.assertEqual(scanner.scan(tmp)["state"], "HIT")
+
     def test_no_secret_lines(self):
         with tempfile.TemporaryDirectory() as tmp:
             (Path(tmp) / "requirements.txt").write_text("litellm>=1.0 # fake-secret-never-publish")

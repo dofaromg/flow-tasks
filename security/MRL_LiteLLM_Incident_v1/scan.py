@@ -146,7 +146,8 @@ def scan(root, runtime=False):
             if name in {"cook.pth", "cook.py", "sitecustomize.py"} or re.fullmatch(r"(?:cook|sitecustomize).*\.pyc", name):
                 finding(rel, "UNKNOWN", "startup_hook_requires_static_investigation")
             archive = name.endswith((".zip", ".whl", ".tar.gz", ".tgz", ".flpkg"))
-            candidate = path.suffix.lower() in EXT or "dockerfile" in name.lower() or name == "Pipfile" or name == "METADATA"
+            candidate = (path.suffix.lower() in EXT or "dockerfile" in rel.lower()
+                         or "docker-compose" in rel.lower() or name in {"Pipfile", "METADATA"})
             if not (candidate or archive or runtime):
                 continue
             try:
