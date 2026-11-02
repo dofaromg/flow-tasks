@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -34,11 +35,11 @@ class ProductBundleTests(unittest.TestCase):
         spec.loader.exec_module(builder)
 
         class CorruptingZipFile(zipfile.ZipFile):
-            def write(self, filename, arcname=None, *args, **kwargs):
-                if arcname and arcname.endswith("docs/MRL_SUPPORT_SCOPE_v1.md"):
-                    self.writestr(arcname, b"CORRUPTED_ZIP_PAYLOAD\n")
-                else:
-                    super().write(filename, arcname, *args, **kwargs)
+            def writestr(self, zinfo_or_arcname, data, *args, **kwargs):
+                name = getattr(zinfo_or_arcname, "filename", zinfo_or_arcname)
+                if name.endswith("docs/MRL_SUPPORT_SCOPE_v1.md"):
+                    data = b"CORRUPTED_ZIP_PAYLOAD\n"
+                return super().writestr(zinfo_or_arcname, data, *args, **kwargs)
 
         with tempfile.TemporaryDirectory() as temporary:
             with mock.patch.object(builder, "DIST", Path(temporary)), mock.patch.object(
@@ -46,6 +47,28 @@ class ProductBundleTests(unittest.TestCase):
             ):
                 with self.assertRaisesRegex(ValueError, "customer ZIP content mismatch"):
                     builder.main()
+
+    def test_bundle_is_reproducible_across_source_mtimes(self) -> None:
+        """A new checkout's filesystem timestamps must not change delivery SHA."""
+        with tempfile.TemporaryDirectory() as temporary:
+            repository = Path(temporary)
+            for relative in (PRODUCT_RELATIVE, RUNTIME_RELATIVE):
+                shutil.copytree(ROOT.parents[1] / relative, repository / relative,
+                                ignore=shutil.ignore_patterns("dist", "__pycache__"))
+            product = repository / PRODUCT_RELATIVE
+            bundle = product / "dist" / f"{BUNDLE_ROOT_NAME}.zip"
+            hashes = []
+            for timestamp in (946684800, 1735689600):
+                for relative in (PRODUCT_RELATIVE, RUNTIME_RELATIVE):
+                    for path in (repository / relative).rglob("*"):
+                        if path.is_file() and "dist" not in path.parts:
+                            os.utime(path, (timestamp, timestamp))
+                subprocess.run([sys.executable, "scripts/MRL_build_product_bundle_v1.py"],
+                               cwd=product, capture_output=True, text=True, check=True)
+                hashes.append(hashlib.sha256(bundle.read_bytes()).hexdigest())
+                self.assertEqual(bundle.with_suffix(".zip.sha256").read_text(),
+                                 f"{hashes[-1]}  {bundle.name}\n")
+            self.assertEqual(hashes[0], hashes[1])
 
     def test_rejects_invalid_product_source_before_build(self) -> None:
         """Tampered, extra, missing and empty product files must never earn PASS."""

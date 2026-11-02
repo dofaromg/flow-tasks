@@ -3,7 +3,8 @@ name: Feature request
 about: 提出新功能或改進建議
 title: "[Feature]: "
 labels: enhancement
-assignees: mrliou
+assignees: ''
+
 ---
 
 ## 🌟 想法描述

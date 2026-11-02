@@ -3,7 +3,8 @@ name: Bug report
 about: 回報專案中遇到的錯誤或異常行為
 title: "[BUG]: "
 labels: bug
-assignees: mrliou
+assignees: ''
+
 ---
 
 ## 🐞 問題描述

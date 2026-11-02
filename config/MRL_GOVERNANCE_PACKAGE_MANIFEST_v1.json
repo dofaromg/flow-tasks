@@ -11,7 +11,7 @@
     "no_global_rename",
     "no_implicit_authorization"
   ],
-  "expected_file_count": 28,
+  "expected_file_count": 29,
   "dependency_tree": {
     "authority": [
       "MRL_Mother/00_rootlaw/MRL_ROOT_AUTHORITY_v1.md",
@@ -228,7 +228,8 @@
       "path": ".github/workflows/mrl-governance-tests.yml",
       "dependencies": [
         "scripts/validate_mrl_governance.py",
-        "MRL_Mother/tests_mrl_ai_system/test_MRL_governance_contracts.py"
+        "MRL_Mother/tests_mrl_ai_system/test_MRL_governance_contracts.py",
+        "tests/test_mrl_issue_templates.py"
       ],
       "required": true
     },
@@ -258,6 +259,19 @@
       "path": "MRL_Mother/06_trace/MRL_GOVERNANCE_PACKAGE_SHA256SUMS_v1.txt",
       "dependencies": [
         "config/MRL_GOVERNANCE_PACKAGE_MANIFEST_v1.json"
+      ],
+      "required": true
+    },
+    {
+      "path": "tests/test_mrl_issue_templates.py",
+      "dependencies": [
+        ".github/ISSUE_TEMPLATE/config.yml",
+        ".github/ISSUE_TEMPLATE/bug_report.md",
+        ".github/ISSUE_TEMPLATE/feature_request.md",
+        ".github/ISSUE_TEMPLATE/particle_extension.md",
+        ".github/ISSUE_TEMPLATE/copilot_task.md",
+        ".github/ISSUE_TEMPLATE/draft_issue.md",
+        ".github/ISSUE_TEMPLATE/custom.md"
       ],
       "required": true
     }

@@ -12,14 +12,66 @@ $entry = Join-Path $backend 'server.js'
 if (-not (Test-Path $entry) -or -not (Test-Path (Join-Path $backend 'node_modules'))) { throw 'Install existing backend dependencies first' }
 # SYSTEM must not execute code writable by broad unprivileged groups.
 # DependencyPath is prepended to SYSTEM's PATH and the runner resolves colmap/mrl3d through it.
-$dependencyDirs = @($DependencyPath -split ';' | Where-Object { $_.Trim() } | ForEach-Object { (Resolve-Path $_.Trim()).Path })
+$dependencyDirs = @((Resolve-BridgeDependencyPath $DependencyPath) -split ';' | Where-Object { $_ })
+$dependencyPathValue = $dependencyDirs -join ';'
 # Write/append data, write (extended) attributes, delete child, delete, change permissions,
 # take ownership, generic write and generic all: any of these lets the group alter or take over code.
 $writeRights = 0x500D0156
-foreach ($dir in @($root, (Join-Path $root 'scripts'), $backend, (Split-Path $node), (Split-Path $python)) + $dependencyDirs) {
-    foreach ($ace in (Get-Acl $dir).Access) {
+function Get-BridgeAclItems([string]$Directory, [switch]$Directories, [string]$ExcludePath = '') {
+    foreach ($item in Get-ChildItem -LiteralPath $Directory -Force) {
+        if ($ExcludePath -and $item.FullName -eq $ExcludePath) { continue }
+        if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { throw "Reparse point in protected code/state tree: $($item.FullName)" }
+        if ($item.PSIsContainer) {
+            if ($Directories) { $item.FullName }
+            Get-BridgeAclItems -Directory $item.FullName -Directories:$Directories -ExcludePath $ExcludePath
+        } elseif (-not $Directories) {
+            $item.FullName
+        }
+    }
+}
+# Discover Python's library roots from protected metadata, never by executing Python.
+$pythonRoot = Split-Path $python
+$venvConfig = Join-Path (Split-Path $pythonRoot) 'pyvenv.cfg'
+$pythonRoots = @($pythonRoot)
+if (Test-Path -LiteralPath $venvConfig -PathType Leaf) {
+    $pythonRoots = @((Split-Path $pythonRoot))
+    $homeLines = @(Get-Content -LiteralPath $venvConfig | Where-Object { $_ -match '^\s*home\s*=' })
+    if ($homeLines.Count -ne 1) { throw 'Python venv must declare exactly one base interpreter home' }
+    $pythonHome = ($homeLines[0] -split '=', 2)[1].Trim()
+    if ($pythonHome -notmatch '^[A-Za-z]:[\\/]') { throw 'Python venv home must be an absolute local path' }
+    $pythonRoots += (Resolve-Path -LiteralPath $pythonHome).Path
+}
+$state = Join-Path $root '.bridge'
+$storagePath = Join-Path $backend 'storage'
+# Use the .NET full-path spelling shared by FileSystemInfo.FullName (8.3 aliases).
+if (Test-Path -LiteralPath $storagePath) { $storagePath = [IO.Path]::GetFullPath((Resolve-Path -LiteralPath $storagePath).Path) }
+$recursiveRoots = @((Join-Path $root 'scripts')) + $dependencyDirs + $pythonRoots
+if (Test-Path -LiteralPath $state) { $recursiveRoots += $state }
+Write-Verbose ('ACL recursive roots: ' + ($recursiveRoots -join ';'))
+Write-Verbose ('ACL backend data exclusion: ' + $storagePath)
+$protectedDirectories = @($root, $backend, (Split-Path $node)) + $recursiveRoots
+$protectedDirectories += @(Get-BridgeAclItems -Directory $backend -Directories -ExcludePath $storagePath)
+foreach ($dir in @($recursiveRoots | Sort-Object -Unique)) {
+    if (-not (Test-Path -LiteralPath $dir -PathType Container)) { throw "Protected path must be a directory: $dir" }
+    $protectedDirectories += @(Get-BridgeAclItems -Directory $dir -Directories)
+}
+foreach ($dir in @($protectedDirectories | Sort-Object -Unique)) {
+    if ((Get-Item -LiteralPath $dir -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { throw "Reparse point in protected code/state tree: $dir" }
+    foreach ($ace in (Get-Acl -LiteralPath $dir).Access) {
         $sid = $ace.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value
         if ($sid -in @('S-1-1-0','S-1-5-11','S-1-5-32-545') -and $ace.AccessControlType -eq 'Allow' -and ([int]$ace.FileSystemRights -band $writeRights)) { throw "Broad write access on $dir; protect deployment ACL before SYSTEM registration" }
+    }
+}
+$protectedFiles = @($node, $python, $entry, (Join-Path $backend 'python\mrl3d_job_runner.py'))
+$protectedFiles += @(Get-BridgeAclItems -Directory $backend -ExcludePath $storagePath)
+foreach ($dir in @($recursiveRoots | Sort-Object -Unique)) {
+    $protectedFiles += @(Get-BridgeAclItems -Directory $dir)
+}
+foreach ($file in @($protectedFiles | Sort-Object -Unique)) {
+    if ((Get-Item -LiteralPath $file -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { throw "Reparse point in protected code/state tree: $file" }
+    foreach ($ace in (Get-Acl -LiteralPath $file).Access) {
+        $sid = $ace.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value
+        if ($sid -in @('S-1-1-0','S-1-5-11','S-1-5-32-545') -and $ace.AccessControlType -eq 'Allow' -and ([int]$ace.FileSystemRights -band $writeRights)) { throw "Broad write access on executable or loaded file $file; protect deployment ACL before SYSTEM registration" }
     }
 }
 $task = Get-BridgeTask; Assert-TaskOwner $task $root
@@ -37,10 +89,10 @@ $state = Join-Path $root '.bridge'; New-Item -ItemType Directory $state -Force |
 $configFile = Join-Path $state 'config.json'
 if (Test-Path $configFile) {
     $c = Get-BridgeConfig
-    if ($c.node -ne $node -or $c.python -ne $python -or $c.dependencyPath -ne $DependencyPath) { throw 'Configuration change requires safe removal first' }
+    if ($c.node -ne $node -or $c.python -ne $python -or $c.entry -ne $entry -or (Resolve-BridgeDependencyPath ([string]$c.dependencyPath)) -ne $dependencyPathValue) { throw 'Configuration change requires safe removal first' }
 } else {
     if ($task) { throw 'Task exists without config; inspect before recovery' }
-    $c = [ordered]@{root=$root; node=$node; python=$python; entry=$entry; port=3050; dependencyPath=$DependencyPath; instance=[guid]::NewGuid().ToString(); source='1b10f5605ec5542f2271315e38d8302c3f1d387a'}
+    $c = [ordered]@{root=$root; node=$node; python=$python; entry=$entry; port=3050; dependencyPath=$dependencyPathValue; instance=[guid]::NewGuid().ToString(); source='1b10f5605ec5542f2271315e38d8302c3f1d387a'}
     Write-BridgeJson $configFile $c
 }
 if ($task) { Write-BridgeReceipt 'register-existing' $null; exit 0 }

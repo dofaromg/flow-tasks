@@ -1,0 +1,111 @@
+name: MRL 3DScanner ProductBridge
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/**'
+      - '.github/workflows/mrl-3dscanner-productbridge.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/**'
+      - '.github/workflows/mrl-3dscanner-productbridge.yml'
+
+permissions:
+  contents: read
+
+env:
+  BRIDGE: MRL_Mother/MRL_3DScanner_ProductBridge_v1_1
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify exact tested commit
+        run: git rev-parse HEAD
+      - name: Backend lint, build and regression
+        working-directory: MRL_Mother/MRL_3DScanner_ProductBridge_v1_1/backend/MRL_3D_Reconstruction_Server
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run lint
+          npm run build
+          MRL_TEST_PYTHON="$(command -v python)" npm test
+      - name: Runner and delivery integrity
+        run: |
+          python -m unittest discover -s "$BRIDGE/tests" -p 'test_*.py' -v
+          python "$BRIDGE/tests/verify_integration.py"
+      - name: Package only tracked ProductBridge files for Windows
+        run: |
+          python - <<'PY'
+          import os, subprocess, zipfile
+          from pathlib import Path
+          files = subprocess.check_output(['git', 'ls-files', '-z', '--', os.environ['BRIDGE']], text=True).split('\0')
+          with zipfile.ZipFile(Path(os.environ['RUNNER_TEMP']) / 'MRL_ProductBridge_exact_head.zip', 'w') as z:
+              for name in filter(None, files):
+                  z.write(name, name)
+              z.writestr('MRL_CI_EXACT_HEAD.txt', subprocess.check_output(['git', 'rev-parse', 'HEAD']))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MRL-ProductBridge-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/MRL_ProductBridge_exact_head.zip
+          retention-days: 3
+  windows-powershell51:
+    needs: backend
+    runs-on: windows-2022
+    timeout-minutes: 10
+    steps:
+      # Full Git checkout rejects historical root names such as :mnt:data.txt,
+      # including in sparse mode. Consume only the tested, exact-head module ZIP.
+      - uses: actions/download-artifact@v4
+        with:
+          name: MRL-ProductBridge-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}
+      - name: Verify transferred source identity and module hashes
+        shell: powershell
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          Expand-Archive -LiteralPath "$env:RUNNER_TEMP/MRL_ProductBridge_exact_head.zip" -DestinationPath $env:GITHUB_WORKSPACE
+          $actual=(Get-Content 'MRL_CI_EXACT_HEAD.txt' -Raw).Trim()
+          if ($actual -ne $env:EXPECTED_HEAD) { throw 'Source SHA mismatch' }
+          $audit=Get-Content "$env:BRIDGE/MAINLINE_INTEGRATION_20261021.json" -Raw | ConvertFrom-Json
+          foreach ($item in $audit.files.PSObject.Properties) {
+            if ($item.Name.StartsWith($env:BRIDGE + '/')) {
+              if ((Get-FileHash -LiteralPath $item.Name -Algorithm SHA256).Hash -ne $item.Value.sha256) { throw "Source hash mismatch: $($item.Name)" }
+            }
+          }
+          Write-Host "Verified exact-head $actual"
+      - name: Windows PowerShell 5.1 regression (hosted runner, not DL580)
+        shell: powershell
+        run: |
+          if ($PSVersionTable.PSVersion.Major -ne 5) { throw 'Windows PowerShell 5.1 required' }
+          & "$env:BRIDGE/tests/common.test.ps1"
+      - name: Native ACL and descendant cleanup (temporary fixtures only)
+        shell: powershell
+        run: '& "$env:BRIDGE/tests/windows.test.ps1"'
+  swift-contract:
+    runs-on: macos-14
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Compile actual Codable model and decode shared API response
+        run: |
+          git rev-parse HEAD
+          swiftc "$BRIDGE/ios/MRL_3DScanner_iOS/Reconstruction/MRLReconstructionJob.swift" "$BRIDGE/tests/upload-contract.swift" -o "$RUNNER_TEMP/mrl-upload-contract"
+          "$RUNNER_TEMP/mrl-upload-contract" "$BRIDGE/tests/fixtures/upload-response.json"

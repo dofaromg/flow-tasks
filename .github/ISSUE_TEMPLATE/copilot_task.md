@@ -3,7 +3,8 @@ name: Copilot Task
 about: Create an issue optimized for GitHub Copilot coding agent
 title: "[Copilot]: "
 labels: copilot
-assignees: ""
+assignees: ''
+
 ---
 
 ## 🤖 Task Description

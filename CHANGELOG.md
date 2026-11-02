@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — MRL ProductBridge post-merge security review (2026-10-21)
+
+- Follow up merged PR #680 at main 0c88c996: include the existing .bridge state,
+  Python venv and base interpreter libraries in registration ACL preflight.
+- Exclude only the direct backend scan storage tree; inspect dependency packages
+  named storage and reject reparse points in protected code/state trees.
+- Reject future, expired or finite recovery triggers; compare legacy dependency
+  paths with the same normalization as new registration without rewriting config.
+- Add Windows PowerShell 5.1 regressions using isolated ACL fixtures and actual
+  unregistered ScheduledTasks definitions; DL580/iPhone/reboot gates remain separate.
+- origin_signature: MrLiouWord; canonical_authority: Mr.liou.
+
+### Fixed — MRL 3DScanner ProductBridge main integration (2026-10-21)
+
+- Integrate the remaining PR #678 safety changes onto exact main cc5b0059,
+  preserving its Tailscale-only entry, startup wait, names and source lineage.
+- Keep upload responses, iOS Codable and local PowerShell acceptance consistent;
+  strip legacy scan file paths, limit scan listing, validate task/ACL definitions,
+  contain Node descendants and defer recovery writes until every listener binds.
+- Preserve original patch hashes and admit only the audited main/#678 predecessor
+  hashes for upgrades; add API, task-drift, native Windows recovery and Swift tests.
+- GitHub-hosted CI and DL580/iPhone/reboot acceptance are distinct evidence gates.
+- origin_signature: MrLiouWord; canonical_authority: Mr.liou.
+
 ### Fixed — DL580 naming restoration preflight (2026-10-14)
 
 - PR #669 now defaults to evidence-only preflight on DL580 D:, with unique receipts,
