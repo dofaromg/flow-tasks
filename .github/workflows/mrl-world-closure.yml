@@ -1,0 +1,22 @@
+name: MRL WorldModule Closure
+on:
+  pull_request:
+    paths:
+      - 'MRL_Mother/05_persona/world_module.py'
+      - 'MRL_Mother/05_persona/world_closure_store.py'
+      - 'MRL_Mother/05_persona/README.md'
+      - 'MRL_Mother/tests/test_mrl_world_closure.py'
+      - '.github/workflows/mrl-world-closure.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  closure-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test reversible world-state closure
+        run: python -m unittest discover -s MRL_Mother/tests -p 'test_mrl_world_closure.py' -v
