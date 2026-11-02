@@ -401,10 +401,14 @@ class BaseConnector(ABC):
             return {"success": False, "error": "Not connected"}
         
         return {
-            "success": True,
+            "success": False,
+            "skipped": False,
+            "reason": "sync_not_implemented",
+            "error": "資料傳輸與母體驗收尚未實作；連線成功不代表同步完成",
             "direction": direction,
             "timestamp": datetime.now().isoformat(),
-            "items_synced": 0
+            "items_synced": 0,
+            "mother_backfill_verified": False,
         }
 
     def _check_connection_with_request(
