@@ -53,6 +53,7 @@ jobs:
       # while GH_TOKEN is set, which made every scheduled run fail here.
       - name: Check Codespace Status
         id: check
+        shell: bash
         env:
           # Fine-grained PAT: Codespaces repository permission (read) on this repo.
           # Classic PAT / OAuth token: codespace scope. GITHUB_TOKEN is unsuitable.
@@ -110,13 +111,16 @@ jobs:
             LAST_USED=$(echo "$codespace" | jq -r '.lastUsedAt')
             
             if [ "$LAST_USED" != "null" ]; then
-              LAST_USED_TS=$(date -d "$LAST_USED" +%s 2>/dev/null)
+              if ! LAST_USED_TS=$(date -d "$LAST_USED" +%s 2>/dev/null); then
+                echo "::error title=Invalid Codespace timestamp::Cannot parse lastUsedAt; monitoring is incomplete."
+                exit 1
+              fi
               if [ -n "$LAST_USED_TS" ]; then
                 DAYS_SINCE_USED=$(( ($CURRENT_TIME - $LAST_USED_TS) / 86400 ))
                 DAYS_UNTIL_DELETION=$((30 - $DAYS_SINCE_USED))
                 
                 if [ $DAYS_UNTIL_DELETION -le 7 ]; then
-                  echo "⚠️  WARNING: $NAME will be deleted in ~${DAYS_UNTIL_DELETION} days"
+                  echo "⚠️  WARNING: $NAME reaches the 30-day inactivity estimate in ~${DAYS_UNTIL_DELETION} days (not a confirmed deletion deadline)"
                   echo "$NAME" >> warnings.txt
                 fi
               fi
@@ -144,7 +148,7 @@ jobs:
           cat > issue_body.md <<'EOF'
           ## ⚠️ Codespace Retention Warning
           
-          Some of your codespaces are approaching the end of their retention period and will be deleted soon.
+          Some codespaces meet the existing 30-day inactivity warning estimate. This is not a confirmed deletion deadline; check each Codespace's actual retention settings.
           
           ### Codespaces Requiring Attention
           
@@ -170,7 +174,7 @@ jobs:
           - **Repository**: $REPO
           - **State**: $STATE
           - **Last used**: $LAST_USED ($DAYS_SINCE_USED days ago)
-          - **⚠️ Will be deleted in**: ~$DAYS_UNTIL_DELETION days
+          - **⚠️ 30-day inactivity estimate reached in**: ~$DAYS_UNTIL_DELETION days (not a confirmed deletion deadline)
           - **Action**: [Continue using](https://github.com/codespaces)
           
           EOL
@@ -249,3 +253,4 @@ jobs:
               gh issue close "$issue" --repo "$GITHUB_REPOSITORY" --comment "No codespaces require attention under the 30-day estimate in this monitoring cycle."
             done
           fi
+

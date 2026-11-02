@@ -29,9 +29,10 @@ def result(value, code=0):
         print(json.dumps(value))
     sys.exit(code)
 if a[:2] == ['codespace', 'list']:
-    assert a[a.index('--repo') + 1] == 'dofaromg/flow-tasks'
+    assert a[a.index('--repo') + 1] == os.environ['GITHUB_REPOSITORY']
     assert a[a.index('--limit') + 1] == '1000'
     if cfg.get('api_fail'):
+        print('HTTP ' + str(cfg.get('api_status', 500)), file=sys.stderr)
         result(None, 1)
     if 'raw_response' in cfg:
         print(cfg['raw_response'])
@@ -85,14 +86,14 @@ class CodespaceMonitoringTests(unittest.TestCase):
         self.output = self.cwd / 'outputs'
         self.output.touch()
 
-    def run_step(self, name, scenario=None, token=True):
+    def run_step(self, name, scenario=None, token=True, repository='dofaromg/flow-tasks'):
         cfg = scenario or {}
         (self.cwd / 'scenario.json').write_text(json.dumps(cfg))
         if name == 'Create Issue for Warnings':
             (self.cwd / 'codespaces.json').write_text(json.dumps(cfg.get('codespaces', [codespace()])))
         env = {'PATH': str(self.cwd) + ':' + os.environ.get('PATH', '/usr/bin:/bin'),
                'GH_TOKEN': 'synthetic-test-value' if token else '',
-               'GITHUB_REPOSITORY': 'dofaromg/flow-tasks',
+               'GITHUB_REPOSITORY': repository,
                'GITHUB_OUTPUT': str(self.output), 'LANG': 'C.UTF-8'}
         return subprocess.run(['bash', '-eo', 'pipefail', '-c', self.steps[name]],
                               cwd=self.cwd, env=env, text=True, capture_output=True)
@@ -113,6 +114,42 @@ class CodespaceMonitoringTests(unittest.TestCase):
 
     def test_codespaces_api_failure_is_not_empty_success(self):
         self.assert_failed(self.run_step('Check Codespace Status', {'api_fail': True}))
+
+    def test_auth_permission_and_rate_limit_fail_with_diagnostics(self):
+        for status in (401, 403, 429):
+            with self.subTest(status=status):
+                self.output.write_text('')
+                result = self.run_step('Check Codespace Status',
+                                       {'api_fail': True, 'api_status': status})
+                self.assert_failed(result)
+                self.assertIn('::error title=Codespace listing failed', result.stdout)
+                self.assertIn('HTTP ' + str(status), result.stderr)
+                self.assertEqual(self.output.read_text(), '')
+
+    def test_invalid_timestamp_reports_incomplete_monitoring(self):
+        result = self.run_step('Check Codespace Status',
+                               {'codespaces': [codespace(last_used='invalid-date')]})
+        self.assert_failed(result)
+        self.assertIn('::error title=Invalid Codespace timestamp', result.stdout)
+        self.assertEqual(self.output.read_text(), '')
+
+    def test_confirmed_repository_ports_keep_query_scoped(self):
+        repositories = ('flow-tasks', 'MRL_ASI_system', 'flow-tasks-01',
+                        'Mrl_w01234567', 'Mrl_ai-Assist', 'MrliouAI-box')
+        for name in repositories:
+            with self.subTest(repository=name):
+                self.output.write_text('')
+                result = self.run_step('Check Codespace Status',
+                                       repository='dofaromg/' + name)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(self.output.read_text(), 'has_warnings=false\n')
+
+    def test_warning_body_does_not_assert_a_deletion_deadline(self):
+        result = self.run_step('Create Issue for Warnings')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        body = (self.cwd / 'issue_body.md').read_text()
+        self.assertIn('not a confirmed deletion deadline', body)
+        self.assertNotIn('Will be deleted in', body)
 
     def test_empty_list_is_success(self):
         result = self.run_step('Check Codespace Status')
@@ -205,3 +242,4 @@ class CodespaceMonitoringTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
