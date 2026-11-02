@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security — MRL-32 LiteLLM artifact containment (2026-11-02)
+
+- Add a static version/hash/digest deny policy and scanner with HIT, NO_HIT and
+  UNKNOWN results; never import target packages or start target Python/pip.
+- Add 25 positive/negative tests, a read-only DL580 PowerShell collector and
+  a fail-closed GitHub gate required by the two APIWorks delivery build jobs.
+- Keep unresolved archives, runtime evidence, historical caches and unverified
+  image provenance blocked; this change does not certify DL580 or authorize release.
+- Preserve origin_signature: MrLiouWord and the existing MRL-32 task lineage.
+
 ### Fixed — MRL ProductBridge post-merge security review (2026-10-21)
 
 - Follow up merged PR #680 at main 0c88c996: include the existing .bridge state,

@@ -54,4 +54,6 @@ deny policy 阻擋受影響版本、四個指定標籤及已知雜湊。浮動�
 
 完整 URL、取得日、時間窗口、wheel hash、已知 digest/prefix 與金鑰指紋保留於 `policy.json`。官方初報後續有更正，攻擊鏈以 10 月 23 日 canonical 調查為準，簽章資訊採 10 月 30 日更新。短 prefix 明確標示為 prefix，未捏造完整 digest；未知平台／config／layer digest 保持未知。版本與標籤策略不取代官方後續公告。
 
+另已查核官方安全頁 https://www.litellm.ai/security ：10 月 27 日另有 Enterprise proxy 漏洞公告。測試中的 `1.106.2` 只表示不命中本事故版本，**不是目前正式部署版本推薦**；重建前仍需查核所選分支最新安全修補與適用性。
+
 依賴樹：`policy.json → scan.py → test_scan.py → mrl-litellm-incident.yml → 兩個 BYOH 交付工作流程`；`MRL_collect_DL580.ps1 → 私有靜態證據 → 乾淨工作站 scan.py → owner 審核`。
