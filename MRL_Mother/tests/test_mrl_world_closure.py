@@ -59,12 +59,14 @@ class WorldClosureTests(unittest.TestCase):
         self.assertEqual(self.world.verify_history()["latest_version_index"], 4)
 
     def test_bootstrap_preserves_existing_legacy_data(self):
-        (self.folder / "nodes.json").write_text(json.dumps({"old": {"data": {"v": 1}}}))
-        (self.folder / "trajectory.jsonl").write_text('{"old":"trace"}\n')
-        w = module.WorldModule(self.folder)
+        legacy_dir = self.folder / "legacy_import"
+        legacy_dir.mkdir()
+        (legacy_dir / "nodes.json").write_text(json.dumps({"old": {"data": {"v": 1}}}))
+        (legacy_dir / "trajectory.jsonl").write_text('{"old":"trace"}\n')
+        w = module.WorldModule(legacy_dir)
         self.assertEqual(w.get_node("old")["data"]["v"], 1)
         self.assertEqual(w.version_index, 0)
-        self.assertIn("old", (self.folder / "trajectory.jsonl").read_text())
+        self.assertIn("old", (legacy_dir / "trajectory.jsonl").read_text())
 
     def test_integrity_tampering_fails_closed(self):
         self.world.set_state("x", 1)
