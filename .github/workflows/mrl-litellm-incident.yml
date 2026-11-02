@@ -1,0 +1,22 @@
+name: MRL Supply Chain Incident Deny Gate
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  static-deny:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Test static scanner without site initialization
+        run: python3 -I -S security/MRL_LiteLLM_Incident_v1/test_scan.py -v
+      - name: Deny affected and unresolved artifacts
+        run: python3 -I -S security/MRL_LiteLLM_Incident_v1/scan.py . --output "$RUNNER_TEMP/MRL-32-${GITHUB_SHA}-${GITHUB_RUN_ATTEMPT}.json"
+      # Detailed file paths/hashes stay on the ephemeral runner. No public inventory upload.
