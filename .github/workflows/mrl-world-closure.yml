@@ -29,12 +29,15 @@ jobs:
           git remote add origin "https://github.com/${MRL_REPOSITORY}.git"
           git fetch --depth=1 origin "$MRL_HEAD"
           test "$(git rev-parse FETCH_HEAD)" = "$MRL_HEAD"
-          # Archive only these dependencies: checkout validates unrelated
-          # Windows-incompatible archive paths even in sparse mode.
-          git archive --format=tar FETCH_HEAD -- \
+          # Read named blobs without unpacking the incompatible archive tree.
+          for file in \
             MRL_Mother/05_persona/world_module.py \
             MRL_Mother/05_persona/world_closure_store.py \
-            MRL_Mother/tests/test_mrl_world_closure.py | tar -xf -
+            MRL_Mother/tests/test_mrl_world_closure.py
+          do
+            mkdir -p "$(dirname "$file")"
+            git cat-file blob "${MRL_HEAD}:${file}" > "$file"
+          done
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'

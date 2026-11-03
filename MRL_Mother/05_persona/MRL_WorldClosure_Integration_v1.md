@@ -111,3 +111,9 @@ The final workflow fetches the exact head, asserts the fetched SHA, and uses
 `git archive` to extract only the three required source/test files, without
 checking out the incompatible archive tree. The public repository is fetched
 read-only without credentials. Git path protections remain enabled.
+
+
+`git archive` also unpacked the incompatible tree on Windows (run 41553610910).
+The final extraction reads each named blob with `git cat-file blob SHA:path`
+and writes only the three dependency paths, avoiding tree unpack entirely.
+All failed extraction runs remain recorded; none count as Windows test passes.
