@@ -38,6 +38,22 @@ class GPUAdmissionIntegrationTests(unittest.TestCase):
                 allocator.allocate_gpu('engine')
             allocator._admit_workload.assert_called_once_with('engine', [1])
 
+    def test_device_selection_rechecks_current_admission(self):
+        torch = MagicMock()
+        with patch.dict(sys.modules, {'torch': torch, 'yaml': MagicMock()}):
+            sys.path.insert(0, str(REPO))
+            spec = importlib.util.spec_from_file_location('mrl_test_allocator3', REPO/'utils/gpu_orchestrator.py')
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            allocator = mod.GPUOrchestrator.__new__(mod.GPUOrchestrator)
+            allocator._last_admitted_engine_name = 'engine'
+            allocator._last_admitted_gpu_ids = (0,)
+            allocator._admit_workload = MagicMock(side_effect=mod.AdmissionError('artifact changed'))
+            with self.assertRaises(mod.AdmissionError):
+                allocator.set_device([0])
+            allocator._admit_workload.assert_called_once_with('engine', [0])
+            torch.cuda.set_device.assert_not_called()
+
 
 if __name__ == '__main__':
     unittest.main()

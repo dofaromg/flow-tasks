@@ -51,6 +51,7 @@ class GPUOrchestrator:
         self.gpu_locks = [threading.Lock() for _ in range(self.num_gpus)]
         self.gpu_assignments = {}  # engine -> gpu_ids mapping
         self._last_admitted_gpu_ids = None
+        self._last_admitted_engine_name = None
         self._initialize_gpu_assignments()
         
         logger.info(f"GPU Orchestrator initialized with {self.num_gpus} GPUs")
@@ -147,6 +148,7 @@ class GPUOrchestrator:
             分配的GPU ID列表
         """
         self._last_admitted_gpu_ids = None
+        self._last_admitted_engine_name = None
         # 從配置獲取預設分配
         gpu_ids = self.gpu_assignments.get(engine_name, [0])
         
@@ -156,6 +158,7 @@ class GPUOrchestrator:
         
         self._admit_workload(engine_name, gpu_ids)
         self._last_admitted_gpu_ids = tuple(gpu_ids)
+        self._last_admitted_engine_name = engine_name
 
         logger.info(f"Allocated GPUs {gpu_ids} for engine '{engine_name}' (priority: {user_priority})")
         return gpu_ids
@@ -211,6 +214,13 @@ class GPUOrchestrator:
         except (KeyError, ValueError, TypeError, OSError, subprocess.SubprocessError) as exc:
             raise AdmissionError('MRL hardware admission unknown: ' + str(exc)) from exc
 
+    def verify_admitted_allocation(self, engine_name: str, gpu_ids: List[int]) -> Dict:
+        """Recheck the current host and artifact bytes at model-load boundaries."""
+        if (engine_name != self._last_admitted_engine_name
+                or tuple(gpu_ids) != self._last_admitted_gpu_ids):
+            raise AdmissionError("GPU selection was not admitted for this engine")
+        return self._admit_workload(engine_name, gpu_ids)
+
     def _balance_load(self, preferred_gpus: List[int], engine_name: str) -> List[int]:
         """
         負載均衡 - 選擇最空閒的GPU
@@ -264,8 +274,8 @@ class GPUOrchestrator:
         """
         if not gpu_ids:
             return torch.device('cpu')
-        if tuple(gpu_ids) != getattr(self, '_last_admitted_gpu_ids', None):
-            raise AdmissionError("GPU selection was not admitted for this allocation")
+        engine_name = getattr(self, '_last_admitted_engine_name', None)
+        self.verify_admitted_allocation(engine_name, gpu_ids)
         
         primary_gpu = gpu_ids[0]
         torch.cuda.set_device(primary_gpu)
@@ -282,8 +292,8 @@ class GPUOrchestrator:
         Returns:
             並行化後的模型
         """
-        if tuple(gpu_ids) != getattr(self, '_last_admitted_gpu_ids', None):
-            raise AdmissionError("GPU selection was not admitted for this allocation")
+        engine_name = getattr(self, '_last_admitted_engine_name', None)
+        self.verify_admitted_allocation(engine_name, gpu_ids)
         if len(gpu_ids) > 1:
             logger.info(f"Creating DataParallel model on GPUs: {gpu_ids}")
             return torch.nn.DataParallel(model, device_ids=gpu_ids)
