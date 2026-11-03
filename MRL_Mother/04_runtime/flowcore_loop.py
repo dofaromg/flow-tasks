@@ -29,10 +29,10 @@ import subprocess
 import sys
 import time
 import uuid
+import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
-import requests
 
 VERSION = "1.3.0"
 ORIGIN_SIGNATURE = "MrLiouWord"
@@ -55,6 +55,7 @@ def fsd_search(q: str, limit: int = 20):
             "format": "json",
             "formatversion": "2",
         }
+        import requests
         resp = requests.get(FSD_API_BASE, params=params, timeout=10)
         resp.raise_for_status()
         data = resp.json()
@@ -79,6 +80,7 @@ def fsd_entry(title: str):
             "format": "json",
             "formatversion": "2",
         }
+        import requests
         resp = requests.get(FSD_API_BASE, params=params, timeout=10)
         resp.raise_for_status()
         data = resp.json()
@@ -252,6 +254,7 @@ def merkle_fold(prev_root: str, payload: dict) -> str:
 
 class Tracer:
     def __init__(self, log_dir: str, persona_id: str = "PartnerPersona", rid: str | None = None):
+        self._lock = threading.RLock()
         self.log_dir = log_dir
         os.makedirs(self.log_dir, exist_ok=True)
         self.trace_path = os.path.join(self.log_dir, "trace.jsonl")
@@ -275,7 +278,32 @@ class Tracer:
             json.dump(self._state, f, ensure_ascii=False, indent=2)
         os.replace(tmp, self.state_path)
 
+    @property
+    def timeMachine(self):
+        # Resolve the existing repository core even when run as a script.
+        root = str(pathlib.Path(__file__).resolve().parents[2])
+        if root not in sys.path:
+            sys.path.insert(0, root)
+        from core.time_machine import TimeMachine
+        return TimeMachine(self)
+
+    def loadVersion(self, version):
+        return self.timeMachine.loadVersion(version)
+
+    def mountVersion(self, version_id):
+        return self.timeMachine.mountVersion(version_id)
+
+    def diffVersions(self, v1, v2):
+        return self.timeMachine.diffVersions(v1, v2)
+
+    def branchFrom(self, version_id):
+        return self.timeMachine.branchFrom(version_id)
+
     def emit(self, event_type: str, payload: dict) -> dict:
+        with self._lock:
+            return self._emit(event_type, payload)
+
+    def _emit(self, event_type: str, payload: dict) -> dict:
         self._state["tick"] += 1
         event_id = uuid.uuid4().hex
         rec = {
@@ -401,6 +429,14 @@ _SHELL_METACHAR_RE = re.compile(r"[;&|`$<>\\!]")
 
 
 def make_handler(vault: Vault, tracer: Tracer, steering: SteeringStore):
+    def plain(value):
+        from collections.abc import Mapping
+        if isinstance(value, Mapping):
+            return {k: plain(v) for k, v in value.items()}
+        if isinstance(value, (tuple, list)):
+            return [plain(v) for v in value]
+        return value
+
     class Handler(BaseHTTPRequestHandler):
         server_version = "FlowCoreLoopHTTP/" + VERSION
 
@@ -498,6 +534,28 @@ def make_handler(vault: Vault, tracer: Tracer, steering: SteeringStore):
                     data = {}
                 sp = preflight_router(u.path, "POST", dict(self.headers), data, steering)
                 sp_hash = _profile_hash(sp)
+
+                if u.path.startswith("/timemachine/"):
+                    if not check_token(self.headers):
+                        return self._send(403, {"ok": False, "error": "need_human_token"})
+                    machine = tracer.timeMachine
+                    operation = u.path.rsplit("/", 1)[-1]
+                    try:
+                        if operation in ("loadVersion", "mountVersion"):
+                            result = machine.loadVersion(data["version_id"])
+                        elif operation == "diffVersions":
+                            result = machine.diffVersions(data["v1"], data["v2"])
+                        elif operation == "branchFrom":
+                            branch = machine.branchFrom(data["version_id"])
+                            result = {"branch_id": branch.branch_id, "parent": branch.parent}
+                        elif operation == "saveVersion":
+                            result = machine.saveVersion(data["snapshot"], data["version_string"],
+                                                         branch_id=data.get("branch_id"), parent=data.get("parent"))
+                        else:
+                            return self._send(404, {"ok": False, "error": "not_found"})
+                    except (KeyError, ValueError, TypeError) as error:
+                        return self._send(400, {"ok": False, "error": str(error)})
+                    return self._send(200, {"ok": True, "data": plain(result)})
 
                 # Token check for important operations
                 if u.path in ("/vault/write_text", "/terminal/exec", "/pyramid/register"):
@@ -786,3 +844,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
