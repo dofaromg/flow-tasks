@@ -35,9 +35,12 @@ No production combination is promoted to verified by this change.
 Manifest -> exact reviewed matrix row -> SHA-256-bound local acceptance receipt.
 Orchestrator -> admission -> observed GPU comparison -> selected IDs.
 CI -> tests + production matrix validation. No GPU installation is needed in CI.
-The workflow uses non-cone sparse checkout because the historical root filename
-`:mnt:data.txt` cannot be materialized on Windows. Only the required hardware
-modules, policy and tests are checked out; original names remain untouched.
+The source job packages utils/, configs/ and the gate test from the checked-out
+revision on Linux. Four Linux/Windows policy jobs download that same-run artifact.
+This avoids Windows checkout of the historical root filename `:mnt:data.txt`
+without renaming or deleting it. Sparse checkout alone still fails Windows index
+validation for that path. The artifact is CI source transport, not a GPU deployment
+bundle or a hardware acceptance receipt.
 
 Every manifest field is mandatory, including nullable CUDA/ROCm. NVIDIA requires
 CUDA and null ROCm; AMD requires ROCm and null CUDA. Unknown vendors and missing
