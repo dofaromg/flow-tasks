@@ -22,13 +22,13 @@ The canonical evaluator hashes actual bundle, sharded model, runner, and runtime
 
 - Expected package coverage: `MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/EXPECTED_FILE_LIST.txt`.
 - Package integrity: `MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/SHA256SUMS.txt` and `scripts/MRL_verify_product_source_v1.py`.
-- Engineering file/dependency evidence: `docs/evidence/mrl-34/MRL_34_ENGINEERING_EVIDENCE_R01.json`.
-- Runtime: existing MRL-44 Deployment Passport output -> host manifest; operator workload and artifact paths -> canonical byte/policy gate -> `GPUOrchestrator.allocate_gpu()` -> exact selected GPU IDs -> load. Smoke/replay evidence -> owner-reviewed hardware receipt -> internal acceptance matrix. Public support remains a separate decision.
+- Baseline evidence: `docs/evidence/mrl-34/MRL_34_ENGINEERING_EVIDENCE_R01.json`; integration snapshot, byte inventory, package map, and current validation: `docs/evidence/mrl-34/MRL_34_ENGINEERING_EVIDENCE_R02.json`.
+- Runtime: existing MRL-44 Deployment Passport output -> host manifest; operator workload and artifact paths -> canonical byte/policy gate -> `GPUOrchestrator.allocate_gpu()` -> exact selected GPU IDs -> revalidate at device selection and before/after model-cache retrieval -> load. Smoke/replay evidence -> owner-reviewed hardware receipt -> internal acceptance matrix. Public support remains a separate decision.
 
 The checkout does not contain a source file identifiable as MRL-44's read-only Deployment Passport collector. The generic Passport registry and APIWorks ledger collector are not hardware collectors and are not substituted for it. The runtime config therefore requires an operator-provided current Passport-derived host manifest and blocks when required current fields are absent. Do not copy historical 539.56/CUDA 12.2 observations into it.
 
 ## Review and validation status
 
-The live PR #700 review findings (unused import and local) were corrected. PR #701's unused-import threads were already resolved and outdated at the inspected head. Exact-head Linux/Windows CI for both proposal heads was green when inspected; it did not evaluate this integration change. Local regressions and integrity checks must be rerun at the final issue-branch head.
+The live PR #700 review findings (unused import and local) were corrected. PR #701's unused-import threads were already resolved and outdated at the inspected head. Exact-head Linux/Windows CI for both proposal heads was green when inspected; it did not evaluate this integration change. The integration branch's exact-head GitHub Actions runs currently require workflow approval and have zero jobs; local test results and that CI gap are recorded in R02.
 
 All acceptance fixtures are explicitly test-only and stored in temporary directories. No live DL580 device query, runtime/model smoke, service restart, or formal hardware receipt was produced. No deployment, driver/CUDA upgrade, service activation, or merge is authorized by this proposal. Owner approval and real-node evidence remain required.

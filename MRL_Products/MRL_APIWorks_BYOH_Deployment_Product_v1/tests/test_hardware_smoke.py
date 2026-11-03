@@ -3,6 +3,7 @@
 import copy
 import hashlib
 import platform
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -109,6 +110,51 @@ class HardwareSmokeTests(unittest.TestCase):
             result = smoke._run_smoke("runtime_smoke", self.commands["runtime_smoke"])
         self.assertFalse(result["ok"])
         self.assertEqual(result["stdout_sha256"], hashlib.sha256(output).hexdigest())
+
+    def test_device_query_checks_live_uuid_and_compute_capability(self):
+        response = type("Completed", (), {
+            "stdout": "0, GPU-test-only, Tesla V100-SXM2-32GB, 539.56, 32768 MiB\n",
+        })()
+        torch = type("Torch", (), {
+            "cuda": type("Cuda", (), {
+                "is_available": staticmethod(lambda: True),
+                "device_count": staticmethod(lambda: 1),
+                "get_device_capability": staticmethod(lambda gpu_id: (7, 0)),
+            })(),
+        })()
+        with patch.object(smoke.subprocess, "run", return_value=response), \
+                patch.dict(sys.modules, {"torch": torch}):
+            self.assertTrue(smoke._device_query(self.host)["ok"])
+            self.host["gpus"][0]["uuid"] = "GPU-other"
+            with self.assertRaisesRegex(ValueError, "differs from the current Passport"):
+                smoke._device_query(self.host)
+
+    def test_tampered_replay_record_is_rejected(self):
+        with patch.object(smoke, "_device_query", return_value={"ok": True, "inventory_digest": "test"}), \
+                patch.object(smoke, "_run_smoke", return_value={
+                    "ok": True, "exit_code": 0, "stdout_sha256": "a" * 64, "stderr_sha256": "c" * 64,
+                }):
+            first = smoke.build_record(
+                self.host, self.workload, self.artifacts, self.paths, self.commands,
+            )
+            first["checks"]["model_smoke"]["ok"] = False
+            with self.assertRaisesRegex(ValueError, "replay record"):
+                smoke.build_record(
+                    self.host, self.workload, self.artifacts, self.paths, self.commands, first,
+                )
+
+    def test_nonzero_smoke_command_fails_even_with_expected_stdout(self):
+        output = b"expected"
+        command = {
+            "argv": ["runtime-smoke"],
+            "expected_stdout_sha256": hashlib.sha256(output).hexdigest(),
+        }
+        with patch.object(smoke.subprocess, "run", return_value=type("Completed", (), {
+            "returncode": 1, "stdout": output, "stderr": b"failed",
+        })()):
+            result = smoke._run_smoke("runtime_smoke", command)
+        self.assertFalse(result["ok"])
+        self.assertEqual(result["exit_code"], 1)
 
 
 if __name__ == "__main__":
