@@ -18,3 +18,78 @@ origin_signature: MrLiouWord
 \`python -m unittest discover -s MRL_Mother/tests -p 'test_mrl_world_closure.py' -v\`
 
 必須分別記錄：靜態可檢視、CI 結果、合併狀態及 DL580 母體實機驗收；不得以其中一項代替其他項。
+
+## R01 — PR #699 recovery hardening (2026-11-03 Asia/Taipei)
+origin_signature: MrLiouWord
+
+Parent: PR #699 head `f29989d54b6ff4c68d27038878eb9571028d6188`.
+Legacy API comparison: main `36dc69d98ec3e28e5cca744e82013ed32b203b61`,
+`MRL_Mother/05_persona/world_module.py`. PR #695 TimeMachine remains a separate
+module and provenance lineage; no files from it are replaced here.
+
+- Remove unused `Dict` and `WorldClosureIntegrityError` imports; tests import the
+  integrity exception from its defining module.
+- Load legacy JSON lazily inside the first bootstrap transaction. Existing
+  verified journals recover missing, stale or malformed JSON mirrors without
+  parsing those mirrors first. Malformed first-import data fails without
+  overwriting source JSON. Schema creation and bootstrap commit together;
+  an existing empty events table fails closed rather than inventing version 0.
+- Verify history for version reads as well as writes, and close SQLite
+  connections deterministically, including on Windows.
+- Preserve all prior event rows and hashes during restoration. Restore replaces
+  all three components, including removal of entries absent from the target.
+  Restore trajectory metadata now includes the appended version index.
+
+### Compatibility and operational boundaries
+
+The 10 legacy public method parameter lists are retained: set_node, get_node,
+list_nodes, set_state, get_state, snapshot, set_globe_coord, get_globe_coord,
+trajectory and rewind. Snapshot retains legacy fields and adds version_index.
+Rewind intentionally changes semantics: it appends a complete-state restoration
+instead of deleting trajectory entries; zero/negative/bool steps and insufficient
+version history return failure without mutation. Legacy trajectory entries are
+not retroactively converted into restorable snapshots.
+
+The commit point is SQLite COMMIT. A later mirror/trajectory error propagates to
+the caller even though the version is already durable; reopen and inspect history
+before retrying. Reopening repairs all JSON mirrors without adding a version.
+The three JSON replacements are individually atomic, not one multi-file atomic
+transaction. trajectory.jsonl is a legacy auxiliary log: a crash after COMMIT may
+leave a missing trace entry; no automatic trace backfill is claimed. Use history()
+for the authoritative event list. This change does not provide live coherence
+between multiple WorldModule instances or coordinate concurrent JSON/trajectory
+writers. Operate one WorldModule writer per data directory.
+
+Hash verification detects changed content and broken internal links; without an
+independent anchored tip it cannot prove that a valid suffix was not deleted or
+that an actor with database write access did not recompute the chain. No external
+notarization is claimed. Process-exit tests do not establish physical power-loss
+or DL580 storage/controller durability.
+
+### Validation and delivery accounting
+
+Expected and delivered changed files (5; no renames, missing or extra files):
+1. `.github/workflows/mrl-world-closure.yml`
+2. `MRL_Mother/05_persona/world_closure_store.py`
+3. `MRL_Mother/05_persona/world_module.py`
+4. `MRL_Mother/tests/test_mrl_world_closure.py`
+5. `MRL_Mother/05_persona/MRL_WorldClosure_Integration_v1.md`
+
+Dependency tree: WorldModule → WorldClosureStore → Python stdlib sqlite3;
+tests → both modules; workflow → regression tests. No new third-party dependency.
+No ZIP delivery requested; repository commit is the delivery unit.
+
+Local command: `python -m unittest discover -s MRL_Mother/tests -p 'test_mrl_world_closure.py' -v`
+Result: 18/18 PASS (original 6 retained plus 12 added).
+Python compilation and `git diff --check`: PASS.
+CI runs the same suite on ubuntu-latest and windows-latest, Python 3.11.
+Regression coverage includes complete legacy JSON import, exact trajectory-byte
+prefix retention, repeated restore of all components, unchanged historical rows,
+invalid inputs, copy isolation, corruption/empty-history detection, atomic-replace
+failure, partial mirror failure, trajectory append failure, and actual child
+process exit before/after COMMIT.
+
+Record independently: local tests PASS; exact-head CI requires the new commit's
+GitHub run results; review threads require fresh inspection; merge NOT PERFORMED;
+DL580 deployment and physical-device acceptance NOT PERFORMED. Owner approval is
+required before merge or deployment.

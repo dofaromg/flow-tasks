@@ -46,7 +46,7 @@ import copy
 import os
 import tempfile
 
-from world_closure_store import WorldClosureStore, WorldClosureIntegrityError
+from world_closure_store import WorldClosureStore
 from typing import Any, Dict, List, Optional, Tuple
 
 ORIGIN_SIGNATURE = "MrLiouWord"
@@ -105,12 +105,14 @@ class WorldModule:
         self._traj_path = self.data_dir / "trajectory.jsonl"
         self._globe_path = self.data_dir / "globe.json"
 
-        self._nodes: Dict[str, Any] = _load_json(self._nodes_path, {})
-        self._state: Dict[str, Any] = _load_json(self._state_path, {})
-        self._globe: Dict[str, Any] = _load_json(self._globe_path, {})
-        self._closure = WorldClosureStore(
-            self.data_dir, {"nodes": self._nodes, "state": self._state, "globe": self._globe}
-        )
+        # Read legacy JSON only when bootstrapping an empty journal. Existing
+        # verified history must recover even missing or malformed mirror files.
+        def initial_snapshot() -> Dict[str, Any]:
+            return {"nodes": _load_json(self._nodes_path, {}),
+                    "state": _load_json(self._state_path, {}),
+                    "globe": _load_json(self._globe_path, {})}
+
+        self._closure = WorldClosureStore(self.data_dir, initial_snapshot)
         # Recover mirrors after an interrupted write; immutable journal is authoritative.
         self._apply_snapshot(self._closure.current_snapshot())
 
@@ -138,7 +140,8 @@ class WorldModule:
     def restore_version(self, version_index: int) -> Dict[str, Any]:
         snap = self._closure.restore_version(version_index)
         self._apply_snapshot(snap)
-        self._record_trajectory("restore_version", {"target_version_index": version_index})
+        self._record_trajectory("restore_version", {"target_version_index": version_index,
+                                                    "version_index": self.version_index})
         return snap
 
     # ── Nodes ─────────────────────────────────────────────────────────────────

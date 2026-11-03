@@ -7,11 +7,12 @@ single-writer transaction log; no historical event is removed by rewind.
 from __future__ import annotations
 
 import copy
+from contextlib import closing
 import hashlib
 import json
 import pathlib
 import sqlite3
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, List
 
 
 class WorldClosureIntegrityError(RuntimeError):
@@ -32,22 +33,27 @@ def _event_hash(version_index: int, action: str, detail: dict,
 class WorldClosureStore:
     """Version-indexed immutable events and complete world-state snapshots."""
 
-    def __init__(self, data_dir: pathlib.Path, initial: dict) -> None:
+    def __init__(self, data_dir: pathlib.Path, initial: dict | Callable[[], dict]) -> None:
         self.path = pathlib.Path(data_dir) / "world_events.sqlite3"
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        with self._connect() as db:
-            db.execute("""CREATE TABLE IF NOT EXISTS events (
-                version_index INTEGER PRIMARY KEY,
-                action TEXT NOT NULL,
-                detail_json TEXT NOT NULL,
-                snapshot_json TEXT NOT NULL,
-                prev_hash TEXT NOT NULL,
-                event_hash TEXT NOT NULL
-            )""")
+        with closing(self._connect()) as db:
             db.execute("BEGIN IMMEDIATE")
             try:
+                existed = db.execute(
+                    "SELECT 1 FROM sqlite_master WHERE type='table' AND name='events'"
+                ).fetchone() is not None
+                db.execute("""CREATE TABLE IF NOT EXISTS events (
+                    version_index INTEGER PRIMARY KEY,
+                    action TEXT NOT NULL,
+                    detail_json TEXT NOT NULL,
+                    snapshot_json TEXT NOT NULL,
+                    prev_hash TEXT NOT NULL,
+                    event_hash TEXT NOT NULL
+                )""")
                 if db.execute("SELECT COUNT(*) FROM events").fetchone()[0] == 0:
-                    state = self._validate_snapshot(initial)
+                    if existed:
+                        raise WorldClosureIntegrityError("Missing bootstrap in existing journal")
+                    state = self._validate_snapshot(initial() if callable(initial) else initial)
                     self._insert(db, 0, "bootstrap", {"origin_signature": "MrLiouWord"}, state, "")
                 db.execute("COMMIT")
             except BaseException:
@@ -83,63 +89,65 @@ class WorldClosureStore:
         return dict(version_index=index, action=action, detail=json.loads(detail),
                     snapshot=json.loads(snapshot), prev_hash=prev_hash, event_hash=digest)
 
-    def verify_history(self) -> dict:
-        with self._connect() as db:
-            rows = db.execute("SELECT * FROM events ORDER BY version_index").fetchall()
+    def _verified_events(self, db: sqlite3.Connection) -> List[dict]:
+        rows = db.execute("SELECT * FROM events ORDER BY version_index").fetchall()
         if not rows:
             raise WorldClosureIntegrityError("Missing bootstrap")
+        events = []
         expected_prev = ""
         for index, row in enumerate(rows):
-            event = self._decode(row)
-            if event["version_index"] != index or event["prev_hash"] != expected_prev:
-                raise WorldClosureIntegrityError("World history chain broken at version " + str(index))
-            expected_hash = _event_hash(index, event["action"], event["detail"],
-                                        event["snapshot"], expected_prev)
-            if expected_hash != event["event_hash"]:
-                raise WorldClosureIntegrityError("World event hash mismatch at version " + str(index))
-            expected_prev = expected_hash
-        return {"versions": len(rows), "latest_version_index": len(rows) - 1,
-                "merkle_tip": expected_prev, "integrity": "PASS"}
+            try:
+                event = self._decode(row)
+                self._validate_snapshot(event["snapshot"])
+                valid = (event["version_index"] == index
+                         and event["prev_hash"] == expected_prev
+                         and event["event_hash"] == _event_hash(
+                             index, event["action"], event["detail"],
+                             event["snapshot"], expected_prev))
+            except (ValueError, TypeError) as exc:
+                raise WorldClosureIntegrityError(
+                    "Invalid world event at version " + str(index)) from exc
+            if not valid:
+                raise WorldClosureIntegrityError(
+                    "World history modified at version " + str(index))
+            expected_prev = event["event_hash"]
+            events.append(event)
+        return events
+
+    def verify_history(self) -> dict:
+        with closing(self._connect()) as db:
+            events = self._verified_events(db)
+        return {"versions": len(events), "latest_version_index": len(events) - 1,
+                "merkle_tip": events[-1]["event_hash"], "integrity": "PASS"}
 
     def current_snapshot(self) -> dict:
-        with self._connect() as db:
-            row = db.execute("SELECT snapshot_json FROM events ORDER BY version_index DESC LIMIT 1").fetchone()
-        return copy.deepcopy(json.loads(row[0]))
+        with closing(self._connect()) as db:
+            return copy.deepcopy(self._verified_events(db)[-1]["snapshot"])
 
     @property
     def version_index(self) -> int:
-        with self._connect() as db:
-            return db.execute("SELECT MAX(version_index) FROM events").fetchone()[0]
+        with closing(self._connect()) as db:
+            return self._verified_events(db)[-1]["version_index"]
 
     def load_version(self, index: int) -> dict:
         if not isinstance(index, int) or isinstance(index, bool) or index < 0:
             raise ValueError("Invalid version_index")
-        with self._connect() as db:
-            row = db.execute("SELECT snapshot_json FROM events WHERE version_index = ?", (index,)).fetchone()
-        if row is None:
+        with closing(self._connect()) as db:
+            events = self._verified_events(db)
+        if index >= len(events):
             raise KeyError("Unknown version_index: " + str(index))
-        return copy.deepcopy(json.loads(row[0]))
+        return copy.deepcopy(events[index]["snapshot"])
 
     def history(self) -> List[dict]:
-        with self._connect() as db:
-            rows = db.execute("SELECT * FROM events ORDER BY version_index").fetchall()
-        return [self._decode(row) for row in rows]
+        with closing(self._connect()) as db:
+            return self._verified_events(db)
 
     def commit(self, action: str, detail: dict, mutate: Callable[[dict], None]) -> dict:
         # SQLite BEGIN IMMEDIATE serializes concurrent local writers.
-        with self._connect() as db:
+        with closing(self._connect()) as db:
             db.execute("BEGIN IMMEDIATE")
             try:
-                rows = db.execute("SELECT * FROM events ORDER BY version_index").fetchall()
-                expected_prev = ""
-                for index, row in enumerate(rows):
-                    event = self._decode(row)
-                    if (event["version_index"] != index or event["prev_hash"] != expected_prev
-                            or event["event_hash"] != _event_hash(index, event["action"],
-                                                     event["detail"], event["snapshot"], expected_prev)):
-                        raise WorldClosureIntegrityError("World history modified at version " + str(index))
-                    expected_prev = event["event_hash"]
-                latest = self._decode(rows[-1])
+                latest = self._verified_events(db)[-1]
                 snapshot = self._validate_snapshot(latest["snapshot"])
                 mutate(snapshot)
                 snapshot = self._validate_snapshot(snapshot)
