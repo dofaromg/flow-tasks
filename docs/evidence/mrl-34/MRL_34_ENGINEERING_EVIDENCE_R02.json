@@ -101,8 +101,8 @@
     },
     {
       "path": "docs/MRL_HARDWARE_ADMISSION.md",
-      "size": 3976,
-      "sha256": "39a4dbdadcfe70057e75a4b1d4f6c7969d39daafbe3c13c1480d45447e975c4b"
+      "size": 4326,
+      "sha256": "dd376ea084837c822afece658ee02fb47d49b41d792629e73d6a680a5f23c4fe"
     },
     {
       "path": "tests/test_gpu_hardware_admission.py",
@@ -280,6 +280,7 @@
   "remaining": [
     "Obtain MRL-44 current Passport output and current real-node device/runtime/model smoke evidence",
     "Measure actual model, runner, runtime, image, and bundle bytes or immutable image digests on the target",
+    "Bind production model-cache objects to the verified artifact bytes; current cache has no loader provenance interface",
     "Obtain owner approval for the concrete service activation and rollback commands before any operation",
     "Run exact-head Linux/Windows CI after workflow approval; hosted runs currently have zero jobs",
     "Keep all unaccepted hardware combinations denied and separate DL580 V100 CUDA 12 from modern GPU routes"

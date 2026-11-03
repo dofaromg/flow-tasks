@@ -18,6 +18,8 @@ PR #700's optional `allocate_admitted_gpu()` left `allocate_gpu()` as an uncheck
 
 The canonical evaluator hashes actual bundle, sharded model, runner, and runtime bytes. Directory digests are computed from the sorted relative file names, byte sizes, and per-file SHA-256 values; symlinks, special files, and empty artifact directories fail closed. Container images must be digest-pinned and match the workload CUDA major. Admission receipts are content-hash checked and require passing device, runtime, model, and restart checks.
 
+The existing model cache stores opaque objects and has no loader provenance binding an object to the verified file set. Engine paths recheck admission around cache retrieval, but this does not prove that cached weights came from those bytes. Keep live activation blocked until the production loader consumes or attests the same immutable artifacts.
+
 ## Expected files and dependency tree
 
 - Expected package coverage: `MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/EXPECTED_FILE_LIST.txt`.
