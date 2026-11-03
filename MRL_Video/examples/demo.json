@@ -1,0 +1,15 @@
+{
+  "schema": "MRL_Video_Request/v1",
+  "title": "MRL source to video",
+  "template": "explainer",
+  "profile": "landscape",
+  "music": true,
+  "sources": [
+    {
+      "id": "workflow",
+      "original_name": "MRL_Video synthetic acceptance fixture",
+      "locator": "fixture:MRL_Video/examples/demo.json",
+      "text": "A request carries its original sources.\nEach caption maps to a source excerpt.\nProduction retains a new version for every change.\nThe package is checked before delivery."
+    }
+  ]
+}

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — MRL local evidence-backed video production (2026-11-03)
+
+- Add MRL_Video: source-bound storyboards, local CPU H.264/AAC production, original music, optional local narration, previews and SRT subtitles.
+- Add durable SQLite queue, version branches/diffs, cancellation/recovery, authenticated private mobile studio/API and verified delivery packages.
+- Preserve existing Ultimate video, MRL_VideoGen and canonical Bridge implementations; provide local queue integration and explicit DL580/iPhone acceptance gates.
+- Add cross-platform CI and real-media regression coverage. origin_signature: MrLiouWord; canonical_authority: Mr.liou.
+
 ### Fixed — MRL ProductBridge post-merge security review (2026-10-21)
 
 - Follow up merged PR #680 at main 0c88c996: include the existing .bridge state,
@@ -163,3 +170,4 @@ For changes before 2026-01-12, please refer to the git commit history.
 - Propagate recursive authorization denial; recheck direct scanner reads and in-memory renderers, enforce actual path/depth, and reject symlinked historical indexes.
 - Carry authorized depth through smart-updater and common runner without widening grants.
 - Add seven behavioral regressions and delivery payload/dependency integrity validation. Preserve prior evidence and origin_signature: MrLiouWord.
+
