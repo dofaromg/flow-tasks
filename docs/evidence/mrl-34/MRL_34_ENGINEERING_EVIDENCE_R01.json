@@ -22,9 +22,11 @@
     ".github/workflows/mrl-hardware-admission.yml",
     "tests/test_gpu_hardware_admission.py",
     "CHANGELOG.md",
-    "docs/evidence/mrl-34/MRL_34_ENGINEERING_EVIDENCE_R01.json"
+    "docs/evidence/mrl-34/MRL_34_ENGINEERING_EVIDENCE_R01.json",
+    "config/Mrliou_MRL_Sync_Delivery_v1.json",
+    "config/Mrliou_Structure_Authorization_Delivery_v1.json"
   ],
-  "file_count": 18,
+  "file_count": 20,
   "files_excluding_self": [
     {
       "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/README.md",
@@ -98,8 +100,8 @@
     },
     {
       "path": ".github/workflows/mrl-hardware-admission.yml",
-      "size": 3273,
-      "sha256": "f0da713989f80426bcb15bfc10d447ce226a13300a5a3bc6e90ae8737589aba5"
+      "size": 4055,
+      "sha256": "b5191bca7b19a798874c207efe03c0ebce086ddcf93b45f2d065da87ee89a27b"
     },
     {
       "path": "tests/test_gpu_hardware_admission.py",
@@ -110,6 +112,16 @@
       "path": "CHANGELOG.md",
       "size": 9248,
       "sha256": "e9f3044a2b842af7d15befc285722de35bf3cd328998693ed0d7a913fc4b0b3c"
+    },
+    {
+      "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+      "size": 9215,
+      "sha256": "a8b8d1a022312abf613dcbfbb0d015ea320370656835dcfdfbd51ba0e41f48ac"
+    },
+    {
+      "path": "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+      "size": 15734,
+      "sha256": "da607bac1cd50465a60a1cae8bc0e849a4ff23965c80d4189a626785bc365811"
     }
   ],
   "self_integrity": "Git tree/commit hash; self omitted from own SHA list to avoid circular digest",
@@ -129,6 +141,10 @@
       "product test suite",
       "GPU orchestrator boundary tests",
       "source checksum verifier"
+    ],
+    "CHANGELOG.md": [
+      "config/Mrliou_MRL_Sync_Delivery_v1.json",
+      "config/Mrliou_Structure_Authorization_Delivery_v1.json"
     ]
   },
   "package_map": [
@@ -197,7 +213,7 @@
       "failed": 0
     },
     "pytest": "not_installed; equivalent relevant unittest suites executed",
-    "github_ci": "Linux tests passed; Windows checkout infrastructure fixed by exact-source tar export; final-head rerun pending"
+    "github_ci": "Prior exact-head hardware Linux/Windows and product workflows passed; final dependency-integrity commit rerun pending"
   },
   "requested_vs_delivered": {
     "missing_files": [],
@@ -229,6 +245,17 @@
       "linux": "success",
       "windows": "Git still validates excluded invalid paths during sparse checkout",
       "fix": "Linux git archive exports only exact dependency closure; Windows consumes same source bytes through artifact, no Git safety controls disabled"
+    },
+    {
+      "head": "4565a8d63ad09b9163c501c2430c27aec7e06873",
+      "hardware_runs": [
+        41610033187,
+        41610027274
+      ],
+      "hardware_result": "Linux and Windows success",
+      "product_run": 41610033503,
+      "product_result": "success",
+      "followup": "CHANGELOG integrity drift detected in two existing delivery manifests; refreshed live hashes with additive previous entries retained; final-head CI required"
     }
   ]
 }

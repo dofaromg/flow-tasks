@@ -39,6 +39,8 @@ jobs:
           MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1
           MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1
           utils/gpu_orchestrator.py tests/test_gpu_hardware_admission.py
+          CHANGELOG.md config/Mrliou_MRL_Sync_Delivery_v1.json
+          config/Mrliou_Structure_Authorization_Delivery_v1.json
       - uses: actions/upload-artifact@v4
         with:
           name: MRL-34-exact-source
@@ -61,6 +63,12 @@ jobs:
           python-version: '3.12'
       - name: Extract exact source safely (preserve canonical bytes)
         run: python -c "import tarfile; tarfile.open('MRL_34_source.tar').extractall(filter='data')"
+      - name: Verify changed delivery-manifest dependency hashes
+        run: >-
+          python -c "import json,hashlib,pathlib;
+          manifests=[('config/Mrliou_MRL_Sync_Delivery_v1.json','files'),('config/Mrliou_Structure_Authorization_Delivery_v1.json','payload')];
+          rows=[e for f,k in manifests for e in json.loads(pathlib.Path(f).read_text(encoding='utf-8'))[k] if e['path'] in ('CHANGELOG.md','config/Mrliou_MRL_Sync_Delivery_v1.json') and e['path']!=f];
+          assert all(len(pathlib.Path(e['path']).read_bytes())==e['size_bytes'] and hashlib.sha256(pathlib.Path(e['path']).read_bytes()).hexdigest()==e['sha256'] for e in rows)"
       - name: Verify parent runtime
         run: python MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/scripts/MRL_verify_package_v1.py
       - name: Verify source coverage and SHA-256
