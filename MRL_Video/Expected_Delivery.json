@@ -8,7 +8,7 @@
   "expected_file_count": 22,
   "expected_files": [
     ".github/workflows/mrl-video.yml",
-    "CHANGELOG.md",
+    "MRL_Video/CHANGELOG.md",
     "MRL_Video/Expected_Delivery.json",
     "MRL_Video/README.md",
     "MRL_Video/__init__.py",

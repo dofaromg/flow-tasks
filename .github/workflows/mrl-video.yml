@@ -19,6 +19,13 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /MRL_Video/
+            /scripts/MRL_Start_Video.ps1
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'

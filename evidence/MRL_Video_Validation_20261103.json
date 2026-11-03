@@ -10,23 +10,23 @@
   "files": [
     {
       "path": ".github/workflows/mrl-video.yml",
-      "size": 2385,
-      "sha256": "153da1d2e65616c0921eae897ac6fca0221fbf3d5ee0ecf611afc48f8fa4f581"
+      "size": 2644,
+      "sha256": "ed2e698e1f662757ebecfd266151841d616011dc57ae93b51859ba44fdc5fc22"
     },
     {
-      "path": "CHANGELOG.md",
-      "size": 9331,
-      "sha256": "c92b494e50db5fd7fc74184b6b7f6a9941e42b9efb254b4d0c50a38369ae31ae"
+      "path": "MRL_Video/CHANGELOG.md",
+      "size": 623,
+      "sha256": "f68195abb2bd2a86890cd482219bb0e9e0c7c042c0b9afaf233f720637198880"
     },
     {
       "path": "MRL_Video/Expected_Delivery.json",
-      "size": 2637,
-      "sha256": "be8e0ec29ed56abaea59f700749e6e42e3209502f46c07095584205704244d76"
+      "size": 2647,
+      "sha256": "5b0b74b27dce0fb253911439c83035822eedfeeb8067f2247c0f9dc15ba657f1"
     },
     {
       "path": "MRL_Video/README.md",
-      "size": 8636,
-      "sha256": "3c8d4116a656623f02020695a0f9730f17dc9b73170021b81a32a2966e8eef8b"
+      "size": 8854,
+      "sha256": "ec62051ca313f38d839a792494eec3049fa7e3cafe29289b5782b97e19ea805a"
     },
     {
       "path": "MRL_Video/__init__.py",
@@ -208,5 +208,14 @@
   "dl580_deployment": "NOT_RUN",
   "mother_bridge_roundtrip": "NOT_RUN",
   "iphone_acceptance": "NOT_RUN",
-  "overall_deployed_delivery": "NOT_ASSERTED"
+  "overall_deployed_delivery": "NOT_ASSERTED",
+  "ci_followup": {
+    "first_head": "d8111ad88e602127471faf4b751aae1e48e5ac5d",
+    "run": 41621266367,
+    "linux_media_job": 125867281651,
+    "linux_media_test_step": "PASS_INCLUDING_CJK_TEST",
+    "windows_checkout": "FAILED_ON_PREEXISTING_INVALID_PATH_:mnt:data.txt",
+    "fix": "Limit checkout to MRL_Video and launcher, pin exact PR head; preserve all historical filenames.",
+    "root_changelog": "Restored original bytes because two existing delivery contracts pin its size/hash; new module CHANGELOG added."
+  }
 }
