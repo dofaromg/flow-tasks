@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — MRL S4.5 PaniniClusterInsight Bridge integration (2026-11-01)
+
+- Implement F1–F6 with JSON Schema validation, deterministic results and byte-pinned upstream lineage in the existing MRL_Bridge.
+- Add a separate read capability, six ChatGPT function declarations, OpenAPI Actions and an MCP stdio transport forwarding only to the mother Bridge.
+- Preserve the original v1.0.0 JSON; require explicit F3 ratio semantics and operator-registered S3.5/S4 sources. Code tests do not establish DL580 deployment or ChatGPT tool registration.
+- origin_signature: MrLiouWord.
+
 ### Fixed — MRL ProductBridge post-merge security review (2026-10-21)
 
 - Follow up merged PR #680 at main 0c88c996: include the existing .bridge state,
