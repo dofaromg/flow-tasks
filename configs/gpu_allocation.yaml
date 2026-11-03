@@ -108,3 +108,5 @@ error_recovery:
 hardware_admission:
   host_manifest: null
   workloads: {}
+  artifact_root: null
+  artifact_paths: {}

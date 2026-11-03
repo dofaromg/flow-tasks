@@ -14,6 +14,7 @@ import time
 import json
 import platform
 import subprocess
+import csv
 
 from MRL_Products.MRL_APIWorks_BYOH_Deployment_Product_v1.scripts.MRL_hardware_admission_v1 import (
     AdmissionError, require_admission,
@@ -49,6 +50,7 @@ class GPUOrchestrator:
         self.num_gpus = torch.cuda.device_count()
         self.gpu_locks = [threading.Lock() for _ in range(self.num_gpus)]
         self.gpu_assignments = {}  # engine -> gpu_ids mapping
+        self._last_admitted_gpu_ids = None
         self._initialize_gpu_assignments()
         
         logger.info(f"GPU Orchestrator initialized with {self.num_gpus} GPUs")
@@ -133,38 +135,6 @@ class GPUOrchestrator:
             processes=[]
         )
     
-    def allocate_admitted_gpu(self, engine_name: str, device_manifests: Dict,
-                              matrix_path=None) -> List[int]:
-        """MRL-34: gate every configured device before returning deployment IDs.
-
-        Existing allocation remains a legacy runtime API. New deployments use
-        this entry point; no balancing onto unverified devices is permitted.
-        Manifests must come from the trusted deployment inventory collector.
-        """
-        from utils.mrl_hardware_admission import admit, DEFAULT_MATRIX
-
-        gpu_ids = self.gpu_assignments.get(engine_name)
-        if not gpu_ids or len(set(gpu_ids)) != len(gpu_ids):
-            raise ValueError("MRL admission: missing or duplicate GPU assignment")
-        bundle_keys = set()
-        for gpu_id in gpu_ids:
-            if type(gpu_id) is not int or not 0 <= gpu_id < self.num_gpus:
-                raise ValueError("MRL admission: invalid GPU ID")
-            decision = admit(device_manifests.get(gpu_id),
-                             DEFAULT_MATRIX if matrix_path is None else matrix_path)
-            if not decision['admitted']:
-                raise ValueError(f"MRL admission denied GPU {gpu_id}: {decision['reason']}")
-            manifest = device_manifests[gpu_id]
-            props = torch.cuda.get_device_properties(gpu_id)
-            if (manifest['sku'] != props.name
-                    or manifest['compute_capability'] != f"{props.major}.{props.minor}"
-                    or manifest['vram_mib'] != props.total_memory // (1024 ** 2)):
-                raise ValueError("MRL admission: manifest differs from selected GPU")
-            bundle_keys.add((manifest['track'], manifest['bundle_id'], manifest['bundle_digest']))
-        if len(bundle_keys) != 1:
-            raise ValueError("MRL admission: one allocation must use one track and bundle")
-        return list(gpu_ids)
-
     def allocate_gpu(self, engine_name: str, user_priority: int = 5) -> List[int]:
         """
         為引擎分配GPU
@@ -176,6 +146,7 @@ class GPUOrchestrator:
         Returns:
             分配的GPU ID列表
         """
+        self._last_admitted_gpu_ids = None
         # 從配置獲取預設分配
         gpu_ids = self.gpu_assignments.get(engine_name, [0])
         
@@ -184,6 +155,7 @@ class GPUOrchestrator:
             gpu_ids = self._balance_load(gpu_ids, engine_name)
         
         self._admit_workload(engine_name, gpu_ids)
+        self._last_admitted_gpu_ids = tuple(gpu_ids)
 
         logger.info(f"Allocated GPUs {gpu_ids} for engine '{engine_name}' (priority: {user_priority})")
         return gpu_ids
@@ -199,33 +171,41 @@ class GPUOrchestrator:
             host = json.loads(Path(policy['host_manifest']).read_text(encoding='utf-8'))
             workload_path = policy['workloads'][engine_name]
             workload = json.loads(Path(workload_path).read_text(encoding='utf-8'))
+            artifact_paths = policy['artifact_paths'][engine_name]
             if not gpu_ids or any(type(i) is not int or i < 0 or i >= self.num_gpus for i in gpu_ids):
                 raise ValueError('invalid or empty allocation')
+            if workload['gpu_ids'] != gpu_ids:
+                raise ValueError('workload GPU selection differs from the final allocation')
             if {g['id'] for g in host['gpus']} != set(range(self.num_gpus)):
                 raise ValueError('manifest must describe the complete live GPU inventory')
             live_os = {'family': platform.system().lower(), 'version': platform.version(),
                        'arch': platform.machine()}
             if host['os'] != live_os or host['observation'] != 'current':
                 raise ValueError('host OS/observation differs from current node')
+            rows = subprocess.run(
+                ['nvidia-smi', '--query-gpu=index,uuid,name,driver_version,memory.total',
+                 '--format=csv,noheader'],
+                check=True, capture_output=True, text=True, timeout=10,
+            ).stdout
+            live_gpus = {int(row[0].strip()): row[1:] for row in csv.reader(rows.splitlines())}
+            if set(live_gpus) != set(range(self.num_gpus)):
+                raise ValueError('live GPU inventory differs from the passport')
             for gpu in host['gpus']:
+                _, uuid, name, driver, memory = (item.strip() for item in live_gpus[gpu['id']])
                 props = torch.cuda.get_device_properties(gpu['id'])
                 cc = '.'.join(str(v) for v in torch.cuda.get_device_capability(gpu['id']))
-                if (gpu['sku'] != props.name or gpu['compute_capability'] != cc
-                        or gpu['vram_mib'] != props.total_memory // (1024 * 1024)):
+                if (gpu['uuid'] != uuid or gpu['sku'] != name or name != props.name
+                        or gpu['compute_capability'] != cc
+                        or gpu['vram_mib'] != props.total_memory // (1024 * 1024)
+                        or int(memory.split()[0]) != gpu['vram_mib']):
                     raise ValueError('live GPU identity differs from host manifest')
-            drivers = subprocess.run(
-                ['nvidia-smi', '--query-gpu=driver_version', '--format=csv,noheader'],
-                check=True, capture_output=True, text=True, timeout=10,
-            ).stdout.splitlines()
-            if len(drivers) != self.num_gpus or any(d.strip() != host['driver']['version'] for d in drivers):
-                raise ValueError('live driver differs from host manifest')
-            # torch.version.cuda is the CUDA runtime used by this orchestrator;
-            # it is not inferred from nvidia-smi's maximum supported CUDA value.
-            if (workload['runner']['id'] == 'pytorch'
+                if driver != host['driver']['version']:
+                    raise ValueError('live driver differs from host manifest')
+            if (workload['runner']['id'].lower() == 'pytorch'
                     and (torch.version.cuda != workload['cuda_runtime']
                          or torch.__version__ != workload['runner']['version'])):
                 raise ValueError('live PyTorch runtime differs from workload manifest')
-            return require_admission(host, workload)
+            return require_admission(host, workload, Path(policy['artifact_root']), artifact_paths)
         except AdmissionError:
             raise
         except (KeyError, ValueError, TypeError, OSError, subprocess.SubprocessError) as exc:
@@ -284,6 +264,8 @@ class GPUOrchestrator:
         """
         if not gpu_ids:
             return torch.device('cpu')
+        if tuple(gpu_ids) != getattr(self, '_last_admitted_gpu_ids', None):
+            raise AdmissionError("GPU selection was not admitted for this allocation")
         
         primary_gpu = gpu_ids[0]
         torch.cuda.set_device(primary_gpu)
@@ -300,6 +282,8 @@ class GPUOrchestrator:
         Returns:
             並行化後的模型
         """
+        if tuple(gpu_ids) != getattr(self, '_last_admitted_gpu_ids', None):
+            raise AdmissionError("GPU selection was not admitted for this allocation")
         if len(gpu_ids) > 1:
             logger.info(f"Creating DataParallel model on GPUs: {gpu_ids}")
             return torch.nn.DataParallel(model, device_ids=gpu_ids)

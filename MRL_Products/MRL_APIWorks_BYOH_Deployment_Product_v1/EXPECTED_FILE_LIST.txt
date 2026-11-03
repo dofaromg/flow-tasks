@@ -15,9 +15,11 @@ hardware/MRL_hardware_matrix_v1.json
 scripts/MRL_build_product_bundle_v1.py
 scripts/MRL_capture_node_evidence_v1.py
 scripts/MRL_hardware_admission_v1.py
+scripts/MRL_hardware_smoke_v1.py
 scripts/MRL_reversible_change_v1.py
 scripts/MRL_verify_product_source_v1.py
 tests/test_hardware_admission.py
+tests/test_hardware_smoke.py
 tests/test_reversible_change.py
 tests/test_hardware_bundle.py
 tests/test_node_evidence.py

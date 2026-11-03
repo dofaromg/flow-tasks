@@ -7,6 +7,7 @@
   "routes": [
     {
       "bundle_id": "MRL_APIWorks_BYOH_DL580_V100_CUDA12_v1",
+      "track": "dl580-v100",
       "architectures": [
         "Volta"
       ],
@@ -18,6 +19,7 @@
     },
     {
       "bundle_id": "MRL_APIWorks_BYOH_Modern_NVIDIA_CUDA12_v1",
+      "track": "modern-gpu",
       "architectures": [
         "Turing",
         "Ampere",
@@ -33,6 +35,7 @@
     },
     {
       "bundle_id": "MRL_APIWorks_BYOH_Modern_NVIDIA_CUDA13_v1",
+      "track": "modern-gpu",
       "architectures": [
         "Turing",
         "Ampere",
@@ -48,6 +51,7 @@
     },
     {
       "bundle_id": "MRL_APIWorks_BYOH_AMD_ROCm_v1",
+      "track": "modern-gpu",
       "architectures": [
         "CDNA",
         "RDNA"

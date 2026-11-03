@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 from pathlib import Path
 
@@ -36,9 +37,145 @@ def version(value: object) -> tuple[int, ...]:
     return tuple(int(part) for part in value.split(".")) + (0,) * (3-len(value.split(".")))
 
 
-def load_matrix(path: Path = MATRIX) -> dict:
+def load_matrix(path: Path | None = None) -> dict:
     """Load release policy without contacting a remote service."""
-    return json.loads(path.read_text(encoding="utf-8"))
+    path = MATRIX if path is None else Path(path)
+    matrix = json.loads(path.read_text(encoding="utf-8"))
+    if (matrix.get("origin_signature") != ORIGIN
+            or matrix.get("schema") != "MRL_Hardware_Matrix_v1"
+            or not isinstance(matrix.get("routes"), list)
+            or not isinstance(matrix.get("acceptances"), list)):
+        raise ValueError("invalid hardware matrix")
+    routes = {}
+    for route in matrix["routes"]:
+        _required(route, ("bundle_id", "track", "architectures", "cuda_major"))
+        if route["bundle_id"] in routes or route["track"] not in ("dl580-v100", "modern-gpu"):
+            raise ValueError("duplicate or invalid hardware route")
+        routes[route["bundle_id"]] = route["track"]
+    acceptance_ids = set()
+    ownership = {}
+    for acceptance in matrix["acceptances"]:
+        acceptance_id = acceptance.get("acceptance_id")
+        if not isinstance(acceptance_id, str) or not acceptance_id or acceptance_id in acceptance_ids:
+            raise ValueError("acceptance IDs must be unique")
+        acceptance_ids.add(acceptance_id)
+        verify_acceptance_receipt(acceptance, path.parent)
+        if routes.get(acceptance["bundle_id"]) != acceptance["track"]:
+            raise ValueError("acceptance does not match its hardware route")
+        for key in ("bundle_id", "evidence_digest", "acceptance_id"):
+            identity = (key, acceptance[key])
+            previous = ownership.setdefault(identity, acceptance["track"])
+            if previous != acceptance["track"]:
+                raise ValueError("cross-track acceptance reuse")
+    return matrix
+
+
+def _file_digest(path: Path) -> tuple[str, int]:
+    before = path.lstat()
+    if not path.is_file() or path.is_symlink():
+        raise ValueError("artifact entry is not a regular file")
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        opened = os.fstat(stream.fileno())
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    after = path.lstat()
+    identity = lambda stat: (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns)
+    if identity(before) != identity(opened) or identity(opened) != identity(after):
+        raise ValueError("artifact changed while hashing")
+    return "sha256:" + digest.hexdigest(), after.st_size
+
+
+def artifact_digest(root: Path, relative: str) -> str:
+    """Hash one file or a deterministic, complete directory file set."""
+    root = Path(root).resolve(strict=True)
+    relative_path = Path(relative)
+    if relative_path.is_absolute() or ".." in relative_path.parts or not relative_path.parts:
+        raise ValueError("artifact path must be relative to the artifact root")
+    candidate = root.joinpath(relative_path)
+    current = root
+    for part in relative_path.parts:
+        current = current / part
+        if current.is_symlink():
+            raise ValueError("artifact paths may not contain symlinks")
+    target = candidate.resolve(strict=True)
+    if target != root and root not in target.parents:
+        raise ValueError("artifact path escapes its root")
+    if target.is_file():
+        return _file_digest(target)[0]
+    if not target.is_dir():
+        raise ValueError("artifact must be a regular file or directory")
+    entries = []
+    for path in sorted(target.rglob("*"), key=lambda item: item.relative_to(target).as_posix()):
+        if path.is_symlink():
+            raise ValueError("artifact directory may not contain symlinks")
+        if path.is_dir():
+            continue
+        if not path.is_file():
+            raise ValueError("artifact directory contains a non-file entry")
+        digest, size = _file_digest(path)
+        entries.append({"path": path.relative_to(target).as_posix(), "size": size, "sha256": digest})
+    if not entries:
+        raise ValueError("artifact directory is empty")
+    payload = json.dumps(entries, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    return "sha256:" + hashlib.sha256(payload).hexdigest()
+
+
+def verify_artifact_bytes(workload: dict, artifact_root: Path, artifact_paths: dict) -> None:
+    """Verify actual bundle, sharded model, runner, and runtime bytes."""
+    expected = {
+        "bundle": workload["bundle_digest"],
+        "model": workload["model"]["digest"],
+        "runner": workload["runner"]["digest"],
+        "runtime": workload["runtime_binary"]["digest"],
+    }
+    if not isinstance(artifact_paths, dict) or set(artifact_paths) != set(expected):
+        raise ValueError("artifact paths must specify bundle, model, runner, and runtime")
+    for name, digest in expected.items():
+        if not isinstance(artifact_paths[name], str) or not DIGEST.fullmatch(digest):
+            raise ValueError("invalid artifact path or digest: " + name)
+        if artifact_digest(artifact_root, artifact_paths[name]) != digest:
+            raise ValueError("artifact bytes do not match manifest: " + name)
+
+
+def verify_acceptance_receipt(acceptance: dict, evidence_root: Path) -> dict:
+    """Verify exact real-hardware receipt bytes before using a registry row."""
+    required = ("bundle_id", "configuration_digest", "status", "evidence_kind",
+                "source_commit", "evidence_digest", "evidence_ref", "receipt_path")
+    _required(acceptance, required)
+    if (acceptance["status"] != "passed"
+            or acceptance["evidence_kind"] != "real_hardware_smoke_and_restart"
+            or not re.fullmatch(r"[0-9a-f]{40}", acceptance["source_commit"])
+            or not DIGEST.fullmatch(acceptance["evidence_digest"])
+            or not DIGEST.fullmatch(acceptance["configuration_digest"])):
+        raise ValueError("acceptance is not an exact real-hardware record")
+    relative = Path(acceptance["receipt_path"])
+    if relative.is_absolute() or ".." in relative.parts:
+        raise ValueError("receipt path must be relative to the matrix")
+    root = evidence_root.resolve()
+    candidate = root
+    for part in relative.parts:
+        candidate = candidate / part
+        if candidate.is_symlink():
+            raise ValueError("receipt path may not contain symlinks")
+    path = candidate.resolve(strict=True)
+    if path == root or root not in path.parents:
+        raise ValueError("receipt must remain within the matrix directory")
+    raw = path.read_bytes()
+    if "sha256:" + hashlib.sha256(raw).hexdigest() != acceptance["evidence_digest"]:
+        raise ValueError("acceptance receipt digest mismatch")
+    receipt = json.loads(raw)
+    if (receipt.get("origin_signature") != ORIGIN
+            or receipt.get("status") != "hardware_verified"
+            or receipt.get("acceptance_id") != acceptance["acceptance_id"]
+            or receipt.get("configuration_digest") != acceptance["configuration_digest"]
+            or receipt.get("checks") != {
+                "device_query": True, "runtime_smoke": True,
+                "model_smoke": True, "restart_smoke": True,
+            }
+            or not receipt.get("source")):
+        raise ValueError("incomplete or failed hardware acceptance receipt")
+    return receipt
 
 
 def _required(obj: dict, fields: tuple[str, ...]) -> None:
@@ -47,10 +184,12 @@ def _required(obj: dict, fields: tuple[str, ...]) -> None:
 
 
 def _validate(host: dict, workload: dict) -> None:
-    _required(host, ("schema", "origin_signature", "os", "driver", "gpus", "observation"))
-    _required(workload, ("schema", "origin_signature", "bundle_id", "bundle_digest", "os",
+    _required(host, ("schema", "origin_signature", "os", "driver", "gpus", "observation",
+                     "loaded_runner", "loaded_runtime", "loaded_image"))
+    _required(workload, ("schema", "origin_signature", "source_commit", "track", "gpu_ids",
+                         "bundle_id", "bundle_digest", "os",
                          "cuda_runtime", "runtime_abi", "toolkit", "runner", "model",
-                         "quantization", "image"))
+                         "runtime_binary", "quantization", "image"))
     if host["schema"] != "MRL_Hardware_Manifest_v1" or workload["schema"] != "MRL_Workload_Manifest_v1":
         raise ValueError("schema mismatch")
     if host["origin_signature"] != ORIGIN or workload["origin_signature"] != ORIGIN:
@@ -60,9 +199,13 @@ def _validate(host: dict, workload: dict) -> None:
     version(host["driver"]["version"])
     if not isinstance(host["gpus"], list) or not host["gpus"]:
         raise ValueError("empty GPU inventory")
+    if (not isinstance(workload["gpu_ids"], list) or not workload["gpu_ids"]
+            or any(type(gpu_id) is not int or gpu_id < 0 for gpu_id in workload["gpu_ids"])
+            or len(set(workload["gpu_ids"])) != len(workload["gpu_ids"])):
+        raise ValueError("invalid workload GPU selection")
     ids = []
     for gpu in host["gpus"]:
-        _required(gpu, ("id", "vendor", "architecture", "sku", "compute_capability", "vram_mib"))
+        _required(gpu, ("id", "uuid", "vendor", "architecture", "sku", "compute_capability", "vram_mib"))
         if type(gpu["id"]) is not int or gpu["id"] < 0 or type(gpu["vram_mib"]) is not int or gpu["vram_mib"] <= 0:
             raise ValueError("invalid GPU id or VRAM")
         ids.append(gpu["id"])
@@ -76,18 +219,33 @@ def _validate(host: dict, workload: dict) -> None:
         _required(workload[key], ("id", "version", "digest"))
         if not DIGEST.fullmatch(workload[key]["digest"]):
             raise ValueError("invalid artifact digest")
+    _required(workload["runtime_binary"], ("id", "version", "digest"))
+    version(workload["runtime_binary"]["version"])
+    if not DIGEST.fullmatch(workload["runtime_binary"]["digest"]):
+        raise ValueError("invalid runtime artifact digest")
     _required(workload["image"], ("id", "cuda_major"))
     if type(workload["image"]["cuda_major"]) is not int:
         raise ValueError("image CUDA major must be explicit (0 for native)")
     if workload["image"]["id"] != "native" and not re.search(r"@sha256:[0-9a-f]{64}\Z", workload["image"]["id"]):
         raise ValueError("container image must be digest pinned")
+    if workload["image"]["id"] == "native" and workload["image"]["cuda_major"] != 0:
+        raise ValueError("native workloads must use image CUDA major 0")
     if workload["runtime_abi"] != "cuda-" + str(version(workload["cuda_runtime"])[0]):
         raise ValueError("runtime ABI disagrees with CUDA runtime")
+    if workload["track"] not in ("dl580-v100", "modern-gpu"):
+        raise ValueError("unknown hardware track")
+    if not re.fullmatch(r"[0-9a-f]{40}", workload["source_commit"]):
+        raise ValueError("workload source commit must be an exact Git SHA")
+    _required(host["loaded_runner"], ("id", "version", "digest"))
+    _required(host["loaded_runtime"], ("id", "version", "digest"))
+    for runtime in (host["loaded_runner"], host["loaded_runtime"]):
+        if not DIGEST.fullmatch(runtime["digest"]):
+            raise ValueError("invalid loaded runtime digest")
     if workload["toolkit"] != "not_used":
         version(workload["toolkit"])
 
 
-def evaluate(host: dict, workload: dict, matrix: dict | None = None) -> dict:
+def evaluate(host: dict, workload: dict, artifact_root: Path, artifact_paths: dict) -> dict:
     """Return admitted/rejected/unknown; both non-admitted states block execution.
 
     Exact acceptance binds OS, every GPU, driver, CUDA ABI, runner, model,
@@ -102,10 +260,11 @@ def evaluate(host: dict, workload: dict, matrix: dict | None = None) -> dict:
         return result
 
     try:
-        matrix = load_matrix() if matrix is None else matrix
+        matrix = load_matrix()
         if matrix["origin_signature"] != ORIGIN or matrix["schema"] != "MRL_Hardware_Matrix_v1":
             raise ValueError("matrix identity mismatch")
         _validate(host, workload)
+        verify_artifact_bytes(workload, artifact_root, artifact_paths)
         result["configuration_digest"] = digest({"host": host, "workload": workload})
         runtime = version(workload["cuda_runtime"])
         toolkit = None if workload["toolkit"] == "not_used" else version(workload["toolkit"])
@@ -128,6 +287,15 @@ def evaluate(host: dict, workload: dict, matrix: dict | None = None) -> dict:
                     return finish("rejected", "VOLTA_TENSORRT_VERSION_UNSUPPORTED")
                 if int(host["driver"]["version"].split(".")[0]) > 580:
                     return finish("rejected", "VOLTA_DRIVER_AFTER_LAST_SUPPORTED_BRANCH")
+        if (workload["image"]["id"] != "native"
+                and image_major != runtime[0]):
+            return finish("rejected", "BUNDLE_CUDA_ROUTE_MISMATCH")
+        if host["loaded_runner"] != workload["runner"]:
+            raise ValueError("loaded runner differs from the workload")
+        if host["loaded_runtime"] != workload["runtime_binary"]:
+            raise ValueError("loaded runtime differs from the workload")
+        if host["loaded_image"] != workload["image"]["id"]:
+            raise ValueError("loaded image differs from the workload")
         if host["driver"]["vendor"] != "NVIDIA" or any(g["vendor"] != "NVIDIA" for g in host["gpus"]):
             return finish("unknown", "UNTESTED_VENDOR_PATH")
         if workload["os"] != host["os"]:
@@ -146,6 +314,8 @@ def evaluate(host: dict, workload: dict, matrix: dict | None = None) -> dict:
             return finish("unknown", "UNKNOWN_BUNDLE_ROUTE")
         if route['cuda_major'] != runtime[0]:
             return finish("rejected", "BUNDLE_CUDA_ROUTE_MISMATCH")
+        if route.get("track") != workload["track"]:
+            return finish("rejected", "BUNDLE_TRACK_MISMATCH")
         if any(g["architecture"] not in route["architectures"] for g in host["gpus"]):
             return finish("rejected", "BUNDLE_HARDWARE_ROUTE_MISMATCH")
         if host["observation"] != "current":
@@ -154,12 +324,14 @@ def evaluate(host: dict, workload: dict, matrix: dict | None = None) -> dict:
         # supplied boolean. Hashes protect identity, not evidence authenticity.
         for entry in matrix["acceptances"]:
             if (entry["bundle_id"] == workload["bundle_id"]
+                    and entry["track"] == workload["track"]
+                    and entry["source_commit"] == workload["source_commit"]
                     and entry["configuration_digest"] == result["configuration_digest"]
                     and entry["status"] == "passed"
                     and entry["evidence_kind"] == "real_hardware_smoke_and_restart"
                     and re.fullmatch(r"[0-9a-f]{40}", entry["source_commit"])
-                    and DIGEST.fullmatch(entry["evidence_digest"])
                     and entry["evidence_ref"]):
+                verify_acceptance_receipt(entry, MATRIX.parent)
                 result["evidence_ref"] = entry["evidence_ref"]
                 return finish("admitted", "EXACT_REVIEWED_HARDWARE_ACCEPTANCE")
         return finish("unknown", "NO_EXACT_HARDWARE_ACCEPTANCE")
@@ -167,23 +339,26 @@ def evaluate(host: dict, workload: dict, matrix: dict | None = None) -> dict:
         return finish("unknown", "INVALID_OR_INCOMPLETE_MANIFEST: " + str(exc))
 
 
-def require_admission(host: dict, workload: dict, matrix: dict | None = None) -> dict:
+def require_admission(host: dict, workload: dict, artifact_root: Path, artifact_paths: dict) -> dict:
     """Block execution unless admission is explicitly granted."""
-    result = evaluate(host, workload, matrix)
+    result = evaluate(host, workload, artifact_root, artifact_paths)
     if not result["allowed"]:
         raise AdmissionError(json.dumps(result, ensure_ascii=False))
     return result
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", required=True, type=Path)
     parser.add_argument("--workload", required=True, type=Path)
-    # No caller-supplied acceptance flag or alternate matrix on production CLI.
-    args = parser.parse_args()
+    parser.add_argument("--artifact-root", required=True, type=Path)
+    parser.add_argument("--artifact-paths", required=True, type=Path)
+    args = parser.parse_args(argv)
     try:
         result = evaluate(json.loads(args.host.read_text(encoding="utf-8")),
-                          json.loads(args.workload.read_text(encoding="utf-8")))
+                          json.loads(args.workload.read_text(encoding="utf-8")),
+                          args.artifact_root,
+                          json.loads(args.artifact_paths.read_text(encoding="utf-8")))
     except (OSError, ValueError) as exc:
         result = {"status": "unknown", "allowed": False, "error": str(exc), "origin_signature": ORIGIN}
     print(json.dumps(result, ensure_ascii=False, indent=2))

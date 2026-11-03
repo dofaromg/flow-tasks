@@ -8,8 +8,9 @@ Baseline: dofaromg/flow-tasks@608b66e0db23e7cc4eef21ea752668ac800620b3
 
 沿用 `utils/gpu_orchestrator.py`、`configs/gpu_allocation.yaml` 與商品建包器。
 `allocate_gpu()` 在負載平衡完成後、返回 GPU 配置前呼叫唯一商品准入器。
-完整 GPU inventory 與現場 torch GPU 名稱、CC、VRAM、nvidia-smi driver、OS 比對；
-PyTorch runner 另核對 torch 版本及其 CUDA runtime。配置不存在時 fail closed。
+完整 GPU inventory 與現場 UUID、torch GPU 名稱、CC、VRAM、nvidia-smi driver、OS 比對；
+Passport 所載 loaded runner/runtime/image 必須與 workload 完全相同。PyTorch runner
+另核對 torch 版本及其 CUDA runtime。配置、實際 artifact bytes 或欄位缺失時 fail closed。
 這是分支上的行為變更，未安裝或部署到母體；既有 GPU 分配偏好不改。
 其他自行繞過 orchestrator 的外部程式不受此 Python API 控制；本 gate 不是 OS 隔離機制。
 
@@ -29,14 +30,14 @@ Windows Server 2019 build 17763、6×V100-SXM2-32GB、driver 539.56、當時報�
 
 | 欄位 | 含義與准入條件 |
 |---|---|
-| GPU architecture / compute capability | V100 = Volta / 7.0；逐卡 inventory，不以「NVIDIA」概括 |
+| GPU identity / architecture / compute capability | UUID、SKU、Volta / 7.0 逐卡比對；不以「NVIDIA」概括 |
 | Driver | OS 裝置驅動；driver API 的相容性與硬體支援範圍，不等同 Toolkit |
 | Toolkit | 編譯工具鏈；明確版本，或預編譯 native workload 的 `not_used` |
 | CUDA runtime / runtime ABI | runner 實際 linked CUDA 版本與 `cuda-12`；不可抄 nvidia-smi 標頭代替 |
 | OS / CPU ABI | family、OS version、arch 必須一致；Windows 不能被 Linux 容器驗收覆蓋 |
-| Runner / model / quantization | exact id、version、artifact digest 與精度，全部納入 configuration digest |
-| Bundle / image | 獨立 bundle_id、實際 SHA-256；容器必須 image@sha256，禁止 latest/tag-only |
-| Acceptance | reviewed release matrix 的 exact configuration + 真實 smoke/restart 證據，不接受 caller 的 passed 旗標 |
+| Runner / runtime / model / quantization | exact id、version、實際 byte digest 與精度，全部納入 configuration digest |
+| Bundle / image | bundle、runner、runtime、模型實際 bytes SHA-256；sharded directories 用排序 file-set digest；容器必須 image@sha256 |
+| Acceptance | reviewed release matrix 的 exact configuration + 真實 device/runtime/model/restart receipt，不接受 caller 的 passed 旗標 |
 
 CUDA 13 移除 CC <7.5 的離線編譯支援；MRL 政策進一步拒絕 Volta 路徑的
 CUDA runtime/Toolkit/image major 非 12，以及 TensorRT RTX、TensorRT >=10.5。
@@ -56,31 +57,49 @@ CUDA 12 驅動底線採保守 MRL 政策：Linux 525.60.13、Windows 528.33。
 現代 NVIDIA CUDA12、CUDA13 與 AMD ROCm 都各自 unknown。
 
 Host 必要欄位：`schema=MRL_Hardware_Manifest_v1`、origin_signature、observation=current、
-os{family,version,arch}、driver{vendor,version}、非空 gpus[]，每卡
-{id,vendor,architecture,sku,compute_capability,vram_mib}。現場 inventory 必須完整，不能排除不相容卡。
+os{family,version,arch}、driver{vendor,version}、loaded_runner、loaded_runtime、
+loaded_image、非空 gpus[]，每卡 {id,uuid,vendor,architecture,sku,compute_capability,vram_mib}。
+現場 inventory 必須完整，不能排除不相容卡。
 歷史 snapshot 有完整硬體欄位，但 observation=historical，不能直接當 current 使用。
 
-Workload 必要欄位：`schema=MRL_Workload_Manifest_v1`、origin_signature、bundle_id、
-bundle_digest(`sha256:`+64hex)、os、cuda_runtime、runtime_abi、toolkit、
-runner{id,version,digest}、model{id,version,digest}、quantization、
-image{id,cuda_major}（native 時 id=native、cuda_major=0）。
+Workload 必要欄位：`schema=MRL_Workload_Manifest_v1`、origin_signature、track、gpu_ids、
+bundle_id、bundle_digest(`sha256:`+64hex)、os、cuda_runtime、runtime_abi、toolkit、
+runner{id,version,digest}、runtime_binary{id,version,digest}、model{id,version,digest}、
+quantization、image{id,cuda_major}（native 時 id=native、cuda_major=0）。
+`artifact_paths` 在操作者的 `configs/gpu_allocation.yaml` 中與 `artifact_root` 一起提供，
+分別指向實際 bundle/model/runner/runtime 檔案或目錄；路徑本身不取代 digest。
 `tests/test_hardware_admission.py::fixture` 是可執行的 synthetic 格式範例，
 其 digest 只用於測試，不是交付 runner、模型或驗收資料。
 
 從商品目錄執行：
 
 ```powershell
-python scripts\MRL_hardware_admission_v1.py --host D:\mrl\evidence\current_host.json --workload D:\mrl\evidence\current_workload.json
+python scripts\MRL_hardware_admission_v1.py `
+  --host D:\mrl\evidence\current_host.json `
+  --workload D:\mrl\evidence\current_workload.json `
+  --artifact-root D:\mrl\candidate `
+  --artifact-paths D:\mrl\evidence\artifact_paths.json
 ```
 
-Exit 0=admitted、1=rejected、2=unknown；只有 0 可啟動 workload。
-CLI 不提供 alternate matrix 或 force-pass。Python API 的 matrix 參數供 policy 單元測試使用；
-部署必須從已審查 checkout 載入 release matrix，不把工作負載提供者當 acceptance authority。
-配置 `configs/gpu_allocation.yaml` 的 hardware_admission.host_manifest 與 workloads[engine_name]
-指向操作者保存的現場資料；不能只把歷史檔 observation 改 current。
+CLI 是 policy/digest 預檢，不查詢實際 GPU，也不能自行授權啟動。部署只可經
+`GPUOrchestrator.allocate_gpu()`；該路徑在回傳前查詢 live OS/driver/GPU 並重新執行同一
+canonical gate。`set_device()` 與 `DataParallel` 也必須使用最近一次 admitted 的完全相同 GPU IDs。
+CLI 不提供 alternate matrix 或 force-pass；Python API 也不接受 caller-supplied matrix。
+配置 `configs/gpu_allocation.yaml` 的 hardware_admission.host_manifest、
+workloads[engine_name]、artifact_root 與 artifact_paths[engine_name] 指向操作者保存的資料；
+不得把歷史檔 observation 改成 current。
 configuration_digest 是 canonical JSON SHA-256，包含整個 host 與 workload。
 新 driver、runner、模型、精度或 bundle 都需要獨立 exact acceptance。
-證據 digest 是完整性識別，不是數位簽章；release review 負責證據真實性。
+證據 receipt 必須列出並通過 device_query、runtime_smoke、model_smoke、restart_smoke。
+receipt/evidence digest 是完整性識別，不是數位簽章；release review 負責證據真實性。
+
+`scripts/MRL_hardware_smoke_v1.py` 重用操作者提供的 current Passport JSON，不另建硬體
+collector；它查詢 nvidia-smi/torch、驗證實際 artifacts，並執行操作者明確提供的
+argv-only runtime/model smoke commands。命令規格包含 deterministic stdout SHA-256；
+script 只保存 command 的 exit code 與 stdout/stderr digest，不保存原始輸出。通過時
+狀態仍是 `smoke_passed_pending_restart_and_owner_review`，絕不自行建立
+`hardware_verified` receipt。`--replay-record` 會驗證舊紀錄與當前 configuration/digests
+相同後重跑。此 script 不重啟服務、不安裝軟體、不升級 driver/CUDA。
 
 ## 獨立 bundle
 
@@ -99,21 +118,70 @@ python scripts\MRL_build_product_bundle_v1.py --hardware-route MRL_APIWorks_BYOH
 
 ## Smoke / rollback（需 owner 核准才對母體執行）
 
-1. 保存當前服務、完整 GPU/OS/driver inventory、現有 runner/model digest、設定及回復點；只讀查詢：
-   `nvidia-smi --query-gpu=index,name,driver_version,memory.total,compute_cap --format=csv`。
-   `nvcc --version` 僅證明 Toolkit；runner build metadata 才證明其 CUDA runtime/ABI。
-2. 在既有 CUDA12 runner 的隔離工作目錄執行同模型、固定輸入、固定精度 smoke；
-   記錄 device UUID、sm_70 kernel 是否可載入、exit code、輸出 digest、VRAM、服務健康。
-   不升級 driver/Toolkit，不測 CUDA13 啟動：負案例僅在准入器層驗證阻擋。
-3. 將既有 `MRL_capture_node_evidence_v1.py` 的本機推論與 ledger 讀回回執，
-   連同 bundle/runner/model digest、exact source commit 存到節點本地證據目錄。
-   取得核准並重啟選定服務後重播原 session，確認 GPU 與記憶持久化，保存新回執。
-4. 人工審查實機資料後，以追加 reviewed acceptance entry 登錄 release matrix：
-   bundle_id、configuration_digest、status=passed、evidence_kind=real_hardware_smoke_and_restart、
-   source_commit(40hex)、evidence_ref、evidence_digest。舊 entry 不刪；對外支援狀態另審。
-5. 若 smoke/重播失敗，停止候選 runner，恢復原服務設定與先前 binary digest，
-   啟動原服務並讀回原健康與 session。候選紀錄保留；未知或失敗不寫 passed。
-   若僅撤回本 PR，回到 baseline checkout 即可；不要以關閉 gate 代替某 workload 通過。
+Prepare the local smoke/replay record only after the actual current Passport output and all
+artifact bytes are available:
+
+```powershell
+python scripts\MRL_hardware_smoke_v1.py `
+  --host <current-passport-derived-host.json> `
+  --workload <exact-workload.json> `
+  --artifact-root <immutable-candidate-root> `
+  --artifact-paths <artifact-paths.json> `
+  --smoke-commands <approved-smoke-argv.json> `
+  --output <local-evidence-dir\smoke.json>
+
+python scripts\MRL_hardware_smoke_v1.py `
+  --host <same-current-passport-derived-host.json> `
+  --workload <same-exact-workload.json> `
+  --artifact-root <same-immutable-candidate-root> `
+  --artifact-paths <same-artifact-paths.json> `
+  --smoke-commands <same-approved-smoke-argv.json> `
+  --replay-record <local-evidence-dir\smoke.json> `
+  --output <local-evidence-dir\replay.json>
+```
+
+`MRL_capture_node_evidence_v1.py --replay-receipt <prior-apiworks-receipt.json>` is a
+separate local API/memory/passport replay, not GPU acceptance. No restart is performed by
+either smoke command. Do not copy raw output, private paths, credentials, or model data to GitHub.
+
+The existing receipt tool can build immutable before/forward/return plans and verify their
+artifact hashes without running commands:
+
+```powershell
+python scripts\MRL_reversible_change_v1.py record --root <local-evidence-root> --spec <before.json> --output <before-receipt.json>
+python scripts\MRL_reversible_change_v1.py record --root <local-evidence-root> --spec <forward.json> --output <forward-receipt.json>
+python scripts\MRL_reversible_change_v1.py record --root <local-evidence-root> --spec <return.json> --output <return-receipt.json>
+python scripts\MRL_reversible_change_v1.py verify --root <local-evidence-root> --before <before-receipt.json> --forward <forward-receipt.json> --return-receipt <return-receipt.json>
+```
+
+Each forward/return command plan must use explicit argv arrays and `requires_owner_go: true`.
+These commands only record/verify; they never activate or roll back a service.
+
+After separate owner approval and review of exact digests, the existing
+`MRL_Mother/deploy_reference/dl580/MRL_systemd_service.template` names the service
+`mrl-runtime`. Its activation candidate is:
+
+```bash
+sudo install -o root -g root -m 0644 <owner-reviewed-mrl-runtime.service> /etc/systemd/system/mrl-runtime.service
+sudo systemctl daemon-reload
+sudo systemctl start mrl-runtime
+systemctl status mrl-runtime --no-pager
+journalctl -u mrl-runtime -n 100 --no-pager
+```
+
+Rollback candidate, only after owner approval:
+
+```bash
+sudo systemctl stop mrl-runtime
+sudo install -o root -g root -m 0644 <verified-before-mrl-runtime.service> /etc/systemd/system/mrl-runtime.service
+sudo systemctl daemon-reload
+sudo systemctl start mrl-runtime
+systemctl status mrl-runtime --no-pager
+```
+
+The service template has `<MRL_HOME>`/`<MRL_USER>` placeholders; no node-specific values
+or GPU service mapping were available to fill them. Do not execute these commands from this
+issue. Preserve all prior bundles and receipts; unknown or failed combinations remain denied.
 
 風險：本分支啟用後未配置證據的 GPU allocation 會阻擋；正式部署前先準備 exact acceptance。
 此次僅在工程分支建構，沒有重啟、升級或修改母體。
