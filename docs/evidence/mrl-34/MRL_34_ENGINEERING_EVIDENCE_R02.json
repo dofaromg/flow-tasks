@@ -2,7 +2,7 @@
   "schema": "MRL_34_Engineering_Evidence_v1",
   "origin_signature": "MrLiouWord",
   "recorded_at": "2026-11-03",
-  "source_snapshot_parent": "9093c4f157584647e3ccb32920c4e3f740b54630",
+  "tested_code_commit": "89721823f17830a9ef20e97d3c1ef776ffae3245",
   "supplemental_changes": [
     "docs/MRL_HARDWARE_ADMISSION.md",
     "docs/evidence/mrl-34/MRL_34_ENGINEERING_EVIDENCE_R02.json",
@@ -101,8 +101,8 @@
     },
     {
       "path": "docs/MRL_HARDWARE_ADMISSION.md",
-      "size": 3920,
-      "sha256": "6e0e5ccb2ef4b588124f1f5eeec6de1113aaa73c986388c66fe6c11936332e43"
+      "size": 4004,
+      "sha256": "3268d8ca083fdcc5390132a1236241a25f64f6b366d112b1f57502a3c536ef03"
     },
     {
       "path": "tests/test_gpu_hardware_admission.py",
@@ -132,7 +132,7 @@
     {
       "path": "utils/mrl_hardware_admission.py",
       "size": 601,
-      "sha256": "a50a2229267e81a63891066e657f49dd452f2a6112ff5b0cc6cf9ab36ee5d703"
+      "sha256": "a50a2229267e81a63891066d657f49dd452f2a6112ff5b0cc6cf9ab36ee5d703"
     }
   ],
   "dependency_tree": {
@@ -237,6 +237,7 @@
     "python_compilation": "passed for admission, smoke, orchestrator, and engine modules"
   },
   "full_root_test_suite": {
+    "head": "9093c4f157584647e3ccb32920c4e3f740b54630",
     "passed": 351,
     "failed": 12,
     "failure_causes": [
@@ -246,25 +247,27 @@
     "changed_admission_tests": "passed separately"
   },
   "exact_head_ci": {
-    "head": "9093c4f157584647e3ccb32920c4e3f740b54630",
+    "head": "89721823f17830a9ef20e97d3c1ef776ffae3245",
     "workflows": [
       {
         "name": "MRL Hardware Admission",
-        "run_id": 41618281323,
-        "status": "action_required",
-        "jobs_created": 0
+        "latest_run_id": 41618281323,
+        "latest_run_head": "9093c4f157584647e3ccb32920c4e3f740b54630",
+        "latest_run_status": "action_required",
+        "latest_run_jobs_created": 0,
+        "exact_head_run": "not triggered for latest GPU orchestrator change"
       },
       {
         "name": "CodeQL Analysis",
-        "run_id": 41618281569,
+        "run_id": 41618760595,
         "status": "action_required",
         "jobs_created": 0
       }
     ],
-    "linux_windows_ci": "not executed; workflow approval required"
+    "linux_windows_ci": "not executed at latest code head; workflow approval required and no latest-head MRL run exists"
   },
   "local_codeql_checker": {
-    "head": "9093c4f157584647e3ccb32920c4e3f740b54630",
+    "head": "89721823f17830a9ef20e97d3c1ef776ffae3245",
     "alerts": 0
   },
   "live_hardware_acceptance": "NOT_EXECUTED",
