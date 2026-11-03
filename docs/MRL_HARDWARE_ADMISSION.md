@@ -35,6 +35,9 @@ No production combination is promoted to verified by this change.
 Manifest -> exact reviewed matrix row -> SHA-256-bound local acceptance receipt.
 Orchestrator -> admission -> observed GPU comparison -> selected IDs.
 CI -> tests + production matrix validation. No GPU installation is needed in CI.
+The workflow uses non-cone sparse checkout because the historical root filename
+`:mnt:data.txt` cannot be materialized on Windows. Only the required hardware
+modules, policy and tests are checked out; original names remain untouched.
 
 Every manifest field is mandatory, including nullable CUDA/ROCm. NVIDIA requires
 CUDA and null ROCm; AMD requires ROCm and null CUDA. Unknown vendors and missing
