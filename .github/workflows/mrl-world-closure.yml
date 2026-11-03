@@ -18,16 +18,23 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          # Existing archive paths include names unsupported by Windows.
-          # Check out every runtime/test dependency, leaving archives untouched.
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /MRL_Mother/05_persona/world_module.py
-            /MRL_Mother/05_persona/world_closure_store.py
-            /MRL_Mother/tests/test_mrl_world_closure.py
+      - name: Extract exact-head closure sources
+        shell: bash
+        env:
+          MRL_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          MRL_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${MRL_REPOSITORY}.git"
+          git fetch --depth=1 origin "$MRL_HEAD"
+          test "$(git rev-parse FETCH_HEAD)" = "$MRL_HEAD"
+          # Archive only these dependencies: checkout validates unrelated
+          # Windows-incompatible archive paths even in sparse mode.
+          git archive --format=tar FETCH_HEAD -- \
+            MRL_Mother/05_persona/world_module.py \
+            MRL_Mother/05_persona/world_closure_store.py \
+            MRL_Mother/tests/test_mrl_world_closure.py | tar -xf -
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'

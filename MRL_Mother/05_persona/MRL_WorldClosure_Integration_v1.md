@@ -103,3 +103,11 @@ path `:mnt:data.txt` is invalid on Windows. No archive file was renamed or remov
 The workflow now uses non-cone sparse checkout of the two runtime modules and
 complete regression test file, with explicit PR head SHA selection. Both platforms
 therefore test the actual head, independently of the temporary PR merge ref.
+
+
+Windows Git also rejects the invalid archive path during non-cone sparse
+checkout (run 41553494212, head 34a78314374320233fa9835d42142b5f8e85677b).
+The final workflow fetches the exact head, asserts the fetched SHA, and uses
+`git archive` to extract only the three required source/test files, without
+checking out the incompatible archive tree. The public repository is fetched
+read-only without credentials. Git path protections remain enabled.
