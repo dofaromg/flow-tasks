@@ -126,6 +126,38 @@ class GPUOrchestrator:
             processes=[]
         )
     
+    def allocate_admitted_gpu(self, engine_name: str, device_manifests: Dict,
+                              matrix_path=None) -> List[int]:
+        """MRL-34: gate every configured device before returning deployment IDs.
+
+        Existing allocation remains a legacy runtime API. New deployments use
+        this entry point; no balancing onto unverified devices is permitted.
+        Manifests must come from the trusted deployment inventory collector.
+        """
+        from utils.mrl_hardware_admission import admit, DEFAULT_MATRIX
+
+        gpu_ids = self.gpu_assignments.get(engine_name)
+        if not gpu_ids or len(set(gpu_ids)) != len(gpu_ids):
+            raise ValueError("MRL admission: missing or duplicate GPU assignment")
+        bundle_keys = set()
+        for gpu_id in gpu_ids:
+            if type(gpu_id) is not int or not 0 <= gpu_id < self.num_gpus:
+                raise ValueError("MRL admission: invalid GPU ID")
+            decision = admit(device_manifests.get(gpu_id),
+                             DEFAULT_MATRIX if matrix_path is None else matrix_path)
+            if not decision['admitted']:
+                raise ValueError(f"MRL admission denied GPU {gpu_id}: {decision['reason']}")
+            manifest = device_manifests[gpu_id]
+            props = torch.cuda.get_device_properties(gpu_id)
+            if (manifest['sku'] != props.name
+                    or manifest['compute_capability'] != f"{props.major}.{props.minor}"
+                    or manifest['vram_mib'] != props.total_memory // (1024 ** 2)):
+                raise ValueError("MRL admission: manifest differs from selected GPU")
+            bundle_keys.add((manifest['track'], manifest['bundle_id'], manifest['bundle_digest']))
+        if len(bundle_keys) != 1:
+            raise ValueError("MRL admission: one allocation must use one track and bundle")
+        return list(gpu_ids)
+
     def allocate_gpu(self, engine_name: str, user_priority: int = 5) -> List[int]:
         """
         為引擎分配GPU
