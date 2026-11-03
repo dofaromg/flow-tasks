@@ -10,13 +10,9 @@ on:
 permissions:
   contents: read
 jobs:
-  video:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 15
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,6 +22,29 @@ jobs:
           sparse-checkout: |
             /MRL_Video/
             /scripts/MRL_Start_Video.ps1
+      - name: Export exact-head portable source
+        uses: actions/upload-artifact@v4
+        with:
+          name: MRL-video-source-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            MRL_Video/
+            scripts/MRL_Start_Video.ps1
+          if-no-files-found: error
+          retention-days: 7
+  video:
+    needs: source
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      # Windows Git rejects historical NTFS-invalid names even with sparse checkout.
+      # Export only this module on Linux; never rename or weaken Git path protection.
+      - uses: actions/download-artifact@v4
+        with:
+          name: MRL-video-source-${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'

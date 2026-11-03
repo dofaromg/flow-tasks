@@ -10,8 +10,8 @@
   "files": [
     {
       "path": ".github/workflows/mrl-video.yml",
-      "size": 2644,
-      "sha256": "ed2e698e1f662757ebecfd266151841d616011dc57ae93b51859ba44fdc5fc22"
+      "size": 3386,
+      "sha256": "eefa7700386eb37086b73568641ab31c2fd2ff6b809065c61fabddaf390a4ecf"
     },
     {
       "path": "MRL_Video/CHANGELOG.md",
@@ -25,8 +25,8 @@
     },
     {
       "path": "MRL_Video/README.md",
-      "size": 8854,
-      "sha256": "ec62051ca313f38d839a792494eec3049fa7e3cafe29289b5782b97e19ea805a"
+      "size": 8909,
+      "sha256": "6ed99d24eecbfb45f4c8a433eb7a2ddd03dea15d1ff8640ae76a0bb4ada054e7"
     },
     {
       "path": "MRL_Video/__init__.py",
@@ -215,7 +215,9 @@
     "linux_media_job": 125867281651,
     "linux_media_test_step": "PASS_INCLUDING_CJK_TEST",
     "windows_checkout": "FAILED_ON_PREEXISTING_INVALID_PATH_:mnt:data.txt",
-    "fix": "Limit checkout to MRL_Video and launcher, pin exact PR head; preserve all historical filenames.",
-    "root_changelog": "Restored original bytes because two existing delivery contracts pin its size/hash; new module CHANGELOG added."
+    "fix": "Linux exports only exact-head module and launcher; Windows consumes the same portable source artifact without checking out historical invalid paths.",
+    "root_changelog": "Restored original bytes because two existing delivery contracts pin its size/hash; new module CHANGELOG added.",
+    "second_run": 41621647508,
+    "second_windows_checkout": "Sparse checkout still rejected historical NTFS-invalid names; replaced by portable source artifact."
   }
 }

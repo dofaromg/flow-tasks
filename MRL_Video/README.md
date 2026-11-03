@@ -150,7 +150,7 @@ python -m compileall -q MRL_Video
 
 設定 `MRL_VIDEO_TEST_FONT` 指向測試字體；預設測試使用 DejaVu Sans。
 設定 `MRL_VIDEO_TEST_CJK_FONT` 可加跑中文製片驗收；缺字會拒絕製作。
-CI 使用 exact head 與限定檔案 checkout，避開既有 Windows 不合法檔名；原始檔案不改名。
+CI 在 Linux 以 exact head 匯出模組，再讓 Linux／Windows 下載同一份來源執行；避開 Windows Git 對歷史檔名的限制，原始檔案不改名。
 模組變更紀錄放在 `CHANGELOG.md`，保留根目錄已被其他交付清單固定的變更紀錄。
 工作室為單一可信 Owner 的私有本地工具，不提供租戶隔離／公開網際網路入口；HTTP 本身不提供 TLS。
 同一 root 只允許一個生產 worker，metadata/SQLite 必須位於可信本地磁碟，並依母體機制備份。
