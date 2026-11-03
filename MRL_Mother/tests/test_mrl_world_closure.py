@@ -4,14 +4,13 @@ origin_signature: MrLiouWord
 import inspect
 from contextlib import closing
 import subprocess
-from unittest import mock
+from unittest import TestCase, main, mock
 import importlib.util
 import json
 import pathlib
 import sqlite3
 import sys
 import tempfile
-import unittest
 
 WORLD_DIR = pathlib.Path(__file__).resolve().parents[1] / "05_persona"
 sys.path.insert(0, str(WORLD_DIR))
@@ -22,7 +21,7 @@ module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
 
-class WorldClosureTests(unittest.TestCase):
+class WorldClosureTests(TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
@@ -283,4 +282,4 @@ world.set_state('x', 'new')
 
 
 if __name__ == "__main__":
-    unittest.main()
+    main()
