@@ -54,6 +54,21 @@ class GPUAdmissionIntegrationTests(unittest.TestCase):
             allocator._admit_workload.assert_called_once_with('engine', [0])
             torch.cuda.set_device.assert_not_called()
 
+    def test_load_balancing_telemetry_does_not_select_an_unadmitted_gpu(self):
+        torch = MagicMock()
+        torch.cuda.is_available.return_value = True
+        torch.cuda.get_device_properties.return_value.name = 'test GPU'
+        torch.cuda.get_device_properties.return_value.total_memory = 1024**3
+        with patch.dict(sys.modules, {'torch': torch, 'yaml': MagicMock()}):
+            sys.path.insert(0, str(REPO))
+            spec = importlib.util.spec_from_file_location('mrl_test_allocator4', REPO/'utils/gpu_orchestrator.py')
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            allocator = mod.GPUOrchestrator.__new__(mod.GPUOrchestrator)
+            allocator.num_gpus = 1
+            allocator.get_gpu_status(0)
+            torch.cuda.set_device.assert_not_called()
+
 
 if __name__ == '__main__':
     unittest.main()

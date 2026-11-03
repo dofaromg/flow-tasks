@@ -117,7 +117,6 @@ class GPUOrchestrator:
         memory_total = props.total_memory / 1024**3  # Convert to GB
         
         # 獲取記憶體使用情況
-        torch.cuda.set_device(gpu_id)
         memory_allocated = torch.cuda.memory_allocated(gpu_id) / 1024**3
         memory_reserved = torch.cuda.memory_reserved(gpu_id) / 1024**3
         memory_free = memory_total - memory_reserved

@@ -2,12 +2,14 @@
   "schema": "MRL_34_Engineering_Evidence_v1",
   "origin_signature": "MrLiouWord",
   "recorded_at": "2026-11-03",
-  "source_snapshot_commit": "07e4fd3c02e88e9a53185a1416ba19ecb6b34d52",
+  "source_snapshot_parent": "9093c4f157584647e3ccb32920c4e3f740b54630",
   "supplemental_changes": [
     "docs/MRL_HARDWARE_ADMISSION.md",
     "docs/evidence/mrl-34/MRL_34_ENGINEERING_EVIDENCE_R02.json",
     "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/SHA256SUMS.txt",
-    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_hardware_smoke.py"
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_hardware_smoke.py",
+    "tests/test_gpu_hardware_admission.py",
+    "utils/gpu_orchestrator.py"
   ],
   "lineage": {
     "preserved_source_merges": [
@@ -104,8 +106,8 @@
     },
     {
       "path": "tests/test_gpu_hardware_admission.py",
-      "size": 3011,
-      "sha256": "f0443441d5ba847c8dd7637a30065e33f0b57da24e37862ca3eda7065f6827f6"
+      "size": 3853,
+      "sha256": "e0527f1f2bd39e34aa6ea84e94595068a4993678025204ead633afa3a1d46fd9"
     },
     {
       "path": "tests/test_mrl_hardware_admission.py",
@@ -124,8 +126,8 @@
     },
     {
       "path": "utils/gpu_orchestrator.py",
-      "size": 15608,
-      "sha256": "20bf5d1522c08ec8e58cf44e17ec0acafdf27dd28a433a35b2d292e75de27724"
+      "size": 15570,
+      "sha256": "85fa063ce20da4a6309fce161391dfd9a76d41d3a434ee32c55d9baa009b18b1"
     },
     {
       "path": "utils/mrl_hardware_admission.py",
@@ -223,7 +225,7 @@
   ],
   "local_validation": {
     "targeted_admission_smoke_and_allocation_tests": {
-      "passed": 34,
+      "passed": 35,
       "failed": 0
     },
     "product_bundle_and_node_evidence_tests": {
@@ -244,22 +246,26 @@
     "changed_admission_tests": "passed separately"
   },
   "exact_head_ci": {
-    "head": "07e4fd3c02e88e9a53185a1416ba19ecb6b34d52",
+    "head": "9093c4f157584647e3ccb32920c4e3f740b54630",
     "workflows": [
       {
         "name": "MRL Hardware Admission",
-        "run_id": 41617757145,
+        "run_id": 41618281323,
         "status": "action_required",
         "jobs_created": 0
       },
       {
         "name": "CodeQL Analysis",
-        "run_id": 41617757443,
+        "run_id": 41618281569,
         "status": "action_required",
         "jobs_created": 0
       }
     ],
     "linux_windows_ci": "not executed; workflow approval required"
+  },
+  "local_codeql_checker": {
+    "head": "9093c4f157584647e3ccb32920c4e3f740b54630",
+    "alerts": 0
   },
   "live_hardware_acceptance": "NOT_EXECUTED",
   "current_passport_collector": "MRL-44 collector/output was not available in this repository; no replacement collector was represented as MRL-44",
