@@ -2,6 +2,7 @@
 origin_signature: MrLiouWord
 """
 import inspect
+from contextlib import closing
 import subprocess
 from unittest import mock
 import importlib.util
@@ -75,7 +76,7 @@ class WorldClosureTests(unittest.TestCase):
 
     def test_integrity_tampering_fails_closed(self):
         self.world.set_state("x", 1)
-        with sqlite3.connect(self.folder / "world_events.sqlite3") as db:
+        with closing(sqlite3.connect(self.folder / "world_events.sqlite3")) as db, db:
             db.execute("UPDATE events SET snapshot_json = '{}' WHERE version_index = 1")
         with self.assertRaises(WorldClosureIntegrityError):
             module.WorldModule(self.folder)
@@ -219,7 +220,7 @@ class WorldClosureTests(unittest.TestCase):
                     "DELETE FROM events"):
             with self.subTest(sql=sql), tempfile.TemporaryDirectory() as directory:
                 world = module.WorldModule(pathlib.Path(directory))
-                with sqlite3.connect(world._closure.path) as db:
+                with closing(sqlite3.connect(world._closure.path)) as db, db:
                     db.execute(sql)
                 with self.assertRaises(WorldClosureIntegrityError):
                     module.WorldModule(pathlib.Path(directory))
