@@ -1,13 +1,10 @@
 """MRL-34 policy tests; synthetic acceptances never enter the release matrix."""
 import copy
-import importlib.util
 import json
 from pathlib import Path
 import subprocess
 import sys
-import tempfile
 import unittest
-from unittest.mock import patch, MagicMock
 
 ROOT = Path(__file__).resolve().parents[1]
 REPO = ROOT.parents[1]
