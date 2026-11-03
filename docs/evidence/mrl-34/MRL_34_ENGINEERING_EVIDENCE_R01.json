@@ -98,8 +98,8 @@
     },
     {
       "path": ".github/workflows/mrl-hardware-admission.yml",
-      "size": 2387,
-      "sha256": "7b1d4c6ea4226ece9ea6d8c134641476350eb11763e3db2d321aa6b203ca7f9e"
+      "size": 3273,
+      "sha256": "f0da713989f80426bcb15bfc10d447ce226a13300a5a3bc6e90ae8737589aba5"
     },
     {
       "path": "tests/test_gpu_hardware_admission.py",
@@ -197,7 +197,7 @@
       "failed": 0
     },
     "pytest": "not_installed; equivalent relevant unittest suites executed",
-    "github_ci": "pending_submission"
+    "github_ci": "Linux tests passed; Windows checkout infrastructure fixed by exact-source tar export; final-head rerun pending"
   },
   "requested_vs_delivered": {
     "missing_files": [],
@@ -222,6 +222,13 @@
       "windows": "checkout failed on pre-existing invalid Windows path :mnt:data.txt; no admission tests ran",
       "linux": "all verification/test/upload steps succeeded, job cancelled by matrix fail-fast",
       "fix": "sparse checkout exact dependency closure, preserve LF source bytes, disable matrix fail-fast; rerun required"
+    },
+    {
+      "head": "f94efd268958496aaf758baacdcdba845b493540",
+      "run": 41609841784,
+      "linux": "success",
+      "windows": "Git still validates excluded invalid paths during sparse checkout",
+      "fix": "Linux git archive exports only exact dependency closure; Windows consumes same source bytes through artifact, no Git safety controls disabled"
     }
   ]
 }

@@ -21,26 +21,46 @@ permissions:
   contents: read
 
 jobs:
-  admission:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-24.04, windows-2022]
-    runs-on: ${{ matrix.os }}
+  prepare-source:
+    runs-on: ubuntu-24.04
     steps:
-      - name: Preserve canonical source bytes
-        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/
             /MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/
             /utils/gpu_orchestrator.py
             /tests/test_gpu_hardware_admission.py
+      - name: Export exact dependency closure without legacy filesystem paths
+        run: >-
+          git archive --format=tar --output=MRL_34_source.tar HEAD --
+          MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1
+          MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1
+          utils/gpu_orchestrator.py tests/test_gpu_hardware_admission.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MRL-34-exact-source
+          path: MRL_34_source.tar
+          if-no-files-found: error
+          retention-days: 7
+  admission:
+    needs: prepare-source
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: MRL-34-exact-source
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Extract exact source safely (preserve canonical bytes)
+        run: python -c "import tarfile; tarfile.open('MRL_34_source.tar').extractall(filter='data')"
       - name: Verify parent runtime
         run: python MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/scripts/MRL_verify_package_v1.py
       - name: Verify source coverage and SHA-256
