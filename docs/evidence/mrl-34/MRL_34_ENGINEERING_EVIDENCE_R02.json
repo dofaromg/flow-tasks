@@ -101,8 +101,8 @@
     },
     {
       "path": "docs/MRL_HARDWARE_ADMISSION.md",
-      "size": 4004,
-      "sha256": "3268d8ca083fdcc5390132a1236241a25f64f6b366d112b1f57502a3c536ef03"
+      "size": 3976,
+      "sha256": "39a4dbdadcfe70057e75a4b1d4f6c7969d39daafbe3c13c1480d45447e975c4b"
     },
     {
       "path": "tests/test_gpu_hardware_admission.py",
@@ -247,24 +247,22 @@
     "changed_admission_tests": "passed separately"
   },
   "exact_head_ci": {
-    "head": "89721823f17830a9ef20e97d3c1ef776ffae3245",
+    "head": "e3f8bc0591f3e6878d320adbfb4ed6f7c3ad72e0",
     "workflows": [
       {
         "name": "MRL Hardware Admission",
-        "latest_run_id": 41618281323,
-        "latest_run_head": "9093c4f157584647e3ccb32920c4e3f740b54630",
-        "latest_run_status": "action_required",
-        "latest_run_jobs_created": 0,
-        "exact_head_run": "not triggered for latest GPU orchestrator change"
+        "run_id": 41619075937,
+        "status": "action_required",
+        "jobs_created": 0
       },
       {
         "name": "CodeQL Analysis",
-        "run_id": 41618760595,
+        "run_id": 41619075750,
         "status": "action_required",
         "jobs_created": 0
       }
     ],
-    "linux_windows_ci": "not executed at latest code head; workflow approval required and no latest-head MRL run exists"
+    "linux_windows_ci": "not executed; workflow approval required and no jobs were created"
   },
   "local_codeql_checker": {
     "head": "89721823f17830a9ef20e97d3c1ef776ffae3245",

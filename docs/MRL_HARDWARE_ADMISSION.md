@@ -29,6 +29,6 @@ The checkout does not contain a source file identifiable as MRL-44's read-only D
 
 ## Review and validation status
 
-The live PR #700 review findings (unused import and local) were corrected. PR #701's unused-import threads were already resolved and outdated at the inspected head. Exact-head Linux/Windows CI for both proposal heads was green when inspected; it did not evaluate this integration change. The latest MRL Hardware Admission run (head `9093c4f`) and CodeQL run (head `8972182`) are `action_required` with zero jobs; the MRL workflow was not triggered for the latest GPU telemetry change. Local test results and the CI gap are recorded in R02.
+The live PR #700 review findings (unused import and local) were corrected. PR #701's unused-import threads were already resolved and outdated at the inspected head. Exact-head Linux/Windows CI for both proposal heads was green when inspected; it did not evaluate this integration change. Hosted MRL Hardware Admission and CodeQL runs for this branch are `action_required` with zero jobs, so no hosted Linux/Windows tests ran on the delivered branch. Local test results and exact run details are recorded in R02.
 
 All acceptance fixtures are explicitly test-only and stored in temporary directories. No live DL580 device query, runtime/model smoke, service restart, or formal hardware receipt was produced. No deployment, driver/CUDA upgrade, service activation, or merge is authorized by this proposal. Owner approval and real-node evidence remain required.
