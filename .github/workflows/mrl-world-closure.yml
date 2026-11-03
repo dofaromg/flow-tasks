@@ -19,6 +19,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          # Existing archive paths include names unsupported by Windows.
+          # Check out every runtime/test dependency, leaving archives untouched.
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /MRL_Mother/05_persona/world_module.py
+            /MRL_Mother/05_persona/world_closure_store.py
+            /MRL_Mother/tests/test_mrl_world_closure.py
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'

@@ -93,3 +93,13 @@ Record independently: local tests PASS; exact-head CI requires the new commit's
 GitHub run results; review threads require fresh inspection; merge NOT PERFORMED;
 DL580 deployment and physical-device acceptance NOT PERFORMED. Owner approval is
 required before merge or deployment.
+
+
+### CI follow-up (R01)
+
+Commit `37fb25e842b03bc9ccce3570b50675e99611e3fb`, run 41553315995:
+Linux passed; Windows checkout failed before tests because the existing archive
+path `:mnt:data.txt` is invalid on Windows. No archive file was renamed or removed.
+The workflow now uses non-cone sparse checkout of the two runtime modules and
+complete regression test file, with explicit PR head SHA selection. Both platforms
+therefore test the actual head, independently of the temporary PR merge ref.
