@@ -98,8 +98,8 @@
     },
     {
       "path": ".github/workflows/mrl-hardware-admission.yml",
-      "size": 1937,
-      "sha256": "15a14dc9f6507a909ee1ff3ab8978700b4529240538cd0c0ff57b2afbdd1ba69"
+      "size": 2387,
+      "sha256": "7b1d4c6ea4226ece9ea6d8c134641476350eb11763e3db2d321aa6b203ca7f9e"
     },
     {
       "path": "tests/test_gpu_hardware_admission.py",
@@ -214,5 +214,14 @@
     "Owner-approved real GPU smoke and restart/replay",
     "Reviewed exact acceptance entry and separate public support decision"
   ],
-  "mother_changes": []
+  "mother_changes": [],
+  "ci_history": [
+    {
+      "head": "0f57ce62b2c97e773f984055e5a9f850aa9d21ef",
+      "run": 41609634114,
+      "windows": "checkout failed on pre-existing invalid Windows path :mnt:data.txt; no admission tests ran",
+      "linux": "all verification/test/upload steps succeeded, job cancelled by matrix fail-fast",
+      "fix": "sparse checkout exact dependency closure, preserve LF source bytes, disable matrix fail-fast; rerun required"
+    }
+  ]
 }

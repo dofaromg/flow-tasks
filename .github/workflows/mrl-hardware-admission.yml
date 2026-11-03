@@ -23,11 +23,21 @@ permissions:
 jobs:
   admission:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-24.04, windows-2022]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Preserve canonical source bytes
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/
+            /MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/
+            /utils/gpu_orchestrator.py
+            /tests/test_gpu_hardware_admission.py
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
