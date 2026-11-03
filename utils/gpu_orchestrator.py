@@ -11,6 +11,13 @@ from dataclasses import dataclass
 from pathlib import Path
 import threading
 import time
+import json
+import platform
+import subprocess
+
+from MRL_Products.MRL_APIWorks_BYOH_Deployment_Product_v1.scripts.MRL_hardware_admission_v1 import (
+    AdmissionError, require_admission,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -176,9 +183,54 @@ class GPUOrchestrator:
         if self.config.get('load_balancing', {}).get('enabled', False):
             gpu_ids = self._balance_load(gpu_ids, engine_name)
         
+        self._admit_workload(engine_name, gpu_ids)
+
         logger.info(f"Allocated GPUs {gpu_ids} for engine '{engine_name}' (priority: {user_priority})")
         return gpu_ids
     
+    def _admit_workload(self, engine_name: str, gpu_ids: List[int]) -> Dict:
+        """Admit the final allocation using live GPU/driver facts and release policy.
+
+        No missing-config fallback: legacy allocation preferences are retained,
+        but cannot launch an unverified workload. This does not install anything.
+        """
+        try:
+            policy = self.config['hardware_admission']
+            host = json.loads(Path(policy['host_manifest']).read_text(encoding='utf-8'))
+            workload_path = policy['workloads'][engine_name]
+            workload = json.loads(Path(workload_path).read_text(encoding='utf-8'))
+            if not gpu_ids or any(type(i) is not int or i < 0 or i >= self.num_gpus for i in gpu_ids):
+                raise ValueError('invalid or empty allocation')
+            if {g['id'] for g in host['gpus']} != set(range(self.num_gpus)):
+                raise ValueError('manifest must describe the complete live GPU inventory')
+            live_os = {'family': platform.system().lower(), 'version': platform.version(),
+                       'arch': platform.machine()}
+            if host['os'] != live_os or host['observation'] != 'current':
+                raise ValueError('host OS/observation differs from current node')
+            for gpu in host['gpus']:
+                props = torch.cuda.get_device_properties(gpu['id'])
+                cc = '.'.join(str(v) for v in torch.cuda.get_device_capability(gpu['id']))
+                if (gpu['sku'] != props.name or gpu['compute_capability'] != cc
+                        or gpu['vram_mib'] != props.total_memory // (1024 * 1024)):
+                    raise ValueError('live GPU identity differs from host manifest')
+            drivers = subprocess.run(
+                ['nvidia-smi', '--query-gpu=driver_version', '--format=csv,noheader'],
+                check=True, capture_output=True, text=True, timeout=10,
+            ).stdout.splitlines()
+            if len(drivers) != self.num_gpus or any(d.strip() != host['driver']['version'] for d in drivers):
+                raise ValueError('live driver differs from host manifest')
+            # torch.version.cuda is the CUDA runtime used by this orchestrator;
+            # it is not inferred from nvidia-smi's maximum supported CUDA value.
+            if (workload['runner']['id'] == 'pytorch'
+                    and (torch.version.cuda != workload['cuda_runtime']
+                         or torch.__version__ != workload['runner']['version'])):
+                raise ValueError('live PyTorch runtime differs from workload manifest')
+            return require_admission(host, workload)
+        except AdmissionError:
+            raise
+        except (KeyError, ValueError, TypeError, OSError, subprocess.SubprocessError) as exc:
+            raise AdmissionError('MRL hardware admission unknown: ' + str(exc)) from exc
+
     def _balance_load(self, preferred_gpus: List[int], engine_name: str) -> List[int]:
         """
         負載均衡 - 選擇最空閒的GPU

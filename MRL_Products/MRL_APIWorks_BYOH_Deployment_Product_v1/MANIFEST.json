@@ -11,12 +11,13 @@
   "included_customer_organizations": 1,
   "included_byoh_nodes": 1,
   "stabilization_support_days": 30,
-  "expected_source_file_count": 15,
+  "expected_source_file_count": 24,
   "release_gates": {
     "product_source": "CANDIDATE",
     "parent_runtime_ci": "REQUIRED_PASS",
     "customer_real_model_acceptance": "REQUIRED_PER_ORDER",
     "legal_order_form": "REQUIRED_PER_ORDER",
-    "payment_collection": "REQUIRED_PER_ORDER"
+    "payment_collection": "REQUIRED_PER_ORDER",
+    "hardware_admission": "REQUIRED_EXACT_REAL_HARDWARE_ACCEPTANCE"
   }
 }
