@@ -26,6 +26,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -35,7 +37,9 @@ jobs:
           cache: npm
       - run: python -m pip install requests PyYAML pytest
       - run: python -m pytest -q MRL_Bridge/test_translation_center.py connectors/test_connectors.py connectors/test_mrl_translation_center.py MRL_Mother/tests_mrl_ai_system/test_MRL_mobius_closure_engine.py
-      - run: node --test MRL_Bridge/test_mrl_bridge_translation_center.cjs
+      - run: npm ci --ignore-scripts
+        working-directory: MRL_Bridge
+      - run: node --test MRL_Bridge/test_mrl_bridge_translation_center.cjs MRL_Bridge/test_mrl_file_verification.cjs
       - run: node --check MRL_Bridge/server.js
       - run: npm ci --ignore-scripts
       - run: npm run lint
@@ -67,3 +71,45 @@ jobs:
             }
             if (Test-MRLAcceptedHash $entry ('0' * 64)) { throw 'Unrecognized deployment hash was accepted' }
           }
+  file-verification-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Package declared Windows-safe Bridge sources
+        run: |
+          git rev-parse HEAD > MRL_source_commit.txt
+          sha256sum MRL_Bridge/server.js MRL_Bridge/mrl_bridge_translation_center.cjs MRL_Bridge/test_mrl_file_verification.cjs MRL_Bridge/test_mrl_bridge_translation_center.cjs MRL_Bridge/package.json MRL_Bridge/package-lock.json > MRL_source_sha256.txt
+          tar -czf MRL_bridge_test_source.tgz MRL_source_commit.txt MRL_source_sha256.txt MRL_Bridge/server.js MRL_Bridge/mrl_bridge_translation_center.cjs MRL_Bridge/test_mrl_file_verification.cjs MRL_Bridge/test_mrl_bridge_translation_center.cjs MRL_Bridge/package.json MRL_Bridge/package-lock.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MRL-bridge-test-source
+          path: MRL_bridge_test_source.tgz
+          retention-days: 7
+  file-verification-windows:
+    needs: file-verification-source
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: MRL-bridge-test-source
+      - name: Verify packaged source identity
+        shell: pwsh
+        env:
+          MRL_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          tar -xzf MRL_bridge_test_source.tgz
+          if ((Get-Content MRL_source_commit.txt -Raw).Trim() -ne $env:MRL_EXPECTED_HEAD) { throw 'MRL source head mismatch' }
+          foreach ($line in Get-Content MRL_source_sha256.txt) {
+            $parts = $line -split '  ', 2
+            if ((Get-FileHash -LiteralPath $parts[1] -Algorithm SHA256).Hash.ToLowerInvariant() -ne $parts[0]) { throw 'MRL source byte mismatch' }
+          }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm ci --ignore-scripts
+        working-directory: MRL_Bridge
+      - run: node --test MRL_Bridge/test_mrl_file_verification.cjs MRL_Bridge/test_mrl_bridge_translation_center.cjs
