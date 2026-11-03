@@ -1,0 +1,50 @@
+name: MRL Hardware Admission
+
+on:
+  pull_request:
+    paths:
+      - 'MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/**'
+      - 'utils/gpu_orchestrator.py'
+      - 'configs/gpu_allocation.yaml'
+      - 'tests/test_gpu_hardware_admission.py'
+      - '.github/workflows/mrl-hardware-admission.yml'
+  push:
+    branches: [main, 'mrl-34/**']
+    paths:
+      - 'MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/**'
+      - 'utils/gpu_orchestrator.py'
+      - 'configs/gpu_allocation.yaml'
+      - 'tests/test_gpu_hardware_admission.py'
+      - '.github/workflows/mrl-hardware-admission.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  admission:
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify parent runtime
+        run: python MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/scripts/MRL_verify_package_v1.py
+      - name: Verify source coverage and SHA-256
+        run: python MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_verify_product_source_v1.py
+      - name: Test admission and route bundle integrity
+        run: python -m unittest discover -s MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests -v
+      - name: Test existing GPU orchestrator boundary
+        run: python -m unittest discover -s tests -p test_gpu_hardware_admission.py -v
+      - name: Upload independent source bundles (not GPU acceptance)
+        uses: actions/upload-artifact@v4
+        with:
+          name: MRL-34-source-bundles-${{ matrix.os }}-${{ github.sha }}
+          path: |
+            MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/dist/*.zip
+            MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/dist/*.sha256
+          if-no-files-found: error
+          retention-days: 7

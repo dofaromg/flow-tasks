@@ -1,0 +1,218 @@
+{
+  "schema": "MRL_34_Engineering_Evidence_v1",
+  "origin_signature": "MrLiouWord",
+  "recorded_at": "2026-11-03 Asia/Taipei",
+  "baseline_commit": "608b66e0db23e7cc4eef21ea752668ac800620b3",
+  "branch": "mrl-34/hardware-admission-v1",
+  "expected_delivery": [
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/README.md",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/EXPECTED_FILE_LIST.txt",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/SHA256SUMS.txt",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/MANIFEST.json",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_build_product_bundle_v1.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_hardware_admission_v1.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/docs/MRL_HARDWARE_ADMISSION_v1.md",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_hardware_bundle.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_hardware_admission.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/hardware/MRL_hardware_matrix_v1.json",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/hardware/MRL_DL580_historical_snapshot_v1.json",
+    "utils/gpu_orchestrator.py",
+    "configs/gpu_allocation.yaml",
+    "docs/HARDWARE_SETUP.md",
+    ".github/workflows/mrl-hardware-admission.yml",
+    "tests/test_gpu_hardware_admission.py",
+    "CHANGELOG.md",
+    "docs/evidence/mrl-34/MRL_34_ENGINEERING_EVIDENCE_R01.json"
+  ],
+  "file_count": 18,
+  "files_excluding_self": [
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/README.md",
+      "size": 3250,
+      "sha256": "abaf6fa5be01833b1042ad416781aa73509ad9b3b79804b84d8cf155e74f01e9"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/EXPECTED_FILE_LIST.txt",
+      "size": 620,
+      "sha256": "23bef6a5f70b60257103fda077579e070b5aa605e470b80d4a941d9f59c62cd9"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/SHA256SUMS.txt",
+      "size": 1925,
+      "sha256": "3c9f7293db734cdfe332ee34ca32a1879ef2934f4a23cf891660921d3a57ca2e"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/MANIFEST.json",
+      "size": 880,
+      "sha256": "abbd76d5aea07db4a76ea59523b08082977c4866921ee3d4398fd3697958b432"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_build_product_bundle_v1.py",
+      "size": 6989,
+      "sha256": "36062634817b8513d9215df93b807a49f3f8e06d9563d58faa9de3316e616716"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_hardware_admission_v1.py",
+      "size": 10125,
+      "sha256": "de0344c57a24adcccf0eab77576d0296b89f50e3f2a99d1f91ac83144e05cc25"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/docs/MRL_HARDWARE_ADMISSION_v1.md",
+      "size": 8907,
+      "sha256": "3e69ac73711de79a7ce333e91f1497e517f8011de3604796aa0655ec5502719a"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_hardware_bundle.py",
+      "size": 2626,
+      "sha256": "ba92d1f0d8f636b724e22590994a65aca7c3e635744efe600d127304c6eea56b"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_hardware_admission.py",
+      "size": 8023,
+      "sha256": "2b22c716bd42edf35f41b1559bab8bbe2cd2ef9a01d1df0c2155b0894cd90a40"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/hardware/MRL_hardware_matrix_v1.json",
+      "size": 2250,
+      "sha256": "98ee2d1f3f51447bae5e812120bbd7328997c11046b78293f7585590cff8b97c"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/hardware/MRL_DL580_historical_snapshot_v1.json",
+      "size": 1973,
+      "sha256": "f5a77306e4220411bbf6fc60e6b10501137a8e3ea3cd37af2a3fe37e8c3d3573"
+    },
+    {
+      "path": "utils/gpu_orchestrator.py",
+      "size": 14057,
+      "sha256": "a3c8f8c20814d2c027a6493a5c05377f4722bfb73473169c432e63a41c16c4b3"
+    },
+    {
+      "path": "configs/gpu_allocation.yaml",
+      "size": 2405,
+      "sha256": "be5f8cee8a250847b28fd1836af67a0f1f8bdf9321905be142587acefd43c113"
+    },
+    {
+      "path": "docs/HARDWARE_SETUP.md",
+      "size": 9123,
+      "sha256": "57970b798eb5c3e373e17c68b5883b994dde88eadb6fb83bd73ec829d8b8b6fe"
+    },
+    {
+      "path": ".github/workflows/mrl-hardware-admission.yml",
+      "size": 1937,
+      "sha256": "15a14dc9f6507a909ee1ff3ab8978700b4529240538cd0c0ff57b2afbdd1ba69"
+    },
+    {
+      "path": "tests/test_gpu_hardware_admission.py",
+      "size": 2071,
+      "sha256": "7ef05796ab1bf86ba743d474c3c2ba11390118f62ee5cd08155ee8894bfe6f4f"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "size": 9248,
+      "sha256": "e9f3044a2b842af7d15befc285722de35bf3cd328998693ed0d7a913fc4b0b3c"
+    }
+  ],
+  "self_integrity": "Git tree/commit hash; self omitted from own SHA list to avoid circular digest",
+  "dependency_tree": {
+    "product": [
+      "hardware/MRL_hardware_matrix_v1.json",
+      "scripts/MRL_hardware_admission_v1.py",
+      "scripts/MRL_build_product_bundle_v1.py",
+      "parent_runtime:MRL_AI_Mother_Autonomous_Runtime_Baseline_v1"
+    ],
+    "utils/gpu_orchestrator.py": [
+      "canonical product hardware admission",
+      "configs/gpu_allocation.yaml",
+      "existing torch/yaml dependencies"
+    ],
+    "CI": [
+      "product test suite",
+      "GPU orchestrator boundary tests",
+      "source checksum verifier"
+    ]
+  },
+  "package_map": [
+    {
+      "name": "MRL_APIWorks_BYOH_AMD_ROCm_v1.zip",
+      "sha256": "6b8d887e03cd232c928a3e4c1184ef0be6ad09f70986590e19a5f09ae4ee189b",
+      "size": 96840,
+      "zip_count": 56,
+      "manifest_count_including_manifest": 56,
+      "hardware_bundle_id": "MRL_APIWorks_BYOH_AMD_ROCm_v1",
+      "hardware_acceptance": "unknown",
+      "artifact_kind": "source_bundle"
+    },
+    {
+      "name": "MRL_APIWorks_BYOH_DL580_V100_CUDA12_v1.zip",
+      "sha256": "96f0baf9744753333356913c61a426432b1b6d816e78e01fce4b5c6c044cd390",
+      "size": 96851,
+      "zip_count": 56,
+      "manifest_count_including_manifest": 56,
+      "hardware_bundle_id": "MRL_APIWorks_BYOH_DL580_V100_CUDA12_v1",
+      "hardware_acceptance": "unknown",
+      "artifact_kind": "source_bundle"
+    },
+    {
+      "name": "MRL_APIWorks_BYOH_Deployment_Product_v1.zip",
+      "sha256": "dd65baa1f67453e5a924521dd333a7c76f87a95f4bc68b048c57a9ff51fb5174",
+      "size": 96308,
+      "zip_count": 55,
+      "manifest_count_including_manifest": 55,
+      "hardware_bundle_id": null,
+      "hardware_acceptance": "unknown",
+      "artifact_kind": "source_bundle"
+    },
+    {
+      "name": "MRL_APIWorks_BYOH_Modern_NVIDIA_CUDA12_v1.zip",
+      "sha256": "e61f7e67a6c53b4799fff6cd861333bcc3e53fd81415dab510dbe4d1438fb717",
+      "size": 96882,
+      "zip_count": 56,
+      "manifest_count_including_manifest": 56,
+      "hardware_bundle_id": "MRL_APIWorks_BYOH_Modern_NVIDIA_CUDA12_v1",
+      "hardware_acceptance": "unknown",
+      "artifact_kind": "source_bundle"
+    },
+    {
+      "name": "MRL_APIWorks_BYOH_Modern_NVIDIA_CUDA13_v1.zip",
+      "sha256": "84370b0c9e0b9aff0a263b0bbad0e81741060d626be9eff8a088c059a4d0714d",
+      "size": 96882,
+      "zip_count": 56,
+      "manifest_count_including_manifest": 56,
+      "hardware_bundle_id": "MRL_APIWorks_BYOH_Modern_NVIDIA_CUDA13_v1",
+      "hardware_acceptance": "unknown",
+      "artifact_kind": "source_bundle"
+    }
+  ],
+  "tests": {
+    "product_unittest": {
+      "passed": 33,
+      "failed": 0
+    },
+    "orchestrator_unittest": {
+      "passed": 2,
+      "failed": 0
+    },
+    "parent_runtime_unittest": {
+      "passed": 20,
+      "failed": 0
+    },
+    "pytest": "not_installed; equivalent relevant unittest suites executed",
+    "github_ci": "pending_submission"
+  },
+  "requested_vs_delivered": {
+    "missing_files": [],
+    "unexpected_files": [],
+    "renamed_files": [],
+    "orphan_files": [],
+    "coverage_percent": 100,
+    "source_delivery": "DELIVERY_PASS"
+  },
+  "live_hardware_acceptance": "NOT_EXECUTED",
+  "remaining": [
+    "Fresh DL580 hardware/driver/linked-runtime probe",
+    "Actual runner/model/runtime-bundle artifact digests",
+    "Owner-approved real GPU smoke and restart/replay",
+    "Reviewed exact acceptance entry and separate public support decision"
+  ],
+  "mother_changes": []
+}
