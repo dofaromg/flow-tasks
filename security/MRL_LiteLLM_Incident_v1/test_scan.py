@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest import mock
 import subprocess
 import sys
 
@@ -18,6 +19,35 @@ class ScannerTests(unittest.TestCase):
         states = [s for s, _ in results]
         actual = "HIT" if "HIT" in states else "UNKNOWN" if "UNKNOWN" in states else "NO_HIT"
         self.assertEqual(actual, state, results)
+
+    def test_json_fallback_to_toml(self):
+        results = scanner.inspect_text('[[package]]\nname = "litellm"\nversion = "1.107.0"')
+        self.assertIn(("HIT", "structured_package_version"), results)
+
+    def test_toml_fallback_to_json(self):
+        results = scanner.inspect_text('{"name":"litellm","version":"1.106.2"}')
+        self.assertIn(("NO_HIT", "structured_package_version"), results)
+        self.check('{"name":"litellm","version":"1.107.0"}', "HIT")
+
+    def test_malformed_formats_preserve_unknown(self):
+        for text in ['{"litellm":', '[[package]\nname = "litellm"']:
+            self.check(text, "UNKNOWN")
+
+    def test_missing_toml_parser_fails_closed(self):
+        with mock.patch.dict(sys.modules, {"tomllib": None}):
+            self.assertIn(("UNKNOWN", "toml_parser_unavailable"),
+                          scanner.inspect_text('litellm==1.106.2'))
+            self.check('litellm==1.107.0', "HIT")
+            self.check('unrelated text', "NO_HIT")
+
+    def test_unexpected_parser_errors_propagate(self):
+        with mock.patch.object(scanner.json, "loads", side_effect=RuntimeError("parser failure")):
+            with self.assertRaises(RuntimeError):
+                scanner.inspect_text('litellm==1.106.2')
+        import tomllib
+        with mock.patch.object(tomllib, "loads", side_effect=RuntimeError("parser failure")):
+            with self.assertRaises(RuntimeError):
+                scanner.inspect_text('litellm==1.106.2')
 
     def test_pins(self):
         for text in ["litellm==1.107.0", 'litellm[proxy]===1.107.0', 'LiteLLM==v1.107.0+vendor', 'litellm==1.107.0.0']:

@@ -72,16 +72,27 @@ def inspect_text(text):
         else:
             add("UNKNOWN", "image_requires_signature_provenance_and_sbom_verification")
     # Structured lockfile / SBOM records, without executing any config.
-    objects = []
     try:
-        objects.append(json.loads(text))
-    except (ValueError, TypeError):
-        pass
+        json_object = json.loads(text)
+    except json.JSONDecodeError:
+        # Other supported formats are not JSON; retain lexical checks below.
+        objects = []
+    else:
+        objects = [json_object]
     try:
         import tomllib
-        objects.append(tomllib.loads(text))
-    except (ValueError, ImportError):
-        pass
+    except ImportError:
+        # Missing structured-parser coverage must never silently allow a reference.
+        if MENTION.search(text):
+            add("UNKNOWN", "toml_parser_unavailable")
+    else:
+        try:
+            toml_object = tomllib.loads(text)
+        except tomllib.TOMLDecodeError:
+            # Non-TOML input still receives JSON and conservative lexical checks.
+            toml_object = None
+        if toml_object is not None:
+            objects.append(toml_object)
     def walk(obj):
         if isinstance(obj, dict):
             if str(obj.get("name", "")).lower() == "litellm":
