@@ -283,3 +283,23 @@ def test_full_20minute_delivery(tmp_path):
             'render':json.loads((root/'layout.json').read_text()),'job':jid}
     Path(os.environ.get('MRL_VIDEO_BENCHMARK','/tmp/MRL_longfilm_benchmark.json')).write_text(json.dumps(result,indent=2))
 
+
+
+def test_cache_flush_uses_writable_file_descriptors(tmp_path, monkeypatch):
+    """Windows _commit rejects read-only descriptors even when POSIX fsync accepts them."""
+    from MRL_Video.cache import SceneCache
+    actual_fsync = os.fsync
+    flushed = []
+    def require_writable(fd):
+        os.write(fd, b"")  # EBADF on a read-only handle, reproducing the Windows requirement.
+        flushed.append(fd)
+        actual_fsync(fd)
+    monkeypatch.setattr(os, "fsync", require_writable)
+    png, video = tmp_path / "frame.png", tmp_path / "video.mp4"
+    png.write_bytes(b"unit-test-png-bytes")
+    video.write_bytes(b"unit-test-video-bytes")
+    cache = SceneCache(tmp_path / "cache")
+    cache.save("a" * 64, png, video, {"status": "tested"})
+    restored = cache.restore("a" * 64, tmp_path / "restored.png", tmp_path / "restored.mp4")
+    assert flushed and restored == {"status": "tested"}
+    assert (tmp_path / "restored.mp4").read_bytes() == video.read_bytes()

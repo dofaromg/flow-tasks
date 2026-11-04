@@ -22,3 +22,4 @@
 - Add cross-platform CI and real-media regression coverage. origin_signature: MrLiouWord; canonical_authority: Mr.liou.
 
 - Preserve concurrent 0d689cb clip schema, episode import, persistent segment progress, retry, embedded subtitles and original acceptance evidence.
+- Fix Windows cache publication by synchronizing writable descriptors; add an EBADF regression and retain strict integrity checks.

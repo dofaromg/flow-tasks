@@ -2,9 +2,9 @@
   "schema": "MRL_AuditSupervisor_v1",
   "origin_signature": "MrLiouWord",
   "canonical_authority": "Mr.liou",
-  "observed_at": "2026-11-04T07:26:29.087641+00:00",
+  "observed_at": "2026-11-04T07:31:44.037551+00:00",
   "baseline_commit": "9adfe7afe1f14312b07119e72be65b41f5c78a98",
-  "integration_parent_commit": "1ddab27115a1135f2b0afe19fb79febdad9711fc",
+  "integration_parent_commit": "7fac33202126ce2f4ea4f7f58707111686e512ee",
   "source_delivery": {
     "status": "DELIVERY_PASS",
     "expected_file_count": 41,
@@ -66,13 +66,13 @@
       },
       {
         "path": "MRL_Video/CHANGELOG.md",
-        "size": 1816,
-        "sha256": "c8105c1a173c57819ab3bb57656e497575117cc0aa22866e1f4bdd046fb78edb"
+        "size": 1947,
+        "sha256": "ba7a1133c6bd7304859ad99325089d537ea9802e2063dd63b0a5c89d2ebc0832"
       },
       {
         "path": "MRL_Video/Expected_Delivery.json",
         "size": 5717,
-        "sha256": "e7c1357271f8149305270c78497b07b0903897f98365aed0759b2d82530648d7"
+        "sha256": "d44b1e8050d6ff8598c0a32bca8ad17b80a95eb922a022aaf7a9fedac1521309"
       },
       {
         "path": "MRL_Video/README.md",
@@ -96,8 +96,8 @@
       },
       {
         "path": "MRL_Video/cache.py",
-        "size": 3455,
-        "sha256": "57fbd03c266206c789729de60043179adccee16077796d94f2174e9d7c46760f"
+        "size": 3522,
+        "sha256": "5817769070aa248180075326291abfc394eed72f6793db47b441ad1f9e4f1f63"
       },
       {
         "path": "MRL_Video/contract.py",
@@ -186,8 +186,8 @@
       },
       {
         "path": "MRL_Video/tests/test_longfilm.py",
-        "size": 13283,
-        "sha256": "b909ff89b759de413d25cda22a6fb5bed161d9b0b368655e8765e3c772b65d5e"
+        "size": 14254,
+        "sha256": "53f359b5542a136500bac2cf6830536f7bb204c116c36f0b42b5ca4af2094021"
       },
       {
         "path": "MRL_Video/tests/test_video.py",
@@ -246,8 +246,8 @@
       },
       {
         "path": "evidence/MRL_Video_LongFilm_Sources_20261104.json",
-        "size": 10440,
-        "sha256": "55915534299636feb7756f988b93723d6f081fea9e6acfff7ebd584c15c73254"
+        "size": 10540,
+        "sha256": "786e1c689135c53682a30412c353f3e03a3d533993f82fa89f2090d1b3328b81"
       },
       {
         "path": "evidence/MRL_Video_Validation_20261103.json",
@@ -404,7 +404,8 @@
     "ruff_F401_F841_E722": "PASS",
     "OpenAPI_3_schema_union": "PASS",
     "JSON_examples": "PASS",
-    "diff_whitespace": "PASS"
+    "diff_whitespace": "PASS",
+    "scope": "Full integrated media regression before the Windows writable-handle fix; current fix has an additional three-test targeted media regression"
   },
   "actual_20min_v2": {
     "scope": "SYNTHETIC_CARDS_AND_LOCAL_TONE_NOT_AI_CREATIVE_FILM",
@@ -604,7 +605,7 @@
     "clip_initial_attempt": "FAIL_REJECTED_SEGMENT_CHANGED",
     "clip_retry_child": "PASS_20_VERIFIED_CACHE_HITS",
     "mutation_cause": "UNRESOLVED",
-    "observed_at": "2026-11-04T07:26:29.132076+00:00"
+    "observed_at": "2026-11-04T07:31:44.087441+00:00"
   },
   "actual_1080p_short_fixture": {
     "status": "PASS",
@@ -637,5 +638,13 @@
     "creative_quality": "OWNER_REVIEW_REQUIRED",
     "formal_merge": "NOT_PERFORMED",
     "deployment": "NOT_PERFORMED"
+  },
+  "windows_cache_flush_fix": {
+    "previous_head": "7fac33202126ce2f4ea4f7f58707111686e512ee",
+    "prior_windows_CI": "9 failed, 80 passed, 1 skipped; root cause: fsync on read-only cache descriptor",
+    "change": "Open staged cache payloads with r+b before fsync; no weakening of integrity checks",
+    "targeted_current_regression": "3 passed: writable-handle guard, failed-job checkpoint reuse/corruption rejection, actual 1080p output",
+    "new_exact_head_windows_CI": "PENDING",
+    "previous_head_CodeQL": "SUCCESS"
   }
 }

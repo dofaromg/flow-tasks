@@ -199,7 +199,7 @@
     "deployment": "NOT_DEPLOYED",
     "external_service_requirement": false
   },
-  "integration_parent_commit": "1ddab27115a1135f2b0afe19fb79febdad9711fc",
+  "integration_parent_commit": "7fac33202126ce2f4ea4f7f58707111686e512ee",
   "concurrent_lineage": {
     "preserved_evidence": [
       "evidence/MRL_Longfilm_Benchmark_20261104.json",
@@ -221,7 +221,9 @@
     "additional_commits": [
       "0d689cbf2e37c39345a1ff8c26d81d13b02ba5b9",
       "fb42de6ac707941befbf13322f60b858d9959ed6",
-      "d1fdd2e83d480690e1a83c2839bc0b54fd835d96"
+      "d1fdd2e83d480690e1a83c2839bc0b54fd835d96",
+      "1ddab27115a1135f2b0afe19fb79febdad9711fc",
+      "7fac33202126ce2f4ea4f7f58707111686e512ee"
     ]
   }
 }

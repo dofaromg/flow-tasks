@@ -50,7 +50,8 @@ class SceneCache:
             receipt = {"key": key, "files": {n: file_digest(pending / n) for n in self.names}}
             (pending / "receipt.json").write_bytes(canonical(receipt))
             for path in pending.iterdir():
-                with path.open("rb") as stream:
+                # Windows _commit requires a writable descriptor.
+                with path.open("r+b") as stream:
                     os.fsync(stream.fileno())
             # Worker is single-owner; key includes scene position so siblings cannot collide.
             pending.rename(self.root / key)
