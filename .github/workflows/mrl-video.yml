@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'MRL_Video/**'
+      - 'docs/MRL_LongFilm_Integration_20261104.md'
+      - 'evidence/MRL_LongFilm*'
       - 'scripts/MRL_Start_Video.ps1'
       - 'config/MRL_Video_Bridge.json'
       - '.github/workflows/mrl-video.yml'

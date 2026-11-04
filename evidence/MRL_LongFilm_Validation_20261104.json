@@ -15,8 +15,8 @@
     "files": [
       {
         "path": ".github/workflows/mrl-video.yml",
-        "size": 3748,
-        "sha256": "caa421ca34ac965e07c1059eb3e820b53e26a9c22ada9d3dc4ab434305e33e59"
+        "size": 3833,
+        "sha256": "39c592d628bae26c4b7a7a2d840c0b5714d241f0fca911aaea717b89ab9ef3bf"
       },
       {
         "path": "MRL_Video/CHANGELOG.md",
@@ -105,23 +105,23 @@
       },
       {
         "path": "config/MRL_Video_Bridge.json",
-        "size": 1298,
-        "sha256": "2a8695a9d767dac8e0af3ed836e1a2cbaea9304ade3d50ea8010eb59a8926e68"
+        "size": 1297,
+        "sha256": "18129e0c40a13764056597d558753768017a7f13a1179958feee5a1f488b14a0"
       },
       {
         "path": "docs/MRL_Video_Acceptance.md",
-        "size": 4136,
-        "sha256": "702aa9567040809f2a9e53db2e616ff570a2a096a1762a5bf9d580ba32e51eed"
+        "size": 4135,
+        "sha256": "bc21da5baecd354af4cf32958ea4cf4dfeec6777e5cb510a2e2fd12ea6933638"
       },
       {
         "path": "evidence/MRL_Video_Validation_20261103.json",
-        "size": 7748,
-        "sha256": "9716e4a8032f87661296ddc6028e6d512c5506837758955a0146c4f1ad7df1f1"
+        "size": 7747,
+        "sha256": "6336bf005da9fa02fcc04a4f02fd699183c0ac3ba75802b50bf54fb56bd5dc04"
       },
       {
         "path": "scripts/MRL_Start_Video.ps1",
-        "size": 1563,
-        "sha256": "b2a9418b0f5b7ad10a960174f54a75b30da388a52a4cacb85e7da655523d8328"
+        "size": 1562,
+        "sha256": "5745ec3c30d5369eef81bece5eda3b22b39714f54da6c0f12a0935057b58b241"
       },
       {
         "path": "MRL_Video/longfilm.py",
@@ -253,7 +253,8 @@
       "MRL_Video/tests/test_clip_longfilm.py": "MRL_Video/tests/test_clip_longfilm.py",
       "evidence/MRL_Longfilm_Benchmark_20261104.json": "evidence/MRL_Longfilm_Benchmark_20261104.json",
       "evidence/MRL_Longfilm_Source_Audit_20261104.json": "evidence/MRL_Longfilm_Source_Audit_20261104.json"
-    }
+    },
+    "readback_note": "Preserved baseline bytes exactly, including trailing newline count; Git tree blob IDs used for remote verification."
   },
   "merged_regression": {
     "passed": 67,
