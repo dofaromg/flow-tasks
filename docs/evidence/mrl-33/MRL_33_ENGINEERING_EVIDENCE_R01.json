@@ -1,0 +1,173 @@
+{
+  "schema": "MRL_33_Engineering_Evidence_v1",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "date": "2026-11-04",
+  "parent_commit": "82b657edc314c502e365ebf1f3e3a1d3e1ae4a4e",
+  "task": "https://linear.app/dofaromgg/issue/MRL-33",
+  "scope": "Engineering branch only; formal merge/deployment/policy approval/key rotation excluded",
+  "expected_file_list": [
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_artifact_trust_v1.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_runtime_delivery_admission_v1.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_build_product_bundle_v1.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_artifact_trust.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/trust/MRL_artifact_trust_policy_v1.json",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/docs/MRL_ARTIFACT_TRUST_v1.md",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/MANIFEST.json",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/EXPECTED_FILE_LIST.txt",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/SHA256SUMS.txt",
+    ".github/workflows/mrl-artifact-trust.yml",
+    "CHANGELOG.md",
+    "config/Mrliou_MRL_Sync_Delivery_v1.json",
+    "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+    "docs/evidence/mrl-33/MRL_33_ENGINEERING_EVIDENCE_R01.json"
+  ],
+  "expected_changed_file_count": 14,
+  "missing": [],
+  "extra": [],
+  "mismatch": [],
+  "renamed": [],
+  "orphan": [],
+  "empty": [],
+  "coverage_percent": 100,
+  "source_delivery_gate": "DELIVERY_PASS",
+  "file_evidence": [
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_artifact_trust_v1.py",
+      "size": 17451,
+      "sha256": "fa25bb09258cbb1b0481518d01d7df291b78b0327471b75f2300242608494e6a"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_runtime_delivery_admission_v1.py",
+      "size": 1494,
+      "sha256": "6a27f2fbd14a69667f6b5134c48b501f5424f0cd873ab9be9618c9a7db1301f4"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_build_product_bundle_v1.py",
+      "size": 8445,
+      "sha256": "32243ca5d6f8eea6fd8e88209f39998960abf8e15b4227b7c9f2dc6a234c1358"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_artifact_trust.py",
+      "size": 16057,
+      "sha256": "9f231e967ac83179916879e4d151d2a6d1de301b865ab615160fd242ae7eb206"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/trust/MRL_artifact_trust_policy_v1.json",
+      "size": 306,
+      "sha256": "26c8acab0ae08c235ad75b11bb79e727cb0930ba0f4a7e6e787d2f8ad6115931"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/docs/MRL_ARTIFACT_TRUST_v1.md",
+      "size": 7777,
+      "sha256": "a1f54d92bd2802aaf590811f04cc5ead2a50a7a80609439b5b16bff1ec7077c3"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/MANIFEST.json",
+      "size": 952,
+      "sha256": "276a935df50ad38096289694a093f819d64de13607b881edb646cabcdae34c93"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/EXPECTED_FILE_LIST.txt",
+      "size": 960,
+      "sha256": "cedf5e80902c944a90de409087c6673040f09c171815f558a2c88c904a7c5ddc"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/SHA256SUMS.txt",
+      "size": 2925,
+      "sha256": "620e93f42aacc266d1d6706914d8e2a25b2ec1e0ea9f99898045134caf36d71c"
+    },
+    {
+      "path": ".github/workflows/mrl-artifact-trust.yml",
+      "size": 2961,
+      "sha256": "1165ff925717f361976498d30ce773b47777b1918b7bf421a9a2048a44739822"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "size": 10424,
+      "sha256": "b74c8558e9440500961e7079d2875148c1972bfb9bc4f9273127d8715da57f06"
+    },
+    {
+      "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+      "size": 9291,
+      "sha256": "fe487e4e8f44981b7c26eea4e16fc267cb8537e754f99d779917f81de703bc14"
+    },
+    {
+      "path": "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+      "size": 15810,
+      "sha256": "74eff45abb9cc7d0fa5bf3dfc1ae015a799baaeb4855ff92a0c2dbd5503c5b0b"
+    }
+  ],
+  "self_hash_rule": "This report is excluded from its own hash list; the Git commit binds it. All other delivery files have byte hashes above.",
+  "dependency_tree": {
+    "bundle_builder": [
+      "trust_export",
+      "existing_source_verifier",
+      "parent_runtime_verifier"
+    ],
+    "trust_export": [
+      "trust_validator",
+      "staged_byte_verification"
+    ],
+    "trust_validator": [
+      "existing_artifact_digest",
+      "OpenSSL_Ed25519",
+      "reviewed_policy",
+      "signed_sbom",
+      "signed_provenance"
+    ],
+    "composed_admission": [
+      "hardware_evaluate",
+      "runner_trust",
+      "runtime_trust"
+    ],
+    "CI": [
+      "product_source_hashes",
+      "parent_runtime_hashes",
+      "product_tests",
+      "synthetic_public_replay_export"
+    ]
+  },
+  "package_map": {
+    "git_branch": "14 source/CI/documentation/integrity files; no customer runtime release requested",
+    "offline_export": "7 explicitly referenced public files, actual byte replay PASS; private key excluded"
+  },
+  "validation": {
+    "product_unittest": {
+      "passed": 76,
+      "failed": 0
+    },
+    "product_source_verifier": "PASS",
+    "parent_runtime_verifier": "PASS",
+    "syntax": "PASS",
+    "workflow_yaml": "PASS",
+    "public_replay": {
+      "file_count": 7,
+      "matches": true,
+      "private_key_included": false
+    },
+    "hosted_ci": "PENDING_EXACT_COMMIT"
+  },
+  "separate_acceptance": {
+    "supply_chain_isolation": "UNVERIFIED_BLOCKED_BY_MRL_32",
+    "engineering": "LOCAL_PASS",
+    "formal_delivery_admission": "DENIED_EMPTY_PRODUCTION_TRUST_POLICY",
+    "dl580_real_node": "UNVERIFIED"
+  },
+  "missing_upstream_evidence": [
+    "LiteLLM 1.106.6 actual artifact bytes and immutable digest",
+    "Verified release tag to source commit mapping",
+    "Publisher repository identity evidence and independently authenticated Ed25519 SPKI fingerprint",
+    "Publisher signature over the supported manifest profile, or reviewed upstream signature adapter",
+    "Artifact-bound SBOM and SLSA provenance",
+    "MRL-32 inventory/isolation clearance and explicit owner release approval"
+  ],
+  "production_keys": 0,
+  "production_artifacts": 0,
+  "limitations": [
+    "Supported signature profile is detached Ed25519 over canonical MRL manifest; other profiles deny",
+    "OCI exported manifest verification does not verify layer availability or running images",
+    "Historical replay policies do not authorize current release",
+    "CI receipt proves synthetic engineering only; live routes are not activated"
+  ]
+}

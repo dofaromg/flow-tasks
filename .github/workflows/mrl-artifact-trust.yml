@@ -1,0 +1,66 @@
+name: MRL Runtime Artifact Trust
+on:
+  pull_request:
+    paths:
+      - 'MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/**'
+      - '.github/workflows/mrl-artifact-trust.yml'
+  push:
+    branches: ['mrl-33/**']
+permissions:
+  contents: read
+jobs:
+  trust:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/
+            /MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Verify source and parent package
+        run: |
+          python MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/scripts/MRL_verify_package_v1.py
+          python MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_verify_product_source_v1.py
+      - name: Test signatures, offline replay, combined admission and packaging
+        run: python -m unittest discover -s MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests -v
+      - name: Export synthetic public replay evidence (never production trust)
+        shell: python
+        run: |
+          import pathlib, sys
+          product = pathlib.Path('MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1')
+          sys.path.insert(0, str(product / 'tests'))
+          import test_artifact_trust as fixture
+          test = fixture.ArtifactTrustTests()
+          test.setUp()
+          try:
+              fixture.gate.export_evidence(test.m, test.p, test.root, pathlib.Path('MRL_33_SYNTHETIC_REPLAY'))
+          finally:
+              test.doCleanups()
+      - name: Record exact source and test boundary
+        shell: python
+        run: |
+          import json, os, pathlib, subprocess
+          source = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          pathlib.Path('MRL_33_CI_RECEIPT.json').write_text(json.dumps({
+              'origin_signature': 'MrLiouWord', 'source_commit': source,
+              'engineering_test': 'PASS', 'supply_chain_isolation': 'UNVERIFIED',
+              'formal_delivery_admission': 'DENIED_NO_PRODUCTION_TRUST',
+              'dl580_acceptance': 'UNVERIFIED'}, indent=2), encoding='utf-8')
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: MRL-33-engineering-${{ matrix.os }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            MRL_33_CI_RECEIPT.json
+            MRL_33_SYNTHETIC_REPLAY/
+          if-no-files-found: error
+          retention-days: 14

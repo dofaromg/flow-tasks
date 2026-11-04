@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 9834,
-      "sha256": "43fd9b754b2ab504f17e9b9f8ff7819968559fc856259e7fbed50297faf0e338",
+      "size_bytes": 10424,
+      "sha256": "b74c8558e9440500961e7079d2875148c1972bfb9bc4f9273127d8715da57f06",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -223,7 +223,10 @@
         "3372f149d9efef46e6457e9e4df8e09d49f775e6",
         "ea9c08874add64c7eaed70bc2bf7c6ecedfcc448"
       ],
-      "source_prs": [700, 701],
+      "source_prs": [
+        700,
+        701
+      ],
       "reason": "Integrate both MRL-34 candidate histories additively; preserve prior records and refresh live payload integrity.",
       "previous_entries": [
         {
