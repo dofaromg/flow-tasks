@@ -157,3 +157,26 @@ CI 在 Linux 以 exact head 匯出模組，再讓 Linux／Windows 下載同一�
 沒有自動 TTS、數字人、照片生成影片或 GPU 推論；不將既有小影系統的功能宣稱當成本模組實作。
 目前僅 programmatic review；人工仍需檢查標題、圖片、來源意思與視覺呈現。
 部署驗收程序見 `../docs/MRL_Video_Acceptance.md`。
+
+## 長片增量（2026-11-04，接續 PR #705）
+
+在既有 request 加 `"longfilm": true` 可排入最多 600 幕、總長 30～1200 秒；每幕仍為 2～20 秒，長片要求 24 FPS 整幀對齊，避免串接累積漂移。未加此欄位保留原短片路徑。
+
+可選 `"encoding": {"width": 1920, "height": 1080, "crf": 20, "preset": "fast"}`。
+尺寸須偶數、每邊 320～3840、總像素不超過 3840×2160；CRF 16～28，preset 支援 ultrafast/veryfast/fast/medium/slow。這是編碼控制，不代表素材細節增加或 4K 實機已驗收。
+
+既有 worker 在版本根目錄建立 `MRL_segment_cache`，以實際 PNG、片長、編碼設定、FPS、FFmpeg 版本及 renderer 原始碼雜湊識別片段；完整解碼完成後才原子發布，命中時比對 SHA-256。字體、來源畫面、標題、索引或品質改動會失效。快取含素材衍生內容，應留在同一私有磁碟；目前未自動回收，操作者可在 worker 停止後刪除快取以釋放空間。
+
+中斷版本保留原檔，沿用既有 branch CLI 建立子版本重新排隊；子版本自動重用相符片段，再重建音軌、字幕與合片。不是覆寫或自動重放中斷版本。音訊沿用每幕精確樣本長度與本地 WAV 旁白；最終仍檢查音畫長度、完整解碼、黑畫面與每幕取樣。
+
+`layout.json` 新增 render_seconds、cache_hits、cache_misses 與 encoding。預覽 GIF 最多約 30 幀，聯絡表最多前 24 幕；完整逐幕審查圖片仍全部交付。worker 原有 1800 秒總期限不變，超時後可透過子版本重用快取；不承諾本機或 DL580 的完成時間。
+
+完整機制驗收：
+```bash
+MRL_VIDEO_MEDIA_TEST=1 MRL_VIDEO_LONG_TEST=1 python -m pytest MRL_Video/tests -q
+```
+長片測試實際製作 60×20 秒、320×320、24 FPS 的合成圖卡影片，驗證 28800 幀及完整交付；不等同真實故事、角色連續性或生成模型驗收。1080p/4K 長片、DL580、Bridge、iPhone 尚須獨立實機驗收。
+
+來源對位：R03 的 `README_R03.md` 與 `mrl_longfilm.py` 已讀取，其 audit/assemble 依賴 R01 mrl_manga 合片器，並未包含可恢復佇列；本次將恢復與快取接回本模組。Ultimate 的 `/api/digital-human/generate` 依賴本地引擎；母體 HTML 的 MRL_VideoGen 為工具識別，不能視作此 worker 已接通。沒有新增外部模型下載、TTS 或人物授權聲明。
+
+回復方式：停止新 worker，保留版本根與快取，將程式切回父提交 `9adfe7afe1f14312b07119e72be65b41f5c78a98`；新 encoding/longfilm request 不交給舊程式。原短片版本、事件鏈及服務設定未遷移，未修改 DL580 服務。

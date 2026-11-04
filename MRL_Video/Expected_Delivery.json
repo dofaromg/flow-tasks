@@ -5,7 +5,7 @@
   "request": "Detailed high-spec local MRL video explainer module authorized 2026-11-03",
   "parent_repository": "dofaromg/flow-tasks",
   "parent_commit": "608b66e0db23e7cc4eef21ea752668ac800620b3",
-  "expected_file_count": 22,
+  "expected_file_count": 25,
   "expected_files": [
     ".github/workflows/mrl-video.yml",
     "MRL_Video/CHANGELOG.md",
@@ -28,7 +28,10 @@
     "config/MRL_Video_Bridge.json",
     "docs/MRL_Video_Acceptance.md",
     "evidence/MRL_Video_Validation_20261103.json",
-    "scripts/MRL_Start_Video.ps1"
+    "scripts/MRL_Start_Video.ps1",
+    "MRL_Video/tests/test_longfilm.py",
+    "evidence/MRL_Longfilm_Benchmark_20261104.json",
+    "evidence/MRL_Longfilm_Source_Audit_20261104.json"
   ],
   "expected_dependency_tree": {
     "MRL_Video/__main__.py": [
@@ -57,6 +60,11 @@
     ".github/workflows/mrl-video.yml": [
       "MRL_Video/tests/test_video.py",
       "MRL_Video/requirements.txt"
+    ],
+    "MRL_Video/tests/test_longfilm.py": [
+      "MRL_Video/service.py",
+      "MRL_Video/render.py",
+      "MRL_Video/audit.py"
     ]
   },
   "expected_features": [
@@ -75,7 +83,10 @@
     "full decode/black scan",
     "exact ZIP inventory and SHA-256",
     "Windows launcher",
-    "CI and acceptance runbook"
+    "CI and acceptance runbook",
+    "opt-in 1200-second timeline",
+    "sealed segment cache and immutable child resume",
+    "configurable resolution CRF and preset"
   ],
   "excluded_from_source_package": [
     "generated media",

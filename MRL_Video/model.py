@@ -65,7 +65,7 @@ def local_file(root: Path, name: str) -> Path:
 def validate(request: dict) -> dict:
     """Normalize a request; never silently ignore unsupported options."""
     keys(request, {"schema", "title", "sources", "scenes", "profile", "music",
-                   "require_narration", "template", "source_commit"}, "request")
+                   "require_narration", "template", "source_commit", "longfilm", "encoding"}, "request")
     if request.get("schema") != "MRL_Video_Request/v1":
         raise VideoError("Unsupported request schema")
     title = text(request.get("title"), 100, "title")
@@ -100,6 +100,24 @@ def validate(request: dict) -> dict:
     narration = request.get("require_narration", False)
     if type(music) is not bool or type(narration) is not bool:
         raise VideoError("music and require_narration must be booleans")
+    longfilm = request.get("longfilm", False)
+    if type(longfilm) is not bool:
+        raise VideoError("longfilm must be boolean")
+    encoding = request.get("encoding", {})
+    keys(encoding, {"width", "height", "crf", "preset"}, "encoding")
+    from .render import PROFILES
+    width, height = PROFILES[profile]
+    encoding = dict(width=encoding.get("width", width), height=encoding.get("height", height),
+                    crf=encoding.get("crf", 20), preset=encoding.get("preset", "fast"))
+    for key in ("width", "height"):
+        if type(encoding[key]) is not int or not 320 <= encoding[key] <= 3840 or encoding[key] % 2:
+            raise VideoError("Resolution must use even dimensions within 320..3840")
+    if encoding["width"] * encoding["height"] > 3840 * 2160:
+        raise VideoError("Resolution exceeds 4K budget")
+    if type(encoding["crf"]) is not int or not 16 <= encoding["crf"] <= 28:
+        raise VideoError("CRF must be 16..28")
+    if encoding["preset"] not in {"ultrafast", "veryfast", "fast", "medium", "slow"}:
+        raise VideoError("Unsupported encoder preset")
     scenes = request.get("scenes")
     if scenes is None:
         # Extractive planning: no claims invented, no external model or API.
@@ -116,8 +134,8 @@ def validate(request: dict) -> dict:
                    "source_id": source["id"], "duration": 8,
                    "layout": "steps" if template == "tutorial" else "diagram"}
                   for i, (source, excerpt) in enumerate(excerpts[:4])]
-    if not isinstance(scenes, list) or not 1 <= len(scenes) <= 8:
-        raise VideoError("Provide 1..8 scenes")
+    if not isinstance(scenes, list) or not 1 <= len(scenes) <= (600 if longfilm else 8):
+        raise VideoError("Scene count exceeds selected short/longfilm mode")
     total = 0.0
     normalized = []
     for scene in scenes:
@@ -141,11 +159,13 @@ def validate(request: dict) -> dict:
                 text(scene[name], 240, name)
         if narration and not scene.get("narration"):
             raise VideoError("Narration required for every scene")
+        if longfilm and abs(duration * 24 - round(duration * 24)) > 1e-6:
+            raise VideoError("Longfilm scene durations must align to 24 FPS frames")
         total += duration
         normalized.append(dict(scene, duration=duration, layout=layout))
-    if not 30 <= total <= 60:
-        raise VideoError("Total runtime must be 30..60 seconds")
+    if not 30 <= total <= (1200 if longfilm else 60):
+        raise VideoError("Total runtime exceeds selected short/longfilm mode")
     return {"schema": "MRL_Video_Request/v1", "title": title, "sources": sources,
             "scenes": normalized, "profile": profile, "music": music,
-            "require_narration": narration, "template": template,
+            "require_narration": narration, "template": template, **({"longfilm": longfilm} if "longfilm" in request else {}), **({"encoding": encoding} if "encoding" in request else {}),
             **({"source_commit": commit} if commit else {})}

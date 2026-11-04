@@ -2,6 +2,9 @@
 from __future__ import annotations
 
 import array
+import shutil
+import os
+import uuid
 import json
 import math
 import re
@@ -126,8 +129,8 @@ def fit_text(draw, content: str, font_path: Path, box: tuple, maximum: int, mini
 
 
 def card(scene: dict, index: int, count: int, profile: str, font: Path,
-         source_root: Path, output: Path) -> dict:
-    width, height = PROFILES[profile]
+         source_root: Path, output: Path, dimensions=None) -> dict:
+    width, height = dimensions or PROFILES[profile]
     image = Image.new("RGB", (width, height), "#101929")
     draw = ImageDraw.Draw(image)
     margin = int(min(width, height) * .07)
@@ -208,7 +211,7 @@ def soundtrack(request: dict, root: Path, output: Path, runner: Runner) -> None:
             t = n / SAMPLE_RATE
             envelope = min(1, t, max(0, (length - n) / SAMPLE_RATE / 2))
             frequencies = chords[int(t / (60 / 80 * 4)) % 4]
-            music = sum(math.sin(2 * math.pi * f * t) for f in frequencies) / 3
+            music = sum(math.sin(2 * math.pi * f * t) for f in frequencies) / 3 if request["music"] else 0
             gain = (500 if has_voice else 1800) if request["music"] else 0
             value = round(voice[n] * .85 + music * gain * envelope)
             samples.append(max(-32768, min(32767, value)))
@@ -245,18 +248,45 @@ def render(request: dict, work: Path, font: Path, source_root: Path,
     content = "MrLiouWord | MRL / SOURCE 0123456789" + "".join(
         s["title"] + s["caption"] + s["source_id"] for s in request["scenes"])
     ensure_glyphs(font, content)
+    started = time.monotonic()
+    encoding = request.get("encoding", {})
+    dimensions = (encoding.get("width", PROFILES[request["profile"]][0]),
+                  encoding.get("height", PROFILES[request["profile"]][1]))
+    cache = work.parent / "MRL_segment_cache"
+    cache.mkdir(exist_ok=True)
+    tool = runner.run(["ffmpeg", "-version"], work)
     phase("BUILD_SCENES")
     def build(index):
         scene = request["scenes"][index]
         try:
             runner.check()
             png = work / f"scene_{index + 1:02}.png"
-            layout = card(scene, index, len(request["scenes"]), request["profile"], font, source_root, png)
+            layout = card(scene, index, len(request["scenes"]), request["profile"], font, source_root, png, dimensions)
             duration = scene["duration"]
+            key = digest(png.read_bytes() + json.dumps([scene["duration"], encoding, FPS, tool,
+                         digest(Path(__file__).read_bytes())], sort_keys=True).encode())
+            cached = cache / (key + ".mp4")
+            seal = cache / (key + ".sha256")
+            output = work / f"scene_{index + 1:02}.mp4"
+            hit = cached.is_file() and seal.is_file() and digest(cached.read_bytes()) == seal.read_text()
+            if hit:
+                shutil.copyfile(cached, output)
+                layout["cache_hit"] = True
+                layout["segment_key"] = key
+                return layout
             runner.run(["ffmpeg", "-v", "error", "-nostdin", "-n", "-loop", "1", "-i", png.name,
                         "-t", str(duration), "-vf", f"fade=t=in:st=0:d=0.25,fade=t=out:st={duration - .25}:d=0.25",
-                        "-r", str(FPS), "-c:v", "libx264", "-preset", "fast", "-crf", "20",
+                        "-r", str(FPS), "-c:v", "libx264", "-preset", encoding.get("preset", "fast"), "-crf", str(encoding.get("crf", 20)),
                         "-threads", "2", "-pix_fmt", "yuv420p", f"scene_{index + 1:02}.mp4"], work)
+            runner.run(["ffmpeg", "-v", "error", "-xerror", "-i", output.name, "-f", "null", "-"], work)
+            temp = cache / (key + "." + uuid.uuid4().hex + ".tmp")
+            shutil.copyfile(output, temp)
+            os.replace(temp, cached)
+            temp_seal = cache / (key + "." + uuid.uuid4().hex + ".tmp")
+            temp_seal.write_text(digest(output.read_bytes()))
+            os.replace(temp_seal, seal)
+            layout["cache_hit"] = False
+            layout["segment_key"] = key
             return layout
         except BaseException:
             runner.failed.set()
@@ -280,21 +310,24 @@ def render(request: dict, work: Path, font: Path, source_root: Path,
         if preview.exists():
             preview.unlink()
         runner.run(["ffmpeg", "-v", "error", "-nostdin", "-n", "-i", "explainer.mp4", "-vf",
-                    f"fps=0.5,scale={width}:-1:flags=lanczos", "-t", str(total), preview.name], work)
+                    f"fps={min(.5, 30 / total)},scale={width}:-1:flags=lanczos", "-t", str(total), preview.name], work)
         if preview.stat().st_size < 2 * 1024 * 1024:
             break
     else:
         raise VideoError("GIF budget exceeded")
     thumb_width = 480
-    aspect = PROFILES[request["profile"]]
+    aspect = dimensions
     thumb_height = round(thumb_width * aspect[1] / aspect[0])
-    board = Image.new("RGB", (thumb_width * 2, thumb_height * math.ceil(len(layouts) / 2)), "#101929")
-    for i in range(len(layouts)):
+    board = Image.new("RGB", (thumb_width * 2, thumb_height * math.ceil(min(24, len(layouts)) / 2)), "#101929")
+    for i in range(min(24, len(layouts))):
         with Image.open(work / f"scene_{i + 1:02}.png") as tile:
             board.paste(tile.resize((thumb_width, thumb_height)),
                         (i % 2 * thumb_width, i // 2 * thumb_height))
     board.save(work / "explainer-stills.png")
-    return {"layouts": layouts, "font_sha256": digest(font.read_bytes()),
+    return {"render_seconds": time.monotonic() - started,
+            "cache_hits": sum(x["cache_hit"] for x in layouts),
+            "cache_misses": sum(not x["cache_hit"] for x in layouts),
+            "encoding": encoding, "layouts": layouts, "font_sha256": digest(font.read_bytes()),
             "music": "original_synthesized" if request["music"] else "disabled",
             "narration_scenes": sum(bool(s.get("narration")) for s in request["scenes"]),
             "semantic_review": "OWNER_REVIEW_REQUIRED"}

@@ -31,7 +31,7 @@ def verify_package(path: Path) -> dict:
     """
     with zipfile.ZipFile(path) as archive:
         entries = archive.infolist()
-        if (len(entries) > 256 or sum(e.file_size for e in entries) > 2 * 1024 ** 3
+        if (len(entries) > 3000 or sum(e.file_size for e in entries) > 2 * 1024 ** 3
                 or any(e.file_size > 512 * 1024 ** 2 for e in entries)):
             raise VideoError("Package read budget exceeded")
         names = archive.namelist()
@@ -64,7 +64,7 @@ def audit_media(root: Path, request: dict, expected: list[str], runner: Runner) 
     if len(videos) != 1 or len(audios) != 1:
         raise VideoError("Expected exactly one video and audio stream")
     video = videos[0]
-    width, height = PROFILES[request["profile"]]
+    width, height = (request.get("encoding", {}).get("width", PROFILES[request["profile"]][0]), request.get("encoding", {}).get("height", PROFILES[request["profile"]][1]))
     target = sum(s["duration"] for s in request["scenes"])
     observed = float(info["format"]["duration"])
     if (not math.isfinite(observed) or abs(observed - target) > .5
