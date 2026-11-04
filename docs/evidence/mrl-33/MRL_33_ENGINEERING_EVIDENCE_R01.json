@@ -79,8 +79,8 @@
     },
     {
       "path": ".github/workflows/mrl-artifact-trust.yml",
-      "size": 2961,
-      "sha256": "1165ff925717f361976498d30ce773b47777b1918b7bf421a9a2048a44739822"
+      "size": 4202,
+      "sha256": "c0ddd47c9eb8239cb2017cb37625e068c63ead4905a8e7fdfe21f15b88c0016f"
     },
     {
       "path": "CHANGELOG.md",
@@ -146,7 +146,16 @@
       "matches": true,
       "private_key_included": false
     },
-    "hosted_ci": "PENDING_EXACT_COMMIT"
+    "hosted_ci": "PENDING_FIXED_WORKFLOW_EXACT_COMMIT",
+    "hosted_ci_history": [
+      {
+        "source_commit": "f2bbd5982a2dcbf6cc64408e750adc472124e7a0",
+        "run": "https://github.com/dofaromg/flow-tasks/actions/runs/41789406338",
+        "linux": "PASS",
+        "windows": "FAILED_CHECKOUT_LEGACY_INVALID_PATH_:mnt:data.txt",
+        "correction": "Linux git archive exports exact dependency closure; Windows verifies source SHA and extracts canonical bytes; no historical filename modified"
+      }
+    ]
   },
   "separate_acceptance": {
     "supply_chain_isolation": "UNVERIFIED_BLOCKED_BY_MRL_32",
