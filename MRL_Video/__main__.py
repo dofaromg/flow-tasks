@@ -22,7 +22,7 @@ def output(value):
             print_json(data=value, ensure_ascii=False)
             return
         except ImportError:
-            # Rich is optional; plain JSON below remains available.
+            # Rich is optional; use plain JSON below.
             pass
     print(json.dumps(value, ensure_ascii=False, indent=2))
 
@@ -43,6 +43,9 @@ def main() -> int:
     sub.add_parser("retry").add_argument("job_id")
     for name in ("status", "cancel", "events", "load-version"):
         sub.add_parser(name).add_argument("job_id")
+    item = sub.add_parser("resume")
+    item.add_argument("job_id")
+    item.add_argument("--idempotency")
     item = sub.add_parser("diff")
     item.add_argument("left")
     item.add_argument("right")
@@ -55,6 +58,7 @@ def main() -> int:
     item.add_argument("--profile", default="landscape")
     item.add_argument("--quality", default="draft")
     serve = sub.add_parser("serve")
+    parser.add_argument("--timeout", type=int, default=21600, help="Job budget in seconds, 60..86400")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=7812)
     serve.add_argument("--allow-host", action="append", default=[])
@@ -70,8 +74,9 @@ def main() -> int:
         output(verify_package(args.zip))
         return 0
     if args.command in {"run", "serve"}:
-        service = Service(args.root, args.source_root, args.font, getattr(args, "workers", 2), args.law)
-        if not args.font.is_file():
+        service = Service(args.root, args.source_root, args.font, getattr(args, "workers", 2), args.law, args.timeout)
+        clip_only = (args.command == "run" and json.loads(args.request.read_text(encoding="utf-8")).get("schema") == "MRL_LongFilm_Request/v1")
+        if not args.font.is_file() and not clip_only:
             raise VideoError("Configure MRL_VIDEO_FONT as a local TTF/OTF/TTC font")
         if args.command == "serve":
             from .web import Server
@@ -82,7 +87,8 @@ def main() -> int:
                 output({"service": "MRL_Video", "address": list(server.server_address), "status": "READY"})
                 server.serve_forever(poll_interval=.25)
             except KeyboardInterrupt:
-                output({"service": "MRL_Video", "status": "STOPPING"})
+                # Owner requested shutdown; finally closes the server and worker.
+                pass
             finally:
                 server.server_close()
                 service.close()
@@ -104,6 +110,8 @@ def main() -> int:
                              getattr(args, "parent", None))
     elif args.command == "retry":
         value = store.retry(args.job_id)
+    elif args.command == "resume":
+        value = store.resume(args.job_id, args.idempotency)
     elif args.command == "status":
         value = store.get(args.job_id)
     elif args.command == "cancel":

@@ -4,7 +4,9 @@ on:
     paths:
       - 'MRL_Video/**'
       - 'docs/MRL_LongFilm_Integration_20261104.md'
+      - 'docs/MRL_Video_LongFilm_R04.md'
       - 'evidence/MRL_LongFilm*'
+      - 'evidence/MRL_Video_LongFilm*'
       - 'scripts/MRL_Start_Video.ps1'
       - 'config/MRL_Video_Bridge.json'
       - '.github/workflows/mrl-video.yml'
@@ -40,7 +42,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
       # Windows Git rejects historical NTFS-invalid names even with sparse checkout.
       # Export only this module on Linux; never rename or weaken Git path protection.
@@ -78,13 +80,14 @@ jobs:
       - name: Syntax and real media regression tests
         env:
           MRL_VIDEO_MEDIA_TEST: '1'
-          MRL_VIDEO_LONG_TEST: ${{ runner.os == 'Linux' && '1' || '0' }}
+          MRL_VIDEO_LONG_TEST: '1'
+          MRL_VIDEO_LONG_OUTPUT: MRL-longfilm-fixture
           MRL_VIDEO_BENCHMARK: MRL-longfilm-benchmark.json
         run: |
           python -m compileall -q MRL_Video
           python -m pytest MRL_Video/tests -q --junitxml=MRL-video-tests.xml
       - name: Full 1200-second synthetic pipeline acceptance
-        run: python -m MRL_Video.fixture_acceptance --out MRL-longfilm-fixture
+        run: python -m MRL_Video.fixture_acceptance --out MRL-clip-longfilm-fixture
       - name: Retain test evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -92,7 +95,8 @@ jobs:
           name: MRL-video-${{ matrix.os }}-${{ github.sha }}
           path: |
             MRL-video-tests.xml
-            MRL-longfilm-fixture/acceptance.json
+            MRL-longfilm-fixture/MRL_20min_evidence.json
+            MRL-clip-longfilm-fixture/acceptance.json
             MRL-longfilm-benchmark.json
           if-no-files-found: error
 

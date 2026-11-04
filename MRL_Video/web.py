@@ -158,8 +158,8 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/templates":
                 return self.json(200, {"templates": ["explainer", "tutorial", "release", "promo"],
                                        "profiles": ["landscape", "portrait", "square"],
-                                       "request_schema": "MRL_Video_Request/v1",
-                                       "longfilm_schema": "MRL_LongFilm_Request/v1"})
+                                       "request_schema": "MRL_Video_Request/v1", "longfilm_schema": "MRL_LongFilm_Request/v1", "v2_schema": "MRL_Video_Request/v2",
+                                       "resolutions": ["360p", "720p", "1080p", "2160p"], "max_seconds": 1200})
             if path == "/api/chain":
                 return self.json(200, {"event_chain_valid": store.verify_chain()})
             match = re.fullmatch(r"/api/jobs/(MRL_[0-9a-f]{32})(?:/(events|request|segments))?", path)
@@ -201,6 +201,8 @@ class Handler(BaseHTTPRequestHandler):
                         body += f'<p><a href="/artifacts/{jid}/{name}">{name}</a></p>'
                 if job["state"] in {"RUNNING", "QUEUED"}:
                     body += f'<form method="post" action="/cancel/{jid}">{hidden}<button>取消任務</button></form>'
+                if job["state"] in {"FAILED", "CANCELLED", "INTERRUPTED"}:
+                    body += f'<form method="post" action="/resume/{jid}">{hidden}<button>沿用已完成片段，建立續跑子版本</button></form>'
                 original = json.dumps(store.request(jid), ensure_ascii=False, indent=2)
                 body += (f'<form method="post" action="/branch/{jid}">{hidden}<label>修改後建立子版本</label>'
                          f'<textarea name="request">{escaped(original)}</textarea><button>保留原版，製作子版本</button></form>')
@@ -232,7 +234,7 @@ class Handler(BaseHTTPRequestHandler):
             if not (session or api):
                 return self.json(401, {"error": "Authentication required"})
             raw = self.body()
-            is_form = path == "/submit" or path.startswith(("/branch/", "/cancel/"))
+            is_form = path == "/submit" or path.startswith(("/branch/", "/cancel/", "/resume/"))
             if is_form:
                 form = parse_qs(raw.decode())
                 if not session or not hmac.compare_digest(form.get("csrf", [""])[0], self.server.sign("csrf:" + token)):
@@ -250,8 +252,11 @@ class Handler(BaseHTTPRequestHandler):
             api_branch = re.fullmatch(r"/api/jobs/(MRL_[0-9a-f]{32})/branch", path)
             if api_branch:
                 parent = api_branch[1]
+            resume = re.fullmatch(r"/(?:api/jobs/)?(?:resume/)?(MRL_[0-9a-f]{32})(?:/resume)?", path)
             cancel = re.fullmatch(r"/(?:api/jobs/)?(?:cancel/)?(MRL_[0-9a-f]{32})(?:/cancel)?", path)
-            if cancel and (path.startswith("/cancel/") or path.endswith("/cancel")):
+            if resume and (path.startswith("/resume/") or path.endswith("/resume")):
+                result = store.resume(resume[1], self.headers.get("Idempotency-Key"))
+            elif cancel and (path.startswith("/cancel/") or path.endswith("/cancel")):
                 result = store.cancel(cancel[1])
             elif path in {"/api/jobs", "/submit"} or parent:
                 result = store.submit(payload, self.headers.get("Idempotency-Key"), parent)

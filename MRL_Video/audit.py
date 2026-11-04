@@ -1,7 +1,6 @@
 """Requested-versus-delivered validation and independently verifiable ZIP inventory."""
 from __future__ import annotations
 
-import hashlib
 import json
 import math
 import re
@@ -10,16 +9,8 @@ from pathlib import Path
 
 from PIL import Image, ImageStat
 
-from .contract import VideoError
-from .render import FPS, PROFILES, Runner, probe
-
-
-def file_digest(path):
-    h = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            h.update(chunk)
-    return h.hexdigest()
+from .contract import VideoError, dimensions, file_digest, stream_digest
+from .render import FPS, Runner, probe
 
 
 def write_json(path: Path, value: object) -> None:
@@ -40,7 +31,7 @@ def verify_package(path: Path) -> dict:
     """
     with zipfile.ZipFile(path) as archive:
         entries = archive.infolist()
-        if (len(entries) > 4096 or sum(e.file_size for e in entries) > 32 * 1024 ** 3
+        if (len(entries) > 5000 or sum(e.file_size for e in entries) > 64 * 1024 ** 3
                 or any(e.file_size > 8 * 1024 ** 3 for e in entries)):
             raise VideoError("Package read budget exceeded")
         names = archive.namelist()
@@ -55,13 +46,9 @@ def verify_package(path: Path) -> dict:
             name = row["path"]
             if Path(name).is_absolute() or ".." in Path(name).parts or "\\" in name:
                 raise VideoError("Unsafe package entry")
-            hashed = hashlib.sha256()
-            size = 0
             with archive.open(name) as stream:
-                for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-                    hashed.update(chunk)
-                    size += len(chunk)
-            if not size or size != row["size"] or hashed.hexdigest() != row["sha256"]:
+                sha, size = stream_digest(stream)
+            if not size or size != row["size"] or sha != row["sha256"]:
                 raise VideoError("ZIP payload mismatch")
         audit = json.loads(archive.read("MRL_audit.json"))
         if audit.get("status") != "DELIVERY_PASS":
@@ -78,7 +65,9 @@ def audit_media(root: Path, request: dict, expected: list[str], runner: Runner) 
     if len(videos) != 1 or len(audios) != 1:
         raise VideoError("Expected exactly one video and audio stream")
     video = videos[0]
-    width, height = (request.get("encoding", {}).get("width", PROFILES[request["profile"]][0]), request.get("encoding", {}).get("height", PROFILES[request["profile"]][1]))
+    width, height = dimensions(request)
+    fps = request.get("fps", FPS)
+    strict = request["schema"] in {"MRL_Video_Request/v2", "MRL_LongFilm_Request/v1"} or request.get("longfilm", False)
     target = sum(s["duration"] for s in request["scenes"])
     observed = float(info["format"]["duration"])
     if (not math.isfinite(observed) or abs(observed - target) > .5
@@ -86,9 +75,20 @@ def audit_media(root: Path, request: dict, expected: list[str], runner: Runner) 
             or video["codec_name"] != "h264" or audios[0]["codec_name"] != "aac"):
         raise VideoError("Media format or duration mismatch")
     frame_count = int(video.get("nb_frames", 0))
-    if abs(frame_count - round(target * FPS)) > len(request["scenes"]):
+    if abs(frame_count - round(target * fps)) > (0 if strict else len(request["scenes"])):
         raise VideoError("Frame timeline mismatch")
-    if abs(float(audios[0].get("duration", 0)) - target) > .5:
+    from fractions import Fraction
+    # Matroska millisecond ticks can give a slightly non-integral MP4 average rate.
+    # Its nominal rate, exact frame count and bounded end time are checked together.
+    rate_field = "r_frame_rate" if request["schema"] == "MRL_LongFilm_Request/v1" else "avg_frame_rate"
+    if Fraction(video[rate_field]) != fps or video.get("pix_fmt") != "yuv420p":
+        raise VideoError("Pixel format or frame rate mismatch")
+    audio_duration = float(audios[0].get("duration", 0))
+    video_duration = float(video.get("duration", 0))
+    if (not math.isfinite(audio_duration) or not math.isfinite(video_duration)
+            or abs(video_duration - target) > (1 / fps + .001 if strict else .5)
+            or abs(audio_duration - target) > (.1 if strict else .5)
+            or abs(float(video.get("start_time", 0)) - float(audios[0].get("start_time", 0))) > .1):
         raise VideoError("Audio timeline mismatch")
     runner.run(["ffmpeg", "-v", "error", "-xerror", "-nostdin", "-i", "explainer.mp4",
                 "-f", "null", "-"], root)
@@ -134,7 +134,10 @@ def audit_media(root: Path, request: dict, expected: list[str], runner: Runner) 
             "missing": missing, "extra": extra, "mismatch": [], "renamed": [],
             "orphan": [], "empty": empty, "coverage": 100,
             "expected_files": sorted(expected), "duration_seconds": observed,
-            "frame_count": frame_count, "scene_samples": samples,
+            "frame_count": frame_count, "expected_duration_seconds": target,
+            "video_duration_seconds": video_duration, "audio_duration_seconds": audio_duration,
+            "av_end_delta_seconds": abs(video_duration - audio_duration),
+            "dimensions": [width, height], "fps": fps, "scene_samples": samples,
             "full_decode": "PASS", "black_interval_scan": "PASS_750MS_THRESHOLD", "format": "H264/AAC/yuv420p",
             "layout": "BOUNDS_CHECKED", "content_validation": "VERBATIM_SOURCE_CAPTIONS",
             "semantic_visual_review": "OWNER_REVIEW_REQUIRED",

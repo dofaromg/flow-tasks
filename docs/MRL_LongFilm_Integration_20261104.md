@@ -51,10 +51,14 @@ python -m MRL_Video.fixture_acceptance --out new_fixture_directory
 
 CI 對同一 exact-head source artifact 在 Linux/Windows 執行回歸與完整 1200 秒 fixture。fixture 是 160×90、24 FPS 的 testsrc2＋音調，20 次重用同一 60 秒片段；它驗證合片、快取、字幕、時長、全片解碼與交付，不能證明生成模型、劇情或人物品質。1080p 另有 2 秒真實編碼驗收；4K 尚未做完整長片驗收。
 
-CodeQL 七項原指摘的修正：CLI KeyboardInterrupt 改為明示停止狀態；移除測試中三個未使用 import；HTTP GET/POST/file 統一 return 路徑。在 fb42de6 的新掃描中原七項 threads 已解決；該掃描另指出循環匯入，已抽出無相依的 contract.py 保留舊公開匯入名稱，待下一個 exact head 再掃描。
+CodeQL 七項原指摘的修正：CLI KeyboardInterrupt 改為明示停止狀態；移除測試中三個未使用 import；HTTP GET/POST/file 統一 return 路徑。需等新 head 的 CodeQL 執行才能記為掃描通過；不以修改程式自動標記 review resolved。
 
 R03 已取得程式與範本，尚無經核准的 1200 秒故事／完整實際生成素材。正式成片、人物一致性、口型、DL580、canonical Bridge 往返及 iPhone 播放仍待驗收。
 
 ## 回復與核准範圍
 
 這次只更新 PR 工程分支。合併前可用 `git revert <本次增量commit>` 回復程式；不需要更動既有服務。資料 root 留在操作人本地，舊版本和 ZIP 保留；SQLite 新增 segments 表為相容增量，回舊程式可忽略。若未來批准部署，先備份完整 root，再依原 acceptance runbook 啟動獨立 worker；不要讓新舊 worker 同時使用同一 root。回復時停止新 worker，切回先前程式與備份，保留新資料供追溯。
+
+### 1.2.0 整合補記
+
+本路徑已與同一 Service 的 v1 圖卡與 v2 明確分鏡介面整合；預設任務預算現為 21600 秒，可設 60–86400 秒。大型素材快照與 hash 採串流，clip 單檔上限 2 GiB；封包驗證最多 5000 項、解壓總量 64 GiB、單檔 8 GiB。快取 identity 另綁定實際尺寸，片段讀取限制本地協定與容器。Matroska 毫秒時基可能讓 MP4 avg_frame_rate 略偏離整數；驗收同時要求 nominal FPS、精確幀數與嚴格片尾時長，不以平均幀率的表示誤差拒絕完整成片。新綜合證據見 `evidence/MRL_Video_LongFilm_Validation_20261104.json`，原證據保留其當時範圍。

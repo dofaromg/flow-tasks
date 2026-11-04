@@ -144,14 +144,14 @@ def render_longfilm(request, work, assets, runner, phase, store, jid, workers):
     # Changing renderer, tool build or quality invalidates cached outputs.
     identity = {'renderer': file_hash(Path(__file__)),
                 'ffmpeg': runner.run(['ffmpeg', '-version'], work),
-                'profile': request['profile'], 'quality': request['quality']}
+                'profile': request['profile'], 'quality': request['quality'], 'dimensions': [width, height]}
     store.prepare_segments(jid, len(clock))
     phase('BUILD_SEGMENTS')
 
     def build(index):
         scene = request['scenes'][index]
         row = clock[index]
-        source = local_file(assets, scene['clip'])
+        source = local_file(assets, scene['clip'], 2 * 1024 ** 3)
         frames = row['end_frame'] - row['start_frame']
         spec = {**identity, 'input_sha256': file_hash(source), 'frames': frames,
                 'in_seconds': scene['in_seconds'], 'allow_silent': scene['allow_silent'],
@@ -190,6 +190,7 @@ def render_longfilm(request, work, assets, runner, phase, store, jid, workers):
                     if audio_duration + .025 < scene['in_seconds'] + scene['duration']:
                         raise VideoError('Clip audio shorter than requested interval')
                 args = ['ffmpeg', '-v', 'error', '-nostdin', '-n', '-ss', str(scene['in_seconds']),
+                        '-protocol_whitelist', 'file,pipe', '-format_whitelist', 'mov,matroska,webm',
                         '-i', str(source.resolve())]
                 if not audio:
                     args += ['-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo']

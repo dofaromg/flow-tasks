@@ -155,6 +155,12 @@ class Store:
                 self.event(db, jid, "CANCEL_REQUESTED")
         return self.get(jid)
 
+    def resume(self, jid: str, idempotency: str | None = None) -> dict:
+        """Append a child retry; reuse only checkpoints matching freshly snapshotted inputs."""
+        if self.get(jid)["state"] not in {"FAILED", "CANCELLED", "INTERRUPTED"}:
+            raise VideoError("Only unsuccessful terminal jobs can resume")
+        return self.submit(self.request(jid), idempotency, jid)
+
     def recover(self) -> None:
         """Interrupted work remains inspectable; never blindly replay external effects."""
         with self.connect() as db:

@@ -3,12 +3,14 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import threading
 from pathlib import Path
 
 from . import __version__
 from .audit import audit_media, package, verify_package, write_json
-from .model import VideoError, digest, local_file
+from .model import VideoError, digest, file_digest, local_file, dimensions
+from .cache import SceneCache
 from .render import Cancelled, Runner, render
 from .store import Store
 
@@ -16,8 +18,9 @@ from .store import Store
 class Service:
     """One bounded production worker per storage root; jobs survive restarts."""
 
-    def __init__(self, root: Path, source_root: Path, font: Path, workers: int = 2, law: Path | None = None):
+    def __init__(self, root: Path, source_root: Path, font: Path, workers: int = 2, law: Path | None = None, timeout: int = 21600):
         self.store = Store(root)
+        self.timeout = max(60, min(timeout, 86400))
         self.source_root = source_root.resolve()
         self.font = font.resolve()
         self.law = law.resolve() if law else None
@@ -87,7 +90,7 @@ class Service:
     def process(self, jid: str) -> None:
         """Never overwrite a prior artifact directory; failures retain partial work."""
         work = self.store.root / jid
-        runner = Runner(lambda: self.stop.is_set() or bool(self.store.get(jid)["cancel_requested"]))
+        runner = Runner(lambda: self.stop.is_set() or bool(self.store.get(jid)["cancel_requested"]), self.timeout)
         try:
             work.mkdir(exist_ok=False)
             if not self.store.verify_chain():
@@ -109,7 +112,7 @@ class Service:
             assets = work / "assets"
             assets.mkdir()
             asset_rows = []
-            names = sorted({s[k] for s in request["scenes"] for k in (("clip",) if longfilm else ("image", "narration")) if s.get(k)})
+            names = sorted({s[k] for s in request["scenes"] for k in ("image", "clip", "narration") if s.get(k)})
             input_root = self.source_root
             parent = self.store.get(jid)["parent_id"]
             prior_assets = {}
@@ -121,18 +124,18 @@ class Service:
                     input_root = prior / "assets"
             for name in names:
                 runner.check()
-                original = local_file(input_root, name)
-                data = original.read_bytes()
-                if name in prior_assets and digest(data) != prior_assets[name]["sha256"]:
+                original = local_file(input_root, name, 2 * 1024 ** 3)
+                if name in prior_assets and file_digest(original) != prior_assets[name]["sha256"]:
                     raise VideoError("Parent asset integrity failure")
-                if len(data) > 50 * 1024 * 1024:
-                    raise VideoError("Asset exceeds budget")
                 destination = assets / name
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 with destination.open("xb") as stream:
-                    stream.write(data)
+                    with original.open("rb") as source:
+                        shutil.copyfileobj(source, stream, 1024 * 1024)
+                if destination.stat().st_size > 2 * 1024 ** 3:
+                    raise VideoError("Asset exceeds budget")
                 asset_rows.append({"original_name": name, "snapshot": "assets/" + name,
-                                   "sha256": digest(data), "size": len(data)})
+                                   "sha256": file_digest(destination), "size": destination.stat().st_size})
             write_json(work / "provenance.json", {"sources": provenance, "assets": asset_rows,
                        "captions": [{"scene": i + 1, "source_id": s["source_id"],
                                      "quote": s["caption"]} for i, s in enumerate(request["scenes"])],
@@ -165,7 +168,8 @@ class Service:
                 from .longfilm import render_longfilm
                 details = render_longfilm(request, work, assets, runner, phase, self.store, jid, self.workers)
             else:
-                details = render(request, work, self.font, assets, runner, phase, self.workers)
+                details = render(request, work, self.font, assets, runner, phase, self.workers,
+                                 SceneCache(self.store.root / "MRL_scene_cache"))
             write_json(work / "layout.json", details)
             job = self.store.get(jid)
             metadata = {"module": "MRL_Video", "module_version": __version__,
@@ -176,7 +180,9 @@ class Service:
                         "source_commit": request.get("source_commit"), "font_sha256": details["font_sha256"],
                         "renderer": "CPU/libx264", "external_network_calls": 0,
                         "law_sha256": law_sha, "law_binding": "HASHED_LOCAL_SNAPSHOT" if law_sha else "NOT_CONFIGURED",
-                        "dl580_acceptance": "NOT_RUN"}
+                        "dl580_acceptance": "NOT_RUN", "iphone_acceptance": "NOT_RUN",
+                        "deployment": "NOT_DEPLOYED", "dimensions": details.get("dimensions", list(dimensions(request))),
+                        "fps": details.get("fps", 24), "cache_hits": details["cache_hits"]}
             write_json(work / "metadata.json", metadata)
             phase("AUDIT")
             result = audit_media(work, request, expected, runner)
@@ -217,7 +223,7 @@ class Service:
                     raise VideoError("Manifest readback mismatch")
         else:
             row = next(row for row in manifest["files"] if row["path"] == name)
-            if digest(path.read_bytes()) != row["sha256"]:
+            if file_digest(path) != row["sha256"]:
                 raise VideoError("Artifact readback mismatch")
         return path
 

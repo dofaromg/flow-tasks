@@ -419,3 +419,29 @@ def test_traditional_chinese_roundtrip(tmp_path):
     assert service.store.get(jid)["state"] == "SUCCEEDED", service.store.get(jid)
     assert verify_package(service.artifact(jid, "package.zip"))["status"] == "DELIVERY_PASS"
 
+
+def test_retry_api_and_mobile_form_preserve_failed_parent(api, request_data):
+    from urllib.parse import urlencode
+    server, base = api
+    store = server.service.store
+    parent = store.submit(request_data)
+    store.claim()
+    store.update(parent["id"], "FAILED", "DELIVERY_FAIL", "fixture")
+    path = f"/api/jobs/{parent['id']}/resume"
+    assert http(base, path, b"{}")[0] == 401
+    auth = {"x-api-key": "test-key-" * 5, "Idempotency-Key": "api-retry"}
+    status, body, _ = http(base, path, b"{}", auth)
+    assert status == 202
+    child = json.loads(body)
+    assert child["parent_id"] == parent["id"]
+    assert json.loads(http(base, path, b"{}", auth)[1])["id"] == child["id"]
+    assert store.get(parent["id"])["state"] == "FAILED"
+    cookie = server.cookie()
+    session = {"Cookie": "MRL_video_session=" + cookie}
+    page = http(base, f"/jobs/{parent['id']}", headers=session)[1].decode()
+    assert f'/resume/{parent["id"]}' in page
+    assert http(base, f"/resume/{parent['id']}", b"csrf=bad", session)[0] == 403
+    data = urlencode({"csrf": server.sign("csrf:" + cookie)}).encode()
+    assert http(base, f"/resume/{parent['id']}", data, session)[0] == 200
+    assert len(store.list()) == 3
+    assert store.verify_chain()

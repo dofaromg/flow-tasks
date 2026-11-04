@@ -2,14 +2,12 @@
 from __future__ import annotations
 
 import array
-import shutil
-import os
-import uuid
 import json
 import math
 import re
 import subprocess
 import sys
+import tempfile
 import time
 import wave
 from concurrent.futures import ThreadPoolExecutor
@@ -19,7 +17,8 @@ from threading import Event
 from fontTools.ttLib import TTFont
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
-from .contract import FPS, PROFILES, VideoError, digest, local_file
+from .contract import FPS as FPS, PROFILES as PROFILES, VideoError, dimensions, file_digest, local_file
+from .cache import SceneCache, scene_key
 
 SAMPLE_RATE = 22050
 
@@ -74,6 +73,7 @@ class Runner:
 def probe(path: Path, runner: Runner) -> dict:
     """Read media metadata without executing input content."""
     return json.loads(runner.run(["ffprobe", "-v", "error", "-show_format", "-show_streams",
+                                  "-protocol_whitelist", "file,pipe", "-format_whitelist", "mov,matroska,webm,wav",
                                   "-of", "json", str(path.resolve())], path.parent))
 
 
@@ -127,8 +127,8 @@ def fit_text(draw, content: str, font_path: Path, box: tuple, maximum: int, mini
 
 
 def card(scene: dict, index: int, count: int, profile: str, font: Path,
-         source_root: Path, output: Path, dimensions=None) -> dict:
-    width, height = dimensions or PROFILES[profile]
+         source_root: Path, output: Path, size: tuple | None = None) -> dict:
+    width, height = size or PROFILES[profile]
     image = Image.new("RGB", (width, height), "#101929")
     draw = ImageDraw.Draw(image)
     margin = int(min(width, height) * .07)
@@ -178,47 +178,68 @@ def card(scene: dict, index: int, count: int, profile: str, font: Path,
 
 def soundtrack(request: dict, root: Path, output: Path, runner: Runner) -> None:
     """Compose deterministic original music; mix explicit local narration WAV files."""
-    audio = array.array("h")
     chords = [(261.63, 329.63, 392.00), (220, 261.63, 329.63),
               (174.61, 220, 261.63), (196, 246.94, 293.66)]
-    for idx, scene in enumerate(request["scenes"]):
-        runner.check()
-        length = round(scene["duration"] * SAMPLE_RATE)
-        voice = array.array("h", [0]) * length
-        has_voice = bool(scene.get("narration"))
-        if has_voice:
-            path = local_file(root, scene["narration"])
-            with wave.open(str(path), "rb") as wav:
-                if (wav.getnchannels(), wav.getsampwidth(), wav.getframerate(), wav.getcomptype()) != (1, 2, SAMPLE_RATE, "NONE"):
-                    raise VideoError("Narration must be mono PCM16 WAV at 22050 Hz")
-                if wav.getnframes() > length:
-                    raise VideoError("Narration exceeds scene duration; shorten audio or extend scene")
-                samples = array.array("h")
-                samples.frombytes(wav.readframes(wav.getnframes()))
-                if len(samples) != wav.getnframes():
-                    raise VideoError("Truncated narration WAV")
-                if sys.byteorder == "big":
-                    samples.byteswap()
-                if max((abs(s) for s in samples), default=0) < 16:
-                    raise VideoError("Narration is silent")
-                voice[:len(samples)] = samples
-        samples = array.array("h")
-        for n in range(length):
-            if n % SAMPLE_RATE == 0:
-                runner.check()
-            t = n / SAMPLE_RATE
-            envelope = min(1, t, max(0, (length - n) / SAMPLE_RATE / 2))
-            frequencies = chords[int(t / (60 / 80 * 4)) % 4]
-            music = sum(math.sin(2 * math.pi * f * t) for f in frequencies) / 3 if request["music"] else 0
-            gain = (500 if has_voice else 1800) if request["music"] else 0
-            value = round(voice[n] * .85 + music * gain * envelope)
-            samples.append(max(-32768, min(32767, value)))
-        audio.extend(samples)
-    if sys.byteorder == "big":
-        audio.byteswap()
-    with wave.open(str(output), "wb") as wav:
-        wav.setparams((1, 2, SAMPLE_RATE, 0, "NONE", "not compressed"))
-        wav.writeframes(audio.tobytes())
+    wav = wave.open(str(output), "wb")
+    wav.setparams((1, 2, SAMPLE_RATE, 0, "NONE", "not compressed"))
+    try:
+        for scene in request["scenes"]:
+            runner.check()
+            length = round(scene["duration"] * SAMPLE_RATE)
+            voice = array.array("h", [0]) * length
+            has_voice = bool(scene.get("narration"))
+            if scene.get("clip") and not has_voice:
+                # Extract from the same source trim as video; normalize each clip independently.
+                with tempfile.TemporaryDirectory(prefix="MRL-audio-", dir=output.parent) as temporary:
+                    path = Path(temporary) / "voice.wav"
+                    source = local_file(root, scene["clip"], 2 * 1024 ** 3)
+                    info = probe(source, runner)
+                    if any(x["codec_type"] == "audio" for x in info["streams"]):
+                        runner.run(["ffmpeg", "-v", "error", "-nostdin", "-n", "-ss", str(scene.get("clip_start", 0)),
+                                    "-protocol_whitelist", "file,pipe", "-format_whitelist", "mov,matroska,webm",
+                                  "-i", str(source), "-t", str(scene["duration"]), "-vn", "-ac", "1", "-ar", str(SAMPLE_RATE),
+                                    "-af", f"aresample={SAMPLE_RATE},apad,atrim=end_sample={length},asetpts=PTS-STARTPTS", "-c:a", "pcm_s16le", str(path)], output.parent)
+                        with wave.open(str(path), "rb") as clip_audio:
+                            raw = clip_audio.readframes(length)
+                        voice = array.array("h")
+                        voice.frombytes(raw)
+                        if sys.byteorder == "big":
+                            voice.byteswap()
+                        if len(voice) != length:
+                            raise VideoError("Clip audio length mismatch")
+                        has_voice = True
+            if scene.get("narration"):
+                path = local_file(root, scene["narration"])
+                with wave.open(str(path), "rb") as narration_wav:
+                    if (narration_wav.getnchannels(), narration_wav.getsampwidth(), narration_wav.getframerate(), narration_wav.getcomptype()) != (1, 2, SAMPLE_RATE, "NONE"):
+                        raise VideoError("Narration must be mono PCM16 WAV at 22050 Hz")
+                    if narration_wav.getnframes() > length:
+                        raise VideoError("Narration exceeds scene duration; shorten audio or extend scene")
+                    samples = array.array("h")
+                    samples.frombytes(narration_wav.readframes(narration_wav.getnframes()))
+                    if len(samples) != narration_wav.getnframes():
+                        raise VideoError("Truncated narration WAV")
+                    if sys.byteorder == "big":
+                        samples.byteswap()
+                    if max((abs(s) for s in samples), default=0) < 16:
+                        raise VideoError("Narration is silent")
+                    voice[:len(samples)] = samples
+            samples = array.array("h")
+            for n in range(length):
+                if n % SAMPLE_RATE == 0:
+                    runner.check()
+                t = n / SAMPLE_RATE
+                envelope = min(1, t, max(0, (length - n) / SAMPLE_RATE / 2))
+                frequencies = chords[int(t / (60 / 80 * 4)) % 4]
+                music = sum(math.sin(2 * math.pi * f * t) for f in frequencies) / 3 if request["music"] else 0
+                gain = (500 if has_voice else 1800) if request["music"] else 0
+                value = round(voice[n] * .85 + music * gain * envelope)
+                samples.append(max(-32768, min(32767, value)))
+            if sys.byteorder == "big":
+                samples.byteswap()
+            wav.writeframesraw(samples.tobytes())
+    finally:
+        wav.close()
 
 
 def srt(request: dict) -> str:
@@ -238,54 +259,74 @@ def srt(request: dict) -> str:
 
 
 def render(request: dict, work: Path, font: Path, source_root: Path,
-           runner: Runner, phase, workers: int = 2) -> dict:
+           runner: Runner, phase, workers: int = 2, cache: SceneCache | None = None) -> dict:
     """Render every scene, join tracks, and generate bounded previews."""
-    runner.run(["ffmpeg", "-version"], work)
-    runner.run(["ffprobe", "-version"], work)
+    tool_versions = runner.run(["ffmpeg", "-version"], work) + runner.run(["ffprobe", "-version"], work)
+    started = time.monotonic()
+    cache = cache or SceneCache(work.parent / "MRL_scene_cache")
+    size = dimensions(request)
+    encoding = request.get("encoding", {})
+    fps = request.get("fps", FPS)
+    font_hash = file_digest(font)
+    asset_hashes = {name: file_digest(local_file(source_root, name, 2 * 1024 ** 3))
+                    for name in {s[k] for s in request["scenes"] for k in ("image", "clip", "narration") if s.get(k)}}
     font = font.resolve()
     content = "MrLiouWord | MRL / SOURCE 0123456789" + "".join(
         s["title"] + s["caption"] + s["source_id"] for s in request["scenes"])
     ensure_glyphs(font, content)
-    started = time.monotonic()
-    encoding = request.get("encoding", {})
-    dimensions = (encoding.get("width", PROFILES[request["profile"]][0]),
-                  encoding.get("height", PROFILES[request["profile"]][1]))
-    cache = work.parent / "MRL_segment_cache"
-    cache.mkdir(exist_ok=True)
-    tool = runner.run(["ffmpeg", "-version"], work)
     phase("BUILD_SCENES")
     def build(index):
         scene = request["scenes"][index]
         try:
             runner.check()
             png = work / f"scene_{index + 1:02}.png"
-            layout = card(scene, index, len(request["scenes"]), request["profile"], font, source_root, png, dimensions)
+            video = work / f"scene_{index + 1:02}.mp4"
+            key = scene_key(scene, index, len(request["scenes"]), request, font_hash, asset_hashes, tool_versions)
+            cached = cache.restore(key, png, video) if cache else None
+            if cached is not None:
+                return dict(cached, cache_key=key, segment_key=key, cache_hit=True)
+            layout = card(scene, index, len(request["scenes"]), request["profile"], font, source_root, png, size)
             duration = scene["duration"]
-            key = digest(png.read_bytes() + json.dumps([scene["duration"], encoding, FPS, tool,
-                         digest(Path(__file__).read_bytes())], sort_keys=True).encode())
-            cached = cache / (key + ".mp4")
-            seal = cache / (key + ".sha256")
-            output = work / f"scene_{index + 1:02}.mp4"
-            hit = cached.is_file() and seal.is_file() and digest(cached.read_bytes()) == seal.read_text()
-            if hit:
-                shutil.copyfile(cached, output)
-                layout["cache_hit"] = True
-                layout["segment_key"] = key
-                return layout
-            runner.run(["ffmpeg", "-v", "error", "-nostdin", "-n", "-loop", "1", "-i", png.name,
-                        "-t", str(duration), "-vf", f"fade=t=in:st=0:d=0.25,fade=t=out:st={duration - .25}:d=0.25",
-                        "-r", str(FPS), "-c:v", "libx264", "-preset", encoding.get("preset", "fast"), "-crf", str(encoding.get("crf", 20)),
-                        "-threads", "2", "-pix_fmt", "yuv420p", f"scene_{index + 1:02}.mp4"], work)
-            runner.run(["ffmpeg", "-v", "error", "-xerror", "-i", output.name, "-f", "null", "-"], work)
-            temp = cache / (key + "." + uuid.uuid4().hex + ".tmp")
-            shutil.copyfile(output, temp)
-            os.replace(temp, cached)
-            temp_seal = cache / (key + "." + uuid.uuid4().hex + ".tmp")
-            temp_seal.write_text(digest(output.read_bytes()))
-            os.replace(temp_seal, seal)
-            layout["cache_hit"] = False
-            layout["segment_key"] = key
-            return layout
+            width, height = size
+            filters = f"scale={width}:{height}:force_original_aspect_ratio=decrease,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,setsar=1,fps={fps},setpts=PTS-STARTPTS"
+            if scene.get("clip"):
+                source = local_file(source_root, scene["clip"], 2 * 1024 ** 3)
+                info = probe(source, runner)
+                videos = [x for x in info["streams"] if x["codec_type"] == "video"]
+                if len(videos) != 1:
+                    raise VideoError("Clip needs exactly one video stream")
+                available = float(videos[0].get("duration") or info["format"]["duration"])
+                if not math.isfinite(available) or available + .001 < scene.get("clip_start", 0) + duration:
+                    raise VideoError("Clip is shorter than requested trim")
+                if not scene.get("narration") and not scene.get("allow_silent", False):
+                    audio = [x for x in info["streams"] if x["codec_type"] == "audio"]
+                    if not audio:
+                        raise VideoError("Silent clip requires allow_silent=true or narration")
+                    available_audio = float(audio[0].get("duration") or info["format"]["duration"])
+                    if available_audio + .05 < scene.get("clip_start", 0) + duration:
+                        raise VideoError("Clip audio is shorter than requested trim")
+                inputs = ["-protocol_whitelist", "file,pipe", "-format_whitelist", "mov,matroska,webm",
+                          "-ss", str(scene.get("clip_start", 0)), "-i", str(source)]
+                # First normalized frame is the contact-sheet image; source bytes remain in assets.
+                png.unlink()
+                runner.run(["ffmpeg", "-v", "error", "-nostdin", "-n", *inputs,
+                            "-vf", filters, "-frames:v", "1", png.name], work)
+            else:
+                inputs = ["-loop", "1", "-i", png.name]
+                filters += f",fade=t=in:st=0:d=0.25,fade=t=out:st={duration - .25}:d=0.25"
+            runner.run(["ffmpeg", "-v", "error", "-nostdin", "-n", *inputs,
+                        "-t", str(duration), "-vf", filters, "-an", "-r", str(fps),
+                        "-frames:v", str(round(duration * fps)), "-c:v", "libx264",
+                        "-preset", request.get("preset", encoding.get("preset", "fast")), "-crf", str(request.get("crf", encoding.get("crf", 20))),
+                        "-threads", "2", "-pix_fmt", "yuv420p", "-video_track_timescale", "90000", video.name], work)
+            # Decode before sealing: a killed or invalid segment is never a checkpoint.
+            runner.run(["ffmpeg", "-v", "error", "-xerror", "-i", video.name, "-f", "null", "-"], work)
+            meta = probe(video, runner)["streams"][0]
+            if abs(float(meta["duration"]) - duration) > 1 / fps + .001:
+                raise VideoError("Scene checkpoint timeline mismatch")
+            if cache:
+                cache.save(key, png, video, layout)
+            return dict(layout, cache_key=key, segment_key=key, cache_hit=False)
         except BaseException:
             runner.failed.set()
             raise
@@ -314,18 +355,20 @@ def render(request: dict, work: Path, font: Path, source_root: Path,
     else:
         raise VideoError("GIF budget exceeded")
     thumb_width = 480
-    aspect = dimensions
+    aspect = size
     thumb_height = round(thumb_width * aspect[1] / aspect[0])
-    board = Image.new("RGB", (thumb_width * 2, thumb_height * math.ceil(min(24, len(layouts)) / 2)), "#101929")
-    for i in range(min(24, len(layouts))):
-        with Image.open(work / f"scene_{i + 1:02}.png") as tile:
+    indices = sorted(set(round(i * (len(layouts) - 1) / max(1, min(24, len(layouts)) - 1)) for i in range(min(24, len(layouts)))))
+    board = Image.new("RGB", (thumb_width * 2, thumb_height * math.ceil(len(indices) / 2)), "#101929")
+    for i, index in enumerate(indices):
+        with Image.open(work / f"scene_{index + 1:02}.png") as tile:
             board.paste(tile.resize((thumb_width, thumb_height)),
                         (i % 2 * thumb_width, i // 2 * thumb_height))
     board.save(work / "explainer-stills.png")
-    return {"render_seconds": time.monotonic() - started,
-            "cache_hits": sum(x["cache_hit"] for x in layouts),
-            "cache_misses": sum(not x["cache_hit"] for x in layouts),
-            "encoding": encoding, "layouts": layouts, "font_sha256": digest(font.read_bytes()),
+    return {"render_seconds": time.monotonic() - started, "encoding": encoding,
+            "cache_misses": sum(not row["cache_hit"] for row in layouts), "layouts": layouts, "font_sha256": font_hash, "dimensions": list(size), "fps": fps,
+            "cache_hits": sum(row["cache_hit"] for row in layouts),
+            "contact_sheet_scene_indices": [i + 1 for i in indices],
+            "join": "hard cuts; exact frame timeline; one continuous audio encode",
             "music": "original_synthesized" if request["music"] else "disabled",
             "narration_scenes": sum(bool(s.get("narration")) for s in request["scenes"]),
             "semantic_review": "OWNER_REVIEW_REQUIRED"}

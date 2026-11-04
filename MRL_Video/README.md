@@ -1,8 +1,8 @@
 # MRL_Video · 本地解說影片製作模組
 
-origin_signature: **MrLiouWord** · canonical_authority: **Mr.liou** · version: **1.1.0**
+origin_signature: **MrLiouWord** · canonical_authority: **Mr.liou** · version: **1.2.0**
 
-把來源文字及分鏡轉成真正的 H.264/AAC 短片，保留來源、版本、字幕、素材與交付證據。
+把來源文字、分鏡及本地片段轉成真正的 H.264/AAC 影片，保留來源、版本、字幕、素材與交付證據。
 All production runs locally. No cloud model, external API, CUDA runtime or downloaded media is required.
 
 ## 與既有系統的關係
@@ -20,14 +20,14 @@ All production runs locally. No cloud model, external API, CUDA runtime or downl
 |---|---|
 | 四種故事範本 | explainer／tutorial／release／promo，無模型的來源摘錄規劃 |
 | 嚴格來源對應 | 每幕字幕必須是指定來源的逐字摘錄；標題明列為編輯標籤 |
-| 自訂分鏡 | 1～8 幕，每幕 2～20 秒，總長 30～60 秒 |
-| 三種畫面 | 1280×720、720×1280、960×960；24 FPS |
+| 自訂分鏡 | v1：1～8 幕、30～60 秒；v2：1～600 幕、每幕 2～60 秒、總長最多 1200 秒 |
+| 三種畫面 | v1 三種原始畫面；v2 360p／720p／1080p／2160p，24／25／30 FPS |
 | 三種版面 | diagram／steps／quote，可提供本地圖片；節點圖為裝飾，不主張來源拓撲 |
 | 實際影音製作 | Pillow 文字排版、淡入淡出、FFmpeg 編碼／合成與 AAC 配樂 |
 | 字體檢查 | 先檢查所有字元；缺字即失敗，不輸出亂碼冒充完成 |
 | 配樂與旁白 | 原創程式合成四和弦；可選每幕本地 PCM16／22050Hz／mono WAV 旁白 |
 | 持久任務 | SQLite WAL、交易式 claim、最多 32 個待處理／執行中任務 |
-| 有界執行 | 每次一項任務，每項 1～4 個場景執行緒，共用 30 分鐘期限，可取消 |
+| 有界執行 | 每次一項任務，每項 1～4 個場景執行緒，預設共用 6 小時期限（可設 60 秒～24 小時），可取消 |
 | 版本記憶 | 遞增 version_index、version_string、parent_id；載入／比較／分支，不覆寫原件 |
 | 失敗恢復 | OS 單 worker 鎖；重啟將執行中任務標示 INTERRUPTED，已入列任務繼續 |
 | 事件鏈 | 交易內追加 SHA-256 鏈；可核對篡改，非遠端公證／數位簽章 |
@@ -116,11 +116,11 @@ ZIP 含 `MRL_manifest.json` 與實際內容；manifest 不含自身 hash，避�
 receipt 是 ZIP 外部的比對依據，請保存到既有證據系統；可同時修改 manifest 與 ZIP 的人仍可偽造，不能當作簽章。
 `DELIVERY_PASS` 表示此 request 的程式化交付檢查通過；語意、美感、對外發布及 DL580 實機是獨立狀態。
 失敗保留現場，下載入口拒絕 FAILED／CANCELLED／INTERRUPTED 任務。修正使用新子版本。
-短片 v1 採整項重新製作；新增長片 schema 支援逐段持久佇列、驗證快取與子版本續跑，仍為單機執行。
+1.2.0 增加內容位址片段快取與失敗子版本續跑；仍為單機執行。完整契約、影音片段輸入、母體來源與長片驗收分層見 [長片整合 R04](../docs/MRL_Video_LongFilm_R04.md)。
 
 ## API 與母體橋接
 
-完整端點見 `openapi.json`；request schema 見 `request.schema.json`。
+完整端點見 `openapi.json`；request schema 見 `request.schema.json`（v1）與 `request-v2.schema.json`（v2）。
 JSON API 使用 `x-api-key`；瀏覽器 cookie 不可寫入 JSON API。
 `Idempotency-Key` 相同且內容、parent 相同時回傳原任務；不同內容會拒絕。
 
@@ -158,31 +158,7 @@ CI 在 Linux 以 exact head 匯出模組，再讓 Linux／Windows 下載同一�
 目前僅 programmatic review；人工仍需檢查標題、圖片、來源意思與視覺呈現。
 部署驗收程序見 `../docs/MRL_Video_Acceptance.md`。
 
-## 長片增量（2026-11-04，接續 PR #705）
 
-在既有 request 加 `"longfilm": true` 可排入最多 600 幕、總長 30～1200 秒；每幕仍為 2～20 秒，長片要求 24 FPS 整幀對齊，避免串接累積漂移。未加此欄位保留原短片路徑。
+既有 1.1.0 的 v1 `longfilm: true`／`encoding` 仍可使用：最多 1200 秒、每幕 2–20 秒、24 FPS，自訂偶數尺寸與既有 CRF／preset。v2 另提供精確 target_seconds、60 秒片段與 clip。舊 `MRL_segment_cache` 留存，不重新命名；新實作使用 `MRL_scene_cache` 並因 renderer 變更重新建立已驗證快取。
 
-可選 `"encoding": {"width": 1920, "height": 1080, "crf": 20, "preset": "fast"}`。
-尺寸須偶數、每邊 320～3840、總像素不超過 3840×2160；CRF 16～28，preset 支援 ultrafast/veryfast/fast/medium/slow。這是編碼控制，不代表素材細節增加或 4K 實機已驗收。
-
-既有 worker 在版本根目錄建立 `MRL_segment_cache`，以實際 PNG、片長、編碼設定、FPS、FFmpeg 版本及 renderer 原始碼雜湊識別片段；完整解碼完成後才原子發布，命中時比對 SHA-256。字體、來源畫面、標題、索引或品質改動會失效。快取含素材衍生內容，應留在同一私有磁碟；目前未自動回收，操作者可在 worker 停止後刪除快取以釋放空間。
-
-中斷版本保留原檔，沿用既有 branch CLI 建立子版本重新排隊；子版本自動重用相符片段，再重建音軌、字幕與合片。不是覆寫或自動重放中斷版本。音訊沿用每幕精確樣本長度與本地 WAV 旁白；最終仍檢查音畫長度、完整解碼、黑畫面與每幕取樣。
-
-`layout.json` 新增 render_seconds、cache_hits、cache_misses 與 encoding。預覽 GIF 最多約 30 幀，聯絡表最多前 24 幕；完整逐幕審查圖片仍全部交付。worker 原有 1800 秒總期限不變，超時後可透過子版本重用快取；不承諾本機或 DL580 的完成時間。
-
-完整機制驗收：
-```bash
-MRL_VIDEO_MEDIA_TEST=1 MRL_VIDEO_LONG_TEST=1 python -m pytest MRL_Video/tests -q
-```
-長片測試實際製作 60×20 秒、320×320、24 FPS 的合成圖卡影片，驗證 28800 幀及完整交付；不等同真實故事、角色連續性或生成模型驗收。1080p/4K 長片、DL580、Bridge、iPhone 尚須獨立實機驗收。
-
-來源對位：R03 的 `README_R03.md` 與 `mrl_longfilm.py` 已讀取，其 audit/assemble 依賴 R01 mrl_manga 合片器，並未包含可恢復佇列；本次將恢復與快取接回本模組。Ultimate 的 `/api/digital-human/generate` 依賴本地引擎；母體 HTML 的 MRL_VideoGen 為工具識別，不能視作此 worker 已接通。沒有新增外部模型下載、TTS 或人物授權聲明。
-
-回復方式：停止新 worker，保留版本根與快取，將程式切回父提交 `9adfe7afe1f14312b07119e72be65b41f5c78a98`；新 encoding/longfilm request 不交給舊程式。原短片版本、事件鏈及服務設定未遷移，未修改 DL580 服務。
-
-
-
-## 20 分鐘長片增量
-
-`MRL_LongFilm_Request/v1` 接受既有模組產出的本地影片，最多 600 段／1200 秒，提供幀對齊時間軸、PCM 分段、單次 AAC、字幕銜接、cut/fade、快取與保留父版的 retry。新增 fullhd／uhd 畫面選項。完整來源對位、命令、測試及回復方式見 [長片整合說明](../docs/MRL_LongFilm_Integration_20261104.md)；schema 見 `longfilm.schema.json`。
+並行提交的 `MRL_LongFilm_Request/v1`、episode import、SQLite segment progress、retry 與內嵌字幕繼續由既有 `longfilm.py` 承接，詳見 [片段長片接線](../docs/MRL_LongFilm_Integration_20261104.md)。
