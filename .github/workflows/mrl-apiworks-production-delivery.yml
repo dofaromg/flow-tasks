@@ -28,6 +28,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  incident-deny:
+    uses: ./.github/workflows/mrl-litellm-incident.yml
   authorize-production-reference:
     name: Authorize main-only production dispatch
     runs-on: ubuntu-24.04
@@ -43,7 +45,7 @@ jobs:
 
   build-authorized-customer-delivery:
     name: Build authorized APIWorks customer delivery
-    needs: authorize-production-reference
+    needs: [authorize-production-reference, incident-deny]
     runs-on: ubuntu-24.04
     environment:
       name: production
