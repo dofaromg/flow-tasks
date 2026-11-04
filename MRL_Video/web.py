@@ -158,14 +158,16 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/templates":
                 return self.json(200, {"templates": ["explainer", "tutorial", "release", "promo"],
                                        "profiles": ["landscape", "portrait", "square"],
-                                       "request_schema": "MRL_Video_Request/v1"})
+                                       "request_schema": "MRL_Video_Request/v1",
+                                       "longfilm_schema": "MRL_LongFilm_Request/v1"})
             if path == "/api/chain":
                 return self.json(200, {"event_chain_valid": store.verify_chain()})
-            match = re.fullmatch(r"/api/jobs/(MRL_[0-9a-f]{32})(?:/(events|request))?", path)
+            match = re.fullmatch(r"/api/jobs/(MRL_[0-9a-f]{32})(?:/(events|request|segments))?", path)
             if match:
                 jid, suffix = match.groups()
                 return self.json(200, store.history(jid) if suffix == "events" else
-                                 store.request(jid) if suffix == "request" else store.get(jid))
+                                 store.request(jid) if suffix == "request" else
+                                 store.segments(jid) if suffix == "segments" else store.get(jid))
             match = re.fullmatch(r"/api/diff/(MRL_[0-9a-f]{32})/(MRL_[0-9a-f]{32})", path)
             if match:
                 return self.json(200, store.diff(*match.groups()))
@@ -203,13 +205,13 @@ class Handler(BaseHTTPRequestHandler):
                 body += (f'<form method="post" action="/branch/{jid}">{hidden}<label>修改後建立子版本</label>'
                          f'<textarea name="request">{escaped(original)}</textarea><button>保留原版，製作子版本</button></form>')
                 return self.page(job["version_string"], body, job["state"] in {"QUEUED", "RUNNING"})
-            self.json(404, {"error": "Not found"})
+            return self.json(404, {"error": "Not found"})
         except KeyError:
-            self.json(404, {"error": "Job not found"})
+            return self.json(404, {"error": "Job not found"})
         except (VideoError, ValueError, TypeError):
-            self.json(400, {"error": "Invalid request or artifact integrity failure"})
+            return self.json(400, {"error": "Invalid request or artifact integrity failure"})
         except (OSError, RuntimeError):
-            self.json(500, {"error": "Local service failure"})
+            return self.json(500, {"error": "Local service failure"})
 
     def do_POST(self):
         try:
@@ -257,14 +259,14 @@ class Handler(BaseHTTPRequestHandler):
                 return self.json(404, {"error": "Not found"})
             if is_form:
                 return self.send(303, b"", "text/plain", {"Location": "/jobs/" + result["id"]})
-            self.json(202, result)
+            return self.json(202, result)
         except KeyError:
-            self.json(404, {"error": "Job or field not found"})
+            return self.json(404, {"error": "Job or field not found"})
         except (VideoError, ValueError, TypeError) as exc:
             error = str(exc) if isinstance(exc, VideoError) else "Invalid JSON or fields"
-            self.json(400, {"error": error})
+            return self.json(400, {"error": error})
         except OSError:
-            self.json(500, {"error": "Local storage failure"})
+            return self.json(500, {"error": "Local storage failure"})
 
     def file(self, path):
         size = path.stat().st_size
@@ -297,3 +299,5 @@ class Handler(BaseHTTPRequestHandler):
                     break
                 self.wfile.write(data)
                 remaining -= len(data)
+        return None
+

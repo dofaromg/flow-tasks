@@ -168,6 +168,156 @@
           }
         },
         "$comment": "Python validation additionally enforces total duration 30..60s, caption/source substring mapping, source hash, unique IDs and request budgets."
+      },
+      "LongFilmRequest": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "MRL_LongFilm_Request/v1",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "title",
+          "sources",
+          "scenes",
+          "target_seconds"
+        ],
+        "properties": {
+          "schema": {
+            "const": "MRL_LongFilm_Request/v1"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "sources": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "original_name",
+                "locator",
+                "text"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_-]+$",
+                  "maxLength": 48
+                },
+                "original_name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "locator": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 50000
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            }
+          },
+          "scenes": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 600,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "title",
+                "caption",
+                "source_id",
+                "clip",
+                "duration"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "caption": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 240
+                },
+                "source_id": {
+                  "type": "string",
+                  "maxLength": 48
+                },
+                "duration": {
+                  "type": "number",
+                  "minimum": 2,
+                  "maximum": 120
+                },
+                "clip": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 240
+                },
+                "in_seconds": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 86400
+                },
+                "allow_silent": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "transition": {
+                  "enum": [
+                    "cut",
+                    "fade"
+                  ],
+                  "default": "cut"
+                }
+              }
+            }
+          },
+          "profile": {
+            "enum": [
+              "landscape",
+              "portrait",
+              "square",
+              "fullhd",
+              "uhd"
+            ],
+            "default": "landscape"
+          },
+          "source_commit": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "quality": {
+            "enum": [
+              "draft",
+              "fullhd",
+              "uhd"
+            ],
+            "default": "draft"
+          },
+          "target_seconds": {
+            "type": "number",
+            "minimum": 2,
+            "maximum": 1200
+          }
+        },
+        "$comment": "Python enforces 24 FPS frame alignment, exact duration sum, original source/caption mapping and relative local asset paths."
       }
     }
   },
@@ -231,7 +381,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/VideoRequest"
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/VideoRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/LongFilmRequest"
+                  }
+                ]
               }
             }
           }
@@ -396,7 +553,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/VideoRequest"
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/VideoRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/LongFilmRequest"
+                  }
+                ]
               }
             }
           }
@@ -542,6 +706,26 @@
             }
           }
         ]
+      }
+    },
+    "/api/jobs/{job_id}/segments": {
+      "get": {
+        "summary": "Persistent segment progress and cache dependencies",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Segment queue rows"
+          }
+        }
       }
     }
   }

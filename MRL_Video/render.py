@@ -331,3 +331,4 @@ def render(request: dict, work: Path, font: Path, source_root: Path,
             "music": "original_synthesized" if request["music"] else "disabled",
             "narration_scenes": sum(bool(s.get("narration")) for s in request["scenes"]),
             "semantic_review": "OWNER_REVIEW_REQUIRED"}
+

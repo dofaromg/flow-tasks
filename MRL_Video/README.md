@@ -1,6 +1,6 @@
 # MRL_Video · 本地解說影片製作模組
 
-origin_signature: **MrLiouWord** · canonical_authority: **Mr.liou** · version: **1.0.0**
+origin_signature: **MrLiouWord** · canonical_authority: **Mr.liou** · version: **1.1.0**
 
 把來源文字及分鏡轉成真正的 H.264/AAC 短片，保留來源、版本、字幕、素材與交付證據。
 All production runs locally. No cloud model, external API, CUDA runtime or downloaded media is required.
@@ -116,7 +116,7 @@ ZIP 含 `MRL_manifest.json` 與實際內容；manifest 不含自身 hash，避�
 receipt 是 ZIP 外部的比對依據，請保存到既有證據系統；可同時修改 manifest 與 ZIP 的人仍可偽造，不能當作簽章。
 `DELIVERY_PASS` 表示此 request 的程式化交付檢查通過；語意、美感、對外發布及 DL580 實機是獨立狀態。
 失敗保留現場，下載入口拒絕 FAILED／CANCELLED／INTERRUPTED 任務。修正使用新子版本。
-此版採整項重新製作，沒有片段快取或跨機分散式執行。
+短片 v1 採整項重新製作；新增長片 schema 支援逐段持久佇列、驗證快取與子版本續跑，仍為單機執行。
 
 ## API 與母體橋接
 
@@ -180,3 +180,9 @@ MRL_VIDEO_MEDIA_TEST=1 MRL_VIDEO_LONG_TEST=1 python -m pytest MRL_Video/tests -q
 來源對位：R03 的 `README_R03.md` 與 `mrl_longfilm.py` 已讀取，其 audit/assemble 依賴 R01 mrl_manga 合片器，並未包含可恢復佇列；本次將恢復與快取接回本模組。Ultimate 的 `/api/digital-human/generate` 依賴本地引擎；母體 HTML 的 MRL_VideoGen 為工具識別，不能視作此 worker 已接通。沒有新增外部模型下載、TTS 或人物授權聲明。
 
 回復方式：停止新 worker，保留版本根與快取，將程式切回父提交 `9adfe7afe1f14312b07119e72be65b41f5c78a98`；新 encoding/longfilm request 不交給舊程式。原短片版本、事件鏈及服務設定未遷移，未修改 DL580 服務。
+
+
+
+## 20 分鐘長片增量
+
+`MRL_LongFilm_Request/v1` 接受既有模組產出的本地影片，最多 600 段／1200 秒，提供幀對齊時間軸、PCM 分段、單次 AAC、字幕銜接、cut/fade、快取與保留父版的 retry。新增 fullhd／uhd 畫面選項。完整來源對位、命令、測試及回復方式見 [長片整合說明](../docs/MRL_LongFilm_Integration_20261104.md)；schema 見 `longfilm.schema.json`。

@@ -22,6 +22,7 @@ def output(value):
             print_json(data=value, ensure_ascii=False)
             return
         except ImportError:
+            # Rich is optional; plain JSON below remains available.
             pass
     print(json.dumps(value, ensure_ascii=False, indent=2))
 
@@ -39,6 +40,7 @@ def main() -> int:
         item.add_argument("--idempotency")
         if name == "branch":
             item.add_argument("--parent", required=True)
+    sub.add_parser("retry").add_argument("job_id")
     for name in ("status", "cancel", "events", "load-version"):
         sub.add_parser(name).add_argument("job_id")
     item = sub.add_parser("diff")
@@ -47,12 +49,23 @@ def main() -> int:
     sub.add_parser("list")
     sub.add_parser("verify-chain")
     sub.add_parser("verify-package").add_argument("zip", type=Path)
+    item = sub.add_parser("import-episode")
+    item.add_argument("episode", type=Path)
+    item.add_argument("--out", type=Path, required=True)
+    item.add_argument("--profile", default="landscape")
+    item.add_argument("--quality", default="draft")
     serve = sub.add_parser("serve")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=7812)
     serve.add_argument("--allow-host", action="append", default=[])
     serve.add_argument("--workers", type=int, choices=range(1, 5), default=2)
     args = parser.parse_args()
+    if args.command == "import-episode":
+        from .episode_adapter import import_episode
+        from .audit import write_json
+        write_json(args.out, import_episode(args.episode, args.profile, args.quality))
+        output({"status": "IMPORTED_NOT_RENDERED", "origin_signature": "MrLiouWord"})
+        return 0
     if args.command == "verify-package":
         output(verify_package(args.zip))
         return 0
@@ -69,7 +82,7 @@ def main() -> int:
                 output({"service": "MRL_Video", "address": list(server.server_address), "status": "READY"})
                 server.serve_forever(poll_interval=.25)
             except KeyboardInterrupt:
-                pass
+                output({"service": "MRL_Video", "status": "STOPPING"})
             finally:
                 server.server_close()
                 service.close()
@@ -89,6 +102,8 @@ def main() -> int:
     if args.command in {"submit", "branch"}:
         value = store.submit(json.loads(args.request.read_text(encoding="utf-8")), args.idempotency,
                              getattr(args, "parent", None))
+    elif args.command == "retry":
+        value = store.retry(args.job_id)
     elif args.command == "status":
         value = store.get(args.job_id)
     elif args.command == "cancel":
@@ -115,3 +130,4 @@ if __name__ == "__main__":
     except (VideoError, OSError, ValueError, KeyError) as exc:
         output({"status": "FAIL", "error": str(exc) if isinstance(exc, VideoError) else type(exc).__name__})
         sys.exit(1)
+

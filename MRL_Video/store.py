@@ -29,6 +29,10 @@ class Store:
               request_sha256 TEXT NOT NULL, idempotency TEXT UNIQUE,
               state TEXT NOT NULL, phase TEXT NOT NULL, error TEXT,
               created_at TEXT NOT NULL, cancel_requested INTEGER NOT NULL DEFAULT 0);
+            CREATE TABLE IF NOT EXISTS segments (
+              job_id TEXT REFERENCES jobs(id), segment_index INTEGER, state TEXT NOT NULL,
+              cache_key TEXT, cache_hit INTEGER NOT NULL DEFAULT 0,
+              PRIMARY KEY(job_id,segment_index));
             CREATE TABLE IF NOT EXISTS events (
               seq INTEGER PRIMARY KEY AUTOINCREMENT, job_id TEXT NOT NULL REFERENCES jobs(id),
               payload TEXT NOT NULL, previous_sha256 TEXT NOT NULL, sha256 TEXT NOT NULL);
@@ -158,6 +162,7 @@ class Store:
             rows = db.execute("SELECT id FROM jobs WHERE state='RUNNING'").fetchall()
             for row in rows:
                 db.execute("UPDATE jobs SET state='INTERRUPTED',phase='INTERRUPTED' WHERE id=?", (row[0],))
+                db.execute("UPDATE segments SET state='INTERRUPTED' WHERE job_id=? AND state='RUNNING'", (row[0],))
                 self.event(db, row[0], "INTERRUPTED")
 
     def verify_chain(self) -> bool:
@@ -178,3 +183,35 @@ class Store:
         a, b = self.request(left), self.request(right)
         return {key: {"before": a.get(key), "after": b.get(key)}
                 for key in sorted(a.keys() | b.keys()) if a.get(key) != b.get(key)}
+
+
+    def prepare_segments(self, jid: str, count: int) -> None:
+        """Register the exact segment queue under its immutable parent version."""
+        with self.connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            db.executemany("INSERT INTO segments(job_id,segment_index,state) VALUES(?,?,?)",
+                           [(jid, i, "QUEUED") for i in range(count)])
+            self.event(db, jid, "SEGMENTS_QUEUED", str(count))
+
+    def segment_state(self, jid, index, state, key, hit=False) -> None:
+        """Record clip progress and its cache dependency inside the event transaction."""
+        if state not in {"RUNNING", "SUCCEEDED", "FAILED"}:
+            raise VideoError("Invalid segment state")
+        with self.connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            db.execute("UPDATE segments SET state=?,cache_key=?,cache_hit=? WHERE job_id=? AND segment_index=?",
+                       (state, key, int(hit), jid, index))
+            self.event(db, jid, "SEGMENT_" + state, canonical({"index": index, "key": key, "cache_hit": hit}).decode())
+
+    def segments(self, jid: str) -> list[dict]:
+        """Inspect persistent segment queue progress."""
+        self.get(jid)
+        with self.connect() as db:
+            return [dict(r) for r in db.execute(
+                "SELECT * FROM segments WHERE job_id=? ORDER BY segment_index", (jid,))]
+
+    def retry(self, jid: str) -> dict:
+        """Resume through a new child version; completed cache entries are reusable."""
+        if self.get(jid)["state"] not in {"FAILED", "CANCELLED", "INTERRUPTED"}:
+            raise VideoError("Only unsuccessful terminal jobs can be retried")
+        return self.submit(self.request(jid), parent_id=jid)

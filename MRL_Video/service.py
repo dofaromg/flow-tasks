@@ -93,6 +93,7 @@ class Service:
             if not self.store.verify_chain():
                 raise VideoError("Event chain integrity failure")
             request = self.store.request(jid)
+            longfilm = request["schema"] == "MRL_LongFilm_Request/v1"
             write_json(work / "request.json", request)
             write_json(work / "storyboard.json", request["scenes"])
             snapshots = work / "sources"
@@ -108,11 +109,22 @@ class Service:
             assets = work / "assets"
             assets.mkdir()
             asset_rows = []
-            names = sorted({s[k] for s in request["scenes"] for k in ("image", "narration") if s.get(k)})
+            names = sorted({s[k] for s in request["scenes"] for k in (("clip",) if longfilm else ("image", "narration")) if s.get(k)})
+            input_root = self.source_root
+            parent = self.store.get(jid)["parent_id"]
+            prior_assets = {}
+            if longfilm and parent and self.store.request(parent) == request:
+                prior = self.store.root / parent
+                if (prior / "provenance.json").is_file():
+                    prior_assets = {r["original_name"]: r for r in json.loads(
+                        (prior / "provenance.json").read_text(encoding="utf-8"))["assets"]}
+                    input_root = prior / "assets"
             for name in names:
                 runner.check()
-                original = local_file(self.source_root, name)
+                original = local_file(input_root, name)
                 data = original.read_bytes()
+                if name in prior_assets and digest(data) != prior_assets[name]["sha256"]:
+                    raise VideoError("Parent asset integrity failure")
                 if len(data) > 50 * 1024 * 1024:
                     raise VideoError("Asset exceeds budget")
                 destination = assets / name
@@ -128,6 +140,9 @@ class Service:
             expected = ["request.json", "storyboard.json", "provenance.json", "layout.json", "metadata.json",
                         "subtitles.srt", "soundtrack.wav", "concat.txt", "explainer.mp4",
                         "explainer-preview.gif", "explainer-stills.png", "MRL_audit.json", "MRL_manifest.json"]
+            if longfilm:
+                expected.remove("soundtrack.wav")
+                expected.append("timeline.json")
             law_sha = None
             if self.law is not None:
                 data = self.law.read_bytes()
@@ -138,12 +153,19 @@ class Service:
                 law_sha = digest(data)
                 expected.append("core/law.md")
             expected += [row["snapshot"] for row in provenance + asset_rows]
+            if longfilm:
+                expected += [f"segment_{i+1:03}.mkv" for i in range(len(request["scenes"]))]
             expected += [f"{prefix}_{i + 1:02}.{ext}" for i in range(len(request["scenes"]))
-                         for prefix, ext in (("scene", "png"), ("scene", "mp4"), ("review", "png"))]
+                         for prefix, ext in ((("scene", "png"), ("review", "png")) if longfilm else
+                                             (("scene", "png"), ("scene", "mp4"), ("review", "png")))]
             def phase(value):
                 runner.check()
                 self.store.update(jid, "RUNNING", value)
-            details = render(request, work, self.font, assets, runner, phase, self.workers)
+            if longfilm:
+                from .longfilm import render_longfilm
+                details = render_longfilm(request, work, assets, runner, phase, self.store, jid, self.workers)
+            else:
+                details = render(request, work, self.font, assets, runner, phase, self.workers)
             write_json(work / "layout.json", details)
             job = self.store.get(jid)
             metadata = {"module": "MRL_Video", "module_version": __version__,
@@ -198,3 +220,4 @@ class Service:
             if digest(path.read_bytes()) != row["sha256"]:
                 raise VideoError("Artifact readback mismatch")
         return path
+

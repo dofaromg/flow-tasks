@@ -64,6 +64,9 @@ def local_file(root: Path, name: str) -> Path:
 
 def validate(request: dict) -> dict:
     """Normalize a request; never silently ignore unsupported options."""
+    if isinstance(request, dict) and request.get("schema") == "MRL_LongFilm_Request/v1":
+        from .longfilm import validate_longfilm
+        return validate_longfilm(request)
     keys(request, {"schema", "title", "sources", "scenes", "profile", "music",
                    "require_narration", "template", "source_commit", "longfilm", "encoding"}, "request")
     if request.get("schema") != "MRL_Video_Request/v1":
@@ -169,3 +172,4 @@ def validate(request: dict) -> dict:
             "scenes": normalized, "profile": profile, "music": music,
             "require_narration": narration, "template": template, **({"longfilm": longfilm} if "longfilm" in request else {}), **({"encoding": encoding} if "encoding" in request else {}),
             **({"source_commit": commit} if commit else {})}
+

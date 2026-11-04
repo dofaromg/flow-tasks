@@ -1,0 +1,491 @@
+{
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "baseline_commit": "9adfe7afe1f14312b07119e72be65b41f5c78a98",
+  "integration_parent_commit": "70f2d5f0ed9cde8bc92b30473651b19a6070cf15",
+  "scope": "source increment and local synthetic acceptance; no merge/deployment",
+  "source_delivery": {
+    "status": "DELIVERY_PASS",
+    "expected_file_count": 34,
+    "missing": [],
+    "extra": [],
+    "mismatch": [],
+    "empty": [],
+    "coverage": 100,
+    "files": [
+      {
+        "path": ".github/workflows/mrl-video.yml",
+        "size": 3748,
+        "sha256": "caa421ca34ac965e07c1059eb3e820b53e26a9c22ada9d3dc4ab434305e33e59"
+      },
+      {
+        "path": "MRL_Video/CHANGELOG.md",
+        "size": 1433,
+        "sha256": "dac9cae58cb087188e933ad19a98d47de8630140a07b3550679ba189c052f80f"
+      },
+      {
+        "path": "MRL_Video/Expected_Delivery.json",
+        "size": 3858,
+        "sha256": "cf03b0e0a984deae3172791b99e964dff82e32bbb356b6adf9d1614293638d0f"
+      },
+      {
+        "path": "MRL_Video/README.md",
+        "size": 12075,
+        "sha256": "1416c7bddb614cdd11f4f36acd7b814b1f2b45ec417be99362d4822601ae1365"
+      },
+      {
+        "path": "MRL_Video/__init__.py",
+        "size": 104,
+        "sha256": "db2f5146028b030d7a6e58ddbe0485417eefa492d1ab6f63c923757a5eb8eb87"
+      },
+      {
+        "path": "MRL_Video/__main__.py",
+        "size": 5667,
+        "sha256": "ce4e4e12f8b1d981b30d4d5fb2653b5897f93225b02790b1fbae3531d9d951e3"
+      },
+      {
+        "path": "MRL_Video/audit.py",
+        "size": 8574,
+        "sha256": "fd0aee7102d5bdcc944937d3fa5b09f49e6fa41a85b3068694bcb8331c0d081d"
+      },
+      {
+        "path": "MRL_Video/examples/demo.json",
+        "size": 511,
+        "sha256": "a52a137ee709f2ad431450dfafabcb9a44e418dcbbe08956e127b66c07407c3a"
+      },
+      {
+        "path": "MRL_Video/model.py",
+        "size": 8869,
+        "sha256": "0e9bcdadb0f40e73bc5deb1e29a3228bf545baa8fa3d9f9a8a7d445eed8ad9ef"
+      },
+      {
+        "path": "MRL_Video/openapi.json",
+        "size": 18724,
+        "sha256": "0a6a13638dd93522743859693e639aec728802676281be2a3ab4a8dc4f0e47ca"
+      },
+      {
+        "path": "MRL_Video/render.py",
+        "size": 16135,
+        "sha256": "f0611a2c9a33d5ca82085c4c895cb6ef7b10fdd551bac5466478f4a62f13a935"
+      },
+      {
+        "path": "MRL_Video/request.schema.json",
+        "size": 3953,
+        "sha256": "8944d880330a073d98ded781ef975fbcae1aec24fc5f26230fe7dd8455e50b10"
+      },
+      {
+        "path": "MRL_Video/requirements.txt",
+        "size": 34,
+        "sha256": "08b047e969c7d2d05151e5cddd91674db82a2efe062357ae3a46bc63d8b0db8d"
+      },
+      {
+        "path": "MRL_Video/service.py",
+        "size": 11273,
+        "sha256": "8124bd42d600e1da78d1320ff33d47d4852817cca32e38dbd269db5970b36889"
+      },
+      {
+        "path": "MRL_Video/store.py",
+        "size": 10435,
+        "sha256": "ff53bd37a495fcbc83432c139466d8c31e7309effad99a09330c481c3955f113"
+      },
+      {
+        "path": "MRL_Video/templates/explainer.json",
+        "size": 1368,
+        "sha256": "a75fd6c07099e9dec270b27507796f181c0ee1c00b128e140a9128d5744fa795"
+      },
+      {
+        "path": "MRL_Video/tests/test_video.py",
+        "size": 16551,
+        "sha256": "830cd626f1025f569e1b3e51f2d82f66b634bac95745c08150fbab05204577f6"
+      },
+      {
+        "path": "MRL_Video/web.py",
+        "size": 16111,
+        "sha256": "cc53099a0e783e4bd30763e264855104fe7b844efa0d7e24e8fd2415cada633c"
+      },
+      {
+        "path": "config/MRL_Video_Bridge.json",
+        "size": 1298,
+        "sha256": "2a8695a9d767dac8e0af3ed836e1a2cbaea9304ade3d50ea8010eb59a8926e68"
+      },
+      {
+        "path": "docs/MRL_Video_Acceptance.md",
+        "size": 4136,
+        "sha256": "702aa9567040809f2a9e53db2e616ff570a2a096a1762a5bf9d580ba32e51eed"
+      },
+      {
+        "path": "evidence/MRL_Video_Validation_20261103.json",
+        "size": 7748,
+        "sha256": "9716e4a8032f87661296ddc6028e6d512c5506837758955a0146c4f1ad7df1f1"
+      },
+      {
+        "path": "scripts/MRL_Start_Video.ps1",
+        "size": 1563,
+        "sha256": "b2a9418b0f5b7ad10a960174f54a75b30da388a52a4cacb85e7da655523d8328"
+      },
+      {
+        "path": "MRL_Video/longfilm.py",
+        "size": 14461,
+        "sha256": "af8c179903a8c818554774c5018ddec1dd39793e3fcbd51a378e1cce0087a408"
+      },
+      {
+        "path": "MRL_Video/episode_adapter.py",
+        "size": 1557,
+        "sha256": "1823dae06ec66d341191d8fe1571ba3cec3fd942e2a51a2ffff6bcb6e5dd403f"
+      },
+      {
+        "path": "MRL_Video/fixture_acceptance.py",
+        "size": 3620,
+        "sha256": "899581a5034aa4409cbed615cfb5e526d4457ddcec9198afb9050d91b688b85c"
+      },
+      {
+        "path": "MRL_Video/longfilm.schema.json",
+        "size": 3286,
+        "sha256": "cd993f503cb147363418234e084a83cf195ed80af2beeb4a7badde192137862d"
+      },
+      {
+        "path": "MRL_Video/tests/test_longfilm.py",
+        "size": 3344,
+        "sha256": "2f5e23ee0aea490434c804fa65c6c77256f41f2fa7d215d375e469b4fda21480"
+      },
+      {
+        "path": "docs/MRL_LongFilm_Integration_20261104.md",
+        "size": 6080,
+        "sha256": "a593635c5282c15640315c89dfc6b371452c12a6700efb43247857a35a0ab8ed"
+      },
+      {
+        "path": "evidence/MRL_LongFilm_Lineage_20261104.json",
+        "size": 3758,
+        "sha256": "16716409b93b15b3edd11204ab4c9ecee51677c964aac821342f5003b32236cf"
+      },
+      {
+        "path": "evidence/MRL_LongFilm_LocalTests_20261104.xml",
+        "size": 7766,
+        "sha256": "2c8853f1cc3f211fffe6164f0c691afeeca9132c585c9698da0717de6ee3cf09"
+      },
+      {
+        "path": "MRL_Video/tests/test_clip_longfilm.py",
+        "size": 8313,
+        "sha256": "c5f5a9478db648b982c618acab9b5d4432e5b8058c009e8b691df87517896242"
+      },
+      {
+        "path": "evidence/MRL_Longfilm_Benchmark_20261104.json",
+        "size": 49984,
+        "sha256": "0ba6b6d23bea1604c1144168eaaadd9ef8e4c9085d38ee36a76d476fd2cb79d3"
+      },
+      {
+        "path": "evidence/MRL_Longfilm_Source_Audit_20261104.json",
+        "size": 5463,
+        "sha256": "bf69e6ef9f3169b67e3aecedcdd99e2d41eb281fd26404315241946ae40b498c"
+      }
+    ],
+    "self_hash": "excluded; sealed by Git commit",
+    "dependency_tree": {
+      "MRL_Video/__main__.py": [
+        "MRL_Video/service.py",
+        "MRL_Video/web.py",
+        "MRL_Video/store.py"
+      ],
+      "MRL_Video/service.py": [
+        "MRL_Video/model.py",
+        "MRL_Video/render.py",
+        "MRL_Video/audit.py",
+        "MRL_Video/store.py",
+        "MRL_Video/longfilm.py"
+      ],
+      "MRL_Video/render.py": [
+        "MRL_Video/requirements.txt",
+        "external:local FFmpeg/FFprobe",
+        "external:local font"
+      ],
+      "MRL_Video/web.py": [
+        "MRL_Video/service.py"
+      ],
+      "scripts/MRL_Start_Video.ps1": [
+        "MRL_Video/__main__.py",
+        "config/MRL_Video_Bridge.json"
+      ],
+      ".github/workflows/mrl-video.yml": [
+        "MRL_Video/tests/test_video.py",
+        "MRL_Video/requirements.txt"
+      ],
+      "MRL_Video/longfilm.py": [
+        "MRL_Video/model.py",
+        "MRL_Video/render.py",
+        "MRL_Video/store.py"
+      ],
+      "MRL_Video/episode_adapter.py": [
+        "MRL_Video/longfilm.py"
+      ]
+    },
+    "package_map": {
+      ".github/workflows/mrl-video.yml": ".github/workflows/mrl-video.yml",
+      "MRL_Video/CHANGELOG.md": "MRL_Video/CHANGELOG.md",
+      "MRL_Video/Expected_Delivery.json": "MRL_Video/Expected_Delivery.json",
+      "MRL_Video/README.md": "MRL_Video/README.md",
+      "MRL_Video/__init__.py": "MRL_Video/__init__.py",
+      "MRL_Video/__main__.py": "MRL_Video/__main__.py",
+      "MRL_Video/audit.py": "MRL_Video/audit.py",
+      "MRL_Video/examples/demo.json": "MRL_Video/examples/demo.json",
+      "MRL_Video/model.py": "MRL_Video/model.py",
+      "MRL_Video/openapi.json": "MRL_Video/openapi.json",
+      "MRL_Video/render.py": "MRL_Video/render.py",
+      "MRL_Video/request.schema.json": "MRL_Video/request.schema.json",
+      "MRL_Video/requirements.txt": "MRL_Video/requirements.txt",
+      "MRL_Video/service.py": "MRL_Video/service.py",
+      "MRL_Video/store.py": "MRL_Video/store.py",
+      "MRL_Video/templates/explainer.json": "MRL_Video/templates/explainer.json",
+      "MRL_Video/tests/test_video.py": "MRL_Video/tests/test_video.py",
+      "MRL_Video/web.py": "MRL_Video/web.py",
+      "config/MRL_Video_Bridge.json": "config/MRL_Video_Bridge.json",
+      "docs/MRL_Video_Acceptance.md": "docs/MRL_Video_Acceptance.md",
+      "evidence/MRL_Video_Validation_20261103.json": "evidence/MRL_Video_Validation_20261103.json",
+      "scripts/MRL_Start_Video.ps1": "scripts/MRL_Start_Video.ps1",
+      "MRL_Video/longfilm.py": "MRL_Video/longfilm.py",
+      "MRL_Video/episode_adapter.py": "MRL_Video/episode_adapter.py",
+      "MRL_Video/fixture_acceptance.py": "MRL_Video/fixture_acceptance.py",
+      "MRL_Video/longfilm.schema.json": "MRL_Video/longfilm.schema.json",
+      "MRL_Video/tests/test_longfilm.py": "MRL_Video/tests/test_longfilm.py",
+      "docs/MRL_LongFilm_Integration_20261104.md": "docs/MRL_LongFilm_Integration_20261104.md",
+      "evidence/MRL_LongFilm_Lineage_20261104.json": "evidence/MRL_LongFilm_Lineage_20261104.json",
+      "evidence/MRL_LongFilm_Validation_20261104.json": "evidence/MRL_LongFilm_Validation_20261104.json",
+      "evidence/MRL_LongFilm_LocalTests_20261104.xml": "evidence/MRL_LongFilm_LocalTests_20261104.xml",
+      "MRL_Video/tests/test_clip_longfilm.py": "MRL_Video/tests/test_clip_longfilm.py",
+      "evidence/MRL_Longfilm_Benchmark_20261104.json": "evidence/MRL_Longfilm_Benchmark_20261104.json",
+      "evidence/MRL_Longfilm_Source_Audit_20261104.json": "evidence/MRL_Longfilm_Source_Audit_20261104.json"
+    }
+  },
+  "merged_regression": {
+    "passed": 67,
+    "skipped": 1,
+    "failures": 0,
+    "junit": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "1",
+      "tests": "68",
+      "time": "133.474",
+      "timestamp": "2026-11-04T01:05:09.257338-06:00",
+      "hostname": "22a81261f8dc"
+    },
+    "includes_full_1200_second_card_timeline": true
+  },
+  "clip_fixture_initial": {
+    "origin_signature": "MrLiouWord",
+    "scope": "SYNTHETIC_PIPELINE_ONLY",
+    "resolution": [
+      160,
+      90
+    ],
+    "fps": 24,
+    "target_seconds": 1200,
+    "duration_seconds": 1200.0,
+    "segment_count": 20,
+    "cache_hits": 19,
+    "full_decode": "PASS",
+    "frame_count": 28800,
+    "coverage": 100,
+    "subtitles": "SIDECAR_AND_EMBEDDED",
+    "event_chain_valid": true,
+    "mp4_sha256": "38e0ffdb26bab9776d293eb5827bfde6967e6d80d461d7d525ca891e8fa99411",
+    "receipt": {
+      "status": "DELIVERY_PASS",
+      "file_count": 75,
+      "zip_sha256": "c693d59717341c97b3583eb798dc76553af45b8c158f929abac0e126e318322c",
+      "coverage": 100
+    },
+    "elapsed_seconds": 76.35,
+    "formal_film": "NOT_PRODUCED",
+    "dl580": "NOT_RUN",
+    "iphone": "NOT_RUN"
+  },
+  "clip_recovery_fixture": {
+    "scope": "SYNTHETIC_PIPELINE_ONLY",
+    "resolution": [
+      160,
+      90
+    ],
+    "fps": 24,
+    "duration_seconds": 1200.0,
+    "frame_count": 28800,
+    "segment_count": 20,
+    "cache_hits": 20,
+    "audit": {
+      "schema": "MRL_AuditSupervisor_v1",
+      "status": "DELIVERY_PASS",
+      "missing": [],
+      "extra": [],
+      "mismatch": [],
+      "renamed": [],
+      "orphan": [],
+      "empty": [],
+      "coverage": 100,
+      "expected_files": [
+        "MRL_audit.json",
+        "MRL_manifest.json",
+        "assets/fixture.mp4",
+        "concat.txt",
+        "explainer-preview.gif",
+        "explainer-stills.png",
+        "explainer.mp4",
+        "layout.json",
+        "metadata.json",
+        "provenance.json",
+        "request.json",
+        "review_01.png",
+        "review_02.png",
+        "review_03.png",
+        "review_04.png",
+        "review_05.png",
+        "review_06.png",
+        "review_07.png",
+        "review_08.png",
+        "review_09.png",
+        "review_10.png",
+        "review_11.png",
+        "review_12.png",
+        "review_13.png",
+        "review_14.png",
+        "review_15.png",
+        "review_16.png",
+        "review_17.png",
+        "review_18.png",
+        "review_19.png",
+        "review_20.png",
+        "scene_01.png",
+        "scene_02.png",
+        "scene_03.png",
+        "scene_04.png",
+        "scene_05.png",
+        "scene_06.png",
+        "scene_07.png",
+        "scene_08.png",
+        "scene_09.png",
+        "scene_10.png",
+        "scene_11.png",
+        "scene_12.png",
+        "scene_13.png",
+        "scene_14.png",
+        "scene_15.png",
+        "scene_16.png",
+        "scene_17.png",
+        "scene_18.png",
+        "scene_19.png",
+        "scene_20.png",
+        "segment_001.mkv",
+        "segment_002.mkv",
+        "segment_003.mkv",
+        "segment_004.mkv",
+        "segment_005.mkv",
+        "segment_006.mkv",
+        "segment_007.mkv",
+        "segment_008.mkv",
+        "segment_009.mkv",
+        "segment_010.mkv",
+        "segment_011.mkv",
+        "segment_012.mkv",
+        "segment_013.mkv",
+        "segment_014.mkv",
+        "segment_015.mkv",
+        "segment_016.mkv",
+        "segment_017.mkv",
+        "segment_018.mkv",
+        "segment_019.mkv",
+        "segment_020.mkv",
+        "sources/fixture.txt",
+        "storyboard.json",
+        "subtitles.srt",
+        "timeline.json"
+      ],
+      "duration_seconds": 1200.0,
+      "frame_count": 28800,
+      "scene_samples": [
+        "review_01.png",
+        "review_02.png",
+        "review_03.png",
+        "review_04.png",
+        "review_05.png",
+        "review_06.png",
+        "review_07.png",
+        "review_08.png",
+        "review_09.png",
+        "review_10.png",
+        "review_11.png",
+        "review_12.png",
+        "review_13.png",
+        "review_14.png",
+        "review_15.png",
+        "review_16.png",
+        "review_17.png",
+        "review_18.png",
+        "review_19.png",
+        "review_20.png"
+      ],
+      "full_decode": "PASS",
+      "black_interval_scan": "PASS_750MS_THRESHOLD",
+      "format": "H264/AAC/yuv420p",
+      "layout": "BOUNDS_CHECKED",
+      "content_validation": "VERBATIM_SOURCE_CAPTIONS",
+      "semantic_visual_review": "OWNER_REVIEW_REQUIRED",
+      "limits": "Sample checks do not prove absence of all transient visual defects.",
+      "dl580_acceptance": "NOT_RUN"
+    },
+    "receipt": {
+      "status": "DELIVERY_PASS",
+      "file_count": 75,
+      "zip_sha256": "ed849f775e4e74a86398d961969ff2db5b46bbf87f2c030d98ad5cc3031b909a",
+      "coverage": 100
+    },
+    "versions": [
+      {
+        "id": "MRL_1fde3cdbe3ed46c18191fcf383ef7892",
+        "version_index": 1,
+        "parent_id": null,
+        "state": "FAILED",
+        "error": "Segment changed after validation"
+      },
+      {
+        "id": "MRL_11ef51e845e94d9ba8ef2fa7d5e30c36",
+        "version_index": 2,
+        "parent_id": "MRL_1fde3cdbe3ed46c18191fcf383ef7892",
+        "state": "SUCCEEDED",
+        "error": null
+      }
+    ],
+    "mp4_sha256": "38e0ffdb26bab9776d293eb5827bfde6967e6d80d461d7d525ca891e8fa99411",
+    "mp4_size": 44586100,
+    "formal_film": "NOT_PRODUCED",
+    "dl580": "NOT_RUN",
+    "iphone": "NOT_RUN"
+  },
+  "clip_fixture_post_execution_readback": {
+    "initial_zip": "PASS; reverified independently after subsequent runs",
+    "initial_zip_sha256": "c693d59717341c97b3583eb798dc76553af45b8c158f929abac0e126e318322c",
+    "later_attempts": "FAIL; some large local artifacts changed or truncated after in-process verification; cause unresolved",
+    "failure_was_blocked": true,
+    "additional_gate": "segment hashes rechecked immediately before composition",
+    "required_next": "fresh exact-head CI acceptance and stable artifact readback before merge/deployment"
+  },
+  "merged_card_fixture": {
+    "scope": "synthetic source-backed cards; no generative model",
+    "duration_seconds": 1200.0,
+    "frame_count": 28800,
+    "coverage": 100,
+    "wall_seconds": 67.24644543699833
+  },
+  "codeql": {
+    "reported_patterns_fixed": 7,
+    "fresh_exact_head_scan": "PENDING",
+    "review_threads_not_manually_resolved": true
+  },
+  "remaining": [
+    "R03 approved 1200-second story and complete creative assets",
+    "stable post-execution large-artifact readback for later local attempts",
+    "exact-head Linux/Windows CI and CodeQL",
+    "4K full-length quality/performance",
+    "real model/character/lip-sync integration",
+    "DL580 install, canonical Bridge roundtrip, iPhone playback",
+    "owner approval for merge/deployment"
+  ]
+}

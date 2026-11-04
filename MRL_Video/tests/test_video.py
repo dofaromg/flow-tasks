@@ -14,10 +14,10 @@ from pathlib import Path
 import pytest
 
 from MRL_Video.audit import verify_package
-from MRL_Video.model import VideoError, digest, local_file, validate
-from MRL_Video.render import Cancelled, Runner, ensure_glyphs, soundtrack, srt
+from MRL_Video.model import VideoError, local_file, validate
+from MRL_Video.render import Runner, ensure_glyphs, soundtrack, srt
 from MRL_Video.service import Service
-from MRL_Video.store import Store, TERMINAL
+from MRL_Video.store import Store
 from MRL_Video.web import Server
 
 ROOT = Path(__file__).parents[1]
@@ -418,3 +418,4 @@ def test_traditional_chinese_roundtrip(tmp_path):
     service.process(jid)
     assert service.store.get(jid)["state"] == "SUCCEEDED", service.store.get(jid)
     assert verify_package(service.artifact(jid, "package.zip"))["status"] == "DELIVERY_PASS"
+

@@ -81,6 +81,8 @@ jobs:
         run: |
           python -m compileall -q MRL_Video
           python -m pytest MRL_Video/tests -q --junitxml=MRL-video-tests.xml
+      - name: Full 1200-second synthetic pipeline acceptance
+        run: python -m MRL_Video.fixture_acceptance --out MRL-longfilm-fixture
       - name: Retain test evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -88,5 +90,7 @@ jobs:
           name: MRL-video-${{ matrix.os }}-${{ github.sha }}
           path: |
             MRL-video-tests.xml
+            MRL-longfilm-fixture/acceptance.json
             MRL-longfilm-benchmark.json
           if-no-files-found: error
+

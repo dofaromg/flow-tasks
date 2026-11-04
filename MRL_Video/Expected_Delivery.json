@@ -2,10 +2,10 @@
   "schema": "MRL_Expected_Delivery/v1",
   "origin_signature": "MrLiouWord",
   "canonical_authority": "Mr.liou",
-  "request": "Detailed high-spec local MRL video explainer module authorized 2026-11-03",
+  "request": "Continue 20-minute video engineering from PR705 with lineage preservation, reusable segmented assembly, cache, recovery and CI",
   "parent_repository": "dofaromg/flow-tasks",
   "parent_commit": "608b66e0db23e7cc4eef21ea752668ac800620b3",
-  "expected_file_count": 25,
+  "expected_file_count": 34,
   "expected_files": [
     ".github/workflows/mrl-video.yml",
     "MRL_Video/CHANGELOG.md",
@@ -29,7 +29,16 @@
     "docs/MRL_Video_Acceptance.md",
     "evidence/MRL_Video_Validation_20261103.json",
     "scripts/MRL_Start_Video.ps1",
+    "MRL_Video/longfilm.py",
+    "MRL_Video/episode_adapter.py",
+    "MRL_Video/fixture_acceptance.py",
+    "MRL_Video/longfilm.schema.json",
     "MRL_Video/tests/test_longfilm.py",
+    "docs/MRL_LongFilm_Integration_20261104.md",
+    "evidence/MRL_LongFilm_Lineage_20261104.json",
+    "evidence/MRL_LongFilm_Validation_20261104.json",
+    "evidence/MRL_LongFilm_LocalTests_20261104.xml",
+    "MRL_Video/tests/test_clip_longfilm.py",
     "evidence/MRL_Longfilm_Benchmark_20261104.json",
     "evidence/MRL_Longfilm_Source_Audit_20261104.json"
   ],
@@ -43,7 +52,8 @@
       "MRL_Video/model.py",
       "MRL_Video/render.py",
       "MRL_Video/audit.py",
-      "MRL_Video/store.py"
+      "MRL_Video/store.py",
+      "MRL_Video/longfilm.py"
     ],
     "MRL_Video/render.py": [
       "MRL_Video/requirements.txt",
@@ -61,10 +71,13 @@
       "MRL_Video/tests/test_video.py",
       "MRL_Video/requirements.txt"
     ],
-    "MRL_Video/tests/test_longfilm.py": [
-      "MRL_Video/service.py",
+    "MRL_Video/longfilm.py": [
+      "MRL_Video/model.py",
       "MRL_Video/render.py",
-      "MRL_Video/audit.py"
+      "MRL_Video/store.py"
+    ],
+    "MRL_Video/episode_adapter.py": [
+      "MRL_Video/longfilm.py"
     ]
   },
   "expected_features": [
@@ -84,9 +97,15 @@
     "exact ZIP inventory and SHA-256",
     "Windows launcher",
     "CI and acceptance runbook",
-    "opt-in 1200-second timeline",
-    "sealed segment cache and immutable child resume",
-    "configurable resolution CRF and preset"
+    "local clip timelines up to 1200 seconds",
+    "persistent segment queue",
+    "verified segment cache",
+    "child-version retry",
+    "original episode import",
+    "frame and sample clock",
+    "embedded and sidecar subtitles",
+    "fullhd/uhd output profiles",
+    "real 1200-second synthetic CI fixture"
   ],
   "excluded_from_source_package": [
     "generated media",
@@ -102,5 +121,6 @@
     "DL580",
     "iPhone",
     "owner semantic review"
-  ]
+  ],
+  "increment_parent_commit": "70f2d5f0ed9cde8bc92b30473651b19a6070cf15"
 }

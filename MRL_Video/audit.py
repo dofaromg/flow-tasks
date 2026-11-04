@@ -1,6 +1,7 @@
 """Requested-versus-delivered validation and independently verifiable ZIP inventory."""
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import re
@@ -9,8 +10,16 @@ from pathlib import Path
 
 from PIL import Image, ImageStat
 
-from .model import VideoError, digest
+from .model import VideoError
 from .render import FPS, PROFILES, Runner, probe
+
+
+def file_digest(path):
+    h = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 def write_json(path: Path, value: object) -> None:
@@ -21,7 +30,7 @@ def write_json(path: Path, value: object) -> None:
 
 def inventory(root: Path, names: list[str]) -> list[dict]:
     return [{"path": name, "size": (root / name).stat().st_size,
-             "sha256": digest((root / name).read_bytes())} for name in sorted(names)]
+             "sha256": file_digest(root / name)} for name in sorted(names)]
 
 
 def verify_package(path: Path) -> dict:
@@ -31,8 +40,8 @@ def verify_package(path: Path) -> dict:
     """
     with zipfile.ZipFile(path) as archive:
         entries = archive.infolist()
-        if (len(entries) > 3000 or sum(e.file_size for e in entries) > 2 * 1024 ** 3
-                or any(e.file_size > 512 * 1024 ** 2 for e in entries)):
+        if (len(entries) > 4096 or sum(e.file_size for e in entries) > 32 * 1024 ** 3
+                or any(e.file_size > 8 * 1024 ** 3 for e in entries)):
             raise VideoError("Package read budget exceeded")
         names = archive.namelist()
         if len(names) != len(set(names)) or "MRL_manifest.json" not in names:
@@ -46,14 +55,19 @@ def verify_package(path: Path) -> dict:
             name = row["path"]
             if Path(name).is_absolute() or ".." in Path(name).parts or "\\" in name:
                 raise VideoError("Unsafe package entry")
-            data = archive.read(name)
-            if not data or len(data) != row["size"] or digest(data) != row["sha256"]:
+            hashed = hashlib.sha256()
+            size = 0
+            with archive.open(name) as stream:
+                for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                    hashed.update(chunk)
+                    size += len(chunk)
+            if not size or size != row["size"] or hashed.hexdigest() != row["sha256"]:
                 raise VideoError("ZIP payload mismatch")
         audit = json.loads(archive.read("MRL_audit.json"))
         if audit.get("status") != "DELIVERY_PASS":
             raise VideoError("Package audit did not pass")
     return {"status": "DELIVERY_PASS", "file_count": len(names),
-            "zip_sha256": digest(path.read_bytes()), "coverage": 100}
+            "zip_sha256": file_digest(path), "coverage": 100}
 
 
 def audit_media(root: Path, request: dict, expected: list[str], runner: Runner) -> dict:
@@ -83,6 +97,18 @@ def audit_media(root: Path, request: dict, expected: list[str], runner: Runner) 
                             "-an", "-f", "null", "-"], root, capture_stderr=True)
     if any(float(v) >= .75 for v in re.findall(r"black_duration:([0-9.]+)", black_log)):
         raise VideoError("Unexpected black interval detected")
+    if request["schema"] == "MRL_LongFilm_Request/v1":
+        from .render import srt
+        if (root / "subtitles.srt").read_text(encoding="utf-8") != srt(request):
+            raise VideoError("Subtitle timeline mismatch")
+        if len([s for s in info["streams"] if s["codec_type"] == "subtitle"]) != 1:
+            raise VideoError("Embedded subtitle stream missing")
+        if frame_count != round(target * FPS):
+            raise VideoError("Long-film frame count mismatch")
+        if abs(float(video.get("duration", 0)) - target) > 1 / FPS:
+            raise VideoError("Long-film video timeline mismatch")
+        if abs(float(audios[0].get("duration", 0)) - target) > .05:
+            raise VideoError("Long-film audio timeline mismatch")
     position = 0.0
     samples = []
     for i, scene in enumerate(request["scenes"]):
@@ -133,3 +159,4 @@ def package(root: Path, expected: list[str], output: Path, metadata: dict) -> di
         for name in sorted(expected):
             archive.write(root / name, name)
     return verify_package(output)
+

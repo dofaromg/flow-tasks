@@ -66,3 +66,4 @@ def test_full_20minute_delivery(tmp_path):
             'wall_seconds':time.monotonic()-started,'audit':audit,
             'render':json.loads((root/'layout.json').read_text()),'job':jid}
     Path(os.environ.get('MRL_VIDEO_BENCHMARK','/tmp/MRL_longfilm_benchmark.json')).write_text(json.dumps(result,indent=2))
+
