@@ -10,7 +10,7 @@ from pathlib import Path
 
 from PIL import Image, ImageStat
 
-from .model import VideoError
+from .contract import VideoError
 from .render import FPS, PROFILES, Runner, probe
 
 

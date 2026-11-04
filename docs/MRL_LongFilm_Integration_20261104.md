@@ -51,7 +51,7 @@ python -m MRL_Video.fixture_acceptance --out new_fixture_directory
 
 CI 對同一 exact-head source artifact 在 Linux/Windows 執行回歸與完整 1200 秒 fixture。fixture 是 160×90、24 FPS 的 testsrc2＋音調，20 次重用同一 60 秒片段；它驗證合片、快取、字幕、時長、全片解碼與交付，不能證明生成模型、劇情或人物品質。1080p 另有 2 秒真實編碼驗收；4K 尚未做完整長片驗收。
 
-CodeQL 七項原指摘的修正：CLI KeyboardInterrupt 改為明示停止狀態；移除測試中三個未使用 import；HTTP GET/POST/file 統一 return 路徑。需等新 head 的 CodeQL 執行才能記為掃描通過；不以修改程式自動標記 review resolved。
+CodeQL 七項原指摘的修正：CLI KeyboardInterrupt 改為明示停止狀態；移除測試中三個未使用 import；HTTP GET/POST/file 統一 return 路徑。在 fb42de6 的新掃描中原七項 threads 已解決；該掃描另指出循環匯入，已抽出無相依的 contract.py 保留舊公開匯入名稱，待下一個 exact head 再掃描。
 
 R03 已取得程式與範本，尚無經核准的 1200 秒故事／完整實際生成素材。正式成片、人物一致性、口型、DL580、canonical Bridge 往返及 iPhone 播放仍待驗收。
 

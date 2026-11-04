@@ -16,12 +16,11 @@ from pathlib import Path
 
 from PIL import Image
 
-from .model import VideoError, canonical, digest, keys, local_file, number, text
+from .contract import VideoError, canonical, digest, keys, local_file, number, text
 from .render import FPS, PROFILES, probe, srt
 
 SCHEMA = 'MRL_LongFilm_Request/v1'
 QUALITIES = {'draft': ('veryfast', 25), 'fullhd': ('fast', 18), 'uhd': ('medium', 18)}
-PROFILES.update({'fullhd': (1920, 1080), 'uhd': (3840, 2160)})
 
 
 def file_hash(path: Path) -> str:

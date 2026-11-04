@@ -19,10 +19,8 @@ from threading import Event
 from fontTools.ttLib import TTFont
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
-from .model import VideoError, digest, local_file
+from .contract import FPS, PROFILES, VideoError, digest, local_file
 
-PROFILES = {"landscape": (1280, 720), "portrait": (720, 1280), "square": (960, 960)}
-FPS = 24
 SAMPLE_RATE = 22050
 
 

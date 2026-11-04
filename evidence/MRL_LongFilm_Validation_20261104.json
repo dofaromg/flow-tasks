@@ -6,7 +6,7 @@
   "scope": "source increment and local synthetic acceptance; no merge/deployment",
   "source_delivery": {
     "status": "DELIVERY_PASS",
-    "expected_file_count": 34,
+    "expected_file_count": 35,
     "missing": [],
     "extra": [],
     "mismatch": [],
@@ -25,8 +25,8 @@
       },
       {
         "path": "MRL_Video/Expected_Delivery.json",
-        "size": 3858,
-        "sha256": "cf03b0e0a984deae3172791b99e964dff82e32bbb356b6adf9d1614293638d0f"
+        "size": 4144,
+        "sha256": "0f8215cfc44bdb94a2e87694918bd59abb6a5687e27e998d5b5d12c04222124c"
       },
       {
         "path": "MRL_Video/README.md",
@@ -45,8 +45,8 @@
       },
       {
         "path": "MRL_Video/audit.py",
-        "size": 8574,
-        "sha256": "fd0aee7102d5bdcc944937d3fa5b09f49e6fa41a85b3068694bcb8331c0d081d"
+        "size": 8577,
+        "sha256": "0206cc81c12b9a3c101f71897c22706ea16f875fdb711e3a8bd80b017d7b04cf"
       },
       {
         "path": "MRL_Video/examples/demo.json",
@@ -55,8 +55,8 @@
       },
       {
         "path": "MRL_Video/model.py",
-        "size": 8869,
-        "sha256": "0e9bcdadb0f40e73bc5deb1e29a3228bf545baa8fa3d9f9a8a7d445eed8ad9ef"
+        "size": 7017,
+        "sha256": "9e89a8caac291ea086012131becac725fe18837fa8601e6c8417d17d7cf0ed73"
       },
       {
         "path": "MRL_Video/openapi.json",
@@ -65,8 +65,8 @@
       },
       {
         "path": "MRL_Video/render.py",
-        "size": 16135,
-        "sha256": "f0611a2c9a33d5ca82085c4c895cb6ef7b10fdd551bac5466478f4a62f13a935"
+        "size": 16059,
+        "sha256": "bcdb6d68c32f098a48d344837b65a63b7debaa38c6f911b97ae6090bd152c7cb"
       },
       {
         "path": "MRL_Video/request.schema.json",
@@ -125,8 +125,8 @@
       },
       {
         "path": "MRL_Video/longfilm.py",
-        "size": 14461,
-        "sha256": "af8c179903a8c818554774c5018ddec1dd39793e3fcbd51a378e1cce0087a408"
+        "size": 14401,
+        "sha256": "92805d74722d047bebfa4a9e3bf145ef28993d99268279b1fe87bb2dc914cda0"
       },
       {
         "path": "MRL_Video/episode_adapter.py",
@@ -150,8 +150,8 @@
       },
       {
         "path": "docs/MRL_LongFilm_Integration_20261104.md",
-        "size": 6080,
-        "sha256": "a593635c5282c15640315c89dfc6b371452c12a6700efb43247857a35a0ab8ed"
+        "size": 6162,
+        "sha256": "3cc82c49a46d9bdeef5d4c471e42809e711f171a2c210b80996891da70dae043"
       },
       {
         "path": "evidence/MRL_LongFilm_Lineage_20261104.json",
@@ -161,7 +161,7 @@
       {
         "path": "evidence/MRL_LongFilm_LocalTests_20261104.xml",
         "size": 7766,
-        "sha256": "2c8853f1cc3f211fffe6164f0c691afeeca9132c585c9698da0717de6ee3cf09"
+        "sha256": "5a757de1cf5d5e9c4bebade195e39bb9fe191556b8182be8354bf0b378251d6c"
       },
       {
         "path": "MRL_Video/tests/test_clip_longfilm.py",
@@ -177,6 +177,11 @@
         "path": "evidence/MRL_Longfilm_Source_Audit_20261104.json",
         "size": 5463,
         "sha256": "bf69e6ef9f3169b67e3aecedcdd99e2d41eb281fd26404315241946ae40b498c"
+      },
+      {
+        "path": "MRL_Video/contract.py",
+        "size": 2300,
+        "sha256": "d862335f10d258b838a234f2d71521ddc1a95f95f80d40fb0b682a490dd91f1a"
       }
     ],
     "self_hash": "excluded; sealed by Git commit",
@@ -196,7 +201,8 @@
       "MRL_Video/render.py": [
         "MRL_Video/requirements.txt",
         "external:local FFmpeg/FFprobe",
-        "external:local font"
+        "external:local font",
+        "MRL_Video/contract.py"
       ],
       "MRL_Video/web.py": [
         "MRL_Video/service.py"
@@ -210,12 +216,21 @@
         "MRL_Video/requirements.txt"
       ],
       "MRL_Video/longfilm.py": [
-        "MRL_Video/model.py",
+        "MRL_Video/contract.py",
         "MRL_Video/render.py",
-        "MRL_Video/store.py"
+        "MRL_Video/audit.py"
       ],
       "MRL_Video/episode_adapter.py": [
         "MRL_Video/longfilm.py"
+      ],
+      "MRL_Video/contract.py": [],
+      "MRL_Video/model.py": [
+        "MRL_Video/contract.py",
+        "MRL_Video/longfilm.py"
+      ],
+      "MRL_Video/audit.py": [
+        "MRL_Video/contract.py",
+        "MRL_Video/render.py"
       ]
     },
     "package_map": {
@@ -252,7 +267,8 @@
       "evidence/MRL_LongFilm_LocalTests_20261104.xml": "evidence/MRL_LongFilm_LocalTests_20261104.xml",
       "MRL_Video/tests/test_clip_longfilm.py": "MRL_Video/tests/test_clip_longfilm.py",
       "evidence/MRL_Longfilm_Benchmark_20261104.json": "evidence/MRL_Longfilm_Benchmark_20261104.json",
-      "evidence/MRL_Longfilm_Source_Audit_20261104.json": "evidence/MRL_Longfilm_Source_Audit_20261104.json"
+      "evidence/MRL_Longfilm_Source_Audit_20261104.json": "evidence/MRL_Longfilm_Source_Audit_20261104.json",
+      "MRL_Video/contract.py": "MRL_Video/contract.py"
     },
     "readback_note": "Preserved baseline bytes exactly, including trailing newline count; Git tree blob IDs used for remote verification."
   },
@@ -266,8 +282,8 @@
       "failures": "0",
       "skipped": "1",
       "tests": "68",
-      "time": "133.474",
-      "timestamp": "2026-11-04T01:05:09.257338-06:00",
+      "time": "148.145",
+      "timestamp": "2026-11-04T01:14:36.323481-06:00",
       "hostname": "22a81261f8dc"
     },
     "includes_full_1200_second_card_timeline": true
@@ -477,8 +493,9 @@
   },
   "codeql": {
     "reported_patterns_fixed": 7,
-    "fresh_exact_head_scan": "PENDING",
-    "review_threads_not_manually_resolved": true
+    "fresh_exact_head_scan": "PENDING_AFTER_CONTRACT_EXTRACTION",
+    "review_threads_not_manually_resolved": true,
+    "cyclic_import_fix": "Extract dependency-free contract.py; preserve public reexports; static internal import graph has zero cycles"
   },
   "remaining": [
     "R03 approved 1200-second story and complete creative assets",
@@ -488,5 +505,12 @@
     "real model/character/lip-sync integration",
     "DL580 install, canonical Bridge roundtrip, iPhone playback",
     "owner approval for merge/deployment"
-  ]
+  ],
+  "previous_head_ci": {
+    "head": "fb42de6ac707941befbf13322f60b858d9959ed6",
+    "run": "https://github.com/dofaromg/flow-tasks/actions/runs/41790371138",
+    "linux": "68 passed; full 1200-second card and clip fixtures passed",
+    "windows": "66 passed, 2 skipped; full 1200-second clip fixture passed",
+    "CodeQL": "analysis completed; original seven threads resolved; seven cyclic import findings subsequently fixed by contract extraction"
+  }
 }
