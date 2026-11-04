@@ -4,7 +4,18 @@ from __future__ import annotations
 import re
 
 # Re-export the original public names for existing callers.
-from .contract import VideoError, canonical as canonical, digest, keys, local_file as local_file, number, text
+from .contract import VideoError, digest, keys, number, text
+from . import contract
+
+
+def canonical(value: object) -> bytes:
+    """Keep the original public entry point backed by the shared contract."""
+    return contract.canonical(value)
+
+
+def local_file(root, name):
+    """Keep existing local-file callers compatible with the shared contract."""
+    return contract.local_file(root, name)
 
 
 def validate(request: dict) -> dict:

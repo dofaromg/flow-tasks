@@ -55,8 +55,8 @@
       },
       {
         "path": "MRL_Video/model.py",
-        "size": 7017,
-        "sha256": "9e89a8caac291ea086012131becac725fe18837fa8601e6c8417d17d7cf0ed73"
+        "size": 7299,
+        "sha256": "802701691872d316e5b31f63423c4b108896c8a12f657b6b6c05b227cb13dbee"
       },
       {
         "path": "MRL_Video/openapi.json",
@@ -495,7 +495,9 @@
     "reported_patterns_fixed": 7,
     "fresh_exact_head_scan": "PENDING_AFTER_CONTRACT_EXTRACTION",
     "review_threads_not_manually_resolved": true,
-    "cyclic_import_fix": "Extract dependency-free contract.py; preserve public reexports; static internal import graph has zero cycles"
+    "cyclic_import_fix": "Extract dependency-free contract.py; preserve public reexports; static internal import graph has zero cycles",
+    "compatibility_export_fix": "Replace canonical/local_file import reexports with real delegating functions; original names preserved.",
+    "prior_head_status": "Original seven and all seven cyclic-import threads resolved; unused compatibility imports fixed in this increment."
   },
   "remaining": [
     "R03 approved 1200-second story and complete creative assets",
@@ -512,5 +514,15 @@
     "linux": "68 passed; full 1200-second card and clip fixtures passed",
     "windows": "66 passed, 2 skipped; full 1200-second clip fixture passed",
     "CodeQL": "analysis completed; original seven threads resolved; seven cyclic import findings subsequently fixed by contract extraction"
+  },
+  "public_compatibility_wrapper_regression": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "12",
+    "tests": "68",
+    "time": "3.622",
+    "timestamp": "2026-11-04T01:22:17.493592-06:00",
+    "hostname": "22a81261f8dc"
   }
 }
