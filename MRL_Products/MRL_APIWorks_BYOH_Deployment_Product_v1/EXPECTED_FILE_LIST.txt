@@ -13,6 +13,16 @@ docs/MRL_REVERSIBLE_CHANGE_v1.md
 docs/MRL_SUPPORT_SCOPE_v1.md
 hardware/MRL_DL580_historical_snapshot_v1.json
 hardware/MRL_hardware_matrix_v1.json
+local_console/MRL_Accept_Local.cmd
+local_console/MRL_Start_Local.cmd
+local_console/MRL_Start_Local.ps1
+local_console/MRL_Start_Local.sh
+local_console/MRL_accept_local_v1.py
+local_console/MRL_build_local_delivery_v1.py
+local_console/MRL_local_console_v1.py
+local_console/MRL_verify_local_package_v1.py
+local_console/README_zhTW.md
+local_console/index.html
 scripts/MRL_artifact_trust_v1.py
 scripts/MRL_build_product_bundle_v1.py
 scripts/MRL_capture_node_evidence_v1.py
@@ -25,6 +35,8 @@ tests/test_artifact_trust.py
 tests/test_hardware_admission.py
 tests/test_hardware_bundle.py
 tests/test_hardware_smoke.py
+tests/test_local_console.py
+tests/test_local_delivery.py
 tests/test_node_evidence.py
 tests/test_product_bundle.py
 tests/test_reversible_change.py

@@ -60,6 +60,24 @@ jobs:
           python MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_verify_product_source_v1.py
       - name: Test signatures, offline replay, combined admission and packaging
         run: python -m unittest discover -s MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests -v
+      - name: Check local console script syntax
+        shell: python
+        run: |
+          import pathlib, subprocess, tempfile
+          html = pathlib.Path('MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/index.html').read_text(encoding='utf-8')
+          with tempfile.TemporaryDirectory() as d:
+              script = pathlib.Path(d)/'MRL_console.js'
+              script.write_text(html.split('<script>')[1].split('</script>')[0], encoding='utf-8')
+              subprocess.run(['node', '--check', str(script)], check=True)
+      - name: Build complete local server acceptance ZIP
+        shell: python
+        run: |
+          import pathlib, sys
+          product = pathlib.Path('MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1')
+          sys.path.insert(0, str(product/'local_console'))
+          import MRL_build_local_delivery_v1 as delivery
+          sha = pathlib.Path('MRL_33_SOURCE_COMMIT.txt').read_text().strip()
+          print(delivery.build(product/'dist/MRL_Runtime_Trust_Local_v1_1_0.zip', sha))
       - name: Export synthetic public replay evidence (never production trust)
         shell: python
         run: |
@@ -89,5 +107,7 @@ jobs:
           path: |
             MRL_33_CI_RECEIPT.json
             MRL_33_SYNTHETIC_REPLAY/
+            MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/dist/MRL_Runtime_Trust_Local_v1_1_0.zip
+            MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/dist/MRL_Runtime_Trust_Local_v1_1_0.zip.sha256
           if-no-files-found: error
           retention-days: 14
