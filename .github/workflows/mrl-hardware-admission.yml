@@ -10,6 +10,7 @@ on:
       - 'tests/test_gpu_hardware_admission.py'
       - 'tests/test_mrl_hardware_admission.py'
       - '.github/workflows/mrl-hardware-admission.yml'
+      - 'config/MRL_LICENSE_SCOPE_REGISTRY_v1.json'
   push:
     branches: [main, 'mrl-34/**']
     paths:
@@ -20,6 +21,7 @@ on:
       - 'tests/test_gpu_hardware_admission.py'
       - 'tests/test_mrl_hardware_admission.py'
       - '.github/workflows/mrl-hardware-admission.yml'
+      - 'config/MRL_LICENSE_SCOPE_REGISTRY_v1.json'
 
 permissions:
   contents: read
@@ -35,6 +37,7 @@ jobs:
           sparse-checkout: |
             /MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/
             /MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/
+            /config/MRL_LICENSE_SCOPE_REGISTRY_v1.json
             /utils/gpu_orchestrator.py
             /utils/mrl_hardware_admission.py
             /configs/gpu_allocation.yaml
@@ -48,6 +51,7 @@ jobs:
           utils/gpu_orchestrator.py utils/mrl_hardware_admission.py
           configs/gpu_allocation.yaml tests/test_gpu_hardware_admission.py
           tests/test_mrl_hardware_admission.py
+          config/MRL_LICENSE_SCOPE_REGISTRY_v1.json
           CHANGELOG.md config/Mrliou_MRL_Sync_Delivery_v1.json
           config/Mrliou_Structure_Authorization_Delivery_v1.json
       - uses: actions/upload-artifact@v4

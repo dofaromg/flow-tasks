@@ -16,6 +16,7 @@
   },
   "expected_file_list": [
     ".github/workflows/mrl-artifact-trust.yml",
+    ".github/workflows/mrl-hardware-admission.yml",
     "CHANGELOG.md",
     "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/EXPECTED_FILE_LIST.txt",
     "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/MANIFEST.json",
@@ -29,6 +30,8 @@
     "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_artifact_trust.py",
     "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_license_gate.py",
     "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_product_bundle.py",
+    "config/Mrliou_MRL_Sync_Delivery_v1.json",
+    "config/Mrliou_Structure_Authorization_Delivery_v1.json",
     "docs/evidence/mrl-37/MRL_37_ENGINEERING_EVIDENCE_R01.json"
   ],
   "files": [
@@ -36,6 +39,11 @@
       "path": ".github/workflows/mrl-artifact-trust.yml",
       "size": 4787,
       "sha256": "762482dc1d4fb1683aec79339b1d5ba8c32990e347480233dfc7ead1b8edc8a7"
+    },
+    {
+      "path": ".github/workflows/mrl-hardware-admission.yml",
+      "size": 4840,
+      "sha256": "fc6f233d8502bc0ce2d4eb3b5a2883dfc02d88a08e7b711c63a9873816c03de4"
     },
     {
       "path": "CHANGELOG.md",
@@ -101,12 +109,22 @@
       "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_product_bundle.py",
       "size": 8505,
       "sha256": "bf1fa9cf0f3af93e8f333f8eb70965479f262859b175f6d89a0c83d753807079"
+    },
+    {
+      "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+      "size": 10280,
+      "sha256": "21ffde853dc01dab51d245eade22293ba83cce71c65b8e430c35c3ad8afffa51"
+    },
+    {
+      "path": "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+      "size": 16937,
+      "sha256": "fa91f72005f6119e3342fbc8bdfa1a088b205fcd72b942c2ea15609815f20a55"
     }
   ],
   "self_hash": "Excluded to avoid recursive digest; enclosing exact Git commit binds this report.",
   "diff_audit": {
-    "expected_count": 15,
-    "actual_count": 15,
+    "expected_count": 18,
+    "actual_count": 18,
     "missing": [],
     "extra": [],
     "mismatch": [],
@@ -171,7 +189,14 @@
     "source_integrity": "PASS",
     "workflow_yaml_and_python_syntax": "PASS",
     "git_diff_check": "PASS",
-    "hosted_ci": "PENDING_EXACT_COMMIT_RUN; final PR records independently verified results"
+    "prior_exact_head_hosted_ci": {
+      "commit": "d7028ad8c0c20eda0508d90742eaf6596c9b9de8",
+      "run": 41948630511,
+      "linux": "PASS",
+      "windows": "PASS",
+      "hardware_ci": "FAILED_TRANSITIVE_CHANGELOG_HASH; repaired additively in this revision"
+    },
+    "hosted_ci": "PENDING_FINAL_EXACT_COMMIT_RUN; final PR records independently verified results"
   },
   "package_map": {
     "engineering_source_zip": {

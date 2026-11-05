@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 10424,
-      "sha256": "b74c8558e9440500961e7079d2875148c1972bfb9bc4f9273127d8715da57f06",
+      "size_bytes": 10976,
+      "sha256": "fe5d85aec36ab60439acc39e39d7e8e0d29c1eb72f7427277ac4545502704b4f",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -245,6 +245,34 @@
           "role": "additive_history",
           "size_bytes": 9834,
           "sha256": "43fd9b754b2ab504f17e9b9f8ff7819968559fc856259e7fbed50297faf0e338",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "bd4052bff5b96548a7fad8e618804e633525cfc5",
+      "source_pr": 708,
+      "reason": "MRL-37 adds the license gate CHANGELOG entry. Preserve previous evidence and refresh live dependency hashes; no rights or authority policy changes.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 10424,
+          "sha256": "b74c8558e9440500961e7079d2875148c1972bfb9bc4f9273127d8715da57f06",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 10976,
+          "sha256": "fe5d85aec36ab60439acc39e39d7e8e0d29c1eb72f7427277ac4545502704b4f",
           "dependencies": [
             "docs/Mrliou_MRL_Sync_Operations_v1.md"
           ]
