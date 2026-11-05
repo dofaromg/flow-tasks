@@ -62,20 +62,23 @@ if ($bin) {
     } else { $receipt.checks.tailnet='UNKNOWN' }
   } catch { $receipt.checks.tailnet='UNKNOWN' }
 }
-foreach ($name in @('MRL_Bridge','MRL_RuntimeOS','MRL_Tunnel','MRL_Tailscale','Tailscale')) {
+foreach ($name in @('MRL_Bridge','MRL_RuntimeOS','MRL_Inference','MRL_Inference_v5','MRL_FlowAgent_API','MRL_Tunnel','MRL_Tailscale','Tailscale')) {
   $sv=Get-Service -Name $name -ErrorAction SilentlyContinue
   $receipt.services+= [ordered]@{name=$name;status=if($sv){[string]$sv.Status}else{'NOT_FOUND'}}
 }
 $expected=@(
   [ordered]@{name='MRL_Bridge';port=7800},
   [ordered]@{name='MRL_RuntimeOS';port=8790},
-  [ordered]@{name='MRL_3DScanner_ProductBridge';port=3050}
+  [ordered]@{name='MRL_3DScanner_ProductBridge';port=3050},
+  [ordered]@{name='MRL_Inference';port=7500},
+  [ordered]@{name='MRL_FlowAgent_API';port=7900}
 )
 foreach ($item in $expected) {
   $listeners=@(Get-NetTCPConnection -State Listen -LocalPort $item.port -ErrorAction SilentlyContinue)
   $receipt.ports+= [ordered]@{
     name=$item.name;port=$item.port;listening=($listeners.Count -gt 0)
     binds=@($listeners|ForEach-Object {$_.LocalAddress}|Sort-Object -Unique)
+    owning_pids=@($listeners|ForEach-Object {$_.OwningProcess}|Sort-Object -Unique)
   }
 }
 if ($ProbeLoopback) {
