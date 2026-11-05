@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 10424,
-      "sha256": "b74c8558e9440500961e7079d2875148c1972bfb9bc4f9273127d8715da57f06"
+      "size_bytes": 10976,
+      "sha256": "fe5d85aec36ab60439acc39e39d7e8e0d29c1eb72f7427277ac4545502704b4f"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 9291,
-      "sha256": "fe487e4e8f44981b7c26eea4e16fc267cb8537e754f99d779917f81de703bc14"
+      "size_bytes": 10280,
+      "sha256": "21ffde853dc01dab51d245eade22293ba83cce71c65b8e430c35c3ad8afffa51"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -391,6 +391,36 @@
           "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
           "size_bytes": 9266,
           "sha256": "f5d011066ef62b0a72e06a52d1ecdf3a86b783e3386ffb787bf131adf20dbb8f"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "bd4052bff5b96548a7fad8e618804e633525cfc5",
+      "source_pr": 708,
+      "reason": "MRL-37 adds the license gate CHANGELOG entry. Preserve previous evidence and refresh live dependency hashes; no rights or authority policy changes.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 10424,
+          "sha256": "b74c8558e9440500961e7079d2875148c1972bfb9bc4f9273127d8715da57f06"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 9291,
+          "sha256": "fe487e4e8f44981b7c26eea4e16fc267cb8537e754f99d779917f81de703bc14"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 10976,
+          "sha256": "fe5d85aec36ab60439acc39e39d7e8e0d29c1eb72f7427277ac4545502704b4f"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 10280,
+          "sha256": "21ffde853dc01dab51d245eade22293ba83cce71c65b8e430c35c3ad8afffa51"
         }
       ],
       "origin_signature": "MrLiouWord"

@@ -12,12 +12,15 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('host', 'workload', 'artifact-paths', 'runtime-manifests', 'artifact-root', 'receipt'):
         parser.add_argument('--' + name, type=Path, required=True)
+    for name in ('license-manifest', 'license-context', 'license-evidence-root'):
+        parser.add_argument('--' + name, type=Path, required=True)
     args = parser.parse_args(argv)
     try:
         # runtime-manifests contains full signed documents for runner and runtime.
         result = evaluate_delivery(load_json(args.host), load_json(args.workload), args.artifact_root,
                                    load_json(args.artifact_paths), load_json(args.runtime_manifests),
-                                   load_json(POLICY))
+                                   load_json(POLICY), load_json(args.license_manifest),
+                                   load_json(args.license_context), args.license_evidence_root)
     except (ValueError, KeyError, TypeError, OSError) as error:
         result = {'origin_signature': 'MrLiouWord', 'allowed': False,
                   'formal_delivery_admission': 'DENIED', 'reason': str(error)}

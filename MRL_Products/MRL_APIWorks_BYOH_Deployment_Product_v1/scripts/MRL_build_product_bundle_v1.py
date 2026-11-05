@@ -39,7 +39,8 @@ def files_under(root: Path) -> list[Path]:
     """List reproducible bundle inputs while excluding generated output."""
     return sorted(
         path for path in root.rglob("*")
-        if path.is_file() and "__pycache__" not in path.parts and "dist" not in path.parts
+        if path.is_file() and "__pycache__" not in path.relative_to(root).parts
+        and "dist" not in path.relative_to(root).parts
     )
 
 
@@ -50,10 +51,20 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument('--third-party-runtime', type=Path, action='append', default=[],
                         help='Signed trust manifest; production policy must approve exact artifact')
     parser.add_argument('--runtime-evidence-root', type=Path)
+    parser.add_argument('--license-manifest', type=Path)
+    parser.add_argument('--license-context', type=Path)
+    parser.add_argument('--license-evidence-root', type=Path)
+    parser.add_argument('--customer-delivery', action='store_true',
+                        help='Requires exact Owner rights decisions for every bundled file')
     # Parse once after all arguments have been registered.
     args = parser.parse_args([] if argv is None else argv)
     if args.third_party_runtime and not args.runtime_evidence_root:
         parser.error('--runtime-evidence-root is required for third-party runtime inputs')
+    license_inputs = (args.license_manifest, args.license_context, args.license_evidence_root)
+    if any(license_inputs) and not all(license_inputs):
+        parser.error('all license inputs are required together')
+    if (args.customer_delivery or args.third_party_runtime) and not all(license_inputs):
+        raise ValueError('license gate DENIED: rights manifest/context/evidence required')
     hardware_route = None
     if args.hardware_route:
         matrix = json.loads((PRODUCT_ROOT / 'hardware/MRL_hardware_matrix_v1.json').read_text(encoding='utf-8'))
@@ -73,7 +84,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     DIST.mkdir(parents=True, exist_ok=True)
     output = DIST / f"{args.hardware_route or BUNDLE_ROOT_NAME}.zip"
-    with tempfile.TemporaryDirectory() as temporary:
+    with tempfile.TemporaryDirectory(dir=DIST) as temporary:
         stage = Path(temporary) / BUNDLE_ROOT_NAME
         runtime_target = stage / RUNTIME_RELATIVE
         product_target = stage / PRODUCT_RELATIVE
@@ -82,7 +93,7 @@ def main(argv: list[str] | None = None) -> int:
 
         trust_receipts = []
         if args.third_party_runtime:
-            from MRL_artifact_trust_v1 import export_evidence, load_json, POLICY
+            from MRL_artifact_trust_v1 import canonical, export_evidence, load_json, POLICY
             policy = load_json(POLICY)
             seen = set()
             for index, manifest_path in enumerate(args.third_party_runtime):
@@ -93,7 +104,12 @@ def main(argv: list[str] | None = None) -> int:
                 seen.add(identity)
                 receipt = export_evidence(trust_manifest, policy, args.runtime_evidence_root,
                                           stage / 'third_party_runtime' / str(index), 'release')
-                trust_receipts.append(receipt)
+                # Package a reproducible verification record. The verifier's live
+                # wall-clock observation is not a source/artifact identity field.
+                packaged_receipt = {k: v for k, v in receipt.items() if k != 'verified_at'}
+                (stage / 'third_party_runtime' / str(index) / 'MRL_TRUST_RECEIPT.json').write_bytes(
+                    canonical(packaged_receipt))
+                trust_receipts.append(packaged_receipt)
         if hardware_route:
             # These are distinct source delivery artifacts, not GPU runtime validation.
             (stage / 'MRL_HARDWARE_ROUTE.json').write_text(json.dumps({
@@ -109,6 +125,14 @@ def main(argv: list[str] | None = None) -> int:
             mutable_config_target,
         )
 
+        # Apply licensing to the complete staged payload after trust exports/config.
+        # Engineering source ZIPs confer no customer or commercial delivery permission.
+        license_receipt = {'allowed': False, 'reason': 'ENGINEERING_SOURCE_ONLY_RIGHTS_UNRESOLVED'}
+        if all(license_inputs):
+            from MRL_license_gate_v1 import package_license
+            from MRL_artifact_trust_v1 import load_json
+            license_receipt = package_license(stage, load_json(args.license_manifest),
+                                              load_json(args.license_context), args.license_evidence_root)
         entries = []
         for path in files_under(stage):
             name = path.relative_to(stage).as_posix()
@@ -126,6 +150,9 @@ def main(argv: list[str] | None = None) -> int:
             "archive_root": BUNDLE_ROOT_NAME,
             "mutable_after_extraction": [MUTABLE_CONFIG.as_posix()],
             "files": entries,
+            "license_admission": license_receipt,
+            "package_purpose": "RIGHTS_REVIEWED_CANDIDATE" if license_receipt['allowed'] else "ENGINEERING_ONLY",
+            "customer_delivery_approved": False,
             "hardware_bundle_id": args.hardware_route,
             "artifact_trust_receipts": trust_receipts,
             "third_party_runtime_included": bool(trust_receipts),
@@ -136,7 +163,8 @@ def main(argv: list[str] | None = None) -> int:
         (stage / MANIFEST_NAME).write_text(
             json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
         )
-        with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as archive:
+        candidate = Path(temporary) / output.name
+        with zipfile.ZipFile(candidate, "w", zipfile.ZIP_DEFLATED) as archive:
             for path in files_under(stage):
                 # Filesystem mtimes and host permissions are not product identity.
                 # Keep source timestamps in Git; normalize only ZIP metadata.
@@ -149,7 +177,7 @@ def main(argv: list[str] | None = None) -> int:
         # Read the persisted ZIP before asserting PASS, including the manifest.
         prefix = f"{BUNDLE_ROOT_NAME}/"
         expected_names = {prefix + item["path"] for item in entries} | {prefix + MANIFEST_NAME}
-        with zipfile.ZipFile(output) as archive:
+        with zipfile.ZipFile(candidate) as archive:
             names = archive.namelist()
             if len(names) != len(set(names)) or set(names) != expected_names:
                 raise ValueError("customer ZIP file coverage mismatch")
@@ -159,13 +187,22 @@ def main(argv: list[str] | None = None) -> int:
                 data = archive.read(prefix + item["path"])
                 if len(data) != item["size"] or hashlib.sha256(data).hexdigest() != item["sha256"]:
                     raise ValueError("customer ZIP content mismatch: " + item["path"])
+        if license_receipt['allowed']:
+            from MRL_license_gate_v1 import verify_packaged
+            verified = verify_packaged(stage)
+            if not verified['allowed']:
+                raise ValueError('persisted bundle license verification denied')
+        candidate.replace(output)
     checksum = sha256(output)
     checksum_path = output.with_suffix(".zip.sha256")
     checksum_path.write_text(f"{checksum}  {output.name}\n", encoding="utf-8")
     if checksum_path.read_text(encoding="utf-8") != f"{checksum}  {output.name}\n":
         raise ValueError("customer ZIP checksum sidecar readback mismatch")
-    print(json.dumps({"delivery_gate": "PRODUCT_BUNDLE_DELIVERY_PASS", "path": str(output),
-                      "sha256": checksum, "checksum_path": str(checksum_path)}, ensure_ascii=False))
+    print(json.dumps({"delivery_gate": ("PRODUCT_RIGHTS_REVIEWED_CANDIDATE_PASS" if license_receipt['allowed']
+                                        else "PRODUCT_ENGINEERING_BUNDLE_PASS"), "path": str(output),
+                      "sha256": checksum, "checksum_path": str(checksum_path),
+                      "engineering_package_verified": True, "customer_delivery_approved": False,
+                      "license_admission": license_receipt}, ensure_ascii=False))
     return 0
 
 
