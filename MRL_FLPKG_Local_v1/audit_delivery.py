@@ -41,8 +41,8 @@ def verify(path):
         orphan = sorted({name for parent, children in expected["expected_dependencies"].items()
                          for name in [parent, *children] if name not in files})
         coverage = round(100 * (len(files) - len(missing)) / len(files), 2)
-        passed = not (missing or extra or mismatch or orphan)
-        return {"status": "DELIVERY_PASS" if passed else "DELIVERY_FAIL",
+        status = "DELIVERY_FAIL" if missing or extra or mismatch or orphan else "DELIVERY_PASS"
+        return {"status": status,
                 "expected": len(files), "zip_count": len(names), "coverage": coverage,
                 "missing": missing, "extra": extra, "mismatch": mismatch,
                 "renamed": [], "orphan": orphan, "zip": descriptor(path.read_bytes())}

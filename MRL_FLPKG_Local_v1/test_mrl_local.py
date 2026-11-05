@@ -1,21 +1,68 @@
+from contextlib import redirect_stderr
 import hashlib
+import io
 import json
 from pathlib import Path
 import re
+import runpy
 import subprocess
 import sys
 import tempfile
 import time
 import unittest
+from unittest.mock import patch
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 import zipfile
 
+from audit_delivery import MANIFEST, build, verify
 from mrl_local import verify_job
 from mrl_package import extract_verified, verify_package
 from mrl_runtime import Runtime
 
 HOME = Path(__file__).resolve().parent
+
+
+class DeliveryChecks(unittest.TestCase):
+    def test_audit_accepts_intact_zip_and_rejects_modified_zip(self):
+        with tempfile.TemporaryDirectory() as temp:
+            intact = Path(temp) / "intact.zip"
+            built = build(intact)
+            self.assertEqual(built["status"], "DELIVERY_PASS")
+            self.assertEqual(built["expected"], 15)
+            self.assertEqual(built["zip_count"], 15)
+            self.assertEqual(built["coverage"], 100)
+            with zipfile.ZipFile(intact) as archive:
+                members = {name: archive.read(name) for name in archive.namelist()}
+
+            for name, content in (("README.md", b"modified"), (MANIFEST, b"{invalid json")):
+                with self.subTest(member=name):
+                    tampered = Path(temp) / "tampered.zip"
+                    with zipfile.ZipFile(tampered, "w") as archive:
+                        for member, data in {**members, name: content}.items():
+                            archive.writestr(member, data)
+                    failed = verify(tampered)
+                    self.assertEqual(failed["status"], "DELIVERY_FAIL")
+                    self.assertEqual(failed["coverage"], 100)
+                    self.assertIn("package manifest" if name == MANIFEST else name, failed["mismatch"])
+                    cli = subprocess.run(
+                        [sys.executable, "-X", "utf8", str(HOME / "audit_delivery.py"),
+                         "verify", str(tampered)], capture_output=True, timeout=10)
+                    self.assertEqual(cli.returncode, 1)
+                    self.assertEqual(json.loads(cli.stdout), failed)
+
+    def test_cli_distinguishes_interrupt_from_failure(self):
+        for error, code, message in (
+            (KeyboardInterrupt(), 130, "Interrupted by operator"),
+            (RuntimeError("unexpected error"), 1, "unexpected error"),
+        ):
+            with self.subTest(error=type(error).__name__):
+                stderr = io.StringIO()
+                with patch("argparse.ArgumentParser.parse_args", side_effect=error), redirect_stderr(stderr):
+                    with self.assertRaises(SystemExit) as exit_status:
+                        runpy.run_path(str(HOME / "mrl_local.py"), run_name="__main__")
+                self.assertEqual(exit_status.exception.code, code)
+                self.assertEqual(stderr.getvalue().strip(), message)
 
 
 class Deployment(unittest.TestCase):

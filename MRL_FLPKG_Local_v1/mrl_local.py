@@ -181,7 +181,8 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        pass
+        print("Interrupted by operator", file=sys.stderr)
+        sys.exit(130)
     except Exception as exc:
         print(str(exc), file=sys.stderr)
         sys.exit(1)
