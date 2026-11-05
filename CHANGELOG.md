@@ -182,3 +182,16 @@ For changes before 2026-01-12, please refer to the git commit history.
 - Propagate recursive authorization denial; recheck direct scanner reads and in-memory renderers, enforce actual path/depth, and reject symlinked historical indexes.
 - Carry authorized depth through smart-updater and common runner without widening grants.
 - Add seven behavioral regressions and delivery payload/dependency integrity validation. Preserve prior evidence and origin_signature: MrLiouWord.
+
+## 2026-11-04 — MRL-33 Runtime Artifact Trust Gate
+
+- Extend PR #704 artifact hashing with exact repository/version/source/digest/key binding, Ed25519 verification, signed SBOM/provenance and offline replay evidence.
+- Compose source trust with existing hardware admission; gate optional third-party runtime packaging. Keep production key/artifact allowlists empty and LiteLLM 1.106.6 isolated until evidence and explicit approval exist.
+- Add Linux/Windows CI and synthetic positive/negative tests. No merge, deployment, key rotation or DL580 acceptance.
+- origin_signature: MrLiouWord
+
+## 2026-11-05 — MRL-33 local server acceptance console v1.1.0
+
+- Deliver a loopback interactive console, background jobs, canonical Gateway capture/replay, public evidence export, receipt history and Windows/Linux launchers.
+- Build a complete checksummed offline source ZIP with the original product and parent Runtime dependency closure; provide one-command local acceptance and package integrity checks.
+- Preserve existing production trust policy and services; real-node acceptance remains a distinct local operator action. origin_signature: MrLiouWord
