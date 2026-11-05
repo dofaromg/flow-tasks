@@ -1,0 +1,223 @@
+{
+  "schema": "MRL_Source_Delivery_Audit/v1",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "observed_at": "2026-11-03T18:39:56.283044+08:00",
+  "repository": "dofaromg/flow-tasks",
+  "parent_commit": "608b66e0db23e7cc4eef21ea752668ac800620b3",
+  "branch": "codex/mrl-video-explainer-20261103",
+  "expected_file_count": 22,
+  "files": [
+    {
+      "path": ".github/workflows/mrl-video.yml",
+      "size": 3386,
+      "sha256": "eefa7700386eb37086b73568641ab31c2fd2ff6b809065c61fabddaf390a4ecf"
+    },
+    {
+      "path": "MRL_Video/CHANGELOG.md",
+      "size": 623,
+      "sha256": "f68195abb2bd2a86890cd482219bb0e9e0c7c042c0b9afaf233f720637198880"
+    },
+    {
+      "path": "MRL_Video/Expected_Delivery.json",
+      "size": 2647,
+      "sha256": "5b0b74b27dce0fb253911439c83035822eedfeeb8067f2247c0f9dc15ba657f1"
+    },
+    {
+      "path": "MRL_Video/README.md",
+      "size": 8909,
+      "sha256": "6ed99d24eecbfb45f4c8a433eb7a2ddd03dea15d1ff8640ae76a0bb4ada054e7"
+    },
+    {
+      "path": "MRL_Video/__init__.py",
+      "size": 103,
+      "sha256": "1138fab88a8217d558ef4b1640457f0dda68c4639230f72dba91b445ef9a8fd1"
+    },
+    {
+      "path": "MRL_Video/__main__.py",
+      "size": 4848,
+      "sha256": "dafc4431d3152c5d57c2f8a01c41044484de47f428896de6bfa88b5c8fa0c5f4"
+    },
+    {
+      "path": "MRL_Video/audit.py",
+      "size": 7279,
+      "sha256": "2186dacef6b4b05e3aeb3cd9655ac165cda20d442d78263948688fb00e687cec"
+    },
+    {
+      "path": "MRL_Video/examples/demo.json",
+      "size": 510,
+      "sha256": "e013bced71e41f24feeffbd5f436f941c5ddad798a3b2dd4457b73996875a138"
+    },
+    {
+      "path": "MRL_Video/model.py",
+      "size": 7191,
+      "sha256": "5a6ca29a8f48ebd0f5676085d6f14dcf657867de7d7c776eb8be4af26ef5166c"
+    },
+    {
+      "path": "MRL_Video/openapi.json",
+      "size": 13658,
+      "sha256": "b1383086641a86e1b699df44b64abfd75d4d5d8ce084328e887f583006a46981"
+    },
+    {
+      "path": "MRL_Video/render.py",
+      "size": 14270,
+      "sha256": "275c04901d398f23aac825490d65c2e57c48c0fd337bf77733ddad08bc389f72"
+    },
+    {
+      "path": "MRL_Video/request.schema.json",
+      "size": 3231,
+      "sha256": "59b25275b5979334b31281601bd43ea67db7e8a688570bdb47005fdac406fd8b"
+    },
+    {
+      "path": "MRL_Video/requirements.txt",
+      "size": 33,
+      "sha256": "5ad775b9e8aee4ef5b142feb4a022283fa18e0318f9519b21034494a9d848104"
+    },
+    {
+      "path": "MRL_Video/service.py",
+      "size": 9930,
+      "sha256": "6d9dce1dcfe5779f8db2fb854e445a357043562f0474a2b7eb812c98f9aa3e4b"
+    },
+    {
+      "path": "MRL_Video/store.py",
+      "size": 8313,
+      "sha256": "b26d6a7f73149bc591a36af430bc6d534575c6165cb9bb7e1a6b519d9724c68e"
+    },
+    {
+      "path": "MRL_Video/templates/explainer.json",
+      "size": 1367,
+      "sha256": "888f1e9001e918f99f4956fc7d96103e50269a614a6fa21a38a807cf9f56f177"
+    },
+    {
+      "path": "MRL_Video/tests/test_video.py",
+      "size": 16579,
+      "sha256": "80aa8997c975d656498d455504a501cb28cf2204a57a3587d609de4d4e59a746"
+    },
+    {
+      "path": "MRL_Video/web.py",
+      "size": 15858,
+      "sha256": "635c20d279828318b920186560c31a3fb2fe8a699628535548423f3b8c76434a"
+    },
+    {
+      "path": "config/MRL_Video_Bridge.json",
+      "size": 1297,
+      "sha256": "18129e0c40a13764056597d558753768017a7f13a1179958feee5a1f488b14a0"
+    },
+    {
+      "path": "docs/MRL_Video_Acceptance.md",
+      "size": 4135,
+      "sha256": "bc21da5baecd354af4cf32958ea4cf4dfeec6777e5cb510a2e2fd12ea6933638"
+    },
+    {
+      "path": "scripts/MRL_Start_Video.ps1",
+      "size": 1562,
+      "sha256": "5745ec3c30d5369eef81bece5eda3b22b39714f54da6c0f12a0935057b58b241"
+    }
+  ],
+  "self_hash_policy": "This evidence file is counted but excludes its own recursive hash; Git commit pins its bytes.",
+  "missing": [],
+  "extra": [],
+  "mismatch": [],
+  "renamed": [],
+  "orphan": [],
+  "empty": [],
+  "coverage": 100,
+  "source_delivery": "DELIVERY_PASS",
+  "dependency_tree": {
+    "MRL_Video/__main__.py": [
+      "MRL_Video/service.py",
+      "MRL_Video/web.py",
+      "MRL_Video/store.py"
+    ],
+    "MRL_Video/service.py": [
+      "MRL_Video/model.py",
+      "MRL_Video/render.py",
+      "MRL_Video/audit.py",
+      "MRL_Video/store.py"
+    ],
+    "MRL_Video/render.py": [
+      "MRL_Video/requirements.txt",
+      "external:local FFmpeg/FFprobe",
+      "external:local font"
+    ],
+    "MRL_Video/web.py": [
+      "MRL_Video/service.py"
+    ],
+    "scripts/MRL_Start_Video.ps1": [
+      "MRL_Video/__main__.py",
+      "config/MRL_Video_Bridge.json"
+    ],
+    ".github/workflows/mrl-video.yml": [
+      "MRL_Video/tests/test_video.py",
+      "MRL_Video/requirements.txt"
+    ]
+  },
+  "tests": {
+    "passed": 48,
+    "failed": 0,
+    "skipped": 1,
+    "skip_reason": "Local Traditional Chinese font unavailable; CI installs Noto CJK on Linux.",
+    "python": "3.12.14",
+    "junit_sha256": "1df0a719c835bb5df2ecffc19354f643775e4476d2068ec10deb56bf6f292469",
+    "scope": "Contract, concurrency, idempotency, worker locking/crash, queue/recovery, HTTP/auth/CSRF, real 3-profile FFmpeg production and ZIP tamper rejection",
+    "prior_attempt": "One earlier portrait run failed media validation; decoder/filter thread pools were bounded and the full suite was rerun successfully. Root cause is not conclusively established."
+  },
+  "json_validation": "All authored JSON parsed successfully",
+  "syntax": "Python compileall passed",
+  "actual_media_acceptance": [
+    {
+      "profile": "landscape",
+      "zip_sha256": "0bc5b47c3178a363f5b2aed07f8129dbe9c5c0cb8e87b3c8bf64a90ca0719d07",
+      "zip_size": 1812930,
+      "file_count": 29,
+      "duration": 32.0,
+      "full_decode": "PASS",
+      "black_interval_scan": "PASS_750MS_THRESHOLD",
+      "coverage": 100,
+      "narration_fixture": "synthetic tone, not speech",
+      "law_binding": "HASHED_LOCAL_SNAPSHOT"
+    },
+    {
+      "profile": "portrait",
+      "zip_sha256": "16f5b7ed14141702d9b5261b96d089313adab5e32c29ca3e43032abd3977bca0",
+      "zip_size": 1933077,
+      "file_count": 26,
+      "duration": 32.0,
+      "full_decode": "PASS",
+      "black_interval_scan": "PASS_750MS_THRESHOLD",
+      "coverage": 100,
+      "narration_fixture": "none",
+      "law_binding": "NOT_CONFIGURED"
+    },
+    {
+      "profile": "square",
+      "zip_sha256": "b0b12c66ad0f4ce2bfee2abcb817ba51db73ccf680263849b0d1c291309ec767",
+      "zip_size": 1973257,
+      "file_count": 26,
+      "duration": 32.0,
+      "full_decode": "PASS",
+      "black_interval_scan": "PASS_750MS_THRESHOLD",
+      "coverage": 100,
+      "narration_fixture": "none",
+      "law_binding": "NOT_CONFIGURED"
+    }
+  ],
+  "manual_visual_review": "Landscape and portrait still boards inspected; English word boundaries improved and rechecked.",
+  "ci": "PENDING_EXACT_HEAD",
+  "windows_execution": "NOT_RUN_LOCALLY",
+  "dl580_deployment": "NOT_RUN",
+  "mother_bridge_roundtrip": "NOT_RUN",
+  "iphone_acceptance": "NOT_RUN",
+  "overall_deployed_delivery": "NOT_ASSERTED",
+  "ci_followup": {
+    "first_head": "d8111ad88e602127471faf4b751aae1e48e5ac5d",
+    "run": 41621266367,
+    "linux_media_job": 125867281651,
+    "linux_media_test_step": "PASS_INCLUDING_CJK_TEST",
+    "windows_checkout": "FAILED_ON_PREEXISTING_INVALID_PATH_:mnt:data.txt",
+    "fix": "Linux exports only exact-head module and launcher; Windows consumes the same portable source artifact without checking out historical invalid paths.",
+    "root_changelog": "Restored original bytes because two existing delivery contracts pin its size/hash; new module CHANGELOG added.",
+    "second_run": 41621647508,
+    "second_windows_checkout": "Sparse checkout still rejected historical NTFS-invalid names; replaced by portable source artifact."
+  }
+}

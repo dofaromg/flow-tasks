@@ -1,0 +1,2111 @@
+{
+  "origin_signature": "MrLiouWord",
+  "fixture": "synthetic source-backed cards; no generative model",
+  "wall_seconds": 67.83894813200095,
+  "audit": {
+    "schema": "MRL_AuditSupervisor_v1",
+    "status": "DELIVERY_PASS",
+    "missing": [],
+    "extra": [],
+    "mismatch": [],
+    "renamed": [],
+    "orphan": [],
+    "empty": [],
+    "coverage": 100,
+    "expected_files": [
+      "MRL_audit.json",
+      "MRL_manifest.json",
+      "concat.txt",
+      "explainer-preview.gif",
+      "explainer-stills.png",
+      "explainer.mp4",
+      "layout.json",
+      "metadata.json",
+      "provenance.json",
+      "request.json",
+      "review_01.png",
+      "review_02.png",
+      "review_03.png",
+      "review_04.png",
+      "review_05.png",
+      "review_06.png",
+      "review_07.png",
+      "review_08.png",
+      "review_09.png",
+      "review_10.png",
+      "review_11.png",
+      "review_12.png",
+      "review_13.png",
+      "review_14.png",
+      "review_15.png",
+      "review_16.png",
+      "review_17.png",
+      "review_18.png",
+      "review_19.png",
+      "review_20.png",
+      "review_21.png",
+      "review_22.png",
+      "review_23.png",
+      "review_24.png",
+      "review_25.png",
+      "review_26.png",
+      "review_27.png",
+      "review_28.png",
+      "review_29.png",
+      "review_30.png",
+      "review_31.png",
+      "review_32.png",
+      "review_33.png",
+      "review_34.png",
+      "review_35.png",
+      "review_36.png",
+      "review_37.png",
+      "review_38.png",
+      "review_39.png",
+      "review_40.png",
+      "review_41.png",
+      "review_42.png",
+      "review_43.png",
+      "review_44.png",
+      "review_45.png",
+      "review_46.png",
+      "review_47.png",
+      "review_48.png",
+      "review_49.png",
+      "review_50.png",
+      "review_51.png",
+      "review_52.png",
+      "review_53.png",
+      "review_54.png",
+      "review_55.png",
+      "review_56.png",
+      "review_57.png",
+      "review_58.png",
+      "review_59.png",
+      "review_60.png",
+      "scene_01.mp4",
+      "scene_01.png",
+      "scene_02.mp4",
+      "scene_02.png",
+      "scene_03.mp4",
+      "scene_03.png",
+      "scene_04.mp4",
+      "scene_04.png",
+      "scene_05.mp4",
+      "scene_05.png",
+      "scene_06.mp4",
+      "scene_06.png",
+      "scene_07.mp4",
+      "scene_07.png",
+      "scene_08.mp4",
+      "scene_08.png",
+      "scene_09.mp4",
+      "scene_09.png",
+      "scene_10.mp4",
+      "scene_10.png",
+      "scene_11.mp4",
+      "scene_11.png",
+      "scene_12.mp4",
+      "scene_12.png",
+      "scene_13.mp4",
+      "scene_13.png",
+      "scene_14.mp4",
+      "scene_14.png",
+      "scene_15.mp4",
+      "scene_15.png",
+      "scene_16.mp4",
+      "scene_16.png",
+      "scene_17.mp4",
+      "scene_17.png",
+      "scene_18.mp4",
+      "scene_18.png",
+      "scene_19.mp4",
+      "scene_19.png",
+      "scene_20.mp4",
+      "scene_20.png",
+      "scene_21.mp4",
+      "scene_21.png",
+      "scene_22.mp4",
+      "scene_22.png",
+      "scene_23.mp4",
+      "scene_23.png",
+      "scene_24.mp4",
+      "scene_24.png",
+      "scene_25.mp4",
+      "scene_25.png",
+      "scene_26.mp4",
+      "scene_26.png",
+      "scene_27.mp4",
+      "scene_27.png",
+      "scene_28.mp4",
+      "scene_28.png",
+      "scene_29.mp4",
+      "scene_29.png",
+      "scene_30.mp4",
+      "scene_30.png",
+      "scene_31.mp4",
+      "scene_31.png",
+      "scene_32.mp4",
+      "scene_32.png",
+      "scene_33.mp4",
+      "scene_33.png",
+      "scene_34.mp4",
+      "scene_34.png",
+      "scene_35.mp4",
+      "scene_35.png",
+      "scene_36.mp4",
+      "scene_36.png",
+      "scene_37.mp4",
+      "scene_37.png",
+      "scene_38.mp4",
+      "scene_38.png",
+      "scene_39.mp4",
+      "scene_39.png",
+      "scene_40.mp4",
+      "scene_40.png",
+      "scene_41.mp4",
+      "scene_41.png",
+      "scene_42.mp4",
+      "scene_42.png",
+      "scene_43.mp4",
+      "scene_43.png",
+      "scene_44.mp4",
+      "scene_44.png",
+      "scene_45.mp4",
+      "scene_45.png",
+      "scene_46.mp4",
+      "scene_46.png",
+      "scene_47.mp4",
+      "scene_47.png",
+      "scene_48.mp4",
+      "scene_48.png",
+      "scene_49.mp4",
+      "scene_49.png",
+      "scene_50.mp4",
+      "scene_50.png",
+      "scene_51.mp4",
+      "scene_51.png",
+      "scene_52.mp4",
+      "scene_52.png",
+      "scene_53.mp4",
+      "scene_53.png",
+      "scene_54.mp4",
+      "scene_54.png",
+      "scene_55.mp4",
+      "scene_55.png",
+      "scene_56.mp4",
+      "scene_56.png",
+      "scene_57.mp4",
+      "scene_57.png",
+      "scene_58.mp4",
+      "scene_58.png",
+      "scene_59.mp4",
+      "scene_59.png",
+      "scene_60.mp4",
+      "scene_60.png",
+      "soundtrack.wav",
+      "sources/s.txt",
+      "storyboard.json",
+      "subtitles.srt"
+    ],
+    "duration_seconds": 1200.0,
+    "frame_count": 28800,
+    "scene_samples": [
+      "review_01.png",
+      "review_02.png",
+      "review_03.png",
+      "review_04.png",
+      "review_05.png",
+      "review_06.png",
+      "review_07.png",
+      "review_08.png",
+      "review_09.png",
+      "review_10.png",
+      "review_11.png",
+      "review_12.png",
+      "review_13.png",
+      "review_14.png",
+      "review_15.png",
+      "review_16.png",
+      "review_17.png",
+      "review_18.png",
+      "review_19.png",
+      "review_20.png",
+      "review_21.png",
+      "review_22.png",
+      "review_23.png",
+      "review_24.png",
+      "review_25.png",
+      "review_26.png",
+      "review_27.png",
+      "review_28.png",
+      "review_29.png",
+      "review_30.png",
+      "review_31.png",
+      "review_32.png",
+      "review_33.png",
+      "review_34.png",
+      "review_35.png",
+      "review_36.png",
+      "review_37.png",
+      "review_38.png",
+      "review_39.png",
+      "review_40.png",
+      "review_41.png",
+      "review_42.png",
+      "review_43.png",
+      "review_44.png",
+      "review_45.png",
+      "review_46.png",
+      "review_47.png",
+      "review_48.png",
+      "review_49.png",
+      "review_50.png",
+      "review_51.png",
+      "review_52.png",
+      "review_53.png",
+      "review_54.png",
+      "review_55.png",
+      "review_56.png",
+      "review_57.png",
+      "review_58.png",
+      "review_59.png",
+      "review_60.png"
+    ],
+    "full_decode": "PASS",
+    "black_interval_scan": "PASS_750MS_THRESHOLD",
+    "format": "H264/AAC/yuv420p",
+    "layout": "BOUNDS_CHECKED",
+    "content_validation": "VERBATIM_SOURCE_CAPTIONS",
+    "semantic_visual_review": "OWNER_REVIEW_REQUIRED",
+    "limits": "Sample checks do not prove absence of all transient visual defects.",
+    "dl580_acceptance": "NOT_RUN"
+  },
+  "render": {
+    "render_seconds": 51.06336425900008,
+    "cache_hits": 0,
+    "cache_misses": 60,
+    "encoding": {
+      "crf": 28,
+      "height": 320,
+      "preset": "ultrafast",
+      "width": 320
+    },
+    "layouts": [
+      {
+        "scene": 1,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "f36cbd3b9d1e26b07b8d346e3ed7f81132d4d5c2c5d7a6ea2c87fb86d6c5dcb3"
+      },
+      {
+        "scene": 2,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "07e2921bc0a03b27ee52b92ffd60b74673360b13df754932950a447055d1ce0f"
+      },
+      {
+        "scene": 3,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "e4800eeed97c9026a3fce8b1e602adb3843b989ee66aad17c647077ba52cd3cb"
+      },
+      {
+        "scene": 4,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "69f1e57856f360a86267087024dbbb1831143fc1ed7d3fc4115d1c27da7e1dab"
+      },
+      {
+        "scene": 5,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "c581df4891fb54f7ffc0de70fb22541134dda7ec8200d78542144ee3171387e4"
+      },
+      {
+        "scene": 6,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "c8810b615f94a280a708c2288288bce85b02111c2e18de54e3a38afe955d5757"
+      },
+      {
+        "scene": 7,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "717dd3d71191a3a28a1550a3ec529190ca1175b9b69e5edef25ec9000bbb71f0"
+      },
+      {
+        "scene": 8,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "d2fa24d7d30744b1eb87844ed9cefaf8d971b4896bac44df4ebc5dd726493ee5"
+      },
+      {
+        "scene": 9,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "76057540b877d82c12dc5038f20833eaaf8bd62abfd1141fb70a57c182fc6cde"
+      },
+      {
+        "scene": 10,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "02432f4031ee23b04930cfaef6655758a386d758139b1a6c3557621c30290624"
+      },
+      {
+        "scene": 11,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "325cfebd93f9216d637f7e7ded3747310c35fd97b900ce22b3f18d16e7b397e9"
+      },
+      {
+        "scene": 12,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "1f734e2b96ab99370dacc980e76e4235acb4990a0a8b2a7e896b54659522c283"
+      },
+      {
+        "scene": 13,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "3b9c34ef6ac1d9641fbb959088f88459cd9ab4009e65e3075bd388463d899637"
+      },
+      {
+        "scene": 14,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "bd0b88d014c9e179c38acd11b579957fe0d04362a9156501a9266e023637833c"
+      },
+      {
+        "scene": 15,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "ce8d9a1a16a9d433d9773d73d3b4620bfce60299253928171a830de6925f7df8"
+      },
+      {
+        "scene": 16,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "31bc1582087e281031336276a7a47d0f63ca09dfb7c8bd22e27b1bc67dc3ca70"
+      },
+      {
+        "scene": 17,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "91b07cc7f2fa423da9ca5971332d1016be1a6f9fbe22a1702dadc7bb54f26ea8"
+      },
+      {
+        "scene": 18,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "55a4aae66596b18d241e3acccb320fa4f9f36cd4a887f39a457dec818ec1af97"
+      },
+      {
+        "scene": 19,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "fd5ccffc810cd25d7dd75018f6103d245f0cdcde9a478694bc49ec31721407aa"
+      },
+      {
+        "scene": 20,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "87b39b956ea95c3ade7ee9fcc6f6d99a02e3c5f56320c6772ec09884f2233a78"
+      },
+      {
+        "scene": 21,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "3f6d68e314c241ef2935e7210d3a1aac34f766cc6988957c202cfd7d1974ca11"
+      },
+      {
+        "scene": 22,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "8ca69b4473f43c0001ec47d417a7622e817ea3f172dcb9f26817de4faea9b416"
+      },
+      {
+        "scene": 23,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "591b1a9ff1fdef0ab30393d6ef5113e438cee31b4c525b85fa64930f718980a1"
+      },
+      {
+        "scene": 24,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "a646dc27ef742cf9042e768151cb770b5e6a21f423e7e967df4d7f863b2a8b18"
+      },
+      {
+        "scene": 25,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "792f6592d5c0c2c73b002061d639a9b79b54059a127dd58612642ebe5bc2869b"
+      },
+      {
+        "scene": 26,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "caf33d7706c1e762c604043c38b180f91ca4c35c598da192fc55c749d552b2b4"
+      },
+      {
+        "scene": 27,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "65a6264706d139fabcc0e7ca7635b0bb962f8419b34a4462d002c632c11a697d"
+      },
+      {
+        "scene": 28,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "9fa8052a2585a7ed1dafe8ef67f43ff0a4dc979438d324c197a8a0654532e436"
+      },
+      {
+        "scene": 29,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "c341499f3e4bf44e4631a2de0848a147244963801f024d14a2bb45026140727b"
+      },
+      {
+        "scene": 30,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "cad424ac08bc2632ece258a7af6d269a4469625474a4db3c9e49634258a5bd65"
+      },
+      {
+        "scene": 31,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "2a066be9a6ce15a77b732edb74ae203fcc79ab9ae743895a0c29e9e75a5b6976"
+      },
+      {
+        "scene": 32,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "d2ba0ed26dfcc3f928178701e49198c90a7a24db2c4c2f55f8723ee219e2a81e"
+      },
+      {
+        "scene": 33,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "7baab3813d2b6b37b76848daf5987f85bcb893f873ee75d7616a1528e7967e03"
+      },
+      {
+        "scene": 34,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "90acef876ba6e2368b0ba954a66d805873b4763f4485748e3b3b1750804f35fc"
+      },
+      {
+        "scene": 35,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "450e85a4e16bd92c51e36901c6d4aa865a99b7f1262cc6071ba4d5d976b09f08"
+      },
+      {
+        "scene": 36,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "87478b653a5d8759ec9b55e59253da19aaa1552169a9d28c0ad54c557ab9d8bd"
+      },
+      {
+        "scene": 37,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "2064126aa8f629dcddcf482854629c3c077e7a3b0d26d2549de729aa30bbfc58"
+      },
+      {
+        "scene": 38,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "e77ba43530c8eeb7e19361c3c83df709000f339b449151b9fd243e763788361d"
+      },
+      {
+        "scene": 39,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "d3dfa256fc8ec316f2bb21a2419050f2141a9a7d3c685bd4f1bb8759a37c8d43"
+      },
+      {
+        "scene": 40,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "7da51fbbc49c1a243a2d99788bae4c4207bf77e6a07e2a95020aa7929e936d76"
+      },
+      {
+        "scene": 41,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "7c0e71e92d5214fe48dc8a6353fa7c6bfc54db7b35f2a6a7a119c107cb37e04b"
+      },
+      {
+        "scene": 42,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "a5009df6af6b31282333f60ad974bc0de1c0bbdced174ebef9a3ffebb40a7dbc"
+      },
+      {
+        "scene": 43,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "ca475ab74cf3e577683bfea4d7c705958f3b7ea1ffb57af52ab69bce8328c26f"
+      },
+      {
+        "scene": 44,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "aa84fe0c823e1206f3726b78e99a22576119f5ef6e4f8db5b98e4ff6083c61f8"
+      },
+      {
+        "scene": 45,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "0c059115728246f9b23ff2e26af2839173e9b70ba7244cee13e3a17b4af2dab2"
+      },
+      {
+        "scene": 46,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "042f863f7a99177fd8bb41c1ecbffd70092ebc68c5d2b0569c01e6c9067a2604"
+      },
+      {
+        "scene": 47,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "a5e485fe8468a2da59111f61ab0f4b65387438b93264ee72e5ca59dbb749df47"
+      },
+      {
+        "scene": 48,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "c3bb4bcadf34faac20f1a0c939b77d358dea883f0f595b55a16f9a21c6329e86"
+      },
+      {
+        "scene": 49,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "f5dacfd4f6c8a2e3d9e564a414852d358455494dd824e2743d2c65e4ad062715"
+      },
+      {
+        "scene": 50,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "cdce78f9279c97cba475aef683b2a689908454b013264c22175d726421d0be78"
+      },
+      {
+        "scene": 51,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "05bc793329089d5eb83298ac9353ef0e2221530473b5e8087db8c136cff38cef"
+      },
+      {
+        "scene": 52,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "9b6658ddbfc209544f955bcbe72a6e7871fd6df0ed543f87ae528911a65f9006"
+      },
+      {
+        "scene": 53,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "f5266a7b1995d116d27fb4e600f37bcff89644aef7f3874cb84e31e20a10292b"
+      },
+      {
+        "scene": 54,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "58f529a9f1f28436441d346a24a399db08748c8668b44b3ee3f6f99143d0877a"
+      },
+      {
+        "scene": 55,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "d52a64ad73a3858ac7d8c4bb1126cabc5db59c0e695976bda62f76c61cf1e6ba"
+      },
+      {
+        "scene": 56,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "07a1765665405283bcbc3f28ab45528c1c6d3af8caf6c249b64baf47c3afdbd9"
+      },
+      {
+        "scene": 57,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "4cffd4825d8221820c993c07935564081ab58512e69e938452a0009b245f9afb"
+      },
+      {
+        "scene": 58,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "3e70d5f3b5a545882b5e9cd012249ec3296ef8087858463451ef4bba027d5fed"
+      },
+      {
+        "scene": 59,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "0dd0e292ef9c0e4924fa796487e313dc374a9d60cf5c356f5fad591f1cf0e4cb"
+      },
+      {
+        "scene": 60,
+        "title": {
+          "font_size": 39,
+          "lines": 1,
+          "box": [
+            22,
+            44,
+            276,
+            57
+          ]
+        },
+        "caption": {
+          "font_size": 36,
+          "lines": 1,
+          "box": [
+            22,
+            214,
+            276,
+            73
+          ]
+        },
+        "source_id": "s",
+        "layout": "quote",
+        "visual_semantics": "decorative; diagram nodes do not assert source topology",
+        "status": "LAYOUT_PASS",
+        "cache_hit": false,
+        "segment_key": "c7efe4f8c80142ab82f6cbfdb4ce8c770809c21dba60544828550fff97ff8678"
+      }
+    ],
+    "font_sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+    "music": "disabled",
+    "narration_scenes": 0,
+    "semantic_review": "OWNER_REVIEW_REQUIRED"
+  },
+  "job": "MRL_d54fb4e78fab4a559f6bf0853fd116de",
+  "hd_smoke": {
+    "wall_seconds": 20.692687973998545,
+    "fixture": "40 second synthetic 1080p cards",
+    "origin_signature": "MrLiouWord",
+    "audit": {
+      "schema": "MRL_AuditSupervisor_v1",
+      "status": "DELIVERY_PASS",
+      "missing": [],
+      "extra": [],
+      "mismatch": [],
+      "renamed": [],
+      "orphan": [],
+      "empty": [],
+      "coverage": 100,
+      "expected_files": [
+        "MRL_audit.json",
+        "MRL_manifest.json",
+        "concat.txt",
+        "explainer-preview.gif",
+        "explainer-stills.png",
+        "explainer.mp4",
+        "layout.json",
+        "metadata.json",
+        "provenance.json",
+        "request.json",
+        "review_01.png",
+        "review_02.png",
+        "scene_01.mp4",
+        "scene_01.png",
+        "scene_02.mp4",
+        "scene_02.png",
+        "soundtrack.wav",
+        "sources/s.txt",
+        "storyboard.json",
+        "subtitles.srt"
+      ],
+      "duration_seconds": 40.0,
+      "frame_count": 960,
+      "scene_samples": [
+        "review_01.png",
+        "review_02.png"
+      ],
+      "full_decode": "PASS",
+      "black_interval_scan": "PASS_750MS_THRESHOLD",
+      "format": "H264/AAC/yuv420p",
+      "layout": "BOUNDS_CHECKED",
+      "content_validation": "VERBATIM_SOURCE_CAPTIONS",
+      "semantic_visual_review": "OWNER_REVIEW_REQUIRED",
+      "limits": "Sample checks do not prove absence of all transient visual defects.",
+      "dl580_acceptance": "NOT_RUN"
+    }
+  },
+  "environment": {
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+    "python": "3.12.14",
+    "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers"
+  },
+  "baseline": "9adfe7afe1f14312b07119e72be65b41f5c78a98",
+  "regression": "50 passed, 2 skipped (full longfilm separately executed; CJK font unavailable)",
+  "longfilm_tests": "3 passed; strengthened corrupt-cache test separately passed",
+  "remaining": [
+    "1080p/4K 20-minute performance",
+    "DL580 installation/GPU",
+    "canonical Bridge roundtrip",
+    "iPhone playback",
+    "real licensed assets/model runtime",
+    "story/character continuity"
+  ]
+}
+
