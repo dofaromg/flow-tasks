@@ -1,0 +1,43 @@
+name: MRL Tailnet Receipt Tests
+
+on:
+  pull_request:
+    paths:
+      - 'MRL_Mother/deploy_reference/tailscale/**'
+      - '.github/workflows/mrl-tailnet-receipt-tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-receipts:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: MRL_Mother/deploy_reference/tailscale
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /MRL_Mother/deploy_reference/tailscale/
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test synthetic network and receipt cases
+        run: python -m unittest -v test_MRL_tailnet_cross_device_receipt_v1
+      - name: Parse original collector on Windows
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          $parseErrors = $null
+          $tokens = $null
+          $path = (Resolve-Path .\MRL_tailnet_bridge_receipt_v1.ps1).Path
+          [void][System.Management.Automation.Language.Parser]::ParseFile($path, [ref]$tokens, [ref]$parseErrors)
+          if ($parseErrors) { $parseErrors | Out-String | Write-Error; exit 1 }
