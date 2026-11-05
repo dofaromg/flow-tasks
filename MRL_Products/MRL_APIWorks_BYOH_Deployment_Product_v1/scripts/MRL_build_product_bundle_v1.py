@@ -198,7 +198,8 @@ def main(argv: list[str] | None = None) -> int:
     checksum_path.write_text(f"{checksum}  {output.name}\n", encoding="utf-8")
     if checksum_path.read_text(encoding="utf-8") != f"{checksum}  {output.name}\n":
         raise ValueError("customer ZIP checksum sidecar readback mismatch")
-    print(json.dumps({"delivery_gate": "PRODUCT_BUNDLE_DELIVERY_PASS", "path": str(output),
+    print(json.dumps({"delivery_gate": ("PRODUCT_RIGHTS_REVIEWED_CANDIDATE_PASS" if license_receipt['allowed']
+                                        else "PRODUCT_ENGINEERING_BUNDLE_PASS"), "path": str(output),
                       "sha256": checksum, "checksum_path": str(checksum_path),
                       "engineering_package_verified": True, "customer_delivery_approved": False,
                       "license_admission": license_receipt}, ensure_ascii=False))

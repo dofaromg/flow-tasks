@@ -95,7 +95,8 @@ class ProductBundleTests(unittest.TestCase):
                     cwd=product, capture_output=True, text=True, check=False,
                 )
                 self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
-                self.assertNotIn("PRODUCT_BUNDLE_DELIVERY_PASS", result.stdout)
+                self.assertNotIn("PRODUCT_ENGINEERING_BUNDLE_PASS", result.stdout)
+                self.assertNotIn("PRODUCT_RIGHTS_REVIEWED_CANDIDATE_PASS", result.stdout)
                 self.assertFalse((product / "dist" / f"{BUNDLE_ROOT_NAME}.zip").exists())
 
     def test_builds_runnable_customer_zip(self) -> None:

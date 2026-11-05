@@ -63,12 +63,12 @@
     {
       "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/SHA256SUMS.txt",
       "size": 3320,
-      "sha256": "611a6b48e09a7275e765159e62922a1bf382d983f6a993db10b200d3d167c5ff"
+      "sha256": "6b984866bf50585d541546793a023fb37513f925d2616e4bca0802764b929e93"
     },
     {
       "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/docs/MRL_LICENSE_GATE_v1.md",
-      "size": 7522,
-      "sha256": "4de986e2f2de49c9238549e4267a7e237470ea7b13078c2d896229c397f54168"
+      "size": 7581,
+      "sha256": "dbcfddbbca300a7ab54ed5c56d106d2d8f28805a3052fdafea2acb43af079cc9"
     },
     {
       "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/licenses/MRL_license_manifest_schema_v1.json",
@@ -82,8 +82,8 @@
     },
     {
       "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_build_product_bundle_v1.py",
-      "size": 10996,
-      "sha256": "336002215d78d46e88c1d177d5a98c8562fe82bf3fe2906e75370d12720a2657"
+      "size": 11117,
+      "sha256": "fb032ca46e20f9bcb0f16c327172dc26b2f9bbe794e47e02ffa8bf46d9c52971"
     },
     {
       "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_license_gate_v1.py",
@@ -107,8 +107,8 @@
     },
     {
       "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_product_bundle.py",
-      "size": 8505,
-      "sha256": "bf1fa9cf0f3af93e8f333f8eb70965479f262859b175f6d89a0c83d753807079"
+      "size": 8598,
+      "sha256": "d034c93b43d8abee11bad984e846b23acaffb7ea0247b6dc37d41f1cc6b185d0"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
@@ -177,7 +177,7 @@
     "local_product_tests": {
       "passed": 102,
       "failed": 0,
-      "log_sha256": "e405a7555c8eaa68c61401065566104610922680b7690e1e7a1c60107d75dd0d"
+      "log_sha256": "19107d92f7b9c50219f220d790dab08a05718ab1ca067809338cda612dab9021"
     },
     "local_parent_runtime_tests": {
       "passed": 20,
@@ -190,11 +190,13 @@
     "workflow_yaml_and_python_syntax": "PASS",
     "git_diff_check": "PASS",
     "prior_exact_head_hosted_ci": {
-      "commit": "d7028ad8c0c20eda0508d90742eaf6596c9b9de8",
-      "run": 41948630511,
+      "commit": "c20c86785362c9586d91a318bae568d3951e29f4",
+      "trust_run": 41948864526,
+      "hardware_run": 41948864572,
+      "product_run": 41948864554,
       "linux": "PASS",
       "windows": "PASS",
-      "hardware_ci": "FAILED_TRANSITIVE_CHANGELOG_HASH; repaired additively in this revision"
+      "hardware_ci": "PASS; transitive checksum history preserved"
     },
     "hosted_ci": "PENDING_FINAL_EXACT_COMMIT_RUN; final PR records independently verified results"
   },
@@ -202,7 +204,7 @@
     "engineering_source_zip": {
       "file_count": 69,
       "manifest_payload_count": 68,
-      "sha256": "35f37078d6a2acf576289da32e26a46412470b687d0eaabf175f6635940c597f",
+      "sha256": "6071878bc830cbc44d8d357a818e389f097054454f1e34f205a4567fd3f5cdb8",
       "purpose": "ENGINEERING_ONLY",
       "license_allowed": false,
       "customer_delivery_approved": false

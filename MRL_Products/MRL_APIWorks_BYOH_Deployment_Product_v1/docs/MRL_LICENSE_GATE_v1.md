@@ -95,7 +95,8 @@ ZIP 先寫入暫存檔，逐項讀回 hash/size/coverage，驗證完整 NOTICE �
 
 未帶授權參數的既有 source build 只建立 `ENGINEERING_ONLY` 工程 ZIP，
 `license_admission.allowed=false`、`customer_delivery_approved=false`。
-舊的 `PRODUCT_BUNDLE_DELIVERY_PASS` 僅代表工程 ZIP 完整性，不得用作商業交付證據。
+輸出改為 `PRODUCT_ENGINEERING_BUNDLE_PASS`；授權已審候選包則為
+`PRODUCT_RIGHTS_REVIEWED_CANDIDATE_PASS`。兩者均不聲稱客戶已批准交付。
 這種工程模式禁止加入任何第三方 Runtime bytes。
 
 完整 NOTICE 包含所有已驗證 LICENSE／NOTICE／terms 原文，不以 Manifest 取代。
