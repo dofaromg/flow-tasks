@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MRL_License_Manifest_v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "origin_signature",
+    "components"
+  ],
+  "properties": {
+    "schema": {
+      "const": "MRL_License_Manifest_v1"
+    },
+    "origin_signature": {
+      "const": "MrLiouWord"
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "version",
+          "source",
+          "source_commit",
+          "delivery",
+          "license_id",
+          "files",
+          "documents",
+          "commercial_use",
+          "redistribution",
+          "mrl_acquisition",
+          "annual_revenue_limit_usd",
+          "threshold_applies_to",
+          "regions",
+          "customers",
+          "obligations"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "model_weights",
+              "runtime",
+              "container_base",
+              "optional_addon",
+              "mrl_source"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_commit": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "delivery": {
+            "enum": [
+              "bundled",
+              "customer_provided"
+            ]
+          },
+          "license_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "sha256"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "minItems": 1
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "sha256",
+                "role"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "role": {
+                  "enum": [
+                    "license",
+                    "notice",
+                    "terms"
+                  ]
+                }
+              }
+            },
+            "minItems": 1
+          },
+          "commercial_use": {
+            "type": "boolean"
+          },
+          "redistribution": {
+            "type": "boolean"
+          },
+          "mrl_acquisition": {
+            "type": "boolean"
+          },
+          "annual_revenue_limit_usd": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "threshold_applies_to": {
+            "enum": [
+              "none",
+              "mrl",
+              "customer",
+              "both"
+            ]
+          },
+          "regions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          },
+          "customers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          },
+          "obligations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0
+          }
+        }
+      },
+      "minItems": 1
+    }
+  }
+}

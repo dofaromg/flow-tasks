@@ -1,0 +1,202 @@
+{
+  "schema": "MRL_37_Engineering_Evidence_v1",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "date_taipei": "2026-11-05",
+  "task": "https://linear.app/dofaromgg/issue/MRL-37",
+  "lineage": {
+    "parent_pr": 706,
+    "parent_commit": "bd4052bff5b96548a7fad8e618804e633525cfc5",
+    "parent_pr_704_commit": "82b657edc314c502e365ebf1f3e3a1d3e1ae4a4e",
+    "main_observed": "608b66e0db23e7cc4eef21ea752668ac800620b3",
+    "registry": "config/MRL_LICENSE_SCOPE_REGISTRY_v1.json",
+    "registry_sha256": "f8ecef17b6990c05f301a2e4eafd0886e87ff78b45d653473dbd59aec9d43380",
+    "unchanged_root_law": "MRL_Mother/00_rootlaw/",
+    "unchanged_production_trust_policy": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/trust/MRL_artifact_trust_policy_v1.json"
+  },
+  "expected_file_list": [
+    ".github/workflows/mrl-artifact-trust.yml",
+    "CHANGELOG.md",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/EXPECTED_FILE_LIST.txt",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/MANIFEST.json",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/SHA256SUMS.txt",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/docs/MRL_LICENSE_GATE_v1.md",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/licenses/MRL_license_manifest_schema_v1.json",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_artifact_trust_v1.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_build_product_bundle_v1.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_license_gate_v1.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_runtime_delivery_admission_v1.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_artifact_trust.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_license_gate.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_product_bundle.py",
+    "docs/evidence/mrl-37/MRL_37_ENGINEERING_EVIDENCE_R01.json"
+  ],
+  "files": [
+    {
+      "path": ".github/workflows/mrl-artifact-trust.yml",
+      "size": 4787,
+      "sha256": "762482dc1d4fb1683aec79339b1d5ba8c32990e347480233dfc7ead1b8edc8a7"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "size": 10976,
+      "sha256": "fe5d85aec36ab60439acc39e39d7e8e0d29c1eb72f7427277ac4545502704b4f"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/EXPECTED_FILE_LIST.txt",
+      "size": 1091,
+      "sha256": "d295f084320e67eb34fcdd3120a8ff1045c302a912e66cf13eec249dfd9dbb6e"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/MANIFEST.json",
+      "size": 1032,
+      "sha256": "b864ad8b8c3304cd0467b57928fb4741bc5bf96de182d4d7eddff17b35a9f3f2"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/SHA256SUMS.txt",
+      "size": 3320,
+      "sha256": "611a6b48e09a7275e765159e62922a1bf382d983f6a993db10b200d3d167c5ff"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/docs/MRL_LICENSE_GATE_v1.md",
+      "size": 7522,
+      "sha256": "4de986e2f2de49c9238549e4267a7e237470ea7b13078c2d896229c397f54168"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/licenses/MRL_license_manifest_schema_v1.json",
+      "size": 4361,
+      "sha256": "8ff7ea0a82f8ab6ccb05eb407f8129032482031bde44a9709733ebf756382830"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_artifact_trust_v1.py",
+      "size": 18659,
+      "sha256": "b1b8656a0383d1f4cd8b74d0852abfa191cfcf318bab0824591ba9e696bd63a9"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_build_product_bundle_v1.py",
+      "size": 10996,
+      "sha256": "336002215d78d46e88c1d177d5a98c8562fe82bf3fe2906e75370d12720a2657"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_license_gate_v1.py",
+      "size": 17143,
+      "sha256": "5b88f3bce74bee03e86ea73b8147a625680ae9b5b6742bb25345337df94a55ed"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_runtime_delivery_admission_v1.py",
+      "size": 1773,
+      "sha256": "608fdff877f0724c2256c636031a87e3c4cf6155be8c32345f7cd29dd7f79818"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_artifact_trust.py",
+      "size": 15244,
+      "sha256": "72c119f763dc09b0d1c17d23943daa61bd831653d981798b73d2eda67cdd738f"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_license_gate.py",
+      "size": 21013,
+      "sha256": "f294a870ebb5420af0686168602ba51c35b776acdcd37c17575379ddb0def61a"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_product_bundle.py",
+      "size": 8505,
+      "sha256": "bf1fa9cf0f3af93e8f333f8eb70965479f262859b175f6d89a0c83d753807079"
+    }
+  ],
+  "self_hash": "Excluded to avoid recursive digest; enclosing exact Git commit binds this report.",
+  "diff_audit": {
+    "expected_count": 15,
+    "actual_count": 15,
+    "missing": [],
+    "extra": [],
+    "mismatch": [],
+    "renamed": [],
+    "orphans": [],
+    "empty": [],
+    "coverage_percent": 100,
+    "engineering_delivery": "DELIVERY_PASS"
+  },
+  "expected_dependency_tree": {
+    "MRL_ROOT_AUTHORITY_v1": [
+      "MRL_LICENSE_SCOPE_BOUNDARY_v1",
+      "MRL_AUTHORIZATION_AND_OPERATING_RIGHTS_v1",
+      "config/MRL_LICENSE_SCOPE_REGISTRY_v1.json"
+    ],
+    "PR706": {
+      "artifact_trust": [
+        "hardware_admission",
+        "license_gate"
+      ],
+      "license_gate": [
+        "license_manifest_schema",
+        "config/MRL_LICENSE_SCOPE_REGISTRY_v1.json",
+        "LICENSE_NOTICE_terms",
+        "customer_context"
+      ],
+      "product_builder": [
+        "source_integrity",
+        "parent_runtime",
+        "artifact_trust_exports",
+        "license_gate",
+        "ZIP_persisted_readback",
+        "NOTICE_reverification"
+      ]
+    }
+  },
+  "request_coverage": {
+    "manifest_schema": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/licenses/MRL_license_manifest_schema_v1.json",
+    "notice_generation_and_check": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_license_gate_v1.py::notice_bytes,package_license,verify_packaged",
+    "separate_model_runtime_rights": "test_model_and_runtime_require_separate_review; test_all_three_gates_pass_only_with_separate_model_runtime_rights",
+    "commercial_threshold": "test_commercial_threshold_both_entities_boundary_unknown",
+    "customer_provided_model": "test_customer_provided_no_redistribution_grant_or_mrl_acquisition",
+    "fail_closed": "test_spdx_label_does_not_grant_rights; test_unknown_licenses_even_with_fixture_approval; test_builder_requires_both_valid_signatures_and_valid_license",
+    "unknown_custom_missing_documents_no_redistribution": "tests/test_license_gate.py",
+    "zip_integration": "test_builder_positive_full_zip_and_stale_owner_denial",
+    "runtime_integration": "MRL_runtime_delivery_admission_v1.py",
+    "cross_platform_ci": ".github/workflows/mrl-artifact-trust.yml"
+  },
+  "validation": {
+    "local_product_tests": {
+      "passed": 102,
+      "failed": 0,
+      "log_sha256": "e405a7555c8eaa68c61401065566104610922680b7690e1e7a1c60107d75dd0d"
+    },
+    "local_parent_runtime_tests": {
+      "passed": 20,
+      "failed": 0,
+      "log_sha256": "40c31cc704fba71df39d3259125b6edf42b0d06169a82926a4ad3d23714417a6"
+    },
+    "product_source_inventory": 35,
+    "parent_source_inventory": 32,
+    "source_integrity": "PASS",
+    "workflow_yaml_and_python_syntax": "PASS",
+    "git_diff_check": "PASS",
+    "hosted_ci": "PENDING_EXACT_COMMIT_RUN; final PR records independently verified results"
+  },
+  "package_map": {
+    "engineering_source_zip": {
+      "file_count": 69,
+      "manifest_payload_count": 68,
+      "sha256": "35f37078d6a2acf576289da32e26a46412470b687d0eaabf175f6635940c597f",
+      "purpose": "ENGINEERING_ONLY",
+      "license_allowed": false,
+      "customer_delivery_approved": false
+    },
+    "rights_reviewed_fixture_zip": "Synthetic test only; full LICENSE/NOTICE text, evidence, per-file SHA-256 and persisted ZIP verification. No fixture grants written to canonical registry."
+  },
+  "boundaries": {
+    "engineering_tests": "PASS",
+    "legal_rights_review": "RIGHTS_UNRESOLVED",
+    "formal_merge": "NOT_PERFORMED",
+    "deployment": "NOT_PERFORMED",
+    "customer_delivery_approval": "NOT_GRANTED",
+    "new_third_party_rights": "NONE",
+    "new_production_trust": "NONE"
+  },
+  "owner_next_steps": [
+    "Review exact diff and hosted CI. Draft is stacked on PR706; do not merge its parents implicitly.",
+    "Any rights activation requires original license evidence, exact component/context hashes, grant scope/action/dates, effects and rollback, then explicit Mr.liou approval.",
+    "Keep deny policy until all separate legal, hardware, source trust, order and customer approval gates are satisfied."
+  ],
+  "rollback": "Before activation leave branch unused/close Draft; preserve history. Any later deployment/policy rollback requires separately approved operation and retained receipts."
+}

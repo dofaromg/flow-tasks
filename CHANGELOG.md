@@ -1,3 +1,11 @@
+## 2026-11-05 — MRL-37 license and redistribution gate (candidate)
+
+- Extend PR #706 with exact Owner-reviewed model/Runtime rights decisions; keep production RIGHTS_UNRESOLVED.
+- Add manifest schema, complete LICENSE/NOTICE export, commercial thresholds and customer-provided model restrictions.
+- Compose hardware, source trust and rights admission; verify all staged ZIP bytes before publication.
+- Add positive/negative Linux/Windows engineering tests; no merge, commercial grant, deployment or customer approval.
+- origin_signature: MrLiouWord
+
 ## 2026-11-03 — MRL-34 hardware admission (candidate)
 
 - Preserve DL580 historical snapshot; add machine-readable hardware routes and exact acceptance gate.

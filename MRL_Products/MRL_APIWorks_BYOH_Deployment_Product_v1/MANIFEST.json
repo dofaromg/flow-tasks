@@ -11,7 +11,7 @@
   "included_customer_organizations": 1,
   "included_byoh_nodes": 1,
   "stabilization_support_days": 30,
-  "expected_source_file_count": 31,
+  "expected_source_file_count": 35,
   "release_gates": {
     "product_source": "CANDIDATE",
     "parent_runtime_ci": "REQUIRED_PASS",
@@ -19,6 +19,7 @@
     "legal_order_form": "REQUIRED_PER_ORDER",
     "payment_collection": "REQUIRED_PER_ORDER",
     "hardware_admission": "REQUIRED_EXACT_REAL_HARDWARE_ACCEPTANCE",
-    "runtime_artifact_trust": "REQUIRED_SIGNED_EXACT_SOURCE_AND_BYTES"
+    "runtime_artifact_trust": "REQUIRED_SIGNED_EXACT_SOURCE_AND_BYTES",
+    "model_runtime_license": "REQUIRED_EXACT_OWNER_RIGHTS_DECISION_AND_NOTICE"
   }
 }
