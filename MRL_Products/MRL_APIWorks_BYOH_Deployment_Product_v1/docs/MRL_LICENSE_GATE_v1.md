@@ -100,7 +100,8 @@ ZIP 先寫入暫存檔，逐項讀回 hash/size/coverage，驗證完整 NOTICE �
 這種工程模式禁止加入任何第三方 Runtime bytes。
 
 完整 NOTICE 包含所有已驗證 LICENSE／NOTICE／terms 原文，不以 Manifest 取代。
-`MRL_LICENSE_EVIDENCE/` 保存原相對路徑，Registry snapshot 僅供血緣。
+`MRL_LICENSE_EVIDENCE/` 保存原相對路徑，Registry snapshot 僅供血緣，僅含本交付匹配的裁定與 canonical Registry hash，
+不匯出其他客戶或無關授權記錄。
 檢查已解壓包時，可在上述檢查命令加 `--verify-packaged`，artifact-root 指向包根目錄。
 它以目前 canonical Registry 重查、重算檔案與 NOTICE，不信任舊回執或包內 Registry。
 canonical Registry 缺失時拒絕，不以 snapshot 自行補權。

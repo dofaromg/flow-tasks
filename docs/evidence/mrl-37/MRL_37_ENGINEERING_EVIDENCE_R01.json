@@ -63,12 +63,12 @@
     {
       "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/SHA256SUMS.txt",
       "size": 3320,
-      "sha256": "6b984866bf50585d541546793a023fb37513f925d2616e4bca0802764b929e93"
+      "sha256": "41d5b3b545b6cfb8959ff4fdfd23bcc7bab5ec35ce6d9bf5494c798aa59336f8"
     },
     {
       "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/docs/MRL_LICENSE_GATE_v1.md",
-      "size": 7581,
-      "sha256": "dbcfddbbca300a7ab54ed5c56d106d2d8f28805a3052fdafea2acb43af079cc9"
+      "size": 7687,
+      "sha256": "388a03b08e6930a80b0ec361c680e57efd34cab300eaf3c9a9cca7ec9f836ff4"
     },
     {
       "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/licenses/MRL_license_manifest_schema_v1.json",
@@ -87,8 +87,8 @@
     },
     {
       "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_license_gate_v1.py",
-      "size": 17143,
-      "sha256": "5b88f3bce74bee03e86ea73b8147a625680ae9b5b6742bb25345337df94a55ed"
+      "size": 17667,
+      "sha256": "aeed1bd7ea1e1f91df711d0534063b4d0a97d16703281c6f4e5ba097945a1f7b"
     },
     {
       "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_runtime_delivery_admission_v1.py",
@@ -102,8 +102,8 @@
     },
     {
       "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_license_gate.py",
-      "size": 21013,
-      "sha256": "f294a870ebb5420af0686168602ba51c35b776acdcd37c17575379ddb0def61a"
+      "size": 21473,
+      "sha256": "11d9ef7197a257a0758a6af2f11571332809e2a2e28126c115d09c5b41fb5ffe"
     },
     {
       "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_product_bundle.py",
@@ -177,7 +177,7 @@
     "local_product_tests": {
       "passed": 102,
       "failed": 0,
-      "log_sha256": "19107d92f7b9c50219f220d790dab08a05718ab1ca067809338cda612dab9021"
+      "log_sha256": "34d5d4aea1e366c3774a4572e1f7d03e8c0d8d7009a3aacdebf05b9c143359f3"
     },
     "local_parent_runtime_tests": {
       "passed": 20,
@@ -204,7 +204,7 @@
     "engineering_source_zip": {
       "file_count": 69,
       "manifest_payload_count": 68,
-      "sha256": "6071878bc830cbc44d8d357a818e389f097054454f1e34f205a4567fd3f5cdb8",
+      "sha256": "3a09b27783faf77f4b98fe4bef4d8601878ccee85c76db1f86242ebb38991365",
       "purpose": "ENGINEERING_ONLY",
       "license_allowed": false,
       "customer_delivery_approved": false

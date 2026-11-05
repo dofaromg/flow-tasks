@@ -233,6 +233,15 @@ def evaluate(manifest, context, root, evidence_root, registry=None,
     return receipt
 
 
+def registry_snapshot(registry, receipt):
+    """Export only decisions applicable to this delivery, never unrelated grants."""
+    selected = set(receipt['reviewed_records'])
+    return {'schema': 'MRL_License_Registry_Snapshot_v1', 'origin_signature': 'MrLiouWord',
+            'canonical_registry_sha256': digest(registry),
+            'artifact_decisions': [r for r in registry.get('artifact_decisions', [])
+                                   if r.get('record_id') in selected]}
+
+
 def package_license(stage, manifest, context, evidence_root):
     """Gate every staged byte, then export reproducible evidence and full NOTICE."""
     registry = load_json(REGISTRY)
@@ -249,7 +258,7 @@ def package_license(stage, manifest, context, evidence_root):
             target.write_bytes(raw)
     for name, value in [('MRL_LICENSE_MANIFEST.json', manifest), ('MRL_LICENSE_CONTEXT.json', context),
                         ('MRL_LICENSE_RECEIPT.json', result),
-                        ('MRL_LICENSE_REGISTRY_SNAPSHOT.json', registry)]:
+                        ('MRL_LICENSE_REGISTRY_SNAPSHOT.json', registry_snapshot(registry, result))]:
         (Path(stage) / name).write_bytes(canonical(value))
     (Path(stage) / 'NOTICE').write_bytes(notice_bytes(manifest, evidence_root))
     return result
@@ -278,7 +287,7 @@ def verify_packaged(stage):
         raise ValueError('NOTICE mismatch')
     if load_json(stage / 'MRL_LICENSE_RECEIPT.json') != result:
         raise ValueError('license receipt mismatch')
-    if digest(load_json(stage / 'MRL_LICENSE_REGISTRY_SNAPSHOT.json')) != result['registry_sha256']:
+    if load_json(stage / 'MRL_LICENSE_REGISTRY_SNAPSHOT.json') != registry_snapshot(load_json(REGISTRY), result):
         raise ValueError('registry snapshot stale')
     return result
 

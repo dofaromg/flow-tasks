@@ -244,11 +244,17 @@ class LicenseGateTests(unittest.TestCase):
         self.denied('symlink')
 
     def test_full_notice_export_reverification_and_tamper(self):
+        unrelated = copy.deepcopy(self.registry['artifact_decisions'][0])
+        unrelated.update(record_id='UNRELATED_PRIVATE_GRANT', component_sha256='f' * 64)
+        self.registry['artifact_decisions'].append(unrelated)
         registry_file = Path(self.temp.name) / 'fixture-registry.json'
         registry_file.write_bytes(trust.canonical(self.registry))
         with patch.object(gate, 'REGISTRY', registry_file):
             gate.package_license(self.root, self.manifest, self.context, self.evidence)
             self.assertTrue(gate.verify_packaged(self.root)['allowed'])
+            snapshot = gate.load_json(self.root / 'MRL_LICENSE_REGISTRY_SNAPSHOT.json')
+            self.assertEqual(len(snapshot['artifact_decisions']), 1)
+            self.assertNotIn('UNRELATED_PRIVATE_GRANT', json.dumps(snapshot))
             original = (self.root / 'NOTICE').read_bytes()
             self.assertIn((self.evidence / 'LICENSE').read_bytes(), original)
             self.assertIn((self.evidence / 'NOTICE').read_bytes(), original)
