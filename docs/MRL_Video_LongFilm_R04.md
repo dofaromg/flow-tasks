@@ -23,6 +23,8 @@ v1 保留短片契約，並承接同日 `70f2d5f0ed9cde8bc92b30473651b19a6070cf1
 
 每幕完成編碼與完整解碼後，才以原子目錄更名封存 `MRL_scene_cache/<key>`。key 綁定 renderer bytes、FFmpeg/FFprobe、字體、原始素材 SHA、幕位置/總數、分鏡及畫質設定。復用前逐檔核對 SHA；損壞即失敗，保留證據，需操作者隔離損壞 entry 後重試，不悄悄覆寫。尚未完成的幕永遠不視為可復用。
 
+既有 `MRL_segment_cache` 曾觀察到已驗證片段由 12,282,553 bytes 縮至 11,534,336 bytes；原始紀錄指出縮小在合成前被拒絕，但沒有足夠的生命週期資料判定根因。後續 `layout.json` 每幕驗收記錄加入 hash、device/inode、size、mtime/ctime 與 open-handle 穩定性快照；驗證前後、預覽讀取前後與合成前都比對快照。快取發布前核對 staging copy 與封存 hash，並 fsync payload/receipt，再分別以 atomic replace 發布。回歸測試重現該尺寸縮小並核對完整預期/觀察診斷；這補強偵測與證據，不代表該次外部縮小根因已被證實或解決。
+
 ```bash
 python -m MRL_Video --root /local/mrl/video/versions --source-root /local/mrl/video/inputs \
   --font /local/fonts/font.ttf --timeout 21600 run MRL_Video/examples/longfilm_20min.json

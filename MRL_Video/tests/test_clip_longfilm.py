@@ -7,7 +7,7 @@ import pytest
 
 from MRL_Video.audit import verify_package
 from MRL_Video.episode_adapter import import_episode
-from MRL_Video.longfilm import SCHEMA, file_hash, timeline
+from MRL_Video.longfilm import SCHEMA, assert_file_snapshot, file_hash, file_snapshot, timeline
 from MRL_Video.model import VideoError, validate
 from MRL_Video.render import PROFILES, Runner, probe, srt
 from MRL_Video.service import Service
@@ -47,6 +47,22 @@ def test_20min_frame_clock():
     assert all(a['end_frame'] == b['start_frame'] for a, b in zip(rows, rows[1:]))
     assert '00:19:00,000 --> 00:20:00,000' in srt(r)
     assert validate(r) == r
+
+
+def test_segment_shrink_after_seal_is_rejected_with_identity_diagnostics(tmp_path):
+    segment = tmp_path / 'segment_001.mkv'
+    with segment.open('wb') as stream:
+        stream.truncate(12_282_553)
+    sealed = file_snapshot(segment)
+    with segment.open('r+b') as stream:
+        stream.truncate(11_534_336)
+    with pytest.raises(VideoError, match='Segment changed after validation') as error:
+        assert_file_snapshot(segment, sealed, 'Segment changed after validation')
+    details = json.loads(str(error.value).split(': ', 1)[1])
+    assert details['expected']['size'] == 12_282_553
+    assert details['observed']['size'] == 11_534_336
+    assert details['expected']['sha256'] != details['observed']['sha256']
+    assert details['expected']['file_identity'] == details['observed']['file_identity']
 
 
 def test_import_preserves_original(tmp_path):

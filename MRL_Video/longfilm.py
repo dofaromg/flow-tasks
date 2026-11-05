@@ -32,6 +32,41 @@ def file_hash(path: Path) -> str:
     return h.hexdigest()
 
 
+def file_snapshot(path: Path) -> dict:
+    """Hash a file while recording the identity held by the open read handle."""
+    def identity(info):
+        return {'device': info.st_dev, 'inode': info.st_ino, 'size': info.st_size,
+                'mtime_ns': info.st_mtime_ns, 'ctime_ns': info.st_ctime_ns}
+
+    h = hashlib.sha256()
+    with path.open('rb') as stream:
+        before = identity(os.fstat(stream.fileno()))
+        for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+            h.update(chunk)
+        after = identity(os.fstat(stream.fileno()))
+    path_identity = identity(path.stat())
+    if before != after or after != path_identity:
+        raise VideoError('Segment changed while its open-handle hash was being recorded')
+    return {'sha256': h.hexdigest(), 'file_identity': {'device': after['device'],
+            'inode': after['inode']}, 'size': after['size'], 'mtime_ns': after['mtime_ns'],
+            'ctime_ns': after['ctime_ns'], 'open_handle_verified': True}
+
+
+def assert_file_snapshot(path: Path, expected: dict, context: str) -> dict:
+    """Compare content and filesystem identity, retaining useful failure diagnostics."""
+    observed = file_snapshot(path)
+    if observed != expected:
+        details = json.dumps({'expected': expected, 'observed': observed}, sort_keys=True)
+        raise VideoError(f'{context}: {details}')
+    return observed
+
+
+def _fsync_file(path: Path) -> None:
+    with path.open('r+b') as stream:
+        stream.flush()
+        os.fsync(stream.fileno())
+
+
 def validate_longfilm(request: dict) -> dict:
     """Explicit clip timeline; reject rounding drift, invented captions and options."""
     keys(request, {'schema', 'title', 'sources', 'scenes', 'profile', 'quality',
@@ -171,7 +206,10 @@ def render_longfilm(request, work, assets, runner, phase, store, jid, workers):
                     hit = False
             if hit:
                 shutil.copyfile(cached, target)
+                before_validation = file_snapshot(target)
                 check_segment(target, frames, (width, height), runner)
+                sealed = file_snapshot(target)
+                assert_file_snapshot(target, before_validation, 'Segment changed during validation')
             else:
                 info = probe(source, runner)
                 video = next((s for s in info['streams'] if s['codec_type'] == 'video'), None)
@@ -204,18 +242,30 @@ def render_longfilm(request, work, assets, runner, phase, store, jid, workers):
                          '-crf', str(crf), '-threads', '2', '-pix_fmt', 'yuv420p',
                          '-c:a', 'pcm_s16le', '-ar', '48000', '-ac', '2', target.name]
                 runner.run(args, work)
+                before_validation = file_snapshot(target)
                 check_segment(target, frames, (width, height), runner)
+                sealed = file_snapshot(target)
+                assert_file_snapshot(target, before_validation, 'Segment changed during validation')
                 # Atomic cache publication; unique staging avoids concurrent duplicate keys.
                 with tempfile.TemporaryDirectory(dir=cache) as staging:
                     tmp = Path(staging)
+                    assert_file_snapshot(target, sealed, 'Segment changed before cache publication')
                     shutil.copyfile(target, tmp / 'clip.mkv')
-                    (tmp / 'receipt.json').write_bytes(canonical({'spec': spec, 'sha256': file_hash(target)}))
+                    if file_hash(tmp / 'clip.mkv') != sealed['sha256']:
+                        raise VideoError('Staged cache segment differs from its verified source')
+                    (tmp / 'receipt.json').write_bytes(canonical({'spec': spec, 'sha256': sealed['sha256']}))
+                    _fsync_file(tmp / 'clip.mkv')
+                    _fsync_file(tmp / 'receipt.json')
                     os.replace(tmp / 'clip.mkv', cached)
                     os.replace(tmp / 'receipt.json', receipt)
+            assert_file_snapshot(target, sealed, 'Segment changed after validation')
             runner.run(['ffmpeg', '-v', 'error', '-n', '-ss', str(scene['duration']/2),
                         '-i', target.name, '-frames:v', '1', f'scene_{index+1:02}.png'], work)
+            assert_file_snapshot(target, sealed, 'Segment changed after validation')
             store.segment_state(jid, index, 'SUCCEEDED', key, hit)
-            return {**row, 'cache_key': key, 'cache_hit': hit, 'sha256': file_hash(target),
+            return {**row, 'cache_key': key, 'cache_generation': key, 'cache_hit': hit,
+                    'cache_publication': 'cache-hit' if hit else 'fsynced-files+atomic-replace',
+                    'integrity_snapshot': sealed, 'sha256': sealed['sha256'],
                     'quality': request['quality'], 'transition': scene['transition']}
         except BaseException:
             store.segment_state(jid, index, 'FAILED', key)
@@ -230,8 +280,8 @@ def render_longfilm(request, work, assets, runner, phase, store, jid, workers):
             results.extend(pool.map(build, range(start, min(len(clock), start + workers))))
     for i, result in enumerate(results):
         runner.check()
-        if file_hash(work / f'segment_{i+1:03}.mkv') != result['sha256']:
-            raise VideoError('Segment changed after validation')
+        assert_file_snapshot(work / f'segment_{i+1:03}.mkv', result['integrity_snapshot'],
+                             f'Segment {i+1:03} changed after validation')
     phase('COMPOSE_VIDEO')
     (work / 'subtitles.srt').write_text(srt(request), encoding='utf-8')
     (work / 'concat.txt').write_text(''.join(
