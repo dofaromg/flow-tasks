@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 8683,
-      "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78"
+      "size_bytes": 9668,
+      "sha256": "991b533c2b523b16b20fbb285b8ae64ef0f3ede64a48483a9572681c6039f841"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 8235,
-      "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
+      "size_bytes": 11945,
+      "sha256": "d2d575a8cddd8291c752d788244b3b8d7e61c5f64e07872cb06df5b51bf9da51"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -355,6 +355,153 @@
           "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
           "size_bytes": 8235,
           "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "780f541c6d0ba96d876f137c847b237ef40fc93e",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
+      "reason": "PR #667 additive CHANGELOG entry requires refreshed live hashes for CHANGELOG and its sync manifest dependency. Preserve all preceding entries, counts, policies and payloads.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 6146,
+          "sha256": "ceb3be67cc8945b600351e998dcd2d9e2e80d0d6932c9545974fa216e297c953"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 5560,
+          "sha256": "0f76e27a8edd94f5ada5a5ed533c030426eb4800bc5662db8f89370727022886"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 7131,
+          "sha256": "e3e438f7f4c2ce7e30bd45cdc636b414a95dc0914a0c9e3c06aa713951cc7a96"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 6353,
+          "sha256": "0c4fd557e86b2dcd0ed467845c921b22d229ace5d1c0c2f0cb501159b1f1c2f5"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "fea30e790dab80b7c43e61c40482bbfb11b64d61",
+      "base_commit": "cc5b00595cab803867ec9ed374902cae04aefcad",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
+      "reason": "Merge main into PR #667 additive CHANGELOG and sync manifest integrity update. Both PR #669 and PR #667 entries retained; the preceding PR #667 branch entry is kept as branch history. No counts, policies, payloads or names changed.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 7123,
+          "sha256": "81e444c3bde63b8b5a1bfc5b51d81a507d1f7785bf422f1ab2adf4514b4ffcda"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 6387,
+          "sha256": "158acad39797a40b1179a9e8ea32332af335983acec6a3f4fd518c56f3bb8a6b"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 8108,
+          "sha256": "d69e16cee3a9750a9bdd02443780b39f83c6fdb11b1a6c3c6038c002e433df62"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 8107,
+          "sha256": "13b0af76fed4aab0a0ed34039e185445727fbfadbbe93f1c4107aa597415d486"
+        }
+      ],
+      "origin_signature": "MrLiouWord",
+      "change_commit": "bfe49d1f821bfa6d4d92ce075fa17543121e88bd"
+    },
+    {
+      "source_commit": "bfe49d1f821bfa6d4d92ce075fa17543121e88bd",
+      "base_commit": "0c88c9962a361dc04d74998ee4fab20be1c18981",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
+      "reason": "Merge main (PR #680 ProductBridge integration) into PR #667 additive CHANGELOG and sync manifest integrity update. Earlier PR #667 entries retained; no counts, policies, payloads or names changed.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 7908,
+          "sha256": "9513cfe13ce7b5d5870ad9359965d04c1277d794e01fc249acd08e12ee59193b"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 7228,
+          "sha256": "0da5fcbcb686481a8c7b918c5add6ac90a76ce359837b20bcb1ada089fc00a0b"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 8893,
+          "sha256": "e1cb246a065c3852e687337885646057ab9a1038e2f0eaba8fa00f033cc2b5dd"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 9909,
+          "sha256": "dd7fb81a266ceff28eb0f63e9cf61bc3e1bdeced6bae851be35fb06ee7fbc4d6"
+        }
+      ],
+      "origin_signature": "MrLiouWord",
+      "change_commit": "cac701c98d2019a33756e4e743698b2e80d9c481"
+    },
+    {
+      "source_commit": "cac701c98d2019a33756e4e743698b2e80d9c481",
+      "base_commit": "32d4294b929f67cc6717318f6df05f15f01f0661",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
+      "reason": "Merge main (PR #685 and issue-governance updates) into PR #667 additive CHANGELOG and sync manifest integrity update. Earlier PR #667 entries retained; no counts, policies, payloads or names changed.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 8683,
+          "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 8235,
+          "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 9668,
+          "sha256": "991b533c2b523b16b20fbb285b8ae64ef0f3ede64a48483a9572681c6039f841"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 11878,
+          "sha256": "fb7f121cd52d61e65fde43439b740f9ec893745be2d16ad424e80ed2e59e703e"
+        }
+      ],
+      "origin_signature": "MrLiouWord",
+      "change_commit": "a45f1d5a623f971e1ad2bc0500270b2a3897ad8b"
+    },
+    {
+      "source_commit": "a45f1d5a623f971e1ad2bc0500270b2a3897ad8b",
+      "base_commit": "9116b578eca6ec6bd66bc3030f801a0226264b26",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/667",
+      "reason": "Merge main (PR #690 and APIWorks delivery evidence) into PR #667. Main did not change CHANGELOG or the sync manifest; only change_commit is recorded on the preceding PR #667 merge entries, so refresh only the sync manifest checksum. Earlier PR #667 entries retained; no counts, policies, payloads or names changed.",
+      "previous_entries": [
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 11878,
+          "sha256": "fb7f121cd52d61e65fde43439b740f9ec893745be2d16ad424e80ed2e59e703e"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 11945,
+          "sha256": "d2d575a8cddd8291c752d788244b3b8d7e61c5f64e07872cb06df5b51bf9da51"
         }
       ],
       "origin_signature": "MrLiouWord"
