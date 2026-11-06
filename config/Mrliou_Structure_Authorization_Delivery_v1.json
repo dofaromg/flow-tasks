@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 8683,
-      "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78"
+      "size_bytes": 9248,
+      "sha256": "e9f3044a2b842af7d15befc285722de35bf3cd328998693ed0d7a913fc4b0b3c"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 8235,
-      "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
+      "size_bytes": 9215,
+      "sha256": "a8b8d1a022312abf613dcbfbb0d015ea320370656835dcfdfbd51ba0e41f48ac"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -355,6 +355,35 @@
           "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
           "size_bytes": 8235,
           "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "4565a8d63ad09b9163c501c2430c27aec7e06873",
+      "reason": "MRL-34 appends CHANGELOG history; propagate live payload checksums through existing delivery dependency chain without altering prior entries or authorization rules.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 8683,
+          "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 8235,
+          "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 9248,
+          "sha256": "e9f3044a2b842af7d15befc285722de35bf3cd328998693ed0d7a913fc4b0b3c"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 9215,
+          "sha256": "a8b8d1a022312abf613dcbfbb0d015ea320370656835dcfdfbd51ba0e41f48ac"
         }
       ],
       "origin_signature": "MrLiouWord"
