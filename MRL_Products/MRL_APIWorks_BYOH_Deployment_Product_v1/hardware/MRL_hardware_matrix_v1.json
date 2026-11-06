@@ -1,0 +1,75 @@
+{
+  "schema": "MRL_Hardware_Matrix_v1",
+  "version": "1.0.0",
+  "origin_signature": "MrLiouWord",
+  "parent_product": "MRL_APIWorks_BYOH_Deployment_Product_v1",
+  "baseline_commit": "608b66e0db23e7cc4eef21ea752668ac800620b3",
+  "routes": [
+    {
+      "bundle_id": "MRL_APIWorks_BYOH_DL580_V100_CUDA12_v1",
+      "track": "dl580-v100",
+      "architectures": [
+        "Volta"
+      ],
+      "cuda_major": 12,
+      "bundle_digest": null,
+      "internal_acceptance": "unknown",
+      "public_support": "not_published",
+      "evidence_refs": []
+    },
+    {
+      "bundle_id": "MRL_APIWorks_BYOH_Modern_NVIDIA_CUDA12_v1",
+      "track": "modern-gpu",
+      "architectures": [
+        "Turing",
+        "Ampere",
+        "Ada",
+        "Hopper",
+        "Blackwell"
+      ],
+      "cuda_major": 12,
+      "bundle_digest": null,
+      "internal_acceptance": "unknown",
+      "public_support": "not_published",
+      "evidence_refs": []
+    },
+    {
+      "bundle_id": "MRL_APIWorks_BYOH_Modern_NVIDIA_CUDA13_v1",
+      "track": "modern-gpu",
+      "architectures": [
+        "Turing",
+        "Ampere",
+        "Ada",
+        "Hopper",
+        "Blackwell"
+      ],
+      "cuda_major": 13,
+      "bundle_digest": null,
+      "internal_acceptance": "unknown",
+      "public_support": "not_published",
+      "evidence_refs": []
+    },
+    {
+      "bundle_id": "MRL_APIWorks_BYOH_AMD_ROCm_v1",
+      "track": "modern-gpu",
+      "architectures": [
+        "CDNA",
+        "RDNA"
+      ],
+      "cuda_major": 0,
+      "bundle_digest": null,
+      "internal_acceptance": "unknown",
+      "public_support": "not_published",
+      "evidence_refs": []
+    }
+  ],
+  "acceptances": [],
+  "acceptance_policy": "Only release-reviewed exact real-hardware smoke plus restart evidence. Synthetic tests and historical host observations never grant production admission.",
+  "sources": [
+    "https://developer.nvidia.com/blog/navigating-gpu-architecture-support-a-guide-for-nvidia-cuda-developers/",
+    "https://docs.nvidia.com/cuda/archive/12.2.0/cuda-toolkit-release-notes/index.html",
+    "https://docs.nvidia.com/deploy/cuda-compatibility/minor-version-compatibility.html",
+    "https://docs.nvidia.com/deeplearning/tensorrt-rtx/latest/getting-started/support-matrix.html",
+    "https://docs.nvidia.com/deeplearning/tensorrt/10.x.x/architecture/architecture-overview.html"
+  ]
+}

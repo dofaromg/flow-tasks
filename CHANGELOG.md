@@ -1,3 +1,12 @@
+## 2026-11-03 — MRL-34 hardware admission (candidate)
+
+- Preserve DL580 historical snapshot; add machine-readable hardware routes and exact acceptance gate.
+- Reject Volta CUDA13 and TensorRT RTX; gate existing GPUOrchestrator after balancing.
+- Build distinct route source bundles with verified SHA-256 and independent unknown acceptance.
+- Add Linux/Windows CI, negative/positive policy tests, smoke/restart and rollback instructions.
+- No DL580 driver, Toolkit, GPU or service changes; real-hardware acceptance remains pending.
+- origin_signature: MrLiouWord
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -6,6 +15,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Added — MRL-34 hardware admission (2026-11-03)
+
+- Add exact hardware/runtime/model/bundle manifests and a fail-closed gate.
+- Extend the existing GPU orchestrator with an explicit admitted allocation API;
+  preserve six-card configuration and legacy running-service behavior.
+- Deny Volta/V100 CUDA 13, require reviewed CUDA 12.x hardware receipts, and
+  prevent cross-track bundle/acceptance reuse. Preserve incomplete DL580 history.
+- Add synthetic policy tests, Linux/Windows CI and live smoke/rollback procedure.
+- origin_signature: MrLiouWord; canonical_authority: Mr.liou.
 
 ### Fixed — MRL ProductBridge post-merge security review (2026-10-21)
 

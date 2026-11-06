@@ -11,6 +11,14 @@ from dataclasses import dataclass
 from pathlib import Path
 import threading
 import time
+import json
+import platform
+import subprocess
+import csv
+
+from MRL_Products.MRL_APIWorks_BYOH_Deployment_Product_v1.scripts.MRL_hardware_admission_v1 import (
+    AdmissionError, require_admission,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +50,8 @@ class GPUOrchestrator:
         self.num_gpus = torch.cuda.device_count()
         self.gpu_locks = [threading.Lock() for _ in range(self.num_gpus)]
         self.gpu_assignments = {}  # engine -> gpu_ids mapping
+        self._last_admitted_gpu_ids = None
+        self._last_admitted_engine_name = None
         self._initialize_gpu_assignments()
         
         logger.info(f"GPU Orchestrator initialized with {self.num_gpus} GPUs")
@@ -107,7 +117,6 @@ class GPUOrchestrator:
         memory_total = props.total_memory / 1024**3  # Convert to GB
         
         # 獲取記憶體使用情況
-        torch.cuda.set_device(gpu_id)
         memory_allocated = torch.cuda.memory_allocated(gpu_id) / 1024**3
         memory_reserved = torch.cuda.memory_reserved(gpu_id) / 1024**3
         memory_free = memory_total - memory_reserved
@@ -137,6 +146,8 @@ class GPUOrchestrator:
         Returns:
             分配的GPU ID列表
         """
+        self._last_admitted_gpu_ids = None
+        self._last_admitted_engine_name = None
         # 從配置獲取預設分配
         gpu_ids = self.gpu_assignments.get(engine_name, [0])
         
@@ -144,9 +155,71 @@ class GPUOrchestrator:
         if self.config.get('load_balancing', {}).get('enabled', False):
             gpu_ids = self._balance_load(gpu_ids, engine_name)
         
+        self._admit_workload(engine_name, gpu_ids)
+        self._last_admitted_gpu_ids = tuple(gpu_ids)
+        self._last_admitted_engine_name = engine_name
+
         logger.info(f"Allocated GPUs {gpu_ids} for engine '{engine_name}' (priority: {user_priority})")
         return gpu_ids
     
+    def _admit_workload(self, engine_name: str, gpu_ids: List[int]) -> Dict:
+        """Admit the final allocation using live GPU/driver facts and release policy.
+
+        No missing-config fallback: legacy allocation preferences are retained,
+        but cannot launch an unverified workload. This does not install anything.
+        """
+        try:
+            policy = self.config['hardware_admission']
+            host = json.loads(Path(policy['host_manifest']).read_text(encoding='utf-8'))
+            workload_path = policy['workloads'][engine_name]
+            workload = json.loads(Path(workload_path).read_text(encoding='utf-8'))
+            artifact_paths = policy['artifact_paths'][engine_name]
+            if not gpu_ids or any(type(i) is not int or i < 0 or i >= self.num_gpus for i in gpu_ids):
+                raise ValueError('invalid or empty allocation')
+            if workload['gpu_ids'] != gpu_ids:
+                raise ValueError('workload GPU selection differs from the final allocation')
+            if {g['id'] for g in host['gpus']} != set(range(self.num_gpus)):
+                raise ValueError('manifest must describe the complete live GPU inventory')
+            live_os = {'family': platform.system().lower(), 'version': platform.version(),
+                       'arch': platform.machine()}
+            if host['os'] != live_os or host['observation'] != 'current':
+                raise ValueError('host OS/observation differs from current node')
+            rows = subprocess.run(
+                ['nvidia-smi', '--query-gpu=index,uuid,name,driver_version,memory.total',
+                 '--format=csv,noheader'],
+                check=True, capture_output=True, text=True, timeout=10,
+            ).stdout
+            live_gpus = {int(row[0].strip()): row[1:] for row in csv.reader(rows.splitlines())}
+            if set(live_gpus) != set(range(self.num_gpus)):
+                raise ValueError('live GPU inventory differs from the passport')
+            for gpu in host['gpus']:
+                _, uuid, name, driver, memory = (item.strip() for item in live_gpus[gpu['id']])
+                props = torch.cuda.get_device_properties(gpu['id'])
+                cc = '.'.join(str(v) for v in torch.cuda.get_device_capability(gpu['id']))
+                if (gpu['uuid'] != uuid or gpu['sku'] != name or name != props.name
+                        or gpu['compute_capability'] != cc
+                        or gpu['vram_mib'] != props.total_memory // (1024 * 1024)
+                        or int(memory.split()[0]) != gpu['vram_mib']):
+                    raise ValueError('live GPU identity differs from host manifest')
+                if driver != host['driver']['version']:
+                    raise ValueError('live driver differs from host manifest')
+            if (workload['runner']['id'].lower() == 'pytorch'
+                    and (torch.version.cuda != workload['cuda_runtime']
+                         or torch.__version__ != workload['runner']['version'])):
+                raise ValueError('live PyTorch runtime differs from workload manifest')
+            return require_admission(host, workload, Path(policy['artifact_root']), artifact_paths)
+        except AdmissionError:
+            raise
+        except (KeyError, ValueError, TypeError, OSError, subprocess.SubprocessError) as exc:
+            raise AdmissionError('MRL hardware admission unknown: ' + str(exc)) from exc
+
+    def verify_admitted_allocation(self, engine_name: str, gpu_ids: List[int]) -> Dict:
+        """Recheck the current host and artifact bytes at model-load boundaries."""
+        if (engine_name != self._last_admitted_engine_name
+                or tuple(gpu_ids) != self._last_admitted_gpu_ids):
+            raise AdmissionError("GPU selection was not admitted for this engine")
+        return self._admit_workload(engine_name, gpu_ids)
+
     def _balance_load(self, preferred_gpus: List[int], engine_name: str) -> List[int]:
         """
         負載均衡 - 選擇最空閒的GPU
@@ -200,6 +273,8 @@ class GPUOrchestrator:
         """
         if not gpu_ids:
             return torch.device('cpu')
+        engine_name = getattr(self, '_last_admitted_engine_name', None)
+        self.verify_admitted_allocation(engine_name, gpu_ids)
         
         primary_gpu = gpu_ids[0]
         torch.cuda.set_device(primary_gpu)
@@ -216,6 +291,8 @@ class GPUOrchestrator:
         Returns:
             並行化後的模型
         """
+        engine_name = getattr(self, '_last_admitted_engine_name', None)
+        self.verify_admitted_allocation(engine_name, gpu_ids)
         if len(gpu_ids) > 1:
             logger.info(f"Creating DataParallel model on GPUs: {gpu_ids}")
             return torch.nn.DataParallel(model, device_ids=gpu_ids)
