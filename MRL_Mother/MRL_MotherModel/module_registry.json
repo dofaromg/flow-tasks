@@ -16,91 +16,117 @@
       "layer": "L0",
       "status": "reconstructed",
       "source_count": 13,
-      "dependencies": ["MRL.NODE.00.Reality"]
+      "dependencies": [
+        "MRL.NODE.00.Reality"
+      ]
     },
     {
       "node_id": "MRL.NODE.02.SeedKernel",
       "layer": "L0/L1",
       "status": "reconstructed",
       "source_count": 20,
-      "dependencies": ["MRL.NODE.01.Origin"]
+      "dependencies": [
+        "MRL.NODE.01.Origin"
+      ]
     },
     {
       "node_id": "MRL.NODE.03.PreParticle",
       "layer": "L1",
       "status": "reconstructed",
       "source_count": 24,
-      "dependencies": ["MRL.NODE.02.SeedKernel"]
+      "dependencies": [
+        "MRL.NODE.02.SeedKernel"
+      ]
     },
     {
       "node_id": "MRL.NODE.04.Particle",
       "layer": "L2",
       "status": "reconstructed",
       "source_count": 220,
-      "dependencies": ["MRL.NODE.03.PreParticle"]
+      "dependencies": [
+        "MRL.NODE.03.PreParticle"
+      ]
     },
     {
       "node_id": "MRL.NODE.05.Signal",
       "layer": "L3",
       "status": "reconstructed",
       "source_count": 17,
-      "dependencies": ["MRL.NODE.04.Particle"]
+      "dependencies": [
+        "MRL.NODE.04.Particle"
+      ]
     },
     {
       "node_id": "MRL.NODE.06.Field",
       "layer": "L3",
       "status": "reconstructed",
       "source_count": 18,
-      "dependencies": ["MRL.NODE.05.Signal"]
+      "dependencies": [
+        "MRL.NODE.05.Signal"
+      ]
     },
     {
       "node_id": "MRL.NODE.07.Persona",
       "layer": "L4",
       "status": "reconstructed",
       "source_count": 79,
-      "dependencies": ["MRL.NODE.06.Field"]
+      "dependencies": [
+        "MRL.NODE.06.Field"
+      ]
     },
     {
       "node_id": "MRL.NODE.08.Memory",
       "layer": "L2/L5",
       "status": "reconstructed",
       "source_count": 9,
-      "dependencies": ["MRL.NODE.07.Persona"]
+      "dependencies": [
+        "MRL.NODE.07.Persona"
+      ]
     },
     {
       "node_id": "MRL.NODE.09.Globe",
       "layer": "L5/L∞",
       "status": "reconstructed",
       "source_count": 8,
-      "dependencies": ["MRL.NODE.08.Memory"]
+      "dependencies": [
+        "MRL.NODE.08.Memory"
+      ]
     },
     {
       "node_id": "MRL.NODE.10.World",
       "layer": "L4/L7",
       "status": "reconstructed",
       "source_count": 14,
-      "dependencies": ["MRL.NODE.09.Globe"]
+      "dependencies": [
+        "MRL.NODE.09.Globe"
+      ]
     },
     {
       "node_id": "MRL.NODE.11.Runtime",
       "layer": "L6",
       "status": "reconstructed",
       "source_count": 8,
-      "dependencies": ["MRL.NODE.10.World"]
+      "dependencies": [
+        "MRL.NODE.10.World"
+      ]
     },
     {
       "node_id": "MRL.NODE.12.Mother",
       "layer": "L0(canonical)",
       "status": "reconstructed",
       "source_count": 7,
-      "dependencies": ["MRL.NODE.11.Runtime"]
+      "dependencies": [
+        "MRL.NODE.11.Runtime"
+      ]
     },
     {
       "node_id": "MRL.NODE.13.Return",
       "layer": "L7/Loop",
       "status": "reconstructed",
       "source_count": 5,
-      "dependencies": ["MRL.NODE.12.Mother"],
+      "dependencies": [
+        "MRL.NODE.12.Mother"
+      ],
       "closure": "MRL.NODE.01.Origin"
     }
   ],
@@ -115,6 +141,41 @@
       "data_return_model": "EXPLICIT_USER_INITIATED_BUNDLE",
       "provider_receiver_state": "RECEIVER_GATE_OPEN",
       "external_model_api_required": false,
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "module_id": "MRL_Financial_Core_v1",
+      "type": "financial_system_prototype",
+      "path": "../MRL_Extensions/MRL_Financial_Core_v1",
+      "parent": "MRL_Mother/MRL_Extensions",
+      "version": "0.2.0",
+      "package_state": "LOCAL_TESTS_PASS",
+      "live_runtime_state": "NOT_DEPLOYED",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "module_id": "MRL_Financial_External_Access_v1",
+      "type": "authorized_financial_adapter",
+      "path": "../MRL_Extensions/MRL_Financial_Core_v1/external",
+      "parent": "MRL_Financial_Core_v1",
+      "version": "0.1.0",
+      "package_state": "LOCAL_TESTS_PASS",
+      "live_runtime_state": "NOT_DEPLOYED",
+      "live_account_state": "NO_ACTIVE_EXTERNAL_GRANT_CREATED",
+      "credentials_state": "NOT_PROVISIONED",
+      "evidence": "../MRL_Extensions/MRL_Financial_Core_v1/AUDIT.json",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "module_id": "MRL_Financial_Standalone_Delivery_v1",
+      "type": "local_offline_module_delivery",
+      "path": "../MRL_Extensions/MRL_Financial_Core_v1/delivery",
+      "parent": "MRL_Financial_Core_v1",
+      "version": "0.1.0",
+      "package_state": "LINUX_LOCAL_OFFLINE_INSTALL_PASS",
+      "exact_head_ci": "PENDING_AT_COMMIT",
+      "live_runtime_state": "NOT_DEPLOYED_TO_DL580",
+      "cloudflare_required": false,
       "origin_signature": "MrLiouWord"
     }
   ],
@@ -205,6 +266,35 @@
       "size": 696628,
       "sha256": "A26C71A3C00CC0584DB4B205DAFF9C8B2946594BC4737E32FB2E52BA921D5DF9",
       "variants": 3
+    }
+  ],
+  "additive_updates": [
+    {
+      "record_id": "MRL_FINANCIAL_EXTERNAL_BACKFILL_20261107_R02",
+      "date_taipei": "2026-11-07",
+      "source_commit": "d7e0e8137c833fef123f6681ca19f827bc99a0e8",
+      "source_pr": "https://github.com/dofaromg/flow-tasks/pull/713",
+      "added_children": [
+        "MRL_Financial_Core_v1",
+        "MRL_Financial_External_Access_v1"
+      ],
+      "status": "SOURCE_AND_MODULE_REGISTRY_BACKFILLED; LIVE_DEPLOYMENT_PENDING",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "record_id": "MRL_FINANCIAL_STANDALONE_20261107_R03",
+      "source_commit": "e12b48954d84325115dee57c8efa80dd92811191",
+      "date_taipei": "2026-11-07",
+      "added_children": [
+        "MRL_Financial_Standalone_Delivery_v1"
+      ],
+      "preserved_failures": [
+        "Cloudflare Pages",
+        "Workers Builds: flow-tasks",
+        "Workers Builds: mrl-store",
+        "Workers Builds: mrlflow-tasks"
+      ],
+      "origin_signature": "MrLiouWord"
     }
   ]
 }

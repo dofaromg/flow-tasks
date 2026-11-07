@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — MRL standalone financial module delivery R03 (2026-11-07)
+
+- Replace this Python module's Cloudflare build dependency with dedicated GitHub
+  Actions Windows/Linux ZIP builds and local Python 3.12 offline installation.
+- Bundle actual platform wheels, a complete hash-pinned install lock, original
+  mother source paths and create-only installers; verify ZIP contents and run
+  50 invariant/package tests from a fresh offline installation before publishing.
+- Preserve Cloudflare failure evidence, parent/child module lineage and financial
+  admission controls; no bank credentials, account grants or live deployment added.
+- Fix the two CodeQL URL-substring findings in provider test fixtures with exact
+  hostname comparison and remove the two reported unused imports.
+- origin_signature: MrLiouWord; canonical_authority: Mr.liou.
+
+### Added — MRL authorized financial connectors R02 (2026-11-07)
+
+- Extend PR #713 with Mercury account/transaction reads and approval-required ACH
+  requests, plus externally signed EIP-1559 native transfers on Ethereum/Sepolia.
+- Require exact external grants in the existing root registry, majority-signed
+  per-operation consent, source/recipient allowlists and integer limits. Keep all
+  shipped settings disabled and existing structure grants unchanged.
+- Add a persistent submission outbox, append-only receipt hashes, timeout/replay
+  refusal and explicit mother ToolRegistry registration. Preserve the test ledger.
+- Backfill additive parent/child module records, primary API sources and R02
+  delivery evidence; live accounts, real transfers and DL580 acceptance remain open.
+- origin_signature: MrLiouWord; canonical_authority: Mr.liou.
+
+### Added — MRL financial-system reconstruction prototype (2026-11-07)
+
+- Add MRL_Financial_Core_v1 under the existing mother extension boundary:
+  signed test-unit ledger, delayed settlement, dispute reservations, one pre-decision
+  appeal, majority-signed restitution and append-only double-entry postings.
+- Mount explicitly through the existing ToolRegistry; preserve MRL parent lineage,
+  Owner authority and source signature. No real asset adapter or DL580 deployment.
+- Add adversarial invariant tests, local CLI, a staged financial constitution and
+  Linux/Windows CI definition. This is a prototype, not a complete financial system.
+- origin_signature: MrLiouWord; canonical_authority: Mr.liou.
+
 ### Fixed — MRL ProductBridge post-merge security review (2026-10-21)
 
 - Follow up merged PR #680 at main 0c88c996: include the existing .bridge state,
@@ -163,3 +200,4 @@ For changes before 2026-01-12, please refer to the git commit history.
 - Propagate recursive authorization denial; recheck direct scanner reads and in-memory renderers, enforce actual path/depth, and reject symlinked historical indexes.
 - Carry authorized depth through smart-updater and common runner without widening grants.
 - Add seven behavioral regressions and delivery payload/dependency integrity validation. Preserve prior evidence and origin_signature: MrLiouWord.
+

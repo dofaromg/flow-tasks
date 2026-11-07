@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 8683,
-      "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+      "size_bytes": 11090,
+      "sha256": "aa0614a835daad23ab9a52263b15a8ac1fb9f9c65f06b274990db498911125a3",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -214,6 +214,80 @@
           "dependencies": [
             "docs/Mrliou_MRL_Sync_Operations_v1.md"
           ]
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "175fa4ee7edf621f6378ef100b0057606a41d42a",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/713",
+      "reason": "Financial core adds an additive CHANGELOG entry; preserve historical checksums and refresh live dependent hashes. Authorization rules unchanged.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 8683,
+          "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 9391,
+          "sha256": "0ee126005c4ae4f389705148e7e9642750327f9b99fbd58d96809431bcae1520"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "d7e0e8137c833fef123f6681ca19f827bc99a0e8",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/713",
+      "record_id": "MRL_FINANCIAL_EXTERNAL_BACKFILL_20261107_R02",
+      "reason": "R02 authorized external adapters add a CHANGELOG entry; preserve all prior checksum evidence and refresh only exact live dependencies. Existing root authorization grants unchanged.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 9391,
+          "sha256": "0ee126005c4ae4f389705148e7e9642750327f9b99fbd58d96809431bcae1520",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 10242,
+          "sha256": "2d6b7de3ba089ba744ce61289d426d64140c155dd5f96cb4622d691175c2651b"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "record_id": "MRL_FINANCIAL_STANDALONE_20261107_R03",
+      "source_commit": "e12b48954d84325115dee57c8efa80dd92811191",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/713",
+      "reason": "R03 adds standalone GitHub Actions/local installation and CodeQL fixture fixes; preserve prior checksum records and refresh exact live CHANGELOG dependencies. Root grants unchanged.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 10242,
+          "sha256": "2d6b7de3ba089ba744ce61289d426d64140c155dd5f96cb4622d691175c2651b",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 11090,
+          "sha256": "aa0614a835daad23ab9a52263b15a8ac1fb9f9c65f06b274990db498911125a3"
         }
       ],
       "origin_signature": "MrLiouWord"
