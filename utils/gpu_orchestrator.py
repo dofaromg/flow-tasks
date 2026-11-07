@@ -17,7 +17,7 @@ import subprocess
 import csv
 
 from MRL_Products.MRL_APIWorks_BYOH_Deployment_Product_v1.scripts.MRL_hardware_admission_v1 import (
-    AdmissionError, require_admission,
+    AdmissionError, require_admission, verify_loaded_process_artifacts,
 )
 
 logger = logging.getLogger(__name__)
@@ -174,7 +174,8 @@ class GPUOrchestrator:
             workload_path = policy['workloads'][engine_name]
             workload = json.loads(Path(workload_path).read_text(encoding='utf-8'))
             artifact_paths = policy['artifact_paths'][engine_name]
-            if not gpu_ids or any(type(i) is not int or i < 0 or i >= self.num_gpus for i in gpu_ids):
+            if (not gpu_ids or len(set(gpu_ids)) != len(gpu_ids)
+                    or any(type(i) is not int or i < 0 or i >= self.num_gpus for i in gpu_ids)):
                 raise ValueError('invalid or empty allocation')
             if workload['gpu_ids'] != gpu_ids:
                 raise ValueError('workload GPU selection differs from the final allocation')
@@ -189,11 +190,18 @@ class GPUOrchestrator:
                  '--format=csv,noheader'],
                 check=True, capture_output=True, text=True, timeout=10,
             ).stdout
-            live_gpus = {int(row[0].strip()): row[1:] for row in csv.reader(rows.splitlines())}
+            live_gpus = {}
+            for row in csv.reader(rows.splitlines()):
+                if len(row) != 5:
+                    raise ValueError('invalid nvidia-smi inventory row')
+                index = int(row[0].strip())
+                if index in live_gpus:
+                    raise ValueError('duplicate live GPU index')
+                live_gpus[index] = [item.strip() for item in row[1:]]
             if set(live_gpus) != set(range(self.num_gpus)):
                 raise ValueError('live GPU inventory differs from the passport')
             for gpu in host['gpus']:
-                _, uuid, name, driver, memory = (item.strip() for item in live_gpus[gpu['id']])
+                uuid, name, driver, memory = live_gpus[gpu['id']]
                 props = torch.cuda.get_device_properties(gpu['id'])
                 cc = '.'.join(str(v) for v in torch.cuda.get_device_capability(gpu['id']))
                 if (gpu['uuid'] != uuid or gpu['sku'] != name or name != props.name
@@ -207,7 +215,13 @@ class GPUOrchestrator:
                     and (torch.version.cuda != workload['cuda_runtime']
                          or torch.__version__ != workload['runner']['version'])):
                 raise ValueError('live PyTorch runtime differs from workload manifest')
-            return require_admission(host, workload, Path(policy['artifact_root']), artifact_paths)
+            verify_loaded_process_artifacts(workload, Path(policy['artifact_root']), artifact_paths, torch)
+            decision = require_admission(host, workload, Path(policy['artifact_root']), artifact_paths)
+            # Keep the observed documents together; never reopen a changed
+            # Passport/workload between the live check and cache handoff.
+            return dict(decision, model_inputs=dict(
+                host=host, workload=workload, artifact_root=Path(policy['artifact_root']),
+                artifact_paths=dict(artifact_paths)))
         except AdmissionError:
             raise
         except (KeyError, ValueError, TypeError, OSError, subprocess.SubprocessError) as exc:
@@ -219,6 +233,15 @@ class GPUOrchestrator:
                 or tuple(gpu_ids) != self._last_admitted_gpu_ids):
             raise AdmissionError("GPU selection was not admitted for this engine")
         return self._admit_workload(engine_name, gpu_ids)
+
+    def admitted_model_inputs(self, engine_name: str, gpu_ids: List[int]) -> Dict:
+        """Return the same manifests/paths used by this admitted allocation.
+
+        The cache repeats the canonical gate inside its lock and loads only
+        verified snapshot streams. These inputs confer no separate authority.
+        """
+        decision = self.verify_admitted_allocation(engine_name, gpu_ids)
+        return decision['model_inputs']
 
     def _balance_load(self, preferred_gpus: List[int], engine_name: str) -> List[int]:
         """

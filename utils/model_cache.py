@@ -11,6 +11,9 @@ from pathlib import Path
 import threading
 import time
 from collections import OrderedDict
+from MRL_Products.MRL_APIWorks_BYOH_Deployment_Product_v1.scripts import (
+    MRL_hardware_admission_v1 as admission,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +31,8 @@ class ModelCache:
         self.config = self._load_config(config_path)
         self.models = OrderedDict()  # model_name -> model object
         self.model_configs = {}  # model_name -> config
-        self.lock = threading.Lock()
+        self.lock = threading.RLock()
+        self._admitted_provenance = {}
         self.preload_enabled = self.config.get('model_storage', {}).get('preload_all', True)
         
         logger.info(f"Model Cache initialized (preload: {self.preload_enabled})")
@@ -59,6 +63,7 @@ class ModelCache:
             memory_size_gb: 模型佔用記憶體 (GB)
         """
         with self.lock:
+            self._admitted_provenance.pop(model_name, None)
             self.models[model_name] = model
             self.model_configs[model_name] = {
                 **config,
@@ -86,6 +91,51 @@ class ModelCache:
             
             logger.warning(f"Model '{model_name}' not found in cache")
             return None
+
+    def _model_identity(self, model_name, workload):
+        model = workload['model']
+        components = model.get('components', [])
+        if (not isinstance(components, list)
+                or any(not isinstance(name, str) or not name for name in components)):
+            raise admission.AdmissionError('model components must be explicit cache names')
+        if model_name != model['id'] and model_name not in components:
+            raise admission.AdmissionError('cache model name is not bound to the workload')
+
+    def load_admitted_model(self, model_name, loader, *, host, workload,
+                            artifact_root, artifact_paths, memory_size_gb=0):
+        """Register a model only from verified, path-free snapshot streams.
+
+        Trusted loaders accept a read-only mapping of shard names to seekable
+        streams ('.' for a single file). They must not reopen original paths,
+        download weights, run remote code, or substitute a different model.
+        """
+        with self.lock:
+            self._model_identity(model_name, workload)
+            result = admission.require_admission(host, workload, artifact_root, artifact_paths)
+            with admission.verified_model_streams(workload, artifact_root, artifact_paths) as streams:
+                model = loader(streams)
+                if model is None:
+                    raise admission.AdmissionError('admitted model loader returned no model')
+            # Recheck release policy and all artifacts after the loader returns.
+            after = admission.require_admission(host, workload, artifact_root, artifact_paths)
+            if after['configuration_digest'] != result['configuration_digest']:
+                raise admission.AdmissionError('configuration changed while loading model')
+            self.register_model(model_name, model, {}, memory_size_gb)
+            self._admitted_provenance[model_name] = (model, result['configuration_digest'])
+            return model
+
+    def get_admitted_model(self, model_name, *, host, workload, artifact_root, artifact_paths):
+        """Fail closed for legacy/unbound cache objects; no placeholder fallback."""
+        with self.lock:
+            self._model_identity(model_name, workload)
+            result = admission.require_admission(host, workload, artifact_root, artifact_paths)
+            model = self.models.get(model_name)
+            prior = self._admitted_provenance.get(model_name)
+            if (model is None or prior is None or prior[0] is not model
+                    or prior[1] != result['configuration_digest']):
+                raise admission.AdmissionError('cached model has no matching controlled-load provenance')
+            self.models.move_to_end(model_name)
+            return model
     
     def has_model(self, model_name: str) -> bool:
         """
@@ -112,6 +162,7 @@ class ModelCache:
         with self.lock:
             if model_name in self.models:
                 model = self.models.pop(model_name)
+                self._admitted_provenance.pop(model_name, None)
                 config = self.model_configs.pop(model_name)
                 
                 # 清理GPU記憶體

@@ -1,0 +1,440 @@
+{
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "reviewed_date_Asia_Taipei": "2026-11-08",
+  "direct_parent": "82b657edc314c502e365ebf1f3e3a1d3e1ae4a4e",
+  "common_proposal_baseline": "608b66e0db23e7cc4eef21ea752668ac800620b3",
+  "sources": {
+    "PR700": {
+      "head": "3372f149d9efef46e6457e9e4df8e09d49f775e6",
+      "tree_sha": "cecb27b0f04461efd68ddd23bde72fec887856d0",
+      "changed_files": [
+        {
+          "path": ".github/workflows/MRL_hardware_admission.yml",
+          "git_blob_sha1": "c20532a4730db9ffca4714d28d5207744c2d6366",
+          "size_bytes": 2683,
+          "sha256": "201439b02db7754003a986954852bdeeb522a3074c530746b9b5d54a6aad189b"
+        },
+        {
+          "path": "CHANGELOG.md",
+          "git_blob_sha1": "f51b3778e0ea91845a85dd5a16fcb1fabf679cac",
+          "size_bytes": 9269,
+          "sha256": "8e668ed4986ff60daa163bcc753fd484dbfcd01ff6b30ad6a85060fa66b017ab"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "git_blob_sha1": "380d143c95fcb73b3c22f43b43c52161f40bc476",
+          "size_bytes": 9236,
+          "sha256": "2e2722a2c4b1283b9ff1e105b3f1ac679775f643c6e636c8180ed24893ec0b83"
+        },
+        {
+          "path": "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+          "git_blob_sha1": "d4f700d0450bc577c368e66bb7fd4dab7a1ac95d",
+          "size_bytes": 15755,
+          "sha256": "d82be45e3043fe4160d3932ee6783251a0547ab871e1ccb305360bd9e3c70257"
+        },
+        {
+          "path": "configs/MRL_hardware_manifest_v1.schema.json",
+          "git_blob_sha1": "6fe71f35bf657cdc5e44e1b4f73881ae3b8bd819",
+          "size_bytes": 2240,
+          "sha256": "a72b5f8bc0e258a9960d6eee4bc101a39102aa4dd2ea28f5fbf085a6d28b5888"
+        },
+        {
+          "path": "configs/MRL_hardware_matrix_v1.json",
+          "git_blob_sha1": "afc2e1caf22154869d41c718019d032532927679",
+          "size_bytes": 1187,
+          "sha256": "84755a7f68d8070e59637906a21c7221f0539474272a786f7e968abd7272c0cf"
+        },
+        {
+          "path": "docs/HARDWARE_SETUP.md",
+          "git_blob_sha1": "4c2f36f5eec63ab20080f89b0839e867af477cd9",
+          "size_bytes": 9118,
+          "sha256": "4463c1a204d50731b7c1dbe269e591ce1faadbe0f7e8c613ee575bfe6e9ec591"
+        },
+        {
+          "path": "docs/MRL_HARDWARE_ADMISSION.md",
+          "git_blob_sha1": "df7184c89e6061ac6371e1553d43ddb289710422",
+          "size_bytes": 9154,
+          "sha256": "af07f219fff8ac5fb83373cf7b6abb24a5511da16bf2b8ce34dc2e6f4ba48df2"
+        },
+        {
+          "path": "tests/test_mrl_hardware_admission.py",
+          "git_blob_sha1": "a7c461f81c687ac564bd1ed378ecf1dfaaeca16c",
+          "size_bytes": 9564,
+          "sha256": "f196457c7589b0e1b43ddeca6869f42a03c87ca9145c8137269e319107ac7780"
+        },
+        {
+          "path": "utils/gpu_orchestrator.py",
+          "git_blob_sha1": "e2447798f467f898991a30d1038b42ad976f5907",
+          "size_bytes": 12822,
+          "sha256": "9c535878c5778e44987f52710bb14938949c7b5694a2ec9922b8c86991af5816"
+        },
+        {
+          "path": "utils/mrl_hardware_admission.py",
+          "git_blob_sha1": "e45c3c3ae1b56bae2f9296c693900202a23f0590",
+          "size_bytes": 7661,
+          "sha256": "fc87c48c23e3703f8b46bfed817e6f380169a3201300e05bf50cbb52bb651bf0"
+        }
+      ]
+    },
+    "PR701": {
+      "head": "ea9c08874add64c7eaed70bc2bf7c6ecedfcc448",
+      "tree_sha": "573a8e529001728cd82bfc776adb37cf2b7c831f",
+      "changed_files": [
+        {
+          "path": ".github/workflows/mrl-hardware-admission.yml",
+          "git_blob_sha1": "4dd9d09d8151458e10d67ab998944ae9fe219dad",
+          "size_bytes": 4055,
+          "sha256": "b5191bca7b19a798874c207efe03c0ebce086ddcf93b45f2d065da87ee89a27b"
+        },
+        {
+          "path": "CHANGELOG.md",
+          "git_blob_sha1": "8384a9a4ae1fa71dd15b6f90ea5008d21e124ab7",
+          "size_bytes": 9248,
+          "sha256": "e9f3044a2b842af7d15befc285722de35bf3cd328998693ed0d7a913fc4b0b3c"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/EXPECTED_FILE_LIST.txt",
+          "git_blob_sha1": "3b9152469734561ce999e773f70dc37dbe1de8fa",
+          "size_bytes": 721,
+          "sha256": "aceb6f0dfb988c64aa6ae9cf613092392948caf4ce84527a5e53831d7a92dfd3"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/MANIFEST.json",
+          "git_blob_sha1": "af9ffe3d0be06a6aeb977a27b294be5ee2159a94",
+          "size_bytes": 880,
+          "sha256": "c0d143dbbb22b3b1aaa28072cba5c265723fcbfbb86cc5122ea9d59fca25a290"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/README.md",
+          "git_blob_sha1": "658b9ac26980ae5eb6fb5e528175451e19b6590a",
+          "size_bytes": 3250,
+          "sha256": "abaf6fa5be01833b1042ad416781aa73509ad9b3b79804b84d8cf155e74f01e9"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/SHA256SUMS.txt",
+          "git_blob_sha1": "71232d2edca6777370c01a7877a49764b47ffdce",
+          "size_bytes": 2224,
+          "sha256": "f99c1b5530b7a9c07646d63fca9188c49b6e6f2ff2d341e072f02ae74f43ec36"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/docs/MRL_HARDWARE_ADMISSION_v1.md",
+          "git_blob_sha1": "b58aa91feae279a867649ebebb338fe4c0fb610b",
+          "size_bytes": 8907,
+          "sha256": "3e69ac73711de79a7ce333e91f1497e517f8011de3604796aa0655ec5502719a"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/docs/MRL_REVERSIBLE_CHANGE_v1.md",
+          "git_blob_sha1": "66f444da7ae8d2f863ec2cda19cf26f76d56365f",
+          "size_bytes": 2573,
+          "sha256": "8ece1a608cda9557303637dada8c6d4b9b75fc569c214b30db5762ffd2059af4"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/hardware/MRL_DL580_historical_snapshot_v1.json",
+          "git_blob_sha1": "5095ba88e97645e2e3834699a5f6f2189bd90ec1",
+          "size_bytes": 1973,
+          "sha256": "f5a77306e4220411bbf6fc60e6b10501137a8e3ea3cd37af2a3fe37e8c3d3573"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/hardware/MRL_hardware_matrix_v1.json",
+          "git_blob_sha1": "dcac34406931617b61f8f12bdc71f7c818cb9326",
+          "size_bytes": 2250,
+          "sha256": "98ee2d1f3f51447bae5e812120bbd7328997c11046b78293f7585590cff8b97c"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_build_product_bundle_v1.py",
+          "git_blob_sha1": "0cc83228987d7305ee2a1c36f2b9582225a813f0",
+          "size_bytes": 6989,
+          "sha256": "36062634817b8513d9215df93b807a49f3f8e06d9563d58faa9de3316e616716"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_hardware_admission_v1.py",
+          "git_blob_sha1": "f2f1987ae44eddbe28a206f84d00035287093677",
+          "size_bytes": 10125,
+          "sha256": "de0344c57a24adcccf0eab77576d0296b89f50e3f2a99d1f91ac83144e05cc25"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_reversible_change_v1.py",
+          "git_blob_sha1": "623f46878bde801eb0a27e65bb80af1c5a7cdc32",
+          "size_bytes": 9790,
+          "sha256": "d519b9c4b969f05c80f240e1b570f8920c47ca20b0e9964887aa42b517969b21"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_hardware_admission.py",
+          "git_blob_sha1": "d0c15d46890ab0b796f0943df804fbd5a7e47e22",
+          "size_bytes": 7942,
+          "sha256": "4491f3ed7c57f618cc4a27f64e6df09859f4d6fba0d785921936e1b3c4cce356"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_hardware_bundle.py",
+          "git_blob_sha1": "d7d3f2c5282e0afafa9270d653f41d6fa134a90f",
+          "size_bytes": 2626,
+          "sha256": "ba92d1f0d8f636b724e22590994a65aca7c3e635744efe600d127304c6eea56b"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_reversible_change.py",
+          "git_blob_sha1": "9e736828d63a3081b3d00ef0fde10c55ce5897d9",
+          "size_bytes": 5637,
+          "sha256": "7e1dae809ed7aded94e61e0cbfe059deaa337b0a95dee1a7a60bfb1fa4aeefff"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "git_blob_sha1": "5de907978dea5a13e04237b3d19179b5746dc713",
+          "size_bytes": 9215,
+          "sha256": "a8b8d1a022312abf613dcbfbb0d015ea320370656835dcfdfbd51ba0e41f48ac"
+        },
+        {
+          "path": "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+          "git_blob_sha1": "aeef6b6fb3c88b26ef7afd79f5ec3996cb319765",
+          "size_bytes": 15734,
+          "sha256": "da607bac1cd50465a60a1cae8bc0e849a4ff23965c80d4189a626785bc365811"
+        },
+        {
+          "path": "configs/gpu_allocation.yaml",
+          "git_blob_sha1": "acead9b0a845c2f005dcc753467d0b5d03e3fa85",
+          "size_bytes": 2405,
+          "sha256": "be5f8cee8a250847b28fd1836af67a0f1f8bdf9321905be142587acefd43c113"
+        },
+        {
+          "path": "docs/HARDWARE_SETUP.md",
+          "git_blob_sha1": "83b58aa3a9096ea7dc8cb219a56434d00f2108b6",
+          "size_bytes": 9123,
+          "sha256": "57970b798eb5c3e373e17c68b5883b994dde88eadb6fb83bd73ec829d8b8b6fe"
+        },
+        {
+          "path": "docs/evidence/mrl-34/MRL_34_ENGINEERING_EVIDENCE_R01.json",
+          "git_blob_sha1": "a95276a5a133af33b35c7025867a77f67b4fca08",
+          "size_bytes": 11948,
+          "sha256": "454029c313e85dd26343b3f16735e40a65ee5ba01cbfc335e978a3e0420ae9de"
+        },
+        {
+          "path": "tests/test_gpu_hardware_admission.py",
+          "git_blob_sha1": "f99e4cb765dad4eb9e4fd280a25d041c9e9dc248",
+          "size_bytes": 2071,
+          "sha256": "7ef05796ab1bf86ba743d474c3c2ba11390118f62ee5cd08155ee8894bfe6f4f"
+        },
+        {
+          "path": "utils/gpu_orchestrator.py",
+          "git_blob_sha1": "b157183cca502a083db4a2302dc9f8dba7826368",
+          "size_bytes": 14057,
+          "sha256": "a3c8f8c20814d2c027a6493a5c05377f4722bfb73473169c432e63a41c16c4b3"
+        }
+      ]
+    },
+    "PR704": {
+      "head": "82b657edc314c502e365ebf1f3e3a1d3e1ae4a4e",
+      "tree_sha": "9965100d295a42667b79128022d77be4f3e38a59",
+      "changed_files": [
+        {
+          "path": ".github/workflows/mrl-hardware-admission.yml",
+          "git_blob_sha1": "cd10b28f6ace9786cc0716564974a63d352cef57",
+          "size_bytes": 4629,
+          "sha256": "804aecb2871166e166da1e1c4b29c4f51ec8c2690c11882a302f9e3479df7b7b"
+        },
+        {
+          "path": "CHANGELOG.md",
+          "git_blob_sha1": "7f964cd53e0fcf41daad8e7fe64e01d7f43a1463",
+          "size_bytes": 9834,
+          "sha256": "43fd9b754b2ab504f17e9b9f8ff7819968559fc856259e7fbed50297faf0e338"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/EXPECTED_FILE_LIST.txt",
+          "git_blob_sha1": "20849fbb5ffc6d7aa5d831e2a453ff62d2f42306",
+          "size_bytes": 783,
+          "sha256": "61811c465c7ae545c3a73275b8a23e52f4cecbdcae7c493a5af85cd5008053e9"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/MANIFEST.json",
+          "git_blob_sha1": "e790bef966b728e565230900b60fe90548edb542",
+          "size_bytes": 880,
+          "sha256": "18abe03c87ee882a4e712422742620feafe0ea26fd08de54d2478be638b8ea05"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/README.md",
+          "git_blob_sha1": "658b9ac26980ae5eb6fb5e528175451e19b6590a",
+          "size_bytes": 3250,
+          "sha256": "abaf6fa5be01833b1042ad416781aa73509ad9b3b79804b84d8cf155e74f01e9"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/SHA256SUMS.txt",
+          "git_blob_sha1": "2d2e6d0d7894e55a79cc9a399ebfdab95425c93e",
+          "size_bytes": 2418,
+          "sha256": "50417d974b8da7636514f89dd6e9cca672d5302f61bf48d4487ba6b038bfc076"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/docs/MRL_HARDWARE_ADMISSION_v1.md",
+          "git_blob_sha1": "2128fe0a6393022ff3e18d8f2263344953300f6d",
+          "size_bytes": 12004,
+          "sha256": "edd9b3a83eb698c134c19d1b53970e3361fe07f403546915e68f743dc56d5c5a"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/docs/MRL_REVERSIBLE_CHANGE_v1.md",
+          "git_blob_sha1": "04df4d14f2ed755099cb6a04199b39387e411d73",
+          "size_bytes": 2569,
+          "sha256": "e4e3ab93c055eb96b3d7e5a05dc95559b79206ef6cbaa81093cc258cf20943c4"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/hardware/MRL_DL580_historical_snapshot_v1.json",
+          "git_blob_sha1": "5095ba88e97645e2e3834699a5f6f2189bd90ec1",
+          "size_bytes": 1973,
+          "sha256": "f5a77306e4220411bbf6fc60e6b10501137a8e3ea3cd37af2a3fe37e8c3d3573"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/hardware/MRL_hardware_matrix_v1.json",
+          "git_blob_sha1": "66a2ea18f40ba07b435d05d6c4f9aa7e1f5605b2",
+          "size_bytes": 2366,
+          "sha256": "d1cf14eb729bdac65a48d345068f354fdf6c2a19219ddb9c3c2a915d1805681d"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_build_product_bundle_v1.py",
+          "git_blob_sha1": "0cc83228987d7305ee2a1c36f2b9582225a813f0",
+          "size_bytes": 6989,
+          "sha256": "36062634817b8513d9215df93b807a49f3f8e06d9563d58faa9de3316e616716"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_hardware_admission_v1.py",
+          "git_blob_sha1": "8471bc2682d0bf28fb93f8daea06e7822f7faf5f",
+          "size_bytes": 19761,
+          "sha256": "e575bf8e91b7b8ba9ae8ff571fe1135de3d71b19de789733c642631027e9f129"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_hardware_smoke_v1.py",
+          "git_blob_sha1": "30c4401ae3e5f06ee682b48d40a2a1530bef9cb2",
+          "size_bytes": 7726,
+          "sha256": "26b81bc26b1213e64cb42dc92a29a735a212d97ea94afe456f7634010817aeab"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_reversible_change_v1.py",
+          "git_blob_sha1": "623f46878bde801eb0a27e65bb80af1c5a7cdc32",
+          "size_bytes": 9790,
+          "sha256": "d519b9c4b969f05c80f240e1b570f8920c47ca20b0e9964887aa42b517969b21"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_hardware_admission.py",
+          "git_blob_sha1": "85a3be850ba27d5e4972f2c6878a2b98c8891af5",
+          "size_bytes": 13424,
+          "sha256": "25049a2f49c2e12c38ca067efefa76c717c61a800c035e40e83545793b4126de"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_hardware_bundle.py",
+          "git_blob_sha1": "d7d3f2c5282e0afafa9270d653f41d6fa134a90f",
+          "size_bytes": 2626,
+          "sha256": "ba92d1f0d8f636b724e22590994a65aca7c3e635744efe600d127304c6eea56b"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_hardware_smoke.py",
+          "git_blob_sha1": "983117be4b3367497fe13cfe41ae14ae7b0e7eba",
+          "size_bytes": 8219,
+          "sha256": "0945c4a1d5ff399bc24a18700a3c22f1f7f4649a40b8608f690df3709d62e896"
+        },
+        {
+          "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_reversible_change.py",
+          "git_blob_sha1": "9e736828d63a3081b3d00ef0fde10c55ce5897d9",
+          "size_bytes": 5637,
+          "sha256": "7e1dae809ed7aded94e61e0cbfe059deaa337b0a95dee1a7a60bfb1fa4aeefff"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "git_blob_sha1": "62cd2a7a6e23d7c39b803f355ac1b034dafca19a",
+          "size_bytes": 9266,
+          "sha256": "f5d011066ef62b0a72e06a52d1ecdf3a86b783e3386ffb787bf131adf20dbb8f"
+        },
+        {
+          "path": "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+          "git_blob_sha1": "d1bd9089885da46be39b097a6b43c2971e2af72b",
+          "size_bytes": 15785,
+          "sha256": "2df8c212c6474fa698ea96d80bd4083928381d883fcc84580de887bb67155628"
+        },
+        {
+          "path": "configs/gpu_allocation.yaml",
+          "git_blob_sha1": "cbd5e73e40277d52edd49d73dc8320b8fb9649d6",
+          "size_bytes": 2448,
+          "sha256": "9d933077298064ea9b95760d210109c7403b9f6fd27b1ba4b66c57069a34aa9d"
+        },
+        {
+          "path": "docs/HARDWARE_SETUP.md",
+          "git_blob_sha1": "e2417273f6118802eb4ff184ae57b41888f1e056",
+          "size_bytes": 9122,
+          "sha256": "0316890a55718ee708d2b8b48fa659ddaf466a785fc2a4d2ae7589d202989f81"
+        },
+        {
+          "path": "docs/MRL_HARDWARE_ADMISSION.md",
+          "git_blob_sha1": "007053034aea3b20ef7cc6fa3b3299f01758f9b6",
+          "size_bytes": 4326,
+          "sha256": "dd376ea084837c822afece658ee02fb47d49b41d792629e73d6a680a5f23c4fe"
+        },
+        {
+          "path": "docs/evidence/mrl-34/MRL_34_ENGINEERING_EVIDENCE_R01.json",
+          "git_blob_sha1": "a95276a5a133af33b35c7025867a77f67b4fca08",
+          "size_bytes": 11948,
+          "sha256": "454029c313e85dd26343b3f16735e40a65ee5ba01cbfc335e978a3e0420ae9de"
+        },
+        {
+          "path": "docs/evidence/mrl-34/MRL_34_ENGINEERING_EVIDENCE_R02.json",
+          "git_blob_sha1": "e68f5b3c65650bc0d63c70e276f13a1146e96f94",
+          "size_bytes": 11577,
+          "sha256": "893a20e76caecdf45b69ec4e9f562fe46f9dd550e4a61b1ba96eac9de7bf3d1b"
+        },
+        {
+          "path": "tests/test_gpu_hardware_admission.py",
+          "git_blob_sha1": "bab6bde966a30c79a58be154009567d31f8758cd",
+          "size_bytes": 3853,
+          "sha256": "e0527f1f2bd39e34aa6ea84e94595068a4993678025204ead633afa3a1d46fd9"
+        },
+        {
+          "path": "tests/test_mrl_hardware_admission.py",
+          "git_blob_sha1": "95c569a06a7d343351d0208c266100a23a846c3b",
+          "size_bytes": 1167,
+          "sha256": "4621c8e4eedffeb564becd17c74c15c8aee4c827a836989ca73217aa7973df4c"
+        },
+        {
+          "path": "ultimate_engines/digital_human_ultra.py",
+          "git_blob_sha1": "258fb059aca306afee46ac35a037be1a7a4b991b",
+          "size_bytes": 11806,
+          "sha256": "bc9ab63c9f4ca90cdd82064dcfce86f11659c0046ce8615a203742a21cb67087"
+        },
+        {
+          "path": "ultimate_engines/voice_clone_unlimited.py",
+          "git_blob_sha1": "1c350357f03f6b2abadd2a958f68c3c8bb5ca352",
+          "size_bytes": 11048,
+          "sha256": "61e6123d9334f012c45ab54e3f05b7affd428e762034cb8b299d681a97e33cea"
+        },
+        {
+          "path": "utils/gpu_orchestrator.py",
+          "git_blob_sha1": "8db285be7399d2c6b927150f5c70d1bb5f6ad047",
+          "size_bytes": 15570,
+          "sha256": "85fa063ce20da4a6309fce161391dfd9a76d41d3a434ee32c55d9baa009b18b1"
+        },
+        {
+          "path": "utils/mrl_hardware_admission.py",
+          "git_blob_sha1": "e056d2b08d74af2d5e90c42000a4a6e2186e4291",
+          "size_bytes": 601,
+          "sha256": "a50a2229267e81a63891066d657f49dd452f2a6112ff5b0cc6cf9ab36ee5d703"
+        }
+      ]
+    }
+  },
+  "PR701_body_old_sha": "7a480be831824788c6cb4dfe03089f8b8f2a86af",
+  "PR701_exact_head_ci": {
+    "run_id": 41613416544,
+    "head_sha": "ea9c08874add64c7eaed70bc2bf7c6ecedfcc448",
+    "status": "success",
+    "linux_product_tests": 41,
+    "windows_product_tests": 41,
+    "orchestrator_tests_per_os": 2,
+    "byoh_run_id": 41613416597,
+    "codeql_run_id": 41613416909
+  },
+  "PR704_exact_head_ci": "action_required",
+  "hardware_acceptance": "UNKNOWN",
+  "verified_release_acceptances": 0,
+  "approval": "NO_HOST_OPERATIONS_REQUESTED_OR_PERFORMED",
+  "integration_choices": {
+    "canonical_gate": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_hardware_admission_v1.py",
+    "compatibility_wrapper": "utils/mrl_hardware_admission.py",
+    "collector": "reuse MRL-44 current Passport, unavailable this session",
+    "builder": "reuse MRL_build_product_bundle_v1.py",
+    "rollback": "extend MRL_reversible_change_v1.py; verify returned artifact bytes",
+    "original_branches": "unchanged; both heads are ancestors of PR704"
+  }
+}

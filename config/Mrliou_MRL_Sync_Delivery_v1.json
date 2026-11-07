@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 9834,
-      "sha256": "43fd9b754b2ab504f17e9b9f8ff7819968559fc856259e7fbed50297faf0e338",
+      "size_bytes": 10467,
+      "sha256": "0ae76b08d95ee1ced3353ca2e4013e423ce6442af4ace99e181a760f8a781ccf",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -223,7 +223,10 @@
         "3372f149d9efef46e6457e9e4df8e09d49f775e6",
         "ea9c08874add64c7eaed70bc2bf7c6ecedfcc448"
       ],
-      "source_prs": [700, 701],
+      "source_prs": [
+        700,
+        701
+      ],
       "reason": "Integrate both MRL-34 candidate histories additively; preserve prior records and refresh live payload integrity.",
       "previous_entries": [
         {
@@ -248,6 +251,44 @@
         }
       ],
       "origin_signature": "MrLiouWord"
+    }
+  ],
+  "integrity_history": [
+    {
+      "origin_signature": "MrLiouWord",
+      "source_commits": [
+        "3372f149d9efef46e6457e9e4df8e09d49f775e6",
+        "ea9c08874add64c7eaed70bc2bf7c6ecedfcc448",
+        "82b657edc314c502e365ebf1f3e3a1d3e1ae4a4e"
+      ],
+      "source_prs": [
+        700,
+        701,
+        704
+      ],
+      "reason": "MRL-59/63 R03 additive integration; retain previous integrity rows",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 9834,
+          "sha256": "43fd9b754b2ab504f17e9b9f8ff7819968559fc856259e7fbed50297faf0e338",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 10467,
+          "sha256": "0ae76b08d95ee1ced3353ca2e4013e423ce6442af4ace99e181a760f8a781ccf",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ]
     }
   ]
 }

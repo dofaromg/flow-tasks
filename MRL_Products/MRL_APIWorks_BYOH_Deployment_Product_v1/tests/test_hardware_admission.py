@@ -15,6 +15,7 @@ REPO = ROOT.parents[1]
 MATRIX_SOURCE = ROOT / 'hardware/MRL_hardware_matrix_v1.json'
 sys.path.insert(0, str(ROOT / 'scripts'))
 import MRL_hardware_admission_v1 as gate
+import MRL_reversible_change_v1 as reversible
 
 
 def fixture():
@@ -63,9 +64,29 @@ def tested_matrix(host, workload, path):
     matrix = json.loads(gate.MATRIX.read_text(encoding='utf-8'))
     configuration_digest = gate.digest({'host': host, 'workload': workload})
     acceptance_id = 'TEST_ONLY_SYNTHETIC'
+    (path.parent / 'before.bin').write_bytes(b'SYNTHETIC_BEFORE')
+    (path.parent / 'forward.bin').write_bytes(b'SYNTHETIC_FORWARD')
+    before = reversible.build_receipt(
+        evidence_root=path.parent, change_id='MRL-TEST-ROUNDTRIP', phase='before',
+        state={'configuration': 'before'}, artifacts=['before.bin'], commands=[], status='captured')
+    command = [{'argv': ['TEST_ONLY_NO_EXECUTION'], 'expected_exit_codes': [0], 'requires_owner_go': True}]
+    forward = reversible.build_receipt(
+        evidence_root=path.parent, change_id=before['change_id'], phase='forward',
+        state={'configuration': configuration_digest}, artifacts=['forward.bin'], commands=command,
+        status='passed', previous_receipt_digest=before['receipt_digest'])
+    returned = reversible.build_receipt(
+        evidence_root=path.parent, change_id=before['change_id'], phase='return',
+        state=before['state'], artifacts=['before.bin'], commands=command,
+        status='passed', previous_receipt_digest=forward['receipt_digest'])
+    for phase, item in zip(('before', 'forward', 'return'), (before, forward, returned)):
+        (path.parent / (phase + '.json')).write_text(json.dumps(item), encoding='utf-8')
     receipt = {
         'origin_signature': 'MrLiouWord', 'status': 'hardware_verified',
         'acceptance_id': acceptance_id, 'configuration_digest': configuration_digest,
+        'bundle_id': workload['bundle_id'], 'bundle_digest': workload['bundle_digest'],
+        'track': workload['track'], 'source_commit': workload['source_commit'],
+        'change_id': before['change_id'],
+        'rollback': {phase: phase + '.json' for phase in ('before', 'forward', 'return')},
         'checks': {'device_query': True, 'runtime_smoke': True,
                    'model_smoke': True, 'restart_smoke': True},
         'source': 'SYNTHETIC_TEST_ONLY_NOT_HARDWARE',
@@ -75,6 +96,7 @@ def tested_matrix(host, workload, path):
     matrix['acceptances'] = [{
         'acceptance_id': acceptance_id,
         'bundle_id': workload['bundle_id'],
+        'bundle_digest': workload['bundle_digest'],
         'track': workload['track'],
         'configuration_digest': configuration_digest,
         'status': 'passed', 'evidence_kind': 'real_hardware_smoke_and_restart',
@@ -161,6 +183,7 @@ class HardwareAdmissionTests(unittest.TestCase):
                 self.reset_fixture()
                 if field == 'runtime':
                     self.w.update(cuda_runtime='13.0', runtime_abi='cuda-13')
+                    self.w['runtime_binary']['version'] = '13.0'
                     self.h['loaded_runtime']['version'] = '13.0'
                 elif field == 'toolkit':
                     self.w['toolkit'] = '13.0'
@@ -244,7 +267,24 @@ class HardwareAdmissionTests(unittest.TestCase):
         self.h['driver']['version'] = '580.99'
         self.w.update(bundle_id='MRL_APIWorks_BYOH_Modern_NVIDIA_CUDA13_v1',
                       cuda_runtime='13.0', toolkit='13.0', runtime_abi='cuda-13')
+        self.w['runtime_binary']['version'] = '13.0'
+        self.h['loaded_runtime'] = copy.deepcopy(self.w['runtime_binary'])
         self.check_status('unknown', 'CUDA_PATH_NOT_VALIDATED')
+
+    def test_loaded_runtime_must_be_mapped_and_runner_must_match_actual_import(self):
+        import types
+        self.w['runner']['id'] = 'pytorch'
+        module = types.SimpleNamespace(__file__=str(self.artifact_root / 'runner.bin'),
+                                       __version__=self.w['runner']['version'],
+                                       version=types.SimpleNamespace(cuda='12.2'))
+        with patch.object(gate, 'loaded_module_paths', return_value=set()):
+            with self.assertRaisesRegex(ValueError, 'not mapped'):
+                gate.verify_loaded_process_artifacts(self.w, self.artifact_root, self.artifact_paths, module)
+        with patch.object(gate, 'loaded_module_paths', return_value={self.artifact_root / 'runtime.bin'}):
+            gate.verify_loaded_process_artifacts(self.w, self.artifact_root, self.artifact_paths, module)
+            module.__file__ = str(self.artifact_root / 'runtime.bin')
+            with self.assertRaisesRegex(ValueError, 'outside'):
+                gate.verify_loaded_process_artifacts(self.w, self.artifact_root, self.artifact_paths, module)
 
     def test_unsupported_precision(self):
         for precision in ('bf16', 'fp8', 'fp4'):
@@ -276,6 +316,45 @@ class HardwareAdmissionTests(unittest.TestCase):
                                  '--artifact-paths', str(artifact_paths)], capture_output=True)
         self.assertEqual(result.returncode, 2)
         self.assertFalse(json.loads(result.stdout)['allowed'])
+
+    def test_acceptance_cannot_reuse_bundle_bytes_across_routes(self):
+        tested_matrix(self.h, self.w, self.matrix_path)
+        matrix = json.loads(self.matrix_path.read_text())
+        for route in matrix['routes'][:2]:
+            route['bundle_digest'] = self.w['bundle_digest']
+        self.matrix_path.write_text(json.dumps(matrix))
+        self.check_status('unknown', 'independent bundle digests')
+
+    def test_selected_device_must_exist_and_uuid_must_be_unique(self):
+        self.w['gpu_ids'] = [1]
+        tested_matrix(self.h, self.w, self.matrix_path)
+        self.check_status('unknown', 'absent')
+        self.w['gpu_ids'] = [0]
+        self.h['gpus'].append(dict(self.h['gpus'][0], id=1))
+        self.check_status('unknown', 'duplicate')
+
+    def test_rollback_bytes_are_required_even_with_hardware_pass_flags(self):
+        tested_matrix(self.h, self.w, self.matrix_path)
+        self.check_status('admitted')
+        (self.matrix_path.parent / 'before.bin').write_bytes(b'wrong return bundle')
+        self.check_status('unknown', 'artifact changed')
+
+    def test_controlled_snapshot_reads_verified_shards_and_rejects_replacement(self):
+        with self.assertRaisesRegex(ValueError, 'artifact bytes'):
+            with gate.verified_model_streams(self.w, self.artifact_root, self.artifact_paths) as streams:
+                original = self.artifact_root / 'model/weights-00001.bin'
+                original.unlink()
+                original.write_bytes(b'REPLACED')
+                self.assertEqual(streams['weights-00001.bin'].read(), b'test-shard-1')
+                with self.assertRaises((TypeError, AttributeError)):
+                    streams['new'] = None
+                with self.assertRaises(Exception):
+                    streams['weights-00001.bin'].write(b'forbidden')
+
+    def test_snapshot_rejects_added_shard(self):
+        with self.assertRaisesRegex(ValueError, 'artifact bytes'):
+            with gate.verified_model_streams(self.w, self.artifact_root, self.artifact_paths):
+                (self.artifact_root / 'model/extra.bin').write_bytes(b'extra')
 
 
 

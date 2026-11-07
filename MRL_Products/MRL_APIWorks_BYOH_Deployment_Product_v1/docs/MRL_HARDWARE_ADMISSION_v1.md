@@ -197,3 +197,17 @@ issue. Preserve all prior bundles and receipts; unknown or failed combinations r
 - https://docs.nvidia.com/deeplearning/tensorrt/10.x.x/architecture/architecture-overview.html
 
 R535 不同產品支援表與日期需各自核對；不據此文件推定母體需升級。
+
+## R03 整合追加（2026-11-08）
+
+沿用 #704@82b657edc314c502e365ebf1f3e3a1d3e1ae4a4e（祖先含 #700/#701），
+補齊逐卡 CSV 解析、實際 import/mapped runtime 檢查、模型快照串流與受控快取 provenance。
+完整說明與工程套用方式見 repository 的 docs/MRL_V100_INTEGRATION_R03.md。
+本商品來源包內不包含 repository 的 GPUOrchestrator/engine，不能單獨宣稱已啟用這些入口。
+
+接受憑證須追加 bundle_id、bundle_digest、track、source_commit、change_id 與
+rollback{before,forward,return} 三個相對 receipt 路徑；各路徑與 artifact 都留本機 matrix
+目錄內且不得為 symlink。同一 change_id 的往返鏈、回復實體 bytes 必須驗證。
+舊欄位不足的 receipt 只會拒絕，不自動升級為 passed；正式 catalog 目前仍沒有任何 receipt。
+Runtime 的單檔 digest 必須與當前 process 映射的 CUDA DLL/SO 一致；外部 runner/容器缺
+已審 adapter 時維持 UNKNOWN。模型 loader 取得已驗證快照，不能重新開原始路徑。

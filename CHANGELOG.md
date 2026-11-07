@@ -1,3 +1,12 @@
+## 2026-11-08 — MRL-59 / MRL-63 V100 integration R03 (review candidate)
+
+- Continue #704 and preserve #700/#701 ancestry; keep one BYOH admission implementation.
+- Fix live GPU CSV verification; bind imported runner and mapped runtime to checked artifacts.
+- Load verified model snapshot streams and reject unbound/changed cache objects and shards.
+- Require route-isolated bundle digests and before/forward/return artifact byte recovery.
+- Add regressions and predeployment review instructions; real DL580 acceptance remains UNKNOWN.
+- No merge, deployment, restart, driver/CUDA or firmware change. origin_signature: MrLiouWord.
+
 ## 2026-11-03 — MRL-34 hardware admission (candidate)
 
 - Preserve DL580 historical snapshot; add machine-readable hardware routes and exact acceptance gate.

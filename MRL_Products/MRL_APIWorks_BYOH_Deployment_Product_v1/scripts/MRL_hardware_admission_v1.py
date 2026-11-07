@@ -8,11 +8,15 @@ Only a release-reviewed exact acceptance entry can grant admission.
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager, ExitStack
 import hashlib
+import io
 import json
 import os
 import re
+import tempfile
 from pathlib import Path
+from types import MappingProxyType
 
 ORIGIN = "MrLiouWord"
 MATRIX = Path(__file__).resolve().parents[1] / "hardware/MRL_hardware_matrix_v1.json"
@@ -47,11 +51,17 @@ def load_matrix(path: Path | None = None) -> dict:
             or not isinstance(matrix.get("acceptances"), list)):
         raise ValueError("invalid hardware matrix")
     routes = {}
+    route_digests = set()
     for route in matrix["routes"]:
         _required(route, ("bundle_id", "track", "architectures", "cuda_major"))
         if route["bundle_id"] in routes or route["track"] not in ("dl580-v100", "modern-gpu"):
             raise ValueError("duplicate or invalid hardware route")
         routes[route["bundle_id"]] = route["track"]
+        route_digest = route.get("bundle_digest")
+        if route_digest is not None:
+            if not DIGEST.fullmatch(route_digest) or route_digest in route_digests:
+                raise ValueError("hardware routes must have independent bundle digests")
+            route_digests.add(route_digest)
     acceptance_ids = set()
     ownership = {}
     for acceptance in matrix["acceptances"]:
@@ -62,10 +72,10 @@ def load_matrix(path: Path | None = None) -> dict:
         verify_acceptance_receipt(acceptance, path.parent)
         if routes.get(acceptance["bundle_id"]) != acceptance["track"]:
             raise ValueError("acceptance does not match its hardware route")
-        for key in ("bundle_id", "evidence_digest", "acceptance_id"):
+        for key in ("bundle_id", "bundle_digest", "evidence_digest", "acceptance_id"):
             identity = (key, acceptance[key])
-            previous = ownership.setdefault(identity, acceptance["track"])
-            if previous != acceptance["track"]:
+            previous = ownership.setdefault(identity, acceptance["bundle_id"])
+            if previous != acceptance["bundle_id"]:
                 raise ValueError("cross-track acceptance reuse")
     return matrix
 
@@ -79,9 +89,11 @@ def _file_digest(path: Path) -> tuple[str, int]:
         opened = os.fstat(stream.fileno())
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
+        finished = os.fstat(stream.fileno())
     after = path.lstat()
-    identity = lambda stat: (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns)
-    if identity(before) != identity(opened) or identity(opened) != identity(after):
+    identity = lambda stat: (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns)
+    if (identity(before) != identity(opened) or identity(opened) != identity(finished)
+            or identity(finished) != identity(after) or after.st_size <= 0):
         raise ValueError("artifact changed while hashing")
     return "sha256:" + digest.hexdigest(), after.st_size
 
@@ -121,6 +133,74 @@ def artifact_digest(root: Path, relative: str) -> str:
     return "sha256:" + hashlib.sha256(payload).hexdigest()
 
 
+class _ReadOnlySnapshot(io.BufferedIOBase):
+    """File-like model input without a path, writable API, or exposed descriptor."""
+
+    def __init__(self, stream):
+        self._stream = stream
+
+    def read(self, size=-1):
+        return self._stream.read(size)
+
+    def readinto(self, buffer):
+        return self._stream.readinto(buffer)
+
+    def seek(self, offset, whence=0):
+        return self._stream.seek(offset, whence)
+
+    def tell(self):
+        return self._stream.tell()
+
+    def readable(self):
+        return True
+
+    def seekable(self):
+        return True
+
+
+@contextmanager
+def verified_model_streams(workload: dict, artifact_root: Path, artifact_paths: dict):
+    """Snapshot verified model bytes; a trusted loader must consume these streams.
+
+    Temporary copies spill to private local disk and are closed on every exit.
+    Replacing source paths cannot redirect reads. Source changes during copying
+    or loading fail before any model is registered/returned. This is a loader
+    contract, not a sandbox for hostile Python code or a runtime DLL loader.
+    """
+    verify_artifact_bytes(workload, artifact_root, artifact_paths)
+    root = Path(artifact_root).resolve(strict=True)
+    model_path = root / artifact_paths['model']
+    is_directory = model_path.is_dir()
+    paths = sorted(model_path.rglob('*')) if is_directory else [model_path]
+    with ExitStack() as stack:
+        streams, entries = {}, []
+        for path in paths:
+            if path.is_dir() and not path.is_symlink():
+                continue
+            name = path.relative_to(model_path).as_posix() if is_directory else '.'
+            # Validate every original path, including parents, before opening.
+            expected = artifact_digest(root, path.relative_to(root).as_posix())
+            snapshot = stack.enter_context(tempfile.TemporaryFile(mode='w+b'))
+            hasher, size = hashlib.sha256(), 0
+            with path.open('rb') as source:
+                for chunk in iter(lambda: source.read(1024 * 1024), b''):
+                    snapshot.write(chunk)
+                    hasher.update(chunk)
+                    size += len(chunk)
+            actual = 'sha256:' + hasher.hexdigest()
+            if not size or actual != expected:
+                raise AdmissionError('model changed while snapshotting')
+            entries.append(dict(path=name, size=size, sha256=actual))
+            snapshot.seek(0)
+            streams[name] = _ReadOnlySnapshot(snapshot)
+        actual_model = digest(entries) if is_directory else entries[0]['sha256']
+        if actual_model != workload['model']['digest']:
+            raise AdmissionError('model snapshot file set differs from manifest')
+        verify_artifact_bytes(workload, root, artifact_paths)
+        yield MappingProxyType(streams)
+        verify_artifact_bytes(workload, root, artifact_paths)
+
+
 def verify_artifact_bytes(workload: dict, artifact_root: Path, artifact_paths: dict) -> None:
     """Verify actual bundle, sharded model, runner, and runtime bytes."""
     expected = {
@@ -138,15 +218,81 @@ def verify_artifact_bytes(workload: dict, artifact_root: Path, artifact_paths: d
             raise ValueError("artifact bytes do not match manifest: " + name)
 
 
+def loaded_module_paths() -> set[Path]:
+    """Read this process's mapped libraries; never infer from nvidia-smi CUDA."""
+    if os.name == 'nt':
+        import ctypes
+        from ctypes import wintypes
+        psapi = ctypes.WinDLL('psapi', use_last_error=True)
+        kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+        kernel.GetCurrentProcess.restype = wintypes.HANDLE
+        process = kernel.GetCurrentProcess()
+        modules = (wintypes.HMODULE * 4096)()
+        needed = wintypes.DWORD()
+        enum = psapi.EnumProcessModules
+        enum.argtypes = (wintypes.HANDLE, ctypes.POINTER(wintypes.HMODULE),
+                         wintypes.DWORD, ctypes.POINTER(wintypes.DWORD))
+        filename = psapi.GetModuleFileNameExW
+        filename.argtypes = (wintypes.HANDLE, wintypes.HMODULE, wintypes.LPWSTR, wintypes.DWORD)
+        if not enum(process, modules, ctypes.sizeof(modules), ctypes.byref(needed)):
+            raise ValueError('cannot inspect mapped runtime modules')
+        if needed.value > ctypes.sizeof(modules):
+            raise ValueError('mapped runtime module inventory truncated')
+        result = set()
+        for module in modules[:needed.value // ctypes.sizeof(wintypes.HMODULE)]:
+            buffer = ctypes.create_unicode_buffer(32768)
+            length = filename(process, module, buffer, len(buffer))
+            if not length or length >= len(buffer):
+                raise ValueError('cannot resolve mapped runtime module')
+            result.add(Path(buffer.value).resolve(strict=True))
+        return result
+    maps = Path('/proc/self/maps')
+    if not maps.is_file():
+        raise ValueError('no trusted loaded-runtime inspection adapter for this OS')
+    result = set()
+    for line in maps.read_text(encoding='utf-8').splitlines():
+        fields = line.split(None, 5)
+        if len(fields) == 6 and fields[5].startswith('/'):
+            if fields[5].endswith(' (deleted)'):
+                raise ValueError('process contains replaced/deleted mapped modules')
+            result.add(Path(fields[5]).resolve(strict=True))
+    return result
+
+
+def verify_loaded_process_artifacts(workload, artifact_root, artifact_paths, runner_module):
+    """Bind the native PyTorch process to the verified runner and mapped runtime.
+
+    Container image/platform attestation and external runners need their own
+    reviewed adapter; a digest-pinned claim alone cannot identify this process.
+    """
+    if workload['runner']['id'].lower() != 'pytorch' or workload['image']['id'] != 'native':
+        raise ValueError('live runner/image adapter is UNKNOWN for this workload')
+    root = Path(artifact_root).resolve(strict=True)
+    verify_artifact_bytes(workload, root, artifact_paths)
+    runner = (root / artifact_paths['runner']).resolve(strict=True)
+    actual_runner = Path(runner_module.__file__).resolve(strict=True)
+    if actual_runner != runner and not (runner.is_dir() and runner in actual_runner.parents):
+        raise ValueError('imported runner is outside the verified runner artifact')
+    runtime = (root / artifact_paths['runtime']).resolve(strict=True)
+    if not runtime.is_file() or runtime not in loaded_module_paths():
+        raise ValueError('verified CUDA runtime binary is not mapped in this process')
+    if (runner_module.__version__ != workload['runner']['version']
+            or runner_module.version.cuda != workload['cuda_runtime']):
+        raise ValueError('loaded PyTorch version or CUDA ABI differs from workload')
+    verify_artifact_bytes(workload, root, artifact_paths)
+
+
 def verify_acceptance_receipt(acceptance: dict, evidence_root: Path) -> dict:
     """Verify exact real-hardware receipt bytes before using a registry row."""
     required = ("bundle_id", "configuration_digest", "status", "evidence_kind",
-                "source_commit", "evidence_digest", "evidence_ref", "receipt_path")
+                "source_commit", "evidence_digest", "evidence_ref", "receipt_path",
+                "acceptance_id", "track", "bundle_digest")
     _required(acceptance, required)
     if (acceptance["status"] != "passed"
             or acceptance["evidence_kind"] != "real_hardware_smoke_and_restart"
             or not re.fullmatch(r"[0-9a-f]{40}", acceptance["source_commit"])
             or not DIGEST.fullmatch(acceptance["evidence_digest"])
+            or not DIGEST.fullmatch(acceptance["bundle_digest"])
             or not DIGEST.fullmatch(acceptance["configuration_digest"])):
         raise ValueError("acceptance is not an exact real-hardware record")
     relative = Path(acceptance["receipt_path"])
@@ -165,22 +311,51 @@ def verify_acceptance_receipt(acceptance: dict, evidence_root: Path) -> dict:
     if "sha256:" + hashlib.sha256(raw).hexdigest() != acceptance["evidence_digest"]:
         raise ValueError("acceptance receipt digest mismatch")
     receipt = json.loads(raw)
+    expected_checks = {'device_query', 'runtime_smoke', 'model_smoke', 'restart_smoke'}
+    checks = receipt.get('checks')
     if (receipt.get("origin_signature") != ORIGIN
             or receipt.get("status") != "hardware_verified"
             or receipt.get("acceptance_id") != acceptance["acceptance_id"]
             or receipt.get("configuration_digest") != acceptance["configuration_digest"]
-            or receipt.get("checks") != {
-                "device_query": True, "runtime_smoke": True,
-                "model_smoke": True, "restart_smoke": True,
-            }
+            or any(receipt.get(key) != acceptance[key]
+                   for key in ('bundle_id', 'bundle_digest', 'track', 'source_commit'))
+            or not isinstance(checks, dict) or set(checks) != expected_checks
+            or any(value is not True for value in checks.values())
             or not receipt.get("source")):
         raise ValueError("incomplete or failed hardware acceptance receipt")
+    rollback = receipt.get('rollback')
+    if not isinstance(rollback, dict) or set(rollback) != {'before', 'forward', 'return'}:
+        raise ValueError('hardware acceptance requires a verified rollback chain')
+    rollback_receipts = []
+    for phase in ('before', 'forward', 'return'):
+        relative = Path(rollback[phase])
+        if relative.is_absolute() or '..' in relative.parts:
+            raise ValueError('rollback path must remain inside the matrix directory')
+        target = root
+        for part in relative.parts:
+            target = target / part
+            if target.is_symlink():
+                raise ValueError('rollback receipt may not contain symlinks')
+        target = target.resolve(strict=True)
+        if root not in target.parents:
+            raise ValueError('rollback path escapes matrix directory')
+        rollback_receipts.append(json.loads(target.read_text(encoding='utf-8')))
+    if __package__:
+        from .MRL_reversible_change_v1 import verify_roundtrip
+    else:
+        from MRL_reversible_change_v1 import verify_roundtrip
+    roundtrip = verify_roundtrip(*rollback_receipts, evidence_root=root)
+    if receipt.get('change_id') != roundtrip['change_id']:
+        raise ValueError('hardware acceptance and rollback change_id differ')
     return receipt
 
 
 def _required(obj: dict, fields: tuple[str, ...]) -> None:
     if not isinstance(obj, dict) or any(obj.get(key) in (None, "", []) for key in fields):
         raise ValueError("missing manifest field: " + ",".join(fields))
+    if any(isinstance(obj[key], str) and obj[key].strip().lower() in
+           ('unknown', 'unverified', 'review_required', 'n/a') for key in fields):
+        raise ValueError('unknown manifest field: ' + ','.join(fields))
 
 
 def _validate(host: dict, workload: dict) -> None:
@@ -210,8 +385,10 @@ def _validate(host: dict, workload: dict) -> None:
             raise ValueError("invalid GPU id or VRAM")
         ids.append(gpu["id"])
         version(gpu["compute_capability"])
-    if len(set(ids)) != len(ids):
+    if len(set(ids)) != len(ids) or len({g['uuid'] for g in host['gpus']}) != len(ids):
         raise ValueError("duplicate GPU id")
+    if not set(workload['gpu_ids']).issubset(ids):
+        raise ValueError('selected GPU is absent from inventory')
     for key in ("bundle_digest",):
         if not isinstance(workload[key], str) or not DIGEST.fullmatch(workload[key]):
             raise ValueError("missing immutable bundle digest")
@@ -232,6 +409,8 @@ def _validate(host: dict, workload: dict) -> None:
         raise ValueError("native workloads must use image CUDA major 0")
     if workload["runtime_abi"] != "cuda-" + str(version(workload["cuda_runtime"])[0]):
         raise ValueError("runtime ABI disagrees with CUDA runtime")
+    if version(workload['runtime_binary']['version']) != version(workload['cuda_runtime']):
+        raise ValueError('runtime binary version disagrees with loaded CUDA runtime')
     if workload["track"] not in ("dl580-v100", "modern-gpu"):
         raise ValueError("unknown hardware track")
     if not re.fullmatch(r"[0-9a-f]{40}", workload["source_commit"]):
@@ -274,6 +453,10 @@ def evaluate(host: dict, workload: dict, artifact_root: Path, artifact_paths: di
             cc = version(gpu["compute_capability"])
             is_v100 = "v100" in gpu["sku"].lower()
             is_volta = gpu["architecture"].lower() == "volta" or cc[:2] in ((7, 0), (7, 2))
+            if (is_volta and (gpu['vendor'] != 'NVIDIA'
+                              or gpu['architecture'] != 'Volta'
+                              or cc[:2] not in ((7, 0), (7, 2)))):
+                return finish('rejected', 'GPU_IDENTITY_CONFLICT')
             if is_v100 and (gpu["vendor"] != "NVIDIA" or not is_volta or cc[:2] != (7, 0)):
                 return finish("rejected", "GPU_IDENTITY_CONFLICT")
             if is_volta or is_v100:
@@ -316,6 +499,13 @@ def evaluate(host: dict, workload: dict, artifact_root: Path, artifact_paths: di
             return finish("rejected", "BUNDLE_CUDA_ROUTE_MISMATCH")
         if route.get("track") != workload["track"]:
             return finish("rejected", "BUNDLE_TRACK_MISMATCH")
+        if (route.get('bundle_digest') is not None
+                and route['bundle_digest'] != workload['bundle_digest']):
+            return finish('rejected', 'BUNDLE_DIGEST_ROUTE_MISMATCH')
+        if workload['track'] == 'dl580-v100' and any(
+                'v100' not in g['sku'].lower() or g['compute_capability'] != '7.0'
+                for g in host['gpus']):
+            return finish('rejected', 'NON_V100_IN_DL580_TRACK')
         if any(g["architecture"] not in route["architectures"] for g in host["gpus"]):
             return finish("rejected", "BUNDLE_HARDWARE_ROUTE_MISMATCH")
         if host["observation"] != "current":
@@ -325,6 +515,7 @@ def evaluate(host: dict, workload: dict, artifact_root: Path, artifact_paths: di
         for entry in matrix["acceptances"]:
             if (entry["bundle_id"] == workload["bundle_id"]
                     and entry["track"] == workload["track"]
+                    and entry['bundle_digest'] == workload['bundle_digest']
                     and entry["source_commit"] == workload["source_commit"]
                     and entry["configuration_digest"] == result["configuration_digest"]
                     and entry["status"] == "passed"

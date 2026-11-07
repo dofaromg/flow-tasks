@@ -50,14 +50,24 @@ def _safe_artifact(root: Path, relative: str) -> Path:
 
 
 def _artifact_row(root: Path, relative: str) -> dict:
+    original = root / relative
+    current = Path(root)
+    for part in Path(relative).parts:
+        current = current / part
+        if current.is_symlink():
+            raise ReceiptError('rollback evidence may not contain symlinks')
     path = _safe_artifact(root, relative)
     if not path.is_file() or path.stat().st_size <= 0:
         raise ReceiptError("artifact missing or empty: " + relative)
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return {"path": relative, "size": path.stat().st_size, "sha256": "sha256:" + digest.hexdigest()}
+    if __package__:
+        from .MRL_hardware_admission_v1 import _file_digest
+    else:
+        from MRL_hardware_admission_v1 import _file_digest
+    try:
+        actual_digest, size = _file_digest(original)
+    except (OSError, ValueError) as exc:
+        raise ReceiptError(str(exc)) from exc
+    return {"path": relative, "size": size, "sha256": actual_digest}
 
 
 def _validate_commands(phase: str, commands: list[dict]) -> None:
@@ -103,7 +113,9 @@ def build_receipt(
     if phase != "before" and (not isinstance(previous_receipt_digest, str)
                                or not DIGEST.fullmatch(previous_receipt_digest)):
         raise ReceiptError(phase + " receipt must bind the previous receipt")
-    if not isinstance(artifacts, list) or not artifacts:
+    if (not isinstance(artifacts, list) or not artifacts
+            or any(not isinstance(item, str) for item in artifacts)
+            or len(set(artifacts)) != len(artifacts)):
         raise ReceiptError("receipt requires at least one immutable artifact")
     _validate_commands(phase, commands)
     receipt = {
@@ -131,6 +143,13 @@ def verify_receipt(receipt: dict, evidence_root: Path) -> None:
         raise ReceiptError("receipt digest mismatch")
     if receipt.get("schema") != SCHEMA or receipt.get("origin_signature") != ORIGIN:
         raise ReceiptError("receipt identity mismatch")
+    if (receipt.get('phase') not in PHASES
+            or receipt.get('status') not in ('captured', 'prepared', 'passed', 'failed')
+            or not isinstance(receipt.get('change_id'), str)
+            or not CHANGE_ID.fullmatch(receipt['change_id'])):
+        raise ReceiptError('invalid receipt phase, status, or change_id')
+    if receipt['phase'] == 'before' and receipt.get('previous_receipt_digest') is not None:
+        raise ReceiptError('before must not bind a prior receipt')
     if canonical_digest(receipt.get("state")) != receipt.get("state_digest"):
         raise ReceiptError("state digest mismatch")
     _validate_commands(receipt.get("phase"), receipt.get("commands"))
@@ -161,6 +180,9 @@ def verify_roundtrip(before: dict, forward: dict, returned: dict, evidence_root:
         raise ReceiptError("roundtrip contains a non-passing phase")
     if returned["state_digest"] != before["state_digest"]:
         raise ReceiptError("return state does not reproduce before state")
+    content_set = lambda item: sorted((row['size'], row['sha256']) for row in item['artifacts'])
+    if content_set(returned) != content_set(before):
+        raise ReceiptError('return artifact bytes do not reproduce before artifacts')
     return {
         "schema": "MRL_Reversible_Change_Verification_v1",
         "origin_signature": ORIGIN,

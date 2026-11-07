@@ -83,16 +83,9 @@ class DigitalHumanEngine:
             lip_sync_model_name = f"digital_human_models.{self.config.lip_sync_model}"
             face_model_name = f"digital_human_models.{self.config.face_model}"
             
-            self.models['lip_sync'] = self.model_cache.get_model(lip_sync_model_name)
-            self.models['face'] = self.model_cache.get_model(face_model_name)
-            
-            if self.models['lip_sync'] is None:
-                logger.warning(f"Lip sync model '{lip_sync_model_name}' not in cache, using placeholder")
-                self.models['lip_sync'] = self._create_placeholder_model("lip_sync")
-            
-            if self.models['face'] is None:
-                logger.warning(f"Face model '{face_model_name}' not in cache, using placeholder")
-                self.models['face'] = self._create_placeholder_model("face")
+            inputs = self.orchestrator.admitted_model_inputs('digital_human', self.gpu_ids)
+            self.models['lip_sync'] = self.model_cache.get_admitted_model(lip_sync_model_name, **inputs)
+            self.models['face'] = self.model_cache.get_admitted_model(face_model_name, **inputs)
 
             self.orchestrator.verify_admitted_allocation("digital_human", self.gpu_ids)
             logger.info("Models loaded successfully")

@@ -103,6 +103,25 @@ class ReversibleChangeTests(unittest.TestCase):
         with self.assertRaises(FileExistsError):
             reversible.write_new(destination, receipt)
 
+    def test_return_same_state_with_wrong_bytes_is_rejected(self):
+        before, forward, returned = self.chain()
+        returned = reversible.build_receipt(
+            evidence_root=self.root, change_id=self.change_id, phase='return',
+            state=self.before_state, artifacts=['candidate.bin'], commands=self.return_command,
+            status='passed', previous_receipt_digest=forward['receipt_digest'])
+        with self.assertRaisesRegex(reversible.ReceiptError, 'return artifact bytes'):
+            reversible.verify_roundtrip(before, forward, returned, self.root)
+
+    def test_symlinked_before_artifact_is_rejected(self):
+        try:
+            (self.root / 'linked.bin').symlink_to(self.root / 'before.bin')
+        except OSError:
+            self.skipTest('symlink privilege unavailable')
+        with self.assertRaisesRegex(reversible.ReceiptError, 'symlink'):
+            reversible.build_receipt(
+                evidence_root=self.root, change_id=self.change_id, phase='before',
+                state=self.before_state, artifacts=['linked.bin'], commands=[], status='captured')
+
 
 if __name__ == "__main__":
     unittest.main()
