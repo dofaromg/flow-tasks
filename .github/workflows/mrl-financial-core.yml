@@ -47,7 +47,8 @@ jobs:
       - run: python -m pip install -r MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/requirements.txt
       - run: python -m unittest MRL_Mother.MRL_Extensions.MRL_Financial_Core_v1.test_core MRL_Mother.MRL_Extensions.MRL_Financial_Core_v1.external.test_external MRL_Mother.MRL_Extensions.MRL_Financial_Core_v1.delivery.test_delivery -v
       - name: Download platform dependency wheels
-        run: python -m pip download --only-binary=:all: --dest wheelhouse -r MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/requirements.txt
+        run: >-
+          python -m pip download --only-binary=:all: --dest wheelhouse -r MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/requirements.txt
       - name: Build verified standalone ZIP
         run: python -m MRL_Mother.MRL_Extensions.MRL_Financial_Core_v1.delivery.build_package --source-root . --wheelhouse wheelhouse --target-os "${{ runner.os }}" --source-sha "${{ github.event.pull_request.head.sha || github.sha }}" --output "dist/MRL_Financial_Core_v1_${{ runner.os }}_py312.zip"
       - name: Extract new version directory

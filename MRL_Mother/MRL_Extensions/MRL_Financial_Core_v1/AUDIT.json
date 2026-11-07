@@ -112,8 +112,8 @@
     },
     {
       "path": ".github/workflows/mrl-financial-core.yml",
-      "size": 3343,
-      "sha256": "e2732ab7929b0f76c857b7c47749439eb66cfb432f08d49a32de2f453d8e1762"
+      "size": 3356,
+      "sha256": "4a3f8eddf8a99ec2538c33eb93e00ab427d9f23c5c8abdedd8316f5cedaf6eea"
     },
     {
       "path": "CHANGELOG.md",
@@ -339,6 +339,14 @@
       "failed_run": 42383748510,
       "windows": "Test cleanup WinError 32 from SQLite connections not closed; production and test connections now use explicit closing",
       "replacement_ci": "PENDING"
+    },
+    "r03_workflow_syntax": {
+      "source_commit": "15232dbe237965f6199fa2a0335a1c7dd39a57c9",
+      "run_id": 42387483179,
+      "failure": "YAML parser interpreted the colon in --only-binary=:all: as a mapping separator",
+      "fix": "Use folded YAML scalar for the pip download command",
+      "local_yaml_parse": "PASS",
+      "next_exact_head_ci": "PENDING_AT_COMMIT"
     }
   },
   "scope_addition": {
