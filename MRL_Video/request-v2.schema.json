@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MRL_Video_Request/v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "title",
+    "sources",
+    "scenes",
+    "target_seconds"
+  ],
+  "properties": {
+    "schema": {
+      "const": "MRL_Video_Request/v2"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "original_name",
+          "locator",
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "maxLength": 48
+          },
+          "original_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50000
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 600,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "caption",
+          "source_id"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "caption": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "source_id": {
+            "type": "string",
+            "maxLength": 48
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 2,
+            "maximum": 60,
+            "multipleOf": 0.001,
+            "default": 8
+          },
+          "layout": {
+            "enum": [
+              "diagram",
+              "steps",
+              "quote"
+            ],
+            "default": "diagram"
+          },
+          "image": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "narration": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "clip": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "clip_start": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 86400,
+            "default": 0
+          },
+          "allow_silent": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+    },
+    "profile": {
+      "enum": [
+        "landscape",
+        "portrait",
+        "square"
+      ],
+      "default": "landscape"
+    },
+    "music": {
+      "type": "boolean",
+      "default": true
+    },
+    "require_narration": {
+      "type": "boolean",
+      "default": false
+    },
+    "source_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "template": {
+      "enum": [
+        "explainer",
+        "tutorial",
+        "release",
+        "promo"
+      ]
+    },
+    "target_seconds": {
+      "type": "number",
+      "minimum": 30,
+      "maximum": 1200
+    },
+    "resolution": {
+      "enum": [
+        "360p",
+        "720p",
+        "1080p",
+        "2160p"
+      ],
+      "default": "1080p"
+    },
+    "fps": {
+      "enum": [
+        24,
+        25,
+        30
+      ],
+      "default": 24
+    },
+    "preset": {
+      "enum": [
+        "veryfast",
+        "fast",
+        "medium"
+      ],
+      "default": "fast"
+    },
+    "crf": {
+      "type": "integer",
+      "minimum": 18,
+      "maximum": 28,
+      "default": 20
+    }
+  },
+  "$comment": "Python additionally enforces exact target sum, whole-frame scene durations, source captions/hashes, clip policy, asset confinement and full media acceptance."
+}

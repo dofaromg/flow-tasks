@@ -1,0 +1,90 @@
+{
+  "origin_signature": "MrLiouWord",
+  "baseline_commit": "9adfe7afe1f14312b07119e72be65b41f5c78a98",
+  "sources": [
+    {
+      "source_path": "R03/mrl_longfilm.py",
+      "locator": "https://www.dropbox.com/scl/fi/h3xckdhg58tp0hdriqx9g",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/mrl_longfilm.py",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "sha256_of_retrieved_utf8": "e90e8a1f33436b0156443c0663353f08c6c891800f96b933ddda3c997a457082",
+      "size": 4698
+    },
+    {
+      "source_path": "R03/test_longfilm.py",
+      "locator": "https://www.dropbox.com/scl/fi/tpi1irhmknsxf3jb4romo",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/test_longfilm.py",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "sha256_of_retrieved_utf8": "c311b165d0db35b1cfad677f0d9c29f7e37d42225c8acc1d61277c5e74778f53",
+      "size": 2340
+    },
+    {
+      "source_path": "R03/TEST_20MIN_EVIDENCE.json",
+      "locator": "https://www.dropbox.com/scl/fi/sj2c3t784uam7c34juqwn",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/TEST_20MIN_EVIDENCE.json",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "sha256_of_retrieved_utf8": "e514c102003d0fee515fb93972bd4952e1c2b6bbd5451697c357236e5c1e0da4",
+      "size": 531
+    },
+    {
+      "source_path": "R02/mrl_video.py",
+      "locator": "https://www.dropbox.com/scl/fi/n9nzv4yu1lb2iuje03xq0",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/baseline_R02/mrl_video.py",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "sha256_of_retrieved_utf8": "3bb666178c282314b5a363a87ba5529b6609b9f6b2359f98f6a6c27e4391ebbc",
+      "size": 12309
+    },
+    {
+      "source_path": "R02/README_R02.md",
+      "locator": "https://www.dropbox.com/scl/fi/exjv5tzluto3vdt7d34ik",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/baseline_R02/README_R02.md",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "sha256_of_retrieved_utf8": "3ce7eaa2add699c05d452ffb911378d0b500937219ea8e6c929f4c04fb8ff023",
+      "size": 7819
+    },
+    {
+      "source_path": "R03/baseline_R02/baseline_R01/MRL_Episode_Pilot_01.json",
+      "locator": "https://www.dropbox.com/scl/fi/jjjezbef3h5j0sywpgak1",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/baseline_R02/baseline_R01/MRL_Episode_Pilot_01.json",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "sha256_of_retrieved_utf8": "351e4169a498474b2dd1fd3a8c92f11c4e231eb1f61b45f37b7cc07b476df98e",
+      "size": 5036
+    },
+    {
+      "source_path": "R03/baseline_R02/baseline_R01/mrl_manga.py",
+      "locator": "https://www.dropbox.com/scl/fi/xzzcef3qxqcflfutt4xkb",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/baseline_R02/baseline_R01/mrl_manga.py",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "sha256_of_retrieved_utf8": "a5cc45f238531e6978a16a2c2ff62ecf3cdbd83030deb87c6735eec1d05d2918",
+      "size": 12308
+    },
+    {
+      "source_path": "MRL_Creator_Studio_v0.7.0_R07/longform.py",
+      "library_file_id": "libfile_3b9adcd1cf40819196da5cafec8a04e1",
+      "sha256": "a4914c9008cc9762810822f5ca80e52a06f0cbf6ad21225204e6ab1097e360fa",
+      "size": 31381
+    },
+    {
+      "source_path": "MRL_Creator_Studio_v0.7.0_R07/render_engine.py",
+      "library_file_id": "libfile_3b9adcd1cf40819196da5cafec8a04e1",
+      "sha256": "ff0175f22bea38c6eff24a25f18f5682a1cf0148d788615bc2e37f63cc0a9624",
+      "size": 5652
+    }
+  ],
+  "raw_material_status": "CODE_AND_PILOT_AVAILABLE; APPROVED_1200_SECOND_STORY_AND_COMPLETE_MEDIA_NOT_FOUND_IN_READ_SCOPE",
+  "scope": "Located/read sources only; not an exhaustive inventory"
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "MRL_Video_Template/v1",
+  "canonical_name": "MRL_Video_Explainer",
+  "version": "1.0.0",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "reference": {
+    "original_title": "Video explainer maker",
+    "input": "ScreenRecording_11-03-2026 18-11-08_1.mp4",
+    "relationship": "Workflow reference supplied by user; platform-specific YAML is not imported or executed.",
+    "external_template_rights": "NOT_ASSESSED"
+  },
+  "renderer": "local_cpu_pillow_ffmpeg",
+  "planner": "extractive_no_network",
+  "profiles": {"landscape": [1280, 720], "portrait": [720, 1280], "square": [960, 960]},
+  "storyboard_types": ["explainer", "tutorial", "release", "promo"],
+  "layouts": ["diagram", "steps", "quote"],
+  "constraints": {"scene_count": [1, 8], "total_seconds": [30, 60], "scene_seconds": [2, 20], "fps": 24,
+                  "scene_workers_max": 4, "job_timeout_seconds": 1800, "pending_jobs_max": 32},
+  "audio": {"music": "original_four_chord_synth", "narration": "local_mono_pcm16_wav_22050hz",
+            "tts_engine": "NOT_INCLUDED", "silent_narration": "REJECT"},
+  "delivery": ["explainer.mp4", "explainer-preview.gif", "explainer-stills.png", "subtitles.srt",
+               "storyboard.json", "provenance.json", "metadata.json", "MRL_audit.json", "MRL_manifest.json"],
+  "semantic_review": "OWNER_REVIEW_REQUIRED"
+}
+

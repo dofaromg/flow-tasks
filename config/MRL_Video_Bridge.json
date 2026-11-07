@@ -1,0 +1,53 @@
+{
+  "schema": "MRL_Video_Bridge_Contract/v1",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "parent_module": "MRL_Bridge_API",
+  "existing_video_parent": "main_ultimate.py",
+  "mother_ui_tool_id": "MRL_VideoGen",
+  "implementation": "MRL_Video",
+  "transport": "existing_authenticated_MRL_exec_to_local_CLI_queue",
+  "worker_address": "http://127.0.0.1:7812",
+  "credential_binding": {
+    "preferred_env": "MRL_VIDEO_API_KEY",
+    "fallback_env": "MRL_BRIDGE_API_KEY",
+    "header": "x-api-key",
+    "minimum_length": 24
+  },
+  "queue_commands": [
+    "submit",
+    "status",
+    "cancel",
+    "branch",
+    "diff",
+    "events",
+    "load-version",
+    "verify-chain",
+    "resume",
+    "retry",
+    "import-episode"
+  ],
+  "long_running_work": "independent_local_worker; never render inside Bridge's 30-second exec request",
+  "http": {
+    "submit": "POST /api/jobs",
+    "status": "GET /api/jobs/{job_id}",
+    "branch": "POST /api/jobs/{job_id}/branch",
+    "cancel": "POST /api/jobs/{job_id}/cancel",
+    "events": "GET /api/jobs/{job_id}/events",
+    "load_version": "GET /api/jobs/{job_id}/request",
+    "diff": "GET /api/diff/{left}/{right}",
+    "package": "GET /artifacts/{job_id}/package.zip",
+    "resume": "POST /api/jobs/{job_id}/resume",
+    "segments": "GET /api/jobs/{job_id}/segments"
+  },
+  "deployment_state": "REQUIRES_DL580_INSTALL_AND_ACCEPTANCE",
+  "public_release": false,
+  "gpu_required": false,
+  "data_egress": "none",
+  "request_schemas": [
+    "MRL_Video_Request/v1",
+    "MRL_Video_Request/v2",
+    "MRL_LongFilm_Request/v1"
+  ],
+  "max_timeline_seconds": 1200
+}

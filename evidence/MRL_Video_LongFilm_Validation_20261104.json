@@ -1,0 +1,650 @@
+{
+  "schema": "MRL_AuditSupervisor_v1",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "observed_at": "2026-11-04T07:31:44.037551+00:00",
+  "baseline_commit": "9adfe7afe1f14312b07119e72be65b41f5c78a98",
+  "integration_parent_commit": "7fac33202126ce2f4ea4f7f58707111686e512ee",
+  "source_delivery": {
+    "status": "DELIVERY_PASS",
+    "expected_file_count": 41,
+    "expected_files": [
+      ".github/workflows/mrl-video.yml",
+      "MRL_Video/CHANGELOG.md",
+      "MRL_Video/Expected_Delivery.json",
+      "MRL_Video/README.md",
+      "MRL_Video/__init__.py",
+      "MRL_Video/__main__.py",
+      "MRL_Video/audit.py",
+      "MRL_Video/cache.py",
+      "MRL_Video/contract.py",
+      "MRL_Video/episode_adapter.py",
+      "MRL_Video/examples/demo.json",
+      "MRL_Video/examples/longfilm_20min.json",
+      "MRL_Video/fixture_acceptance.py",
+      "MRL_Video/longfilm.py",
+      "MRL_Video/longfilm.schema.json",
+      "MRL_Video/model.py",
+      "MRL_Video/openapi.json",
+      "MRL_Video/render.py",
+      "MRL_Video/request-v2.schema.json",
+      "MRL_Video/request.schema.json",
+      "MRL_Video/requirements.txt",
+      "MRL_Video/service.py",
+      "MRL_Video/store.py",
+      "MRL_Video/templates/explainer.json",
+      "MRL_Video/tests/test_clip_longfilm.py",
+      "MRL_Video/tests/test_longfilm.py",
+      "MRL_Video/tests/test_video.py",
+      "MRL_Video/web.py",
+      "config/MRL_Video_Bridge.json",
+      "docs/MRL_LongFilm_Integration_20261104.md",
+      "docs/MRL_Video_Acceptance.md",
+      "docs/MRL_Video_LongFilm_R04.md",
+      "evidence/MRL_LongFilm_Lineage_20261104.json",
+      "evidence/MRL_LongFilm_LocalTests_20261104.xml",
+      "evidence/MRL_LongFilm_Validation_20261104.json",
+      "evidence/MRL_Longfilm_Benchmark_20261104.json",
+      "evidence/MRL_Longfilm_Source_Audit_20261104.json",
+      "evidence/MRL_Video_LongFilm_Sources_20261104.json",
+      "evidence/MRL_Video_LongFilm_Validation_20261104.json",
+      "evidence/MRL_Video_Validation_20261103.json",
+      "scripts/MRL_Start_Video.ps1"
+    ],
+    "missing": [],
+    "extra": [],
+    "mismatch": [],
+    "renamed": [],
+    "orphan": [],
+    "empty": [],
+    "coverage": 100,
+    "files": [
+      {
+        "path": ".github/workflows/mrl-video.yml",
+        "size": 3996,
+        "sha256": "8f50f3847aa260326b5fbbf6479c66caea633d1adc0dac67aecf0cb4214d8152"
+      },
+      {
+        "path": "MRL_Video/CHANGELOG.md",
+        "size": 1947,
+        "sha256": "ba7a1133c6bd7304859ad99325089d537ea9802e2063dd63b0a5c89d2ebc0832"
+      },
+      {
+        "path": "MRL_Video/Expected_Delivery.json",
+        "size": 5717,
+        "sha256": "d44b1e8050d6ff8598c0a32bca8ad17b80a95eb922a022aaf7a9fedac1521309"
+      },
+      {
+        "path": "MRL_Video/README.md",
+        "size": 9794,
+        "sha256": "902f0f11890bdf3437aec2e07f44fe5ebe157b72e49c70c6fb4adc652308b14d"
+      },
+      {
+        "path": "MRL_Video/__init__.py",
+        "size": 104,
+        "sha256": "042470613e0453b3fba21726c63e6f71f46c3a43db2112c1b42fff1caee4108f"
+      },
+      {
+        "path": "MRL_Video/__main__.py",
+        "size": 6166,
+        "sha256": "a2dbbbf7697885d9449564e5467f4cfdcc08de37442b620d589be57938405375"
+      },
+      {
+        "path": "MRL_Video/audit.py",
+        "size": 9341,
+        "sha256": "e894de2a997b11333cc90f8005c5ba4ab80b356cca3541e627f8f6cab1daad84"
+      },
+      {
+        "path": "MRL_Video/cache.py",
+        "size": 3522,
+        "sha256": "5817769070aa248180075326291abfc394eed72f6793db47b441ad1f9e4f1f63"
+      },
+      {
+        "path": "MRL_Video/contract.py",
+        "size": 3533,
+        "sha256": "e6a2f10c896d8f5762726f7372d687d44b6066532c389cd9fe86a0377c9b27dc"
+      },
+      {
+        "path": "MRL_Video/episode_adapter.py",
+        "size": 1557,
+        "sha256": "1823dae06ec66d341191d8fe1571ba3cec3fd942e2a51a2ffff6bcb6e5dd403f"
+      },
+      {
+        "path": "MRL_Video/examples/demo.json",
+        "size": 511,
+        "sha256": "a52a137ee709f2ad431450dfafabcb9a44e418dcbbe08956e127b66c07407c3a"
+      },
+      {
+        "path": "MRL_Video/examples/longfilm_20min.json",
+        "size": 3914,
+        "sha256": "0965490092200dfec399e2a22e6c67d1f19961f3690098d6100d7e124ac6db1a"
+      },
+      {
+        "path": "MRL_Video/fixture_acceptance.py",
+        "size": 3620,
+        "sha256": "899581a5034aa4409cbed615cfb5e526d4457ddcec9198afb9050d91b688b85c"
+      },
+      {
+        "path": "MRL_Video/longfilm.py",
+        "size": 14549,
+        "sha256": "087597f44d7ab8b8b6499369257b548c3b6b085894ceb4870eebd3c3fc78958c"
+      },
+      {
+        "path": "MRL_Video/longfilm.schema.json",
+        "size": 3286,
+        "sha256": "cd993f503cb147363418234e084a83cf195ed80af2beeb4a7badde192137862d"
+      },
+      {
+        "path": "MRL_Video/model.py",
+        "size": 9970,
+        "sha256": "e903b0b8f16f2f08c7b3342687a098a3bbd2c471aee61cc7ca4bd8c6cb0bc222"
+      },
+      {
+        "path": "MRL_Video/openapi.json",
+        "size": 25823,
+        "sha256": "c0199392d27f4e8ebf2893857bcb106f157b4c1b824c5764bca9cfb8d60a80b5"
+      },
+      {
+        "path": "MRL_Video/render.py",
+        "size": 20262,
+        "sha256": "513c36c35278c7a7b41b4dcf0d824fd5e0bccf7c2c729d28403899f3979e29fc"
+      },
+      {
+        "path": "MRL_Video/request-v2.schema.json",
+        "size": 4227,
+        "sha256": "280781ec786ee14c3ec739009a1b54a69d75c81c341488196fe8f6e56116455a"
+      },
+      {
+        "path": "MRL_Video/request.schema.json",
+        "size": 3953,
+        "sha256": "8944d880330a073d98ded781ef975fbcae1aec24fc5f26230fe7dd8455e50b10"
+      },
+      {
+        "path": "MRL_Video/requirements.txt",
+        "size": 34,
+        "sha256": "08b047e969c7d2d05151e5cddd91674db82a2efe062357ae3a46bc63d8b0db8d"
+      },
+      {
+        "path": "MRL_Video/service.py",
+        "size": 11840,
+        "sha256": "e9af60c73730b9a77d32212b950d81d9eaa5eaabcc8fee09b94bbded3e6d0426"
+      },
+      {
+        "path": "MRL_Video/store.py",
+        "size": 10824,
+        "sha256": "43ebc256639e9b008577e6917f8f7d110ef40c918e6657b9f1d7b3677597aab4"
+      },
+      {
+        "path": "MRL_Video/templates/explainer.json",
+        "size": 1368,
+        "sha256": "a75fd6c07099e9dec270b27507796f181c0ee1c00b128e140a9128d5744fa795"
+      },
+      {
+        "path": "MRL_Video/tests/test_clip_longfilm.py",
+        "size": 8313,
+        "sha256": "c5f5a9478db648b982c618acab9b5d4432e5b8058c009e8b691df87517896242"
+      },
+      {
+        "path": "MRL_Video/tests/test_longfilm.py",
+        "size": 14254,
+        "sha256": "53f359b5542a136500bac2cf6830536f7bb204c116c36f0b42b5ca4af2094021"
+      },
+      {
+        "path": "MRL_Video/tests/test_video.py",
+        "size": 17800,
+        "sha256": "1a633e2acd48bb7b36d58fbeefe2c2e99dc20539542dc7e482ee607a564ba3c3"
+      },
+      {
+        "path": "MRL_Video/web.py",
+        "size": 16734,
+        "sha256": "47af6c3e9decd4252349d624e3f881c6ef3d2f798c11981a6afea7895d7eba64"
+      },
+      {
+        "path": "config/MRL_Video_Bridge.json",
+        "size": 1625,
+        "sha256": "76d86bf9f1545e0e6512394b61271183ac570dbe128f74f782262c883fcb5f35"
+      },
+      {
+        "path": "docs/MRL_LongFilm_Integration_20261104.md",
+        "size": 6758,
+        "sha256": "5799c1e5bf4c4f03a05673d9fb962c16156cdb9b30c85ad5e644b39988e04332"
+      },
+      {
+        "path": "docs/MRL_Video_Acceptance.md",
+        "size": 4135,
+        "sha256": "bc21da5baecd354af4cf32958ea4cf4dfeec6777e5cb510a2e2fd12ea6933638"
+      },
+      {
+        "path": "docs/MRL_Video_LongFilm_R04.md",
+        "size": 7914,
+        "sha256": "ccc8c0aee4216e850219bf6a3b72cc65c002f9be2dc392de9c411e5536a8c36f"
+      },
+      {
+        "path": "evidence/MRL_LongFilm_Lineage_20261104.json",
+        "size": 3758,
+        "sha256": "16716409b93b15b3edd11204ab4c9ecee51677c964aac821342f5003b32236cf"
+      },
+      {
+        "path": "evidence/MRL_LongFilm_LocalTests_20261104.xml",
+        "size": 7766,
+        "sha256": "5a757de1cf5d5e9c4bebade195e39bb9fe191556b8182be8354bf0b378251d6c"
+      },
+      {
+        "path": "evidence/MRL_LongFilm_Validation_20261104.json",
+        "size": 18374,
+        "sha256": "42317ca3ef66ed0f663c69134d8c191de13fcdf39ab5f2dfeee8f42213b37b99"
+      },
+      {
+        "path": "evidence/MRL_Longfilm_Benchmark_20261104.json",
+        "size": 49984,
+        "sha256": "0ba6b6d23bea1604c1144168eaaadd9ef8e4c9085d38ee36a76d476fd2cb79d3"
+      },
+      {
+        "path": "evidence/MRL_Longfilm_Source_Audit_20261104.json",
+        "size": 5463,
+        "sha256": "bf69e6ef9f3169b67e3aecedcdd99e2d41eb281fd26404315241946ae40b498c"
+      },
+      {
+        "path": "evidence/MRL_Video_LongFilm_Sources_20261104.json",
+        "size": 10540,
+        "sha256": "786e1c689135c53682a30412c353f3e03a3d533993f82fa89f2090d1b3328b81"
+      },
+      {
+        "path": "evidence/MRL_Video_Validation_20261103.json",
+        "size": 7747,
+        "sha256": "6336bf005da9fa02fcc04a4f02fd699183c0ac3ba75802b50bf54fb56bd5dc04"
+      },
+      {
+        "path": "scripts/MRL_Start_Video.ps1",
+        "size": 1562,
+        "sha256": "5745ec3c30d5369eef81bece5eda3b22b39714f54da6c0f12a0935057b58b241"
+      }
+    ],
+    "self_hash": "Excluded; Git commit pins this evidence blob",
+    "dependency_tree": {
+      "MRL_Video/__main__.py": [
+        "MRL_Video/service.py",
+        "MRL_Video/web.py",
+        "MRL_Video/store.py"
+      ],
+      "MRL_Video/service.py": [
+        "MRL_Video/model.py",
+        "MRL_Video/render.py",
+        "MRL_Video/audit.py",
+        "MRL_Video/store.py",
+        "MRL_Video/cache.py",
+        "MRL_Video/longfilm.py"
+      ],
+      "MRL_Video/render.py": [
+        "MRL_Video/contract.py",
+        "MRL_Video/cache.py",
+        "MRL_Video/requirements.txt",
+        "external:local FFmpeg/FFprobe",
+        "external:local font"
+      ],
+      "MRL_Video/web.py": [
+        "MRL_Video/service.py"
+      ],
+      "scripts/MRL_Start_Video.ps1": [
+        "MRL_Video/__main__.py",
+        "config/MRL_Video_Bridge.json"
+      ],
+      ".github/workflows/mrl-video.yml": [
+        "MRL_Video/tests/test_video.py",
+        "MRL_Video/requirements.txt"
+      ],
+      "MRL_Video/cache.py": [
+        "MRL_Video/contract.py"
+      ],
+      "MRL_Video/tests/test_longfilm.py": [
+        "MRL_Video/service.py",
+        "MRL_Video/cache.py",
+        "MRL_Video/request-v2.schema.json"
+      ],
+      "MRL_Video/request-v2.schema.json": [
+        "MRL_Video/model.py"
+      ],
+      "docs/MRL_Video_LongFilm_R04.md": [
+        "MRL_Video/examples/longfilm_20min.json",
+        "evidence/MRL_Video_LongFilm_Sources_20261104.json",
+        "evidence/MRL_Video_LongFilm_Validation_20261104.json"
+      ],
+      "evidence/MRL_Video_LongFilm_Validation_20261104.json": [
+        "evidence/MRL_Longfilm_Benchmark_20261104.json",
+        "evidence/MRL_Longfilm_Source_Audit_20261104.json",
+        "MRL_Video/tests/test_longfilm.py",
+        "MRL_Video/tests/test_video.py"
+      ],
+      "MRL_Video/longfilm.py": [
+        "MRL_Video/contract.py",
+        "MRL_Video/render.py",
+        "MRL_Video/audit.py"
+      ],
+      "MRL_Video/episode_adapter.py": [
+        "MRL_Video/longfilm.py"
+      ],
+      "MRL_Video/contract.py": [],
+      "MRL_Video/model.py": [
+        "MRL_Video/contract.py",
+        "MRL_Video/longfilm.py"
+      ],
+      "MRL_Video/audit.py": [
+        "MRL_Video/contract.py",
+        "MRL_Video/render.py"
+      ]
+    },
+    "package_map": {
+      ".github/workflows/mrl-video.yml": ".github/workflows/mrl-video.yml",
+      "MRL_Video/CHANGELOG.md": "MRL_Video/CHANGELOG.md",
+      "MRL_Video/Expected_Delivery.json": "MRL_Video/Expected_Delivery.json",
+      "MRL_Video/README.md": "MRL_Video/README.md",
+      "MRL_Video/__init__.py": "MRL_Video/__init__.py",
+      "MRL_Video/__main__.py": "MRL_Video/__main__.py",
+      "MRL_Video/audit.py": "MRL_Video/audit.py",
+      "MRL_Video/cache.py": "MRL_Video/cache.py",
+      "MRL_Video/contract.py": "MRL_Video/contract.py",
+      "MRL_Video/episode_adapter.py": "MRL_Video/episode_adapter.py",
+      "MRL_Video/examples/demo.json": "MRL_Video/examples/demo.json",
+      "MRL_Video/examples/longfilm_20min.json": "MRL_Video/examples/longfilm_20min.json",
+      "MRL_Video/fixture_acceptance.py": "MRL_Video/fixture_acceptance.py",
+      "MRL_Video/longfilm.py": "MRL_Video/longfilm.py",
+      "MRL_Video/longfilm.schema.json": "MRL_Video/longfilm.schema.json",
+      "MRL_Video/model.py": "MRL_Video/model.py",
+      "MRL_Video/openapi.json": "MRL_Video/openapi.json",
+      "MRL_Video/render.py": "MRL_Video/render.py",
+      "MRL_Video/request-v2.schema.json": "MRL_Video/request-v2.schema.json",
+      "MRL_Video/request.schema.json": "MRL_Video/request.schema.json",
+      "MRL_Video/requirements.txt": "MRL_Video/requirements.txt",
+      "MRL_Video/service.py": "MRL_Video/service.py",
+      "MRL_Video/store.py": "MRL_Video/store.py",
+      "MRL_Video/templates/explainer.json": "MRL_Video/templates/explainer.json",
+      "MRL_Video/tests/test_clip_longfilm.py": "MRL_Video/tests/test_clip_longfilm.py",
+      "MRL_Video/tests/test_longfilm.py": "MRL_Video/tests/test_longfilm.py",
+      "MRL_Video/tests/test_video.py": "MRL_Video/tests/test_video.py",
+      "MRL_Video/web.py": "MRL_Video/web.py",
+      "config/MRL_Video_Bridge.json": "config/MRL_Video_Bridge.json",
+      "docs/MRL_LongFilm_Integration_20261104.md": "docs/MRL_LongFilm_Integration_20261104.md",
+      "docs/MRL_Video_Acceptance.md": "docs/MRL_Video_Acceptance.md",
+      "docs/MRL_Video_LongFilm_R04.md": "docs/MRL_Video_LongFilm_R04.md",
+      "evidence/MRL_LongFilm_Lineage_20261104.json": "evidence/MRL_LongFilm_Lineage_20261104.json",
+      "evidence/MRL_LongFilm_LocalTests_20261104.xml": "evidence/MRL_LongFilm_LocalTests_20261104.xml",
+      "evidence/MRL_LongFilm_Validation_20261104.json": "evidence/MRL_LongFilm_Validation_20261104.json",
+      "evidence/MRL_Longfilm_Benchmark_20261104.json": "evidence/MRL_Longfilm_Benchmark_20261104.json",
+      "evidence/MRL_Longfilm_Source_Audit_20261104.json": "evidence/MRL_Longfilm_Source_Audit_20261104.json",
+      "evidence/MRL_Video_LongFilm_Sources_20261104.json": "evidence/MRL_Video_LongFilm_Sources_20261104.json",
+      "evidence/MRL_Video_LongFilm_Validation_20261104.json": "evidence/MRL_Video_LongFilm_Validation_20261104.json",
+      "evidence/MRL_Video_Validation_20261103.json": "evidence/MRL_Video_Validation_20261103.json",
+      "scripts/MRL_Start_Video.ps1": "scripts/MRL_Start_Video.ps1"
+    }
+  },
+  "tool_versions": {
+    "python": "3.12.14",
+    "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers"
+  },
+  "post_contract_compatibility_tests": {
+    "passed": 74,
+    "skipped": 16,
+    "failures": 0,
+    "scope": "All contract and wrapper regressions; media opt-in disabled after public wrapper-only change"
+  },
+  "import_graph": "ACYCLIC",
+  "tests": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "1",
+    "tests": "90",
+    "time": "233.546",
+    "timestamp": "2026-11-04T01:21:04.696221-06:00",
+    "hostname": "22a81261f8dc",
+    "passed": 89,
+    "skip_reason": "Local Traditional Chinese test font not configured",
+    "command": "MRL_VIDEO_MEDIA_TEST=1 MRL_VIDEO_LONG_TEST=1 python -m pytest MRL_Video/tests -q",
+    "syntax": "PASS",
+    "ruff_F401_F841_E722": "PASS",
+    "OpenAPI_3_schema_union": "PASS",
+    "JSON_examples": "PASS",
+    "diff_whitespace": "PASS",
+    "scope": "Full integrated media regression before the Windows writable-handle fix; current fix has an additional three-test targeted media regression"
+  },
+  "actual_20min_v2": {
+    "scope": "SYNTHETIC_CARDS_AND_LOCAL_TONE_NOT_AI_CREATIVE_FILM",
+    "audit": {
+      "schema": "MRL_AuditSupervisor_v1",
+      "status": "DELIVERY_PASS",
+      "missing": [],
+      "extra": [],
+      "mismatch": [],
+      "renamed": [],
+      "orphan": [],
+      "empty": [],
+      "coverage": 100,
+      "expected_files": [
+        "MRL_audit.json",
+        "MRL_manifest.json",
+        "assets/fixture-tone.wav",
+        "concat.txt",
+        "explainer-preview.gif",
+        "explainer-stills.png",
+        "explainer.mp4",
+        "layout.json",
+        "metadata.json",
+        "provenance.json",
+        "request.json",
+        "review_01.png",
+        "review_02.png",
+        "review_03.png",
+        "review_04.png",
+        "review_05.png",
+        "review_06.png",
+        "review_07.png",
+        "review_08.png",
+        "review_09.png",
+        "review_10.png",
+        "review_11.png",
+        "review_12.png",
+        "review_13.png",
+        "review_14.png",
+        "review_15.png",
+        "review_16.png",
+        "review_17.png",
+        "review_18.png",
+        "review_19.png",
+        "review_20.png",
+        "scene_01.mp4",
+        "scene_01.png",
+        "scene_02.mp4",
+        "scene_02.png",
+        "scene_03.mp4",
+        "scene_03.png",
+        "scene_04.mp4",
+        "scene_04.png",
+        "scene_05.mp4",
+        "scene_05.png",
+        "scene_06.mp4",
+        "scene_06.png",
+        "scene_07.mp4",
+        "scene_07.png",
+        "scene_08.mp4",
+        "scene_08.png",
+        "scene_09.mp4",
+        "scene_09.png",
+        "scene_10.mp4",
+        "scene_10.png",
+        "scene_11.mp4",
+        "scene_11.png",
+        "scene_12.mp4",
+        "scene_12.png",
+        "scene_13.mp4",
+        "scene_13.png",
+        "scene_14.mp4",
+        "scene_14.png",
+        "scene_15.mp4",
+        "scene_15.png",
+        "scene_16.mp4",
+        "scene_16.png",
+        "scene_17.mp4",
+        "scene_17.png",
+        "scene_18.mp4",
+        "scene_18.png",
+        "scene_19.mp4",
+        "scene_19.png",
+        "scene_20.mp4",
+        "scene_20.png",
+        "soundtrack.wav",
+        "sources/fixture.txt",
+        "storyboard.json",
+        "subtitles.srt"
+      ],
+      "duration_seconds": 1200.0,
+      "frame_count": 28800,
+      "expected_duration_seconds": 1200.0,
+      "video_duration_seconds": 1200.0,
+      "audio_duration_seconds": 1200.0,
+      "av_end_delta_seconds": 0.0,
+      "dimensions": [
+        640,
+        360
+      ],
+      "fps": 24,
+      "scene_samples": [
+        "review_01.png",
+        "review_02.png",
+        "review_03.png",
+        "review_04.png",
+        "review_05.png",
+        "review_06.png",
+        "review_07.png",
+        "review_08.png",
+        "review_09.png",
+        "review_10.png",
+        "review_11.png",
+        "review_12.png",
+        "review_13.png",
+        "review_14.png",
+        "review_15.png",
+        "review_16.png",
+        "review_17.png",
+        "review_18.png",
+        "review_19.png",
+        "review_20.png"
+      ],
+      "full_decode": "PASS",
+      "black_interval_scan": "PASS_750MS_THRESHOLD",
+      "format": "H264/AAC/yuv420p",
+      "layout": "BOUNDS_CHECKED",
+      "content_validation": "VERBATIM_SOURCE_CAPTIONS",
+      "semantic_visual_review": "OWNER_REVIEW_REQUIRED",
+      "limits": "Sample checks do not prove absence of all transient visual defects.",
+      "dl580_acceptance": "NOT_RUN"
+    },
+    "package": {
+      "status": "DELIVERY_PASS",
+      "file_count": 75,
+      "zip_sha256": "230324c34c6172c6477fb16e6637c23066ac3303b1e40eb80ff5db906b3eccce",
+      "coverage": 100
+    },
+    "mp4_sha256": "8ae144f7a6c9a44583edc9bc49e953014ea18e361e1ce5f53c51f25dc39c3f19",
+    "mp4_size": 2756005,
+    "render_seconds": 61.669057793998945
+  },
+  "actual_20min_v1": {
+    "scope": "RETAINED_V1_SYNTHETIC_CARD_FIXTURE",
+    "duration_seconds": 1200.0,
+    "frame_count": 28800,
+    "full_decode": "PASS",
+    "wall_seconds": 59.759669869999925
+  },
+  "actual_20min_clips": {
+    "origin_signature": "MrLiouWord",
+    "scope": "SYNTHETIC_PIPELINE_RECOVERY_ONLY",
+    "resolution": [
+      160,
+      90
+    ],
+    "fps": 24,
+    "target_seconds": 1200,
+    "duration_seconds": 1200.0,
+    "segment_count": 20,
+    "cache_hits": 20,
+    "full_decode": "PASS",
+    "frame_count": 28800,
+    "coverage": 100,
+    "subtitles": "SIDECAR_AND_EMBEDDED",
+    "event_chain_valid": true,
+    "mp4_sha256": "38e0ffdb26bab9776d293eb5827bfde6967e6d80d461d7d525ca891e8fa99411",
+    "receipt": {
+      "status": "DELIVERY_PASS",
+      "file_count": 75,
+      "zip_sha256": "97088fc3585b359f7a4dcb00fe9aaa1dbbb0d032802f03db72a00d6dac30c5ef",
+      "coverage": 100
+    },
+    "elapsed_seconds": 71.38,
+    "attempts": [
+      {
+        "id": "MRL_1e71adc07019411d97fa866f973c1ccb",
+        "parent_id": "MRL_3c95d08a1a0d44a992609aed713987b8",
+        "state": "SUCCEEDED",
+        "error": null
+      },
+      {
+        "id": "MRL_3c95d08a1a0d44a992609aed713987b8",
+        "parent_id": null,
+        "state": "FAILED",
+        "error": "Segment changed after validation"
+      }
+    ],
+    "initial_failure": "segment_001 changed from sealed 12282553 bytes to 11534336 bytes; pre-composition hash check rejected it; cause unresolved",
+    "formal_film": "NOT_PRODUCED",
+    "dl580": "NOT_RUN",
+    "iphone": "NOT_RUN"
+  },
+  "post_execution_readback": {
+    "v2_mp4_and_ZIP": "PASS",
+    "clip_mp4_and_ZIP": "PASS",
+    "clip_initial_attempt": "FAIL_REJECTED_SEGMENT_CHANGED",
+    "clip_retry_child": "PASS_20_VERIFIED_CACHE_HITS",
+    "mutation_cause": "UNRESOLVED",
+    "observed_at": "2026-11-04T07:31:44.087441+00:00"
+  },
+  "actual_1080p_short_fixture": {
+    "status": "PASS",
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "seconds": 30,
+    "frames": 720,
+    "scope": "Short resolution acceptance, not 1080p full-length creative acceptance"
+  },
+  "codeql_source_fixes": {
+    "961": "KeyboardInterrupt explicitly handled with shutdown comment",
+    "962": "Unused digest import removed",
+    "963": "Unused Cancelled import removed",
+    "964": "Unused TERMINAL import removed",
+    "958": "do_GET explicit returns",
+    "959": "do_POST explicit returns",
+    "960": "file helper explicit None return"
+  },
+  "acceptance_split": {
+    "local_program_and_media": "PASS",
+    "github_exact_head_CI": "PENDING_NEW_COMMIT",
+    "codeql_exact_head_scan": "PENDING_NEW_COMMIT",
+    "DL580_install": "NOT_RUN",
+    "Bridge_roundtrip": "NOT_RUN",
+    "iphone_playback": "NOT_RUN",
+    "model_inference": "NOT_RUN",
+    "1080p_or_4k_full_length": "NOT_RUN",
+    "creative_quality": "OWNER_REVIEW_REQUIRED",
+    "formal_merge": "NOT_PERFORMED",
+    "deployment": "NOT_PERFORMED"
+  },
+  "windows_cache_flush_fix": {
+    "previous_head": "7fac33202126ce2f4ea4f7f58707111686e512ee",
+    "prior_windows_CI": "9 failed, 80 passed, 1 skipped; root cause: fsync on read-only cache descriptor",
+    "change": "Open staged cache payloads with r+b before fsync; no weakening of integrity checks",
+    "targeted_current_regression": "3 passed: writable-handle guard, failed-job checkpoint reuse/corruption rejection, actual 1080p output",
+    "new_exact_head_windows_CI": "PENDING",
+    "previous_head_CodeQL": "SUCCESS"
+  }
+}
