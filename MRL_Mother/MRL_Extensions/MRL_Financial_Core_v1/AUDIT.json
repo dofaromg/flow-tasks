@@ -2,7 +2,7 @@
   "origin_signature": "MrLiouWord",
   "canonical_authority": "Mr.liou",
   "date_taipei": "2026-11-07",
-  "scope": "R02 Mercury/EVM authorized connectors and mother module backfill; complete financial-system deployment remains incomplete",
+  "scope": "R03 independent GitHub Actions platform bundles and local offline installation; no Cloudflare prerequisite for this module",
   "expected_payload_files": [
     "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/__init__.py",
     "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/core.py",
@@ -27,7 +27,12 @@
     "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/sources.json",
     "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/test_external.py",
     "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/transport.py",
-    "MRL_Mother/MRL_MotherModel/module_registry.json"
+    "MRL_Mother/MRL_MotherModel/module_registry.json",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/README.md",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/__init__.py",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/bootstrap.py",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/build_package.py",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/test_delivery.py"
   ],
   "actual_payload_files": [
     "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/__init__.py",
@@ -53,12 +58,17 @@
     "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/sources.json",
     "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/test_external.py",
     "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/transport.py",
-    "MRL_Mother/MRL_MotherModel/module_registry.json"
+    "MRL_Mother/MRL_MotherModel/module_registry.json",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/README.md",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/__init__.py",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/bootstrap.py",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/build_package.py",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/test_delivery.py"
   ],
-  "expected_payload_count": 24,
-  "actual_payload_count": 24,
+  "expected_payload_count": 29,
+  "actual_payload_count": 29,
   "audit_evidence_file_count": 1,
-  "total_delivery_file_count": 25,
+  "total_delivery_file_count": 30,
   "files": [
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/__init__.py",
@@ -77,13 +87,13 @@
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/test_core.py",
-      "size": 12998,
-      "sha256": "438089831fe95881ca05a4c0225013643c10c29e36ea06f1af658a08a7c85e16"
+      "size": 12986,
+      "sha256": "f81ff310fc60822eb558596d40dae0a18a562985c6f3503f44dbb5ab12088472"
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/README.md",
-      "size": 7092,
-      "sha256": "4ea93a298e952115629d2ecb7e2a6a45d0a2bf15c0b88bee82a28eb052d9bed6"
+      "size": 7390,
+      "sha256": "df4e51256f6fcd86d548e3224f4f0ae428d45c978a9e88733061a668949187ff"
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/CONSTITUTION.md",
@@ -92,8 +102,8 @@
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/module.json",
-      "size": 2234,
-      "sha256": "5267ed61c1610f8854e05fb8687d97562a6df5843db9430f7d066207f152a63e"
+      "size": 3091,
+      "sha256": "9a8841f77ce7473db5a559faa0bb9c3561c922417369d5636610a9e3dc6249a0"
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/requirements.txt",
@@ -102,23 +112,23 @@
     },
     {
       "path": ".github/workflows/mrl-financial-core.yml",
-      "size": 1665,
-      "sha256": "2e156ef1164a4543a962e7231ae37ad82bef36ec52059035e7ef5c764ae54c19"
+      "size": 3343,
+      "sha256": "e2732ab7929b0f76c857b7c47749439eb66cfb432f08d49a32de2f453d8e1762"
     },
     {
       "path": "CHANGELOG.md",
-      "size": 10242,
-      "sha256": "2d6b7de3ba089ba744ce61289d426d64140c155dd5f96cb4622d691175c2651b"
+      "size": 11090,
+      "sha256": "aa0614a835daad23ab9a52263b15a8ac1fb9f9c65f06b274990db498911125a3"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size": 10144,
-      "sha256": "04822d9f5a522d366f0a962a2b48e92593dbbac6f4d7c801fbe10f3dfe8d7368"
+      "size": 11145,
+      "sha256": "e8abc94d70214ee3bb0822c44461a6f2e6da9003ff248a6b1726cd36d04ff449"
     },
     {
       "path": "config/Mrliou_Structure_Authorization_Delivery_v1.json",
-      "size": 17063,
-      "sha256": "92fcd20ab4593e57867ba3834d70519313722de484c0119a17812f1487a5725e"
+      "size": 18333,
+      "sha256": "40e7c77540a815d0c7937b56ab71e78339d17a8238e6dcc621dc2b10b8d1271d"
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/README.md",
@@ -142,8 +152,8 @@
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/gate.py",
-      "size": 11282,
-      "sha256": "ca24646d560d9de8f65b82532223657e70168e7a0abf9271a56896d0f72df484"
+      "size": 11270,
+      "sha256": "eda90c05c0b069a71d377a9161bf4fa63c34f99f09a0d5e2780b2b1273cf566b"
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/gateway.py",
@@ -167,8 +177,8 @@
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/test_external.py",
-      "size": 21492,
-      "sha256": "8dfba30cb3f34c9b8580c10bafd4a359bbbea5a470ba6ec1b173dac2d7dddbae"
+      "size": 21647,
+      "sha256": "3d8682071d3261eff9203d0c899cd07da9fd9d8a0ae1ff4e6689be1263021c14"
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/transport.py",
@@ -177,8 +187,33 @@
     },
     {
       "path": "MRL_Mother/MRL_MotherModel/module_registry.json",
-      "size": 7299,
-      "sha256": "4bb34a7bb183ecfe88c1ba9590f6432d2361b2c9bbfe1962b8d1955ff1a9e02d"
+      "size": 8260,
+      "sha256": "61a6703a12f2402caebd867e4233fc418d8e02eefaac70b12a4f340bb30f6b77"
+    },
+    {
+      "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/README.md",
+      "size": 4422,
+      "sha256": "de1fea905fa4b446769faf3a4d6752d997df9d07125b587e86051b0296765769"
+    },
+    {
+      "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/__init__.py",
+      "size": 151,
+      "sha256": "d87bf2fd308747885b9b5bb1ac6e944bc917df7cc322d37f304d2e05994d1558"
+    },
+    {
+      "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/bootstrap.py",
+      "size": 8107,
+      "sha256": "eeba0af0d85d528266b469a1e43f3c31ed6fc5926abdaccedded687a92a6b124"
+    },
+    {
+      "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/build_package.py",
+      "size": 6828,
+      "sha256": "b373dd84ef7ebc9875e98f2390e2d874f9c7577ea9389abeb507775b757ae013"
+    },
+    {
+      "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/test_delivery.py",
+      "size": 5407,
+      "sha256": "e0ed0f5ac6717c25c954ae6f18e80146e1d1ac6efa1c2b7d0d6d5b989490ab33"
     }
   ],
   "missing": [],
@@ -193,16 +228,29 @@
   "zip": "NOT_REQUESTED",
   "local_tests": {
     "runner": "Python 3.12 unittest",
-    "passed": 40,
+    "passed": 50,
     "failed": 0,
     "sandbox_core_cases": 19,
     "external_adapter_cases": 21,
-    "external_provider_calls": "FIXTURES_ONLY",
-    "real_wallet_signature_checks": true,
-    "environment": "Linux local",
+    "delivery_cases": 10,
+    "fresh_offline_linux_install": {
+      "origin_signature": "MrLiouWord",
+      "state": "OFFLINE_INSTALL_AND_SELF_TEST_PASS",
+      "source_sha": "e12b48954d84325115dee57c8efa80dd92811191",
+      "source_mode": "WORKSPACE_SNAPSHOT",
+      "target_os": "Linux",
+      "package_file_count": 57,
+      "manifest_sha256": "5ffef9798f55f5e33ed28a20ef36194c352d158ee56d7b6c3ef405b8b7aad4e2",
+      "external_accounts_enabled": false,
+      "real_asset_transfer_performed": false,
+      "dl580_live_acceptance": "NOT_ESTABLISHED_BY_THIS_RECEIPT"
+    },
+    "local_zip_members": 57,
+    "local_bundled_wheels": 26,
+    "local_package_source_mode": "WORKSPACE_SNAPSHOT",
     "exact_head_linux_windows_ci": "PENDING_AT_COMMIT",
-    "dl580": "NOT_DEPLOYED",
-    "real_funds": "NOT_CONNECTED"
+    "real_funds": "NOT_CONNECTED",
+    "dl580": "NOT_DEPLOYED"
   },
   "dependency_tree": {
     "MRL_Mother/MRL_Extensions": [
@@ -223,6 +271,13 @@
       "EVM JSON-RPC",
       "eth-account==0.14.0",
       "external SQLite submission journal"
+    ],
+    "MRL_Financial_Standalone_Delivery_v1": [
+      "original module source tree",
+      "existing ToolRegistry",
+      "mother module registry",
+      "platform wheels",
+      "Python 3.12 x64 (operator-provided)"
     ]
   },
   "package_map": {
@@ -257,9 +312,16 @@
       "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/README.md",
       "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/sources.json",
       "MRL_Mother/MRL_MotherModel/module_registry.json"
+    ],
+    "standalone_delivery": [
+      "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/README.md",
+      "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/__init__.py",
+      "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/bootstrap.py",
+      "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/build_package.py",
+      "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/test_delivery.py"
     ]
   },
-  "self_hash_policy": "AUDIT.json excluded from its own hash list; all 25 final PR files are independently read back against local content at exact head.",
+  "self_hash_policy": "AUDIT.json is excluded from its own hash list; all 30 PR files are independently read back at exact head. Installer ZIP has an independent manifest and SHA-256 sidecar.",
   "ci_history": {
     "first_head": "895e4b35687d830b1515a55c0ad23f7948c10492",
     "run_id": 42383513748,
@@ -286,15 +348,15 @@
     ],
     "reason": "Necessary CHANGELOG hash dependencies proven by exact-head CI failures; preserve original entries in additive_integrity_history"
   },
-  "record_id": "MRL_FINANCIAL_EXTERNAL_BACKFILL_20261107_R02",
+  "record_id": "MRL_FINANCIAL_STANDALONE_20261107_R03",
   "revision_history": [
     {
-      "source_commit": "d7e0e8137c833fef123f6681ca19f827bc99a0e8",
+      "source_commit": "e12b48954d84325115dee57c8efa80dd92811191",
       "record": {
         "origin_signature": "MrLiouWord",
         "canonical_authority": "Mr.liou",
         "date_taipei": "2026-11-07",
-        "scope": "v0.1 prototype delivery only; entire financial system remains incomplete",
+        "scope": "R02 Mercury/EVM authorized connectors and mother module backfill; complete financial-system deployment remains incomplete",
         "expected_payload_files": [
           "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/__init__.py",
           "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/core.py",
@@ -307,7 +369,19 @@
           ".github/workflows/mrl-financial-core.yml",
           "CHANGELOG.md",
           "config/Mrliou_MRL_Sync_Delivery_v1.json",
-          "config/Mrliou_Structure_Authorization_Delivery_v1.json"
+          "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/README.md",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/__init__.py",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/cli.py",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/evm.py",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/gate.py",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/gateway.py",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/mercury.py",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/requirements.txt",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/sources.json",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/test_external.py",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/transport.py",
+          "MRL_Mother/MRL_MotherModel/module_registry.json"
         ],
         "actual_payload_files": [
           "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/__init__.py",
@@ -321,12 +395,24 @@
           ".github/workflows/mrl-financial-core.yml",
           "CHANGELOG.md",
           "config/Mrliou_MRL_Sync_Delivery_v1.json",
-          "config/Mrliou_Structure_Authorization_Delivery_v1.json"
+          "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/README.md",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/__init__.py",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/cli.py",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/evm.py",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/gate.py",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/gateway.py",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/mercury.py",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/requirements.txt",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/sources.json",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/test_external.py",
+          "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/transport.py",
+          "MRL_Mother/MRL_MotherModel/module_registry.json"
         ],
-        "expected_payload_count": 12,
-        "actual_payload_count": 12,
+        "expected_payload_count": 24,
+        "actual_payload_count": 24,
         "audit_evidence_file_count": 1,
-        "total_delivery_file_count": 13,
+        "total_delivery_file_count": 25,
         "files": [
           {
             "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/__init__.py",
@@ -350,8 +436,8 @@
           },
           {
             "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/README.md",
-            "size": 6828,
-            "sha256": "9739879432e635dafb9ebb7b99993b18d82ab02e5b7978bc8af06ed405cf0eeb"
+            "size": 7092,
+            "sha256": "4ea93a298e952115629d2ecb7e2a6a45d0a2bf15c0b88bee82a28eb052d9bed6"
           },
           {
             "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/CONSTITUTION.md",
@@ -360,8 +446,8 @@
           },
           {
             "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/module.json",
-            "size": 1237,
-            "sha256": "8ef8212cc0dbe1c7640979ed64188cee6415ba05674c084453517196a6ea03f8"
+            "size": 2234,
+            "sha256": "5267ed61c1610f8854e05fb8687d97562a6df5843db9430f7d066207f152a63e"
           },
           {
             "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/requirements.txt",
@@ -370,23 +456,83 @@
           },
           {
             "path": ".github/workflows/mrl-financial-core.yml",
-            "size": 1482,
-            "sha256": "15e54ea633d6c3b967a90747c25764fc55452643adb2eece43894ac1c6db1791"
+            "size": 1665,
+            "sha256": "2e156ef1164a4543a962e7231ae37ad82bef36ec52059035e7ef5c764ae54c19"
           },
           {
             "path": "CHANGELOG.md",
-            "size": 9391,
-            "sha256": "0ee126005c4ae4f389705148e7e9642750327f9b99fbd58d96809431bcae1520"
+            "size": 10242,
+            "sha256": "2d6b7de3ba089ba744ce61289d426d64140c155dd5f96cb4622d691175c2651b"
           },
           {
             "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-            "size": 9137,
-            "sha256": "a47b55bed99fc6f1496a7ba33cc8735abf1101282dc9ac959998ba857acd392d"
+            "size": 10144,
+            "sha256": "04822d9f5a522d366f0a962a2b48e92593dbbac6f4d7c801fbe10f3dfe8d7368"
           },
           {
             "path": "config/Mrliou_Structure_Authorization_Delivery_v1.json",
-            "size": 15787,
-            "sha256": "e36c08184bbab7b4aeacc1fa5b30da8c84b5a5002adbd39011404713b2fa26ec"
+            "size": 17063,
+            "sha256": "92fcd20ab4593e57867ba3834d70519313722de484c0119a17812f1487a5725e"
+          },
+          {
+            "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/README.md",
+            "size": 10525,
+            "sha256": "b3cf251a1cc4fd85c497cd8a7b53f3a46429b4e30994e53dfafb82e21c44db65"
+          },
+          {
+            "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/__init__.py",
+            "size": 211,
+            "sha256": "5118ced1b29a8a1b64df435c32e78435536e8a128920eddeaeb6d71485156cb9"
+          },
+          {
+            "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/cli.py",
+            "size": 3209,
+            "sha256": "39ebd09807cf6232dc81a1e4db77eba654e0957dc39ff3eb1af8ad9b1ef630a4"
+          },
+          {
+            "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/evm.py",
+            "size": 8681,
+            "sha256": "fa291689b4956de473a0b7927c957c8749df36c2031a5840e4d2fd90798fff90"
+          },
+          {
+            "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/gate.py",
+            "size": 11282,
+            "sha256": "ca24646d560d9de8f65b82532223657e70168e7a0abf9271a56896d0f72df484"
+          },
+          {
+            "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/gateway.py",
+            "size": 6370,
+            "sha256": "88e705cb50da145fd6289be16ee3c68a45920599eb1cc0084a92ddf48395fb53"
+          },
+          {
+            "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/mercury.py",
+            "size": 6038,
+            "sha256": "1065abbe986f0cc340599615eea4250d279178b098181f1343c6728a8b62c1d0"
+          },
+          {
+            "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/requirements.txt",
+            "size": 43,
+            "sha256": "a035d64927eeb92a2509c47c9f6de9a5c513a04bf23518474ae09642b302710c"
+          },
+          {
+            "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/sources.json",
+            "size": 1917,
+            "sha256": "445f4a358697057faf32ee486c880185dd9ac525ecabc6ce5203bf862de2ee43"
+          },
+          {
+            "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/test_external.py",
+            "size": 21492,
+            "sha256": "8dfba30cb3f34c9b8580c10bafd4a359bbbea5a470ba6ec1b173dac2d7dddbae"
+          },
+          {
+            "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/transport.py",
+            "size": 2129,
+            "sha256": "5608355bebb7761c8392ac1064adc1eeb06f2c0050f0ce87639e6533e127ccef"
+          },
+          {
+            "path": "MRL_Mother/MRL_MotherModel/module_registry.json",
+            "size": 7299,
+            "sha256": "4bb34a7bb183ecfe88c1ba9590f6432d2361b2c9bbfe1962b8d1955ff1a9e02d"
           }
         ],
         "missing": [],
@@ -401,10 +547,14 @@
         "zip": "NOT_REQUESTED",
         "local_tests": {
           "runner": "Python 3.12 unittest",
-          "passed": 19,
+          "passed": 40,
           "failed": 0,
+          "sandbox_core_cases": 19,
+          "external_adapter_cases": 21,
+          "external_provider_calls": "FIXTURES_ONLY",
+          "real_wallet_signature_checks": true,
           "environment": "Linux local",
-          "windows_ci": "NOT_YET_OBSERVED",
+          "exact_head_linux_windows_ci": "PENDING_AT_COMMIT",
           "dl580": "NOT_DEPLOYED",
           "real_funds": "NOT_CONNECTED"
         },
@@ -416,9 +566,18 @@
             "core.py",
             "cli.py",
             "cryptography==50.0.2",
-            "Python sqlite3"
+            "Python sqlite3",
+            "external (explicit install only)"
           ],
-          "existing_adapter_parent": "MRL_Mother/09_workflow/tool_registry.py (unchanged)"
+          "existing_adapter_parent": "MRL_Mother/09_workflow/tool_registry.py (unchanged)",
+          "MRL_Financial_External_Access_v1": [
+            "existing root registry (read-only; no financial grants created)",
+            "existing ledger policy majority keys",
+            "Mercury official API",
+            "EVM JSON-RPC",
+            "eth-account==0.14.0",
+            "external SQLite submission journal"
+          ]
         },
         "package_map": {
           "runtime": [
@@ -436,9 +595,25 @@
             "CONSTITUTION.md",
             "module.json",
             "CHANGELOG.md"
+          ],
+          "external_runtime": [
+            "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/__init__.py",
+            "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/transport.py",
+            "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/gate.py",
+            "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/mercury.py",
+            "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/evm.py",
+            "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/gateway.py",
+            "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/cli.py",
+            "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/requirements.txt"
+          ],
+          "external_validation_and_lineage": [
+            "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/test_external.py",
+            "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/README.md",
+            "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/sources.json",
+            "MRL_Mother/MRL_MotherModel/module_registry.json"
           ]
         },
-        "self_hash_policy": "AUDIT.json is evidence metadata excluded from its own payload hash list; remote readback checks all 11 files separately",
+        "self_hash_policy": "AUDIT.json excluded from its own hash list; all 25 final PR files are independently read back against local content at exact head.",
         "ci_history": {
           "first_head": "895e4b35687d830b1515a55c0ad23f7948c10492",
           "run_id": 42383513748,
@@ -464,12 +639,205 @@
             "config/Mrliou_Structure_Authorization_Delivery_v1.json"
           ],
           "reason": "Necessary CHANGELOG hash dependencies proven by exact-head CI failures; preserve original entries in additive_integrity_history"
+        },
+        "record_id": "MRL_FINANCIAL_EXTERNAL_BACKFILL_20261107_R02",
+        "revision_history": [
+          {
+            "source_commit": "d7e0e8137c833fef123f6681ca19f827bc99a0e8",
+            "record": {
+              "origin_signature": "MrLiouWord",
+              "canonical_authority": "Mr.liou",
+              "date_taipei": "2026-11-07",
+              "scope": "v0.1 prototype delivery only; entire financial system remains incomplete",
+              "expected_payload_files": [
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/__init__.py",
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/core.py",
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/cli.py",
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/test_core.py",
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/README.md",
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/CONSTITUTION.md",
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/module.json",
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/requirements.txt",
+                ".github/workflows/mrl-financial-core.yml",
+                "CHANGELOG.md",
+                "config/Mrliou_MRL_Sync_Delivery_v1.json",
+                "config/Mrliou_Structure_Authorization_Delivery_v1.json"
+              ],
+              "actual_payload_files": [
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/__init__.py",
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/core.py",
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/cli.py",
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/test_core.py",
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/README.md",
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/CONSTITUTION.md",
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/module.json",
+                "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/requirements.txt",
+                ".github/workflows/mrl-financial-core.yml",
+                "CHANGELOG.md",
+                "config/Mrliou_MRL_Sync_Delivery_v1.json",
+                "config/Mrliou_Structure_Authorization_Delivery_v1.json"
+              ],
+              "expected_payload_count": 12,
+              "actual_payload_count": 12,
+              "audit_evidence_file_count": 1,
+              "total_delivery_file_count": 13,
+              "files": [
+                {
+                  "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/__init__.py",
+                  "size": 232,
+                  "sha256": "73c0a5499ebd02ad74bb199eacca8d73588c3963f425499e31cd785706845776"
+                },
+                {
+                  "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/core.py",
+                  "size": 15384,
+                  "sha256": "f0bf6a87ab7ceda6cb642cd17fc2c9e84b98bd1e1d2fcd818c68dd3606d03fca"
+                },
+                {
+                  "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/cli.py",
+                  "size": 2219,
+                  "sha256": "861c70c1be65748c2e7ece60e035fb38559dad35519983edb0149c3997454306"
+                },
+                {
+                  "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/test_core.py",
+                  "size": 12998,
+                  "sha256": "438089831fe95881ca05a4c0225013643c10c29e36ea06f1af658a08a7c85e16"
+                },
+                {
+                  "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/README.md",
+                  "size": 6828,
+                  "sha256": "9739879432e635dafb9ebb7b99993b18d82ab02e5b7978bc8af06ed405cf0eeb"
+                },
+                {
+                  "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/CONSTITUTION.md",
+                  "size": 4398,
+                  "sha256": "b4bf24c2a8e9f54bc29bf6f3ccf94335164145ba4ba28eff2d67ddd59c73b391"
+                },
+                {
+                  "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/module.json",
+                  "size": 1237,
+                  "sha256": "8ef8212cc0dbe1c7640979ed64188cee6415ba05674c084453517196a6ea03f8"
+                },
+                {
+                  "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/requirements.txt",
+                  "size": 21,
+                  "sha256": "8b5c18678b29b5e8e0fb586a35ac1dce3ccd9da321e8f12ace0e118350b4e568"
+                },
+                {
+                  "path": ".github/workflows/mrl-financial-core.yml",
+                  "size": 1482,
+                  "sha256": "15e54ea633d6c3b967a90747c25764fc55452643adb2eece43894ac1c6db1791"
+                },
+                {
+                  "path": "CHANGELOG.md",
+                  "size": 9391,
+                  "sha256": "0ee126005c4ae4f389705148e7e9642750327f9b99fbd58d96809431bcae1520"
+                },
+                {
+                  "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+                  "size": 9137,
+                  "sha256": "a47b55bed99fc6f1496a7ba33cc8735abf1101282dc9ac959998ba857acd392d"
+                },
+                {
+                  "path": "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+                  "size": 15787,
+                  "sha256": "e36c08184bbab7b4aeacc1fa5b30da8c84b5a5002adbd39011404713b2fa26ec"
+                }
+              ],
+              "missing": [],
+              "extra": [],
+              "mismatch": [],
+              "renamed": [],
+              "orphan": [],
+              "empty_files": [],
+              "coverage_percent": 100,
+              "delivery_gate": "DELIVERY_PASS_FOR_PROTOTYPE_ONLY",
+              "full_financial_system": "INCOMPLETE",
+              "zip": "NOT_REQUESTED",
+              "local_tests": {
+                "runner": "Python 3.12 unittest",
+                "passed": 19,
+                "failed": 0,
+                "environment": "Linux local",
+                "windows_ci": "NOT_YET_OBSERVED",
+                "dl580": "NOT_DEPLOYED",
+                "real_funds": "NOT_CONNECTED"
+              },
+              "dependency_tree": {
+                "MRL_Mother/MRL_Extensions": [
+                  "MRL_Financial_Core_v1"
+                ],
+                "MRL_Financial_Core_v1": [
+                  "core.py",
+                  "cli.py",
+                  "cryptography==50.0.2",
+                  "Python sqlite3"
+                ],
+                "existing_adapter_parent": "MRL_Mother/09_workflow/tool_registry.py (unchanged)"
+              },
+              "package_map": {
+                "runtime": [
+                  "__init__.py",
+                  "core.py",
+                  "cli.py",
+                  "requirements.txt"
+                ],
+                "validation": [
+                  "test_core.py",
+                  ".github/workflows/mrl-financial-core.yml"
+                ],
+                "design_and_lineage": [
+                  "README.md",
+                  "CONSTITUTION.md",
+                  "module.json",
+                  "CHANGELOG.md"
+                ]
+              },
+              "self_hash_policy": "AUDIT.json is evidence metadata excluded from its own payload hash list; remote readback checks all 11 files separately",
+              "ci_history": {
+                "first_head": "895e4b35687d830b1515a55c0ad23f7948c10492",
+                "run_id": 42383513748,
+                "linux": "PASS",
+                "windows": "CHECKOUT_FAILED_INVALID_EXISTING_PATH_:mnt:data.txt",
+                "fix": "Bundle only module and original tool_registry on Linux, transfer artifact to Linux/Windows test jobs; no incompatible Windows checkout and no original file rename",
+                "replacement_exact_head_ci": "PENDING",
+                "sparse_checkout_attempt": {
+                  "head": "f54d44d0ae7151da52b78dc7fd9d5ad22e1e23c3",
+                  "run_id": 42383619931,
+                  "linux": "PASS",
+                  "windows": "CHECKOUT_FAILED_BEFORE_TESTS"
+                },
+                "connection_fix": {
+                  "failed_run": 42383748510,
+                  "windows": "Test cleanup WinError 32 from SQLite connections not closed; production and test connections now use explicit closing",
+                  "replacement_ci": "PENDING"
+                }
+              },
+              "scope_addition": {
+                "files": [
+                  "config/Mrliou_MRL_Sync_Delivery_v1.json",
+                  "config/Mrliou_Structure_Authorization_Delivery_v1.json"
+                ],
+                "reason": "Necessary CHANGELOG hash dependencies proven by exact-head CI failures; preserve original entries in additive_integrity_history"
+              }
+            }
+          }
+        ],
+        "backfill": {
+          "record_id": "MRL_FINANCIAL_EXTERNAL_BACKFILL_20261107_R02",
+          "mother_registry": "MRL_Mother/MRL_MotherModel/module_registry.json",
+          "parent": "MRL_Financial_Core_v1",
+          "child": "MRL_Financial_External_Access_v1",
+          "source_commit": "d7e0e8137c833fef123f6681ca19f827bc99a0e8",
+          "source_pr": "https://github.com/dofaromg/flow-tasks/pull/713",
+          "root_registry_mutated": false,
+          "live_account_grants_created": 0,
+          "deployment": "NOT_PERFORMED"
         }
       }
     }
   ],
   "backfill": {
-    "record_id": "MRL_FINANCIAL_EXTERNAL_BACKFILL_20261107_R02",
+    "record_id": "MRL_FINANCIAL_STANDALONE_20261107_R03",
     "mother_registry": "MRL_Mother/MRL_MotherModel/module_registry.json",
     "parent": "MRL_Financial_Core_v1",
     "child": "MRL_Financial_External_Access_v1",
@@ -477,6 +845,31 @@
     "source_pr": "https://github.com/dofaromg/flow-tasks/pull/713",
     "root_registry_mutated": false,
     "live_account_grants_created": 0,
-    "deployment": "NOT_PERFORMED"
+    "deployment": "NOT_PERFORMED",
+    "delivery_child": "MRL_Financial_Standalone_Delivery_v1"
+  },
+  "delivery_replacement": {
+    "module_id": "MRL_Financial_Standalone_Delivery_v1",
+    "build_provider": "GitHub Actions",
+    "runtime": "local Python 3.12 x64 venv",
+    "cloudflare_required": false,
+    "python_interpreter_included": false,
+    "zip_gate": "CRC + actual member names + byte-for-byte readback + manifest count + hashes",
+    "install_gate": "Extract archive, install bundled hashed wheels with --no-index --require-hashes, run 50 tests, verify installed CLI",
+    "artifact_file_list": "Generated PACKAGE_MANIFEST.json and archive SHA-256; platform dependency wheel count is recorded per build",
+    "bank_credentials_or_authorization_included": false
+  },
+  "codeql_remediation": {
+    "source_commit": "e12b48954d84325115dee57c8efa80dd92811191",
+    "check_id": 128443001437,
+    "high_alerts": 2,
+    "notes": 2,
+    "affected_files": [
+      "external/test_external.py",
+      "external/gate.py",
+      "test_core.py"
+    ],
+    "fix": "Exact parsed Mercury hostname comparison in fake provider tests; remove two unused imports",
+    "exact_head_clearance": "PENDING_AT_COMMIT"
   }
 }

@@ -10,7 +10,7 @@ import sqlite3
 import time
 
 from ..cli import read_json
-from ..core import Ledger, Rejected, canonical, policy_hash, require, valid_hash, valid_name
+from ..core import Ledger, Rejected, canonical, policy_hash, require, valid_name
 
 
 def digest(value):

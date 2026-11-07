@@ -1,5 +1,9 @@
 # MRL 金融制度重建核心 v0.1.0
 
+> R03 增補：套件版本 0.3.0，採 GitHub Actions 產出 Windows／Linux 獨立安裝包，
+> 內附實際依賴 wheels、本地離線安裝與逐檔驗收。詳見 [delivery/README.md](delivery/README.md)。
+> 此模組的交付與執行不依賴 Cloudflare；原站台建置結果保留。
+
 > R02 增補：套件版本 0.2.0，承接原有 v0.1.0 測試帳本，新增
 > [external/README.md](external/README.md) 的明確授權銀行／EVM 適配器。
 > 以下 v0.1.0 規則保留，外部接口不修改原帳本餘額。2026-11-07（Asia/Taipei）。

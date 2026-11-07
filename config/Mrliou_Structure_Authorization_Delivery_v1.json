@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 10242,
-      "sha256": "2d6b7de3ba089ba744ce61289d426d64140c155dd5f96cb4622d691175c2651b"
+      "size_bytes": 11090,
+      "sha256": "aa0614a835daad23ab9a52263b15a8ac1fb9f9c65f06b274990db498911125a3"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 10144,
-      "sha256": "04822d9f5a522d366f0a962a2b48e92593dbbac6f4d7c801fbe10f3dfe8d7368"
+      "size_bytes": 11145,
+      "sha256": "e8abc94d70214ee3bb0822c44461a6f2e6da9003ff248a6b1726cd36d04ff449"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -416,6 +416,37 @@
           "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
           "size_bytes": 10144,
           "sha256": "04822d9f5a522d366f0a962a2b48e92593dbbac6f4d7c801fbe10f3dfe8d7368"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "record_id": "MRL_FINANCIAL_STANDALONE_20261107_R03",
+      "source_commit": "e12b48954d84325115dee57c8efa80dd92811191",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/713",
+      "reason": "R03 adds standalone GitHub Actions/local installation and CodeQL fixture fixes; preserve prior checksum records and refresh exact live CHANGELOG dependencies. Root grants unchanged.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 10242,
+          "sha256": "2d6b7de3ba089ba744ce61289d426d64140c155dd5f96cb4622d691175c2651b"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 10144,
+          "sha256": "04822d9f5a522d366f0a962a2b48e92593dbbac6f4d7c801fbe10f3dfe8d7368"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 11090,
+          "sha256": "aa0614a835daad23ab9a52263b15a8ac1fb9f9c65f06b274990db498911125a3"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 11145,
+          "sha256": "e8abc94d70214ee3bb0822c44461a6f2e6da9003ff248a6b1726cd36d04ff449"
         }
       ],
       "origin_signature": "MrLiouWord"

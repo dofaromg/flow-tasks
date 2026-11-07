@@ -1,6 +1,6 @@
 {
   "module_id": "MRL_Financial_Core_v1",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "origin_signature": "MrLiouWord",
   "canonical_authority": "Mr.liou",
   "parent": "MRL_Mother/MRL_Extensions",
@@ -57,6 +57,25 @@
       "version": "0.2.0",
       "record_id": "MRL_FINANCIAL_EXTERNAL_BACKFILL_20261107_R02",
       "scope": "Optional scoped Mercury/EVM adapters; no active financial grants or live execution created"
+    },
+    {
+      "version": "0.3.0",
+      "record_id": "MRL_FINANCIAL_STANDALONE_20261107_R03",
+      "source_commit": "e12b48954d84325115dee57c8efa80dd92811191",
+      "scope": "GitHub Actions platform bundles and local offline install; preserve Cloudflare failure history and existing authorization"
     }
-  ]
+  ],
+  "delivery": {
+    "module_id": "MRL_Financial_Standalone_Delivery_v1",
+    "version": "0.1.0",
+    "path": "delivery",
+    "build_provider": "GitHub Actions",
+    "runtime": "local Python 3.12 x64 venv",
+    "cloudflare_required": false,
+    "offline_wheel_install": true,
+    "local_validation": "Linux workspace snapshot: 57 ZIP members, 26 dependency wheels, install and 50 self-tests PASS",
+    "exact_head_platform_acceptance": "PENDING_CI_AT_COMMIT",
+    "runtime_credentials_in_package": false,
+    "auto_enable_external_accounts": false
+  }
 }

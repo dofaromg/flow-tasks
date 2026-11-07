@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — MRL standalone financial module delivery R03 (2026-11-07)
+
+- Replace this Python module's Cloudflare build dependency with dedicated GitHub
+  Actions Windows/Linux ZIP builds and local Python 3.12 offline installation.
+- Bundle actual platform wheels, a complete hash-pinned install lock, original
+  mother source paths and create-only installers; verify ZIP contents and run
+  50 invariant/package tests from a fresh offline installation before publishing.
+- Preserve Cloudflare failure evidence, parent/child module lineage and financial
+  admission controls; no bank credentials, account grants or live deployment added.
+- Fix the two CodeQL URL-substring findings in provider test fixtures with exact
+  hostname comparison and remove the two reported unused imports.
+- origin_signature: MrLiouWord; canonical_authority: Mr.liou.
+
 ### Added — MRL authorized financial connectors R02 (2026-11-07)
 
 - Extend PR #713 with Mercury account/transaction reads and approval-required ACH

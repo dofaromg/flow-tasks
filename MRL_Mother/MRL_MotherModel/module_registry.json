@@ -165,6 +165,18 @@
       "credentials_state": "NOT_PROVISIONED",
       "evidence": "../MRL_Extensions/MRL_Financial_Core_v1/AUDIT.json",
       "origin_signature": "MrLiouWord"
+    },
+    {
+      "module_id": "MRL_Financial_Standalone_Delivery_v1",
+      "type": "local_offline_module_delivery",
+      "path": "../MRL_Extensions/MRL_Financial_Core_v1/delivery",
+      "parent": "MRL_Financial_Core_v1",
+      "version": "0.1.0",
+      "package_state": "LINUX_LOCAL_OFFLINE_INSTALL_PASS",
+      "exact_head_ci": "PENDING_AT_COMMIT",
+      "live_runtime_state": "NOT_DEPLOYED_TO_DL580",
+      "cloudflare_required": false,
+      "origin_signature": "MrLiouWord"
     }
   ],
   "infrastructure_modules": [
@@ -267,6 +279,21 @@
         "MRL_Financial_External_Access_v1"
       ],
       "status": "SOURCE_AND_MODULE_REGISTRY_BACKFILLED; LIVE_DEPLOYMENT_PENDING",
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "record_id": "MRL_FINANCIAL_STANDALONE_20261107_R03",
+      "source_commit": "e12b48954d84325115dee57c8efa80dd92811191",
+      "date_taipei": "2026-11-07",
+      "added_children": [
+        "MRL_Financial_Standalone_Delivery_v1"
+      ],
+      "preserved_failures": [
+        "Cloudflare Pages",
+        "Workers Builds: flow-tasks",
+        "Workers Builds: mrl-store",
+        "Workers Builds: mrlflow-tasks"
+      ],
       "origin_signature": "MrLiouWord"
     }
   ]

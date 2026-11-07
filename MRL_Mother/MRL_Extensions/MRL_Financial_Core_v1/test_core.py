@@ -4,7 +4,6 @@ import copy
 from contextlib import closing
 import concurrent.futures
 import importlib.util
-import json
 import sqlite3
 import tempfile
 import unittest

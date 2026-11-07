@@ -14,6 +14,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 from urllib.error import HTTPError
+from urllib.parse import urlsplit
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 try:
@@ -48,7 +49,7 @@ class FakeTransport:
 
     def request(self, method, url, body=None, headers=None):
         self.calls.append((method, url, body, headers))
-        if "mercury.com" in url:
+        if urlsplit(url).hostname in {"api.mercury.com", "api-sandbox.mercury.com"}:
             if method == "GET":
                 return {"id": ACCOUNT, "currentBalance": Decimal("123.45"),
                         "availableBalance": Decimal("120.00"), "accountNumber": "DO_NOT_RETURN"}
@@ -152,7 +153,8 @@ class ExternalTests(unittest.TestCase):
 
     def writes(self):
         return [c for c in self.transport.calls if c[0] == "POST" and
-                ("mercury.com" in c[1] or json.loads(c[2])["method"] == "eth_sendRawTransaction")]
+                (urlsplit(c[1]).hostname in {"api.mercury.com", "api-sandbox.mercury.com"} or
+                 json.loads(c[2])["method"] == "eth_sendRawTransaction")]
 
     def test_bank_official_approval_path_and_fixed_point(self):
         request, sigs = self.approved()
