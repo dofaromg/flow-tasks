@@ -92,8 +92,12 @@ def _file_digest(path: Path) -> tuple[str, int]:
         finished = os.fstat(stream.fileno())
     after = path.lstat()
     identity = lambda stat: (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns)
-    if (identity(before) != identity(opened) or identity(opened) != identity(finished)
-            or identity(finished) != identity(after) or after.st_size <= 0):
+    # Compare path observations with path observations and handle observations
+    # with handle observations. Windows stat/fstat timestamp precision differs;
+    # comparing their entire tuples creates false mutation reports. The digest
+    # still binds the opened bytes, with size equality across both observations.
+    if (identity(before) != identity(after) or identity(opened) != identity(finished)
+            or before.st_size != opened.st_size or after.st_size <= 0):
         raise ValueError("artifact changed while hashing")
     return "sha256:" + digest.hexdigest(), after.st_size
 
@@ -274,7 +278,8 @@ def verify_loaded_process_artifacts(workload, artifact_root, artifact_paths, run
     if actual_runner != runner and not (runner.is_dir() and runner in actual_runner.parents):
         raise ValueError('imported runner is outside the verified runner artifact')
     runtime = (root / artifact_paths['runtime']).resolve(strict=True)
-    if not runtime.is_file() or runtime not in loaded_module_paths():
+    mapped = {path.resolve(strict=True) for path in loaded_module_paths()}
+    if not runtime.is_file() or runtime not in mapped:
         raise ValueError('verified CUDA runtime binary is not mapped in this process')
     if (runner_module.__version__ != workload['runner']['version']
             or runner_module.version.cuda != workload['cuda_runtime']):

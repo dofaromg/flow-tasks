@@ -139,6 +139,17 @@ class HardwareAdmissionTests(unittest.TestCase):
         tested_matrix(self.h, self.w, self.matrix_path)
         self.check_status('admitted')
 
+    def test_path_and_handle_timestamp_precision_can_differ_without_mutation(self):
+        import types
+        original_fstat = gate.os.fstat
+        def handle_stat(fd):
+            value = original_fstat(fd)
+            return types.SimpleNamespace(st_dev=value.st_dev, st_ino=value.st_ino,
+                st_size=value.st_size, st_mtime_ns=value.st_mtime_ns // 1000000000 * 1000000000,
+                st_ctime_ns=value.st_ctime_ns // 1000000000 * 1000000000)
+        with patch.object(gate.os, 'fstat', side_effect=handle_stat):
+            gate.verify_artifact_bytes(self.w, self.artifact_root, self.artifact_paths)
+
     def test_release_catalog_does_not_invent_acceptance(self):
         self.assertEqual(gate.load_matrix()['acceptances'], [])
         self.check_status('unknown', 'NO_EXACT_HARDWARE_ACCEPTANCE')
