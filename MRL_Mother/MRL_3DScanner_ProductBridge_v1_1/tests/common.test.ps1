@@ -71,6 +71,7 @@ Assert $rejected 'trigger interval drift must be rejected'
 $repeat.Repetition.Interval='PT1M'
 foreach ($case in @(
     @('StartBoundary', (Get-Date).AddDays(1).ToString('s')),
+    @('StartBoundary', (Get-Date).AddMinutes(3).ToString('s')),
     @('StartBoundary', 'invalid'),
     @('StartBoundary', ''),
     @('EndBoundary', (Get-Date).AddDays(-1).ToString('s')),

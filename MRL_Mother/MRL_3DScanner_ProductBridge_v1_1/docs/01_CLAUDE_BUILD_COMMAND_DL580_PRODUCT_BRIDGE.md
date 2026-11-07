@@ -49,7 +49,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\MRL_acceptance_check_bridge.p
 
 PASS 條件：
 
-1. Node backend npm install PASS。
+1. Node backend starts with no npm packages PASS。
 2. backend port 3050 health PASS。
 3. `/api/scans/upload` 可收檔並寫 storage。
 4. `/api/reconstruction/jobs` 可建立 job。

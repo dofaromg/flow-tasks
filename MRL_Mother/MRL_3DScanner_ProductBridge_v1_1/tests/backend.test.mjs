@@ -15,7 +15,6 @@ async function start(kind) {
   catch (e) { if (e.message === 'Port 3050 occupied; stop test') throw e; }
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mrl-bridge-test-'));
   await fs.cp(source, root, { recursive: true, filter: p => !p.includes('node_modules') && !p.includes('storage') });
-  await fs.symlink(path.join(source, 'node_modules'), path.join(root, 'node_modules'), 'dir');
   if (kind === 'missing-report') await fs.writeFile(path.join(root, 'python/mrl3d_job_runner.py'), 'import sys\nsys.exit(0)\n');
   if (kind === 'interrupted') {
     await fs.mkdir(path.join(root, 'storage/jobs'), {recursive:true});
@@ -89,7 +88,6 @@ test('unavailable bind address exits instead of falling back to other interfaces
  const root=await fs.mkdtemp(path.join(os.tmpdir(),'mrl-bridge-bind-'));
  try {
    await fs.cp(source,root,{recursive:true,filter:p=>!p.includes('node_modules')&&!p.includes('storage')});
-   await fs.symlink(path.join(source,'node_modules'),path.join(root,'node_modules'),'dir');
    const c=spawn(process.execPath,[path.join(root,'server.js')],{cwd:root,env:{...process.env,MRL_3D_BRIDGE_PORT:'3050',MRL_BRIDGE_BIND:'192.0.2.1'}});let err='';c.stderr.on('data',d=>err+=d);const code=await new Promise(r=>c.on('exit',r));assert.equal(code,1);assert.match(err,/listen 192\.0\.2\.1:3050 failed: EADDRNOTAVAIL/);
  } finally {await fs.rm(root,{recursive:true,force:true});}
 });
@@ -140,12 +138,24 @@ test('legacy manifest paths are hidden without rewriting stored evidence',async(
   } finally { await stop(s); }
 });
 
+test('iOS-style multipart upload is stored without npm packages',async()=>{
+  const s=await start('none');
+  try {
+    const boundary='MRLBOUNDARY-11111111-1111-1111-1111-111111111111';
+    const body=['--'+boundary+'\r\n','Content-Disposition: form-data; name="files"; filename="photo.jpg"\r\n','Content-Type: image/jpeg\r\n\r\n','photo-bytes\r\n','--'+boundary+'--\r\n'].join('');
+    const response=await fetch(base+'/api/scans/upload',{method:'POST',headers:{'Content-Type':'multipart/form-data; boundary='+boundary,'X-MRL-Scan-ID':'ios_style','X-MRL-Scan-Name':'ios'},body});
+    assert.equal(response.status,200);
+    assert.equal((await response.json()).uploaded,1);
+    assert.equal(await fs.readFile(path.join(s.root,'storage/uploads/ios_style/photo.jpg'),'utf8'),'photo-bytes');
+    assert.equal(await fs.access(path.join(s.root,'node_modules')).then(()=>true).catch(()=>false),false);
+  } finally { await stop(s); }
+});
+
 test('partial listener failure leaves queued evidence intact and releases successful bind',async()=>{
   const root=await fs.mkdtemp(path.join(os.tmpdir(),'mrl-bridge-partial-'));
   let child;
   try {
     await fs.cp(source,root,{recursive:true,filter:p=>!p.includes('node_modules')&&!p.includes('storage')});
-    await fs.symlink(path.join(source,'node_modules'),path.join(root,'node_modules'),'dir');
     await fs.mkdir(path.join(root,'storage/jobs'),{recursive:true});
     const file=path.join(root,'storage/jobs/queued.json');
     const original=JSON.stringify({jobId:'queued',status:'queued'});

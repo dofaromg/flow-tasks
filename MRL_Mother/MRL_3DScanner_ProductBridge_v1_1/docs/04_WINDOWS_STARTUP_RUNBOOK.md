@@ -204,3 +204,9 @@ upload hash 與 scan ID、重建 job/report 與功能範圍、重開機前後 bo
 Microsoft 參考：
 - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks
 - https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/new-scheduledtasksettingsset
+
+## PR #682 與 main/#681 整合｜2026-10-21
+
+ACL 與恢復窗口檢查由 `scripts/MRL_bridge_acl.ps1` 承接，註冊與原生測試直接呼叫同一函式。保留 main 的 reparse 拒絕、Python home 唯一且絕對路徑、既有 entry 比對、兩分鐘初次啟動窗口、EndBoundary 拒絕及舊 dependencyPath 正規化。
+
+Backend 已使用 Node http/fs/crypto，不再依賴 npm 套件；安裝記錄 NODE_PACKAGES_NONE，註冊只要求 server.js 存在。Python/COLMAP 相依與其來源保留。主線的原生 ScheduledTasks、十一項 ACL 與 descendant cleanup 回歸保留；本次提交的 Windows/Swift CI 和 DL580/iPhone/重開機回執分開記錄。

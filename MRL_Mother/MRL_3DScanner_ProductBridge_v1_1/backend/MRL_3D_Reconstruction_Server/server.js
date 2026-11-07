@@ -1,12 +1,11 @@
-import express from 'express';
-import cors from 'cors';
-import multer from 'multer';
-import fs from 'fs-extra';
-import http from 'http';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { v4 as uuidv4 } from 'uuid';
-import { spawn } from 'child_process';
+import fs from 'node:fs/promises';
+import { createWriteStream } from 'node:fs';
+import http from 'node:http';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { once } from 'node:events';
+import { fileURLToPath } from 'node:url';
+import { spawn } from 'node:child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,38 +23,74 @@ const OUTPUTS = path.join(STORAGE, 'outputs');
 const REPORTS = path.join(STORAGE, 'reports');
 const LOGS = path.join(STORAGE, 'logs');
 const TMP = path.join(STORAGE, 'tmp');
+const JSON_LIMIT = 20 * 1024 * 1024;
+const MAX_UPLOAD_FILES = 500;
 
-await fs.ensureDir(UPLOADS);
-await fs.ensureDir(JOBS);
-await fs.ensureDir(OUTPUTS);
-await fs.ensureDir(REPORTS);
-await fs.ensureDir(LOGS);
-await fs.ensureDir(TMP);
-
-const app = express();
-app.use(cors());
-app.use(express.json({ limit: '20mb' }));
-let backendReady = false;
-app.use((req, res, next) => {
-  if (!backendReady) return res.status(503).json({ ok: false, error: 'backend initializing' });
-  next();
-});
-
-function asyncRoute(handler) {
-  return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
+async function ensureDir(p) { await fs.mkdir(p, { recursive: true }); }
+async function pathExists(p) { try { await fs.access(p); return true; } catch { return false; } }
+async function removePath(p) { await fs.rm(p, { recursive: true, force: true }); }
+async function moveFile(src, dest) {
+  await ensureDir(path.dirname(dest));
+  try {
+    await fs.rename(src, dest);
+  } catch (err) {
+    if (err.code === 'EXDEV') {
+      await fs.copyFile(src, dest);
+      await fs.rm(src, { force: true });
+      return;
+    }
+    if (err.code === 'EEXIST' || err.code === 'EPERM') {
+      await fs.rm(dest, { force: true });
+      await fs.rename(src, dest);
+      return;
+    }
+    throw err;
+  }
 }
-const upload = multer({ dest: path.join(STORAGE, 'tmp') });
+function newId() { return crypto.randomUUID(); }
+function header(req, name) {
+  const value = req.headers[name.toLowerCase()];
+  return Array.isArray(value) ? value[0] : value;
+}
+function sendJson(res, status, body) {
+  if (res.headersSent) return;
+  const payload = JSON.stringify(body);
+  res.statusCode = status;
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Content-Length', Buffer.byteLength(payload));
+  res.end(payload);
+}
+function clientError(status, error) {
+  const err = new Error(error);
+  err.statusCode = status;
+  err.body = { ok: false, error };
+  return err;
+}
+function setCors(res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-MRL-Scan-ID, X-MRL-Scan-Name');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+}
+
+await ensureDir(UPLOADS);
+await ensureDir(JOBS);
+await ensureDir(OUTPUTS);
+await ensureDir(REPORTS);
+await ensureDir(LOGS);
+await ensureDir(TMP);
+
+let backendReady = false;
 
 function now() { return new Date().toISOString(); }
 function jobPath(id) { return path.join(JOBS, `${id}.json`); }
 function scanDir(scanId) { return path.join(UPLOADS, scanId); }
-async function readJson(p, fallback) { try { return await fs.readJson(p); } catch { return fallback; } }
-async function writeJson(p, data) { await fs.ensureDir(path.dirname(p)); await fs.writeJson(p, data, { spaces: 2 }); }
+async function readJson(p, fallback) { try { return JSON.parse(await fs.readFile(p, 'utf8')); } catch { return fallback; } }
+async function writeJson(p, data) { await ensureDir(path.dirname(p)); await fs.writeFile(p, JSON.stringify(data, null, 2), 'utf8'); }
 const scanListRequests = new Map();
 const scanListWindowMs = 60_000;
 const scanListMaxRequests = 60;
 
-function limitScanList(req, res, next) {
+function limitScanList(req, res) {
   const address = req.socket.remoteAddress || 'unknown';
   const timestamp = Date.now();
   let bucket = scanListRequests.get(address);
@@ -65,80 +100,261 @@ function limitScanList(req, res, next) {
         if (timestamp - value.startedAt >= scanListWindowMs) scanListRequests.delete(key);
       }
       if (scanListRequests.size >= 1024) {
-        return res.status(429).json({ ok: false, error: 'too many clients' });
+        sendJson(res, 429, { ok: false, error: 'too many clients' });
+        return false;
       }
     }
     bucket = { startedAt: timestamp, count: 0 };
     scanListRequests.set(address, bucket);
   }
   if (bucket.count >= scanListMaxRequests) {
-    res.set('Retry-After', String(Math.ceil((bucket.startedAt + scanListWindowMs - timestamp) / 1000)));
-    return res.status(429).json({ ok: false, error: 'scan list rate limit exceeded' });
+    res.setHeader('Retry-After', String(Math.ceil((bucket.startedAt + scanListWindowMs - timestamp) / 1000)));
+    sendJson(res, 429, { ok: false, error: 'scan list rate limit exceeded' });
+    return false;
   }
   bucket.count++;
-  next();
+  return true;
 }
 
 async function appendLog(line) {
   await fs.appendFile(path.join(LOGS, 'runtime.log'), `[${now()}] ${line}\n`, 'utf8');
 }
 
-app.get('/api/health', asyncRoute(async (req, res) => {
-  res.json({ ok: true, service: 'MRL_3D_Reconstruction_Server', version: '1.0.0', port: PORT, pid: process.pid, instance: process.env.MRL_BRIDGE_INSTANCE || null, time: now() });
-}));
+async function writeStream(stream, chunk) {
+  if (!stream.write(chunk)) await once(stream, 'drain');
+}
 
-app.get('/api/scans', limitScanList, asyncRoute(async (req, res) => {
+async function closeStream(stream) {
+  await new Promise((resolve, reject) => {
+    stream.end(err => err ? reject(err) : resolve());
+  });
+}
+
+function multipartBoundary(contentType) {
+  const match = String(contentType || '').match(/boundary\s*=\s*(?:"([^"]+)"|([^;]+))/i);
+  if (!match) return null;
+  return (match[1] || match[2] || '').trim();
+}
+
+function parseDisposition(value) {
+  const name = /(?:^|;)\s*name=(?:"([^"]*)"|([^;]*))/i.exec(value || '');
+  const encoded = /(?:^|;)\s*filename\*=(?:UTF-8''|utf-8'')([^;]+)/i.exec(value || '');
+  const filename = /(?:^|;)\s*filename=(?:"([^"]*)"|([^;]*))/i.exec(value || '');
+  let originalname = '';
+  if (encoded) {
+    try { originalname = decodeURIComponent(encoded[1].trim().replace(/^"|"$/g, '')); } catch { originalname = encoded[1].trim(); }
+  } else if (filename) {
+    originalname = (filename[1] ?? filename[2] ?? '').trim();
+  }
+  return { name: name ? (name[1] ?? name[2] ?? '').trim() : '', originalname };
+}
+
+async function parseMultipartFiles(req) {
+  const boundary = multipartBoundary(header(req, 'content-type'));
+  if (!boundary) throw clientError(400, 'files required');
+  const dashBoundary = Buffer.from(`--${boundary}`);
+  const delimiter = Buffer.from(`\r\n--${boundary}`);
+  const headerSep = Buffer.from('\r\n\r\n');
+  const files = [];
+  let buf = Buffer.alloc(0);
+  let state = 'start';
+  let current = null;
+
+  async function fail(err) {
+    if (current?.stream) {
+      current.stream.destroy();
+      await removePath(current.path);
+      current = null;
+    }
+    await Promise.all(files.map(file => removePath(file.path)));
+    throw err;
+  }
+
+  async function finishPart() {
+    if (!current) return;
+    if (current.stream) {
+      await closeStream(current.stream);
+      files.push({ path: current.path, originalname: current.originalname, filename: current.filename });
+    }
+    current = null;
+  }
+
+  async function consume(chunk) {
+    buf = Buffer.concat([buf, chunk]);
+    while (buf.length) {
+      if (state === 'done') { buf = Buffer.alloc(0); return; }
+      if (state === 'start') {
+        const idx = buf.indexOf(dashBoundary);
+        if (idx === -1) {
+          if (buf.length > dashBoundary.length + 8) await fail(clientError(400, 'files required'));
+          return;
+        }
+        buf = buf.subarray(idx + dashBoundary.length);
+        state = 'after-boundary';
+        continue;
+      }
+      if (state === 'after-boundary') {
+        if (buf.length < 2) return;
+        if (buf[0] === 0x2d && buf[1] === 0x2d) { state = 'done'; buf = Buffer.alloc(0); return; }
+        if (buf[0] === 0x0d && buf[1] === 0x0a) {
+          buf = buf.subarray(2);
+          state = 'headers';
+          continue;
+        }
+        await fail(clientError(400, 'files required'));
+      }
+      if (state === 'headers') {
+        const sep = buf.indexOf(headerSep);
+        if (sep === -1) {
+          if (buf.length > 16 * 1024) await fail(clientError(400, 'files required'));
+          return;
+        }
+        const headerText = buf.subarray(0, sep).toString('utf8');
+        buf = buf.subarray(sep + 4);
+        const headers = {};
+        for (const line of headerText.split('\r\n')) {
+          const colon = line.indexOf(':');
+          if (colon > 0) headers[line.slice(0, colon).trim().toLowerCase()] = line.slice(colon + 1).trim();
+        }
+        const disp = parseDisposition(headers['content-disposition']);
+        if (disp.name === 'files' && disp.originalname) {
+          if (files.length >= MAX_UPLOAD_FILES) await fail(clientError(400, 'files required'));
+          const filename = newId();
+          const filePath = path.join(TMP, filename);
+          current = {
+            path: filePath,
+            filename,
+            originalname: path.basename(disp.originalname),
+            stream: createWriteStream(filePath)
+          };
+        } else {
+          current = { skip: true };
+        }
+        state = 'body';
+        continue;
+      }
+      if (state === 'body') {
+        const idx = buf.indexOf(delimiter);
+        if (idx === -1) {
+          const keep = delimiter.length - 1;
+          if (buf.length > keep) {
+            const write = buf.subarray(0, buf.length - keep);
+            buf = buf.subarray(buf.length - keep);
+            if (current?.stream) await writeStream(current.stream, write);
+          }
+          return;
+        }
+        const write = buf.subarray(0, idx);
+        buf = buf.subarray(idx + 2);
+        if (current?.stream) await writeStream(current.stream, write);
+        await finishPart();
+        state = 'start';
+      }
+    }
+  }
+
+  try {
+    for await (const chunk of req) {
+      if (state === 'done') break;
+      await consume(chunk);
+    }
+    if (current) await fail(clientError(400, 'files required'));
+    return files;
+  } catch (err) {
+    if (err.body) throw err;
+    await fail(err);
+  }
+}
+
+async function readJsonBody(req) {
+  const chunks = [];
+  let size = 0;
+  for await (const chunk of req) {
+    size += chunk.length;
+    if (size > JSON_LIMIT) throw clientError(413, 'payload too large');
+    chunks.push(chunk);
+  }
+  if (!size) return {};
+  try {
+    return JSON.parse(Buffer.concat(chunks).toString('utf8'));
+  } catch {
+    throw clientError(400, 'invalid json');
+  }
+}
+
+async function handleHealth(_req, res) {
+  sendJson(res, 200, { ok: true, service: 'MRL_3D_Reconstruction_Server', version: '1.0.0', port: PORT, pid: process.pid, instance: process.env.MRL_BRIDGE_INSTANCE || null, time: now() });
+}
+
+async function handleScanList(req, res) {
+  if (!limitScanList(req, res)) return;
   const items = [];
-  if (await fs.pathExists(UPLOADS)) {
+  if (await pathExists(UPLOADS)) {
     for (const name of await fs.readdir(UPLOADS)) {
       const manifest = path.join(UPLOADS, name, 'manifest.json');
-      if (await fs.pathExists(manifest)) {
-        const item = await fs.readJson(manifest);
+      if (await pathExists(manifest)) {
+        const item = await readJson(manifest, {});
         items.push({ ...item, files: (item.files || []).map(({ path: _path, ...file }) => file) });
       }
     }
   }
-  res.json({ ok: true, scans: items });
-}));
+  sendJson(res, 200, { ok: true, scans: items });
+}
 
-app.post('/api/scans/upload', upload.array('files', 500), asyncRoute(async (req, res) => {
-  const scanId = req.header('X-MRL-Scan-ID') || uuidv4();
+async function handleUpload(req, res) {
+  const files = await parseMultipartFiles(req);
+  const scanId = header(req, 'x-mrl-scan-id') || newId();
   if (!/^[a-zA-Z0-9_-]{1,128}$/.test(scanId)) {
-    await Promise.all((req.files || []).map(f => fs.remove(f.path)));
-    return res.status(400).json({ ok: false, error: 'invalid scanId' });
+    await Promise.all(files.map(f => removePath(f.path)));
+    sendJson(res, 400, { ok: false, error: 'invalid scanId' });
+    return;
   }
-  if (!req.files?.length) return res.status(400).json({ ok: false, error: 'files required' });
-  if (await fs.pathExists(scanDir(scanId))) {
-    await Promise.all(req.files.map(f => fs.remove(f.path)));
-    return res.status(409).json({ ok: false, error: 'scanId already exists; use a new ID' });
+  if (!files.length) {
+    sendJson(res, 400, { ok: false, error: 'files required' });
+    return;
   }
-  const scanName = req.header('X-MRL-Scan-Name') || `scan_${scanId}`;
+  if (await pathExists(scanDir(scanId))) {
+    await Promise.all(files.map(f => removePath(f.path)));
+    sendJson(res, 409, { ok: false, error: 'scanId already exists; use a new ID' });
+    return;
+  }
+  const scanName = header(req, 'x-mrl-scan-name') || `scan_${scanId}`;
   const dir = scanDir(scanId);
   try { await fs.mkdir(dir); } catch (err) {
-    await Promise.all(req.files.map(f => fs.remove(f.path)));
-    if (err.code === 'EEXIST') return res.status(409).json({ ok: false, error: 'scanId already exists' });
+    await Promise.all(files.map(f => removePath(f.path)));
+    if (err.code === 'EEXIST') {
+      sendJson(res, 409, { ok: false, error: 'scanId already exists' });
+      return;
+    }
     throw err;
   }
-  const files = [];
-  for (const file of req.files || []) {
+  const stored = [];
+  for (const file of files) {
     const safe = path.basename(file.originalname || file.filename).replace(/[^a-zA-Z0-9._-]/g, '_');
     const target = path.join(dir, safe || file.filename);
-    await fs.move(file.path, target, { overwrite: true });
+    await moveFile(file.path, target);
     const stat = await fs.stat(target);
-    files.push({ originalName: file.originalname, filename: path.basename(target), size: stat.size });
+    stored.push({ originalName: file.originalname, filename: path.basename(target), size: stat.size });
   }
-  const manifest = { scanId, scanName, uploaded: files.length, files, createdAt: now(), status: 'uploaded' };
+  const manifest = { scanId, scanName, uploaded: stored.length, files: stored, createdAt: now(), status: 'uploaded' };
   await writeJson(path.join(dir, 'manifest.json'), manifest);
-  await appendLog(`upload scan=${scanId} files=${files.length}`);
-  res.json({ ok: true, scanId, uploaded: files.length });
-}));
+  await appendLog(`upload scan=${scanId} files=${stored.length}`);
+  sendJson(res, 200, { ok: true, scanId, uploaded: stored.length });
+}
 
-app.post('/api/reconstruction/jobs', asyncRoute(async (req, res) => {
-  const { scanId, mode = 'auto' } = req.body || {};
-  if (typeof scanId !== 'string' || !/^[a-zA-Z0-9_-]{1,128}$/.test(scanId)) return res.status(400).json({ ok: false, error: 'scanId required' });
+async function handleCreateJob(req, res) {
+  const body = await readJsonBody(req);
+  const { scanId, mode = 'auto' } = body || {};
+  if (typeof scanId !== 'string' || !/^[a-zA-Z0-9_-]{1,128}$/.test(scanId)) {
+    sendJson(res, 400, { ok: false, error: 'scanId required' });
+    return;
+  }
   const manifest = path.join(scanDir(scanId), 'manifest.json');
-  if (!(await fs.pathExists(manifest))) return res.status(404).json({ ok: false, error: 'scan manifest not found' });
-  const jobId = uuidv4();
+  if (!(await pathExists(manifest))) {
+    sendJson(res, 404, { ok: false, error: 'scan manifest not found' });
+    return;
+  }
+  const jobId = newId();
   const job = { jobId, scanId, mode, status: 'queued', createdAt: now(), updatedAt: now(), message: null, outputFiles: [] };
   await writeJson(jobPath(jobId), job);
   await appendLog(`job queued job=${jobId} scan=${scanId}`);
@@ -147,38 +363,41 @@ app.post('/api/reconstruction/jobs', asyncRoute(async (req, res) => {
     j.status = 'failed'; j.message = String(err?.message || err); j.updatedAt = now();
     await writeJson(jobPath(jobId), j);
   });
-  res.json({ ok: true, jobId, status: job.status });
-}));
+  sendJson(res, 200, { ok: true, jobId, status: job.status });
+}
 
-app.get('/api/reconstruction/jobs/:id', asyncRoute(async (req, res) => {
-  if (!/^[a-zA-Z0-9_-]{1,128}$/.test(req.params.id)) return res.status(400).json({ ok: false, error: 'invalid jobId' });
-  const job = await readJson(jobPath(req.params.id), null);
-  if (!job) return res.status(404).json({ ok: false, error: 'job not found' });
-  res.json(job);
-}));
-
-app.get('/api/reconstruction/jobs/:id/files', asyncRoute(async (req, res) => {
-  if (!/^[a-zA-Z0-9_-]{1,128}$/.test(req.params.id)) return res.status(400).json({ ok: false, error: 'invalid jobId' });
-  const out = path.join(OUTPUTS, req.params.id);
-  if (!(await fs.pathExists(out))) return res.json({ ok: true, files: [] });
-  const files = [];
-  async function walk(d) {
-    for (const n of await fs.readdir(d)) {
-      const p = path.join(d, n); const st = await fs.stat(p);
-      if (st.isDirectory()) await walk(p); else files.push(path.relative(out, p).replaceAll('\\','/'));
-    }
+async function handleGetJob(req, res, id) {
+  if (!/^[a-zA-Z0-9_-]{1,128}$/.test(id)) {
+    sendJson(res, 400, { ok: false, error: 'invalid jobId' });
+    return;
   }
-  await walk(out);
-  res.json({ ok: true, files });
-}));
+  const job = await readJson(jobPath(id), null);
+  if (!job) {
+    sendJson(res, 404, { ok: false, error: 'job not found' });
+    return;
+  }
+  sendJson(res, 200, job);
+}
 
+async function handleJobFiles(req, res, id) {
+  if (!/^[a-zA-Z0-9_-]{1,128}$/.test(id)) {
+    sendJson(res, 400, { ok: false, error: 'invalid jobId' });
+    return;
+  }
+  const out = path.join(OUTPUTS, id);
+  if (!(await pathExists(out))) {
+    sendJson(res, 200, { ok: true, files: [] });
+    return;
+  }
+  sendJson(res, 200, { ok: true, files: await listFiles(out) });
+}
 
 async function runJob(jobId) {
-  let job = await fs.readJson(jobPath(jobId));
+  let job = await readJson(jobPath(jobId), null);
   job.status = 'running'; job.updatedAt = now();
   await writeJson(jobPath(jobId), job);
   const out = path.join(OUTPUTS, jobId);
-  await fs.ensureDir(out);
+  await ensureDir(out);
   const runner = path.join(ROOT, 'python', 'mrl3d_job_runner.py');
   const args = [runner, '--scan-dir', scanDir(job.scanId), '--output-dir', out, '--mode', job.mode];
   const py = process.env.MRL_BRIDGE_PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
@@ -199,12 +418,12 @@ async function runJob(jobId) {
   const report = await readJson(runnerReportPath, null);
   if (report) {
     await writeJson(path.join(REPORTS, `${jobId}_MRL_JOB_REPORT.json`), report);
-    if (await fs.pathExists(runnerMdPath)) {
-      await fs.copy(runnerMdPath, path.join(REPORTS, `${jobId}_RUN_REPORT.md`), { overwrite: true });
+    if (await pathExists(runnerMdPath)) {
+      await fs.copyFile(runnerMdPath, path.join(REPORTS, `${jobId}_RUN_REPORT.md`));
     }
   }
 
-  job = await fs.readJson(jobPath(jobId));
+  job = await readJson(jobPath(jobId), job);
   job.updatedAt = now();
   if (code === 0 && report?.status === 'completed') {
     job.status = 'completed';
@@ -223,7 +442,7 @@ async function runJob(jobId) {
 
 async function listFiles(dir) {
   const files = [];
-  if (!(await fs.pathExists(dir))) return files;
+  if (!(await pathExists(dir))) return files;
   async function walk(d) {
     for (const n of await fs.readdir(d)) {
       const p = path.join(d, n); const st = await fs.stat(p);
@@ -234,11 +453,39 @@ async function listFiles(dir) {
   return files;
 }
 
-app.use((err, req, res, next) => {
-  appendLog(`request failed: ${err.message}`).catch(console.error);
-  if (res.headersSent) return next(err);
-  res.status(500).json({ ok: false, error: 'request failed' });
-});
+async function handleRequest(req, res) {
+  setCors(res);
+  if (req.method === 'OPTIONS') {
+    res.statusCode = 204;
+    res.end();
+    return;
+  }
+  if (!backendReady) {
+    sendJson(res, 503, { ok: false, error: 'backend initializing' });
+    return;
+  }
+  const url = new URL(req.url, 'http://127.0.0.1');
+  const pathname = url.pathname;
+  try {
+    if (req.method === 'GET' && pathname === '/api/health') return await handleHealth(req, res);
+    if (req.method === 'GET' && pathname === '/api/scans') return await handleScanList(req, res);
+    if (req.method === 'POST' && pathname === '/api/scans/upload') return await handleUpload(req, res);
+    if (req.method === 'POST' && pathname === '/api/reconstruction/jobs') return await handleCreateJob(req, res);
+    const jobFiles = /^\/api\/reconstruction\/jobs\/([^/]+)\/files$/.exec(pathname);
+    if (req.method === 'GET' && jobFiles) return await handleJobFiles(req, res, decodeURIComponent(jobFiles[1]));
+    const job = /^\/api\/reconstruction\/jobs\/([^/]+)$/.exec(pathname);
+    if (req.method === 'GET' && job) return await handleGetJob(req, res, decodeURIComponent(job[1]));
+    sendJson(res, 404, { ok: false, error: 'not found' });
+  } catch (err) {
+    await appendLog(`request failed: ${err.message}`).catch(console.error);
+    if (res.headersSent) return;
+    if (err.body && err.statusCode) {
+      sendJson(res, err.statusCode, err.body);
+      return;
+    }
+    sendJson(res, 500, { ok: false, error: 'request failed' });
+  }
+}
 
 async function markInterruptedJobs() {
   for (const name of await fs.readdir(JOBS)) {
@@ -253,7 +500,7 @@ async function markInterruptedJobs() {
 }
 
 // Acquire every configured listener before changing jobs from an earlier backend.
-const servers = BIND.map(() => http.createServer(app));
+const servers = BIND.map(() => http.createServer(handleRequest));
 const listenResults = await Promise.allSettled(servers.map((server, index) => new Promise((resolve, reject) => {
   const host = BIND[index];
   const onError = err => reject(new Error(`listen ${host}:${PORT} failed: ${err.code || err.message}`));
