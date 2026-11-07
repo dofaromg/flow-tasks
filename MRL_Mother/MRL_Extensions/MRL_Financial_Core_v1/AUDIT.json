@@ -74,8 +74,8 @@
     },
     {
       "path": ".github/workflows/mrl-financial-core.yml",
-      "size": 725,
-      "sha256": "b355e725e395c7de27ee455f5e3f0feafdb7f1478244b60ee18d80933fc2bed5"
+      "size": 926,
+      "sha256": "8fbb391abc08a66754fd7c9c14b6d7c11b84f5561388394ba123b8061b7685b2"
     },
     {
       "path": "CHANGELOG.md",
@@ -132,5 +132,13 @@
       "CHANGELOG.md"
     ]
   },
-  "self_hash_policy": "AUDIT.json is evidence metadata excluded from its own payload hash list; remote readback checks all 11 files separately"
+  "self_hash_policy": "AUDIT.json is evidence metadata excluded from its own payload hash list; remote readback checks all 11 files separately",
+  "ci_history": {
+    "first_head": "895e4b35687d830b1515a55c0ad23f7948c10492",
+    "run_id": 42383513748,
+    "linux": "PASS",
+    "windows": "CHECKOUT_FAILED_INVALID_EXISTING_PATH_:mnt:data.txt",
+    "fix": "Sparse checkout only module and original ToolRegistry; original paths unchanged",
+    "replacement_exact_head_ci": "PENDING"
+  }
 }
