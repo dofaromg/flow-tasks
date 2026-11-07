@@ -7,6 +7,7 @@ Balances are test ledger units, not bank deposits or blockchain assets.
 from __future__ import annotations
 
 import hashlib
+from contextlib import closing
 import json
 import re
 import sqlite3
@@ -110,7 +111,7 @@ class Ledger:
         path = Path(path)
         with path.open("xb"):
             pass
-        with sqlite3.connect(path) as db:
+        with closing(sqlite3.connect(path)) as db, db:
             db.execute("CREATE TABLE events (seq INTEGER PRIMARY KEY, body TEXT NOT NULL, "
                        "previous TEXT NOT NULL, hash TEXT NOT NULL)")
             db.execute("CREATE TRIGGER immutable_update BEFORE UPDATE ON events "
@@ -153,7 +154,7 @@ class Ledger:
 
     def snapshot(self, expected_head=None):
         """Replay hashes AND signatures; optional external head rejects stale copies."""
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             state, head, _ = self._read(db)
         require(expected_head is None or expected_head == head, "CHECKPOINT_MISMATCH")
         return {"origin_signature": "MrLiouWord", "mode": "SANDBOX_UNITS_ONLY",
@@ -163,7 +164,7 @@ class Ledger:
         """Admit an externally signed request atomically using the host clock."""
         # Test subclasses override _now; callers cannot supply time through tools/CLI.
         now = self._now()
-        with sqlite3.connect(self.path, timeout=10) as db:
+        with closing(sqlite3.connect(self.path, timeout=10)) as db, db:
             db.execute("BEGIN IMMEDIATE")
             state, head, last = self._read(db)
             require(now >= last, "CLOCK_REGRESSION")
