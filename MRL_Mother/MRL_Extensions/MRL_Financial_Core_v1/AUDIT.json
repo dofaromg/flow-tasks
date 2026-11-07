@@ -13,7 +13,9 @@
     "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/module.json",
     "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/requirements.txt",
     ".github/workflows/mrl-financial-core.yml",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "config/Mrliou_MRL_Sync_Delivery_v1.json",
+    "config/Mrliou_Structure_Authorization_Delivery_v1.json"
   ],
   "actual_payload_files": [
     "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/__init__.py",
@@ -25,12 +27,14 @@
     "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/module.json",
     "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/requirements.txt",
     ".github/workflows/mrl-financial-core.yml",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "config/Mrliou_MRL_Sync_Delivery_v1.json",
+    "config/Mrliou_Structure_Authorization_Delivery_v1.json"
   ],
-  "expected_payload_count": 10,
-  "actual_payload_count": 10,
+  "expected_payload_count": 12,
+  "actual_payload_count": 12,
   "audit_evidence_file_count": 1,
-  "total_delivery_file_count": 11,
+  "total_delivery_file_count": 13,
   "files": [
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/__init__.py",
@@ -39,8 +43,8 @@
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/core.py",
-      "size": 15314,
-      "sha256": "2a11cafc4809646f6fde153724d4573b6c07fccd76f11d433a3d8e6db6c4f6d5"
+      "size": 15384,
+      "sha256": "f0bf6a87ab7ceda6cb642cd17fc2c9e84b98bd1e1d2fcd818c68dd3606d03fca"
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/cli.py",
@@ -49,8 +53,8 @@
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/test_core.py",
-      "size": 12918,
-      "sha256": "b77a94e58cb789c32dd60a1e4528d83d67f867282caa4aa780e5aeb20b2b360f"
+      "size": 12998,
+      "sha256": "438089831fe95881ca05a4c0225013643c10c29e36ea06f1af658a08a7c85e16"
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/README.md",
@@ -81,6 +85,16 @@
       "path": "CHANGELOG.md",
       "size": 9391,
       "sha256": "0ee126005c4ae4f389705148e7e9642750327f9b99fbd58d96809431bcae1520"
+    },
+    {
+      "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+      "size": 9137,
+      "sha256": "a47b55bed99fc6f1496a7ba33cc8735abf1101282dc9ac959998ba857acd392d"
+    },
+    {
+      "path": "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+      "size": 15787,
+      "sha256": "e36c08184bbab7b4aeacc1fa5b30da8c84b5a5002adbd39011404713b2fa26ec"
     }
   ],
   "missing": [],
@@ -145,6 +159,18 @@
       "run_id": 42383619931,
       "linux": "PASS",
       "windows": "CHECKOUT_FAILED_BEFORE_TESTS"
+    },
+    "connection_fix": {
+      "failed_run": 42383748510,
+      "windows": "Test cleanup WinError 32 from SQLite connections not closed; production and test connections now use explicit closing",
+      "replacement_ci": "PENDING"
     }
+  },
+  "scope_addition": {
+    "files": [
+      "config/Mrliou_MRL_Sync_Delivery_v1.json",
+      "config/Mrliou_Structure_Authorization_Delivery_v1.json"
+    ],
+    "reason": "Necessary CHANGELOG hash dependencies proven by exact-head CI failures; preserve original entries in additive_integrity_history"
   }
 }
