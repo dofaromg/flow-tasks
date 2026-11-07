@@ -1,6 +1,7 @@
 """Adversarial financial invariants; all keys generated temporarily for tests."""
 
 import copy
+from contextlib import closing
 import concurrent.futures
 import importlib.util
 import json
@@ -205,7 +206,7 @@ class FinancialCoreTests(unittest.TestCase):
             self.ledger.snapshot(old)
 
     def test_append_only_and_tamper_detection(self):
-        with sqlite3.connect(self.db) as db:
+        with closing(sqlite3.connect(self.db)) as db, db:
             with self.assertRaises(sqlite3.IntegrityError):
                 db.execute("DELETE FROM events WHERE seq=2")
             db.execute("DROP TRIGGER immutable_update")
@@ -267,11 +268,11 @@ class FinancialCoreTests(unittest.TestCase):
 
     def test_external_head_detects_restored_old_database(self):
         backup = Path(self.temp.name) / "before.sqlite"
-        with sqlite3.connect(self.db) as source, sqlite3.connect(backup) as target:
+        with closing(sqlite3.connect(self.db)) as source, closing(sqlite3.connect(backup)) as target:
             source.backup(target)
         self.transfer()
         head = self.ledger.snapshot()["head"]
-        with sqlite3.connect(backup) as source, sqlite3.connect(self.db) as target:
+        with closing(sqlite3.connect(backup)) as source, closing(sqlite3.connect(self.db)) as target:
             source.backup(target)
         with self.assertRaisesRegex(Rejected, "CHECKPOINT_MISMATCH"):
             self.ledger.snapshot(head)
