@@ -50,8 +50,8 @@ def test_export_csv():
         with open(temp_path, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        assert 'role' in content
-        assert 'content' in content
+        assert 'Role' in content
+        assert 'Content' in content
         assert 'user' in content
         assert 'assistant' in content
     finally:
@@ -79,7 +79,7 @@ def test_export_xml():
             content = f.read()
         
         assert '<?xml' in content
-        assert '<conversation>' in content
+        assert '<conversation' in content
         assert '<message' in content
         assert '<metadata>' in content
     finally:

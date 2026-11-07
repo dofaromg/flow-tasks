@@ -137,9 +137,6 @@ extractor.export_to_file(package, "conversation.yaml", "yaml")
 extractor.export_to_file(package, "conversation.csv", "csv")
 extractor.export_to_file(package, "conversation.html", "html")
 extractor.export_to_file(package, "conversation.xml", "xml")
-extractor.export_to_file(package, "conversation.csv", "csv")
-extractor.export_to_file(package, "conversation.xml", "xml")
-extractor.export_to_file(package, "conversation.yaml", "yaml")
 ```
 
 ### 導入對話
@@ -192,7 +189,6 @@ with open("conversation.txt", "w") as f:
     f.write(text1)
 
 package = extractor.import_from_file("conversation.txt")
-```
 ```
 
 ### 分析對話
@@ -347,7 +343,6 @@ python test_conversation_extractor.py
 **參數**:
 - `package`: 對話包
 - `filepath`: 檔案路徑
-- `format`: 格式，可選 "json"、"markdown"、"txt"
 - `format`: 格式，可選 "json"、"markdown"/"md"、"txt"/"text"、"yaml"/"yml"、"csv"、"html"/"htm"、"xml"
 
 #### `analyze_attention(messages: List[Dict]) -> Dict`
@@ -424,7 +419,6 @@ pyyaml     # 用於 YAML 格式導出（可選，系統會自動降級）
 
 已添加到 `particle_core/requirements.txt`。
 
-如果不需要 AI 分析功能，anthropic 庫不是必需的，系統會優雅降級。
 如果不需要 AI 分析功能，anthropic 庫不是必需的；如果不需要 YAML 導出，pyyaml 也不是必需的，系統會優雅降級。
 
 ## 輸出範例
