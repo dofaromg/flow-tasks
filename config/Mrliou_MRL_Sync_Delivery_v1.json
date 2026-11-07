@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 8683,
-      "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+      "size_bytes": 9391,
+      "sha256": "0ee126005c4ae4f389705148e7e9642750327f9b99fbd58d96809431bcae1520",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -214,6 +214,30 @@
           "dependencies": [
             "docs/Mrliou_MRL_Sync_Operations_v1.md"
           ]
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "175fa4ee7edf621f6378ef100b0057606a41d42a",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/713",
+      "reason": "Financial core adds an additive CHANGELOG entry; preserve historical checksums and refresh live dependent hashes. Authorization rules unchanged.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 8683,
+          "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 9391,
+          "sha256": "0ee126005c4ae4f389705148e7e9642750327f9b99fbd58d96809431bcae1520"
         }
       ],
       "origin_signature": "MrLiouWord"
