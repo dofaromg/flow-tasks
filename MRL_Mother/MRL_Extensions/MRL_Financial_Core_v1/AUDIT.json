@@ -202,13 +202,13 @@
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/bootstrap.py",
-      "size": 8107,
-      "sha256": "eeba0af0d85d528266b469a1e43f3c31ed6fc5926abdaccedded687a92a6b124"
+      "size": 8285,
+      "sha256": "a339bd8ceaf2a6e45a6484993229bb9119f3b9f26fb2d7115f28e36aa95c74de"
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/build_package.py",
-      "size": 6828,
-      "sha256": "b373dd84ef7ebc9875e98f2390e2d874f9c7577ea9389abeb507775b757ae013"
+      "size": 6844,
+      "sha256": "6d3658a2033555fc8a822b8a0eeaddc4d99f717ba9a644228de73a85516fa9b0"
     },
     {
       "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/test_delivery.py",
@@ -346,6 +346,18 @@
       "failure": "YAML parser interpreted the colon in --only-binary=:all: as a mapping separator",
       "fix": "Use folded YAML scalar for the pip download command",
       "local_yaml_parse": "PASS",
+      "next_exact_head_ci": "PENDING_AT_COMMIT"
+    },
+    "r03_windows_cli_encoding": {
+      "source_commit": "f55edfc7512166a800df233543becad5c7786bf7",
+      "run_id": 42387689509,
+      "job_id": 128448502501,
+      "unit_tests": "50 PASS",
+      "actual_offline_zip_install_tests": "50 PASS",
+      "failed_step": "Verify installed CLI entry",
+      "error": "UnicodeEncodeError in Traditional Chinese CLI help under default Windows charmap",
+      "fix": "Use explicit Python -X utf8 for installed commands and UTF-8 bootstrap stdout/stderr",
+      "codeql_at_this_source": "PASS: no new alerts",
       "next_exact_head_ci": "PENDING_AT_COMMIT"
     }
   },

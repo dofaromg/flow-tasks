@@ -76,11 +76,11 @@ def build(source_root, wheelhouse, output, target_os, source_sha, source_mode="G
         raise ValueError("REQUIRED_RUNTIME_WHEELS_MISSING")
     payload["requirements.lock"] = ("\n".join(sorted(locked)) + "\n").encode()
     payload["MRL_INSTALL_WINDOWS.cmd"] = (
-        '@echo off\r\npy -3.12 "%~dp0' + BOOTSTRAP.replace("/", "\\") + '" install\r\nexit /b %errorlevel%\r\n'
+        '@echo off\r\npy -3.12 -X utf8 "%~dp0' + BOOTSTRAP.replace("/", "\\") + '" install\r\nexit /b %errorlevel%\r\n'
     ).encode("ascii")
     payload["MRL_INSTALL_LINUX.sh"] = (
         '#!/bin/sh\nset -eu\nMRL_BUNDLE_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)\n'
-        'exec python3.12 "$MRL_BUNDLE_DIR/' + BOOTSTRAP + '" install\n'
+        'exec python3.12 -X utf8 "$MRL_BUNDLE_DIR/' + BOOTSTRAP + '" install\n'
     ).encode("ascii")
     manifest = {
         "schema": "MRL_Financial_Standalone/v1", "origin_signature": "MrLiouWord",

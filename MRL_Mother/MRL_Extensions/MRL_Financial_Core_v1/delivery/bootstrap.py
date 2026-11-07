@@ -101,7 +101,7 @@ def run_tests(root):
     if not interpreter.is_file():
         raise ValueError("INSTALL_FIRST")
     code = "import sys,unittest;sys.path.insert(0,sys.argv.pop(1));unittest.main(module=None)"
-    subprocess.run([str(interpreter), "-I", "-B", "-c", code, str(root),
+    subprocess.run([str(interpreter), "-I", "-X", "utf8", "-B", "-c", code, str(root),
                     BASE_MODULE + ".test_core", BASE_MODULE + ".external.test_external",
                     BASE_MODULE + ".delivery.test_delivery", "-v"],
                    check=True, cwd=root, env=clean_environment(for_tests=True))
@@ -118,7 +118,7 @@ def install(root):
     target.mkdir()
     venv.EnvBuilder(with_pip=True, symlinks=False).create(target)
     interpreter = python_path(root)
-    subprocess.run([str(interpreter), "-I", "-m", "pip", "install", "--no-index", "--no-compile",
+    subprocess.run([str(interpreter), "-I", "-X", "utf8", "-m", "pip", "install", "--no-index", "--no-compile",
                     "--find-links", str(root / "wheelhouse"), "--require-hashes",
                     "-r", str(root / "requirements.lock")],
                    check=True, cwd=root, env=clean_environment(for_tests=True))
@@ -142,11 +142,14 @@ def launch(root, module, arguments):
     if not interpreter.is_file():
         raise ValueError("INSTALL_FIRST")
     code = "import runpy,sys;sys.path.insert(0,sys.argv.pop(1));runpy.run_module(sys.argv.pop(1),run_name='__main__')"
-    return subprocess.run([str(interpreter), "-I", "-B", "-c", code, str(root), module, *arguments],
+    return subprocess.run([str(interpreter), "-I", "-X", "utf8", "-B", "-c", code, str(root), module, *arguments],
                           cwd=root, check=False, env=clean_environment()).returncode
 
 
 def main(argv=None):
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description="MRL 本地離線安裝及驗收")
     sub = parser.add_subparsers(dest="command", required=True)
     for command in ("verify", "install", "self-test"):
