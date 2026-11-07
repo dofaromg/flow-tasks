@@ -16,6 +16,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/
+            /MRL_Mother/09_workflow/tool_registry.py
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
