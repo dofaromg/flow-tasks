@@ -1,0 +1,176 @@
+{
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "date_taipei": "2026-11-07",
+  "scope": "v0.1 prototype delivery only; entire financial system remains incomplete",
+  "expected_payload_files": [
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/__init__.py",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/core.py",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/cli.py",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/test_core.py",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/README.md",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/CONSTITUTION.md",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/module.json",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/requirements.txt",
+    ".github/workflows/mrl-financial-core.yml",
+    "CHANGELOG.md",
+    "config/Mrliou_MRL_Sync_Delivery_v1.json",
+    "config/Mrliou_Structure_Authorization_Delivery_v1.json"
+  ],
+  "actual_payload_files": [
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/__init__.py",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/core.py",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/cli.py",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/test_core.py",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/README.md",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/CONSTITUTION.md",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/module.json",
+    "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/requirements.txt",
+    ".github/workflows/mrl-financial-core.yml",
+    "CHANGELOG.md",
+    "config/Mrliou_MRL_Sync_Delivery_v1.json",
+    "config/Mrliou_Structure_Authorization_Delivery_v1.json"
+  ],
+  "expected_payload_count": 12,
+  "actual_payload_count": 12,
+  "audit_evidence_file_count": 1,
+  "total_delivery_file_count": 13,
+  "files": [
+    {
+      "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/__init__.py",
+      "size": 232,
+      "sha256": "73c0a5499ebd02ad74bb199eacca8d73588c3963f425499e31cd785706845776"
+    },
+    {
+      "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/core.py",
+      "size": 15384,
+      "sha256": "f0bf6a87ab7ceda6cb642cd17fc2c9e84b98bd1e1d2fcd818c68dd3606d03fca"
+    },
+    {
+      "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/cli.py",
+      "size": 2219,
+      "sha256": "861c70c1be65748c2e7ece60e035fb38559dad35519983edb0149c3997454306"
+    },
+    {
+      "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/test_core.py",
+      "size": 12998,
+      "sha256": "438089831fe95881ca05a4c0225013643c10c29e36ea06f1af658a08a7c85e16"
+    },
+    {
+      "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/README.md",
+      "size": 6828,
+      "sha256": "9739879432e635dafb9ebb7b99993b18d82ab02e5b7978bc8af06ed405cf0eeb"
+    },
+    {
+      "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/CONSTITUTION.md",
+      "size": 4398,
+      "sha256": "b4bf24c2a8e9f54bc29bf6f3ccf94335164145ba4ba28eff2d67ddd59c73b391"
+    },
+    {
+      "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/module.json",
+      "size": 1237,
+      "sha256": "8ef8212cc0dbe1c7640979ed64188cee6415ba05674c084453517196a6ea03f8"
+    },
+    {
+      "path": "MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/requirements.txt",
+      "size": 21,
+      "sha256": "8b5c18678b29b5e8e0fb586a35ac1dce3ccd9da321e8f12ace0e118350b4e568"
+    },
+    {
+      "path": ".github/workflows/mrl-financial-core.yml",
+      "size": 1482,
+      "sha256": "15e54ea633d6c3b967a90747c25764fc55452643adb2eece43894ac1c6db1791"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "size": 9391,
+      "sha256": "0ee126005c4ae4f389705148e7e9642750327f9b99fbd58d96809431bcae1520"
+    },
+    {
+      "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+      "size": 9137,
+      "sha256": "a47b55bed99fc6f1496a7ba33cc8735abf1101282dc9ac959998ba857acd392d"
+    },
+    {
+      "path": "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+      "size": 15787,
+      "sha256": "e36c08184bbab7b4aeacc1fa5b30da8c84b5a5002adbd39011404713b2fa26ec"
+    }
+  ],
+  "missing": [],
+  "extra": [],
+  "mismatch": [],
+  "renamed": [],
+  "orphan": [],
+  "empty_files": [],
+  "coverage_percent": 100,
+  "delivery_gate": "DELIVERY_PASS_FOR_PROTOTYPE_ONLY",
+  "full_financial_system": "INCOMPLETE",
+  "zip": "NOT_REQUESTED",
+  "local_tests": {
+    "runner": "Python 3.12 unittest",
+    "passed": 19,
+    "failed": 0,
+    "environment": "Linux local",
+    "windows_ci": "NOT_YET_OBSERVED",
+    "dl580": "NOT_DEPLOYED",
+    "real_funds": "NOT_CONNECTED"
+  },
+  "dependency_tree": {
+    "MRL_Mother/MRL_Extensions": [
+      "MRL_Financial_Core_v1"
+    ],
+    "MRL_Financial_Core_v1": [
+      "core.py",
+      "cli.py",
+      "cryptography==50.0.2",
+      "Python sqlite3"
+    ],
+    "existing_adapter_parent": "MRL_Mother/09_workflow/tool_registry.py (unchanged)"
+  },
+  "package_map": {
+    "runtime": [
+      "__init__.py",
+      "core.py",
+      "cli.py",
+      "requirements.txt"
+    ],
+    "validation": [
+      "test_core.py",
+      ".github/workflows/mrl-financial-core.yml"
+    ],
+    "design_and_lineage": [
+      "README.md",
+      "CONSTITUTION.md",
+      "module.json",
+      "CHANGELOG.md"
+    ]
+  },
+  "self_hash_policy": "AUDIT.json is evidence metadata excluded from its own payload hash list; remote readback checks all 11 files separately",
+  "ci_history": {
+    "first_head": "895e4b35687d830b1515a55c0ad23f7948c10492",
+    "run_id": 42383513748,
+    "linux": "PASS",
+    "windows": "CHECKOUT_FAILED_INVALID_EXISTING_PATH_:mnt:data.txt",
+    "fix": "Bundle only module and original tool_registry on Linux, transfer artifact to Linux/Windows test jobs; no incompatible Windows checkout and no original file rename",
+    "replacement_exact_head_ci": "PENDING",
+    "sparse_checkout_attempt": {
+      "head": "f54d44d0ae7151da52b78dc7fd9d5ad22e1e23c3",
+      "run_id": 42383619931,
+      "linux": "PASS",
+      "windows": "CHECKOUT_FAILED_BEFORE_TESTS"
+    },
+    "connection_fix": {
+      "failed_run": 42383748510,
+      "windows": "Test cleanup WinError 32 from SQLite connections not closed; production and test connections now use explicit closing",
+      "replacement_ci": "PENDING"
+    }
+  },
+  "scope_addition": {
+    "files": [
+      "config/Mrliou_MRL_Sync_Delivery_v1.json",
+      "config/Mrliou_Structure_Authorization_Delivery_v1.json"
+    ],
+    "reason": "Necessary CHANGELOG hash dependencies proven by exact-head CI failures; preserve original entries in additive_integrity_history"
+  }
+}

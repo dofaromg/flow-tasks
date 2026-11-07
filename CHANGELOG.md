@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — MRL financial-system reconstruction prototype (2026-11-07)
+
+- Add MRL_Financial_Core_v1 under the existing mother extension boundary:
+  signed test-unit ledger, delayed settlement, dispute reservations, one pre-decision
+  appeal, majority-signed restitution and append-only double-entry postings.
+- Mount explicitly through the existing ToolRegistry; preserve MRL parent lineage,
+  Owner authority and source signature. No real asset adapter or DL580 deployment.
+- Add adversarial invariant tests, local CLI, a staged financial constitution and
+  Linux/Windows CI definition. This is a prototype, not a complete financial system.
+- origin_signature: MrLiouWord; canonical_authority: Mr.liou.
+
 ### Fixed — MRL ProductBridge post-merge security review (2026-10-21)
 
 - Follow up merged PR #680 at main 0c88c996: include the existing .bridge state,
@@ -163,3 +174,4 @@ For changes before 2026-01-12, please refer to the git commit history.
 - Propagate recursive authorization denial; recheck direct scanner reads and in-memory renderers, enforce actual path/depth, and reject symlinked historical indexes.
 - Carry authorized depth through smart-updater and common runner without widening grants.
 - Add seven behavioral regressions and delivery payload/dependency integrity validation. Preserve prior evidence and origin_signature: MrLiouWord.
+
