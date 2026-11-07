@@ -74,8 +74,8 @@
     },
     {
       "path": ".github/workflows/mrl-financial-core.yml",
-      "size": 926,
-      "sha256": "8fbb391abc08a66754fd7c9c14b6d7c11b84f5561388394ba123b8061b7685b2"
+      "size": 1482,
+      "sha256": "15e54ea633d6c3b967a90747c25764fc55452643adb2eece43894ac1c6db1791"
     },
     {
       "path": "CHANGELOG.md",
@@ -138,7 +138,13 @@
     "run_id": 42383513748,
     "linux": "PASS",
     "windows": "CHECKOUT_FAILED_INVALID_EXISTING_PATH_:mnt:data.txt",
-    "fix": "Sparse checkout only module and original ToolRegistry; original paths unchanged",
-    "replacement_exact_head_ci": "PENDING"
+    "fix": "Bundle only module and original tool_registry on Linux, transfer artifact to Linux/Windows test jobs; no incompatible Windows checkout and no original file rename",
+    "replacement_exact_head_ci": "PENDING",
+    "sparse_checkout_attempt": {
+      "head": "f54d44d0ae7151da52b78dc7fd9d5ad22e1e23c3",
+      "run_id": 42383619931,
+      "linux": "PASS",
+      "windows": "CHECKOUT_FAILED_BEFORE_TESTS"
+    }
   }
 }
