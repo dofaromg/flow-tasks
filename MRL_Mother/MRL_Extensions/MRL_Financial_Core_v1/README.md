@@ -1,5 +1,9 @@
 # MRL 金融制度重建核心 v0.1.0
 
+> R02 增補：套件版本 0.2.0，承接原有 v0.1.0 測試帳本，新增
+> [external/README.md](external/README.md) 的明確授權銀行／EVM 適配器。
+> 以下 v0.1.0 規則保留，外部接口不修改原帳本餘額。2026-11-07（Asia/Taipei）。
+
 origin_signature: MrLiouWord  
 canonical_authority: Mr.liou  
 parent: MRL_Mother/MRL_Extensions  

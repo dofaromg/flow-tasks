@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 9391,
-      "sha256": "0ee126005c4ae4f389705148e7e9642750327f9b99fbd58d96809431bcae1520",
+      "size_bytes": 10242,
+      "sha256": "2d6b7de3ba089ba744ce61289d426d64140c155dd5f96cb4622d691175c2651b",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -238,6 +238,31 @@
           "path": "CHANGELOG.md",
           "size_bytes": 9391,
           "sha256": "0ee126005c4ae4f389705148e7e9642750327f9b99fbd58d96809431bcae1520"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "d7e0e8137c833fef123f6681ca19f827bc99a0e8",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/713",
+      "record_id": "MRL_FINANCIAL_EXTERNAL_BACKFILL_20261107_R02",
+      "reason": "R02 authorized external adapters add a CHANGELOG entry; preserve all prior checksum evidence and refresh only exact live dependencies. Existing root authorization grants unchanged.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 9391,
+          "sha256": "0ee126005c4ae4f389705148e7e9642750327f9b99fbd58d96809431bcae1520",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 10242,
+          "sha256": "2d6b7de3ba089ba744ce61289d426d64140c155dd5f96cb4622d691175c2651b"
         }
       ],
       "origin_signature": "MrLiouWord"

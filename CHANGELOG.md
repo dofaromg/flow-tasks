@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — MRL authorized financial connectors R02 (2026-11-07)
+
+- Extend PR #713 with Mercury account/transaction reads and approval-required ACH
+  requests, plus externally signed EIP-1559 native transfers on Ethereum/Sepolia.
+- Require exact external grants in the existing root registry, majority-signed
+  per-operation consent, source/recipient allowlists and integer limits. Keep all
+  shipped settings disabled and existing structure grants unchanged.
+- Add a persistent submission outbox, append-only receipt hashes, timeout/replay
+  refusal and explicit mother ToolRegistry registration. Preserve the test ledger.
+- Backfill additive parent/child module records, primary API sources and R02
+  delivery evidence; live accounts, real transfers and DL580 acceptance remain open.
+- origin_signature: MrLiouWord; canonical_authority: Mr.liou.
+
 ### Added — MRL financial-system reconstruction prototype (2026-11-07)
 
 - Add MRL_Financial_Core_v1 under the existing mother extension boundary:
