@@ -9,11 +9,8 @@ on:
 permissions:
   contents: read
 jobs:
-  sandbox-invariants:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+  source-bundle:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,6 +18,25 @@ jobs:
           sparse-checkout: |
             /MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/
             /MRL_Mother/09_workflow/tool_registry.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mrl-financial-test-source
+          path: MRL_Mother/
+          if-no-files-found: error
+          retention-days: 7
+  sandbox-invariants:
+    needs: source-bundle
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      # Windows Git rejects legacy names even outside sparse paths. Transfer only
+      # the exact source files, rather than disabling Windows path protections.
+      - uses: actions/download-artifact@v4
+        with:
+          name: mrl-financial-test-source
+          path: MRL_Mother
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
