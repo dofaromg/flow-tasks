@@ -36,6 +36,8 @@ python -m unittest MRL_Mother.MRL_Extensions.MRL_Financial_Core_v1.test_core MRL
 
 測試使用暫存目錄、臨時金鑰及明確標記的 provider fixtures，完全不碰真實帳戶。
 來源錢包核驗測試使用真實 secp256k1 簽名／恢復，但不送出任何交易。
+原 repo 未安裝選配 eth-account 時，通用測試探索會跳過需要該依賴的測試；
+本模組專項 CI 會安裝 external/requirements.txt，再執行全部 40 項測試。
 cryptography 與 eth-account 的授權及來源保留原樣；正式部署前仍須依既有 Runtime Artifact Trust Gate 驗收。
 
 ## 預設狀態與啟用條件
@@ -112,6 +114,8 @@ register_external_tools(existing_tool_registry, gateway)
 註冊 MRL_financial_external_plan、MRL_financial_external_observe、
 MRL_financial_external_submit、MRL_financial_external_status，保留原工具且拒絕覆蓋同名工具。
 ToolRegistry 會記錄呼叫輸入，因此簽署請求與 raw transaction 的操作日誌須留在受保護主機。
+已簽的鏈上交易可由其他人轉送；MRL 的簽核限制適用於本模組的提交路徑，
+不會把普通錢包變成鏈上多簽，也不能撤回已洩漏的有效 raw transaction。
 Token 不接受為工具參數，provider 錯誤內容也不寫入回執或 traceback。
 
 ## 操作 JSON 契約

@@ -16,13 +16,19 @@ from unittest.mock import patch
 from urllib.error import HTTPError
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
-from eth_account import Account
-from eth_utils import keccak
-from hexbytes import HexBytes
+try:
+    from eth_account import Account
+    from eth_utils import keccak
+    from hexbytes import HexBytes
+    from .gateway import Gateway, register_external_tools
+    HAS_EXTERNAL_DEPENDENCIES = True
+except ModuleNotFoundError as exc:
+    if exc.name != "eth_account":
+        raise
+    HAS_EXTERNAL_DEPENDENCIES = False
 
 from ..core import Rejected, canonical
 from .gate import default_settings
-from .gateway import Gateway, register_external_tools
 from .transport import JsonTransport, NoRedirect, https_url
 
 ACCOUNT = "00000000-0000-4000-8000-000000000001"
@@ -67,6 +73,7 @@ class FakeTransport:
         return {"jsonrpc": "2.0", "id": 1, "result": value}
 
 
+@unittest.skipUnless(HAS_EXTERNAL_DEPENDENCIES, "Install optional external/requirements.txt")
 class ExternalTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
