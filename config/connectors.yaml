@@ -1,13 +1,14 @@
 # Cloud Service Connector Configuration
 # 雲端服務連接器配置
 
-version: "1.1"
+version: "1.2"
 
 # required: true means disabling this connector is a strict audit failure.
 # required: false means disabled is an intentional skipped state.
 # required: true 表示停用該連接器會造成 strict audit 失敗。
 # required: false 表示停用是預期的 skipped 狀態。
 
+# Source necessity and owner review: docs/MRL_Connector_Source_Policy_v1.md
 # Connector Settings for 8 Cloud Services
 # 8個雲端服務的連接器設定
 connectors:
@@ -181,4 +182,4 @@ sync:
   max_concurrent_syncs: 3
   
   # Conflict resolution: newest, oldest, manual
-  conflict_resolution: "newest"
+  conflict_resolution: "manual"
