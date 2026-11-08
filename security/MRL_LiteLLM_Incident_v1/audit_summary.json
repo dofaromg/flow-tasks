@@ -1,0 +1,158 @@
+{
+  "schema": "MRL-32_Audit_Summary/v1.0.0",
+  "origin_signature": "MrLiouWord",
+  "captured_at_taipei": "2026-11-03T00:12:47.489758+08:00",
+  "issue": "https://linear.app/dofaromgg/issue/MRL-32",
+  "pull_request": "https://github.com/dofaromg/flow-tasks/pull/698",
+  "policy_sources": [
+    "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+    "https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain",
+    "https://github.com/BerriAI/litellm/issues/47826",
+    "https://docs.litellm.ai/docs/proxy/docker_image_security",
+    "https://www.litellm.ai/security"
+  ],
+  "scope": {
+    "identified_name_matched_repositories": 181,
+    "tree_available": 168,
+    "tree_unavailable": 13,
+    "primary_checkouts": 5,
+    "additional_selected_files_expected": 1637,
+    "additional_selected_files_inspected": 1637,
+    "additional_selected_files_uninspected": 0,
+    "selection": "requirements *.txt/*.in; pyproject/Pipfile/uv/poetry locks; Dockerfile/compose paths; workflow YAML; deploy-named shell/PowerShell/YAML. This is not an exhaustive inventory of all source files or all user accounts.",
+    "branch_history": "default branches only; historical branches, deleted artifacts and caches UNKNOWN"
+  },
+  "primary_results": [
+    {
+      "repository": "dofaromg/flow-tasks",
+      "source_revision": "4d6a4f7445ce44689110fbf642c4c6f1702a63cd",
+      "scope": "selected_static_files_in_full_checkout; scanner controls excluded; no other branches/history/runtime",
+      "files": 3835,
+      "state": "UNKNOWN",
+      "hits": 0,
+      "unknown_references": 0,
+      "gaps": {
+        "symlink_not_followed": 1,
+        "declared_exclusion": 2,
+        "archive_not_extracted": 587,
+        "binary_not_parsed": 7
+      },
+      "private_report_sha256": "6d9b110caf2ac3e78f0b2e58ede91f4cfb1234045dfd8cc52be7b59462bfbbcf"
+    },
+    {
+      "repository": "dofaromg/MRL_AI_SYSTEM",
+      "source_revision": "78b56a4918ae0ebe1a3a9f28c699ecef6b8c60f9",
+      "scope": "selected_static_files_in_full_checkout; scanner controls excluded; no other branches/history/runtime",
+      "files": 2863,
+      "state": "UNKNOWN",
+      "hits": 0,
+      "unknown_references": 0,
+      "gaps": {
+        "declared_exclusion": 1,
+        "archive_not_extracted": 553,
+        "binary_not_parsed": 5
+      },
+      "private_report_sha256": "f876868ff34ca59eb145d5b5e1966c33a9a65f0ac99e888bb10e68286c1ef988"
+    },
+    {
+      "repository": "dofaromg/MRL_ASI_system",
+      "source_revision": "632683e7e880e9e938cd9e71d4d3fbc5a4db1e7d",
+      "scope": "selected_static_files_in_full_checkout; scanner controls excluded; no other branches/history/runtime",
+      "files": 601,
+      "state": "UNKNOWN",
+      "hits": 0,
+      "unknown_references": 0,
+      "gaps": {
+        "symlink_not_followed": 1,
+        "declared_exclusion": 1,
+        "archive_not_extracted": 23,
+        "binary_not_parsed": 2
+      },
+      "private_report_sha256": "d5d553b9c75f765f2e6d6be62915a38a67672bcabeb446d80107ccda2beb7910"
+    },
+    {
+      "repository": "dofaromg/mrlioudb",
+      "source_revision": "183c08792b6825c4f4b279f300ffa6b3eac7bd7a",
+      "scope": "selected_static_files_in_full_checkout; scanner controls excluded; no other branches/history/runtime",
+      "files": 582,
+      "state": "UNKNOWN",
+      "hits": 0,
+      "unknown_references": 0,
+      "gaps": {
+        "symlink_not_followed": 1,
+        "declared_exclusion": 1,
+        "archive_not_extracted": 23,
+        "binary_not_parsed": 2
+      },
+      "private_report_sha256": "fa98fe78770654cad42c94e4000db1e22b1ddbf233a66e8acbd11765477e7d8d"
+    },
+    {
+      "repository": "dofaromg/mrliouword-system",
+      "source_revision": "b8bcbaf51c4c48c7d1cb390700ac3b55f8e7c5d3",
+      "scope": "selected_static_files_in_full_checkout; scanner controls excluded; no other branches/history/runtime",
+      "files": 285,
+      "state": "UNKNOWN",
+      "hits": 0,
+      "unknown_references": 0,
+      "gaps": {
+        "declared_exclusion": 1,
+        "archive_not_extracted": 18
+      },
+      "private_report_sha256": "5aeebcc12cf4c7926acf8b4b701862284ba97a1fcde614aa8d3a62739e10beae"
+    }
+  ],
+  "additional_results": {
+    "selected_states": {
+      "UNKNOWN": 67,
+      "NO_HIT": 109
+    },
+    "finding_states": {
+      "UNKNOWN": 18,
+      "NO_HIT": 3
+    },
+    "repo_names_and_private_paths": "kept in private evidence pack; never posted to Linear"
+  },
+  "verification": {
+    "local_tests": 26,
+    "local_tests_result": "PASS",
+    "python_syntax": "PASS",
+    "workflow_yaml_and_needs": "PASS",
+    "diff_whitespace": "PASS",
+    "windows_collector_execution": "NOT_RUN_NO_WINDOWS_RUNTIME",
+    "historical_exact_head_ci": {
+      "head": "4d6a4f7445ce44689110fbf642c4c6f1702a63cd",
+      "run": "https://github.com/dofaromg/flow-tasks/actions/runs/41477388102",
+      "tests": 25,
+      "tests_result": "PASS",
+      "gate": "UNKNOWN_EXIT_2",
+      "latest_template_fix_ci": "pending_at_summary_capture"
+    },
+    "byoh_blocking_evidence": "https://github.com/dofaromg/flow-tasks/actions/runs/41475884379",
+    "actual_byoh_build": "SKIPPED_AFTER_GATE_FAILURE"
+  },
+  "remaining_evidence": [
+    "DL580 installed environments and Python startup history",
+    "all-user pip/uv/Poetry/HTTP caches and archived wheels",
+    "registry/BuildKit caches and all platform/config/layer digests",
+    "deployment/pull/start records and historical SBOMs",
+    "non-default branches, deleted refs and old CI artifacts",
+    "image signature/provenance verification on actual deployed digests",
+    "13 unavailable repository trees",
+    "PowerShell 5.1/Windows and DL580 execution of collector",
+    "other deployment entrypoints and repositories do not yet enforce this gate"
+  ],
+  "actions": {
+    "isolated_hosts": 0,
+    "rebuilt_environments": 0,
+    "rotated_credentials": 0,
+    "reason": "no confirmed affected runtime artifact; runtime access not available",
+    "merged": false,
+    "deployed": false,
+    "main_gate_active": false
+  },
+  "exposure_conclusion": "UNKNOWN",
+  "incident_closure_gate": "BLOCKED_UNKNOWN",
+  "release_authority": "Mr.liou owner evidence review; no release approval inferred",
+  "policy_sha256": "59d5676783323fe17fcd7720d6157aef1f74c530e3b09191d72209bc4466e603",
+  "scanner_sha256": "0bb36534394cec9b9d7cdb6b966ad9a635d439ff145ea5549252839b99618ab1"
+}

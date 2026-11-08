@@ -1,0 +1,36 @@
+{
+  "schema": "MRL_LiteLLM_Deny_Policy/v1.0.0",
+  "origin_signature": "MrLiouWord",
+  "issue": "MRL-32",
+  "verified_date": "2026-11-02",
+  "sources": [
+    "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+    "https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain",
+    "https://github.com/BerriAI/litellm/issues/47826",
+    "https://docs.litellm.ai/docs/proxy/docker_image_security"
+  ],
+  "deny_versions": ["1.107.0"],
+  "deny_tags": ["v1.107.0", "latest", "main-latest", "main-stable"],
+  "bad_digest_prefixes": [
+    "1bbcb1443bc962e45f5aad53fe3d2c30600e0379715fb6c664cdd3ac126c339e",
+    "c00f9d92c427", "7b00e91cd2fe",
+    "bd1aeee419ea36da9aa2b657288da4101887be468f020ac63d22ba6ed84a3ea5",
+    "56b74573", "b52b5f46cf92"
+  ],
+  "digest_note": "Short prefixes are explicitly published upstream indicators, NOT invented full digests. A prefix match blocks conservatively; list is incomplete for platform/config/layer digests.",
+  "bad_file_sha256": [
+    "7598727f209d717041db37f7dca271d3a7d328a279890e0e1d55375729aeb86d",
+    "0aaf7ba346d41ef2f40390436738b001180d5a1c03aa093f121078a9969d9a1a",
+    "668169d35b87bf51324080390b1b1c5ab12bd335cfe5f1a99e3689abd5e02ae6",
+    "462d0c9f67ca522d9e0e4acd245e90b36ce0d5353604a66bb7c43a1ec4a6fcf7",
+    "c2e32d0ce2548aa662c18bf5001911a79fe5b30cf8357132275add02fdcde054",
+    "1bbce8caa94f01c0aaa0b7ddae51553a8a32e1ce53d96d44fe583272aff7ad00",
+    "12d4ccc5c6f8d35cf4f2cf233b7f3e418e863e657d81ff5f5fc9e210005b9484",
+    "2befe2a79fb4fbbd9a543b5b40b530c8cffa8771bab22b8fb22b2e4ae3b1f819"
+  ],
+  "pypi_window_utc": ["2026-10-21T11:39:51Z", "2026-10-21T13:23:00Z"],
+  "dockerhub_window_utc": ["2026-10-21T11:46:56Z", "2026-10-21T14:20:00Z"],
+  "ghcr_window_utc": ["2026-10-21T11:46:56Z", "2026-10-21T13:51:00Z"],
+  "cosign_key_commit": "e82a3c646908ba0a6ee0beddc4310d7a6cac4065",
+  "cosign_key_sha256": "e3fe3e08c44b16407fe0b37c43b4f8b603b3a0f4ee74c29e647bc022d762c2c0"
+}
