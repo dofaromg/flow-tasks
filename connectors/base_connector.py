@@ -259,6 +259,7 @@ class BaseConnector(ABC):
         headers: Optional[Dict[str, str]] = None,
         params: Optional[Dict[str, Any]] = None,
         json_data: Optional[Any] = None,
+        allow_redirects: Optional[bool] = None,
     ) -> requests.Response:
         """
         Make an HTTP request with timing information.
@@ -293,7 +294,8 @@ class BaseConnector(ABC):
             response = requests.request(
                 method=method, url=url, headers=request_headers, params=params,
                 json=json_data, timeout=self.config.timeout,
-                allow_redirects=self.config.allow_redirects,
+                allow_redirects=(self.config.allow_redirects
+                                 if allow_redirects is None else allow_redirects),
             )
         except Exception:
             self.last_mrl_bridge_receipt = self.mrl_bridge_center.label(
@@ -472,4 +474,5 @@ class BaseConnector(ABC):
             return self._handle_connection_error("Connection failed")
         except Exception as e:
             return self._handle_connection_error(str(e))
+
 
