@@ -18,6 +18,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          sparse-checkout: MRL_Product
+          sparse-checkout-cone-mode: true
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
