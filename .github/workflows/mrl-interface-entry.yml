@@ -1,0 +1,39 @@
+name: MRL Interface Entry R02
+on:
+  pull_request:
+    paths:
+      - 'MRL_Product/**'
+      - '.github/workflows/mrl-interface-entry.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  interface-access:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check source syntax
+        shell: bash
+        run: |
+          node --check MRL_Product/backend/config.js
+          node --check MRL_Product/backend/modules/identity.js
+          node --check MRL_Product/backend/modules/rules.js
+          node --check MRL_Product/backend/modules/access.js
+          node --check MRL_Product/backend/modules/full_output.js
+          node --check MRL_Product/backend/routes/api.js
+          node --check MRL_Product/backend/routes/admin.js
+          node --check MRL_Product/backend/routes/payment.js
+          node --check MRL_Product/backend/routes/pack.js
+          node --check MRL_Product/backend/core/packs/pack-builder.js
+      - name: Session ownership unit tests
+        working-directory: MRL_Product
+        run: npm run test:interface
