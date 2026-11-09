@@ -35,6 +35,10 @@ module.exports = {
     partialRatio: 0.30,   // 前 30% 免費預覽
   },
 
+  // Owner login requires server-side credential verification.
+  ownerEmail: (process.env.MRL_OWNER_EMAIL || '').trim().toLowerCase(),
+  ownerPasswordScrypt: process.env.MRL_OWNER_PASSWORD_SCRYPT || '',
+
   // 管理員
   adminKey: process.env.ADMIN_KEY || 'mrl-admin-dev',
 
