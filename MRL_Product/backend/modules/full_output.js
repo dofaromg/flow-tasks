@@ -3,6 +3,7 @@
 // origin_signature: MrLiouWord
 
 const { getDb } = require('./db');
+const { ownsAnalysis } = require('./access');
 const { enforceAccess } = require('./rules');
 const { buildFull, buildPartial } = require('./partial_output');
 const { selectTemplate } = require('../core/generator/template-selector');
@@ -14,7 +15,7 @@ function getResult(analysisId, sessionId, userId) {
   const db = getDb();
   const analysis = db.prepare('SELECT * FROM analyses WHERE id = ?').get(analysisId);
 
-  if (!analysis) {
+  if (!analysis || !ownsAnalysis(analysis, sessionId, userId)) {
     const err = new Error('Analysis not found');
     err.status = 404;
     throw err;
