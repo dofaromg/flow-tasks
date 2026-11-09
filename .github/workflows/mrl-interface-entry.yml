@@ -8,23 +8,38 @@ on:
 permissions:
   contents: read
 jobs:
+  package-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Package existing MRL_Product only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mrl-interface-exact-head-source
+          path: MRL_Product/
+          retention-days: 7
+          if-no-files-found: error
+
   interface-access:
+    needs: package-source
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Read exactly the same packaged source
+        uses: actions/download-artifact@v4
         with:
-          persist-credentials: false
-          sparse-checkout: |
-            /MRL_Product/
-          sparse-checkout-cone-mode: false
+          name: mrl-interface-exact-head-source
+          path: MRL_Product
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Check source syntax
+      - name: Check existing source syntax
         shell: bash
         run: |
           node --check MRL_Product/backend/config.js
