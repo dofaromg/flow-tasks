@@ -6,6 +6,8 @@ const express = require('express');
 const router = express.Router();
 
 const { authMiddleware } = require('../modules/identity');
+const { getDb } = require('../modules/db');
+const { ownsAnalysis } = require('../modules/access');
 const { createOnceCheckout, createSubscriptionCheckout } = require('../modules/payment_entry');
 const { track, ctxFromReq } = require('../modules/events');
 const logger = require('../utils/logger');
@@ -19,6 +21,9 @@ router.post('/once', async (req, res) => {
   if (!analysis_id) {
     return res.status(400).json({ error: 'analysis_id required' });
   }
+
+  const analysis = getDb().prepare('SELECT session_id, user_id FROM analyses WHERE id = ?').get(analysis_id);
+  if (!ownsAnalysis(analysis, req.sessionId, req.userId)) return res.status(404).json({ error: 'Analysis not found' });
 
   // 追蹤：點擊單次付款
   track('pay_click_once', ctxFromReq(req, {
