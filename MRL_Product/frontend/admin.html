@@ -587,7 +587,7 @@
 (function() {
   'use strict';
 
-  let ADMIN_KEY = localStorage.getItem('mrl_admin_key') || '';
+  let ADMIN_KEY = sessionStorage.getItem('mrl_admin_key') || '';
   let currentTab = 'overview';
   let metricsData = null;
 
@@ -603,7 +603,7 @@
       const res = await api('/admin/health', key);
       if (res.ok) {
         ADMIN_KEY = key;
-        localStorage.setItem('mrl_admin_key', key);
+        sessionStorage.setItem('mrl_admin_key', key);
         authWall.classList.add('hidden');
         dashboard.classList.remove('hidden');
         loadAll();
