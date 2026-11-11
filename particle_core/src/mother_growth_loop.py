@@ -140,7 +140,7 @@ class MRL_MotherGrowthLoop_v1:
 
     def _atomic_write_json(self, path: Path, value: Dict[str, Any]) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
-        temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+        temporary = path.with_name(f".{path.name}.{os.getpid()}.{uuid.uuid4().hex}.tmp")
         temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         os.replace(temporary, path)
 
@@ -334,6 +334,11 @@ class MRL_MotherGrowthLoop_v1:
         actual_hash = self._hash(envelope["seed"])
         if actual_hash != envelope.get("content_hash"):
             raise ValueError(f"Seed content hash mismatch: {seed_id} v{version}")
+        stored_envelope_hash = envelope.get("envelope_hash")
+        if stored_envelope_hash is not None:
+            immutable = {key: value for key, value in envelope.items() if key != "envelope_hash"}
+            if self._hash(immutable) != stored_envelope_hash:
+                raise ValueError(f"Seed envelope hash mismatch: {seed_id} v{version}")
 
     def load_active(self, seed_id: str) -> Dict[str, Any]:
         safe_id = self._safe_seed_id(seed_id)
@@ -433,6 +438,7 @@ class MRL_MotherGrowthLoop_v1:
                 "diff": change,
                 "seed": semantic_seed,
             }
+            envelope["envelope_hash"] = self._hash(envelope)
             version_path = self._version_file(safe_id, version)
             self._write_immutable_json(version_path, envelope)
             reread = self._read_json(version_path)
@@ -447,6 +453,7 @@ class MRL_MotherGrowthLoop_v1:
                     "seed_id": safe_id,
                     "version": version,
                     "content_hash": content_hash,
+                    "envelope_hash": envelope["envelope_hash"],
                     "parent_hash": parent_hash,
                     "parent_version": parent_version,
                     "version_path": relative_path,
@@ -466,6 +473,7 @@ class MRL_MotherGrowthLoop_v1:
                 "updated_at": self._now(),
             }
             self._atomic_write_json(pointer_path, pointer)
+            mqm_export = self._export_envelope_for_mqm(envelope)
             return {
                 "system_name": self.CANONICAL_SYSTEM_NAME,
                 "status": "created" if active is None else "upgraded",
@@ -476,6 +484,7 @@ class MRL_MotherGrowthLoop_v1:
                 "diff": change,
                 "event_hash": event["event_hash"],
                 "path": relative_path,
+                "mqm_export": mqm_export,
             }
 
     def process_and_absorb(
@@ -495,7 +504,7 @@ class MRL_MotherGrowthLoop_v1:
             trust_level=trust_level,
         )
         backfill = self.absorb_pipeline_result(pipeline_result, seed_id, metadata=metadata)
-        mqm_export = self.export_active_for_mqm(seed_id)
+        mqm_export = backfill.get("mqm_export") or self.export_active_for_mqm(seed_id)
         return {
             "pipeline_result": pipeline_result,
             "backfill": backfill,
@@ -509,10 +518,19 @@ class MRL_MotherGrowthLoop_v1:
     ) -> Dict[str, Any]:
         """Export the verified active seed in MemoryQuickMounter structure format."""
         active = self.load_active(seed_id)
+        return self._export_envelope_for_mqm(active, output_path)
+
+    def _export_envelope_for_mqm(
+        self,
+        active: Dict[str, Any],
+        output_path: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Export a specific verified envelope, including while activation lock is held."""
+        self._validate_envelope(active, active["seed_id"], active["version"])
         target = (
             Path(output_path)
             if output_path
-            else self.storage_path / "exports" / f"{self._safe_seed_id(seed_id)}.mqm.json"
+            else self.storage_path / "exports" / f"{active['seed_id']}.mqm.json"
         )
         payload = {
             "structure": {
@@ -612,6 +630,7 @@ class MRL_MotherGrowthLoop_v1:
                     "updated_at": self._now(),
                 },
             )
+            mqm_export = self._export_envelope_for_mqm(target)
             result = {
                 "system_name": self.CANONICAL_SYSTEM_NAME,
                 "status": "rolled_back",
@@ -619,8 +638,8 @@ class MRL_MotherGrowthLoop_v1:
                 "version": target_version,
                 "content_hash": target["content_hash"],
                 "event_hash": event["event_hash"],
+                "mqm_export": mqm_export,
             }
-        result["mqm_export"] = self.export_active_for_mqm(safe_id)
         return result
 
     def verify_store(self, seed_id: Optional[str] = None) -> Dict[str, Any]:
@@ -674,6 +693,14 @@ class MRL_MotherGrowthLoop_v1:
                 ]
                 if not matching_events:
                     errors.append(f"Journal coverage missing: {seed_dir.name} v{version}")
+                elif envelope.get("envelope_hash") is not None and not any(
+                    event.get("envelope_hash") == envelope.get("envelope_hash")
+                    and event.get("parent_hash") == envelope.get("parent_hash")
+                    and event.get("parent_version") == envelope.get("parent_version")
+                    and event.get("diff") == envelope.get("diff")
+                    for event in matching_events
+                ):
+                    errors.append(f"Journal envelope mismatch: {seed_dir.name} v{version}")
             pointer_path = self._active_file(seed_dir.name)
             if not pointer_path.exists():
                 errors.append(f"Missing active pointer: {seed_dir.name}")
