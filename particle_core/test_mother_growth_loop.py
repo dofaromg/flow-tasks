@@ -90,6 +90,18 @@ class MRL_MotherGrowthLoop_v1_Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "content hash mismatch"):
             self.loop.export_active_for_mqm("core")
 
+    def test_lineage_tamper_is_detected(self):
+        self.loop.absorb_pipeline_result(pipeline("v1"), "core")
+        created = self.loop.absorb_pipeline_result(pipeline("v2"), "core")
+        version_path = Path(self.temp.name) / created["path"]
+        data = json.loads(version_path.read_text(encoding="utf-8"))
+        data["parent_version"] = 2
+        data["parent_hash"] = data["content_hash"]
+        version_path.write_text(json.dumps(data), encoding="utf-8")
+        verification = self.loop.verify_store("core")
+        self.assertEqual(verification["status"], "FAIL")
+        self.assertTrue(any("envelope hash mismatch" in error for error in verification["errors"]))
+
     def test_version_gap_never_overwrites_existing_version(self):
         first = self.loop.absorb_pipeline_result(pipeline("v1"), "core")
         second = self.loop.absorb_pipeline_result(pipeline("v2"), "core")
