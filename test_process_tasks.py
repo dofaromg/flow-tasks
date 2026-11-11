@@ -109,6 +109,16 @@ class TaskProcessorSafetyTests(unittest.TestCase):
             self.assertTrue(result["errors"])
             self.assertIn("invalid.py", result["errors"][0]["message"])
 
+    def test_python_directory_validation_reports_cap(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            for index in range(TaskProcessor.MAX_PYTHON_FILES_TO_CHECK + 1):
+                (root / f"module_{index:03d}.py").write_text("VALUE = 1\n", encoding="utf-8")
+            processor = TaskProcessor(str(root / "tasks"), run_repository_checks=False)
+            result = {"checks": [], "errors": [], "warnings": []}
+            processor._validate_python_directory(root, result)
+            self.assertTrue(any("capped" in item["message"] for item in result["warnings"]))
+
     def test_failed_command_output_is_redacted(self):
         with tempfile.TemporaryDirectory() as temp:
             processor = TaskProcessor(str(Path(temp) / "tasks"), run_repository_checks=False)

@@ -234,7 +234,15 @@ class TaskProcessor:
             )
 
     def _validate_python_directory(self, target_path: Path, result: Dict[str, Any]) -> None:
-        python_files = sorted(target_path.rglob("*.py"))
+        all_python_files = sorted(target_path.rglob("*.py"))
+        python_files = all_python_files[: self.MAX_PYTHON_FILES_TO_CHECK]
+        if len(all_python_files) > len(python_files):
+            result["warnings"].append(
+                self._error(
+                    "python_syntax_truncated",
+                    f"Python syntax validation capped at {len(python_files)} of {len(all_python_files)} files",
+                )
+            )
         failures = []
         for python_file in python_files:
             try:
