@@ -1,0 +1,47 @@
+{
+  "passport_version": "0.1-RC0",
+  "deployment_id": "mrl45-synthetic-host",
+  "captured_at": "2026-11-12T13:00:00+08:00",
+  "host": {
+    "hostname": "synthetic-host",
+    "os": "synthetic",
+    "os_build": "synthetic",
+    "execution_topology": "other",
+    "cpu": "synthetic",
+    "ram_bytes": 1048576,
+    "accelerators": []
+  },
+  "runtime": {
+    "backend": "synthetic",
+    "version": "test-only",
+    "driver": "unknown",
+    "compute_stack": "unknown",
+    "artifact_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "signature_status": "unverified"
+  },
+  "model": {
+    "id": "synthetic-model",
+    "revision": "test-only",
+    "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "license_id": "TEST-ONLY",
+    "quantization": "test-only",
+    "capabilities": [
+      "decision"
+    ]
+  },
+  "network": {
+    "ingress": [],
+    "egress_policy": "deny-all",
+    "tls": false,
+    "authentication": "test-only"
+  },
+  "verification": {
+    "smoke_test": "not-run",
+    "load_test": "not-run",
+    "failover_test": "not-run",
+    "rollback_test": "not-run",
+    "receipt_ids": []
+  },
+  "canonical_authority": "Mr.liou",
+  "origin_signature": "MrLiouWord"
+}

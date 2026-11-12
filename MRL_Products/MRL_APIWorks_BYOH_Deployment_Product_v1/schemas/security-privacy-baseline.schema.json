@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:mrl:byoh:security-privacy-baseline:0.1-rc0",
+  "title": "MRL BYOH RC0 security and privacy baseline snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "baseline_version",
+    "canonical_authority",
+    "origin_signature",
+    "default_posture",
+    "controls"
+  ],
+  "properties": {
+    "baseline_version": {
+      "const": "0.1-RC0"
+    },
+    "canonical_authority": {
+      "const": "Mr.liou"
+    },
+    "origin_signature": {
+      "const": "MrLiouWord"
+    },
+    "default_posture": {
+      "const": "deny-by-default"
+    },
+    "controls": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "control",
+          "required",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "control": {
+            "type": "string"
+          },
+          "required": {
+            "const": true
+          },
+          "status": {
+            "const": "pending"
+          }
+        }
+      },
+      "allOf": [
+        {"contains": {"required": ["id","control"],"properties": {"id": {"const": "SP01"},"control": {"const": "authenticated_ingress"}}}},
+        {"contains": {"required": ["id","control"],"properties": {"id": {"const": "SP02"},"control": {"const": "least_privilege_rbac"}}}},
+        {"contains": {"required": ["id","control"],"properties": {"id": {"const": "SP03"},"control": {"const": "secret_storage_and_rotation"}}}},
+        {"contains": {"required": ["id","control"],"properties": {"id": {"const": "SP04"},"control": {"const": "tenant_and_workload_isolation"}}}},
+        {"contains": {"required": ["id","control"],"properties": {"id": {"const": "SP05"},"control": {"const": "egress_allowlist"}}}},
+        {"contains": {"required": ["id","control"],"properties": {"id": {"const": "SP06"},"control": {"const": "request_size_rate_and_concurrency_limits"}}}},
+        {"contains": {"required": ["id","control"],"properties": {"id": {"const": "SP07"},"control": {"const": "prompt_media_and_log_redaction"}}}},
+        {"contains": {"required": ["id","control"],"properties": {"id": {"const": "SP08"},"control": {"const": "retention_deletion_and_backup_policy"}}}},
+        {"contains": {"required": ["id","control"],"properties": {"id": {"const": "SP09"},"control": {"const": "telemetry_disclosure_and_opt_out"}}}},
+        {"contains": {"required": ["id","control"],"properties": {"id": {"const": "SP10"},"control": {"const": "audit_log_integrity_and_clock_sync"}}}},
+        {"contains": {"required": ["id","control"],"properties": {"id": {"const": "SP11"},"control": {"const": "artifact_and_model_code_sandboxing"}}}},
+        {"contains": {"required": ["id","control"],"properties": {"id": {"const": "SP12"},"control": {"const": "incident_response_and_revocation"}}}}
+      ]
+    }
+  }
+}

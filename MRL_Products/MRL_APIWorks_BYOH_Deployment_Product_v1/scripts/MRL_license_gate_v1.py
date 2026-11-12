@@ -11,13 +11,11 @@ from datetime import date, datetime, timezone
 import hashlib
 import json
 from pathlib import Path, PurePosixPath
-import re
 
 from MRL_artifact_trust_v1 import canonical, file_bytes, load_json
 
 PRODUCT = Path(__file__).resolve().parents[1]
 REGISTRY = PRODUCT.parents[1] / 'config/MRL_LICENSE_SCOPE_REGISTRY_v1.json'
-SCHEMA = PRODUCT / 'licenses/MRL_license_manifest_schema_v1.json'
 RESERVED = {'NOTICE', 'MRL_LICENSE_MANIFEST.json', 'MRL_LICENSE_CONTEXT.json',
             'MRL_LICENSE_RECEIPT.json', 'MRL_LICENSE_REGISTRY_SNAPSHOT.json',
             'MRL_PRODUCT_BUNDLE_MANIFEST.json'}
@@ -25,42 +23,6 @@ RESERVED = {'NOTICE', 'MRL_LICENSE_MANIFEST.json', 'MRL_LICENSE_CONTEXT.json',
 
 def digest(value):
     return hashlib.sha256(canonical(value)).hexdigest()
-
-
-def validate(value, schema, location='$'):
-    """Validate the closed JSON Schema subset used by the shipped v1 schema."""
-    types = {'object': lambda x: isinstance(x, dict), 'array': lambda x: isinstance(x, list),
-             'string': lambda x: isinstance(x, str), 'boolean': lambda x: type(x) is bool,
-             'integer': lambda x: type(x) is int, 'null': lambda x: x is None}
-    if 'type' in schema:
-        expected = schema['type'] if isinstance(schema['type'], list) else [schema['type']]
-        if not any(types[t](value) for t in expected):
-            raise ValueError('schema type: ' + location)
-    if 'const' in schema and value != schema['const']:
-        raise ValueError('schema const: ' + location)
-    if 'enum' in schema and value not in schema['enum']:
-        raise ValueError('schema enum: ' + location)
-    if isinstance(value, dict):
-        if set(schema.get('required', [])) - set(value):
-            raise ValueError('schema required: ' + location)
-        props = schema.get('properties', {})
-        if schema.get('additionalProperties') is False and set(value) - set(props):
-            raise ValueError('schema extra: ' + location)
-        for key in value:
-            if key in props:
-                validate(value[key], props[key], location + '.' + key)
-    if isinstance(value, list):
-        if len(value) < schema.get('minItems', 0):
-            raise ValueError('schema empty array: ' + location)
-        for item in value:
-            validate(item, schema['items'], location + '[]')
-    if isinstance(value, str):
-        if len(value.strip()) < schema.get('minLength', 0):
-            raise ValueError('schema empty string: ' + location)
-        if 'pattern' in schema and not re.fullmatch(schema['pattern'], value):
-            raise ValueError('schema pattern: ' + location)
-    if type(value) is int and value < schema.get('minimum', value):
-        raise ValueError('schema minimum: ' + location)
 
 
 def safe_name(name):
@@ -122,15 +84,11 @@ def evaluate(manifest, context, root, evidence_root, registry=None,
                'decision_points': ['approve', 'reject', 'needs-counsel']}
     try:
         registry = load_json(REGISTRY) if registry is None else registry
-        validate(manifest, load_json(SCHEMA))
-        validate(context, {'type': 'object', 'additionalProperties': False,
-                           'required': ['customer', 'region', 'mrl_annual_revenue_usd',
-                                        'customer_annual_revenue_usd', 'customer_model_responsibility'],
-                           'properties': {'customer': {'type': 'string', 'minLength': 1},
-                                          'region': {'type': 'string', 'minLength': 1},
-                                          'mrl_annual_revenue_usd': {'type': ['integer', 'null'], 'minimum': 0},
-                                          'customer_annual_revenue_usd': {'type': ['integer', 'null'], 'minimum': 0},
-                                          'customer_model_responsibility': {'type': 'boolean'}}})
+        try:
+            from MRL_gate_schema_validator_v1 import product_catalog
+        except ImportError as error:
+            raise ValueError('schema validator unavailable: install requirements.mrl45.lock') from error
+        product_catalog().validate_license_inputs(manifest, context)
         if registry['origin_signature'] != 'MrLiouWord' or registry['default_status'] != 'RIGHTS_UNRESOLVED':
             raise ValueError('canonical unresolved policy required')
         for key in ('whole_repository_inference_allowed', 'commercial_permission_inference_allowed',

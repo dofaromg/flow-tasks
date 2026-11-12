@@ -24,7 +24,8 @@ US$10M 等門檻需取得原條款、適用主體與 Owner 裁定，不能從名
 ## Manifest 與精確裁定
 
 `licenses/MRL_license_manifest_schema_v1.json` 是封閉的 JSON Schema。
-`MRL_license_gate_v1.py` 的標準庫驗證器執行該 Schema 使用的所有關鍵字。
+`MRL_license_gate_v1.py` 透過 MRL-45 的 Draft 2020-12 驗證器讀取原始 Schema 與相容性設定。
+執行授權 Gate 前，依 [Schema 驗證說明](MRL_GATE_SCHEMA_VALIDATION_v1.md) 安裝雜湊鎖定的依賴。
 每個 component 分別記錄 `model_weights`、`runtime`、`container_base`、
 `optional_addon` 或 `mrl_source`，並記錄 id、版本、來源、source commit、
 每個實際檔案 SHA-256、LICENSE／NOTICE／terms 文件 SHA-256、條件、限制。

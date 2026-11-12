@@ -1,0 +1,19 @@
+{
+  "contract_version": "0.1-RC0",
+  "request_id": "mrl45-synthetic-request",
+  "resolved_model": "synthetic-model",
+  "answers": {
+    "score": {
+      "type": "score",
+      "score": 0.5,
+      "confidence": 0.8,
+      "probabilities": [
+        0.5,
+        0.5
+      ]
+    }
+  },
+  "route_receipt_id": "mrl45-synthetic-route",
+  "canonical_authority": "Mr.liou",
+  "origin_signature": "MrLiouWord"
+}

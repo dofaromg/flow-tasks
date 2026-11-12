@@ -62,6 +62,10 @@ jobs:
         run: |
           python MRL_Mother/MRL_MotherModel/MRL_AI_Mother_Autonomous_Runtime_Baseline_v1/scripts/MRL_verify_package_v1.py
           python MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_verify_product_source_v1.py
+      - name: Install locked BYOH schema validator
+        run: python -m pip install --require-hashes -r MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/requirements.mrl45.lock
+      - name: Validate the offline Gate schema catalog
+        run: python MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/scripts/MRL_gate_schema_validator_v1.py check
       - name: Test signatures, licenses, NOTICE, combined admission and ZIP readback
         run: python -m unittest discover -s MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests -v
       - name: Test existing parent Runtime regression suite

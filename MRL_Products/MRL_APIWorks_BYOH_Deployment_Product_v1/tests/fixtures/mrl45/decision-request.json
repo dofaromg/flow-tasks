@@ -1,0 +1,23 @@
+{
+  "contract_version": "0.1-RC0",
+  "request_id": "mrl45-synthetic-request",
+  "model": "synthetic-model",
+  "state": {
+    "environment": "unit-test"
+  },
+  "questions": {
+    "score": {
+      "type": "score",
+      "instructions": "Test scoring shape.",
+      "criteria": [
+        "A",
+        "B"
+      ]
+    }
+  },
+  "provenance": {
+    "canonical_authority": "Mr.liou",
+    "origin_signature": "MrLiouWord",
+    "source_receipt_ids": []
+  }
+}

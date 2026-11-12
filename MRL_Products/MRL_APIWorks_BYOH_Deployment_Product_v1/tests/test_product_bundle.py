@@ -136,6 +136,12 @@ class ProductBundleTests(unittest.TestCase):
             product_root = delivery_root / PRODUCT_RELATIVE
             self.assertTrue((runtime_root / "runtime" / "MRL_apiworks_gateway_v1.py").is_file())
             self.assertTrue((product_root / "scripts" / "MRL_build_product_bundle_v1.py").is_file())
+            result = subprocess.run(
+                [sys.executable, str(product_root / "scripts" / "MRL_gate_schema_validator_v1.py"),
+                 "validate", "byoh-bundle-manifest", str(delivery_root / "MRL_PRODUCT_BUNDLE_MANIFEST.json")],
+                capture_output=True, text=True, check=True,
+            )
+            self.assertEqual(json.loads(result.stdout)["status"], "SCHEMA_VALID")
 
             customer_config = delivery_root / MUTABLE_CONFIG
             config = json.loads(customer_config.read_text(encoding="utf-8"))

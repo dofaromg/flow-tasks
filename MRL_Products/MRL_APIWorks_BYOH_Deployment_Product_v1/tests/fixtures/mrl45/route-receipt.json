@@ -1,0 +1,57 @@
+{
+  "receipt_version": "0.1-RC0",
+  "receipt_id": "mrl45-synthetic-route",
+  "request_id": "mrl45-synthetic-request",
+  "trace_id": "mrl45-synthetic-trace",
+  "sequence": 0,
+  "created_at": "2026-11-12T13:00:00+08:00",
+  "policy_id": "test-only",
+  "policy_version": "v1",
+  "requested_model": "synthetic-model",
+  "workload_class": "decision",
+  "resolved_target": "fixture-local",
+  "target_type": "local",
+  "route_reason": [
+    "synthetic-structural-fixture"
+  ],
+  "fallback": {
+    "used": false,
+    "index": null,
+    "attempt_count": 1,
+    "failure_class": "none",
+    "failure_reason": null
+  },
+  "model_artifact": {
+    "model_id": "synthetic-model",
+    "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "license_id": "TEST-ONLY"
+  },
+  "runtime_snapshot": {
+    "backend": "synthetic",
+    "version": "test-only",
+    "artifact_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "hardware_fingerprint": "test-only",
+    "execution_topology": "other",
+    "signature_status": "unverified"
+  },
+  "pricing": {
+    "currency": "TWD",
+    "price_revision": "synthetic-prices-v1",
+    "effective_at": "2026-11-12T13:00:00+08:00",
+    "estimated_cost": null,
+    "metered_cost": null,
+    "cache_state": "unknown"
+  },
+  "data_handling": {
+    "classification": "internal",
+    "egress_allowed": false
+  },
+  "integrity": {
+    "input_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "output_digest": null,
+    "receipt_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "previous_receipt_digest": null
+  },
+  "canonical_authority": "Mr.liou",
+  "origin_signature": "MrLiouWord"
+}

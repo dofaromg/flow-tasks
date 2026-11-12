@@ -1,0 +1,47 @@
+{
+  "schema": "MRL_License_Manifest_v1",
+  "origin_signature": "MrLiouWord",
+  "components": [
+    {
+      "id": "synthetic-model",
+      "kind": "model_weights",
+      "version": "1.0.0",
+      "source": "test-fixture://SYNTHETIC",
+      "source_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "delivery": "bundled",
+      "license_id": "TEST-ONLY",
+      "files": [
+        {
+          "path": "weights.bin",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "documents": [
+        {
+          "path": "LICENSE",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "role": "license"
+        },
+        {
+          "path": "NOTICE",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "role": "notice"
+        }
+      ],
+      "commercial_use": true,
+      "redistribution": true,
+      "mrl_acquisition": true,
+      "annual_revenue_limit_usd": null,
+      "threshold_applies_to": "none",
+      "regions": [
+        "TW"
+      ],
+      "customers": [
+        "SYNTHETIC_CUSTOMER"
+      ],
+      "obligations": [
+        "Preserve synthetic provenance"
+      ]
+    }
+  ]
+}
