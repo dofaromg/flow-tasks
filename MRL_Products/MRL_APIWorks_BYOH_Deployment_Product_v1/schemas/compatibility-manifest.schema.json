@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:mrl:byoh:compatibility-manifest:0.1-rc0",
+  "title": "MRL BYOH RC0 compatibility manifest snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "manifest_version", "canonical_authority",
+    "origin_signature", "generated_at", "support_policy", "lanes"],
+  "properties": {
+    "schema_version": {"const": "0.1-RC0"},
+    "manifest_version": {"const": "0.1-RC0"},
+    "canonical_authority": {"const": "Mr.liou"},
+    "origin_signature": {"const": "MrLiouWord"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "support_policy": {"type": "string", "minLength": 1},
+    "lanes": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/lane"},
+      "allOf": [
+        {"contains": {"properties": {"lane_id": {"const": "legacy-volta-recorded-baseline"}}}},
+        {"contains": {"properties": {"lane_id": {"const": "modern-accelerator-evaluation"}}}}
+      ]
+    }
+  },
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "list": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "lane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lane_id", "host", "os", "accelerators", "policy", "verification_state", "support_claim"],
+      "properties": {
+        "lane_id": {"enum": ["legacy-volta-recorded-baseline", "modern-accelerator-evaluation"]},
+        "host": {"$ref": "#/$defs/text"},
+        "os": {"$ref": "#/$defs/text"},
+        "accelerators": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["vendor", "model", "count", "architecture"],
+          "properties": {
+            "vendor": {"$ref": "#/$defs/text"},
+            "model": {"$ref": "#/$defs/text"},
+            "count": {"type": "integer", "minimum": 0},
+            "architecture": {"$ref": "#/$defs/text"}
+          }
+        },
+        "policy": {"$ref": "#/$defs/text"},
+        "verification_state": {"enum": ["requires-current-host-receipt", "unverified"]},
+        "support_claim": {"const": false},
+        "recorded_driver": {"$ref": "#/$defs/text"},
+        "recorded_cuda_toolkit": {"$ref": "#/$defs/text"},
+        "execution_topology": {"$ref": "#/$defs/text"},
+        "runtime_version": {"$ref": "#/$defs/text"},
+        "model_runner": {"$ref": "#/$defs/text"},
+        "prohibited_inheritance": {"$ref": "#/$defs/list"},
+        "required_dimensions": {"$ref": "#/$defs/list"}
+      },
+      "if": {"properties": {"lane_id": {"const": "legacy-volta-recorded-baseline"}}},
+      "then": {
+        "required": ["recorded_driver", "recorded_cuda_toolkit", "execution_topology",
+          "runtime_version", "model_runner", "prohibited_inheritance"],
+        "properties": {"verification_state": {"const": "requires-current-host-receipt"}}
+      },
+      "else": {
+        "required": ["required_dimensions"],
+        "properties": {"verification_state": {"const": "unverified"}}
+      }
+    }
+  }
+}

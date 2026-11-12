@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1-RC0",
+  "manifest_version": "0.1-RC0",
+  "canonical_authority": "Mr.liou",
+  "origin_signature": "MrLiouWord",
+  "generated_at": "2026-10-05T09:48:54+08:00",
+  "support_policy": "No combination is supported without a host-generated verification receipt.",
+  "lanes": [
+    {
+      "lane_id": "legacy-volta-recorded-baseline",
+      "host": "DL580 Gen9",
+      "os": "Windows Server 2019",
+      "accelerators": {
+        "vendor": "NVIDIA",
+        "model": "V100-SXM2-32GB",
+        "count": 5,
+        "architecture": "Volta"
+      },
+      "recorded_driver": "539.56",
+      "recorded_cuda_toolkit": "13.1 (inventory claim only; not runtime compatibility evidence)",
+      "execution_topology": "unresolved-native-windows-or-wsl2-or-vm-or-remote-worker",
+      "runtime_version": "unresolved",
+      "model_runner": "unresolved",
+      "policy": "freeze-and-read-current-host-before-change",
+      "prohibited_inheritance": [
+        "default CUDA 13 upstream runtime images",
+        "unverified CUDA 12.9 runtime images",
+        "latest tags"
+      ],
+      "verification_state": "requires-current-host-receipt",
+      "support_claim": false
+    },
+    {
+      "lane_id": "modern-accelerator-evaluation",
+      "host": "unspecified",
+      "os": "declared-by-deployment",
+      "accelerators": {
+        "vendor": "NVIDIA|AMD|Intel|CPU|other",
+        "model": "declared-by-deployment",
+        "count": 0,
+        "architecture": "declared-by-deployment"
+      },
+      "policy": "deny-until-verified",
+      "required_dimensions": [
+        "host_os_and_build",
+        "execution_topology",
+        "gpu_architecture",
+        "compute_capability_or_equivalent",
+        "driver_version",
+        "runtime_release_lane",
+        "cuda_or_rocm_or_backend_version",
+        "quantization",
+        "model_runner",
+        "image_digest",
+        "signature_status"
+      ],
+      "verification_state": "unverified",
+      "support_claim": false
+    }
+  ]
+}

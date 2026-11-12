@@ -41,6 +41,11 @@
 Evidence 與 Passport 的核對回執，並在 Gateway 重啟後重播同一個 session。
 步驟與限制見 [交付驗收](docs/MRL_DELIVERY_ACCEPTANCE_v1.md)。回執不自動授予客戶驗收。
 
+## Gate Schema 驗證（MRL-45）
+
+離線契約驗證、正反 fixtures、依賴鎖定與本機執行方式見
+[Gate Schema 驗證](docs/MRL_GATE_SCHEMA_VALIDATION_v1.md)。
+
 ## 建立交付 ZIP
 
 從 GitHub repository checkout 的商品來源目錄執行：

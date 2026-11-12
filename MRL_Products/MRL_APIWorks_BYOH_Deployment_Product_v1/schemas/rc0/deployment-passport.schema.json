@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:mrl:byoh:deployment-passport:0.1-rc0",
+  "title": "MRL BYOH Deployment Passport v0.1-RC0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["passport_version", "deployment_id", "captured_at", "host", "runtime", "model", "network", "verification", "canonical_authority", "origin_signature"],
+  "properties": {
+    "passport_version": { "const": "0.1-RC0" },
+    "deployment_id": { "type": "string", "minLength": 1 },
+    "captured_at": { "type": "string", "format": "date-time" },
+    "host": {
+      "type": "object",
+      "required": ["hostname", "os", "os_build", "execution_topology", "cpu", "ram_bytes", "accelerators"],
+      "properties": {
+        "hostname": { "type": "string" },
+        "os": { "type": "string" },
+        "os_build": { "type": "string" },
+        "execution_topology": { "enum": ["native-windows", "wsl2", "linux-vm", "linux-container-host", "remote-worker", "other"] },
+        "cpu": { "type": "string" },
+        "ram_bytes": { "type": "integer", "minimum": 1 },
+        "accelerators": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["backend", "version", "driver", "compute_stack", "artifact_digest", "signature_status"],
+      "properties": {
+        "backend": { "type": "string" },
+        "version": { "type": "string" },
+        "driver": { "type": "string" },
+        "compute_stack": { "type": "string" },
+        "artifact_digest": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$" },
+        "signature_status": { "enum": ["verified", "unverified", "not-applicable"] },
+        "launch_arguments_digest": { "type": ["string", "null"], "pattern": "^sha256:[a-fA-F0-9]{64}$" }
+      }
+    },
+    "model": {
+      "type": "object",
+      "required": ["id", "revision", "digest", "license_id", "quantization", "capabilities"],
+      "properties": {
+        "id": { "type": "string" },
+        "revision": { "type": "string" },
+        "digest": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$" },
+        "license_id": { "type": "string" },
+        "quantization": { "type": "string" },
+        "capabilities": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "effective_context_size": { "type": ["integer", "null"], "minimum": 1 }
+      }
+    },
+    "network": {
+      "type": "object",
+      "required": ["ingress", "egress_policy", "tls", "authentication"],
+      "properties": {
+        "ingress": { "type": "array", "items": { "type": "string" } },
+        "egress_policy": { "enum": ["deny-all", "allowlist", "unrestricted"] },
+        "tls": { "type": "boolean" },
+        "authentication": { "type": "string" }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": ["smoke_test", "load_test", "failover_test", "rollback_test", "receipt_ids"],
+      "properties": {
+        "smoke_test": { "enum": ["pass", "fail", "not-run"] },
+        "load_test": { "enum": ["pass", "fail", "not-run"] },
+        "failover_test": { "enum": ["pass", "fail", "not-run"] },
+        "rollback_test": { "enum": ["pass", "fail", "not-run"] },
+        "receipt_ids": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }
+      }
+    },
+    "canonical_authority": { "const": "Mr.liou" },
+    "origin_signature": { "const": "MrLiouWord" }
+  }
+}

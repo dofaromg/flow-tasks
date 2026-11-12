@@ -1,0 +1,508 @@
+{
+  "artifact-trust": {
+    "valid": "artifact-trust.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "artifact"
+        ],
+        "keyword": "required",
+        "remove": true
+      },
+      "wrong-type": {
+        "path": [
+          "signing"
+        ],
+        "keyword": "type",
+        "value": []
+      },
+      "unknown-field": {
+        "path": [
+          "mrl45_unexpected_field"
+        ],
+        "keyword": "additionalProperties",
+        "value": true
+      },
+      "unsupported-version": {
+        "path": [
+          "schema"
+        ],
+        "keyword": "const",
+        "value": "999.0-UNSUPPORTED"
+      },
+      "policy-denied": {
+        "path": [
+          "exception_approver"
+        ],
+        "keyword": "const",
+        "value": "unsupported-approver"
+      }
+    }
+  },
+  "billing-receipt": {
+    "valid": "billing-receipt.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "provider"
+        ],
+        "keyword": "required",
+        "remove": true
+      },
+      "wrong-type": {
+        "path": [
+          "input_tokens"
+        ],
+        "keyword": "type",
+        "value": "string"
+      },
+      "unknown-field": {
+        "path": [
+          "mrl45_unexpected_field"
+        ],
+        "keyword": "additionalProperties",
+        "value": true
+      },
+      "unsupported-version": {
+        "path": [
+          "receipt_version"
+        ],
+        "keyword": "const",
+        "value": "999.0-UNSUPPORTED"
+      },
+      "policy-denied": {
+        "path": [
+          "price_state"
+        ],
+        "keyword": "type",
+        "value": "unknown"
+      },
+      "cross-schema-format": {
+        "path": [
+          "pricing",
+          "effective_at"
+        ],
+        "keyword": "format",
+        "value": "2026-02-30T13:00:00Z"
+      },
+      "cross-schema-required": {
+        "path": [
+          "pricing",
+          "currency"
+        ],
+        "keyword": "required",
+        "remove": true
+      },
+      "cross-schema-enum": {
+        "path": [
+          "pricing",
+          "cache_state"
+        ],
+        "keyword": "enum",
+        "value": "UNDECLARED"
+      },
+      "conditional-known-price": {
+        "path": [
+          "pricing",
+          "price_revision"
+        ],
+        "keyword": "type",
+        "value": null
+      }
+    }
+  },
+  "byoh-manifest": {
+    "valid": "compatibility-manifest.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "lanes"
+        ],
+        "keyword": "required",
+        "remove": true
+      },
+      "wrong-type": {
+        "path": [
+          "lanes"
+        ],
+        "keyword": "type",
+        "value": "string"
+      },
+      "unknown-field": {
+        "path": [
+          "mrl45_unexpected_field"
+        ],
+        "keyword": "additionalProperties",
+        "value": true
+      },
+      "unsupported-version": {
+        "path": [
+          "schema_version"
+        ],
+        "keyword": "const",
+        "value": "999.0-UNSUPPORTED"
+      },
+      "policy-denied": {
+        "path": [
+          "lanes",
+          "0",
+          "support_claim"
+        ],
+        "keyword": "const",
+        "value": true
+      },
+      "conditional-lane-evidence": {
+        "path": [
+          "lanes",
+          "0",
+          "recorded_driver"
+        ],
+        "keyword": "required",
+        "remove": true
+      }
+    }
+  },
+  "byoh-bundle-manifest": {
+    "valid": "byoh-bundle-manifest.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "files"
+        ],
+        "keyword": "required",
+        "remove": true
+      },
+      "wrong-type": {
+        "path": [
+          "files"
+        ],
+        "keyword": "type",
+        "value": "string"
+      },
+      "unknown-field": {
+        "path": [
+          "mrl45_unexpected_field"
+        ],
+        "keyword": "additionalProperties",
+        "value": true
+      },
+      "unsupported-version": {
+        "path": [
+          "schema"
+        ],
+        "keyword": "const",
+        "value": "999.0-UNSUPPORTED"
+      },
+      "policy-denied": {
+        "path": [
+          "customer_delivery_approved"
+        ],
+        "keyword": "const",
+        "value": true
+      },
+      "conditional-engineering-only": {
+        "path": [
+          "third_party_runtime_included"
+        ],
+        "keyword": "const",
+        "value": true
+      },
+      "mutable-config-binding": {
+        "path": [
+          "files",
+          "0",
+          "mutable_after_extraction"
+        ],
+        "keyword": "const",
+        "value": false
+      }
+    }
+  },
+  "decision-request": {
+    "valid": "decision-request.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "questions"
+        ],
+        "keyword": "required",
+        "remove": true
+      },
+      "wrong-type": {
+        "path": [
+          "questions"
+        ],
+        "keyword": "type",
+        "value": []
+      },
+      "unknown-field": {
+        "path": [
+          "mrl45_unexpected_field"
+        ],
+        "keyword": "additionalProperties",
+        "value": true
+      },
+      "unsupported-version": {
+        "path": [
+          "contract_version"
+        ],
+        "keyword": "const",
+        "value": "999.0-UNSUPPORTED"
+      },
+      "policy-denied": {
+        "path": [
+          "provenance",
+          "canonical_authority"
+        ],
+        "keyword": "const",
+        "value": "synthetic-unknown-authority"
+      },
+      "local-ref-oneOf": {
+        "path": [
+          "questions",
+          "score",
+          "criteria"
+        ],
+        "keyword": "oneOf",
+        "value": {
+          "A": "one",
+          "B": "two"
+        }
+      }
+    }
+  },
+  "decision-response": {
+    "valid": "decision-response.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "answers"
+        ],
+        "keyword": "required",
+        "remove": true
+      },
+      "wrong-type": {
+        "path": [
+          "answers"
+        ],
+        "keyword": "type",
+        "value": []
+      },
+      "unknown-field": {
+        "path": [
+          "mrl45_unexpected_field"
+        ],
+        "keyword": "additionalProperties",
+        "value": true
+      },
+      "unsupported-version": {
+        "path": [
+          "contract_version"
+        ],
+        "keyword": "const",
+        "value": "999.0-UNSUPPORTED"
+      },
+      "policy-denied": {
+        "path": [
+          "canonical_authority"
+        ],
+        "keyword": "const",
+        "value": "synthetic-unknown-authority"
+      }
+    }
+  },
+  "deployment-passport": {
+    "valid": "deployment-passport.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "host"
+        ],
+        "keyword": "required",
+        "remove": true
+      },
+      "wrong-type": {
+        "path": [
+          "host"
+        ],
+        "keyword": "type",
+        "value": []
+      },
+      "unknown-field": {
+        "path": [
+          "mrl45_unexpected_field"
+        ],
+        "keyword": "additionalProperties",
+        "value": true
+      },
+      "unsupported-version": {
+        "path": [
+          "passport_version"
+        ],
+        "keyword": "const",
+        "value": "999.0-UNSUPPORTED"
+      },
+      "policy-denied": {
+        "path": [
+          "canonical_authority"
+        ],
+        "keyword": "const",
+        "value": "synthetic-unknown-authority"
+      }
+    }
+  },
+  "license-manifest": {
+    "valid": "license-manifest.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "components"
+        ],
+        "keyword": "required",
+        "remove": true
+      },
+      "wrong-type": {
+        "path": [
+          "components"
+        ],
+        "keyword": "type",
+        "value": "string"
+      },
+      "unknown-field": {
+        "path": [
+          "mrl45_unexpected_field"
+        ],
+        "keyword": "additionalProperties",
+        "value": true
+      },
+      "unsupported-version": {
+        "path": [
+          "schema"
+        ],
+        "keyword": "const",
+        "value": "999.0-UNSUPPORTED"
+      },
+      "policy-denied": {
+        "path": [
+          "origin_signature"
+        ],
+        "keyword": "const",
+        "value": "synthetic-unknown-origin"
+      },
+      "legacy-blank": {
+        "path": [
+          "components",
+          "0",
+          "source"
+        ],
+        "keyword": "pattern",
+        "value": "   "
+      },
+      "legacy-digest-newline": {
+        "path": [
+          "components",
+          "0",
+          "source_commit"
+        ],
+        "keyword": "maxLength",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n"
+      },
+      "legacy-wire-integer": {
+        "path": [
+          "components",
+          "0",
+          "annual_revenue_limit_usd"
+        ],
+        "keyword": "type",
+        "value": 10.0
+      }
+    }
+  },
+  "route-receipt": {
+    "valid": "route-receipt.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "integrity"
+        ],
+        "keyword": "required",
+        "remove": true
+      },
+      "wrong-type": {
+        "path": [
+          "sequence"
+        ],
+        "keyword": "type",
+        "value": "string"
+      },
+      "unknown-field": {
+        "path": [
+          "mrl45_unexpected_field"
+        ],
+        "keyword": "additionalProperties",
+        "value": true
+      },
+      "unsupported-version": {
+        "path": [
+          "receipt_version"
+        ],
+        "keyword": "const",
+        "value": "999.0-UNSUPPORTED"
+      },
+      "policy-denied": {
+        "path": [
+          "canonical_authority"
+        ],
+        "keyword": "const",
+        "value": "synthetic-unknown-authority"
+      },
+      "date-time-format": {
+        "path": [
+          "created_at"
+        ],
+        "keyword": "format",
+        "value": "2026-02-30T00:00:00Z"
+      }
+    }
+  },
+  "security-privacy-baseline": {
+    "valid": "security-privacy-baseline.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "controls"
+        ],
+        "keyword": "required",
+        "remove": true
+      },
+      "wrong-type": {
+        "path": [
+          "controls"
+        ],
+        "keyword": "type",
+        "value": "string"
+      },
+      "unknown-field": {
+        "path": [
+          "mrl45_unexpected_field"
+        ],
+        "keyword": "additionalProperties",
+        "value": true
+      },
+      "unsupported-version": {
+        "path": [
+          "baseline_version"
+        ],
+        "keyword": "const",
+        "value": "999.0-UNSUPPORTED"
+      },
+      "policy-denied": {
+        "path": [
+          "default_posture"
+        ],
+        "keyword": "const",
+        "value": "allow-by-default"
+      }
+    }
+  }
+}

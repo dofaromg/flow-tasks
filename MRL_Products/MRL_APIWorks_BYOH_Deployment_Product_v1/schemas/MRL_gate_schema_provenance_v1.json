@@ -1,0 +1,150 @@
+{
+  "record": "MRL_45_Gate_Schema_Source_Provenance_R01",
+  "date": "2026-11-12",
+  "time_zone": "Asia/Taipei",
+  "history_mode": "APPEND_ONLY",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "repository": "dofaromg/flow-tasks",
+  "product_id": "MRL_APIWorks_BYOH_Deployment_Product_v1",
+  "sku": "MRL-APIWORKS-BYOH-DEPLOY-V1",
+  "product_version": "1.0.0-rc3",
+  "parent_runtime_version": "1.1.1",
+  "issue": "https://linear.app/dofaromgg/issue/MRL-45",
+  "canonical_candidate": {
+    "issue": "https://linear.app/dofaromgg/issue/MRL-43",
+    "branch": "main",
+    "commit": "36dc69d98ec3e28e5cca744e82013ed32b203b61",
+    "owner_decision": "PENDING"
+  },
+  "observed_main": {
+    "branch": "main",
+    "commit": "175fa4ee7edf621f6378ef100b0057606a41d42a"
+  },
+  "historical_product_branch": {
+    "branch": "MRL_APIWorks_BYOH_Deployment_Product_v1",
+    "commit": "c3081301d84e7ad73135d32fc29712b426a1c33e",
+    "pr": 329
+  },
+  "patch_base": {
+    "pr": 708,
+    "url": "https://github.com/dofaromg/flow-tasks/pull/708",
+    "branch": "mrl-37/license-redistribution-gate-v1-20261105",
+    "commit": "b69dfdd97cdf44462970bfa956dfbea439e61391",
+    "state": "OPEN_DRAFT"
+  },
+  "related_sources": [
+    {
+      "pr": 704,
+      "commit": "82b657edc314c502e365ebf1f3e3a1d3e1ae4a4e",
+      "role": "hardware stack ancestor"
+    },
+    {
+      "pr": 706,
+      "commit": "bd4052bff5b96548a7fad8e618804e633525cfc5",
+      "role": "actual Artifact Trust ancestor"
+    },
+    {
+      "pr": 706,
+      "commit": "07a28e46d20451717824269603f8b886a7a80f88",
+      "role": "later console head reviewed separately"
+    },
+    {
+      "pr": 701,
+      "commit": "ea9c08874add64c7eaed70bc2bf7c6ecedfcc448",
+      "role": "hardware candidate"
+    },
+    {
+      "pr": 707,
+      "commit": "0fad6bc394f19d73449da1cbd8f2f00168a3e9dd",
+      "role": "Tailscale receipt, not Deployment Passport"
+    },
+    {
+      "pr": 713,
+      "commit": "35a1d8abaf0043ad69f16a3c79be8c00eb3cf3c0",
+      "role": "Financial Core separate module"
+    }
+  ],
+  "rc0_parent": {
+    "filename": "MRL_BYOH_v0.1-RC0.zip",
+    "size_bytes": 14495,
+    "sha256": "a382181ee47511e641c0dd9240a7fdc504109fc5823ad4ad7fa4dc96c19f8b74",
+    "archive_revision": 2,
+    "library_version": "1",
+    "internal_checksums_verified": 11
+  },
+  "mrl43_comparison": {
+    "filename": "MRL43_Baseline_Comparison_20261102_R01.zip",
+    "size_bytes": 960469,
+    "sha256": "2569cc9fcf3d8a876b5b5ddcaa4aa4807e8f39061d73d89b262cf48a4ad62e2f",
+    "url": "https://chatgpt.com/library?file_id=libfile_047ddae751408191bd435621c18a8aa9&account_id=personal"
+  },
+  "retained_source_files": [
+    {
+      "path": "schemas/rc0/decision-contract.schema.json",
+      "origin": "MRL_BYOH_v0.1-RC0.zip!/MRL_BYOH_v0.1-RC0/decision-contract.schema.json",
+      "sha256": "062f331c27cdda3a862eeed536f8917e92264d4ad9f433a315c7e7063bb60a59",
+      "size_bytes": 3416
+    },
+    {
+      "path": "schemas/rc0/decision-response.schema.json",
+      "origin": "MRL_BYOH_v0.1-RC0.zip!/MRL_BYOH_v0.1-RC0/decision-response.schema.json",
+      "sha256": "ae06413db9862695e3b7b4dd9c2f897b0dcbf7cf78aa5077d0c299085174f8ad",
+      "size_bytes": 2845
+    },
+    {
+      "path": "schemas/rc0/deployment-passport.schema.json",
+      "origin": "MRL_BYOH_v0.1-RC0.zip!/MRL_BYOH_v0.1-RC0/deployment-passport.schema.json",
+      "sha256": "cce7a0e4c7d9e2e80ab90b3831232ab0585ed56ead320f094e70539919aeae21",
+      "size_bytes": 3434
+    },
+    {
+      "path": "schemas/rc0/route-receipt.schema.json",
+      "origin": "MRL_BYOH_v0.1-RC0.zip!/MRL_BYOH_v0.1-RC0/route-receipt.schema.json",
+      "sha256": "592350c3bdb7180868ed167026cbd6084799c624ba15fb6851ff1538fc7a2cc3",
+      "size_bytes": 5963
+    },
+    {
+      "path": "tests/fixtures/mrl45/compatibility-manifest.json",
+      "origin": "MRL_BYOH_v0.1-RC0.zip!/MRL_BYOH_v0.1-RC0/compatibility-manifest.json",
+      "sha256": "a10afbe54a597582165671d35cd5a8ea08ffdd5b51af358084db6c79d24425bf",
+      "size_bytes": 1991
+    },
+    {
+      "path": "tests/fixtures/mrl45/security-privacy-baseline.json",
+      "origin": "MRL_BYOH_v0.1-RC0.zip!/MRL_BYOH_v0.1-RC0/security-privacy-baseline.json",
+      "sha256": "58a04e4b09d825cb08cb59ba3ab3b3d37130f4b8fe46d4c07b3e8103dcc9a8bd",
+      "size_bytes": 1431
+    },
+    {
+      "path": "licenses/MRL_license_manifest_schema_v1.json",
+      "origin": "https://github.com/dofaromg/flow-tasks/blob/b69dfdd97cdf44462970bfa956dfbea439e61391/MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/licenses/MRL_license_manifest_schema_v1.json",
+      "sha256": "8ff7ea0a82f8ab6ccb05eb407f8129032482031bde44a9709733ebf756382830",
+      "size_bytes": 4361
+    }
+  ],
+  "derived_schema_sources": {
+    "schemas/compatibility-manifest.schema.json": [
+      "RC0 compatibility-manifest.json",
+      "MRL-35"
+    ],
+    "schemas/security-privacy-baseline.schema.json": [
+      "RC0 security-privacy-baseline.json",
+      "MRL-46"
+    ],
+    "schemas/MRL_product_bundle_manifest_schema_v1.json": [
+      "scripts/MRL_build_product_bundle_v1.py"
+    ],
+    "trust/MRL_artifact_trust_manifest_schema_v1.json": [
+      "scripts/MRL_artifact_trust_v1.py"
+    ],
+    "licenses/MRL_license_manifest_validation_v1.schema.json": [
+      "licenses/MRL_license_manifest_schema_v1.json",
+      "PR #708 legacy representation checks"
+    ],
+    "schemas/billing-receipt.schema.json": [
+      "MRL-39",
+      "RC0 route-receipt.schema.json#/properties/pricing"
+    ]
+  }
+}

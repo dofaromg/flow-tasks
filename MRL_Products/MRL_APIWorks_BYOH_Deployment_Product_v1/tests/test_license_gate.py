@@ -18,6 +18,7 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 import MRL_license_gate_v1 as gate
 import MRL_build_product_bundle_v1 as builder
 import MRL_artifact_trust_v1 as trust
+from MRL_gate_schema_validator_v1 import product_catalog
 
 
 def ref(root, name, raw):
@@ -398,6 +399,7 @@ class LicenseGateTests(unittest.TestCase):
             with zipfile.ZipFile(output) as archive:
                 prefix = builder.BUNDLE_ROOT_NAME + '/'
                 receipt = json.loads(archive.read(prefix + builder.MANIFEST_NAME))
+                product_catalog().validate('byoh-bundle-manifest', receipt)
                 self.assertTrue(receipt['license_admission']['allowed'])
                 self.assertFalse(receipt['customer_delivery_approved'])
                 self.assertEqual(receipt['third_party_runtime_included'], synthetic is not None)
