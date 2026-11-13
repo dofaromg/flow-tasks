@@ -504,7 +504,8 @@
           "sha256": "d2d575a8cddd8291c752d788244b3b8d7e61c5f64e07872cb06df5b51bf9da51"
         }
       ],
-      "origin_signature": "MrLiouWord"
+      "origin_signature": "MrLiouWord",
+      "change_commit": "f79004781d7dd839645c07f9ea795aaa822e12c7"
     }
   ]
 }
