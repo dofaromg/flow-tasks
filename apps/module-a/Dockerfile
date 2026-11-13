@@ -1,14 +1,16 @@
 # Module-A Service Dockerfile
 FROM python:3.10-slim
 
-WORKDIR /app
+# Build from apps/: keep common/ beside module-a/ for the existing imports.
+WORKDIR /app/module-a
 
 # 安裝依賴
-COPY requirements.txt .
+COPY module-a/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 複製應用程式碼
-COPY . .
+COPY common/ /app/common/
+COPY module-a/app.py module-a/core.py ./
 
 # 暴露端口
 EXPOSE 8080
