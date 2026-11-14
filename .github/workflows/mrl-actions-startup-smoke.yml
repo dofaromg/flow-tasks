@@ -1,0 +1,17 @@
+name: MRL Actions Startup Smoke
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/mrl-actions-startup-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Runner reached first step
+        run: echo "MRL_ACTIONS_RUNNER_STEP_REACHED"

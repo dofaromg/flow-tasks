@@ -1,0 +1,9 @@
+{
+  "contract": "MRL_TRUSTED_NODE_KEYS_EXAMPLE_V1",
+  "environment": "TEST_ONLY",
+  "signature_scheme": "ED25519",
+  "keys": {
+    "MRL-EXAMPLE-OWNER-NODE": "0EqyMnQrtKs6E2i9RhXk5tAiSrcaAWuvhSCjMsl3hzc=",
+    "MRL-EXAMPLE-SYSTEM-NODE": "oJql9HpnWYAv+VX43C0qFKXJnSO+l/hkEn/5ODRVpPA="
+  }
+}

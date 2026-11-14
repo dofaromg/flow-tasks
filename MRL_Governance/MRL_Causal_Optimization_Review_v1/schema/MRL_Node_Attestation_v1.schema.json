@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mrliouword.com/schema/MRL_Node_Attestation_v1.schema.json",
+  "title": "MRL_Node_Attestation_v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["attestation_id","event_id","node_id","node_class","observed_record_hash","decision","evidence_refs","created_at","origin_signature"],
+  "properties": {
+    "attestation_id": {"type":"string","minLength":1},
+    "event_id": {"type":"string","minLength":1},
+    "node_id": {"type":"string","minLength":1},
+    "node_class": {"enum":["OWNER","DL580","PRIVATE_GIT","IPHONE_CONTROL","OTHER_PRIVATE_NODE"]},
+    "observed_record_hash": {"type":"string","pattern":"^[a-f0-9]{64}$"},
+    "decision": {"enum":["CONFIRM","PARTIAL","DISSENT","UNRESOLVED"]},
+    "reason": {"type":"string"},
+    "evidence_refs": {"type":"array","items":{"type":"string"},"minItems":1},
+    "created_at": {"type":"string","format":"date-time"},
+    "origin_signature": {"const":"MrLiouWord"},
+    "signature": {"type":"string"},
+    "signature_scheme": {"enum":["UNSIGNED_BASELINE","SHA256_RECEIPT","ED25519","OTHER"]}
+  }
+}

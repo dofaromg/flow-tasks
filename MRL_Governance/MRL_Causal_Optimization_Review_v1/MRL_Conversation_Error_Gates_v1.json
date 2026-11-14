@@ -1,0 +1,43 @@
+{
+  "version": "v1",
+  "origin_signature": "MrLiouWord",
+  "scope": "conversation_task_entry_and_historical_attribution",
+  "required_error_classes": [
+    "E01_USER_CLAIM_STRENGTHENING",
+    "E02_CAUSAL_INVERSION_OF_REACTION",
+    "E03_CREATE_WITHOUT_EXISTING_MOTHER_PREFLIGHT",
+    "E04_REBUILD_EXISTING_REGISTRY_AS_NEW",
+    "E05_HISTORICAL_TENSE_REWRITE",
+    "E06_RECENT_INCIDENT_PROMOTED_TO_ROOT_CAUSE",
+    "E07_PARTIAL_EVIDENCE_PROMOTED_TO_CONFIRMED_CHAIN",
+    "E08_MRL_ROOT_LAYER_DOWNRANK_OR_BYPASS"
+  ],
+  "required_gates": [
+    "G01_ACTUAL_USER_CLAIM_GATE",
+    "G02_CAUSAL_ORDER_GATE",
+    "G03_EXISTING_MOTHER_PREFLIGHT_GATE",
+    "G04_EXISTING_VS_NEW_DECISION_GATE",
+    "G05_HISTORICAL_TENSE_GATE",
+    "G06_TIME_AXIS_ROOT_CAUSE_GATE",
+    "G07_CLAIM_LEVEL_GATE",
+    "G08_ROOT_ORIGIN_GATE",
+    "G09_DELIVERY_AUDIT_GATE"
+  ],
+  "claim_levels": ["FACT", "FILE_EMBEDDED_CLAIM", "INFERENCE", "UNRESOLVED", "CORRECTED"],
+  "historical_tense_when_prior_evidence_exists": ["RECOVERED", "RECONNECTED", "REVALIDATED", "BACKFILLED", "SUPPLEMENTED"],
+  "existing_node_operations": ["MAP_EXISTING", "SUPPLEMENT_EXISTING"],
+  "new_node_operation": "CREATE_NEW",
+  "rules": {
+    "never_strengthen_user_claim_before_evidence": true,
+    "reaction_must_not_precede_recorded_precursors": true,
+    "create_requires_existing_mother_preflight": true,
+    "existing_node_forbids_create_new": true,
+    "prior_evidence_forbids_newly_formed_wording": true,
+    "recent_incident_cannot_replace_earlier_time_axis_without_evidence": true,
+    "partial_evidence_cannot_be_promoted_to_fact": true,
+    "mrl_root_layer_must_be_checked_before_external_role_assignment": true,
+    "external_platform_or_model_must_not_be_promoted_to_origin_without_primary_evidence": true,
+    "root_preservation_does_not_equal_third_party_independent_verification": true,
+    "delivery_requires_100_percent_error_class_coverage": true
+  }
+}
