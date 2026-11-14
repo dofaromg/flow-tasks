@@ -1,0 +1,44 @@
+{
+  "contract_version": "0.1-RC1-DRAFT",
+  "messages": [
+    {
+      "content": "MRL-47 synthetic private input",
+      "role": "user"
+    }
+  ],
+  "routing_request": {
+    "budgets": {
+      "currency": "TWD",
+      "max_attempts": 1,
+      "max_health_age_ms": 5000,
+      "max_total_cost_micros": 1000,
+      "max_total_latency_ms": 1200,
+      "max_ttft_ms": 500,
+      "min_health_bps": 8000
+    },
+    "data_handling": {
+      "approved_cloud_targets": [],
+      "classification": "internal",
+      "egress_allowed": false
+    },
+    "hardware_requirements": {
+      "accelerator_families": [
+        "fixture-gpu"
+      ],
+      "min_accelerators": 1,
+      "min_vram_mib_per_accelerator": 16384,
+      "runtime_abi": "fixture-abi-1"
+    },
+    "input_digest": "sha256:617b668b3381603fd23bd7a898977948ef93bb055cb433aacc184dc93d26294c",
+    "request_id": "fixture-request-001",
+    "requested_model": "MRL_fixture_model",
+    "required_capabilities": [
+      "text"
+    ],
+    "required_model_revision": "fixture-model-r1",
+    "required_runtime_revision": "fixture-runtime-r1",
+    "task": "text.generate",
+    "trace_id": "fixture-trace-001",
+    "workload_class": "chat"
+  }
+}

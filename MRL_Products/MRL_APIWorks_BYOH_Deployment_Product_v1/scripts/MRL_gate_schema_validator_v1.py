@@ -31,7 +31,13 @@ SCHEMA_FILES = {
     'decision-response': 'schemas/rc0/decision-response.schema.json',
     'deployment-passport': 'schemas/rc0/deployment-passport.schema.json',
     'license-manifest': LICENSE_PROFILE,
+    'reference-adapter-config-rc1-draft': 'schemas/rc1-draft/reference-adapter-config.schema.json',
+    'reference-adapter-request-rc1-draft': 'schemas/rc1-draft/reference-adapter-request.schema.json',
+    'reference-adapter-usage-rc1-draft': 'schemas/rc1-draft/reference-adapter-usage.schema.json',
     'route-receipt': 'schemas/rc0/route-receipt.schema.json',
+    'route-receipt-rc1-draft': 'schemas/rc1-draft/route-receipt.schema.json',
+    'routing-adapter-result-rc1-draft': 'schemas/rc1-draft/routing-adapter-result.schema.json',
+    'routing-decision-input-rc1-draft': 'schemas/rc1-draft/routing-decision-input.schema.json',
     'security-privacy-baseline': 'schemas/security-privacy-baseline.schema.json',
 }
 FORMAT_CHECKER = Draft202012Validator.FORMAT_CHECKER

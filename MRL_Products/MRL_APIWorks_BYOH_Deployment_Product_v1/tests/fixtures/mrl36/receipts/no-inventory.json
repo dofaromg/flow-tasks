@@ -1,0 +1,121 @@
+{
+  "receipt_version": "0.1-RC1-DRAFT",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "receipt_id": "mrl36-fa04de621e6c3cb7832af920fda083632add9b9b8ee6e12f7cbb5e16f53e9aab",
+  "request_id": "fixture-request-001",
+  "trace_id": "fixture-trace-001",
+  "sequence": 0,
+  "created_at": "2026-11-14T04:00:00Z",
+  "mode": "live",
+  "outcome": "no_route",
+  "policy_id": "fixture-only",
+  "policy_version": "fixture-policy-r1",
+  "decision_model": {
+    "id": "MRL-36-reference",
+    "revision": "draft-r1",
+    "algorithm": "local-first-weighted-bps-v1"
+  },
+  "requested_model": "fixture-model",
+  "resolved_target": null,
+  "resolved_model_version": null,
+  "execution_location": null,
+  "route_probabilities": {},
+  "route_reason": [
+    "NO_ELIGIBLE_TARGET"
+  ],
+  "health_fallback": {
+    "used": false,
+    "preflight_skipped_targets": [],
+    "health_rejected_targets": []
+  },
+  "ttft_class": null,
+  "pricing": null,
+  "replay_input": {
+    "contract_version": "0.1-RC1-DRAFT",
+    "origin_signature": "MrLiouWord",
+    "canonical_authority": "Mr.liou",
+    "sequence": 0,
+    "previous_receipt_digest": null,
+    "request": {
+      "request_id": "fixture-request-001",
+      "trace_id": "fixture-trace-001",
+      "task": "rank-alternative",
+      "requested_model": "fixture-model",
+      "workload_class": "decision",
+      "required_capabilities": [
+        "structured-output"
+      ],
+      "required_model_revision": "fixture-model-r1",
+      "required_runtime_revision": "fixture-runtime-r1",
+      "hardware_requirements": {
+        "accelerator_families": [
+          "fixture-gpu"
+        ],
+        "min_accelerators": 1,
+        "min_vram_mib_per_accelerator": 16384,
+        "runtime_abi": "fixture-abi-1"
+      },
+      "data_handling": {
+        "classification": "internal",
+        "egress_allowed": true,
+        "approved_cloud_targets": [
+          "cloud-approved"
+        ]
+      },
+      "budgets": {
+        "currency": "TWD",
+        "max_total_cost_micros": 1000,
+        "max_ttft_ms": 500,
+        "max_total_latency_ms": 1200,
+        "min_health_bps": 8000,
+        "max_health_age_ms": 5000,
+        "max_attempts": 3
+      },
+      "input_digest": "sha256:62dc0c2a616a9e4705c32d5eb4474bda0a5dac7eccec85ffd5d88736d1ed83d6"
+    },
+    "policy": {
+      "policy_id": "fixture-only",
+      "policy_version": "fixture-policy-r1",
+      "decision_model": {
+        "id": "MRL-36-reference",
+        "revision": "draft-r1",
+        "algorithm": "local-first-weighted-bps-v1"
+      },
+      "target_weights": {
+        "local-primary": 5000,
+        "cloud-approved": 9000
+      },
+      "cloud_target_allowlist": [
+        "cloud-approved"
+      ],
+      "cloud_classification_allowlist": [
+        "public",
+        "internal"
+      ],
+      "abstain_below_bps": 6000,
+      "ttft_classes": {
+        "interactive_max_ms": 150,
+        "standard_max_ms": 350
+      }
+    },
+    "candidates": []
+  },
+  "decision_rounds": [
+    {
+      "evaluated_at": "2026-11-14T04:00:00Z",
+      "outcome": "no_route",
+      "selected_target": null,
+      "route_probabilities": {},
+      "candidate_checks": {}
+    }
+  ],
+  "attempts": [],
+  "integrity": {
+    "input_digest": "sha256:62dc0c2a616a9e4705c32d5eb4474bda0a5dac7eccec85ffd5d88736d1ed83d6",
+    "output_digest": null,
+    "replay_input_digest": "sha256:1910dc552f6f7784c1c3ea4e47f37d969486520d9df7e9dfa84692a46b8b63b9",
+    "previous_receipt_digest": null,
+    "receipt_digest": "sha256:30bf448a6f3362acf5a5c732b2df41b7cdf1ec15d63fd73857cb5c40f70ed0f5"
+  }
+}

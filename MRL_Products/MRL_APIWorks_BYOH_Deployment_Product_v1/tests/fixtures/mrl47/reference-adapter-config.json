@@ -1,0 +1,77 @@
+{
+  "canonical_authority": "Mr.liou",
+  "contract_version": "0.1-RC1-DRAFT",
+  "enabled": true,
+  "local_model": {
+    "backend": "ollama",
+    "endpoint": "http://127.0.0.1:11434",
+    "model": "MRL_fixture_model",
+    "timeout_seconds": 1
+  },
+  "origin_signature": "MrLiouWord",
+  "policy": {
+    "abstain_below_bps": 6000,
+    "cloud_classification_allowlist": [],
+    "cloud_target_allowlist": [],
+    "decision_model": {
+      "algorithm": "local-first-weighted-bps-v1",
+      "id": "MRL-36-reference",
+      "revision": "draft-r1"
+    },
+    "policy_id": "fixture-only",
+    "policy_version": "fixture-policy-r1",
+    "target_weights": {
+      "local-primary": 5000
+    },
+    "ttft_classes": {
+      "interactive_max_ms": 150,
+      "standard_max_ms": 350
+    }
+  },
+  "target": {
+    "capabilities": [
+      "text"
+    ],
+    "estimated_latency_ms": 320,
+    "estimated_ttft_ms": 110,
+    "execution_location": "local",
+    "hardware": {
+      "accelerator_count": 1,
+      "accelerator_family": "fixture-gpu",
+      "runtime_abi": "fixture-abi-1",
+      "vram_mib_per_accelerator": 32768
+    },
+    "health": {
+      "observed_at": "2026-11-14T18:15:00Z",
+      "score_bps": 9600,
+      "state": "healthy"
+    },
+    "model_artifact": {
+      "digest": "sha256:4b8ccb7cb7fdcd4c171e0978b122278fb3764f35822fd80a3bc3881d8066a045",
+      "license_id": "TEST-ONLY",
+      "model_id": "MRL_fixture_model",
+      "quantization": null,
+      "revision": "fixture-model-r1"
+    },
+    "pricing": {
+      "currency": "TWD",
+      "effective_at": "2026-11-14T17:15:00Z",
+      "estimated_cost_micros": 100,
+      "expires_at": "2026-11-14T19:15:00Z",
+      "price_revision": "fixture-price-local-r1",
+      "source_digest": "sha256:08b4fa5d85a20447094449eb9b904b05ba7b95b9b570ad2d72162d55fdad63aa"
+    },
+    "runtime_snapshot": {
+      "artifact_digest": "sha256:614167d0065f0c5b4d76f81ac3c3425455b23f68ac9189509b6c3c8fc5c13d40",
+      "backend": "ollama",
+      "execution_topology": "other",
+      "hardware_fingerprint": "fixture-local",
+      "signature_status": "unverified",
+      "version": "fixture-runtime-r1"
+    },
+    "target_id": "local-primary",
+    "workload_classes": [
+      "chat"
+    ]
+  }
+}

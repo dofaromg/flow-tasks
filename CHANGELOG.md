@@ -197,3 +197,19 @@ For changes before 2026-01-12, please refer to the git commit history.
 - Compose source trust with existing hardware admission; gate optional third-party runtime packaging. Keep production key/artifact allowlists empty and LiteLLM 1.106.6 isolated until evidence and explicit approval exist.
 - Add Linux/Windows CI and synthetic positive/negative tests. No merge, deployment, key rotation or DL580 acceptance.
 - origin_signature: MrLiouWord
+
+## MRL-47 Reference Adapter R01 · 2026-11-15
+
+Added the local `0.1-RC1-DRAFT` interface for health, capabilities, models,
+decision and synchronous text generation. It reuses the mother Runtime and
+the MRL-36 R01 decision and replay path. Request and usage receipt contracts
+are registered in the MRL-45 catalog. Verification targets synthetic
+loopback fixtures. DL580 acceptance is UNKNOWN.
+
+## MRL-47 Reference Adapter R02 · 2026-11-15
+
+Applied a shared deadline to discovery and synchronous generation, rejected
+incomplete HTTP responses, and kept the published request and receipt
+schemas backward compatible. The customer delivery workflow checks out the
+dispatch commit, installs the locked validator when present, and gates
+publication on formal bundle admission.

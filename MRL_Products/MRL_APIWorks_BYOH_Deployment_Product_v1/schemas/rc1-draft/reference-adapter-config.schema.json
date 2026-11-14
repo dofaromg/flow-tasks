@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:mrl:byoh:reference-adapter-config:0.1-rc1-draft",
+  "title": "MRL-47 Reference Adapter local configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "origin_signature", "canonical_authority", "enabled", "local_model", "policy", "target"],
+  "properties": {
+    "contract_version": {"const": "0.1-RC1-DRAFT"},
+    "origin_signature": {"const": "MrLiouWord"},
+    "canonical_authority": {"const": "Mr.liou"},
+    "enabled": {"type": "boolean"},
+    "local_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["backend", "endpoint", "model", "timeout_seconds"],
+      "properties": {
+        "backend": {"enum": ["ollama", "llamacpp"]},
+        "endpoint": {"type": "string", "minLength": 1, "maxLength": 1024},
+        "model": {"type": "string", "minLength": 1, "maxLength": 256},
+        "timeout_seconds": {"type": "number", "minimum": 0.01, "maximum": 120}
+      }
+    },
+    "policy": {
+      "allOf": [
+        {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/properties/policy"},
+        {"properties": {
+          "cloud_target_allowlist": {"maxItems": 0},
+          "cloud_classification_allowlist": {"maxItems": 0}
+        }}
+      ]
+    },
+    "target": {
+      "allOf": [
+        {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/candidate"},
+        {"properties": {
+          "execution_location": {"const": "local"},
+          "capabilities": {"items": {"const": "text"}, "minItems": 1},
+          "workload_classes": {"items": {"const": "chat"}},
+          "runtime_snapshot": {"properties": {
+            "execution_topology": {"enum": ["native-windows", "wsl2", "linux-vm", "linux-container-host", "other"]}
+          }}
+        }}
+      ]
+    }
+  }
+}

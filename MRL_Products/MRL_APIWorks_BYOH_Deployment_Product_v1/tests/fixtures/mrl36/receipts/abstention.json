@@ -1,0 +1,279 @@
+{
+  "receipt_version": "0.1-RC1-DRAFT",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "receipt_id": "mrl36-ed1e02a57fe9c05e275af4bba07bcdb980d4317fd0559190f41241a8273cf929",
+  "request_id": "fixture-request-001",
+  "trace_id": "fixture-trace-001",
+  "sequence": 0,
+  "created_at": "2026-11-14T04:00:00Z",
+  "mode": "live",
+  "outcome": "abstained",
+  "policy_id": "fixture-only",
+  "policy_version": "fixture-policy-r1",
+  "decision_model": {
+    "id": "MRL-36-reference",
+    "revision": "draft-r1",
+    "algorithm": "local-first-weighted-bps-v1"
+  },
+  "requested_model": "fixture-model",
+  "resolved_target": null,
+  "resolved_model_version": null,
+  "execution_location": null,
+  "route_probabilities": {
+    "cloud-approved": 0,
+    "local-backup": 5000,
+    "local-primary": 5000
+  },
+  "route_reason": [
+    "BELOW_CONFIDENCE_THRESHOLD"
+  ],
+  "health_fallback": {
+    "used": false,
+    "preflight_skipped_targets": [],
+    "health_rejected_targets": []
+  },
+  "ttft_class": null,
+  "pricing": null,
+  "replay_input": {
+    "contract_version": "0.1-RC1-DRAFT",
+    "origin_signature": "MrLiouWord",
+    "canonical_authority": "Mr.liou",
+    "sequence": 0,
+    "previous_receipt_digest": null,
+    "request": {
+      "request_id": "fixture-request-001",
+      "trace_id": "fixture-trace-001",
+      "task": "rank-alternative",
+      "requested_model": "fixture-model",
+      "workload_class": "decision",
+      "required_capabilities": [
+        "structured-output"
+      ],
+      "required_model_revision": "fixture-model-r1",
+      "required_runtime_revision": "fixture-runtime-r1",
+      "hardware_requirements": {
+        "accelerator_families": [
+          "fixture-gpu"
+        ],
+        "min_accelerators": 1,
+        "min_vram_mib_per_accelerator": 16384,
+        "runtime_abi": "fixture-abi-1"
+      },
+      "data_handling": {
+        "classification": "internal",
+        "egress_allowed": true,
+        "approved_cloud_targets": [
+          "cloud-approved"
+        ]
+      },
+      "budgets": {
+        "currency": "TWD",
+        "max_total_cost_micros": 1000,
+        "max_ttft_ms": 500,
+        "max_total_latency_ms": 1200,
+        "min_health_bps": 8000,
+        "max_health_age_ms": 5000,
+        "max_attempts": 3
+      },
+      "input_digest": "sha256:62dc0c2a616a9e4705c32d5eb4474bda0a5dac7eccec85ffd5d88736d1ed83d6"
+    },
+    "policy": {
+      "policy_id": "fixture-only",
+      "policy_version": "fixture-policy-r1",
+      "decision_model": {
+        "id": "MRL-36-reference",
+        "revision": "draft-r1",
+        "algorithm": "local-first-weighted-bps-v1"
+      },
+      "target_weights": {
+        "local-primary": 5000,
+        "cloud-approved": 9000,
+        "local-backup": 5000
+      },
+      "cloud_target_allowlist": [
+        "cloud-approved"
+      ],
+      "cloud_classification_allowlist": [
+        "public",
+        "internal"
+      ],
+      "abstain_below_bps": 6000,
+      "ttft_classes": {
+        "interactive_max_ms": 150,
+        "standard_max_ms": 350
+      }
+    },
+    "candidates": [
+      {
+        "target_id": "local-primary",
+        "execution_location": "local",
+        "capabilities": [
+          "text",
+          "structured-output"
+        ],
+        "workload_classes": [
+          "decision",
+          "chat"
+        ],
+        "model_artifact": {
+          "model_id": "fixture-model",
+          "revision": "fixture-model-r1",
+          "digest": "sha256:4b8ccb7cb7fdcd4c171e0978b122278fb3764f35822fd80a3bc3881d8066a045",
+          "license_id": "TEST-ONLY",
+          "quantization": null
+        },
+        "runtime_snapshot": {
+          "backend": "stub-local",
+          "version": "fixture-runtime-r1",
+          "artifact_digest": "sha256:614167d0065f0c5b4d76f81ac3c3425455b23f68ac9189509b6c3c8fc5c13d40",
+          "hardware_fingerprint": "fixture-local",
+          "execution_topology": "other",
+          "signature_status": "unverified"
+        },
+        "hardware": {
+          "accelerator_family": "fixture-gpu",
+          "accelerator_count": 1,
+          "vram_mib_per_accelerator": 32768,
+          "runtime_abi": "fixture-abi-1"
+        },
+        "health": {
+          "state": "healthy",
+          "observed_at": "2026-11-14T03:59:58Z",
+          "score_bps": 9600
+        },
+        "estimated_ttft_ms": 110,
+        "estimated_latency_ms": 320,
+        "pricing": {
+          "price_revision": "fixture-price-local-r1",
+          "currency": "TWD",
+          "effective_at": "2026-11-14T03:00:00Z",
+          "expires_at": "2026-11-14T05:00:00Z",
+          "estimated_cost_micros": 100,
+          "source_digest": "sha256:08b4fa5d85a20447094449eb9b904b05ba7b95b9b570ad2d72162d55fdad63aa"
+        }
+      },
+      {
+        "target_id": "cloud-approved",
+        "execution_location": "cloud",
+        "capabilities": [
+          "text",
+          "structured-output"
+        ],
+        "workload_classes": [
+          "decision",
+          "chat"
+        ],
+        "model_artifact": {
+          "model_id": "fixture-model",
+          "revision": "fixture-model-r1",
+          "digest": "sha256:84317f5903188316d77aab9b2c383368df4198cbb07b1f901b51c32ed21ae53b",
+          "license_id": "TEST-ONLY",
+          "quantization": null
+        },
+        "runtime_snapshot": {
+          "backend": "stub-cloud",
+          "version": "fixture-runtime-r1",
+          "artifact_digest": "sha256:ea0b4d32c00285d6b43236f150e972784fa2541ab888e31943bb941dccc914ee",
+          "hardware_fingerprint": "fixture-cloud",
+          "execution_topology": "remote-worker",
+          "signature_status": "unverified"
+        },
+        "hardware": {
+          "accelerator_family": "fixture-gpu",
+          "accelerator_count": 1,
+          "vram_mib_per_accelerator": 32768,
+          "runtime_abi": "fixture-abi-1"
+        },
+        "health": {
+          "state": "healthy",
+          "observed_at": "2026-11-14T03:59:58Z",
+          "score_bps": 9600
+        },
+        "estimated_ttft_ms": 240,
+        "estimated_latency_ms": 750,
+        "pricing": {
+          "price_revision": "fixture-price-cloud-r1",
+          "currency": "TWD",
+          "effective_at": "2026-11-14T03:00:00Z",
+          "expires_at": "2026-11-14T05:00:00Z",
+          "estimated_cost_micros": 220,
+          "source_digest": "sha256:a7ca29fdd8f6b9768f634a3422c42588a49b71989505f12aa09032a2f68f8db9"
+        }
+      },
+      {
+        "target_id": "local-backup",
+        "execution_location": "local",
+        "capabilities": [
+          "text",
+          "structured-output"
+        ],
+        "workload_classes": [
+          "decision",
+          "chat"
+        ],
+        "model_artifact": {
+          "model_id": "fixture-model",
+          "revision": "fixture-model-r1",
+          "digest": "sha256:4b8ccb7cb7fdcd4c171e0978b122278fb3764f35822fd80a3bc3881d8066a045",
+          "license_id": "TEST-ONLY",
+          "quantization": null
+        },
+        "runtime_snapshot": {
+          "backend": "stub-local",
+          "version": "fixture-runtime-r1",
+          "artifact_digest": "sha256:614167d0065f0c5b4d76f81ac3c3425455b23f68ac9189509b6c3c8fc5c13d40",
+          "hardware_fingerprint": "fixture-local",
+          "execution_topology": "other",
+          "signature_status": "unverified"
+        },
+        "hardware": {
+          "accelerator_family": "fixture-gpu",
+          "accelerator_count": 1,
+          "vram_mib_per_accelerator": 32768,
+          "runtime_abi": "fixture-abi-1"
+        },
+        "health": {
+          "state": "healthy",
+          "observed_at": "2026-11-14T03:59:58Z",
+          "score_bps": 9600
+        },
+        "estimated_ttft_ms": 110,
+        "estimated_latency_ms": 320,
+        "pricing": {
+          "price_revision": "fixture-price-local-r1",
+          "currency": "TWD",
+          "effective_at": "2026-11-14T03:00:00Z",
+          "expires_at": "2026-11-14T05:00:00Z",
+          "estimated_cost_micros": 100,
+          "source_digest": "sha256:08b4fa5d85a20447094449eb9b904b05ba7b95b9b570ad2d72162d55fdad63aa"
+        }
+      }
+    ]
+  },
+  "decision_rounds": [
+    {
+      "evaluated_at": "2026-11-14T04:00:00Z",
+      "outcome": "abstained",
+      "selected_target": null,
+      "route_probabilities": {
+        "cloud-approved": 0,
+        "local-backup": 5000,
+        "local-primary": 5000
+      },
+      "candidate_checks": {
+        "cloud-approved": [],
+        "local-backup": [],
+        "local-primary": []
+      }
+    }
+  ],
+  "attempts": [],
+  "integrity": {
+    "input_digest": "sha256:62dc0c2a616a9e4705c32d5eb4474bda0a5dac7eccec85ffd5d88736d1ed83d6",
+    "output_digest": null,
+    "replay_input_digest": "sha256:f5bcee3ee74668896a3597f3faa5d259b96eee5dafbfb13408e7f34aa4a28543",
+    "previous_receipt_digest": null,
+    "receipt_digest": "sha256:7eb66217742f75c032a7358b5a232380aab23c21bf3e26112a22dd6dd0b50039"
+  }
+}
