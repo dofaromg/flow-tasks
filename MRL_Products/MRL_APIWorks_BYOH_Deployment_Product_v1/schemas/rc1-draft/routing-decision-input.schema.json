@@ -1,0 +1,328 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft",
+  "title": "MRL-36 BYOH routing decision input v0.1-RC1-DRAFT",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "canonical_authority",
+    "origin_signature",
+    "sequence",
+    "previous_receipt_digest",
+    "request",
+    "policy",
+    "candidates"
+  ],
+  "properties": {
+    "contract_version": {"const": "0.1-RC1-DRAFT"},
+    "canonical_authority": {"const": "Mr.liou"},
+    "origin_signature": {"const": "MrLiouWord"},
+    "sequence": {"type": "integer", "minimum": 0, "maximum": 9007199254740991},
+    "previous_receipt_digest": {
+      "anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_id",
+        "trace_id",
+        "task",
+        "requested_model",
+        "workload_class",
+        "required_capabilities",
+        "required_model_revision",
+        "required_runtime_revision",
+        "hardware_requirements",
+        "data_handling",
+        "budgets",
+        "input_digest"
+      ],
+      "properties": {
+        "request_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "trace_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "task": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+        "requested_model": {"$ref": "urn:mrl:byoh:route-receipt:0.1-rc0#/properties/requested_model"},
+        "workload_class": {"$ref": "urn:mrl:byoh:route-receipt:0.1-rc0#/properties/workload_class"},
+        "required_capabilities": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "required_model_revision": {
+          "anyOf": [{"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"}, {"type": "null"}]
+        },
+        "required_runtime_revision": {
+          "anyOf": [{"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"}, {"type": "null"}]
+        },
+        "hardware_requirements": {"$ref": "#/$defs/hardware_requirement"},
+        "data_handling": {"$ref": "#/$defs/data_handling"},
+        "budgets": {"$ref": "#/$defs/budget"},
+        "input_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_id",
+        "policy_version",
+        "decision_model",
+        "target_weights",
+        "cloud_target_allowlist",
+        "cloud_classification_allowlist",
+        "abstain_below_bps",
+        "ttft_classes"
+      ],
+      "properties": {
+        "policy_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+        "policy_version": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+        "decision_model": {"$ref": "#/$defs/decision_model"},
+        "target_weights": {
+          "type": "object",
+          "maxProperties": 128,
+          "propertyNames": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+          "additionalProperties": {"type": "integer", "minimum": 1, "maximum": 10000}
+        },
+        "cloud_target_allowlist": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+          "minItems": 0,
+          "maxItems": 128,
+          "uniqueItems": true
+        },
+        "cloud_classification_allowlist": {
+          "type": "array",
+          "items": {"$ref": "urn:mrl:byoh:route-receipt:0.1-rc0#/properties/data_handling/properties/classification"},
+          "minItems": 0,
+          "maxItems": 4,
+          "uniqueItems": true
+        },
+        "abstain_below_bps": {"type": "integer", "minimum": 0, "maximum": 10000},
+        "ttft_classes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["interactive_max_ms", "standard_max_ms"],
+          "properties": {
+            "interactive_max_ms": {"type": "integer", "minimum": 1, "maximum": 3600000},
+            "standard_max_ms": {"type": "integer", "minimum": 1, "maximum": 3600000}
+          }
+        }
+      }
+    },
+    "candidates": {"type": "array", "items": {"$ref": "#/$defs/candidate"}, "minItems": 0, "maxItems": 128, "uniqueItems": true}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "sequence": {"const": 0}
+        }
+      },
+      "then": {
+        "properties": {
+          "previous_receipt_digest": {"type": "null"}
+        }
+      },
+      "else": {
+        "properties": {
+          "previous_receipt_digest": {"$ref": "#/$defs/digest"}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,6})?(Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "basis_points": {"type": "integer", "minimum": 0, "maximum": 10000},
+    "duration_ms": {"type": "integer", "minimum": 1, "maximum": 3600000},
+    "amount_micros": {"type": "integer", "minimum": 0, "maximum": 1000000000000},
+    "execution_location": {"enum": ["local", "cloud"]},
+    "price_quote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["price_revision", "currency", "effective_at", "expires_at", "estimated_cost_micros", "source_digest"],
+      "properties": {
+        "price_revision": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+        "currency": {"type": "string", "pattern": "^[A-Z]{3}$"},
+        "effective_at": {"$ref": "#/$defs/timestamp"},
+        "expires_at": {"$ref": "#/$defs/timestamp"},
+        "estimated_cost_micros": {"type": "integer", "minimum": 0, "maximum": 1000000000000},
+        "source_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "decision_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "revision", "algorithm"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+        "revision": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+        "algorithm": {"const": "local-first-weighted-bps-v1"}
+      }
+    },
+    "hardware_requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accelerator_families", "min_accelerators", "min_vram_mib_per_accelerator", "runtime_abi"],
+      "properties": {
+        "accelerator_families": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "min_accelerators": {"type": "integer", "minimum": 0, "maximum": 256},
+        "min_vram_mib_per_accelerator": {"type": "integer", "minimum": 0, "maximum": 1073741824},
+        "runtime_abi": {
+          "anyOf": [{"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"}, {"type": "null"}]
+        }
+      }
+    },
+    "hardware_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accelerator_family", "accelerator_count", "vram_mib_per_accelerator", "runtime_abi"],
+      "properties": {
+        "accelerator_family": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+        "accelerator_count": {"type": "integer", "minimum": 0, "maximum": 256},
+        "vram_mib_per_accelerator": {"type": "integer", "minimum": 0, "maximum": 1073741824},
+        "runtime_abi": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "accelerator_count": {"const": 0}
+            }
+          },
+          "then": {
+            "properties": {
+              "vram_mib_per_accelerator": {"const": 0}
+            }
+          }
+        }
+      ]
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "currency",
+        "max_total_cost_micros",
+        "max_ttft_ms",
+        "max_total_latency_ms",
+        "min_health_bps",
+        "max_health_age_ms",
+        "max_attempts"
+      ],
+      "properties": {
+        "currency": {"type": "string", "pattern": "^[A-Z]{3}$"},
+        "max_total_cost_micros": {"type": "integer", "minimum": 0, "maximum": 1000000000000},
+        "max_ttft_ms": {"type": "integer", "minimum": 1, "maximum": 3600000},
+        "max_total_latency_ms": {"type": "integer", "minimum": 1, "maximum": 3600000},
+        "min_health_bps": {"type": "integer", "minimum": 0, "maximum": 10000},
+        "max_health_age_ms": {"type": "integer", "minimum": 1, "maximum": 3600000},
+        "max_attempts": {"type": "integer", "minimum": 1, "maximum": 8}
+      }
+    },
+    "data_handling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["classification", "egress_allowed", "approved_cloud_targets"],
+      "properties": {
+        "classification": {"$ref": "urn:mrl:byoh:route-receipt:0.1-rc0#/properties/data_handling/properties/classification"},
+        "egress_allowed": {"type": "boolean"},
+        "approved_cloud_targets": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+          "minItems": 0,
+          "maxItems": 128,
+          "uniqueItems": true
+        }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_id",
+        "execution_location",
+        "capabilities",
+        "workload_classes",
+        "model_artifact",
+        "runtime_snapshot",
+        "hardware",
+        "health",
+        "estimated_ttft_ms",
+        "estimated_latency_ms",
+        "pricing"
+      ],
+      "properties": {
+        "target_id": {"$ref": "#/$defs/id"},
+        "execution_location": {"$ref": "#/$defs/execution_location"},
+        "capabilities": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "workload_classes": {
+          "type": "array",
+          "items": {"$ref": "urn:mrl:byoh:route-receipt:0.1-rc0#/properties/workload_class"},
+          "minItems": 1,
+          "maxItems": 9,
+          "uniqueItems": true
+        },
+        "model_artifact": {
+          "allOf": [
+            {"$ref": "urn:mrl:byoh:route-receipt:0.1-rc0#/properties/model_artifact"},
+            {
+              "required": ["revision"],
+              "properties": {
+                "revision": {"$ref": "#/$defs/id"}
+              }
+            }
+          ]
+        },
+        "runtime_snapshot": {"$ref": "urn:mrl:byoh:route-receipt:0.1-rc0#/properties/runtime_snapshot"},
+        "hardware": {
+          "anyOf": [{"$ref": "#/$defs/hardware_snapshot"}, {"type": "null"}]
+        },
+        "health": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "observed_at", "score_bps"],
+          "properties": {
+            "state": {"enum": ["healthy", "degraded", "unavailable", "unknown"]},
+            "observed_at": {
+              "anyOf": [{"$ref": "#/$defs/timestamp"}, {"type": "null"}]
+            },
+            "score_bps": {
+              "anyOf": [{"type": "integer", "minimum": 0, "maximum": 10000}, {"type": "null"}]
+            }
+          }
+        },
+        "estimated_ttft_ms": {
+          "anyOf": [{"type": "integer", "minimum": 1, "maximum": 3600000}, {"type": "null"}]
+        },
+        "estimated_latency_ms": {
+          "anyOf": [{"type": "integer", "minimum": 1, "maximum": 3600000}, {"type": "null"}]
+        },
+        "pricing": {
+          "anyOf": [{"$ref": "#/$defs/price_quote"}, {"type": "null"}]
+        }
+      }
+    }
+  }
+}

@@ -284,7 +284,7 @@ class LicenseGateTests(unittest.TestCase):
 
     def test_all_three_gates_pass_only_with_separate_model_runtime_rights(self):
         from test_artifact_trust import ArtifactTrustTests
-        from test_hardware_admission import fixture, write_artifacts, tested_matrix
+        from test_hardware_admission import fixture, write_artifacts, write_tested_matrix
         import MRL_hardware_admission_v1 as hardware
         synthetic = ArtifactTrustTests()
         synthetic.setUp()
@@ -297,7 +297,7 @@ class LicenseGateTests(unittest.TestCase):
         host['loaded_runner'] = copy.deepcopy(workload['runner'])
         host['loaded_runtime'] = copy.deepcopy(workload['runtime_binary'])
         matrix = synthetic.root / 'matrix.json'
-        tested_matrix(host, workload, matrix)
+        write_tested_matrix(host, workload, matrix)
         components = []
         for role, field, kind in [('runtime', 'runtime_binary', 'runtime'),
                                   ('model', 'model', 'model_weights'), ('bundle', None, 'mrl_source')]:

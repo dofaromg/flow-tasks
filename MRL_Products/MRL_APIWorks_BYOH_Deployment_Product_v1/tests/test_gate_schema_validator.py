@@ -40,9 +40,9 @@ def copy_catalog(target):
         shutil.copyfile(ROOT / relative, destination)
 
 
-def check_fixture(name, spec, label):
+def check_fixture(root, name, spec, label):
     checks = unittest.TestCase()
-    sample = gate.load_json(FIXTURES / spec['valid'])
+    sample = gate.load_json(root / spec['valid'])
     if label == 'valid':
         gate.product_catalog().validate(name, sample)
     elif label == 'bad-ref':
@@ -67,21 +67,26 @@ def check_fixture(name, spec, label):
         checks.assertEqual(rejected.exception.keyword, mutation['keyword'], str(rejected.exception))
 
 
-def fixture_test(name, spec, label):
+def fixture_test(root, name, spec, label):
     def run_fixture():
-        check_fixture(name, spec, label)
+        check_fixture(root, name, spec, label)
 
-    return unittest.FunctionTestCase(run_fixture, description=f'MRL45 {name} {label}')
+    return unittest.FunctionTestCase(run_fixture, description=f'{root.name.upper()} {name} {label}')
 
 
 def load_tests(loader, tests, pattern):
-    cases = gate.load_json(FIXTURES / 'cases.json')
-    if set(cases) != set(gate.SCHEMA_FILES):
-        raise ValueError('MRL-45 schema and fixture inventories differ')
-    for name, spec in sorted(cases.items()):
-        labels = ('valid', 'bad-ref', *spec['cases'])
-        for label in labels:
-            tests.addTest(fixture_test(name, spec, label))
+    names = set()
+    for root in (FIXTURES, FIXTURES.parent / 'mrl36', FIXTURES.parent / 'mrl47'):
+        cases = gate.load_json(root / 'cases.json')
+        if names.intersection(cases):
+            raise ValueError('duplicate Gate Schema fixture inventory')
+        names.update(cases)
+        for name, spec in sorted(cases.items()):
+            labels = ('valid', 'bad-ref', *spec['cases'])
+            for label in labels:
+                tests.addTest(fixture_test(root, name, spec, label))
+    if names != set(gate.SCHEMA_FILES):
+        raise ValueError('Gate Schema and fixture inventories differ')
     return tests
 
 

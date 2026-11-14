@@ -1,0 +1,307 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:mrl:byoh:route-receipt:0.1-rc1-draft",
+  "title": "MRL-36 BYOH replayable route receipt v0.1-RC1-DRAFT",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "receipt_version",
+    "canonical_authority",
+    "origin_signature",
+    "receipt_id",
+    "request_id",
+    "trace_id",
+    "sequence",
+    "created_at",
+    "mode",
+    "outcome",
+    "policy_id",
+    "policy_version",
+    "decision_model",
+    "requested_model",
+    "resolved_target",
+    "resolved_model_version",
+    "execution_location",
+    "route_probabilities",
+    "route_reason",
+    "health_fallback",
+    "ttft_class",
+    "pricing",
+    "replay_input",
+    "decision_rounds",
+    "attempts",
+    "integrity"
+  ],
+  "properties": {
+    "receipt_version": {"const": "0.1-RC1-DRAFT"},
+    "canonical_authority": {"const": "Mr.liou"},
+    "origin_signature": {"const": "MrLiouWord"},
+    "receipt_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+    "request_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "trace_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "sequence": {"type": "integer", "minimum": 0, "maximum": 9007199254740991},
+    "created_at": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/timestamp"},
+    "mode": {"enum": ["live", "shadow"]},
+    "outcome": {"enum": ["routed", "shadow_selected", "abstained", "no_route", "execution_failed"]},
+    "policy_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+    "policy_version": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+    "decision_model": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/decision_model"},
+    "requested_model": {"$ref": "urn:mrl:byoh:route-receipt:0.1-rc0#/properties/requested_model"},
+    "resolved_target": {
+      "anyOf": [{"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/id"}, {"type": "null"}]
+    },
+    "resolved_model_version": {
+      "anyOf": [{"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"}, {"type": "null"}]
+    },
+    "execution_location": {
+      "anyOf": [{"enum": ["local", "cloud"]}, {"type": "null"}]
+    },
+    "route_probabilities": {
+      "type": "object",
+      "maxProperties": 128,
+      "propertyNames": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/id"},
+      "additionalProperties": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/basis_points"}
+    },
+    "route_reason": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "POLICY_SELECTED",
+          "SHADOW_ONLY",
+          "BELOW_CONFIDENCE_THRESHOLD",
+          "NO_ELIGIBLE_TARGET",
+          "ADAPTER_FAILED",
+          "HEALTH_FALLBACK_RETRY",
+          "ATTEMPT_LIMIT_REACHED"
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 3,
+      "uniqueItems": true
+    },
+    "health_fallback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["used", "preflight_skipped_targets", "health_rejected_targets"],
+      "properties": {
+        "used": {"type": "boolean"},
+        "preflight_skipped_targets": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+          "minItems": 0,
+          "maxItems": 128,
+          "uniqueItems": true
+        },
+        "health_rejected_targets": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+          "minItems": 0,
+          "maxItems": 128,
+          "uniqueItems": true
+        }
+      }
+    },
+    "ttft_class": {
+      "anyOf": [{"enum": ["interactive", "standard", "batch"]}, {"type": "null"}]
+    },
+    "pricing": {
+      "anyOf": [{"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/price_quote"}, {"type": "null"}]
+    },
+    "replay_input": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft"},
+    "decision_rounds": {"type": "array", "items": {"$ref": "#/$defs/decision_round"}, "minItems": 1, "maxItems": 8},
+    "attempts": {"type": "array", "items": {"$ref": "#/$defs/attempt"}, "minItems": 0, "maxItems": 8},
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_digest", "output_digest", "replay_input_digest", "receipt_digest", "previous_receipt_digest"],
+      "properties": {
+        "input_digest": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/digest"},
+        "output_digest": {
+          "anyOf": [{"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/digest"}, {"type": "null"}]
+        },
+        "replay_input_digest": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/digest"},
+        "receipt_digest": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/digest"},
+        "previous_receipt_digest": {
+          "anyOf": [{"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/digest"}, {"type": "null"}]
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "mode": {"const": "shadow"}
+        }
+      },
+      "then": {
+        "properties": {
+          "outcome": {"enum": ["shadow_selected", "abstained", "no_route"]},
+          "attempts": {
+            "maxItems": 0
+          },
+          "decision_rounds": {
+            "maxItems": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "outcome": {"enum": ["routed", "abstained", "no_route", "execution_failed"]}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome": {"const": "routed"}
+        }
+      },
+      "then": {
+        "properties": {
+          "execution_location": {"enum": ["local", "cloud"]},
+          "attempts": {
+            "minItems": 1
+          },
+          "integrity": {
+            "properties": {
+              "output_digest": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/digest"}
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "execution_location": {"type": "null"},
+          "integrity": {
+            "properties": {
+              "output_digest": {"type": "null"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome": {"enum": ["routed", "shadow_selected"]}
+        }
+      },
+      "then": {
+        "properties": {
+          "resolved_target": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/id"},
+          "resolved_model_version": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"},
+          "pricing": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/price_quote"},
+          "ttft_class": {"enum": ["interactive", "standard", "batch"]}
+        }
+      },
+      "else": {
+        "properties": {
+          "resolved_target": {"type": "null"},
+          "resolved_model_version": {"type": "null"},
+          "pricing": {"type": "null"},
+          "ttft_class": {"type": "null"}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "decision_round": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evaluated_at", "outcome", "selected_target", "route_probabilities", "candidate_checks"],
+      "properties": {
+        "evaluated_at": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/timestamp"},
+        "outcome": {"enum": ["selected", "abstained", "no_route"]},
+        "selected_target": {
+          "anyOf": [{"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/id"}, {"type": "null"}]
+        },
+        "route_probabilities": {
+          "type": "object",
+          "maxProperties": 128,
+          "propertyNames": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/id"},
+          "additionalProperties": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/basis_points"}
+        },
+        "candidate_checks": {
+          "type": "object",
+          "maxProperties": 128,
+          "propertyNames": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/id"},
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "ALREADY_ATTEMPTED",
+                "TARGET_NOT_IN_POLICY",
+                "EGRESS_DENIED",
+                "MODEL_MISMATCH",
+                "MODEL_REVISION_MISMATCH",
+                "RUNTIME_REVISION_MISMATCH",
+                "WORKLOAD_MISMATCH",
+                "CAPABILITY_MISMATCH",
+                "HARDWARE_UNKNOWN",
+                "HARDWARE_MISMATCH",
+                "HEALTH_UNAVAILABLE",
+                "HEALTH_TOO_LOW",
+                "HEALTH_STALE",
+                "PRICE_UNKNOWN",
+                "PRICE_CURRENCY_MISMATCH",
+                "PRICE_INVALID_WINDOW",
+                "PRICE_NOT_YET_EFFECTIVE",
+                "PRICE_EXPIRED",
+                "COST_BUDGET_EXCEEDED",
+                "LATENCY_UNKNOWN",
+                "TTFT_BUDGET_EXCEEDED",
+                "LATENCY_BUDGET_EXCEEDED"
+              ]
+            },
+            "minItems": 0,
+            "maxItems": 22,
+            "uniqueItems": true
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {"const": "selected"}
+            }
+          },
+          "then": {
+            "properties": {
+              "selected_target": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/id"}
+            }
+          },
+          "else": {
+            "properties": {
+              "selected_target": {"type": "null"}
+            }
+          }
+        }
+      ]
+    },
+    "attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_id", "execution_location", "result"],
+      "properties": {
+        "target_id": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/id"},
+        "execution_location": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/execution_location"},
+        "result": {
+          "oneOf": [
+            {"$ref": "urn:mrl:byoh:routing-adapter-result:0.1-rc1-draft"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["status", "output_digest"],
+              "properties": {
+                "status": {"enum": ["adapter_unavailable", "invalid_adapter_result", "adapter_error"]},
+                "output_digest": {"type": "null"}
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

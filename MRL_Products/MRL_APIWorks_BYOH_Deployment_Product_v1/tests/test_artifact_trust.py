@@ -251,7 +251,7 @@ class ArtifactTrustTests(unittest.TestCase):
         self.assertEqual(self.evaluate('canary')['status'], 'isolated_canary')
 
     def test_composed_hardware_and_trust_admission(self):
-        from test_hardware_admission import fixture, write_artifacts, tested_matrix
+        from test_hardware_admission import fixture, write_artifacts, write_tested_matrix
         import MRL_hardware_admission_v1 as hardware
         h, w = fixture()
         paths = write_artifacts(self.root, w)
@@ -261,7 +261,7 @@ class ArtifactTrustTests(unittest.TestCase):
         h['loaded_runner'] = copy.deepcopy(w['runner'])
         h['loaded_runtime'] = copy.deepcopy(w['runtime_binary'])
         matrix = self.root/'matrix.json'
-        tested_matrix(h, w, matrix)
+        write_tested_matrix(h, w, matrix)
         manifests = {'runner': self.m, 'runtime': self.m}
         with patch.object(hardware, 'MATRIX', matrix):
             result = gate.evaluate_delivery(h, w, self.root, paths, manifests, self.p)

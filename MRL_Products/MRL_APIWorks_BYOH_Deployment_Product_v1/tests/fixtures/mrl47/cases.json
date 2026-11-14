@@ -1,0 +1,149 @@
+{
+  "reference-adapter-config-rc1-draft": {
+    "valid": "reference-adapter-config.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "local_model",
+          "model"
+        ],
+        "remove": true,
+        "keyword": "required"
+      },
+      "wrong-type": {
+        "path": [
+          "enabled"
+        ],
+        "value": "false",
+        "keyword": "type"
+      },
+      "unknown-field": {
+        "path": [
+          "local_model",
+          "proxy"
+        ],
+        "value": "proxy",
+        "keyword": "additionalProperties"
+      },
+      "unsupported-version": {
+        "path": [
+          "contract_version"
+        ],
+        "value": "0.1-RC0",
+        "keyword": "const"
+      },
+      "policy-denied": {
+        "path": [
+          "policy",
+          "cloud_target_allowlist"
+        ],
+        "value": [
+          "cloud-target"
+        ],
+        "keyword": "maxItems"
+      },
+      "remote-target": {
+        "path": [
+          "target",
+          "execution_location"
+        ],
+        "value": "cloud",
+        "keyword": "const"
+      }
+    }
+  },
+  "reference-adapter-request-rc1-draft": {
+    "valid": "reference-adapter-request.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "routing_request",
+          "input_digest"
+        ],
+        "remove": true,
+        "keyword": "required"
+      },
+      "wrong-type": {
+        "path": [
+          "messages"
+        ],
+        "value": {
+          "role": "user"
+        },
+        "keyword": "type"
+      },
+      "unknown-field": {
+        "path": [
+          "messages",
+          "0",
+          "tool_calls"
+        ],
+        "value": [],
+        "keyword": "additionalProperties"
+      },
+      "unsupported-version": {
+        "path": [
+          "contract_version"
+        ],
+        "value": "0.1-RC0",
+        "keyword": "const"
+      },
+      "policy-denied": {
+        "path": [
+          "routing_request",
+          "data_handling",
+          "egress_allowed"
+        ],
+        "value": true,
+        "keyword": "const"
+      }
+    }
+  },
+  "reference-adapter-usage-rc1-draft": {
+    "valid": "reference-adapter-usage.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "route_receipt_digest"
+        ],
+        "remove": true,
+        "keyword": "required"
+      },
+      "wrong-type": {
+        "path": [
+          "output_tokens"
+        ],
+        "value": "3",
+        "keyword": "type"
+      },
+      "unknown-field": {
+        "path": [
+          "output_text"
+        ],
+        "value": "raw result",
+        "keyword": "additionalProperties"
+      },
+      "unsupported-version": {
+        "path": [
+          "receipt_version"
+        ],
+        "value": "0.1-RC0",
+        "keyword": "const"
+      },
+      "policy-denied": {
+        "path": [
+          "execution_location"
+        ],
+        "value": "cloud",
+        "keyword": "const"
+      },
+      "forged-zero-observation": {
+        "path": [
+          "usage_state"
+        ],
+        "value": "unknown",
+        "keyword": "type"
+      }
+    }
+  }
+}
