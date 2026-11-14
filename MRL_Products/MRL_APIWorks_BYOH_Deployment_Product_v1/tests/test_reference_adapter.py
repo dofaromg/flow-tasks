@@ -409,6 +409,31 @@ class ReferenceAdapterTests(unittest.TestCase):
                 self.assertTrue(adapter.generate(envelope)["ok"])
             self.assertEqual(names, ["127.0.0.1", "127.0.0.1"])
 
+    def test_literal_ipv6_endpoint_keeps_the_default_http_port(self):
+        with ProviderFixture("llamacpp") as fixture:
+            def change(config):
+                config["local_model"]["endpoint"] = "http://[::1]"
+
+            adapter, envelope = self.adapter(fixture, change=change)
+            connect = socket.create_connection
+            addresses = []
+
+            def connect_fixture(address, *args):
+                addresses.append(address)
+                return connect(("127.0.0.1", fixture.server.server_port), *args)
+
+            with patch("socket.create_connection", side_effect=connect_fixture):
+                self.assertTrue(adapter.generate(envelope)["ok"])
+            self.assertEqual(addresses, [("::1", 80), ("::1", 80)])
+
+            def change_tls(config):
+                config["local_model"]["endpoint"] = "https://[::1]"
+
+            tls_adapter, _ = self.adapter(fixture, change=change_tls)
+            with patch("socket.create_connection", side_effect=ConnectionRefusedError) as call:
+                self.assertEqual(tls_adapter.health()["error"]["code"], "BACKEND_UNAVAILABLE")
+            self.assertEqual(call.call_args.args[0], ("::1", 443))
+
     def test_unavailable_endpoint_reports_normalized_failure(self):
         with contextlib.closing(socket.socket()) as occupied, ProviderFixture("llamacpp") as fixture:
             occupied.bind(("127.0.0.1", 0))

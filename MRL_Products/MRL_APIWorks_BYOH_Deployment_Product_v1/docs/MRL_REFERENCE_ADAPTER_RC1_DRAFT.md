@@ -97,3 +97,5 @@ R02 的非串流 transport deadline 已在本機回歸驗證。stream、cancel�
 跨請求 idempotency 與 DL580 實機驗收仍列在 R01 缺口表。R01 原始交付與證據保留。
 
 公開工程分支以原始 RC0 檔名、版本、SHA-256 及 Git blob 保留來源鏈。私人檔案定位資訊由 R01 原始審計保存。
+
+未指定連接埠的 IPv6 loopback URL 沿用 HTTP 80 或 HTTPS 443。

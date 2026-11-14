@@ -142,7 +142,8 @@ def _json_request(
     if deadline is not None:
         stop = min(stop, deadline)
     connection_type = _LoopbackHTTPSConnection if parsed.scheme == "https" else _LoopbackHTTPConnection
-    connection = connection_type(parsed.hostname, parsed.port, timeout, stop)
+    port = parsed.port if parsed.port is not None else connection_type.default_port
+    connection = connection_type(parsed.hostname, port, timeout, stop)
     try:
         data = None if payload is None else json.dumps(payload).encode("utf-8")
         connection.request(
