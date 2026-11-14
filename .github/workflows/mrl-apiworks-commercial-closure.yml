@@ -38,7 +38,16 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --yes fonts-noto-cjk
+      - name: Install locked BYOH schema validator when required
+        shell: bash
+        run: |
+          lock=MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/requirements.mrl45.lock
+          if test -f "$lock"; then
+            python -m pip install --require-hashes -r "$lock"
+          fi
       - name: Build evidence entry from checked-out commit
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: |
           python MRL_Commercial/MRL_APIWorks_First_Transaction_Closure_v1/scripts/Mrliou_MRL_build_evidence_entry_v1.py \
             --output "${RUNNER_TEMP}/Mrliou_MRL_APIWorks_Evidence_Entry"

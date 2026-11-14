@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 10976,
-      "sha256": "fe5d85aec36ab60439acc39e39d7e8e0d29c1eb72f7427277ac4545502704b4f"
+      "size_bytes": 11749,
+      "sha256": "6da5cab8d649c86672ad65bb7cf0c76ee920d52f00d6762c538d340c26164a12"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 10280,
-      "sha256": "21ffde853dc01dab51d245eade22293ba83cce71c65b8e430c35c3ad8afffa51"
+      "size_bytes": 11320,
+      "sha256": "a1935827fa6f08b629adfb927687195cbce5c81793c49541d1cda48c7046b985"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -421,6 +421,37 @@
           "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
           "size_bytes": 10280,
           "sha256": "21ffde853dc01dab51d245eade22293ba83cce71c65b8e430c35c3ad8afffa51"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "ccb13c3cedea9388d06cf9cbacdbb136d6a074ab",
+      "change_commit": "1a56ded8060424a756572fc1b785f757080f1e79",
+      "source_pr": 719,
+      "reason": "MRL-47 R01 and R02 append engineering entries to CHANGELOG.md. Propagate the current payload hashes and retain the previous values.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 10976,
+          "sha256": "fe5d85aec36ab60439acc39e39d7e8e0d29c1eb72f7427277ac4545502704b4f"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 10280,
+          "sha256": "21ffde853dc01dab51d245eade22293ba83cce71c65b8e430c35c3ad8afffa51"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 11749,
+          "sha256": "6da5cab8d649c86672ad65bb7cf0c76ee920d52f00d6762c538d340c26164a12"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 11320,
+          "sha256": "a1935827fa6f08b629adfb927687195cbce5c81793c49541d1cda48c7046b985"
         }
       ],
       "origin_signature": "MrLiouWord"
