@@ -15,7 +15,10 @@ permissions:
   contents: read
 
 jobs:
+  incident-deny:
+    uses: ./.github/workflows/mrl-litellm-incident.yml
   verify-product:
+    needs: incident-deny
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
