@@ -38,8 +38,8 @@ def test_trusted_default_branch_sync_only_exempts_mass_change_threshold(monkeypa
     )
 
     assert result["changed_files"] == 2
-    assert result["trusted_default_branch_sync"] is True
-    assert result["mass_change_threshold_exempt"] is True
+    assert result["trusted_default_branch_sync"] == "enabled"
+    assert result["mass_change_threshold_exempt"] == "applied"
 
 
 def test_trusted_default_branch_sync_does_not_exempt_protected_path_changes(monkeypatch):

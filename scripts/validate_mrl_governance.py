@@ -172,8 +172,8 @@ def validate_diff(base,head,*,trusted_default_branch_sync=False):
     return {
         "changed_files":len(rows),
         "identifier_counts":counts,
-        "trusted_default_branch_sync":trusted_default_branch_sync,
-        "mass_change_threshold_exempt":mass_change and not mass_change_approved and trusted_default_branch_sync,
+        "trusted_default_branch_sync":"enabled" if trusted_default_branch_sync else "disabled",
+        "mass_change_threshold_exempt":"applied" if mass_change and not mass_change_approved and trusted_default_branch_sync else "not_applied",
     }
 
 def main():
