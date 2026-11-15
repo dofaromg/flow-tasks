@@ -69,3 +69,20 @@ def test_rootlaw_v11_binding():
     text=(ROOT/"MRL_Mother/00_rootlaw/rootlaw.yaml").read_text(encoding="utf-8")
     assert "version: 11" in text
     assert "rl_21_classification_before_reclamation_and_explicit_authorization" in text
+
+def test_default_branch_source_keeps_diff_authorization_gate():
+    import yaml
+    workflow=yaml.safe_load((ROOT/".github/workflows/mrl-root-governance-gate.yml").read_text(encoding="utf-8"))
+    steps=workflow["jobs"]["trusted-governance"]["steps"]
+    diff=next(s for s in steps if s.get("name")=="Validate proposed change from trusted validator")
+    # All PR sources, including a fork named main and the same-repo default
+    # branch, must retain the trusted validator's complete diff checks.
+    assert diff["if"]=="github.event_name == 'pull_request_target'"
+    assert diff["run"]=='python scripts/validate_mrl_governance.py --base "$BASE_SHA" --head "$HEAD_SHA"'
+    assert diff["env"]["HEAD_SHA"]=="${{ github.event.pull_request.head.sha }}"
+    checkout=next(s for s in steps if s.get("uses","").startswith("actions/checkout@"))
+    assert checkout["with"]["ref"]=="${{ github.event.repository.default_branch }}"
+    assert checkout["with"]["persist-credentials"] is False
+    snapshot=next(s for s in steps if s.get("name")=="Validate proposed default-branch snapshot")
+    assert snapshot["run"]=='python scripts/validate_mrl_governance.py --ref "$HEAD_SHA"'
+    assert snapshot["env"]["HEAD_SHA"]=="${{ github.event.pull_request.head.sha }}"
