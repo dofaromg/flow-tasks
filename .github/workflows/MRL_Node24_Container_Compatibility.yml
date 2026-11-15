@@ -1,0 +1,90 @@
+# origin_signature: MrLiouWord
+name: MRL Node24 Container Compatibility
+on:
+  pull_request:
+    paths:
+      - 'MRL_Bridge/**'
+      - 'MRL_Mother/MRL_RuntimeOS_v1_4_0/**'
+      - '.github/workflows/MRL_Node24_Container_Compatibility.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start isolated PostgreSQL and Redis with ephemeral credentials
+        run: |
+          set -eu
+          MRL_CI_DB_PASSWORD=$(openssl rand -hex 24)
+          MRL_CI_API_KEY=$(openssl rand -hex 24)
+          echo "::add-mask::$MRL_CI_DB_PASSWORD"
+          echo "::add-mask::$MRL_CI_API_KEY"
+          echo "MRL_CI_DB_PASSWORD=$MRL_CI_DB_PASSWORD" >> "$GITHUB_ENV"
+          echo "MRL_CI_API_KEY=$MRL_CI_API_KEY" >> "$GITHUB_ENV"
+          docker run -d --name MRL_Node24_Postgres -p 127.0.0.1:5432:5432 \
+            -e POSTGRES_DB=mrl_baseworld -e POSTGRES_USER=mrl_root \
+            -e POSTGRES_PASSWORD="$MRL_CI_DB_PASSWORD" postgres:16-alpine
+          docker run -d --name MRL_Node24_Redis -p 127.0.0.1:6379:6379 redis:7-alpine
+          for attempt in $(seq 1 30); do
+            if docker exec MRL_Node24_Postgres pg_isready -U mrl_root -d mrl_baseworld && docker exec MRL_Node24_Redis redis-cli ping; then
+              exit 0
+            fi
+            sleep 1
+          done
+          exit 1
+      - name: Build existing MRL_Bridge image
+        run: docker build -t mrl-bridge-node24 MRL_Bridge
+      - name: Test translation contract in built image
+        run: |
+          docker run --rm mrl-bridge-node24 node -e "if(process.version!=='v24.22.1')process.exit(1)"
+          docker run --rm -v "$PWD/MRL_Bridge/test_mrl_bridge_translation_center.cjs:/app/test_mrl_bridge_translation_center.cjs:ro" mrl-bridge-node24 node --test test_mrl_bridge_translation_center.cjs
+      - name: Verify Bridge 7800 with PostgreSQL and Redis
+        run: |
+          set -eu
+          trap 'docker logs MRL_Bridge_Node24; docker rm -f MRL_Bridge_Node24' EXIT
+          docker run -d --name MRL_Bridge_Node24 --network host \
+            -e MRL_BRIDGE_API_KEY="$MRL_CI_API_KEY" -e MRL_PG_PASSWORD="$MRL_CI_DB_PASSWORD" \
+            -e MRL_BRIDGE_LOG_DIR=/tmp/MRL_Bridge_logs mrl-bridge-node24
+          curl --retry 30 --retry-all-errors --retry-delay 1 --retry-max-time 60 --max-time 10 --fail http://127.0.0.1:7800/version > /tmp/MRL_Bridge_version.json
+          curl --max-time 30 --fail http://127.0.0.1:7800/health > /tmp/MRL_Bridge_health.json
+          python - <<'PY'
+          import json
+          v=json.load(open('/tmp/MRL_Bridge_version.json'))
+          h=json.load(open('/tmp/MRL_Bridge_health.json'))
+          assert v['node']=='v24.22.1' and v['version']=='3.1.0'
+          assert v['origin_signature']==h['origin_signature']=='MrLiouWord'
+          assert h['api'] and h['pg'] and h['redis'], h
+          PY
+      - name: Remove isolated test databases
+        if: always()
+        run: |
+          docker logs MRL_Node24_Postgres || true
+          docker logs MRL_Node24_Redis || true
+          docker rm -f MRL_Node24_Postgres MRL_Node24_Redis || true
+  runtimeos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build existing RuntimeOS v1.4.0 image
+        run: docker build -t mrl-runtimeos-node24 MRL_Mother/MRL_RuntimeOS_v1_4_0
+      - name: Run RuntimeOS acceptance inside image
+        run: |
+          docker run --rm mrl-runtimeos-node24 node -e "if(process.version!=='v24.22.1')process.exit(1)"
+          docker run --rm mrl-runtimeos-node24 npm run acceptance
+      - name: Verify existing container port 8788 and health contract
+        run: |
+          set -eu
+          trap 'docker logs MRL_RuntimeOS_Node24; docker rm -f MRL_RuntimeOS_Node24' EXIT
+          docker run -d --name MRL_RuntimeOS_Node24 -p 127.0.0.1:8788:8788 mrl-runtimeos-node24
+          curl --retry 30 --retry-all-errors --retry-delay 1 --retry-max-time 60 --max-time 10 --fail http://127.0.0.1:8788/api/mrl/health > /tmp/MRL_RuntimeOS_health.json
+          python - <<'PY'
+          import json
+          h=json.load(open('/tmp/MRL_RuntimeOS_health.json'))
+          assert h['status']=='ok' and h['origin_signature']=='MrLiouWord'
+          assert h['product']=='MRL_RuntimeOS_EnterpriseRuntimePlatform_CoreExecutable_v1_4_0'
+          assert 'artifact_transfer' in h['capabilities']
+          PY
