@@ -45,6 +45,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and readback do not establish local deployment or runtime acceptance.
 - origin_signature: MrLiouWord; canonical_authority: Mr.liou.
 
+### Fixed — MRL Codespace Monitoring recovery (2026-10-13)
+
+- Restore the existing a071fa7 / d629afe monitoring fixes after f00d493 reverted
+  them to the main version; retain all three historical commits and original paths.
+- Fail on unavailable CODESPACES_TOKEN, API or parsing failures, incomplete listing,
+  and required label/issue operations; update an existing warning instead of
+  creating another, and serialize monitoring jobs across refs.
+- Add credential-free regression execution to this workflow for PRs and before
+  scheduled/manual monitoring. PRs never run the token-backed monitoring job.
+- CODESPACES_TOKEN needs Codespaces read on the selected repository for a
+  fine-grained PAT, or codespace scope for a classic PAT; issue operations keep
+  using GITHUB_TOKEN. Secret values are neither inspected nor stored.
+- Keep the existing 30-day retention estimate; it is not an authoritative
+  per-Codespace deletion deadline. No Codespace is deleted by this workflow.
+
 ### Added — Multi-cloud connector orchestration
 
 - Add one-command authentication checks and synchronization across all eight
