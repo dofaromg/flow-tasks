@@ -12,6 +12,7 @@ import ARKit
 struct ContentView: View {
     @StateObject private var scannerManager = ScannerManager()
     @State private var selectedMode: ScanMode = .easy
+    @State private var showsTags = false
     
     var body: some View {
         NavigationView {
@@ -31,6 +32,10 @@ struct ContentView: View {
                 
                 Spacer()
             }
+            .toolbar {
+                Button("檔案與標籤") { showsTags = true }
+            }
+            .sheet(isPresented: $showsTags) { MRLTagManagerView() }
             .navigationTitle("MrliouWord")
             .navigationBarTitleDisplayMode(.large)
         }
