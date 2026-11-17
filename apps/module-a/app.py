@@ -24,6 +24,8 @@ def index():
 def compute():
     """Real particle compute over a text payload."""
     data = request.get_json(silent=True) or {}
+    if not isinstance(data, dict):
+        return jsonify({'ok': False, 'error': 'invalid_input'}), 400
     try:
         result = core.compute_particle(data.get('text'))
     except ValueError as e:
