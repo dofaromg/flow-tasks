@@ -1,0 +1,34 @@
+{
+  "schema_version": "MRL.hardware_matrix/v1",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "source_issue": "https://linear.app/dofaromgg/issue/MRL-34",
+  "source_commit": "608b66e0db23e7cc4eef21ea752668ac800620b3",
+  "verified_combinations": [],
+  "historical_observations": [
+    {
+      "id": "MRL_DL580_20261022",
+      "status": "historical_observation_incomplete_for_admission",
+      "source": "Owner-supplied DL580 live-audit record, 2026-10-22; not a current probe",
+      "vendor": "NVIDIA",
+      "architecture": "Volta",
+      "sku": "V100-SXM2-32GB",
+      "compute_capability": "7.0",
+      "gpu_count": 6,
+      "nominal_vram_gib": 32,
+      "driver": "539.56",
+      "cuda": "12.2",
+      "rocm": null,
+      "os": "Windows Server 2019 Datacenter 10.0.17763",
+      "runtime_abi": null,
+      "model_runner_version": null,
+      "bundle_digest": null,
+      "acceptance_receipt": null
+    }
+  ],
+  "public_support": [],
+  "official_sources": [
+    "https://docs.nvidia.com/cuda/archive/13.0.0/cuda-toolkit-release-notes/",
+    "https://developer.nvidia.com/blog/navigating-gpu-architecture-support-a-guide-for-nvidia-cuda-developers/"
+  ]
+}

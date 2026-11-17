@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 8683,
-      "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+      "size_bytes": 9269,
+      "sha256": "8e668ed4986ff60daa163bcc753fd484dbfcd01ff6b30ad6a85060fa66b017ab",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -211,6 +211,34 @@
           "role": "additive_history",
           "size_bytes": 8683,
           "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "ad95071d6cfd1f7fea1f4ff7dad50c97aa037147",
+      "source_pr": 700,
+      "reason": "MRL-34 appends the hardware admission CHANGELOG entry; retain previous evidence and propagate exact live dependency hashes without changing authorization policy.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 8683,
+          "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 9269,
+          "sha256": "8e668ed4986ff60daa163bcc753fd484dbfcd01ff6b30ad6a85060fa66b017ab",
           "dependencies": [
             "docs/Mrliou_MRL_Sync_Operations_v1.md"
           ]

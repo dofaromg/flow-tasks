@@ -427,3 +427,11 @@ sensors
 ---
 
 **🎊 硬體配置完成後，即可開始部署系統！🎊**
+
+
+## MRL-34 deployment admission (2026-11-03)
+
+For new deployments use [MRL hardware admission](MRL_HARDWARE_ADMISSION.md).
+The installation examples above remain historical guidance, not a verified
+DL580 support matrix. V100 requires an exact verified CUDA 12.x combination;
+CUDA 13 is denied. Do not change the existing mother driver/runtime from this guide.

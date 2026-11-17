@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — MRL-34 hardware admission (2026-11-03)
+
+- Add exact hardware/runtime/model/bundle manifests and a fail-closed gate.
+- Extend the existing GPU orchestrator with an explicit admitted allocation API;
+  preserve six-card configuration and legacy running-service behavior.
+- Deny Volta/V100 CUDA 13, require reviewed CUDA 12.x hardware receipts, and
+  prevent cross-track bundle/acceptance reuse. Preserve incomplete DL580 history.
+- Add synthetic policy tests, Linux/Windows CI and live smoke/rollback procedure.
+- origin_signature: MrLiouWord; canonical_authority: Mr.liou.
+
 ### Fixed — MRL ProductBridge post-merge security review (2026-10-21)
 
 - Follow up merged PR #680 at main 0c88c996: include the existing .bridge state,

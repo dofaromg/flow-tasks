@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:MRL:hardware-manifest:v1",
+  "title": "MRL hardware admission manifest v1",
+  "description": "origin_signature: MrLiouWord. Complete observed combination; schema validity alone never admits deployment.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "vendor",
+    "architecture",
+    "sku",
+    "compute_capability",
+    "vram_mib",
+    "driver",
+    "os",
+    "runtime",
+    "runtime_version",
+    "runtime_abi",
+    "cuda",
+    "rocm",
+    "quantization",
+    "model_runner",
+    "model_runner_version",
+    "model_digest",
+    "track",
+    "bundle_id",
+    "bundle_digest"
+  ],
+  "properties": {
+    "vendor": {
+      "type": "string",
+      "minLength": 1
+    },
+    "architecture": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sku": {
+      "type": "string",
+      "minLength": 1
+    },
+    "compute_capability": {
+      "type": "string",
+      "minLength": 1
+    },
+    "vram_mib": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "driver": {
+      "type": "string",
+      "minLength": 1
+    },
+    "os": {
+      "type": "string",
+      "minLength": 1
+    },
+    "runtime": {
+      "type": "string",
+      "minLength": 1
+    },
+    "runtime_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "runtime_abi": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cuda": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9]+(\\.[0-9]+){1,3}$"
+    },
+    "rocm": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9]+(\\.[0-9]+){1,3}$"
+    },
+    "quantization": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_runner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_runner_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "track": {
+      "enum": [
+        "dl580-v100",
+        "modern-gpu"
+      ]
+    },
+    "bundle_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "bundle_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}
