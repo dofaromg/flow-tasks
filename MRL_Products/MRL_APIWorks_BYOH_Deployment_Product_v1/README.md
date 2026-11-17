@@ -57,3 +57,10 @@ python scripts\MRL_build_product_bundle_v1.py
 可重建相同 ZIP bytes；跨壓縮函式庫版本仍以實際交付的 SHA-256 核對。
 GitHub Actions 的 `MRL APIWorks BYOH Product` 執行成功後，Artifacts 提供以來源 commit
 命名的 ZIP 與 checksum，保留 7 天；過期可從原 commit 重新建包。
+
+
+## 硬體准入（MRL-34）
+
+硬體矩陣、Volta/CUDA12 gate、獨立 route bundle 與 smoke/rollback 流程見
+[MRL_HARDWARE_ADMISSION_v1.md](docs/MRL_HARDWARE_ADMISSION_v1.md)。
+來源包與 CI 通過不等於 GPU 實機驗收；目前 release matrix 沒有新增 exact acceptance。

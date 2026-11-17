@@ -1,3 +1,8 @@
+> MRL-34：以下保留原始通用安裝指南與歷史命名；它不是 DL580 的現場版本記錄，
+> 也不是升級授權。MRL APIWorks 硬體路徑以
+> [Admission Gate](../MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/docs/MRL_HARDWARE_ADMISSION_v1.md)
+> 及 reviewed matrix 為準。V100 僅可進已驗收 CUDA12 組合，未知組合阻擋。
+
 # Hardware Setup Guide - Ultimate AI Video System
 # 硬體配置指南
 
@@ -427,3 +432,4 @@ sensors
 ---
 
 **🎊 硬體配置完成後，即可開始部署系統！🎊**
+

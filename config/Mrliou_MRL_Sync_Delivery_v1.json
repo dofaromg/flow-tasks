@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 8683,
-      "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+      "size_bytes": 9248,
+      "sha256": "e9f3044a2b842af7d15befc285722de35bf3cd328998693ed0d7a913fc4b0b3c",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -211,6 +211,33 @@
           "role": "additive_history",
           "size_bytes": 8683,
           "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "4565a8d63ad09b9163c501c2430c27aec7e06873",
+      "reason": "MRL-34 appends CHANGELOG history; propagate live payload checksums through existing delivery dependency chain without altering prior entries or authorization rules.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 8683,
+          "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 9248,
+          "sha256": "e9f3044a2b842af7d15befc285722de35bf3cd328998693ed0d7a913fc4b0b3c",
           "dependencies": [
             "docs/Mrliou_MRL_Sync_Operations_v1.md"
           ]

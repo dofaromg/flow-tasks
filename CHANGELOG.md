@@ -1,3 +1,12 @@
+## 2026-11-03 — MRL-34 hardware admission (candidate)
+
+- Preserve DL580 historical snapshot; add machine-readable hardware routes and exact acceptance gate.
+- Reject Volta CUDA13 and TensorRT RTX; gate existing GPUOrchestrator after balancing.
+- Build distinct route source bundles with verified SHA-256 and independent unknown acceptance.
+- Add Linux/Windows CI, negative/positive policy tests, smoke/restart and rollback instructions.
+- No DL580 driver, Toolkit, GPU or service changes; real-hardware acceptance remains pending.
+- origin_signature: MrLiouWord
+
 # Changelog
 
 All notable changes to this project will be documented in this file.

@@ -101,3 +101,10 @@ error_recovery:
   max_retries: 3
   retry_delay: 5  # seconds
   fallback_to_cpu: false  # 不降級到CPU
+
+
+# MRL-34: paths are operator-provided current manifests; no historical auto-pass.
+# All engine allocations are blocked until an exact release acceptance exists.
+hardware_admission:
+  host_manifest: null
+  workloads: {}
