@@ -1,0 +1,161 @@
+{
+  "schema": "MRL_Video_Request/v2",
+  "title": "MRL synthetic 20-minute timeline fixture",
+  "target_seconds": 1200,
+  "profile": "landscape",
+  "resolution": "720p",
+  "fps": 24,
+  "preset": "fast",
+  "crf": 20,
+  "music": false,
+  "sources": [
+    {
+      "id": "fixture",
+      "original_name": "synthetic-timeline.txt",
+      "locator": "test:synthetic",
+      "text": "Synthetic timeline and local audio."
+    }
+  ],
+  "scenes": [
+    {
+      "title": "Chapter 1",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 2",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 3",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 4",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 5",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 6",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 7",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 8",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 9",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 10",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 11",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 12",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 13",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 14",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 15",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 16",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 17",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 18",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 19",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    },
+    {
+      "title": "Chapter 20",
+      "caption": "Synthetic timeline and local audio.",
+      "source_id": "fixture",
+      "duration": 60,
+      "layout": "steps"
+    }
+  ]
+}
