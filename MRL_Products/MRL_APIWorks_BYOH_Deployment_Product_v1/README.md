@@ -37,11 +37,23 @@
 
 只有第三項通過，該客戶部署才算完成。
 
+私人節點驗收可使用 `scripts/MRL_capture_node_evidence_v1.py` 保存推論、磁碟記憶、
+Evidence 與 Passport 的核對回執，並在 Gateway 重啟後重播同一個 session。
+步驟與限制見 [交付驗收](docs/MRL_DELIVERY_ACCEPTANCE_v1.md)。回執不自動授予客戶驗收。
+
 ## 建立交付 ZIP
 
+從 GitHub repository checkout 的商品來源目錄執行：
+
 ```powershell
-python scripts\MRL_build_product_bundle_v1.py
 python scripts\MRL_verify_product_source_v1.py
+python scripts\MRL_build_product_bundle_v1.py
 ```
 
-輸出位於 `dist/`；`dist/` 是可重建產物，不納入來源封包。
+輸出位於 `dist/`；`dist/` 是可重建產物，不納入來源封包。客戶解壓後應從 ZIP 內的單一頂層目錄開始，依 `MRL_Products\MRL_APIWorks_BYOH_Deployment_Product_v1\docs\MRL_DELIVERY_ACCEPTANCE_v1.md` 操作；不要修改受 SHA 保護的 Runtime 範例設定。
+
+同時產生 `.zip.sha256` 核對檔。ZIP 成員的封裝時間與權限固定，避免不同 checkout
+的磁碟時間改變交付雜湊；原始 Git 歷史時間不修改。同一 Python／壓縮環境及相同來源
+可重建相同 ZIP bytes；跨壓縮函式庫版本仍以實際交付的 SHA-256 核對。
+GitHub Actions 的 `MRL APIWorks BYOH Product` 執行成功後，Artifacts 提供以來源 commit
+命名的 ZIP 與 checksum，保留 7 天；過期可從原 commit 重新建包。
