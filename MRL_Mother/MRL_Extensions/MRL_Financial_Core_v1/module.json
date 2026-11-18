@@ -1,0 +1,81 @@
+{
+  "module_id": "MRL_Financial_Core_v1",
+  "version": "0.3.0",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "parent": "MRL_Mother/MRL_Extensions",
+  "source_repository": "dofaromg/flow-tasks",
+  "source_base_commit": "175fa4ee7edf621f6378ef100b0057606a41d42a",
+  "implementation_assistance": "ChatGPT / Codex",
+  "rights_transfer": "NOT_GRANTED",
+  "license_scope": "Inherits repository terms; no additional third-party rights granted",
+  "dependencies": [
+    "Python >=3.10",
+    "cryptography==50.0.2",
+    "sqlite3 (Python standard library)",
+    "MRL_Mother/09_workflow/tool_registry.py (optional adapter)"
+  ],
+  "tools": [
+    "MRL_financial_snapshot",
+    "MRL_financial_submit"
+  ],
+  "activation": "explicit register_tools(registry, ledger) only",
+  "real_asset_execution": false,
+  "deployment_status": "NOT_DEPLOYED",
+  "external_recovery_status": "NOT_IMPLEMENTED",
+  "scope": "Financial-system reconstruction prototype; signed local test-unit ledger and dispute restitution",
+  "external_reference": [
+    "https://eips.ethereum.org/EIPS/eip-7702",
+    "https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/"
+  ],
+  "data_policy": "No private keys or real case data in repository; local database stays with operator",
+  "ledger_version": "0.1.0",
+  "children": [
+    {
+      "module_id": "MRL_Financial_External_Access_v1",
+      "version": "0.1.0",
+      "path": "external",
+      "status": "IMPLEMENTED_DISABLED_BY_DEFAULT",
+      "deployment_status": "NOT_DEPLOYED",
+      "live_external_tests": "NOT_PERFORMED",
+      "requirements": "external/requirements.txt",
+      "tools": [
+        "MRL_financial_external_plan",
+        "MRL_financial_external_observe",
+        "MRL_financial_external_submit",
+        "MRL_financial_external_status"
+      ]
+    }
+  ],
+  "revision_history": [
+    {
+      "version": "0.1.0",
+      "source_commit": "d7e0e8137c833fef123f6681ca19f827bc99a0e8",
+      "scope": "Local test-unit ledger; unchanged by R02"
+    },
+    {
+      "version": "0.2.0",
+      "record_id": "MRL_FINANCIAL_EXTERNAL_BACKFILL_20261107_R02",
+      "scope": "Optional scoped Mercury/EVM adapters; no active financial grants or live execution created"
+    },
+    {
+      "version": "0.3.0",
+      "record_id": "MRL_FINANCIAL_STANDALONE_20261107_R03",
+      "source_commit": "e12b48954d84325115dee57c8efa80dd92811191",
+      "scope": "GitHub Actions platform bundles and local offline install; preserve Cloudflare failure history and existing authorization"
+    }
+  ],
+  "delivery": {
+    "module_id": "MRL_Financial_Standalone_Delivery_v1",
+    "version": "0.1.0",
+    "path": "delivery",
+    "build_provider": "GitHub Actions",
+    "runtime": "local Python 3.12 x64 venv",
+    "cloudflare_required": false,
+    "offline_wheel_install": true,
+    "local_validation": "Linux workspace snapshot: 57 ZIP members, 26 dependency wheels, install and 50 self-tests PASS",
+    "exact_head_platform_acceptance": "PENDING_CI_AT_COMMIT",
+    "runtime_credentials_in_package": false,
+    "auto_enable_external_accounts": false
+  }
+}

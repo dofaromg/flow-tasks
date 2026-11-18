@@ -1,0 +1,15 @@
+{
+  "origin_signature": "MrLiouWord",
+  "checked_date_taipei": "2026-11-07",
+  "source_policy": "Primary technical documentation; upstream names and rights preserved. No derivative-origin claim.",
+  "sources": [
+    {"name": "Mercury Get account by ID", "url": "https://docs.mercury.com/reference/getaccount", "api": "GET /api/v1/account/{accountId}", "version": "unversioned documentation; API v1"},
+    {"name": "Mercury Get transaction by ID", "url": "https://docs.mercury.com/reference/gettransaction", "api": "GET /api/v1/account/{accountId}/transaction/{transactionId}", "version": "unversioned documentation; API v1"},
+    {"name": "Mercury Request to send money", "url": "https://docs.mercury.com/reference/requestsendmoney", "api": "POST /api/v1/account/{accountId}/request-send-money", "implemented_subset": "ACH requests only; no approval endpoint"},
+    {"name": "Using the Mercury Sandbox for Testing", "url": "https://docs.mercury.com/docs/using-mercury-sandbox", "api_origin": "https://api-sandbox.mercury.com/api/v1/"},
+    {"name": "Ethereum JSON-RPC API", "url": "https://ethereum.org/developers/docs/apis/json-rpc/", "implemented_subset": "chain ID, balance, code, nonce, transaction/receipt queries and signed native transaction broadcast"},
+    {"name": "eth-account Typed Transactions", "url": "https://eth-account.readthedocs.io/en/stable/eth_account.typed_transactions.html", "implementation_dependency": "eth-account==0.14.0", "implemented_subset": "TypedTransaction.from_bytes/as_dict and Account.recover_transaction"},
+    {"name": "Ed25519 signing", "url": "https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/", "implementation_dependency": "cryptography==50.0.2"}
+  ],
+  "upstream_rights": "Package/API licenses and terms remain with their original providers; no new redistribution rights or provider approval inferred. Runtime trust/license gates remain separate."
+}
