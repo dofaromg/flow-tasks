@@ -131,8 +131,21 @@ Layer 4  source_cloud        原始創造力場
   - 連帶打斷三條執行路徑（quickstart Dockerfile、LawEngine import、Dockerfile COPY）——引用改了、磁碟檔名沒改。
 - **正確作法（本文件即修正）**：外部名才回收；原生世系一律保留；不全域替換；不刪/不否決粒子；局部視角標「不可由此推定」；canonical 由 ROOT 認可。
 - **處置**：錯誤分支（`MRL_System_Integration_v1` / PR #614）依 `rl_15` **不刪除、以粒子形式保存為先例**；不 force-push 抹歷史。本紀錄即其養分化。
+- **最終結果**（2026-10-10，依 `rl_10 event_chronicle` 附加；上文紀錄不改、不撤回）：
+  - **合併**：PR #614 於 2026-10-10 12:35 UTC（+08:00 20:35）由 `dofaromg` 以 squash commit `cb73e66`（`cb73e661a02eeb540db02398cb61eaa51c5e77e3`，單一 parent `bcef9f1`）合併入 `main`。同日稍早 `8a5f548`（PR #656，隔離 #614 範圍內的 14 檔）先落地 `MRL_EVIDENCE_MODULE_AUDIT_v1.md` + `mrliouai_core/` 13 檔；`cb73e66` 再變更其餘 17 檔（9 新增、7 修改、1 檔僅改檔名 `.txt.txt` → `.txt`，R100、內容不變）。
+  - **上文行為仍屬實**：全域替換 commit `e5884f7`（2026-07-25）仍在 PR #614 與 `MRL_System_Integration_v1` 的 commit 歷史中，並於 2026-08-27 在同一分支由 `290d20c` 回復原名與世系路徑；兩者皆依 `rl_15` 保存於分支，未進入 `main` 歷史（squash 只取合併時的最終差異）。
+  - **標題 ≠ 內容**：`cb73e66` 的標題「refactor: 全倉庫品牌更名 flowmemorysync/flowagent → MrLiouAI + 模組證據審計 (#614)」是**合併時沿用的歷史 PR 標題**（`(#614)` 為 GitHub squash 自動附加；PR 開立時原題為 "refactor: remove external deployment configs (Vercel + Cloudflare Workers)"，2026-07-25 改為此題，2026-07-27 曾短暫改為他題後改回），不描述 `cb73e66` 的實際內容。實際合併內容**未改名**：`cb73e66^` 與 `cb73e66` 全樹計數相同（`git grep -I -o`：`FlowAgent` 4267、`flowmemorysync` 110）；diff 中唯一含這兩個名稱的變更是 `src_server_api_Version3.py` docstring `FlowAgent REST API Server v3.` → `MrLiouAI / FlowAgent REST API Server v3.`（`FlowAgent` 保留）；`MRL_MotherSource_Lineage_v1/`、`08_sources/`、`root_sources/` 零變更。
+  - **給讀 `git log` 的夥伴**：此標題不代表 `main` 已完成品牌更名，也不是補做改名的依據；`FlowAgent` / `flowmemorysync` 依 §4 保留。
 
 > 給未來夥伴：如果你正想跑一個「掃全 repo 改名」的動作 —— 停。先讀 §4。原生世系不是外部殼。
+
+**CASE-CREDENTIAL-FLAG-01（2026-07-25 標記；2026-10-10 附加記錄）**
+
+- **事件**：GitGuardian（`gitguardian[bot]`）在 PR #614 對 commit `22d1582`（`mrliouai_core/README.md`）標記一筆 "Company Email Password"（incident `35168744`，狀態 Triggered）。該 commit 為同一 session 撰寫的 `mrliouai_core` C++ 實作初版。
+- **同分支後續**：同日 `1814c6e`「fix(mrliouai_core): 移除 GitGuardian 誤判的範例憑證」將 `README.md` 與 `tests/selftest.cpp` 中的範例帳密改為佔位符。
+- **main 現況**：`22d1582` 不在 `main` 歷史中（`8a5f548` / PR #656 與 `cb73e66` / PR #614 皆以最終內容落地）；`main` 版 `mrliouai_core/README.md` 的帳密欄位只有 `<YOUR_EMAIL>` / `<YOUR_PASSWORD>`。
+- **仍可見**：`22d1582` 仍可從 PR #614 與 `MRL_System_Integration_v1` 分支公開取得；依 `rl_15` 保留，不以 force-push 抹除歷史。
+- **處置**：是否為真實帳密不可由此推定（分支上以「範例」標示）；若曾為真實帳密，應於該帳號端輪替（rotate）。本紀錄不含原值。
 
 ---
 
