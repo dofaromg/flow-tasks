@@ -484,6 +484,25 @@ class TestConnectorAudit:
             "direction": "pull",
         }
 
+    def test_required_enabled_sync_without_transfer_fails_strict(
+        self, manager, monkeypatch, capsys
+    ):
+        github = manager.connectors["github"]
+        github.config.enabled = True
+        github.config.required = True
+        github.config.sync_enabled = True
+        github.check_connection = Mock(return_value=True)
+        monkeypatch.setattr(sys, "argv", [
+            "connector_manager", "--sync-all", "--strict", "--json",
+        ])
+        with patch("connectors.connector_manager.ConnectorManager", return_value=manager):
+            with pytest.raises(SystemExit) as exc:
+                main()
+        assert exc.value.code == 1
+        result = json.loads(capsys.readouterr().out)["github"]
+        assert result["reason"] == "sync_not_implemented"
+        assert result["mother_backfill_verified"] is False
+
     @pytest.mark.parametrize("strict", [False, True])
     @pytest.mark.parametrize("outcome", ["connected", "unauthorized", "timeout", "exception"])
     def test_enabled_verification_controls_exit_status(
@@ -537,9 +556,15 @@ class TestConnectorAudit:
 class TestDefaultSyncData:
     """Test default sync_data implementation across connectors"""
     
+    @pytest.mark.parametrize("connector_class", [
+        GitHubConnector, NotionConnector, DropboxConnector, GoogleDriveConnector,
+        VercelConnector, GitLabConnector, HuggingFaceConnector,
+    ])
     @patch('connectors.base_connector.requests.request')
-    def test_sync_data_returns_success_when_connected(self, mock_request):
-        """Test sync_data returns success when connected"""
+    def test_sync_data_does_not_claim_backfill_when_connected(
+        self, mock_request, connector_class
+    ):
+        """Healthy authentication cannot prove data transfer or mother receipt."""
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.content = b"test-response"
@@ -549,10 +574,14 @@ class TestDefaultSyncData:
         mock_request.return_value = mock_response
         
         config = ConnectorConfig(credentials={"token": "test_token"})
-        connector = GitHubConnector(config)
+        connector = connector_class(config)
         result = connector.sync_data("pull")
-        
-        assert result["success"] is True
+
+        assert result["success"] is False
+        assert result["reason"] == "sync_not_implemented"
+        assert result["skipped"] is False
+        assert result["items_synced"] == 0
+        assert result["mother_backfill_verified"] is False
         assert result["direction"] == "pull"
         assert "timestamp" in result
     
