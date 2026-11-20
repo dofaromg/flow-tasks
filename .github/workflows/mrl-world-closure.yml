@@ -1,0 +1,45 @@
+name: MRL WorldModule Closure
+on:
+  pull_request:
+    paths:
+      - 'MRL_Mother/05_persona/world_module.py'
+      - 'MRL_Mother/05_persona/world_closure_store.py'
+      - 'MRL_Mother/05_persona/README.md'
+      - 'MRL_Mother/tests/test_mrl_world_closure.py'
+      - '.github/workflows/mrl-world-closure.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  closure-unit:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Extract exact-head closure sources
+        shell: bash
+        env:
+          MRL_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          MRL_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${MRL_REPOSITORY}.git"
+          git fetch --depth=1 origin "$MRL_HEAD"
+          test "$(git rev-parse FETCH_HEAD)" = "$MRL_HEAD"
+          # Read named blobs without unpacking the incompatible archive tree.
+          for file in \
+            MRL_Mother/05_persona/world_module.py \
+            MRL_Mother/05_persona/world_closure_store.py \
+            MRL_Mother/tests/test_mrl_world_closure.py
+          do
+            mkdir -p "$(dirname "$file")"
+            git cat-file blob "${MRL_HEAD}:${file}" > "$file"
+          done
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test reversible world-state closure
+        run: python -m unittest discover -s MRL_Mother/tests -p 'test_mrl_world_closure.py' -v
