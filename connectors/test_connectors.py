@@ -538,23 +538,29 @@ class TestDefaultSyncData:
     """Test default sync_data implementation across connectors"""
     
     @patch('connectors.base_connector.requests.request')
-    def test_sync_data_returns_success_when_connected(self, mock_request):
-        """Test sync_data returns success when connected"""
+    def test_github_sync_returns_success_after_executing_a_configured_task(self, mock_request):
+        """A successful connection alone is not a completed GitHub task."""
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.content = b"test-response"
         mock_response.text = '{"login": "testuser"}'
-        mock_response.json.return_value = {"login": "testuser"}
+        mock_response.json.return_value = {"full_name": "dofaromg/flow-tasks"}
         mock_response.headers = {}
         mock_request.return_value = mock_response
         
-        config = ConnectorConfig(credentials={"token": "test_token"})
+        config = ConnectorConfig(
+            enabled=True, sync_enabled=True, credentials={"token": "test_token"},
+            custom_settings={"repositories": ["dofaromg/flow-tasks"], "tasks": [{
+                "task_id": "MRL_Repository", "operation": "get_repository",
+                "repository": "dofaromg/flow-tasks"}]})
         connector = GitHubConnector(config)
         result = connector.sync_data("pull")
         
         assert result["success"] is True
         assert result["direction"] == "pull"
         assert "timestamp" in result
+        assert result["items_synced"] == 1
+        assert result["results"][0]["data"]["full_name"] == "dofaromg/flow-tasks"
     
     def test_sync_data_returns_error_when_not_connected(self):
         """Test sync_data returns error when not connected"""
@@ -568,4 +574,5 @@ class TestDefaultSyncData:
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
 
