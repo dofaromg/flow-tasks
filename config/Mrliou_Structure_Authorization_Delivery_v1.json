@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 8683,
-      "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78"
+      "size_bytes": 9264,
+      "sha256": "86b015091574286ef8d50b0ce157340dda521df71f7900f513b2e8df3c03295b"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
-      "size_bytes": 8235,
-      "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
+      "size_bytes": 9293,
+      "sha256": "366ff385bb8f2ef386008a8f7691fe44c920c28f4560189f9e45864cfd6c6228"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
@@ -355,6 +355,36 @@
           "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
           "size_bytes": 8235,
           "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "fceb0d829edd92d2ea370321bb3acca9964fdee5",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/697",
+      "reason": "S4.5 PaniniClusterInsight appends the CHANGELOG; preserve prior evidence and propagate live dependency hashes. Authorization policy and source payloads remain unchanged.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 8683,
+          "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 8235,
+          "sha256": "f1b509016e1f552d43b926fde872b88c503e32c7a484ad1586427e1378820be9"
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "size_bytes": 9264,
+          "sha256": "86b015091574286ef8d50b0ce157340dda521df71f7900f513b2e8df3c03295b"
+        },
+        {
+          "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+          "size_bytes": 9293,
+          "sha256": "366ff385bb8f2ef386008a8f7691fe44c920c28f4560189f9e45864cfd6c6228"
         }
       ],
       "origin_signature": "MrLiouWord"

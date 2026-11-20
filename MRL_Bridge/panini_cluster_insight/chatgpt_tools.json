@@ -1,0 +1,296 @@
+[
+  {
+    "type": "function",
+    "name": "cluster_activity_ranker",
+    "description": "MRL S4.5 F1; read and compute an operator-registered mother snapshot. F3 requires an explicit ratio.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "dataset_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+        },
+        "expected_schema_version": {
+          "const": "panini_cluster_insight/v1.0.0"
+        },
+        "cluster_root": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "avg_cluster_size_ratio": {
+          "anyOf": [
+            {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "exclusiveMaximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "dataset_id",
+        "expected_schema_version",
+        "cluster_root",
+        "avg_cluster_size_ratio"
+      ],
+      "additionalProperties": false
+    },
+    "strict": true
+  },
+  {
+    "type": "function",
+    "name": "ontology_aspect_detector",
+    "description": "MRL S4.5 F2; read and compute an operator-registered mother snapshot. F3 requires an explicit ratio.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "dataset_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+        },
+        "expected_schema_version": {
+          "const": "panini_cluster_insight/v1.0.0"
+        },
+        "cluster_root": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "avg_cluster_size_ratio": {
+          "anyOf": [
+            {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "exclusiveMaximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "dataset_id",
+        "expected_schema_version",
+        "cluster_root",
+        "avg_cluster_size_ratio"
+      ],
+      "additionalProperties": false
+    },
+    "strict": true
+  },
+  {
+    "type": "function",
+    "name": "fractal_self_similarity_scorer",
+    "description": "MRL S4.5 F3; read and compute an operator-registered mother snapshot. F3 requires an explicit ratio.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "dataset_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+        },
+        "expected_schema_version": {
+          "const": "panini_cluster_insight/v1.0.0"
+        },
+        "cluster_root": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "avg_cluster_size_ratio": {
+          "anyOf": [
+            {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "exclusiveMaximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "dataset_id",
+        "expected_schema_version",
+        "cluster_root",
+        "avg_cluster_size_ratio"
+      ],
+      "additionalProperties": false
+    },
+    "strict": true
+  },
+  {
+    "type": "function",
+    "name": "panini_ontology_profiler",
+    "description": "MRL S4.5 F4; read and compute an operator-registered mother snapshot. F3 requires an explicit ratio.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "dataset_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+        },
+        "expected_schema_version": {
+          "const": "panini_cluster_insight/v1.0.0"
+        },
+        "cluster_root": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "avg_cluster_size_ratio": {
+          "anyOf": [
+            {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "exclusiveMaximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "dataset_id",
+        "expected_schema_version",
+        "cluster_root",
+        "avg_cluster_size_ratio"
+      ],
+      "additionalProperties": false
+    },
+    "strict": true
+  },
+  {
+    "type": "function",
+    "name": "concept_intensity_map",
+    "description": "MRL S4.5 F5; read and compute an operator-registered mother snapshot. F3 requires an explicit ratio.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "dataset_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+        },
+        "expected_schema_version": {
+          "const": "panini_cluster_insight/v1.0.0"
+        },
+        "cluster_root": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "avg_cluster_size_ratio": {
+          "anyOf": [
+            {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "exclusiveMaximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "dataset_id",
+        "expected_schema_version",
+        "cluster_root",
+        "avg_cluster_size_ratio"
+      ],
+      "additionalProperties": false
+    },
+    "strict": true
+  },
+  {
+    "type": "function",
+    "name": "downstream_module_advisor",
+    "description": "MRL S4.5 F6; read and compute an operator-registered mother snapshot. F3 requires an explicit ratio.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "dataset_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+        },
+        "expected_schema_version": {
+          "const": "panini_cluster_insight/v1.0.0"
+        },
+        "cluster_root": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "avg_cluster_size_ratio": {
+          "anyOf": [
+            {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "exclusiveMaximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "dataset_id",
+        "expected_schema_version",
+        "cluster_root",
+        "avg_cluster_size_ratio"
+      ],
+      "additionalProperties": false
+    },
+    "strict": true
+  }
+]

@@ -67,8 +67,8 @@
     {
       "path": "CHANGELOG.md",
       "role": "additive_history",
-      "size_bytes": 8683,
-      "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+      "size_bytes": 9264,
+      "sha256": "86b015091574286ef8d50b0ce157340dda521df71f7900f513b2e8df3c03295b",
       "dependencies": [
         "docs/Mrliou_MRL_Sync_Operations_v1.md"
       ]
@@ -211,6 +211,34 @@
           "role": "additive_history",
           "size_bytes": 8683,
           "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "origin_signature": "MrLiouWord"
+    },
+    {
+      "source_commit": "fceb0d829edd92d2ea370321bb3acca9964fdee5",
+      "pull_request": "https://github.com/dofaromg/flow-tasks/pull/697",
+      "reason": "S4.5 PaniniClusterInsight appends the CHANGELOG; preserve prior evidence and propagate live dependency hashes. Authorization policy and source payloads remain unchanged.",
+      "previous_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 8683,
+          "sha256": "d1748d694de6caaef401646c5a7ccc8d4ad4d838611a657558a3fb75e8b37c78",
+          "dependencies": [
+            "docs/Mrliou_MRL_Sync_Operations_v1.md"
+          ]
+        }
+      ],
+      "current_entries": [
+        {
+          "path": "CHANGELOG.md",
+          "role": "additive_history",
+          "size_bytes": 9264,
+          "sha256": "86b015091574286ef8d50b0ce157340dda521df71f7900f513b2e8df3c03295b",
           "dependencies": [
             "docs/Mrliou_MRL_Sync_Operations_v1.md"
           ]
