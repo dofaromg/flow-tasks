@@ -19,6 +19,16 @@ hardware/MRL_DL580_historical_snapshot_v1.json
 hardware/MRL_hardware_matrix_v1.json
 licenses/MRL_license_manifest_schema_v1.json
 licenses/MRL_license_manifest_validation_v1.schema.json
+local_console/MRL_Accept_Local.cmd
+local_console/MRL_Start_Local.cmd
+local_console/MRL_Start_Local.ps1
+local_console/MRL_Start_Local.sh
+local_console/MRL_accept_local_v1.py
+local_console/MRL_build_local_delivery_v1.py
+local_console/MRL_local_console_v1.py
+local_console/MRL_verify_local_package_v1.py
+local_console/README_zhTW.md
+local_console/index.html
 requirements.mrl45.lock
 schemas/MRL_36_routing_contract_provenance_R01.json
 schemas/MRL_gate_schema_provenance_v1.json
@@ -87,6 +97,8 @@ tests/test_hardware_admission.py
 tests/test_hardware_bundle.py
 tests/test_hardware_smoke.py
 tests/test_license_gate.py
+tests/test_local_console.py
+tests/test_local_delivery.py
 tests/test_node_evidence.py
 tests/test_product_bundle.py
 tests/test_reference_adapter.py

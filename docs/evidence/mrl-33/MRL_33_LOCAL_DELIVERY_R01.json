@@ -1,0 +1,201 @@
+{
+  "schema": "MRL_Local_Console_Engineering_Evidence_v1",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "date": "2026-11-05",
+  "parent_commit": "bd4052bff5b96548a7fad8e618804e633525cfc5",
+  "requested": [
+    "complete executable local-server acceptance source package",
+    "interactive operation interface",
+    "Windows/Linux launchers",
+    "original verification engine and parent Runtime dependency closure",
+    "local validation and downloadable receipts",
+    "exact source lineage and complete per-file hashes"
+  ],
+  "expected_changed_file_list": [
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_accept_local_v1.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_build_local_delivery_v1.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_Accept_Local.cmd",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_Start_Local.ps1",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_Start_Local.cmd",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_local_console_v1.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/index.html",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_verify_local_package_v1.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_Start_Local.sh",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/README_zhTW.md",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_local_console.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_local_delivery.py",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/EXPECTED_FILE_LIST.txt",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/MANIFEST.json",
+    "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/SHA256SUMS.txt",
+    "CHANGELOG.md",
+    "config/Mrliou_MRL_Sync_Delivery_v1.json",
+    "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+    ".github/workflows/mrl-artifact-trust.yml",
+    "docs/evidence/mrl-33/MRL_33_LOCAL_DELIVERY_R01.json"
+  ],
+  "actual_changed_file_count": 20,
+  "Missing": [],
+  "Extra": [],
+  "Mismatch": [],
+  "Renamed": [],
+  "Orphan": [],
+  "Coverage": 100,
+  "source_delivery": "DELIVERY_PASS",
+  "files": [
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_accept_local_v1.py",
+      "size": 2783,
+      "sha256": "5ce1c427ee526decf2d46b8ca87aae7c9e237086b877dd764ad95791be8b098f"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_build_local_delivery_v1.py",
+      "size": 6924,
+      "sha256": "80d7de1774e717ee1cbe1df6858868cd9c5c864a08015f03b7fb7b52de9bf913"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_Accept_Local.cmd",
+      "size": 262,
+      "sha256": "163ab17c65218c9101b0d6c870a900a83a3bda67c6658363ddd653706ec37440"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_Start_Local.ps1",
+      "size": 712,
+      "sha256": "a23d136c9a7e2e851e2a42e158db4ef4288df6540394cb49283969d4d51a4a93"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_Start_Local.cmd",
+      "size": 414,
+      "sha256": "033339c92fde43738445586396b62fc38a08f3a130ccd0a4e014618c3ec7daab"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_local_console_v1.py",
+      "size": 17397,
+      "sha256": "5c00a3bd0fb5af76f219fc66fd2dfc5aa435574ddf77b4f1bd6ebb74ca45759b"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/index.html",
+      "size": 13920,
+      "sha256": "d7e417129104c412224f3eb9bde530bc83029fa7cd4704cde221a3d58e01f1f3"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_verify_local_package_v1.py",
+      "size": 2582,
+      "sha256": "cb5c37d72f3f0c7ddb0623d8e9bf473f1121c586f3bee7de9e9aeb44efb9fcd1"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/MRL_Start_Local.sh",
+      "size": 155,
+      "sha256": "a32422af1fd4641409bc245c67bf535e121ab321a5609955c2a6c5e32b333b49"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/local_console/README_zhTW.md",
+      "size": 6561,
+      "sha256": "deeafa90b623b28d34d8b5bc0856bc6f7427a849fc72115f1c216c5a8245e082"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_local_console.py",
+      "size": 7862,
+      "sha256": "2f8a3a519b46c61b90ac74e4ea074df116801d3cde35dd03609e4b50c6a708a3"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/tests/test_local_delivery.py",
+      "size": 1851,
+      "sha256": "bdaa1ebc4cc0d5119e9975c9fb0641a53ba97fddb4ea1f24048d41bed274bd68"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/EXPECTED_FILE_LIST.txt",
+      "size": 1372,
+      "sha256": "848134a03bc6f721da6bf19b647f1ae61f578d0758807e9f4a1a086a3a39e98d"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/MANIFEST.json",
+      "size": 1140,
+      "sha256": "cb41c9120e4c15768d510a5f35052e437f767a9cc347c679246dade45e9c3bc3"
+    },
+    {
+      "path": "MRL_Products/MRL_APIWorks_BYOH_Deployment_Product_v1/SHA256SUMS.txt",
+      "size": 4129,
+      "sha256": "97087e7339f4e2c124e99d8e11f77415d9ce03ba133bf51f380b11202f398873"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "size": 10984,
+      "sha256": "e9e1272604570de5e62c7adc480c4d21fc9a45cfc82d8ef2982d19952e2b58fe"
+    },
+    {
+      "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
+      "size": 9291,
+      "sha256": "d905c72922fe977ef56259602be33cdd8e2aabadb03c819777c446cc52981438"
+    },
+    {
+      "path": "config/Mrliou_Structure_Authorization_Delivery_v1.json",
+      "size": 15810,
+      "sha256": "09c761470bcd6c9036b45e7288a29eb8954de9f3c3fbd8d487a808e5a69873e7"
+    },
+    {
+      "path": ".github/workflows/mrl-artifact-trust.yml",
+      "size": 5465,
+      "sha256": "c6f47eaf57c4c00f43b253e2ce4c7fb997f5d3ed00bafa77f02307571b177360"
+    }
+  ],
+  "self_hash_rule": "Report is bound by exact Git commit; excluded from own hash list.",
+  "package_map": {
+    "product_source_files": 43,
+    "parent_runtime_files": 32,
+    "root_launchers_docs_provenance_and_integrity": 8,
+    "expected_archive_files": 83,
+    "archive_root": "MRL_Runtime_Trust_Local_v1_1_0",
+    "zip_inventory_and_bytes": "REQUIRED_PERSISTED_READBACK"
+  },
+  "dependency_tree": {
+    "local_console": [
+      "existing_MRL_artifact_trust_v1",
+      "existing_MRL_capture_node_evidence_v1",
+      "local_HTML_UI",
+      "append_only_local_receipts"
+    ],
+    "Gateway_acceptance": [
+      "existing_parent_runtime",
+      "actual_local_model_endpoint",
+      "persisted_memory_and_evidence"
+    ],
+    "delivery_builder": [
+      "source_expected_list_and_checksums",
+      "parent_runtime_expected_list_and_checksums",
+      "root_launchers",
+      "archive_readback"
+    ],
+    "local_acceptance": [
+      "package_integrity",
+      "product_source_verifier",
+      "parent_runtime_verifier",
+      "complete_product_tests"
+    ]
+  },
+  "validation": {
+    "product_tests": {
+      "passed": 86,
+      "failed": 0
+    },
+    "new_console_HTTP_and_Gateway_tests": 8,
+    "new_package_tests": 2,
+    "JavaScript_syntax": "PASS_NODE_CHECK",
+    "Python_syntax": "PASS",
+    "browser_visual_interaction": "NOT_RUN_NO_BROWSER_BINARY_IN_EXECUTOR",
+    "hosted_CI": "PENDING_EXACT_COMMIT"
+  },
+  "separate_acceptance": {
+    "software": "LOCAL_TEST_PASS",
+    "supply_chain_isolation": "UNVERIFIED",
+    "formal_runtime_admission": "PRODUCTION_POLICY_UNCHANGED",
+    "DL580_real_node": "USER_LOCAL_EXECUTION_REQUIRED"
+  },
+  "operations": [
+    "server is loopback-only on 8766 with per-launch token",
+    "no installation, service replacement or firewall changes",
+    "Gateway capture only executes after explicit local operator action",
+    "temporary test private keys are never in exports",
+    "no policy, key rotation, formal merge or deployment performed"
+  ]
+}

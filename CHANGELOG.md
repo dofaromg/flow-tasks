@@ -198,6 +198,12 @@ For changes before 2026-01-12, please refer to the git commit history.
 - Add Linux/Windows CI and synthetic positive/negative tests. No merge, deployment, key rotation or DL580 acceptance.
 - origin_signature: MrLiouWord
 
+## 2026-11-05 — MRL-33 local server acceptance console v1.1.0
+
+- Deliver a loopback interactive console, background jobs, canonical Gateway capture/replay, public evidence export, receipt history and Windows/Linux launchers.
+- Build a complete checksummed offline source ZIP with the original product and parent Runtime dependency closure; provide one-command local acceptance and package integrity checks.
+- Preserve existing production trust policy and services; real-node acceptance remains a distinct local operator action. origin_signature: MrLiouWord
+
 ## MRL-47 Reference Adapter R01 · 2026-11-15
 
 Added the local `0.1-RC1-DRAFT` interface for health, capabilities, models,

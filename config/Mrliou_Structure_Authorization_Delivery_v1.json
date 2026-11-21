@@ -47,13 +47,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size_bytes": 11749,
-      "sha256": "6da5cab8d649c86672ad65bb7cf0c76ee920d52f00d6762c538d340c26164a12"
+      "size_bytes": 12309,
+      "sha256": "824ed573534a30b68ac2c2234a04c0df27b7d27dd064eb769e6bd23e17fbe7e7"
     },
     {
       "path": "config/Mrliou_MRL_Sync_Delivery_v1.json",
       "size_bytes": 11320,
-      "sha256": "a1935827fa6f08b629adfb927687195cbce5c81793c49541d1cda48c7046b985"
+      "sha256": "4945173b7246b7dcee1e4dac239b49c9e841da041f3fadfe920604d9eb28d4dd"
     }
   ],
   "self_hash": "Record SHA-256 of this manifest in external delivery evidence; no recursive self-hash.",
