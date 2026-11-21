@@ -1,0 +1,1571 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "MRL PaniniClusterInsight Bridge",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://bridge.mrliouword.com"
+    }
+  ],
+  "paths": {
+    "/MRL_particle/panini/v1/F1": {
+      "post": {
+        "operationId": "cluster_activity_ranker",
+        "summary": "MRL S4.5 F1 read/compute",
+        "x-openai-isConsequential": false,
+        "security": [
+          {
+            "MRLReadKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dataset_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+                  },
+                  "expected_schema_version": {
+                    "const": "panini_cluster_insight/v1.0.0"
+                  },
+                  "cluster_root": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 1024
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "avg_cluster_size_ratio": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "exclusiveMaximum": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "dataset_id",
+                  "expected_schema_version",
+                  "cluster_root",
+                  "avg_cluster_size_ratio"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deterministic result; byte-pinned provenance, no mother mutation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "ok",
+                    "canonical_name",
+                    "schema_version",
+                    "origin_signature",
+                    "internal_id",
+                    "stage",
+                    "function",
+                    "dataset_id",
+                    "lineage",
+                    "result",
+                    "result_sha256",
+                    "mutation"
+                  ],
+                  "properties": {
+                    "ok": {
+                      "const": true
+                    },
+                    "canonical_name": {
+                      "const": "Mrliou_MRL_ParticleDict_PaniniClusterInsight_v1.0.0"
+                    },
+                    "schema_version": {
+                      "const": "panini_cluster_insight/v1.0.0"
+                    },
+                    "origin_signature": {
+                      "const": "MrLiouWord"
+                    },
+                    "internal_id": {
+                      "const": "Mrliou.ParticleDict.PaniniClusterInsight.v1"
+                    },
+                    "stage": {
+                      "const": "S4.5"
+                    },
+                    "function": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "properties": {
+                        "id": {
+                          "enum": [
+                            "F1",
+                            "F2",
+                            "F3",
+                            "F4",
+                            "F5",
+                            "F6"
+                          ]
+                        },
+                        "name": {
+                          "enum": [
+                            "cluster_activity_ranker",
+                            "ontology_aspect_detector",
+                            "fractal_self_similarity_scorer",
+                            "panini_ontology_profiler",
+                            "concept_intensity_map",
+                            "downstream_module_advisor"
+                          ]
+                        }
+                      }
+                    },
+                    "dataset_id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+                    },
+                    "lineage": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "canonical_source_sha256",
+                        "snapshot_sha256",
+                        "upstream",
+                        "verification",
+                        "input_sha256",
+                        "implementation_version"
+                      ],
+                      "properties": {
+                        "canonical_source_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "snapshot_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "upstream": {
+                          "type": "object",
+                          "properties": {
+                            "S4": {
+                              "type": "object",
+                              "properties": {
+                                "ref": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "sha256": {
+                                  "type": "string",
+                                  "pattern": "^[a-f0-9]{64}$"
+                                }
+                              },
+                              "required": [
+                                "ref",
+                                "version",
+                                "sha256"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "S3_5": {
+                              "type": "object",
+                              "properties": {
+                                "ref": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "sha256": {
+                                  "type": "string",
+                                  "pattern": "^[a-f0-9]{64}$"
+                                }
+                              },
+                              "required": [
+                                "ref",
+                                "version",
+                                "sha256"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "S4",
+                            "S3_5"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "verification": {
+                          "const": "operator_registered_byte_pins_not_semantic_canonical_approval"
+                        },
+                        "input_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "implementation_version": {
+                          "const": "MRL.PaniniAdapter/v1.0.0"
+                        }
+                      }
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        },
+                        {
+                          "type": "object"
+                        }
+                      ]
+                    },
+                    "result_sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "mutation": {
+                      "const": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "401/403 read permission; 409 pin or lineage mismatch; 413 body limit; 415 media type; 422 invalid input; 503 unregistered/unavailable dataset."
+          }
+        }
+      }
+    },
+    "/MRL_particle/panini/v1/F2": {
+      "post": {
+        "operationId": "ontology_aspect_detector",
+        "summary": "MRL S4.5 F2 read/compute",
+        "x-openai-isConsequential": false,
+        "security": [
+          {
+            "MRLReadKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dataset_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+                  },
+                  "expected_schema_version": {
+                    "const": "panini_cluster_insight/v1.0.0"
+                  },
+                  "cluster_root": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 1024
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "avg_cluster_size_ratio": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "exclusiveMaximum": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "dataset_id",
+                  "expected_schema_version",
+                  "cluster_root",
+                  "avg_cluster_size_ratio"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deterministic result; byte-pinned provenance, no mother mutation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "ok",
+                    "canonical_name",
+                    "schema_version",
+                    "origin_signature",
+                    "internal_id",
+                    "stage",
+                    "function",
+                    "dataset_id",
+                    "lineage",
+                    "result",
+                    "result_sha256",
+                    "mutation"
+                  ],
+                  "properties": {
+                    "ok": {
+                      "const": true
+                    },
+                    "canonical_name": {
+                      "const": "Mrliou_MRL_ParticleDict_PaniniClusterInsight_v1.0.0"
+                    },
+                    "schema_version": {
+                      "const": "panini_cluster_insight/v1.0.0"
+                    },
+                    "origin_signature": {
+                      "const": "MrLiouWord"
+                    },
+                    "internal_id": {
+                      "const": "Mrliou.ParticleDict.PaniniClusterInsight.v1"
+                    },
+                    "stage": {
+                      "const": "S4.5"
+                    },
+                    "function": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "properties": {
+                        "id": {
+                          "enum": [
+                            "F1",
+                            "F2",
+                            "F3",
+                            "F4",
+                            "F5",
+                            "F6"
+                          ]
+                        },
+                        "name": {
+                          "enum": [
+                            "cluster_activity_ranker",
+                            "ontology_aspect_detector",
+                            "fractal_self_similarity_scorer",
+                            "panini_ontology_profiler",
+                            "concept_intensity_map",
+                            "downstream_module_advisor"
+                          ]
+                        }
+                      }
+                    },
+                    "dataset_id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+                    },
+                    "lineage": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "canonical_source_sha256",
+                        "snapshot_sha256",
+                        "upstream",
+                        "verification",
+                        "input_sha256",
+                        "implementation_version"
+                      ],
+                      "properties": {
+                        "canonical_source_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "snapshot_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "upstream": {
+                          "type": "object",
+                          "properties": {
+                            "S4": {
+                              "type": "object",
+                              "properties": {
+                                "ref": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "sha256": {
+                                  "type": "string",
+                                  "pattern": "^[a-f0-9]{64}$"
+                                }
+                              },
+                              "required": [
+                                "ref",
+                                "version",
+                                "sha256"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "S3_5": {
+                              "type": "object",
+                              "properties": {
+                                "ref": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "sha256": {
+                                  "type": "string",
+                                  "pattern": "^[a-f0-9]{64}$"
+                                }
+                              },
+                              "required": [
+                                "ref",
+                                "version",
+                                "sha256"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "S4",
+                            "S3_5"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "verification": {
+                          "const": "operator_registered_byte_pins_not_semantic_canonical_approval"
+                        },
+                        "input_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "implementation_version": {
+                          "const": "MRL.PaniniAdapter/v1.0.0"
+                        }
+                      }
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        },
+                        {
+                          "type": "object"
+                        }
+                      ]
+                    },
+                    "result_sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "mutation": {
+                      "const": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "401/403 read permission; 409 pin or lineage mismatch; 413 body limit; 415 media type; 422 invalid input; 503 unregistered/unavailable dataset."
+          }
+        }
+      }
+    },
+    "/MRL_particle/panini/v1/F3": {
+      "post": {
+        "operationId": "fractal_self_similarity_scorer",
+        "summary": "MRL S4.5 F3 read/compute",
+        "x-openai-isConsequential": false,
+        "security": [
+          {
+            "MRLReadKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dataset_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+                  },
+                  "expected_schema_version": {
+                    "const": "panini_cluster_insight/v1.0.0"
+                  },
+                  "cluster_root": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 1024
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "avg_cluster_size_ratio": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "exclusiveMaximum": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "dataset_id",
+                  "expected_schema_version",
+                  "cluster_root",
+                  "avg_cluster_size_ratio"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deterministic result; byte-pinned provenance, no mother mutation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "ok",
+                    "canonical_name",
+                    "schema_version",
+                    "origin_signature",
+                    "internal_id",
+                    "stage",
+                    "function",
+                    "dataset_id",
+                    "lineage",
+                    "result",
+                    "result_sha256",
+                    "mutation"
+                  ],
+                  "properties": {
+                    "ok": {
+                      "const": true
+                    },
+                    "canonical_name": {
+                      "const": "Mrliou_MRL_ParticleDict_PaniniClusterInsight_v1.0.0"
+                    },
+                    "schema_version": {
+                      "const": "panini_cluster_insight/v1.0.0"
+                    },
+                    "origin_signature": {
+                      "const": "MrLiouWord"
+                    },
+                    "internal_id": {
+                      "const": "Mrliou.ParticleDict.PaniniClusterInsight.v1"
+                    },
+                    "stage": {
+                      "const": "S4.5"
+                    },
+                    "function": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "properties": {
+                        "id": {
+                          "enum": [
+                            "F1",
+                            "F2",
+                            "F3",
+                            "F4",
+                            "F5",
+                            "F6"
+                          ]
+                        },
+                        "name": {
+                          "enum": [
+                            "cluster_activity_ranker",
+                            "ontology_aspect_detector",
+                            "fractal_self_similarity_scorer",
+                            "panini_ontology_profiler",
+                            "concept_intensity_map",
+                            "downstream_module_advisor"
+                          ]
+                        }
+                      }
+                    },
+                    "dataset_id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+                    },
+                    "lineage": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "canonical_source_sha256",
+                        "snapshot_sha256",
+                        "upstream",
+                        "verification",
+                        "input_sha256",
+                        "implementation_version"
+                      ],
+                      "properties": {
+                        "canonical_source_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "snapshot_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "upstream": {
+                          "type": "object",
+                          "properties": {
+                            "S4": {
+                              "type": "object",
+                              "properties": {
+                                "ref": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "sha256": {
+                                  "type": "string",
+                                  "pattern": "^[a-f0-9]{64}$"
+                                }
+                              },
+                              "required": [
+                                "ref",
+                                "version",
+                                "sha256"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "S3_5": {
+                              "type": "object",
+                              "properties": {
+                                "ref": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "sha256": {
+                                  "type": "string",
+                                  "pattern": "^[a-f0-9]{64}$"
+                                }
+                              },
+                              "required": [
+                                "ref",
+                                "version",
+                                "sha256"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "S4",
+                            "S3_5"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "verification": {
+                          "const": "operator_registered_byte_pins_not_semantic_canonical_approval"
+                        },
+                        "input_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "implementation_version": {
+                          "const": "MRL.PaniniAdapter/v1.0.0"
+                        }
+                      }
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        },
+                        {
+                          "type": "object"
+                        }
+                      ]
+                    },
+                    "result_sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "mutation": {
+                      "const": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "401/403 read permission; 409 pin or lineage mismatch; 413 body limit; 415 media type; 422 invalid input; 503 unregistered/unavailable dataset."
+          }
+        }
+      }
+    },
+    "/MRL_particle/panini/v1/F4": {
+      "post": {
+        "operationId": "panini_ontology_profiler",
+        "summary": "MRL S4.5 F4 read/compute",
+        "x-openai-isConsequential": false,
+        "security": [
+          {
+            "MRLReadKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dataset_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+                  },
+                  "expected_schema_version": {
+                    "const": "panini_cluster_insight/v1.0.0"
+                  },
+                  "cluster_root": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 1024
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "avg_cluster_size_ratio": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "exclusiveMaximum": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "dataset_id",
+                  "expected_schema_version",
+                  "cluster_root",
+                  "avg_cluster_size_ratio"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deterministic result; byte-pinned provenance, no mother mutation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "ok",
+                    "canonical_name",
+                    "schema_version",
+                    "origin_signature",
+                    "internal_id",
+                    "stage",
+                    "function",
+                    "dataset_id",
+                    "lineage",
+                    "result",
+                    "result_sha256",
+                    "mutation"
+                  ],
+                  "properties": {
+                    "ok": {
+                      "const": true
+                    },
+                    "canonical_name": {
+                      "const": "Mrliou_MRL_ParticleDict_PaniniClusterInsight_v1.0.0"
+                    },
+                    "schema_version": {
+                      "const": "panini_cluster_insight/v1.0.0"
+                    },
+                    "origin_signature": {
+                      "const": "MrLiouWord"
+                    },
+                    "internal_id": {
+                      "const": "Mrliou.ParticleDict.PaniniClusterInsight.v1"
+                    },
+                    "stage": {
+                      "const": "S4.5"
+                    },
+                    "function": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "properties": {
+                        "id": {
+                          "enum": [
+                            "F1",
+                            "F2",
+                            "F3",
+                            "F4",
+                            "F5",
+                            "F6"
+                          ]
+                        },
+                        "name": {
+                          "enum": [
+                            "cluster_activity_ranker",
+                            "ontology_aspect_detector",
+                            "fractal_self_similarity_scorer",
+                            "panini_ontology_profiler",
+                            "concept_intensity_map",
+                            "downstream_module_advisor"
+                          ]
+                        }
+                      }
+                    },
+                    "dataset_id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+                    },
+                    "lineage": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "canonical_source_sha256",
+                        "snapshot_sha256",
+                        "upstream",
+                        "verification",
+                        "input_sha256",
+                        "implementation_version"
+                      ],
+                      "properties": {
+                        "canonical_source_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "snapshot_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "upstream": {
+                          "type": "object",
+                          "properties": {
+                            "S4": {
+                              "type": "object",
+                              "properties": {
+                                "ref": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "sha256": {
+                                  "type": "string",
+                                  "pattern": "^[a-f0-9]{64}$"
+                                }
+                              },
+                              "required": [
+                                "ref",
+                                "version",
+                                "sha256"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "S3_5": {
+                              "type": "object",
+                              "properties": {
+                                "ref": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "sha256": {
+                                  "type": "string",
+                                  "pattern": "^[a-f0-9]{64}$"
+                                }
+                              },
+                              "required": [
+                                "ref",
+                                "version",
+                                "sha256"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "S4",
+                            "S3_5"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "verification": {
+                          "const": "operator_registered_byte_pins_not_semantic_canonical_approval"
+                        },
+                        "input_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "implementation_version": {
+                          "const": "MRL.PaniniAdapter/v1.0.0"
+                        }
+                      }
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        },
+                        {
+                          "type": "object"
+                        }
+                      ]
+                    },
+                    "result_sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "mutation": {
+                      "const": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "401/403 read permission; 409 pin or lineage mismatch; 413 body limit; 415 media type; 422 invalid input; 503 unregistered/unavailable dataset."
+          }
+        }
+      }
+    },
+    "/MRL_particle/panini/v1/F5": {
+      "post": {
+        "operationId": "concept_intensity_map",
+        "summary": "MRL S4.5 F5 read/compute",
+        "x-openai-isConsequential": false,
+        "security": [
+          {
+            "MRLReadKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dataset_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+                  },
+                  "expected_schema_version": {
+                    "const": "panini_cluster_insight/v1.0.0"
+                  },
+                  "cluster_root": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 1024
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "avg_cluster_size_ratio": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "exclusiveMaximum": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "dataset_id",
+                  "expected_schema_version",
+                  "cluster_root",
+                  "avg_cluster_size_ratio"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deterministic result; byte-pinned provenance, no mother mutation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "ok",
+                    "canonical_name",
+                    "schema_version",
+                    "origin_signature",
+                    "internal_id",
+                    "stage",
+                    "function",
+                    "dataset_id",
+                    "lineage",
+                    "result",
+                    "result_sha256",
+                    "mutation"
+                  ],
+                  "properties": {
+                    "ok": {
+                      "const": true
+                    },
+                    "canonical_name": {
+                      "const": "Mrliou_MRL_ParticleDict_PaniniClusterInsight_v1.0.0"
+                    },
+                    "schema_version": {
+                      "const": "panini_cluster_insight/v1.0.0"
+                    },
+                    "origin_signature": {
+                      "const": "MrLiouWord"
+                    },
+                    "internal_id": {
+                      "const": "Mrliou.ParticleDict.PaniniClusterInsight.v1"
+                    },
+                    "stage": {
+                      "const": "S4.5"
+                    },
+                    "function": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "properties": {
+                        "id": {
+                          "enum": [
+                            "F1",
+                            "F2",
+                            "F3",
+                            "F4",
+                            "F5",
+                            "F6"
+                          ]
+                        },
+                        "name": {
+                          "enum": [
+                            "cluster_activity_ranker",
+                            "ontology_aspect_detector",
+                            "fractal_self_similarity_scorer",
+                            "panini_ontology_profiler",
+                            "concept_intensity_map",
+                            "downstream_module_advisor"
+                          ]
+                        }
+                      }
+                    },
+                    "dataset_id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+                    },
+                    "lineage": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "canonical_source_sha256",
+                        "snapshot_sha256",
+                        "upstream",
+                        "verification",
+                        "input_sha256",
+                        "implementation_version"
+                      ],
+                      "properties": {
+                        "canonical_source_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "snapshot_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "upstream": {
+                          "type": "object",
+                          "properties": {
+                            "S4": {
+                              "type": "object",
+                              "properties": {
+                                "ref": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "sha256": {
+                                  "type": "string",
+                                  "pattern": "^[a-f0-9]{64}$"
+                                }
+                              },
+                              "required": [
+                                "ref",
+                                "version",
+                                "sha256"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "S3_5": {
+                              "type": "object",
+                              "properties": {
+                                "ref": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "sha256": {
+                                  "type": "string",
+                                  "pattern": "^[a-f0-9]{64}$"
+                                }
+                              },
+                              "required": [
+                                "ref",
+                                "version",
+                                "sha256"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "S4",
+                            "S3_5"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "verification": {
+                          "const": "operator_registered_byte_pins_not_semantic_canonical_approval"
+                        },
+                        "input_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "implementation_version": {
+                          "const": "MRL.PaniniAdapter/v1.0.0"
+                        }
+                      }
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        },
+                        {
+                          "type": "object"
+                        }
+                      ]
+                    },
+                    "result_sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "mutation": {
+                      "const": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "401/403 read permission; 409 pin or lineage mismatch; 413 body limit; 415 media type; 422 invalid input; 503 unregistered/unavailable dataset."
+          }
+        }
+      }
+    },
+    "/MRL_particle/panini/v1/F6": {
+      "post": {
+        "operationId": "downstream_module_advisor",
+        "summary": "MRL S4.5 F6 read/compute",
+        "x-openai-isConsequential": false,
+        "security": [
+          {
+            "MRLReadKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dataset_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+                  },
+                  "expected_schema_version": {
+                    "const": "panini_cluster_insight/v1.0.0"
+                  },
+                  "cluster_root": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 1024
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "avg_cluster_size_ratio": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "exclusiveMaximum": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "dataset_id",
+                  "expected_schema_version",
+                  "cluster_root",
+                  "avg_cluster_size_ratio"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deterministic result; byte-pinned provenance, no mother mutation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "ok",
+                    "canonical_name",
+                    "schema_version",
+                    "origin_signature",
+                    "internal_id",
+                    "stage",
+                    "function",
+                    "dataset_id",
+                    "lineage",
+                    "result",
+                    "result_sha256",
+                    "mutation"
+                  ],
+                  "properties": {
+                    "ok": {
+                      "const": true
+                    },
+                    "canonical_name": {
+                      "const": "Mrliou_MRL_ParticleDict_PaniniClusterInsight_v1.0.0"
+                    },
+                    "schema_version": {
+                      "const": "panini_cluster_insight/v1.0.0"
+                    },
+                    "origin_signature": {
+                      "const": "MrLiouWord"
+                    },
+                    "internal_id": {
+                      "const": "Mrliou.ParticleDict.PaniniClusterInsight.v1"
+                    },
+                    "stage": {
+                      "const": "S4.5"
+                    },
+                    "function": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "properties": {
+                        "id": {
+                          "enum": [
+                            "F1",
+                            "F2",
+                            "F3",
+                            "F4",
+                            "F5",
+                            "F6"
+                          ]
+                        },
+                        "name": {
+                          "enum": [
+                            "cluster_activity_ranker",
+                            "ontology_aspect_detector",
+                            "fractal_self_similarity_scorer",
+                            "panini_ontology_profiler",
+                            "concept_intensity_map",
+                            "downstream_module_advisor"
+                          ]
+                        }
+                      }
+                    },
+                    "dataset_id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_.-]{1,80}$"
+                    },
+                    "lineage": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "canonical_source_sha256",
+                        "snapshot_sha256",
+                        "upstream",
+                        "verification",
+                        "input_sha256",
+                        "implementation_version"
+                      ],
+                      "properties": {
+                        "canonical_source_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "snapshot_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "upstream": {
+                          "type": "object",
+                          "properties": {
+                            "S4": {
+                              "type": "object",
+                              "properties": {
+                                "ref": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "sha256": {
+                                  "type": "string",
+                                  "pattern": "^[a-f0-9]{64}$"
+                                }
+                              },
+                              "required": [
+                                "ref",
+                                "version",
+                                "sha256"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "S3_5": {
+                              "type": "object",
+                              "properties": {
+                                "ref": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "version": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                },
+                                "sha256": {
+                                  "type": "string",
+                                  "pattern": "^[a-f0-9]{64}$"
+                                }
+                              },
+                              "required": [
+                                "ref",
+                                "version",
+                                "sha256"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "S4",
+                            "S3_5"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "verification": {
+                          "const": "operator_registered_byte_pins_not_semantic_canonical_approval"
+                        },
+                        "input_sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "implementation_version": {
+                          "const": "MRL.PaniniAdapter/v1.0.0"
+                        }
+                      }
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        },
+                        {
+                          "type": "object"
+                        }
+                      ]
+                    },
+                    "result_sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "mutation": {
+                      "const": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "401/403 read permission; 409 pin or lineage mismatch; 413 body limit; 415 media type; 422 invalid input; 503 unregistered/unavailable dataset."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "MRLReadKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
+      }
+    }
+  }
+}

@@ -731,6 +731,10 @@ app.post('/MRL_redis', auth, async (req, res) => {
 // 404 + 全局錯誤處理
 // ═════════════════════════════════════════════
 
+// S4.5 read/compute routes share this Bridge, rate limit and translation ledger.
+// A separate read capability never grants file-write, SQL or command execution.
+require('./panini_cluster_insight/adapter.cjs').install(app);
+
 app.use((req, res) => {
   res.status(404).json({
     ok: false,
