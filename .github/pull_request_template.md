@@ -20,4 +20,4 @@ Root approval evidence: none / reference
 
 ## Verification
 
-List commands, results and rollback. A mass change without a root-approved migration contract must not be merged.
+List commands, results and rollback. A mass change without a root-approved migration contract must not be merged, except for same-repository syncs from the default branch to a non-default branch; those syncs still run all governance checks other than the file-count threshold.
