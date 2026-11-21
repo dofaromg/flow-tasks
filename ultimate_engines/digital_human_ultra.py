@@ -78,6 +78,7 @@ class DigitalHumanEngine:
     def _load_models(self):
         """加載所需模型"""
         try:
+            self.orchestrator.verify_admitted_allocation("digital_human", self.gpu_ids)
             # 從緩存加載模型
             lip_sync_model_name = f"digital_human_models.{self.config.lip_sync_model}"
             face_model_name = f"digital_human_models.{self.config.face_model}"
@@ -92,7 +93,8 @@ class DigitalHumanEngine:
             if self.models['face'] is None:
                 logger.warning(f"Face model '{face_model_name}' not in cache, using placeholder")
                 self.models['face'] = self._create_placeholder_model("face")
-            
+
+            self.orchestrator.verify_admitted_allocation("digital_human", self.gpu_ids)
             logger.info("Models loaded successfully")
             
         except Exception as e:

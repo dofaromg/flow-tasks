@@ -75,6 +75,7 @@ class VoiceCloneEngine:
     def _load_models(self):
         """加載所需模型"""
         try:
+            self.orchestrator.verify_admitted_allocation("voice_clone", self.gpu_ids)
             model_name = f"voice_clone_models.{self.config.model}"
             self.models['tts'] = self.model_cache.get_model(model_name)
             
@@ -82,6 +83,7 @@ class VoiceCloneEngine:
                 logger.warning(f"TTS model '{model_name}' not in cache, using placeholder")
                 self.models['tts'] = self._create_placeholder_model()
             
+            self.orchestrator.verify_admitted_allocation("voice_clone", self.gpu_ids)
             logger.info("Voice clone models loaded successfully")
             
         except Exception as e:

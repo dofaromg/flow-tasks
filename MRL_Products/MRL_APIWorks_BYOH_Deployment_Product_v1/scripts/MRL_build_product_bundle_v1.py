@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import shutil
@@ -42,8 +43,18 @@ def files_under(root: Path) -> list[Path]:
     )
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     """Verify source packages and create a repository-shaped customer bundle."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--hardware-route', help='Exact bundle_id from hardware matrix; source packaging only')
+    args = parser.parse_args([] if argv is None else argv)
+    hardware_route = None
+    if args.hardware_route:
+        matrix = json.loads((PRODUCT_ROOT / 'hardware/MRL_hardware_matrix_v1.json').read_text(encoding='utf-8'))
+        hardware_route = next((route for route in matrix['routes']
+                               if route['bundle_id'] == args.hardware_route), None)
+        if hardware_route is None:
+            raise ValueError('unknown hardware bundle route')
     subprocess.run(
         [sys.executable, str(PRODUCT_ROOT / "scripts" / "MRL_verify_product_source_v1.py")],
         cwd=PRODUCT_ROOT,
@@ -55,7 +66,7 @@ def main() -> int:
         check=True,
     )
     DIST.mkdir(parents=True, exist_ok=True)
-    output = DIST / f"{BUNDLE_ROOT_NAME}.zip"
+    output = DIST / f"{args.hardware_route or BUNDLE_ROOT_NAME}.zip"
     with tempfile.TemporaryDirectory() as temporary:
         stage = Path(temporary) / BUNDLE_ROOT_NAME
         runtime_target = stage / RUNTIME_RELATIVE
@@ -63,6 +74,14 @@ def main() -> int:
         shutil.copytree(RUNTIME_ROOT, runtime_target, ignore=shutil.ignore_patterns("__pycache__"))
         shutil.copytree(PRODUCT_ROOT, product_target, ignore=shutil.ignore_patterns("dist", "__pycache__"))
 
+        if hardware_route:
+            # These are distinct source delivery artifacts, not GPU runtime validation.
+            (stage / 'MRL_HARDWARE_ROUTE.json').write_text(json.dumps({
+                'origin_signature': 'MrLiouWord', 'bundle_id': hardware_route['bundle_id'],
+                'route': hardware_route, 'artifact_kind': 'source_bundle',
+                'hardware_admission': 'unknown', 'runtime_binary_included': False,
+                'acceptance_evidence': [],
+            }, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         mutable_config_target = stage / MUTABLE_CONFIG
         mutable_config_target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(
@@ -87,6 +106,9 @@ def main() -> int:
             "archive_root": BUNDLE_ROOT_NAME,
             "mutable_after_extraction": [MUTABLE_CONFIG.as_posix()],
             "files": entries,
+            "hardware_bundle_id": args.hardware_route,
+            "hardware_admission": "unknown",
+            "hardware_acceptance_evidence": [],
         }
         (stage / MANIFEST_NAME).write_text(
             json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
@@ -125,4 +147,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv[1:]))
