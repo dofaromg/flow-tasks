@@ -1,0 +1,57 @@
+{
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "upstream_commit": "608b66e0db23e7cc4eef21ea752668ac800620b3",
+  "expected_dependencies": {
+    "README.md": [
+      "mrl_local.py",
+      "Start_MRL_FLPKG.ps1",
+      "start_mrl_flpkg.sh",
+      "test_mrl_local.py",
+      "audit_delivery.py"
+    ],
+    "mrl_local.py": [
+      "console.html",
+      "mrl_runtime.py",
+      "mrl_package.py"
+    ],
+    "mrl_runtime.py": [
+      "mrl_package.py",
+      "mrl_diagnostics.py",
+      "particle_core/src/logic_pipeline.py"
+    ],
+    "particle_core/src/logic_pipeline.py": [
+      "particle_core/src/pipeline_constants.py"
+    ],
+    "test_mrl_local.py": [
+      "mrl_local.py",
+      "下載重建器腳本MRLiou_FLPKG_Rebuilder.py"
+    ],
+    "audit_delivery.py": [
+      "Expected_Delivery.json",
+      "DELIVERY_MANIFEST.json"
+    ]
+  },
+  "expected_files": [
+    "README.md",
+    "mrl_local.py",
+    "mrl_runtime.py",
+    "mrl_package.py",
+    "mrl_diagnostics.py",
+    "console.html",
+    "Start_MRL_FLPKG.ps1",
+    "start_mrl_flpkg.sh",
+    "test_mrl_local.py",
+    "audit_delivery.py",
+    "Expected_Delivery.json",
+    "DELIVERY_MANIFEST.json",
+    "particle_core/src/logic_pipeline.py",
+    "particle_core/src/pipeline_constants.py",
+    "下載重建器腳本MRLiou_FLPKG_Rebuilder.py"
+  ],
+  "upstream_git_blobs": {
+    "particle_core/src/logic_pipeline.py": "5c1b3edcf34ccd50f684857e996cd8852407999a",
+    "particle_core/src/pipeline_constants.py": "4dd99ecf2d54ad2d60f0737a9581469eebaa46cc",
+    "下載重建器腳本MRLiou_FLPKG_Rebuilder.py": "2684601a3f97cf1f2a64649c8c09f2bf777621ec"
+  }
+}
