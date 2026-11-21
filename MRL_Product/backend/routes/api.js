@@ -17,9 +17,8 @@ const { selectTemplate } = require('../core/generator/template-selector');
 const { normalizeProductResult, TEMPLATE_SCHEMA } = require('../templates/product-template'); // 保留相容
 const { track, ctxFromReq } = require('../modules/events');
 const { getOrder } = require('../modules/order');
-const { hasActiveSubscription,
-        hasActiveSubscriptionWithOwner,
-        isOwnerAccount } = require('../modules/rules');
+const { hasActiveSubscriptionWithOwner } = require('../modules/rules');
+const { ownsOrder } = require('../modules/access');
 const { uuid } = require('../utils/ids');
 const { now } = require('../utils/time');
 const { requireFields, sanitizeText } = require('../utils/validate');
@@ -33,8 +32,7 @@ router.post('/session', (req, res) => {
   res.set('X-Session-Token', sess.token);
   // 第十九包：回傳訂閱狀態，讓前端知道是否為訂閱者
   // 第十九包：owner 帳號直接有效訂閱
-  const _email = req.body?.email || req.email || null;
-  const sub = hasActiveSubscriptionWithOwner(sess.sessionId, req.userId, _email);
+  const sub = hasActiveSubscriptionWithOwner(sess.sessionId, req.userId, false);
   res.json({
     token: sess.token,
     sessionId: sess.sessionId,
@@ -46,7 +44,7 @@ router.post('/session', (req, res) => {
 // ── GET /api/session/status ───────────────────────────────────────
 // 已登入者查詢自己的訂閱狀態
 router.get('/session/status', (req, res) => {
-  const sub = hasActiveSubscriptionWithOwner(req.sessionId, req.userId, req.email);
+  const sub = hasActiveSubscriptionWithOwner(req.sessionId, req.userId, req.isVerifiedOwner);
   res.json({
     session_id: req.sessionId,
     has_subscription: !!sub,
@@ -55,19 +53,38 @@ router.get('/session/status', (req, res) => {
   });
 });
 
+// Mother Interface: report only observed state, never synthetic DL580 evidence.
+router.get('/interface/status', (req, res) => {
+  let memoryDb = 'unknown';
+  try { memoryDb = getDb().prepare('SELECT 1 AS ok').get()?.ok === 1 ? 'verified' : 'unknown'; }
+  catch { memoryDb = 'unavailable'; }
+  res.set('Cache-Control', 'no-store');
+  res.json({
+    ok: memoryDb === 'verified', service: 'MRL_Product_v1',
+    origin_signature: 'MrLiouWord', observed_at: new Date().toISOString(),
+    modules: { runtime: 'verified', memory_db: memoryDb, dl580: 'unknown', mother_bridge: 'unknown', gpu_v100: 'unknown' }
+  });
+});
+
+// Read-only session-scoped view of existing append-only events and analyses.
+router.get('/interface/timeline', (req, res) => {
+  const db = getDb();
+  const events = db.prepare('SELECT id, event_name, analysis_id, created_at FROM event_logs WHERE session_id = ? ORDER BY created_at DESC, id DESC LIMIT 20').all(req.sessionId);
+  const analyses = db.prepare('SELECT id, status, category, created_at FROM analyses WHERE session_id = ? OR (user_id IS NOT NULL AND user_id = ?) ORDER BY created_at DESC, id DESC LIMIT 20').all(req.sessionId, req.userId || '');
+  res.set('Cache-Control', 'no-store');
+  res.json({ ok: true, origin_signature: 'MrLiouWord', events, analyses });
+});
+
 // ── POST /api/login ──────────────────────────────────────────────
 router.post('/login', (req, res) => {
-  const { email } = req.body || {};
-  if (!email) return res.status(400).json({ error: 'email required' });
-  const result = login(email);
-  // 第十九包：owner 帳號登入直接有效訂閱
-  const isOwner = isOwnerAccount(email);
-  res.json({
-    ...result,
-    has_subscription:     isOwner || !!result.has_subscription,
-    subscription_expires: isOwner ? '2099-12-31T00:00:00Z' : result.subscription_expires,
-    is_owner:             isOwner,
-  });
+  const { email, password } = req.body || {};
+  if (typeof email !== 'string' || typeof password !== 'string') {
+    return res.status(400).json({ error: 'email and password required' });
+  }
+  const result = login(email, password);
+  if (!result) return res.status(401).json({ error: 'Invalid credentials' });
+  res.set('Cache-Control', 'no-store');
+  res.json(result);
 });
 
 // ── POST /api/analyze ────────────────────────────────────────────
@@ -103,7 +120,7 @@ router.post('/analyze', async (req, res) => {
 
   try {
     // 第十四包：Core Generator 主流程
-    const hasSub = hasActiveSubscriptionWithOwner(req.sessionId, req.userId, req.email);
+    const hasSub = hasActiveSubscriptionWithOwner(req.sessionId, req.userId, req.isVerifiedOwner);
 
     // 呼叫 Core Generator（含 AnalyzeEngine + TemplateSelector + Normalizer + Composer）
     const { rawResult, payload } = await CoreGenerator.analyze({
@@ -170,7 +187,7 @@ router.get('/result/:analysisId', (req, res) => {
 // ── GET /api/order/:orderId ──────────────────────────────────────
 router.get('/order/:orderId', (req, res) => {
   const order = getOrder(req.params.orderId);
-  if (!order) return res.status(404).json({ error: 'Order not found' });
+  if (!order || !ownsOrder(order, req.sessionId, req.userId)) return res.status(404).json({ error: 'Order not found' });
   res.json({
     id: order.id,
     status: order.status,

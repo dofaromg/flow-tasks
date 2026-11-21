@@ -1,0 +1,57 @@
+name: MRL Interface Entry R02
+on:
+  pull_request:
+    paths:
+      - 'MRL_Product/**'
+      - '.github/workflows/mrl-interface-entry.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Package existing MRL_Product only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mrl-interface-exact-head-source
+          path: MRL_Product/
+          retention-days: 7
+          if-no-files-found: error
+
+  interface-access:
+    needs: package-source
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Read exactly the same packaged source
+        uses: actions/download-artifact@v4
+        with:
+          name: mrl-interface-exact-head-source
+          path: MRL_Product
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check existing source syntax
+        shell: bash
+        run: |
+          node --check MRL_Product/backend/config.js
+          node --check MRL_Product/backend/modules/identity.js
+          node --check MRL_Product/backend/modules/rules.js
+          node --check MRL_Product/backend/modules/access.js
+          node --check MRL_Product/backend/modules/full_output.js
+          node --check MRL_Product/backend/routes/api.js
+          node --check MRL_Product/backend/routes/admin.js
+          node --check MRL_Product/backend/routes/payment.js
+          node --check MRL_Product/backend/routes/pack.js
+          node --check MRL_Product/backend/core/packs/pack-builder.js
+      - name: Session ownership unit tests
+        working-directory: MRL_Product
+        run: npm run test:interface

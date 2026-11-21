@@ -13,7 +13,7 @@ const { runReconciliation } = require('../modules/reconciliation');
 
 // ── Admin 認證 middleware ─────────────────────────────────────────
 router.use((req, res, next) => {
-  const key = req.headers['x-admin-key'] || req.query.key;
+  const key = req.headers['x-admin-key'];
   if (key !== config.adminKey) {
     return res.status(403).json({ error: 'Forbidden' });
   }

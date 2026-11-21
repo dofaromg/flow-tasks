@@ -13,6 +13,8 @@ const { normalizeResult }    = require('../generator/result-normalizer');
 const { selectTemplate }     = require('../generator/template-selector');
 const { buildProductPack }   = require('./product-pack');
 const logger                 = require('../../utils/logger');
+const { ownsAnalysis } = require('../../modules/access');
+const { enforceAccess } = require('../../modules/rules');
 
 /**
  * 從現有 analysis 建立 ProductPack
@@ -22,9 +24,10 @@ async function buildPackFromAnalysis({ analysisId, mode, sessionId, userId }) {
 
   // 1. 取 analysis
   const analysis = db.prepare('SELECT * FROM analyses WHERE id = ?').get(analysisId);
-  if (!analysis) {
+  if (!analysis || !ownsAnalysis(analysis, sessionId, userId)) {
     throw Object.assign(new Error(`Analysis not found: ${analysisId}`), { status: 404 });
   }
+  enforceAccess(analysisId, sessionId, userId);
   if (analysis.status === 'pending' || analysis.status === 'failed') {
     throw Object.assign(new Error('Analysis not ready'), { status: 400 });
   }
