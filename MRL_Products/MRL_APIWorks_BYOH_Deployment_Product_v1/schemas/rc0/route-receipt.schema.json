@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:mrl:byoh:route-receipt:0.1-rc0",
+  "title": "MRL BYOH Route Receipt v0.1-RC0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "receipt_version", "receipt_id", "request_id", "trace_id", "sequence",
+    "created_at", "policy_id", "policy_version", "requested_model",
+    "workload_class", "resolved_target", "target_type", "route_reason",
+    "fallback", "model_artifact", "runtime_snapshot", "pricing",
+    "data_handling", "integrity", "canonical_authority", "origin_signature"
+  ],
+  "properties": {
+    "receipt_version": { "const": "0.1-RC0" },
+    "receipt_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "request_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "trace_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "sequence": { "type": "integer", "minimum": 0 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "response_committed_at": { "type": ["string", "null"], "format": "date-time" },
+    "policy_id": { "type": "string", "minLength": 1 },
+    "policy_version": { "type": "string", "minLength": 1 },
+    "requested_model": { "type": "string", "minLength": 1 },
+    "resolved_model_version": { "type": ["string", "null"] },
+    "workload_class": { "enum": ["chat", "embedding", "decision", "score", "rerank", "audio", "vision", "other"] },
+    "resolved_target": { "type": "string", "minLength": 1 },
+    "target_type": { "enum": ["local", "remote", "hybrid"] },
+    "provider_request_id": { "type": ["string", "null"] },
+    "route_reason": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
+    "capability_match": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "fallback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["used", "index", "attempt_count", "failure_class", "failure_reason"],
+      "properties": {
+        "used": { "type": "boolean" },
+        "index": { "type": ["integer", "null"], "minimum": 0 },
+        "attempt_count": { "type": "integer", "minimum": 1 },
+        "failure_class": { "enum": ["none", "timeout", "capacity", "health", "compatibility", "policy", "authentication", "provider", "unknown"] },
+        "failure_reason": { "type": ["string", "null"], "maxLength": 4096 }
+      }
+    },
+    "model_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_id", "digest", "license_id"],
+      "properties": {
+        "model_id": { "type": "string", "minLength": 1 },
+        "revision": { "type": ["string", "null"] },
+        "digest": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$" },
+        "license_id": { "type": "string", "minLength": 1 },
+        "quantization": { "type": ["string", "null"] }
+      }
+    },
+    "runtime_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["backend", "version", "artifact_digest", "hardware_fingerprint", "execution_topology", "signature_status"],
+      "properties": {
+        "backend": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "artifact_digest": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$" },
+        "hardware_fingerprint": { "type": "string", "minLength": 1 },
+        "execution_topology": { "enum": ["native-windows", "wsl2", "linux-vm", "linux-container-host", "remote-worker", "other"] },
+        "signature_status": { "enum": ["verified", "unverified", "not-applicable"] }
+      }
+    },
+    "routing_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "observed_ttft_ms": { "type": ["number", "null"], "minimum": 0 },
+        "cached_tokens": { "type": ["integer", "null"], "minimum": 0 },
+        "remaining_prefill_tokens": { "type": ["integer", "null"], "minimum": 0 },
+        "prefill_load": { "type": ["number", "null"], "minimum": 0 },
+        "decode_load": { "type": ["number", "null"], "minimum": 0 },
+        "queue_depth": { "type": ["integer", "null"], "minimum": 0 },
+        "queue_ttl_ms": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    },
+    "pricing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["currency", "price_revision", "effective_at", "estimated_cost", "metered_cost"],
+      "properties": {
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "price_revision": { "type": ["string", "null"] },
+        "effective_at": { "type": ["string", "null"], "format": "date-time" },
+        "estimated_cost": { "type": ["number", "null"], "minimum": 0 },
+        "metered_cost": { "type": ["number", "null"], "minimum": 0 },
+        "cache_state": { "enum": ["hit", "miss", "mixed", "unknown"] },
+        "time_band": { "type": ["string", "null"] }
+      }
+    },
+    "data_handling": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "classification": { "enum": ["public", "internal", "confidential", "restricted"] },
+        "egress_allowed": { "type": "boolean" },
+        "retention_policy_id": { "type": ["string", "null"] }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_digest", "output_digest", "receipt_digest", "previous_receipt_digest"],
+      "properties": {
+        "input_digest": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$" },
+        "output_digest": { "type": ["string", "null"], "pattern": "^sha256:[a-fA-F0-9]{64}$" },
+        "receipt_digest": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$" },
+        "previous_receipt_digest": { "type": ["string", "null"], "pattern": "^sha256:[a-fA-F0-9]{64}$" }
+      }
+    },
+    "canonical_authority": { "const": "Mr.liou" },
+    "origin_signature": { "const": "MrLiouWord" }
+  }
+}

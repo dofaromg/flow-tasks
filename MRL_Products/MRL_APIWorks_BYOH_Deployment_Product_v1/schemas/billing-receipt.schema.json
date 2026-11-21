@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:mrl:byoh:billing-receipt:0.1-rc1-draft",
+  "title": "MRL BYOH Billing Receipt 0.1-RC1-DRAFT",
+  "description": "MRL-39 engineering candidate. No billing or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["receipt_version", "receipt_id", "request_id", "route_receipt_id", "provider",
+    "requested_model", "resolved_model_version", "input_tokens", "output_tokens", "cache_tokens",
+    "tool_usage", "price_state", "pricing", "region", "source_revision", "origin_signature",
+    "canonical_authority"],
+  "properties": {
+    "receipt_version": {"const": "0.1-RC1-DRAFT"},
+    "receipt_id": {"$ref": "#/$defs/text"},
+    "request_id": {"$ref": "#/$defs/text"},
+    "route_receipt_id": {"$ref": "#/$defs/text"},
+    "provider": {"$ref": "#/$defs/text"},
+    "requested_model": {"$ref": "#/$defs/text"},
+    "resolved_model_version": {"type": ["string", "null"], "minLength": 1},
+    "input_tokens": {"$ref": "#/$defs/count"},
+    "output_tokens": {"$ref": "#/$defs/count"},
+    "cache_tokens": {"$ref": "#/$defs/count"},
+    "tool_usage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["tool_type", "successful_request_count"],
+        "properties": {
+          "tool_type": {"$ref": "#/$defs/text"},
+          "successful_request_count": {"$ref": "#/$defs/count"}
+        }
+      }
+    },
+    "price_state": {"enum": ["known", "unknown"]},
+    "pricing": {"type": ["object", "null"]},
+    "region": {"type": ["string", "null"], "minLength": 1},
+    "source_revision": {"type": ["string", "null"], "minLength": 1},
+    "origin_signature": {"const": "MrLiouWord"},
+    "canonical_authority": {"const": "Mr.liou"}
+  },
+  "if": {"properties": {"price_state": {"const": "known"}}},
+  "then": {
+    "properties": {
+      "pricing": {
+        "$ref": "urn:mrl:byoh:route-receipt:0.1-rc0#/properties/pricing",
+        "properties": {
+          "price_revision": {"$ref": "#/$defs/text"},
+          "effective_at": {"type": "string"}
+        }
+      },
+      "source_revision": {"$ref": "#/$defs/text"}
+    }
+  },
+  "else": {"properties": {"pricing": {"type": "null"}}},
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "count": {"type": "integer", "minimum": 0}
+  }
+}

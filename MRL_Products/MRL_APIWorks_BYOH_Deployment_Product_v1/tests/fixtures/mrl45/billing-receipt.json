@@ -1,0 +1,35 @@
+{
+  "receipt_version": "0.1-RC1-DRAFT",
+  "receipt_id": "mrl45-synthetic-billing",
+  "request_id": "mrl45-synthetic-request",
+  "route_receipt_id": "mrl45-synthetic-route",
+  "provider": "synthetic",
+  "requested_model": "synthetic-model",
+  "resolved_model_version": "1.0.0-test",
+  "input_tokens": 8,
+  "output_tokens": 2,
+  "cache_tokens": 0,
+  "tool_usage": [
+    {
+      "tool_type": "search",
+      "successful_request_count": 1
+    },
+    {
+      "tool_type": "fetch",
+      "successful_request_count": 0
+    }
+  ],
+  "price_state": "known",
+  "pricing": {
+    "currency": "TWD",
+    "price_revision": "synthetic-prices-v1",
+    "effective_at": "2026-11-12T13:00:00+08:00",
+    "estimated_cost": null,
+    "metered_cost": null,
+    "cache_state": "unknown"
+  },
+  "region": "TW",
+  "source_revision": "fixture-price-source-v1",
+  "canonical_authority": "Mr.liou",
+  "origin_signature": "MrLiouWord"
+}

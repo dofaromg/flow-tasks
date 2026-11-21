@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:mrl:byoh:artifact-trust-manifest:1",
+  "title": "MRL Artifact Trust Manifest v1 structure",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "origin_signature", "artifact", "sbom", "provenance",
+    "signing", "exception_approver"],
+  "properties": {
+    "schema": {"const": "MRL_Artifact_Trust_Manifest_v1"},
+    "origin_signature": {"const": "MrLiouWord"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "version", "repository", "source_commit", "digest", "path"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["wheel", "oci_manifest", "native"]},
+        "version": {"type": "string", "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?(?![\\s\\S])"},
+        "repository": {"type": "string", "pattern": "^https://github\\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?![\\s\\S])"},
+        "source_commit": {"type": "string", "minLength": 40, "maxLength": 40, "pattern": "^[0-9a-f]{40}$"},
+        "digest": {"$ref": "#/$defs/digest"},
+        "path": {"type": "string", "minLength": 1}
+      }
+    },
+    "sbom": {"$ref": "#/$defs/evidence"},
+    "provenance": {"$ref": "#/$defs/evidence"},
+    "signing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "fingerprint", "signature"],
+      "properties": {
+        "algorithm": {"const": "Ed25519"},
+        "fingerprint": {"$ref": "#/$defs/digest"},
+        "signature": {"type": "string", "minLength": 88, "maxLength": 88, "pattern": "^[A-Za-z0-9+/]{86}==$"}
+      }
+    },
+    "exception_approver": {"const": "NONE"}
+  },
+  "$defs": {
+    "digest": {"type": "string", "minLength": 71, "maxLength": 71, "pattern": "^sha256:[0-9a-f]{64}$"},
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "digest"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

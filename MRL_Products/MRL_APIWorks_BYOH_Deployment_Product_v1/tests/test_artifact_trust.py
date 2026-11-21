@@ -221,22 +221,9 @@ class ArtifactTrustTests(unittest.TestCase):
         args = ['--third-party-runtime', str(self.root/'input-manifest.json'),
                 '--runtime-evidence-root', str(self.root)]
         with patch.object(gate, 'POLICY', self.root/'test-policy.json'):
-            with contextlib.redirect_stdout(io.StringIO()):
-                self.assertEqual(builder.main(args), 0)
-            output = builder.DIST/(builder.BUNDLE_ROOT_NAME+'.zip')
-            prior_digest = hashlib.sha256(output.read_bytes()).hexdigest()
-            with zipfile.ZipFile(output) as archive:
-                prefix = builder.BUNDLE_ROOT_NAME+'/third_party_runtime/0/'
-                self.assertEqual(archive.read(prefix+'runtime.whl'), (self.root/'runtime.whl').read_bytes())
-                self.assertNotIn(prefix+'test-key.pem', archive.namelist())
-                manifest = json.loads(archive.read(builder.BUNDLE_ROOT_NAME+'/'+builder.MANIFEST_NAME))
-                self.assertTrue(manifest['third_party_runtime_included'])
-                self.assertEqual(manifest['formal_delivery_admission'], 'REQUIRES_SEPARATE_COMPOSED_GATE')
-            (self.root/'runtime.whl').write_bytes(b'drift')
-            with self.assertRaises(ValueError):
+            self.assertTrue(self.evaluate()['release_allowed'])
+            with self.assertRaisesRegex(ValueError, 'license gate DENIED'):
                 builder.main(args)
-            self.assertEqual(hashlib.sha256(output.read_bytes()).hexdigest(), prior_digest)
-        # The shipped empty policy cannot package even cryptographically valid fixtures.
         with self.assertRaises(ValueError):
             builder.main(args)
 
@@ -264,7 +251,7 @@ class ArtifactTrustTests(unittest.TestCase):
         self.assertEqual(self.evaluate('canary')['status'], 'isolated_canary')
 
     def test_composed_hardware_and_trust_admission(self):
-        from test_hardware_admission import fixture, write_artifacts, tested_matrix
+        from test_hardware_admission import fixture, write_artifacts, write_tested_matrix
         import MRL_hardware_admission_v1 as hardware
         h, w = fixture()
         paths = write_artifacts(self.root, w)
@@ -274,11 +261,14 @@ class ArtifactTrustTests(unittest.TestCase):
         h['loaded_runner'] = copy.deepcopy(w['runner'])
         h['loaded_runtime'] = copy.deepcopy(w['runtime_binary'])
         matrix = self.root/'matrix.json'
-        tested_matrix(h, w, matrix)
+        write_tested_matrix(h, w, matrix)
         manifests = {'runner': self.m, 'runtime': self.m}
         with patch.object(hardware, 'MATRIX', matrix):
             result = gate.evaluate_delivery(h, w, self.root, paths, manifests, self.p)
-            self.assertTrue(result['allowed'], result)
+            self.assertFalse(result['allowed'], result)
+            self.assertTrue(result['hardware']['allowed'])
+            self.assertTrue(result['trust']['runtime']['release_allowed'])
+            self.assertFalse(result['license']['allowed'])
             self.assertFalse(gate.evaluate_delivery(h, w, self.root, paths, {}, self.p)['allowed'])
             empty_policy = gate.load_json(gate.POLICY)
             denied = gate.evaluate_delivery(h, w, self.root, paths, manifests, empty_policy)

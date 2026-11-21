@@ -1,0 +1,99 @@
+{
+  "record": "MRL_36_Routing_Contract_Provenance_R01",
+  "date": "2026-11-14",
+  "time_zone": "Asia/Taipei",
+  "history_mode": "APPEND_ONLY",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "product": {
+    "id": "MRL_APIWorks_BYOH_Deployment_Product_v1",
+    "sku": "MRL-APIWORKS-BYOH-DEPLOY-V1",
+    "source_version": "1.0.0-rc3",
+    "runtime_version": "1.1.1"
+  },
+  "issue": {
+    "id": "MRL-36",
+    "source": "https://linear.app/dofaromgg/issue/MRL-36",
+    "observed_status": "Todo",
+    "due_date": "2026-11-14"
+  },
+  "rc0_parent": {
+    "version": "0.1-RC0",
+    "file": "MRL_BYOH_v0.1-RC0.zip",
+    "source": "Owner-controlled MRL_BYOH_v0.1-RC0.zip; locate by the archive SHA-256.",
+    "library_version": "1",
+    "archive_revision": 2,
+    "size_bytes": 14495,
+    "sha256": "a382181ee47511e641c0dd9240a7fdc504109fc5823ad4ad7fa4dc96c19f8b74",
+    "internal_checksums_verified": 11,
+    "supersedes_package_sha256": "259a80c744ed6d067b6907fa6e85cde562c9a502007455abec73e0a07e5b3ef0",
+    "superseded_archive_readback": "UNKNOWN",
+    "route_receipt_schema": {
+      "path": "schemas/rc0/route-receipt.schema.json",
+      "schema_id": "urn:mrl:byoh:route-receipt:0.1-rc0",
+      "git_blob": "f313e16eb92ceaa82089acd9df7901a6a3ec9410",
+      "sha256": "592350c3bdb7180868ed167026cbd6084799c624ba15fb6851ff1538fc7a2cc3",
+      "size_bytes": 5963,
+      "archive_and_git_blob_match": true
+    }
+  },
+  "canonical_candidate": {
+    "issue": "https://linear.app/dofaromgg/issue/MRL-43",
+    "observed_issue_status": "In Progress",
+    "repository": "dofaromg/flow-tasks",
+    "branch": "main",
+    "commit": "36dc69d98ec3e28e5cca744e82013ed32b203b61",
+    "tree": "beac0f17bd62ad428040a1c3504c9c57931df9e6",
+    "owner_decision": "PENDING",
+    "common_ancestor_with_engineering_base": "36dc69d98ec3e28e5cca744e82013ed32b203b61",
+    "engineering_base_commits_ahead": 34
+  },
+  "engineering_base": {
+    "repository": "dofaromg/flow-tasks",
+    "branch": "mrl-37/license-redistribution-gate-v1-20261105",
+    "pr": "https://github.com/dofaromg/flow-tasks/pull/708",
+    "pr_state": "OPEN_DRAFT",
+    "commit": "ccb13c3cedea9388d06cf9cbacdbb136d6a074ab",
+    "tree": "907073f0878f8b6a98320db443bdbe74bda82883",
+    "first_parent": "b69dfdd97cdf44462970bfa956dfbea439e61391",
+    "second_parent": "90cffbea93cfc64ad12b53bcffacd16b2ce875e2",
+    "mrl45": {
+      "issue": "https://linear.app/dofaromgg/issue/MRL-45",
+      "observed_issue_status": "Todo",
+      "pr": "https://github.com/dofaromg/flow-tasks/pull/718",
+      "branch": "mrl-45/byoh-gate-schema-r01-20261112",
+      "head": "90cffbea93cfc64ad12b53bcffacd16b2ce875e2",
+      "merged_at": "2026-11-12T13:43:09+08:00",
+      "source_provenance": "schemas/MRL_gate_schema_provenance_v1.json",
+      "validator": "scripts/MRL_gate_schema_validator_v1.py",
+      "requirements": "requirements.mrl45.lock",
+      "ci_run_at_base": "https://github.com/dofaromg/flow-tasks/actions/runs/43163244743"
+    }
+  },
+  "other_observed_refs": [
+    {
+      "branch": "main",
+      "commit": "175fa4ee7edf621f6378ef100b0057606a41d42a",
+      "rc0_route_receipt_at_same_path": "NOT_FOUND"
+    },
+    {
+      "branch": "MRL_APIWorks_BYOH_Deployment_Product_v1",
+      "commit": "c3081301d84e7ad73135d32fc29712b426a1c33e",
+      "rc0_route_receipt_at_same_path": "NOT_FOUND"
+    }
+  ],
+  "increment": {
+    "version": "0.1-RC1-DRAFT",
+    "implementation": "scripts/MRL_capability_routing_v1.py",
+    "schemas": {
+      "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft": "schemas/rc1-draft/routing-decision-input.schema.json",
+      "urn:mrl:byoh:routing-adapter-result:0.1-rc1-draft": "schemas/rc1-draft/routing-adapter-result.schema.json",
+      "urn:mrl:byoh:route-receipt:0.1-rc1-draft": "schemas/rc1-draft/route-receipt.schema.json"
+    },
+    "owner_decision": "PENDING",
+    "remote_candidate_commit": null,
+    "hosted_ci_at_candidate": "UNKNOWN",
+    "real_adapter_runtime": "UNKNOWN",
+    "dl580_acceptance": "UNKNOWN"
+  }
+}

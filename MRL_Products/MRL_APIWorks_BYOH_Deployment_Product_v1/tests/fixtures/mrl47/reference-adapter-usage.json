@@ -1,0 +1,23 @@
+{
+  "adapter_id": "MRL_Reference_Adapter_v1",
+  "canonical_authority": "Mr.liou",
+  "created_at": "2026-11-14T18:15:00Z",
+  "engineering_base_commit": "ccb13c3cedea9388d06cf9cbacdbb136d6a074ab",
+  "execution_location": "local",
+  "input_digest": "sha256:617b668b3381603fd23bd7a898977948ef93bb055cb433aacc184dc93d26294c",
+  "input_tokens": 7,
+  "origin_signature": "MrLiouWord",
+  "output_digest": "sha256:8bdeb99cc773c15a5d53cc2307c6de4e25dec11f1868e7018d51d91fc75d2b2d",
+  "output_tokens": 3,
+  "parent_runtime_id": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1",
+  "receipt_digest": "sha256:5a79beb586df070ad0adf06da98d855dfb6517879c6fb8ce4a33729e7b4dd1d7",
+  "receipt_id": "MRL_47_usage_82feba2f5473a32b1b5d3906c82038e35a1fdcb00988d2027e70fabf32095b8d",
+  "receipt_version": "0.1-RC1-DRAFT",
+  "request_id": "fixture-request-001",
+  "requested_model": "MRL_fixture_model",
+  "resolved_model_version": "fixture-model-r1",
+  "route_receipt_digest": "sha256:7fb06528c8cc3d02b58bde9348c9e68866cbc31a6a011afd8ef73ce3b598941a",
+  "route_receipt_id": "mrl36-1a26e0fab5326b8ebab4f1abe355be1f31396a558be3071d9c9873755c121c87",
+  "runtime_version": "fixture-runtime-r1",
+  "usage_state": "reported"
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mrl.invalid/byoh/licenses/MRL_license_manifest_validation_v1.schema.json",
+  "title": "MRL License Manifest v1 validation profile",
+  "$ref": "MRL_License_Manifest_v1",
+  "properties": {
+    "components": {
+      "items": {
+        "properties": {
+          "id": {"$ref": "#/$defs/nonblank"},
+          "version": {"$ref": "#/$defs/nonblank"},
+          "source": {"$ref": "#/$defs/nonblank"},
+          "license_id": {"$ref": "#/$defs/nonblank"},
+          "source_commit": {"maxLength": 40},
+          "files": {"items": {"$ref": "#/$defs/paths"}},
+          "documents": {"items": {"$ref": "#/$defs/paths"}},
+          "regions": {"items": {"$ref": "#/$defs/nonblank"}},
+          "customers": {"items": {"$ref": "#/$defs/nonblank"}},
+          "obligations": {"items": {"$ref": "#/$defs/nonblank"}}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "nonblank": {"type": "string", "pattern": "\\S"},
+    "paths": {
+      "properties": {
+        "path": {"$ref": "#/$defs/nonblank"},
+        "sha256": {"maxLength": 64}
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["customer", "region", "mrl_annual_revenue_usd",
+        "customer_annual_revenue_usd", "customer_model_responsibility"],
+      "properties": {
+        "customer": {"$ref": "#/$defs/nonblank"},
+        "region": {"$ref": "#/$defs/nonblank"},
+        "mrl_annual_revenue_usd": {"type": ["integer", "null"], "minimum": 0},
+        "customer_annual_revenue_usd": {"type": ["integer", "null"], "minimum": 0},
+        "customer_model_responsibility": {"type": "boolean"}
+      }
+    }
+  }
+}

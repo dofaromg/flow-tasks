@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:mrl:byoh:routing-adapter-result:0.1-rc1-draft",
+  "title": "MRL-36 BYOH routing adapter result v0.1-RC1-DRAFT",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["status", "output_digest"],
+  "properties": {
+    "status": {"enum": ["succeeded", "health_rejected_before_acceptance", "failed", "commit_unknown"]},
+    "output_digest": {
+      "anyOf": [{"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/digest"}, {"type": "null"}]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {"const": "succeeded"}
+        }
+      },
+      "then": {
+        "properties": {
+          "output_digest": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/digest"}
+        }
+      },
+      "else": {
+        "properties": {
+          "output_digest": {"type": "null"}
+        }
+      }
+    }
+  ]
+}

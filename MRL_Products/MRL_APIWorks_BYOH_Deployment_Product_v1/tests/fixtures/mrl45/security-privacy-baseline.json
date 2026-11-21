@@ -1,0 +1,20 @@
+{
+  "baseline_version": "0.1-RC0",
+  "canonical_authority": "Mr.liou",
+  "origin_signature": "MrLiouWord",
+  "default_posture": "deny-by-default",
+  "controls": [
+    { "id": "SP01", "control": "authenticated_ingress", "required": true, "status": "pending" },
+    { "id": "SP02", "control": "least_privilege_rbac", "required": true, "status": "pending" },
+    { "id": "SP03", "control": "secret_storage_and_rotation", "required": true, "status": "pending" },
+    { "id": "SP04", "control": "tenant_and_workload_isolation", "required": true, "status": "pending" },
+    { "id": "SP05", "control": "egress_allowlist", "required": true, "status": "pending" },
+    { "id": "SP06", "control": "request_size_rate_and_concurrency_limits", "required": true, "status": "pending" },
+    { "id": "SP07", "control": "prompt_media_and_log_redaction", "required": true, "status": "pending" },
+    { "id": "SP08", "control": "retention_deletion_and_backup_policy", "required": true, "status": "pending" },
+    { "id": "SP09", "control": "telemetry_disclosure_and_opt_out", "required": true, "status": "pending" },
+    { "id": "SP10", "control": "audit_log_integrity_and_clock_sync", "required": true, "status": "pending" },
+    { "id": "SP11", "control": "artifact_and_model_code_sandboxing", "required": true, "status": "pending" },
+    { "id": "SP12", "control": "incident_response_and_revocation", "required": true, "status": "pending" }
+  ]
+}

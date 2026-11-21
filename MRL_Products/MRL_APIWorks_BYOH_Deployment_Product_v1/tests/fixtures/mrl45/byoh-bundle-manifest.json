@@ -1,0 +1,30 @@
+{
+  "schema": "MRL_Product_Bundle_Manifest_v1",
+  "canonical_id": "MRL_APIWorks_BYOH_Deployment_Product_v1",
+  "sku": "MRL-APIWORKS-BYOH-DEPLOY-V1",
+  "origin_signature": "MrLiouWord",
+  "archive_root": "MRL_APIWorks_BYOH_Deployment_Product_v1",
+  "mutable_after_extraction": [
+    "customer_config/MRL_runtime.local.json"
+  ],
+  "files": [
+    {
+      "path": "customer_config/MRL_runtime.local.json",
+      "size": 5,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "mutable_after_extraction": true
+    }
+  ],
+  "license_admission": {
+    "allowed": false,
+    "reason": "ENGINEERING_SOURCE_ONLY_RIGHTS_UNRESOLVED"
+  },
+  "package_purpose": "ENGINEERING_ONLY",
+  "customer_delivery_approved": false,
+  "hardware_bundle_id": null,
+  "artifact_trust_receipts": [],
+  "third_party_runtime_included": false,
+  "formal_delivery_admission": "REQUIRES_SEPARATE_COMPOSED_GATE",
+  "hardware_admission": "unknown",
+  "hardware_acceptance_evidence": []
+}

@@ -95,7 +95,8 @@ class ProductBundleTests(unittest.TestCase):
                     cwd=product, capture_output=True, text=True, check=False,
                 )
                 self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
-                self.assertNotIn("PRODUCT_BUNDLE_DELIVERY_PASS", result.stdout)
+                self.assertNotIn("PRODUCT_ENGINEERING_BUNDLE_PASS", result.stdout)
+                self.assertNotIn("PRODUCT_RIGHTS_REVIEWED_CANDIDATE_PASS", result.stdout)
                 self.assertFalse((product / "dist" / f"{BUNDLE_ROOT_NAME}.zip").exists())
 
     def test_builds_runnable_customer_zip(self) -> None:
@@ -123,6 +124,9 @@ class ProductBundleTests(unittest.TestCase):
             manifest = json.loads((delivery_root / "MRL_PRODUCT_BUNDLE_MANIFEST.json").read_text(encoding="utf-8"))
             expected = {f"{prefix}{item['path']}" for item in manifest["files"]}
             self.assertEqual(names - {f"{prefix}MRL_PRODUCT_BUNDLE_MANIFEST.json"}, expected)
+            self.assertEqual(manifest["package_purpose"], "ENGINEERING_ONLY")
+            self.assertFalse(manifest["license_admission"]["allowed"])
+            self.assertFalse(manifest["customer_delivery_approved"])
             self.assertEqual(manifest["archive_root"], BUNDLE_ROOT_NAME)
             self.assertEqual(manifest["mutable_after_extraction"], [MUTABLE_CONFIG.as_posix()])
             mutable_entry = next(item for item in manifest["files"] if item["path"] == MUTABLE_CONFIG.as_posix())
@@ -132,6 +136,12 @@ class ProductBundleTests(unittest.TestCase):
             product_root = delivery_root / PRODUCT_RELATIVE
             self.assertTrue((runtime_root / "runtime" / "MRL_apiworks_gateway_v1.py").is_file())
             self.assertTrue((product_root / "scripts" / "MRL_build_product_bundle_v1.py").is_file())
+            result = subprocess.run(
+                [sys.executable, str(product_root / "scripts" / "MRL_gate_schema_validator_v1.py"),
+                 "validate", "byoh-bundle-manifest", str(delivery_root / "MRL_PRODUCT_BUNDLE_MANIFEST.json")],
+                capture_output=True, text=True, check=True,
+            )
+            self.assertEqual(json.loads(result.stdout)["status"], "SCHEMA_VALID")
 
             customer_config = delivery_root / MUTABLE_CONFIG
             config = json.loads(customer_config.read_text(encoding="utf-8"))

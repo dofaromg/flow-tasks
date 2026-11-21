@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:mrl:byoh:reference-adapter-usage:0.1-rc1-draft",
+  "title": "MRL-47 Reference Adapter usage receipt",
+  "description": "Backend-reported text token observations for engineering replay.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "receipt_version", "receipt_id", "created_at", "request_id", "route_receipt_id",
+    "route_receipt_digest", "input_digest", "output_digest", "receipt_digest", "adapter_id",
+    "parent_runtime_id", "engineering_base_commit", "execution_location", "requested_model",
+    "resolved_model_version", "runtime_version", "input_tokens", "output_tokens", "usage_state",
+    "origin_signature", "canonical_authority"
+  ],
+  "properties": {
+    "receipt_version": {"const": "0.1-RC1-DRAFT"},
+    "receipt_id": {"type": "string", "pattern": "^MRL_47_usage_[a-f0-9]{64}$"},
+    "created_at": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/timestamp"},
+    "request_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "route_receipt_id": {"type": "string", "pattern": "^mrl36-[a-f0-9]{64}$"},
+    "route_receipt_digest": {"$ref": "#/$defs/digest"},
+    "input_digest": {"$ref": "#/$defs/digest"},
+    "output_digest": {"$ref": "#/$defs/digest"},
+    "receipt_digest": {"$ref": "#/$defs/digest"},
+    "adapter_id": {"const": "MRL_Reference_Adapter_v1"},
+    "parent_runtime_id": {"const": "MRL_AI_Mother_Autonomous_Runtime_Baseline_v1"},
+    "engineering_base_commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "execution_location": {"const": "local"},
+    "requested_model": {"type": "string", "minLength": 1},
+    "resolved_model_version": {"type": "string", "minLength": 1},
+    "runtime_version": {"type": "string", "minLength": 1},
+    "input_tokens": {"$ref": "#/$defs/token_count"},
+    "output_tokens": {"$ref": "#/$defs/token_count"},
+    "usage_state": {"enum": ["reported", "partial", "unknown"]},
+    "origin_signature": {"const": "MrLiouWord"},
+    "canonical_authority": {"const": "Mr.liou"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"usage_state": {"const": "reported"}}},
+      "then": {"properties": {"input_tokens": {"type": "integer"}, "output_tokens": {"type": "integer"}}}
+    },
+    {
+      "if": {"properties": {"usage_state": {"const": "partial"}}},
+      "then": {"oneOf": [
+        {"properties": {"input_tokens": {"type": "integer"}, "output_tokens": {"type": "null"}}},
+        {"properties": {"input_tokens": {"type": "null"}, "output_tokens": {"type": "integer"}}}
+      ]}
+    },
+    {
+      "if": {"properties": {"usage_state": {"const": "unknown"}}},
+      "then": {"properties": {"input_tokens": {"type": "null"}, "output_tokens": {"type": "null"}}}
+    }
+  ],
+  "$defs": {
+    "digest": {"$ref": "urn:mrl:byoh:routing-decision-input:0.1-rc1-draft#/$defs/digest"},
+    "token_count": {"type": ["integer", "null"], "minimum": 0, "maximum": 9007199254740991}
+  }
+}

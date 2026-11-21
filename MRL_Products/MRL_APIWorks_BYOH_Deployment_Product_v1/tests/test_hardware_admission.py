@@ -59,7 +59,7 @@ def write_artifacts(root, workload):
     return paths
 
 
-def tested_matrix(host, workload, path):
+def write_tested_matrix(host, workload, path):
     matrix = json.loads(gate.MATRIX.read_text(encoding='utf-8'))
     configuration_digest = gate.digest({'host': host, 'workload': workload})
     acceptance_id = 'TEST_ONLY_SYNTHETIC'
@@ -114,7 +114,7 @@ class HardwareAdmissionTests(unittest.TestCase):
             self.assertIn(reason, result['reasons'][0])
 
     def test_exact_tested_cuda12_preserved(self):
-        tested_matrix(self.h, self.w, self.matrix_path)
+        write_tested_matrix(self.h, self.w, self.matrix_path)
         self.check_status('admitted')
 
     def test_release_catalog_does_not_invent_acceptance(self):
@@ -122,13 +122,13 @@ class HardwareAdmissionTests(unittest.TestCase):
         self.check_status('unknown', 'NO_EXACT_HARDWARE_ACCEPTANCE')
 
     def test_artifact_bytes_and_sharded_file_set_are_verified(self):
-        tested_matrix(self.h, self.w, self.matrix_path)
+        write_tested_matrix(self.h, self.w, self.matrix_path)
         self.check_status('admitted')
         (self.artifact_root / 'model' / 'weights-00002.bin').write_bytes(b'tampered')
         self.check_status('unknown', 'artifact bytes')
 
     def test_missing_and_symlinked_artifacts_fail_closed(self):
-        tested_matrix(self.h, self.w, self.matrix_path)
+        write_tested_matrix(self.h, self.w, self.matrix_path)
         (self.artifact_root / 'runner.bin').unlink()
         self.check_status('unknown')
         try:
@@ -138,14 +138,14 @@ class HardwareAdmissionTests(unittest.TestCase):
         self.check_status('unknown')
 
     def test_receipt_missing_tampered_or_failed_is_not_admitted(self):
-        tested_matrix(self.h, self.w, self.matrix_path)
+        write_tested_matrix(self.h, self.w, self.matrix_path)
         receipt = self.matrix_path.parent / 'test-receipt.json'
         receipt.write_text('{}', encoding='utf-8')
         self.check_status('unknown')
-        tested_matrix(self.h, self.w, self.matrix_path)
+        write_tested_matrix(self.h, self.w, self.matrix_path)
         receipt.unlink()
         self.check_status('unknown')
-        tested_matrix(self.h, self.w, self.matrix_path)
+        write_tested_matrix(self.h, self.w, self.matrix_path)
         failed = json.loads(receipt.read_text(encoding='utf-8'))
         failed['checks']['model_smoke'] = False
         raw = json.dumps(failed, sort_keys=True, separators=(',', ':')).encode()
@@ -166,7 +166,7 @@ class HardwareAdmissionTests(unittest.TestCase):
                     self.w['toolkit'] = '13.0'
                 else:
                     self.w['image'] = {'id': 'vllm-omni@sha256:' + '5'*64, 'cuda_major': 13}
-                tested_matrix(self.h, self.w, self.matrix_path)
+                write_tested_matrix(self.h, self.w, self.matrix_path)
                 self.check_status('rejected', 'VOLTA_REQUIRES_CUDA12')
 
     def test_tensorrt_rtx_blocked(self):
@@ -190,11 +190,11 @@ class HardwareAdmissionTests(unittest.TestCase):
 
     def test_r580_not_confused_with_cuda13(self):
         self.h['driver']['version'] = '580.99'
-        tested_matrix(self.h, self.w, self.matrix_path)
+        write_tested_matrix(self.h, self.w, self.matrix_path)
         self.check_status('admitted')
 
     def test_new_driver_not_automatically_tested(self):
-        tested_matrix(self.h, self.w, self.matrix_path)
+        write_tested_matrix(self.h, self.w, self.matrix_path)
         self.h['driver']['version'] = '580.99'
         self.check_status('unknown')
 
@@ -214,7 +214,7 @@ class HardwareAdmissionTests(unittest.TestCase):
 
     def test_historical_snapshot_not_live(self):
         self.h['observation'] = 'historical'
-        tested_matrix(self.h, self.w, self.matrix_path)
+        write_tested_matrix(self.h, self.w, self.matrix_path)
         self.check_status('unknown', 'HISTORICAL')
 
     def test_unpinned_image_blocked(self):
@@ -224,7 +224,7 @@ class HardwareAdmissionTests(unittest.TestCase):
     def test_changed_exact_inputs_invalidate_acceptance(self):
         for field in ('bundle_digest', 'quantization', 'model', 'runner', 'os'):
             self.reset_fixture()
-            tested_matrix(self.h, self.w, self.matrix_path)
+            write_tested_matrix(self.h, self.w, self.matrix_path)
             if field in ('model', 'runner'):
                 self.w[field]['digest'] = 'sha256:' + 'f'*64
             elif field == 'os':
@@ -261,7 +261,7 @@ class HardwareAdmissionTests(unittest.TestCase):
     def test_evidence_required_even_for_pass_label(self):
         for key, value in [('evidence_digest', ''), ('source_commit', ''),
                            ('evidence_kind', 'unit_test'), ('evidence_ref', '')]:
-            tested_matrix(self.h, self.w, self.matrix_path)
+            write_tested_matrix(self.h, self.w, self.matrix_path)
             matrix = json.loads(self.matrix_path.read_text(encoding='utf-8'))
             matrix['acceptances'][0][key] = value
             self.matrix_path.write_text(json.dumps(matrix), encoding='utf-8')

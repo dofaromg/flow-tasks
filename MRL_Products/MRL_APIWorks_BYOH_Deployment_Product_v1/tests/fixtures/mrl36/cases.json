@@ -1,0 +1,184 @@
+{
+  "routing-decision-input-rc1-draft": {
+    "valid": "decision-input.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "policy",
+          "decision_model"
+        ],
+        "remove": true,
+        "keyword": "required"
+      },
+      "wrong-type": {
+        "path": [
+          "request",
+          "data_handling",
+          "egress_allowed"
+        ],
+        "value": "false",
+        "keyword": "type"
+      },
+      "unknown-field": {
+        "path": [
+          "request",
+          "payload_utf8"
+        ],
+        "value": "MRL-36 synthetic route conformance input",
+        "keyword": "additionalProperties"
+      },
+      "unsupported-version": {
+        "path": [
+          "contract_version"
+        ],
+        "value": "0.1-RC0",
+        "keyword": "const"
+      },
+      "policy-denied": {
+        "path": [
+          "policy",
+          "target_weights",
+          "local-primary"
+        ],
+        "value": 0,
+        "keyword": "minimum"
+      },
+      "bad-format": {
+        "path": [
+          "candidates",
+          "0",
+          "pricing",
+          "expires_at"
+        ],
+        "value": "2026-99-99T04:00:00Z",
+        "keyword": "anyOf"
+      }
+    }
+  },
+  "routing-adapter-result-rc1-draft": {
+    "valid": "adapter-success.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "status"
+        ],
+        "remove": true,
+        "keyword": "required"
+      },
+      "wrong-type": {
+        "path": [
+          "status"
+        ],
+        "value": false,
+        "keyword": "enum"
+      },
+      "unknown-field": {
+        "path": [
+          "fallback_target"
+        ],
+        "value": "cloud-approved",
+        "keyword": "additionalProperties"
+      },
+      "unsupported-status": {
+        "path": [
+          "status"
+        ],
+        "value": "accepted",
+        "keyword": "enum"
+      },
+      "policy-denied": {
+        "path": [
+          "global_policy"
+        ],
+        "value": {
+          "policy_id": "fixture-only",
+          "policy_version": "fixture-policy-r1",
+          "decision_model": {
+            "id": "MRL-36-reference",
+            "revision": "draft-r1",
+            "algorithm": "local-first-weighted-bps-v1"
+          },
+          "target_weights": {
+            "local-primary": 5000,
+            "cloud-approved": 9000
+          },
+          "cloud_target_allowlist": [
+            "cloud-approved"
+          ],
+          "cloud_classification_allowlist": [
+            "public",
+            "internal"
+          ],
+          "abstain_below_bps": 6000,
+          "ttft_classes": {
+            "interactive_max_ms": 150,
+            "standard_max_ms": 350
+          }
+        },
+        "keyword": "additionalProperties"
+      },
+      "success-needs-output-digest": {
+        "path": [
+          "output_digest"
+        ],
+        "value": null,
+        "keyword": "type"
+      },
+      "non-success-must-omit-output": {
+        "path": [
+          "status"
+        ],
+        "value": "failed",
+        "keyword": "type"
+      }
+    }
+  },
+  "route-receipt-rc1-draft": {
+    "valid": "receipts/live-local.json",
+    "cases": {
+      "missing-required": {
+        "path": [
+          "route_probabilities"
+        ],
+        "remove": true,
+        "keyword": "required"
+      },
+      "wrong-type": {
+        "path": [
+          "route_probabilities"
+        ],
+        "value": [],
+        "keyword": "type"
+      },
+      "unknown-field": {
+        "path": [
+          "provider_payload"
+        ],
+        "value": "MRL-36 synthetic route conformance input",
+        "keyword": "additionalProperties"
+      },
+      "unsupported-version": {
+        "path": [
+          "receipt_version"
+        ],
+        "value": "0.1-RC0",
+        "keyword": "const"
+      },
+      "policy-denied": {
+        "path": [
+          "mode"
+        ],
+        "value": "shadow",
+        "keyword": "enum"
+      },
+      "probability-range": {
+        "path": [
+          "route_probabilities",
+          "local-primary"
+        ],
+        "value": 10001,
+        "keyword": "maximum"
+      }
+    }
+  }
+}

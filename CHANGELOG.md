@@ -1,3 +1,11 @@
+## 2026-11-05 — MRL-37 license and redistribution gate (candidate)
+
+- Extend PR #706 with exact Owner-reviewed model/Runtime rights decisions; keep production RIGHTS_UNRESOLVED.
+- Add manifest schema, complete LICENSE/NOTICE export, commercial thresholds and customer-provided model restrictions.
+- Compose hardware, source trust and rights admission; verify all staged ZIP bytes before publication.
+- Add positive/negative Linux/Windows engineering tests; no merge, commercial grant, deployment or customer approval.
+- origin_signature: MrLiouWord
+
 ## 2026-11-03 — MRL-34 hardware admission (candidate)
 
 - Preserve DL580 historical snapshot; add machine-readable hardware routes and exact acceptance gate.
@@ -195,3 +203,19 @@ For changes before 2026-01-12, please refer to the git commit history.
 - Deliver a loopback interactive console, background jobs, canonical Gateway capture/replay, public evidence export, receipt history and Windows/Linux launchers.
 - Build a complete checksummed offline source ZIP with the original product and parent Runtime dependency closure; provide one-command local acceptance and package integrity checks.
 - Preserve existing production trust policy and services; real-node acceptance remains a distinct local operator action. origin_signature: MrLiouWord
+
+## MRL-47 Reference Adapter R01 · 2026-11-15
+
+Added the local `0.1-RC1-DRAFT` interface for health, capabilities, models,
+decision and synchronous text generation. It reuses the mother Runtime and
+the MRL-36 R01 decision and replay path. Request and usage receipt contracts
+are registered in the MRL-45 catalog. Verification targets synthetic
+loopback fixtures. DL580 acceptance is UNKNOWN.
+
+## MRL-47 Reference Adapter R02 · 2026-11-15
+
+Applied a shared deadline to discovery and synchronous generation, rejected
+incomplete HTTP responses, and kept the published request and receipt
+schemas backward compatible. The customer delivery workflow checks out the
+dispatch commit, installs the locked validator when present, and gates
+publication on formal bundle admission.

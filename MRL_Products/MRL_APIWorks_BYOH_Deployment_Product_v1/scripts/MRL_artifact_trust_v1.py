@@ -221,12 +221,14 @@ def replay(previous: dict, manifest: dict, policy: dict, root: Path) -> dict:
 
 
 def evaluate_delivery(host: dict, workload: dict, root: Path, paths: dict,
-                      manifests: dict, policy: dict) -> dict:
+                      manifests: dict, policy: dict, license_manifest=None,
+                      license_context=None, license_evidence_root=None) -> dict:
     """Compose both gates; a trust receipt alone cannot admit a GPU deployment."""
     from MRL_hardware_admission_v1 import evaluate as hardware_evaluate
     hardware = hardware_evaluate(host, workload, root, paths)
     result = {'origin_signature': ORIGIN, 'allowed': False, 'hardware': hardware,
-              'trust': {}, 'formal_delivery_admission': 'DENIED'}
+              'trust': {}, 'formal_delivery_admission': 'DENIED',
+              'customer_delivery_approved': False, 'owner_delivery_approval': 'REQUIRED_SEPARATELY'}
     try:
         required(manifests, ('runner', 'runtime'))
         for role, field in (('runner', 'runner'), ('runtime', 'runtime_binary')):
@@ -237,7 +239,22 @@ def evaluate_delivery(host: dict, workload: dict, root: Path, paths: dict,
             if artifact['path'] != paths[role]:
                 raise ValueError('trust/workload path mismatch: ' + role)
             result['trust'][role] = evaluate(manifests[role], policy, root, 'release')
-        result['allowed'] = hardware['allowed'] and all(
+        from MRL_license_gate_v1 import evaluate as license_evaluate, inventory
+        required_paths = set()
+        roles = []
+        for role, relative in paths.items():
+            target = Path(root) / relative
+            names = ({(Path(relative) / n).as_posix() for n in inventory(target)}
+                     if target.is_dir() else {relative})
+            required_paths.update(names)
+            if role in ('runner', 'runtime', 'model'):
+                field = 'runtime_binary' if role == 'runtime' else role
+                roles.append({'files': names, 'kind': 'model_weights' if role == 'model' else 'runtime',
+                              'id': workload[field]['id'], 'version': workload[field]['version']})
+        result['license'] = license_evaluate(license_manifest, license_context, root,
+                                            license_evidence_root, required_files=required_paths,
+                                            required_roles=roles)
+        result['allowed'] = hardware['allowed'] and result['license']['allowed'] and all(
             r['release_allowed'] for r in result['trust'].values())
         result['formal_delivery_admission'] = 'ADMITTED' if result['allowed'] else 'DENIED'
     except (ValueError, TypeError, KeyError) as error:
