@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MRL FLPKG 本地工作台</title>
+<style>
+body{max-width:960px;margin:2rem auto;padding:0 1rem;font:16px system-ui;color:#142332;background:#f2f6f9}
+section{margin:1rem 0;padding:1rem;background:white;border:1px solid #cbd6df;border-radius:.6rem}
+label{display:inline-flex;flex-direction:column;margin:.35rem .5rem .35rem 0;gap:.3rem}
+input,select,textarea,button{font:inherit;padding:.5rem}button{cursor:pointer}
+textarea{min-height:4rem;width:min(85vw,35rem)}pre{overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+li{margin:.45rem 0}.note{color:#425a6e}
+</style>
+<h1>MRL FLPKG 本地工作台</h1>
+<p class="note">生成、封裝、診斷與驗證。檔案路徑以執行工作台的主機為準。</p>
+<section>
+<h2>新增工作</h2>
+<form id="submit">
+<label>類型<select name="kind"><option value="generate">粒子生成</option><option value="package">FLPKG 封裝</option><option value="diagnostic">ANE 診斷吸收</option></select></label>
+<label>生成工作 ID（選填，封裝用）<input name="source_job"></label><br>
+<label>種子文字／來源資料夾／診斷檔路徑<textarea name="value"></textarea></label><br>
+<button>加入佇列</button>
+</form>
+</section>
+<section>
+<h2>24 小時寫入配額</h2>
+<p id="budget"></p>
+<form id="quota">
+<label>上限 bytes<input type="number" name="limit" min="1" required></label>
+<label>超限行為<select name="mode"><option value="alert">告警</option><option value="queue">排隊</option><option value="throttle">降速</option><option value="deny">拒絕</option></select></label>
+<label>降速 bytes/s<input type="number" name="rate" min="1" required></label>
+<button>套用</button>
+</form>
+</section>
+<section>
+<h2>工作狀態</h2>
+<button id="refresh">更新</button>
+<ul id="jobs"></ul>
+<pre id="details" role="status"></pre>
+</section>
+<script>
+const token = '__TOKEN__';
+const byId = id => document.getElementById(id);
+const show = value => byId('details').textContent = JSON.stringify(value, null, 2);
+async function api(action, data = {}) {
+  const response = await fetch('/api/' + action, {method:'POST',
+    headers:{'Content-Type':'application/json','X-MRL-Token':token}, body:JSON.stringify(data)});
+  const result = await response.json();
+  if (!response.ok) throw Error(result.error || response.status);
+  return result;
+}
+async function refresh() {
+  const state = await api('status');
+  const q = state.quota;
+  byId('budget').textContent = `已計入 ${q.used_bytes} bytes，保留 ${q.reserved_bytes} bytes，上限 ${q.max_bytes} bytes，模式 ${q.mode}`;
+  if (!byId('quota').elements.limit.value) {
+    byId('quota').elements.limit.value = q.max_bytes;
+    byId('quota').elements.mode.value = q.mode;
+    byId('quota').elements.rate.value = q.rate;
+  }
+  const items = state.jobs.map(job => {
+    const li = document.createElement('li');
+    li.textContent = `${job.kind} · ${job.status} · ${job.id} `;
+    const actions = [['status','詳細']];
+    if (job.status === 'done') actions.push(['verify','驗證']);
+    if (['running','queued','waiting'].includes(job.status)) actions.push(['cancel','取消']);
+    if (['failed','cancelled','interrupted','denied'].includes(job.status)) actions.push(['retry','重試']);
+    for (const [action, label] of actions) {
+      const button = document.createElement('button');
+      button.textContent = label;
+      button.onclick = () => perform(async () => show(await api(action,{job:job.id})));
+      li.append(button);
+    }
+    return li;
+  });
+  byId('jobs').replaceChildren(...items);
+}
+async function perform(action) {
+  try { await action(); await refresh(); }
+  catch (error) { show({error:error.message}); }
+}
+byId('submit').onsubmit = event => {
+  event.preventDefault();
+  const data = Object.fromEntries(new FormData(event.target));
+  if (!data.source_job.trim()) delete data.source_job;
+  else data.source_job = data.source_job.trim();
+  perform(async () => show(await api('submit',data)));
+};
+byId('quota').onsubmit = event => {
+  event.preventDefault();
+  const data = Object.fromEntries(new FormData(event.target));
+  data.limit = Number(data.limit); data.rate = Number(data.rate);
+  perform(async () => show(await api('quota',data)));
+};
+byId('refresh').onclick = () => perform(async () => {});
+perform(async () => {});
+setInterval(() => refresh().catch(error => show({error:error.message})), 2000);
+</script>
+</html>
