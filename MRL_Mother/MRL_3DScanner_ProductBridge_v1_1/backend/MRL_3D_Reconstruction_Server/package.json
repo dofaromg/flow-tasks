@@ -9,12 +9,5 @@
     "lint": "node --check server.js",
     "build": "npm run check",
     "test": "node --test ../../tests/backend.test.mjs"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "fs-extra": "^11.2.0",
-    "multer": "^1.4.5-lts.1",
-    "uuid": "^10.0.0"
   }
 }

@@ -8,8 +8,18 @@ $logDir=Join-Path $root '.bridge\logs'; New-Item -ItemType Directory $logDir -Fo
 $log=Join-Path $logDir ('install_' + (Get-Date -Format 'yyyyMMdd_HHmmss_fff') + '.log')
 Push-Location $backend
 try {
-    & $NpmPath ci --ignore-scripts 2>&1 | Tee-Object $log -Append
-    if ($LASTEXITCODE -ne 0) { throw 'npm ci failed' }
+    $packageFile = Join-Path $backend 'package.json'
+    $pkg = Get-Content -LiteralPath $packageFile -Raw | ConvertFrom-Json
+    $hasNpm = $false
+    if ($pkg.PSObject.Properties.Name -contains 'dependencies') {
+        $hasNpm = @($pkg.dependencies.PSObject.Properties).Count -gt 0
+    }
+    if ($hasNpm) {
+        & $NpmPath ci --ignore-scripts 2>&1 | Tee-Object $log -Append
+        if ($LASTEXITCODE -ne 0) { throw 'npm ci failed' }
+    } else {
+        'NODE_PACKAGES_NONE' | Tee-Object $log -Append
+    }
     $zip=Join-Path $root 'included\mrl3d_ai_reconstruction-1.0.0-src.zip'
     if (-not (Test-Path $zip)) { throw 'Original MRL package missing; refusing false install PASS' }
     & $PythonPath -m pip install $zip 2>&1 | Tee-Object $log -Append
