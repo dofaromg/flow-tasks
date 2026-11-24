@@ -151,7 +151,7 @@ def term_count(ref,term):
     out=git("grep","-I","-o","-F","--no-color","-e",term,ref,"--",".",allow_one=True)
     return len(out.splitlines()) if out else 0
 
-def validate_diff(base,head):
+def validate_diff(base,head,*,trusted_default_branch_sync=False):
     records=obj(MIGRATIONS,head).get("migrations",[])
     rows=[]
     for line in git("diff","--name-status","-M",f"{base}...{head}").splitlines():
@@ -166,15 +166,25 @@ def validate_diff(base,head):
         before,after=term_count(base,term),term_count(head,term); counts[term]={"base":before,"head":after}
         if after<before and not approved_migration(term,records): fail(f"protected identifier reduced without root approval: {term} {before}->{after}")
     threshold=int(obj(NAMING,head).get("rename_contract",{}).get("mass_change_file_threshold",100))
-    if len(rows)>=threshold and not approved_migration(None,records,"mass_change"): fail(f"unapproved mass change: {len(rows)} files")
-    return {"changed_files":len(rows),"identifier_counts":counts}
+    mass_change=len(rows)>=threshold
+    mass_change_approved=mass_change and approved_migration(None,records,"mass_change")
+    if mass_change and not mass_change_approved and not trusted_default_branch_sync: fail(f"unapproved mass change: {len(rows)} files")
+    return {
+        "changed_files":len(rows),
+        "identifier_counts":counts,
+        "trusted_default_branch_sync":"enabled" if trusted_default_branch_sync else "disabled",
+        "mass_change_threshold_exempt":"applied" if mass_change and not mass_change_approved and trusted_default_branch_sync else "not_applied",
+    }
 
 def main():
-    p=argparse.ArgumentParser(); p.add_argument("--base"); p.add_argument("--head"); p.add_argument("--ref"); a=p.parse_args()
+    p=argparse.ArgumentParser(); p.add_argument("--base"); p.add_argument("--head"); p.add_argument("--ref")
+    p.add_argument("--trusted-default-branch-sync",action="store_true",help="Skip only the mass-change file-count threshold for a trusted default-branch sync.")
+    a=p.parse_args()
     if bool(a.base)!=bool(a.head): fail("--base and --head must be used together")
+    if a.trusted_default_branch_sync and not a.base: fail("--trusted-default-branch-sync requires --base and --head")
     ref=a.head or a.ref
     result={"origin_signature":"MrLiouWord","canonical_root":"MRL","status":"DELIVERY_FAIL","delivery":validate_static(ref)}
-    if a.base: result["diff"]=validate_diff(a.base,a.head)
+    if a.base: result["diff"]=validate_diff(a.base,a.head,trusted_default_branch_sync=a.trusted_default_branch_sync)
     result.update(status="DELIVERY_PASS",coverage="100%")
     print(json.dumps(result,ensure_ascii=False,indent=2,sort_keys=True))
 
