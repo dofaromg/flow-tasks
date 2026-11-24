@@ -5,7 +5,13 @@
 // project to `opennextjs-cloudflare deploy`, which skips the wrangler.jsonc custom build and
 // needs `.open-next/` to exist already. `--postbuild` produces it there, and only there
 // (WORKERS_CI=1), so local, CI and Docker `npm run build` stay `next build` only.
-// OpenNext itself runs `npm run build`; MRL_OPENNEXT_BUILD stops that nested run from recursing.
+//
+// Two entries, one shape:
+//   --postbuild       `next build` has just finished (npm postbuild hook), so OpenNext packages
+//                     that output with --skipNextBuild: one Next.js build, no nested npm run.
+//   build:cloudflare  manual / wrangler.jsonc build.command entry: OpenNext runs the full build,
+//                     which calls `npm run build` again; MRL_OPENNEXT_BUILD stops that nested
+//                     postbuild from recursing.
 import { spawnSync } from 'node:child_process';
 
 const GUARD = 'MRL_OPENNEXT_BUILD';
@@ -13,8 +19,10 @@ const postbuild = process.argv.includes('--postbuild');
 
 if (postbuild && (process.env.WORKERS_CI !== '1' || process.env[GUARD] === '1')) process.exit(0);
 
-console.log(`MRL OpenNext build start (${postbuild ? 'Workers Builds postbuild' : 'build:cloudflare'})`);
-const result = spawnSync('npx', ['opennextjs-cloudflare', 'build'], {
+const args = ['opennextjs-cloudflare', 'build', ...(postbuild ? ['--skipNextBuild'] : [])];
+
+console.log(`MRL OpenNext build start (${postbuild ? 'Workers Builds postbuild, reusing next build output' : 'build:cloudflare'})`);
+const result = spawnSync('npx', args, {
   stdio: 'inherit',
   shell: process.platform === 'win32',
   env: { ...process.env, [GUARD]: '1' },
