@@ -1,0 +1,67 @@
+name: MRL Financial Core
+on:
+  pull_request:
+    paths:
+      - 'MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/**'
+      - 'MRL_Mother/09_workflow/tool_registry.py'
+      - 'MRL_Mother/MRL_MotherModel/module_registry.json'
+      - '.github/workflows/mrl-financial-core.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/
+            /MRL_Mother/09_workflow/tool_registry.py
+            /MRL_Mother/MRL_MotherModel/module_registry.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mrl-financial-test-source
+          path: MRL_Mother/
+          if-no-files-found: error
+          retention-days: 7
+  sandbox-invariants:
+    needs: source-bundle
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      # Windows Git rejects legacy names even outside sparse paths. Transfer only
+      # the exact source files, rather than disabling Windows path protections.
+      - uses: actions/download-artifact@v4
+        with:
+          name: mrl-financial-test-source
+          path: MRL_Mother
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/requirements.txt
+      - run: python -m pip install -r MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/requirements.txt
+      - run: python -m unittest MRL_Mother.MRL_Extensions.MRL_Financial_Core_v1.test_core MRL_Mother.MRL_Extensions.MRL_Financial_Core_v1.external.test_external MRL_Mother.MRL_Extensions.MRL_Financial_Core_v1.delivery.test_delivery -v
+      - name: Download platform dependency wheels
+        run: >-
+          python -m pip download --only-binary=:all: --dest wheelhouse -r MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/external/requirements.txt
+      - name: Build verified standalone ZIP
+        run: python -m MRL_Mother.MRL_Extensions.MRL_Financial_Core_v1.delivery.build_package --source-root . --wheelhouse wheelhouse --target-os "${{ runner.os }}" --source-sha "${{ github.event.pull_request.head.sha || github.sha }}" --output "dist/MRL_Financial_Core_v1_${{ runner.os }}_py312.zip"
+      - name: Extract new version directory
+        run: python -m zipfile -e "dist/MRL_Financial_Core_v1_${{ runner.os }}_py312.zip" acceptance
+      - name: Install actual ZIP offline and self-test
+        run: python acceptance/MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/bootstrap.py install
+      - name: Verify installed CLI entry
+        run: python acceptance/MRL_Mother/MRL_Extensions/MRL_Financial_Core_v1/delivery/bootstrap.py external -- --help
+      - name: Collect installation evidence
+        run: python -c "import shutil; shutil.copyfile('acceptance/MRL_INSTALL_RECEIPT.json', 'dist/MRL_Financial_Core_v1_${{ runner.os }}_receipt.json')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MRL_Financial_Core_v1_${{ runner.os }}_py312
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
