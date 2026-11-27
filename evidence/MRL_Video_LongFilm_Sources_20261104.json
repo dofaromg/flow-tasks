@@ -1,0 +1,229 @@
+{
+  "schema": "MRL_Video_LongFilm_Sources/v1",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "parent_pr": "https://github.com/dofaromg/flow-tasks/pull/705",
+  "parent_commit": "9adfe7afe1f14312b07119e72be65b41f5c78a98",
+  "r03_root": "dropbox:ns:13891371329//",
+  "r03_shared_link_result": "NOT_FOUND; located exact-name folder by authenticated Dropbox search, nine root entries confirmed",
+  "lineage": [
+    "MRL_LongFilm_20min_R03",
+    "baseline_R02",
+    "baseline_R01"
+  ],
+  "read_sources": [
+    {
+      "original_name": "README_R03.md",
+      "locator": "dropbox:ns:13891371329//README_R03.md",
+      "url": "https://www.dropbox.com/preview/MRL_LongFilm_20min_R03/README_R03.md",
+      "modified_time": "2026-11-03T13:29:09Z",
+      "content_scope": "full extracted text read; specifications and boundaries mapped into R04"
+    },
+    {
+      "original_name": "mrl_longfilm.py",
+      "locator": "dropbox:ns:13891371329//mrl_longfilm.py",
+      "url": "https://www.dropbox.com/scl/fi/h3xckdhg58tp0hdriqx9g",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/mrl_longfilm.py",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "extracted_text_sha256": "e90e8a1f33436b0156443c0663353f08c6c891800f96b933ddda3c997a457082",
+      "extracted_text_bytes": 4698,
+      "hash_scope": "connected-tool extracted UTF-8 text; not Dropbox raw-byte verification"
+    },
+    {
+      "original_name": "MANIFEST_R03.json",
+      "locator": "dropbox:ns:13891371329//MANIFEST_R03.json",
+      "url": "https://www.dropbox.com/scl/fi/124a0yz4a4yz97lhziu0b",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/MANIFEST_R03.json",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "extracted_text_sha256": "5b524182e2bb12aae39dbf3cf2c4541ed174f88153ffe62bbd77a8f1a6403d73",
+      "extracted_text_bytes": 9613,
+      "hash_scope": "connected-tool extracted UTF-8 text; not Dropbox raw-byte verification"
+    },
+    {
+      "original_name": "TEST_20MIN_EVIDENCE.json",
+      "locator": "dropbox:ns:13891371329//TEST_20MIN_EVIDENCE.json",
+      "url": "https://www.dropbox.com/scl/fi/sj2c3t784uam7c34juqwn",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/TEST_20MIN_EVIDENCE.json",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "extracted_text_sha256": "e514c102003d0fee515fb93972bd4952e1c2b6bbd5451697c357236e5c1e0da4",
+      "extracted_text_bytes": 531,
+      "hash_scope": "connected-tool extracted UTF-8 text; not Dropbox raw-byte verification"
+    },
+    {
+      "original_name": "test_longfilm.py",
+      "locator": "dropbox:ns:13891371329//test_longfilm.py",
+      "url": "https://www.dropbox.com/scl/fi/tpi1irhmknsxf3jb4romo",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/test_longfilm.py",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "extracted_text_sha256": "c311b165d0db35b1cfad677f0d9c29f7e37d42225c8acc1d61277c5e74778f53",
+      "extracted_text_bytes": 2340,
+      "hash_scope": "connected-tool extracted UTF-8 text; not Dropbox raw-byte verification"
+    },
+    {
+      "original_name": "run_20min_fixture_test.py",
+      "locator": "dropbox:ns:13891371329//run_20min_fixture_test.py",
+      "url": "https://www.dropbox.com/scl/fi/bshq2gc9y0amy1tadvqia",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/run_20min_fixture_test.py",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "extracted_text_sha256": "6bd5b52e97ca7e058d1d313ea324e5c057ca2c001339511e8e673a1b81cba9bd",
+      "extracted_text_bytes": 1838,
+      "hash_scope": "connected-tool extracted UTF-8 text; not Dropbox raw-byte verification"
+    },
+    {
+      "original_name": "TEST_R03.txt",
+      "locator": "dropbox:ns:13891371329//TEST_R03.txt",
+      "url": "https://www.dropbox.com/scl/fi/slmjneyaxqghik50zxvhx",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/TEST_R03.txt",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "extracted_text_sha256": "278213fdf5cfac9c3b6bd5451f735a303293f809dcc55b92a5d143d382f097a3",
+      "extracted_text_bytes": 495,
+      "hash_scope": "connected-tool extracted UTF-8 text; not Dropbox raw-byte verification"
+    },
+    {
+      "original_name": "REGRESSION_R02.txt",
+      "locator": "dropbox:ns:13891371329//REGRESSION_R02.txt",
+      "url": "https://www.dropbox.com/scl/fi/fygzthcjjiwn6ziw2e4e4",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/REGRESSION_R02.txt",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "extracted_text_sha256": "b7da4061d0091b68b418281502cad088a86d7caf6a0f9bb9dc5bb949e3190383",
+      "extracted_text_bytes": 99,
+      "hash_scope": "connected-tool extracted UTF-8 text; not Dropbox raw-byte verification"
+    },
+    {
+      "original_name": "baseline_R02/README_R02.md",
+      "locator": "dropbox:ns:13891371329//baseline_R02/README_R02.md",
+      "url": "https://www.dropbox.com/scl/fi/exjv5tzluto3vdt7d34ik",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/baseline_R02/README_R02.md",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "extracted_text_sha256": "3ce7eaa2add699c05d452ffb911378d0b500937219ea8e6c929f4c04fb8ff023",
+      "extracted_text_bytes": 7819,
+      "hash_scope": "connected-tool extracted UTF-8 text; not Dropbox raw-byte verification"
+    },
+    {
+      "original_name": "baseline_R02/mrl_video.py",
+      "locator": "dropbox:ns:13891371329//baseline_R02/mrl_video.py",
+      "url": "https://www.dropbox.com/scl/fi/n9nzv4yu1lb2iuje03xq0",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/baseline_R02/mrl_video.py",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "extracted_text_sha256": "3bb666178c282314b5a363a87ba5529b6609b9f6b2359f98f6a6c27e4391ebbc",
+      "extracted_text_bytes": 12309,
+      "hash_scope": "connected-tool extracted UTF-8 text; not Dropbox raw-byte verification"
+    },
+    {
+      "original_name": "baseline_R02/baseline_R01/MRL_Dependency_Tree.json",
+      "locator": "dropbox:ns:13891371329//baseline_R02/baseline_R01/MRL_Dependency_Tree.json",
+      "url": "https://www.dropbox.com/scl/fi/zhkcmpn7h6i3nww14x4vq",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/baseline_R02/baseline_R01/MRL_Dependency_Tree.json",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "extracted_text_sha256": "eca6b24369bc0afee23eaa84117e78e2e7a20ec6d5d6229f1f23052bf0a99393",
+      "extracted_text_bytes": 1478,
+      "hash_scope": "connected-tool extracted UTF-8 text; not Dropbox raw-byte verification"
+    },
+    {
+      "original_name": "baseline_R02/baseline_R01/MRL_Source_Index.json",
+      "locator": "dropbox:ns:13891371329//baseline_R02/baseline_R01/MRL_Source_Index.json",
+      "url": "https://www.dropbox.com/scl/fi/2y3r24zf91im0gqca54g9",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/baseline_R02/baseline_R01/MRL_Source_Index.json",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "extracted_text_sha256": "c77bd5e24b331d34d3ce805703ff687651d7772f6866d1c3661fc48a636eec66",
+      "extracted_text_bytes": 12480,
+      "hash_scope": "connected-tool extracted UTF-8 text; not Dropbox raw-byte verification"
+    },
+    {
+      "original_name": "baseline_R02/baseline_R01/sources/dropbox/landing_media_routes_excerpt.md",
+      "locator": "dropbox:ns:13891371329//baseline_R02/baseline_R01/sources/dropbox/landing_media_routes_excerpt.md",
+      "url": "https://www.dropbox.com/scl/fi/gtn2qix43y33yjw0v5dtn",
+      "metadata": {
+        "path_display": "/MRL_LongFilm_20min_R03/baseline_R02/baseline_R01/sources/dropbox/landing_media_routes_excerpt.md",
+        "server_modified": "2026-11-03T13:29:09Z"
+      },
+      "extracted_text_sha256": "466ed0500d800a46a1502955840ee37ced848cd34de97f32178428138d38ef45",
+      "extracted_text_bytes": 351,
+      "hash_scope": "connected-tool extracted UTF-8 text; not Dropbox raw-byte verification"
+    }
+  ],
+  "mother_capability_sources": {
+    "image_video": "MRL_ComfyUI master/main.py; live source read; imported via local clip snapshots",
+    "workflow_control": "MRL_comfy-mcp src/comfy_mcp/argv.py blob 90e59892ffaa411fb3057b5e9fafc88a1ff47dc3; R02 prepare/submit/collect preserved",
+    "audio": "R01 templates/audio-chatterbox_tts_multilingual.json and VibeVoice source index; use local approved WAV or clip audio",
+    "historical_routes": {
+      "ComfyUI": 8188,
+      "voice_agent": 7820,
+      "scope": "historical document; not live probe"
+    },
+    "notion_pages": [
+      {
+        "id": "2cce7f4e6c5581d4abd5d815f78f0f3f",
+        "title": "生成式媒體合成器",
+        "observed": "blank page; navigation only, no executable capability evidence"
+      },
+      {
+        "id": "2cce7f4e6c558109ac27c8a30b2fd824",
+        "title": "照片&流體&影片識別系統",
+        "observed": "blank page; navigation only, no executable capability evidence"
+      },
+      {
+        "id": "2cce7f4e6c5581c897fdea7615368f21",
+        "title": "自動化工作流引擎",
+        "observed": "blank page; navigation only, no executable capability evidence"
+      }
+    ]
+  },
+  "boundaries": {
+    "model_generation": "NOT_RUN",
+    "DL580": "NOT_RUN",
+    "Bridge_roundtrip": "NOT_RUN",
+    "iphone": "NOT_RUN",
+    "deployment": "NOT_DEPLOYED",
+    "external_service_requirement": false
+  },
+  "integration_parent_commit": "7fac33202126ce2f4ea4f7f58707111686e512ee",
+  "concurrent_lineage": {
+    "preserved_evidence": [
+      "evidence/MRL_Longfilm_Benchmark_20261104.json",
+      "evidence/MRL_Longfilm_Source_Audit_20261104.json"
+    ],
+    "preserved_interface": [
+      "v1 longfilm flag",
+      "v1 encoding dimensions/crf/preset",
+      "render_seconds/cache_hits/cache_misses/encoding/segment_key",
+      "MRL_LongFilm_Request/v1",
+      "episode_adapter import",
+      "SQLite segment progress",
+      "retry CLI",
+      "embedded subtitles",
+      "fixture_acceptance CLI",
+      "dependency-free contract.py and original public reexports"
+    ],
+    "cache_policy_change": "preserve damaged checkpoint and fail; no silent replacement; old cache root retained",
+    "additional_commits": [
+      "0d689cbf2e37c39345a1ff8c26d81d13b02ba5b9",
+      "fb42de6ac707941befbf13322f60b858d9959ed6",
+      "d1fdd2e83d480690e1a83c2839bc0b54fd835d96",
+      "1ddab27115a1135f2b0afe19fb79febdad9711fc",
+      "7fac33202126ce2f4ea4f7f58707111686e512ee"
+    ]
+  }
+}

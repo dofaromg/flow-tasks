@@ -1,0 +1,102 @@
+name: MRL Video local production acceptance
+on:
+  pull_request:
+    paths:
+      - 'MRL_Video/**'
+      - 'docs/MRL_LongFilm_Integration_20261104.md'
+      - 'docs/MRL_Video_LongFilm_R04.md'
+      - 'evidence/MRL_LongFilm*'
+      - 'evidence/MRL_Video_LongFilm*'
+      - 'scripts/MRL_Start_Video.ps1'
+      - 'config/MRL_Video_Bridge.json'
+      - '.github/workflows/mrl-video.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /MRL_Video/
+            /scripts/MRL_Start_Video.ps1
+      - name: Export exact-head portable source
+        uses: actions/upload-artifact@v4
+        with:
+          name: MRL-video-source-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            MRL_Video/
+            scripts/MRL_Start_Video.ps1
+          if-no-files-found: error
+          retention-days: 7
+  video:
+    needs: source
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      # Windows Git rejects historical NTFS-invalid names even with sparse checkout.
+      # Export only this module on Linux; never rename or weaken Git path protection.
+      - uses: actions/download-artifact@v4
+        with:
+          name: MRL-video-source-${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install local media dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-noto-cjk
+      - name: Install local media dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: choco install ffmpeg -y --no-progress
+      - name: Python dependencies
+        run: python -m pip install -r MRL_Video/requirements.txt pytest
+      - name: Configure Linux font
+        if: runner.os == 'Linux'
+        run: |
+          echo 'MRL_VIDEO_TEST_FONT=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf' >> "$GITHUB_ENV"
+          echo 'MRL_VIDEO_TEST_CJK_FONT=/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc' >> "$GITHUB_ENV"
+      - name: Configure Windows font
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Add-Content $env:GITHUB_ENV 'MRL_VIDEO_TEST_FONT=C:\Windows\Fonts\arial.ttf'
+      - name: Validate Windows launcher syntax
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errorsFound = $null
+          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path 'scripts/MRL_Start_Video.ps1'), [ref]$tokens, [ref]$errorsFound) | Out-Null
+          if ($errorsFound.Count) { throw 'MRL_Start_Video.ps1 parse failed' }
+      - name: Syntax and real media regression tests
+        env:
+          MRL_VIDEO_MEDIA_TEST: '1'
+          MRL_VIDEO_LONG_TEST: '1'
+          MRL_VIDEO_LONG_OUTPUT: MRL-longfilm-fixture
+          MRL_VIDEO_BENCHMARK: MRL-longfilm-benchmark.json
+        run: |
+          python -m compileall -q MRL_Video
+          python -m pytest MRL_Video/tests -q --junitxml=MRL-video-tests.xml
+      - name: Full 1200-second synthetic pipeline acceptance
+        run: python -m MRL_Video.fixture_acceptance --out MRL-clip-longfilm-fixture
+      - name: Retain test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: MRL-video-${{ matrix.os }}-${{ github.sha }}
+          path: |
+            MRL-video-tests.xml
+            MRL-longfilm-fixture/MRL_20min_evidence.json
+            MRL-clip-longfilm-fixture/acceptance.json
+            MRL-longfilm-benchmark.json
+          if-no-files-found: error
+

@@ -1,0 +1,176 @@
+{
+  "schema": "MRL_Expected_Delivery/v1",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "request": "Extend PR705 with R03-aligned 1200-second local film assembly, scene checkpoints/retry, clip input, resolution/quality controls, full actual-duration acceptance and seven CodeQL source fixes",
+  "parent_repository": "dofaromg/flow-tasks",
+  "parent_commit": "608b66e0db23e7cc4eef21ea752668ac800620b3",
+  "expected_file_count": 41,
+  "expected_files": [
+    ".github/workflows/mrl-video.yml",
+    "MRL_Video/CHANGELOG.md",
+    "MRL_Video/Expected_Delivery.json",
+    "MRL_Video/README.md",
+    "MRL_Video/__init__.py",
+    "MRL_Video/__main__.py",
+    "MRL_Video/audit.py",
+    "MRL_Video/cache.py",
+    "MRL_Video/contract.py",
+    "MRL_Video/episode_adapter.py",
+    "MRL_Video/examples/demo.json",
+    "MRL_Video/examples/longfilm_20min.json",
+    "MRL_Video/fixture_acceptance.py",
+    "MRL_Video/longfilm.py",
+    "MRL_Video/longfilm.schema.json",
+    "MRL_Video/model.py",
+    "MRL_Video/openapi.json",
+    "MRL_Video/render.py",
+    "MRL_Video/request-v2.schema.json",
+    "MRL_Video/request.schema.json",
+    "MRL_Video/requirements.txt",
+    "MRL_Video/service.py",
+    "MRL_Video/store.py",
+    "MRL_Video/templates/explainer.json",
+    "MRL_Video/tests/test_clip_longfilm.py",
+    "MRL_Video/tests/test_longfilm.py",
+    "MRL_Video/tests/test_video.py",
+    "MRL_Video/web.py",
+    "config/MRL_Video_Bridge.json",
+    "docs/MRL_LongFilm_Integration_20261104.md",
+    "docs/MRL_Video_Acceptance.md",
+    "docs/MRL_Video_LongFilm_R04.md",
+    "evidence/MRL_LongFilm_Lineage_20261104.json",
+    "evidence/MRL_LongFilm_LocalTests_20261104.xml",
+    "evidence/MRL_LongFilm_Validation_20261104.json",
+    "evidence/MRL_Longfilm_Benchmark_20261104.json",
+    "evidence/MRL_Longfilm_Source_Audit_20261104.json",
+    "evidence/MRL_Video_LongFilm_Sources_20261104.json",
+    "evidence/MRL_Video_LongFilm_Validation_20261104.json",
+    "evidence/MRL_Video_Validation_20261103.json",
+    "scripts/MRL_Start_Video.ps1"
+  ],
+  "expected_dependency_tree": {
+    "MRL_Video/__main__.py": [
+      "MRL_Video/service.py",
+      "MRL_Video/web.py",
+      "MRL_Video/store.py"
+    ],
+    "MRL_Video/service.py": [
+      "MRL_Video/model.py",
+      "MRL_Video/render.py",
+      "MRL_Video/audit.py",
+      "MRL_Video/store.py",
+      "MRL_Video/cache.py",
+      "MRL_Video/longfilm.py"
+    ],
+    "MRL_Video/render.py": [
+      "MRL_Video/contract.py",
+      "MRL_Video/cache.py",
+      "MRL_Video/requirements.txt",
+      "external:local FFmpeg/FFprobe",
+      "external:local font"
+    ],
+    "MRL_Video/web.py": [
+      "MRL_Video/service.py"
+    ],
+    "scripts/MRL_Start_Video.ps1": [
+      "MRL_Video/__main__.py",
+      "config/MRL_Video_Bridge.json"
+    ],
+    ".github/workflows/mrl-video.yml": [
+      "MRL_Video/tests/test_video.py",
+      "MRL_Video/requirements.txt"
+    ],
+    "MRL_Video/cache.py": [
+      "MRL_Video/contract.py"
+    ],
+    "MRL_Video/tests/test_longfilm.py": [
+      "MRL_Video/service.py",
+      "MRL_Video/cache.py",
+      "MRL_Video/request-v2.schema.json"
+    ],
+    "MRL_Video/request-v2.schema.json": [
+      "MRL_Video/model.py"
+    ],
+    "docs/MRL_Video_LongFilm_R04.md": [
+      "MRL_Video/examples/longfilm_20min.json",
+      "evidence/MRL_Video_LongFilm_Sources_20261104.json",
+      "evidence/MRL_Video_LongFilm_Validation_20261104.json"
+    ],
+    "evidence/MRL_Video_LongFilm_Validation_20261104.json": [
+      "evidence/MRL_Longfilm_Benchmark_20261104.json",
+      "evidence/MRL_Longfilm_Source_Audit_20261104.json",
+      "MRL_Video/tests/test_longfilm.py",
+      "MRL_Video/tests/test_video.py"
+    ],
+    "MRL_Video/longfilm.py": [
+      "MRL_Video/contract.py",
+      "MRL_Video/render.py",
+      "MRL_Video/audit.py"
+    ],
+    "MRL_Video/episode_adapter.py": [
+      "MRL_Video/longfilm.py"
+    ],
+    "MRL_Video/contract.py": [],
+    "MRL_Video/model.py": [
+      "MRL_Video/contract.py",
+      "MRL_Video/longfilm.py"
+    ],
+    "MRL_Video/audit.py": [
+      "MRL_Video/contract.py",
+      "MRL_Video/render.py"
+    ]
+  },
+  "expected_features": [
+    "extractive/source-bound storyboards",
+    "3 aspect profiles",
+    "3 layouts",
+    "local images and narration",
+    "original music",
+    "MP4/GIF/PNG/SRT",
+    "SQLite queue",
+    "idempotency",
+    "version load/diff/branch",
+    "cancellation/recovery",
+    "authenticated mobile studio/API",
+    "source/law snapshots",
+    "full decode/black scan",
+    "exact ZIP inventory and SHA-256",
+    "Windows launcher",
+    "CI and acceptance runbook",
+    "1200-second explicit timeline",
+    "content-addressed completed scene checkpoints",
+    "append-only child retry",
+    "local generated clip import and trim",
+    "whole-frame AV timeline",
+    "360p/720p/1080p/2160p settings",
+    "bounded long-film previews and streaming ZIP hashing",
+    "actual 1200-second media acceptance fixture",
+    "local clip timelines up to 1200 seconds",
+    "persistent segment queue",
+    "verified segment cache",
+    "child-version retry",
+    "original episode import",
+    "frame and sample clock",
+    "embedded and sidecar subtitles",
+    "fullhd/uhd output profiles",
+    "real 1200-second synthetic CI fixture"
+  ],
+  "excluded_from_source_package": [
+    "generated media",
+    "original uploaded recording",
+    "mother data",
+    "secrets",
+    "installed dependencies"
+  ],
+  "acceptance_split": [
+    "source delivery",
+    "local automated media",
+    "GitHub exact-head CI",
+    "DL580",
+    "iPhone",
+    "owner semantic review"
+  ],
+  "extension_parent_commit": "9adfe7afe1f14312b07119e72be65b41f5c78a98",
+  "integration_parent_commit": "7fac33202126ce2f4ea4f7f58707111686e512ee"
+}
