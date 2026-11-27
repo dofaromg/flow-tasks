@@ -13,8 +13,8 @@ It manages:
   - Particle globe coordinates  (lat/lon/alt mapping for 3-D visualisation)
 
 Design principle: 怎麼過去，就怎麼回來 (the path forward is the path back)
-All state mutations are recorded as reversible trajectory entries so the
-entire world can be rewound to any prior snapshot.
+State mutations are committed to an append-only versioned SQLite journal.
+Rewind restores full state by appending a new event; earlier versions remain.
 
 Usage (as a library)
 ---------------------
@@ -42,6 +42,11 @@ import hashlib
 import json
 import pathlib
 import time
+import copy
+import os
+import tempfile
+
+from world_closure_store import WorldClosureStore
 from typing import Any, Dict, List, Optional, Tuple
 
 ORIGIN_SIGNATURE = "MrLiouWord"
@@ -71,8 +76,17 @@ def _load_json(path: pathlib.Path, default: Any = None) -> Any:
 
 def _save_json(path: pathlib.Path, obj: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as f:
-        json.dump(obj, f, ensure_ascii=False, indent=2)
+    # Atomic mirror update: preserve the previous JSON until replacement succeeds.
+    fd, tmp_name = tempfile.mkstemp(prefix=path.name + ".", suffix=".tmp", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump(obj, f, ensure_ascii=False, indent=2, allow_nan=False)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp_name, path)
+    finally:
+        if os.path.exists(tmp_name):
+            os.unlink(tmp_name)
 
 
 # ─── WorldModule ─────────────────────────────────────────────────────────────
@@ -91,9 +105,44 @@ class WorldModule:
         self._traj_path = self.data_dir / "trajectory.jsonl"
         self._globe_path = self.data_dir / "globe.json"
 
-        self._nodes: Dict[str, Any] = _load_json(self._nodes_path, {})
-        self._state: Dict[str, Any] = _load_json(self._state_path, {})
-        self._globe: Dict[str, Any] = _load_json(self._globe_path, {})
+        # Read legacy JSON only when bootstrapping an empty journal. Existing
+        # verified history must recover even missing or malformed mirror files.
+        def initial_snapshot() -> Dict[str, Any]:
+            return {"nodes": _load_json(self._nodes_path, {}),
+                    "state": _load_json(self._state_path, {}),
+                    "globe": _load_json(self._globe_path, {})}
+
+        self._closure = WorldClosureStore(self.data_dir, initial_snapshot)
+        # Recover mirrors after an interrupted write; immutable journal is authoritative.
+        self._apply_snapshot(self._closure.current_snapshot())
+
+    def _apply_snapshot(self, snapshot: Dict[str, Any]) -> None:
+        self._nodes = copy.deepcopy(snapshot["nodes"])
+        self._state = copy.deepcopy(snapshot["state"])
+        self._globe = copy.deepcopy(snapshot["globe"])
+        _save_json(self._nodes_path, self._nodes)
+        _save_json(self._state_path, self._state)
+        _save_json(self._globe_path, self._globe)
+
+    @property
+    def version_index(self) -> int:
+        return self._closure.version_index
+
+    def load_version(self, version_index: int) -> Dict[str, Any]:
+        return self._closure.load_version(version_index)
+
+    def history(self) -> List[Dict[str, Any]]:
+        return self._closure.history()
+
+    def verify_history(self) -> Dict[str, Any]:
+        return self._closure.verify_history()
+
+    def restore_version(self, version_index: int) -> Dict[str, Any]:
+        snap = self._closure.restore_version(version_index)
+        self._apply_snapshot(snap)
+        self._record_trajectory("restore_version", {"target_version_index": version_index,
+                                                    "version_index": self.version_index})
+        return snap
 
     # ── Nodes ─────────────────────────────────────────────────────────────────
 
@@ -105,9 +154,13 @@ class WorldModule:
             "updated_at_ms": _now_ms(),
             "hash": _sha256(data),
         }
-        self._nodes[name] = entry
-        _save_json(self._nodes_path, self._nodes)
-        self._record_trajectory("set_node", {"name": name, "hash": entry["hash"]})
+        def _set(snapshot: Dict[str, Any]) -> None:
+            snapshot["nodes"][name] = entry
+
+        self._apply_snapshot(self._closure.commit(
+            "set_node", {"name": name, "hash": entry["hash"]}, _set
+        ))
+        self._record_trajectory("set_node", {"name": name, "hash": entry["hash"], "version_index": self.version_index})
         return entry
 
     def get_node(self, name: str) -> Optional[Dict[str, Any]]:
@@ -121,9 +174,11 @@ class WorldModule:
 
     def set_state(self, key: str, value: Any) -> None:
         """Set a world-state key."""
-        self._state[key] = value
-        _save_json(self._state_path, self._state)
-        self._record_trajectory("set_state", {"key": key})
+        def _set(snapshot: Dict[str, Any]) -> None:
+            snapshot["state"][key] = value
+
+        self._apply_snapshot(self._closure.commit("set_state", {"key": key}, _set))
+        self._record_trajectory("set_state", {"key": key, "version_index": self.version_index})
 
     def get_state(self, key: str, default: Any = None) -> Any:
         return self._state.get(key, default)
@@ -134,9 +189,10 @@ class WorldModule:
             "world_version": WORLD_VERSION,
             "origin_signature": ORIGIN_SIGNATURE,
             "snapshot_at_ms": _now_ms(),
-            "nodes": dict(self._nodes),
-            "state": dict(self._state),
-            "globe": dict(self._globe),
+            "nodes": copy.deepcopy(self._nodes),
+            "state": copy.deepcopy(self._state),
+            "globe": copy.deepcopy(self._globe),
+            "version_index": self.version_index,
         }
         snap["hash"] = _sha256(snap)
         return snap
@@ -159,9 +215,15 @@ class WorldModule:
             "meta": meta or {},
             "updated_at_ms": _now_ms(),
         }
-        self._globe[node_name] = coord
-        _save_json(self._globe_path, self._globe)
-        self._record_trajectory("set_globe_coord", {"node": node_name, "lat": lat, "lon": lon})
+        def _set(snapshot: Dict[str, Any]) -> None:
+            snapshot["globe"][node_name] = coord
+
+        self._apply_snapshot(self._closure.commit(
+            "set_globe_coord", {"node": node_name, "lat": lat, "lon": lon}, _set
+        ))
+        self._record_trajectory("set_globe_coord", {
+            "node": node_name, "lat": lat, "lon": lon, "version_index": self.version_index
+        })
         return coord
 
     def get_globe_coord(self, node_name: str) -> Optional[Dict[str, Any]]:
@@ -193,26 +255,15 @@ class WorldModule:
         return steps
 
     def rewind(self, steps: int = 1) -> Tuple[bool, str]:
-        """
-        Remove the last *steps* trajectory entries and reload state from the
-        most recent saved files.
-
-        Note: rewind undoes trajectory records but does NOT mutate node/state
-        files automatically — it signals that the caller should restore from
-        a prior snapshot. To do a full state rewind, restore nodes.json and
-        state.json from a snapshot before calling rewind().
-        """
-        traj = self.trajectory()
-        if steps >= len(traj):
-            # Clear entire trajectory
-            self._traj_path.write_text("", encoding="utf-8")
-            return True, "trajectory cleared"
-        kept = traj[:-steps]
-        self._traj_path.parent.mkdir(parents=True, exist_ok=True)
-        with self._traj_path.open("w", encoding="utf-8") as f:
-            for step in kept:
-                f.write(json.dumps(step, ensure_ascii=False) + "\n")
-        return True, f"rewound {steps} step(s)"
+        """Restore a prior complete version by APPENDING a new restore event."""
+        current = self.version_index
+        if not isinstance(steps, int) or isinstance(steps, bool) or steps < 1:
+            return False, "steps must be a positive integer"
+        if steps > current:
+            return False, "not enough version history; existing data unchanged"
+        target = current - steps
+        self.restore_version(target)
+        return True, f"restored version {target}; current version {self.version_index}"
 
 
 # ─── CLI ─────────────────────────────────────────────────────────────────────
