@@ -65,29 +65,11 @@ function enforceAccess(analysisId, sessionId, userId) {
 
 module.exports = { hasActiveSubscription, canAccessFull, enforceAccess };
 
-// ── Owner 免費帳號（第十九包）────────────────────────────────────
-const FREE_EMAILS = new Set([
-  'z814241@gmail.com',  // MrLiouWord — origin_signature: MrLiouWord
-]);
-
-/**
- * 判斷是否為免費帳號（永久訂閱者）
- */
-function isOwnerAccount(email) {
-  return email && FREE_EMAILS.has(String(email).toLowerCase().trim());
-}
-
-/**
- * 補強 hasActiveSubscription：owner 帳號直接視為有效訂閱
- */
-const _origHasActiveSub = hasActiveSubscription;
-function hasActiveSubscriptionWithOwner(sessionId, userId, email) {
-  // owner 帳號直接放行
-  if (email && isOwnerAccount(email)) {
+// Owner entitlement must originate from a verified JWT claim.
+function hasActiveSubscriptionWithOwner(sessionId, userId, verifiedOwner = false) {
+  if (verifiedOwner === true) {
     return { id: 'owner', status: 'active', plan_type: 'owner', expires_at: '2099-12-31T00:00:00Z' };
   }
-  return _origHasActiveSub(sessionId, userId);
+  return hasActiveSubscription(sessionId, userId);
 }
-
-module.exports.isOwnerAccount = isOwnerAccount;
 module.exports.hasActiveSubscriptionWithOwner = hasActiveSubscriptionWithOwner;

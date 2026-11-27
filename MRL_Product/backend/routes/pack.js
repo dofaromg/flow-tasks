@@ -13,6 +13,17 @@ const Packs   = require('../core/packs');
 const { packToJson } = require('../core/packs/pack-exporter');
 const config  = require('../config');
 const logger  = require('../utils/logger');
+const { getDb } = require('../modules/db');
+const { ownsAnalysis } = require('../modules/access');
+const { enforceAccess } = require('../modules/rules');
+function permittedPack(req, pack) {
+  if (!pack || !pack.analysis_id) return false;
+  const row = getDb().prepare('SELECT id, session_id, user_id FROM analyses WHERE id = ?').get(pack.analysis_id);
+  if (!ownsAnalysis(row, req.sessionId, req.userId)) return false;
+  try { enforceAccess(pack.analysis_id, req.sessionId, req.userId); return true; }
+  catch { return false; }
+}
+
 
 // ── POST /api/pack/generate ───────────────────────────────────────
 router.post('/generate', authMiddleware, async (req, res) => {
@@ -52,7 +63,7 @@ router.post('/generate', authMiddleware, async (req, res) => {
 // ── GET /api/pack/:pack_id ────────────────────────────────────────
 router.get('/:packId', authMiddleware, (req, res) => {
   const pack = Packs.getPack(req.params.packId);
-  if (!pack) return res.status(404).json({ error: 'Pack not found' });
+  if (!permittedPack(req, pack)) return res.status(404).json({ error: 'Pack not found' });
   res.json({ ok: true, pack });
 });
 
@@ -60,7 +71,7 @@ router.get('/:packId', authMiddleware, (req, res) => {
 // 回傳 JSON 檔案下載
 router.get('/:packId/download', authMiddleware, (req, res) => {
   const pack = Packs.getPack(req.params.packId);
-  if (!pack) return res.status(404).json({ error: 'Pack not found' });
+  if (!permittedPack(req, pack)) return res.status(404).json({ error: 'Pack not found' });
 
   const json = packToJson(pack);
   res.setHeader('Content-Type', 'application/json');
@@ -70,7 +81,7 @@ router.get('/:packId/download', authMiddleware, (req, res) => {
 
 // ── GET /api/pack（admin only）────────────────────────────────────
 router.get('/', (req, res) => {
-  const key = req.headers['x-admin-key'] || req.query.key;
+  const key = req.headers['x-admin-key'];
   if (key !== config.adminKey) {
     return res.status(403).json({ error: 'Forbidden' });
   }

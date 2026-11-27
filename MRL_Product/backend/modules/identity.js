@@ -3,23 +3,25 @@
 // origin_signature: MrLiouWord
 
 const jwt = require('jsonwebtoken');
-const { createHash } = require('crypto');
+const { createHash, scryptSync, timingSafeEqual } = require('crypto');
 const { getDb } = require('./db');
 const { uuid, token } = require('../utils/ids');
 const { now, addDays } = require('../utils/time');
 const config = require('../config');
 
-// 第十九包：owner 帳號識別（lazy init 避免循環 require）
-const FREE_OWNER_EMAILS = new Set(['z814241@gmail.com']);
-function isOwner(email) {
-  if (!email) return false;
-  return FREE_OWNER_EMAILS.has(String(email).toLowerCase().trim());
+function verifyOwnerCredentials(email, password) {
+  if (typeof email !== 'string' || typeof password !== 'string' || password.length < 12) return false;
+  const parts = String(config.ownerPasswordScrypt || '').split(':');
+  if (parts.length !== 2 || !/^[a-fA-F0-9]{32}$/.test(parts[0]) || !/^[a-fA-F0-9]{128}$/.test(parts[1])) return false;
+  const actual = scryptSync(password, Buffer.from(parts[0], 'hex'), 64);
+  return timingSafeEqual(actual, Buffer.from(parts[1], 'hex')) &&
+    !!config.ownerEmail && email.trim().toLowerCase() === config.ownerEmail;
 }
 
 /**
  * 建立訪客 session（無需 email）
  */
-function createSession(userId = null, email = null) {
+function createSession(userId = null, email = null, ownerVerified = false) {
   const db = getDb();
   const sessionId = uuid();
   const rawToken = token(32);
@@ -33,7 +35,7 @@ function createSession(userId = null, email = null) {
 
   // 發 JWT（第十九包：加 email 供 owner 識別）
   const jwtToken = jwt.sign(
-    { sessionId, userId, email: email || null },
+    { sessionId, userId, email: email || null, ownerVerified: ownerVerified === true },
     config.jwtSecret,
     { expiresIn: config.jwtExpiry }
   );
@@ -90,26 +92,25 @@ function authMiddleware(req, res, next) {
 
   req.sessionId = payload.sessionId;
   req.userId    = payload.userId || null;
-  req.email     = payload.email  || null;   // 第十九包：owner 識別用
+  req.email = payload.email || null;
+  req.isVerifiedOwner = payload.ownerVerified === true && !!config.ownerEmail && payload.email === config.ownerEmail;
   next();
 }
 
 /**
  * 建立新 session 並回傳 token（登入用）
  */
-function login(email) {
-  const user = upsertUser(email);
-  const sess = createSession(user.id, email);  // 把 email 帶入 JWT
-  // 第十九包：isOwner = 包裝函式，在本檔頂部定義
-  const owner = isOwner(email);  // 呼叫頂部的 isOwner wrapper
+function login(email, password) {
+  if (!verifyOwnerCredentials(email, password)) return null;
+  const normalized = email.trim().toLowerCase();
+  const user = upsertUser(normalized);
   return {
-    ...sess,
-    userId: user.id,
-    email,
-    has_subscription:      owner,
-    subscription_expires:  owner ? '2099-12-31T00:00:00Z' : null,
-    is_owner:              owner,
+    ...createSession(user.id, normalized, true),
+    userId: user.id, email: normalized,
+    has_subscription: true,
+    subscription_expires: '2099-12-31T00:00:00Z',
+    is_owner: true,
   };
 }
 
-module.exports = { createSession, verifyToken, authMiddleware, upsertUser, login };
+module.exports = { createSession, verifyToken, authMiddleware, upsertUser, login, verifyOwnerCredentials };
