@@ -1,0 +1,15 @@
+{
+  "origin_signature": "MrLiouWord",
+  "parent_commit": "36dc69d98ec3e28e5cca744e82013ed32b203b61",
+  "leaves": [
+    {
+      "path": "core/law.md",
+      "sha256": "f9193cd6a6ee32f4a6f71391f4ba87b336c5b6f1794c2b60e9af44764d77a964"
+    },
+    {
+      "path": "MRL_Mother/00_rootlaw/README.md",
+      "sha256": "ef680215fe9c569e857810f1e784a2fa62f8486eaf93549931c078c8c0b29afb"
+    }
+  ],
+  "merkle_root": "cbd7066e75bf7045480a235a8584ab20f594ef803662327a298cc27c0cee6fc8"
+}

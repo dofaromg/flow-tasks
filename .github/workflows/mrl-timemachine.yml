@@ -1,0 +1,23 @@
+name: MRL TimeMachine
+on:
+  pull_request:
+    paths:
+      - 'core/**'
+      - 'MRL_Mother/00_rootlaw/**'
+      - 'MRL_Mother/04_runtime/flowcore_loop.py'
+      - 'MRL_Mother/09_workflow/MRL__Flowcore_Loop_2.py'
+      - 'MRL_Mother/09_workflow/MRL_utils.py'
+      - 'tests/test_mrl_time_machine.py'
+      - '.github/workflows/mrl-timemachine.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Version, legacy trace, Merkle and HTTP regressions
+        run: python3 -m unittest discover -s tests -p test_mrl_time_machine.py -v

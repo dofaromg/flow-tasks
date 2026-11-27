@@ -27,9 +27,9 @@ import shutil
 import sys
 import time
 import uuid
+import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
-import requests
 FSD_API_BASE = "https://directory.fsf.org/w/api.php"
 
 def fsd_search(q: str, limit: int = 20):
@@ -47,6 +47,7 @@ def fsd_search(q: str, limit: int = 20):
             "format": "json",
             "formatversion": "2",
         }
+        import requests
         resp = requests.get(FSD_API_BASE, params=params, timeout=10)
         resp.raise_for_status()
         data = resp.json()
@@ -70,6 +71,7 @@ def fsd_entry(title: str):
             "format": "json",
             "formatversion": "2",
         }
+        import requests
         resp = requests.get(FSD_API_BASE, params=params, timeout=10)
         resp.raise_for_status()
         data = resp.json()
@@ -276,6 +278,7 @@ def now_iso() -> str:
 
 class Tracer:
     def __init__(self, log_dir: str, persona_id: str = "PartnerPersona", rid: str | None = None):
+        self._lock = threading.RLock()
         self.log_dir = log_dir
         os.makedirs(self.log_dir, exist_ok=True)
         self.trace_path = os.path.join(self.log_dir, "trace.jsonl")
@@ -299,7 +302,32 @@ class Tracer:
             json.dump(self._state, f, ensure_ascii=False, indent=2)
         os.replace(tmp, self.state_path)
 
+    @property
+    def timeMachine(self):
+        # Resolve the existing repository core even when run as a script.
+        root = str(pathlib.Path(__file__).resolve().parents[2])
+        if root not in sys.path:
+            sys.path.insert(0, root)
+        from core.time_machine import TimeMachine
+        return TimeMachine(self)
+
+    def loadVersion(self, version):
+        return self.timeMachine.loadVersion(version)
+
+    def mountVersion(self, version_id):
+        return self.timeMachine.mountVersion(version_id)
+
+    def diffVersions(self, v1, v2):
+        return self.timeMachine.diffVersions(v1, v2)
+
+    def branchFrom(self, version_id):
+        return self.timeMachine.branchFrom(version_id)
+
     def emit(self, event_type: str, payload: dict) -> dict:
+        with self._lock:
+            return self._emit(event_type, payload)
+
+    def _emit(self, event_type: str, payload: dict) -> dict:
         self._state["tick"] += 1
         event_id = uuid.uuid4().hex
         rec = {
@@ -841,3 +869,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
