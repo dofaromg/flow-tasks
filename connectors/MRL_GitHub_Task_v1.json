@@ -1,0 +1,30 @@
+{
+  "version": "1.1",
+  "origin_signature": "MrLiouWord",
+  "canonical_authority": "Mr.liou",
+  "connectors": {
+    "github": {
+      "enabled": true,
+      "required": false,
+      "auth_type": "api_key",
+      "sync_enabled": true,
+      "agent_mode": true,
+      "credentials": {},
+      "timeout": 20,
+      "settings": {
+        "repositories": ["dofaromg/flow-tasks"],
+        "allow_public_read": true,
+        "tasks": [
+          {"task_id": "MRL_GitHub_PR329", "operation": "get_pull_request", "repository": "dofaromg/flow-tasks", "number": 329},
+          {"task_id": "MRL_GitHub_PR700", "operation": "get_pull_request", "repository": "dofaromg/flow-tasks", "number": 700},
+          {"task_id": "MRL_GitHub_PR701", "operation": "get_pull_request", "repository": "dofaromg/flow-tasks", "number": 701},
+          {"task_id": "MRL_GitHub_PR705", "operation": "get_pull_request", "repository": "dofaromg/flow-tasks", "number": 705},
+          {"task_id": "MRL_GitHub_PR706", "operation": "get_pull_request", "repository": "dofaromg/flow-tasks", "number": 706},
+          {"task_id": "MRL_GitHub_PR707", "operation": "get_pull_request", "repository": "dofaromg/flow-tasks", "number": 707},
+          {"task_id": "MRL_GitHub_PR708", "operation": "get_pull_request", "repository": "dofaromg/flow-tasks", "number": 708},
+          {"task_id": "MRL_GitHub_PR712", "operation": "get_pull_request", "repository": "dofaromg/flow-tasks", "number": 712}
+        ]
+      }
+    }
+  }
+}

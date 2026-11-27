@@ -244,6 +244,21 @@ class ConnectorManager:
     def get_connector(self, service_name: str) -> Optional[BaseConnector]:
         """Get connector by service name / 根據服務名稱獲取連接器"""
         return self.connectors.get(service_name)
+
+    def execute_task(self, service_name: str, task: Dict[str, Any]) -> Dict[str, Any]:
+        """Route one task through an existing connector and return its result."""
+        connector = self.get_connector(service_name)
+        if connector is None:
+            return {"success": False, "status": "BLOCKED",
+                    "error": "unknown_service", "service": service_name}
+        if not connector.config.enabled:
+            return {"success": False, "status": "BLOCKED",
+                    "error": "connector_disabled", "service": service_name}
+        execute = getattr(connector, "execute_task", None)
+        if not callable(execute):
+            return {"success": False, "status": "BLOCKED",
+                    "error": "task_execution_not_implemented", "service": service_name}
+        return execute(task)
     
     def generate_comprehensive_report(self, output_path: str = "docs/CONNECTOR_SYSTEM_REPORT.md"):
         """
@@ -598,3 +613,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
