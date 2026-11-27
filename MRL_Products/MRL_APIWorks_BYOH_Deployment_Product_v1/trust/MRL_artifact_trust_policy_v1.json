@@ -1,0 +1,8 @@
+{
+  "schema": "MRL_Artifact_Trust_Policy_v1",
+  "origin_signature": "MrLiouWord",
+  "keys": [],
+  "artifacts": [],
+  "default_status": "DENY",
+  "note": "No production keys approved. Key additions, rotations and release clearances require Mr.liou approval. LiteLLM 1.106.6 remains isolated canary only."
+}

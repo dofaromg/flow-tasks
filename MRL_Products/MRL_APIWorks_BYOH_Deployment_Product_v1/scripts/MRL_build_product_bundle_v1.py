@@ -47,7 +47,13 @@ def main(argv: list[str] | None = None) -> int:
     """Verify source packages and create a repository-shaped customer bundle."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--hardware-route', help='Exact bundle_id from hardware matrix; source packaging only')
+    parser.add_argument('--third-party-runtime', type=Path, action='append', default=[],
+                        help='Signed trust manifest; production policy must approve exact artifact')
+    parser.add_argument('--runtime-evidence-root', type=Path)
+    # Parse once after all arguments have been registered.
     args = parser.parse_args([] if argv is None else argv)
+    if args.third_party_runtime and not args.runtime_evidence_root:
+        parser.error('--runtime-evidence-root is required for third-party runtime inputs')
     hardware_route = None
     if args.hardware_route:
         matrix = json.loads((PRODUCT_ROOT / 'hardware/MRL_hardware_matrix_v1.json').read_text(encoding='utf-8'))
@@ -74,6 +80,20 @@ def main(argv: list[str] | None = None) -> int:
         shutil.copytree(RUNTIME_ROOT, runtime_target, ignore=shutil.ignore_patterns("__pycache__"))
         shutil.copytree(PRODUCT_ROOT, product_target, ignore=shutil.ignore_patterns("dist", "__pycache__"))
 
+        trust_receipts = []
+        if args.third_party_runtime:
+            from MRL_artifact_trust_v1 import export_evidence, load_json, POLICY
+            policy = load_json(POLICY)
+            seen = set()
+            for index, manifest_path in enumerate(args.third_party_runtime):
+                trust_manifest = load_json(manifest_path)
+                identity = trust_manifest['artifact']['id']
+                if identity in seen:
+                    raise ValueError('duplicate third-party runtime id')
+                seen.add(identity)
+                receipt = export_evidence(trust_manifest, policy, args.runtime_evidence_root,
+                                          stage / 'third_party_runtime' / str(index), 'release')
+                trust_receipts.append(receipt)
         if hardware_route:
             # These are distinct source delivery artifacts, not GPU runtime validation.
             (stage / 'MRL_HARDWARE_ROUTE.json').write_text(json.dumps({
@@ -107,6 +127,9 @@ def main(argv: list[str] | None = None) -> int:
             "mutable_after_extraction": [MUTABLE_CONFIG.as_posix()],
             "files": entries,
             "hardware_bundle_id": args.hardware_route,
+            "artifact_trust_receipts": trust_receipts,
+            "third_party_runtime_included": bool(trust_receipts),
+            "formal_delivery_admission": "REQUIRES_SEPARATE_COMPOSED_GATE",
             "hardware_admission": "unknown",
             "hardware_acceptance_evidence": [],
         }
@@ -148,3 +171,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
+
